@@ -1,0 +1,2318 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+xmlns="http://www.w3.org/TR/REC-html40">
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 15">
+<meta name=Originator content="Microsoft Word 15">
+<link rel=File-List href="FORCE_project_guide_files/filelist.xml">
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Jingliang Wang</o:Author>
+  <o:LastAuthor>Jingliang Wang</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>21</o:TotalTime>
+  <o:Created>2017-03-13T23:31:00Z</o:Created>
+  <o:LastSaved>2017-03-13T23:31:00Z</o:LastSaved>
+  <o:Pages>8</o:Pages>
+  <o:Words>2028</o:Words>
+  <o:Characters>12048</o:Characters>
+  <o:Lines>100</o:Lines>
+  <o:Paragraphs>28</o:Paragraphs>
+  <o:CharactersWithSpaces>14048</o:CharactersWithSpaces>
+  <o:Version>15.00</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]-->
+<link rel=themeData href="FORCE_project_guide_files/themedata.thmx">
+<link rel=colorSchemeMapping
+href="FORCE_project_guide_files/colorschememapping.xml">
+<!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:View>Print</w:View>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:TrackMoves/>
+  <w:TrackFormatting/>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:DoNotPromoteQF/>
+  <w:LidThemeOther>EN-US</w:LidThemeOther>
+  <w:LidThemeAsian>X-NONE</w:LidThemeAsian>
+  <w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>
+  <w:Compatibility>
+   <w:BreakWrappedTables/>
+   <w:SplitPgBreakAndParaMark/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+  <m:mathPr>
+   <m:mathFont m:val="Cambria Math"/>
+   <m:brkBin m:val="before"/>
+   <m:brkBinSub m:val="&#45;-"/>
+   <m:smallFrac m:val="off"/>
+   <m:dispDef/>
+   <m:lMargin m:val="0"/>
+   <m:rMargin m:val="0"/>
+   <m:defJc m:val="centerGroup"/>
+   <m:wrapIndent m:val="1440"/>
+   <m:intLim m:val="subSup"/>
+   <m:naryLim m:val="undOvr"/>
+  </m:mathPr></w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" DefUnhideWhenUsed="false"
+  DefSemiHidden="false" DefQFormat="false" DefPriority="99"
+  LatentStyleCount="371">
+  <w:LsdException Locked="false" Priority="0" QFormat="true" Name="Normal"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 1"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 2"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 3"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 4"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 5"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 6"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 7"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 8"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 9"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 6"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 7"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 8"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 9"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 1"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 2"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 3"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 4"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 5"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 6"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 7"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 8"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 9"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Normal Indent"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="footnote text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="annotation text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="header"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="footer"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index heading"/>
+  <w:LsdException Locked="false" Priority="35" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="caption"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="table of figures"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="envelope address"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="envelope return"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="footnote reference"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="annotation reference"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="line number"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="page number"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="endnote reference"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="endnote text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="table of authorities"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="macro"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="toa heading"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 5"/>
+  <w:LsdException Locked="false" Priority="10" QFormat="true" Name="Title"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Closing"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Signature"/>
+  <w:LsdException Locked="false" Priority="1" SemiHidden="true"
+   UnhideWhenUsed="true" Name="Default Paragraph Font"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text Indent"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Message Header"/>
+  <w:LsdException Locked="false" Priority="11" QFormat="true" Name="Subtitle"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Salutation"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Date"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text First Indent"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text First Indent 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Note Heading"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text Indent 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text Indent 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Block Text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Hyperlink"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="FollowedHyperlink"/>
+  <w:LsdException Locked="false" Priority="22" QFormat="true" Name="Strong"/>
+  <w:LsdException Locked="false" Priority="20" QFormat="true" Name="Emphasis"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Document Map"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Plain Text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="E-mail Signature"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Top of Form"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Bottom of Form"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Normal (Web)"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Acronym"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Address"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Cite"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Code"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Definition"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Keyboard"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Preformatted"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Sample"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Typewriter"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Variable"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Normal Table"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="annotation subject"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="No List"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Outline List 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Outline List 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Outline List 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Simple 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Simple 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Simple 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Colorful 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Colorful 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Colorful 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 6"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 7"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 8"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 6"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 7"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 8"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table 3D effects 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table 3D effects 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table 3D effects 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Contemporary"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Elegant"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Professional"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Subtle 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Subtle 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Web 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Web 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Web 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Balloon Text"/>
+  <w:LsdException Locked="false" Priority="39" Name="Table Grid"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Theme"/>
+  <w:LsdException Locked="false" SemiHidden="true" Name="Placeholder Text"/>
+  <w:LsdException Locked="false" Priority="1" QFormat="true" Name="No Spacing"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 1"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" Name="Revision"/>
+  <w:LsdException Locked="false" Priority="34" QFormat="true"
+   Name="List Paragraph"/>
+  <w:LsdException Locked="false" Priority="29" QFormat="true" Name="Quote"/>
+  <w:LsdException Locked="false" Priority="30" QFormat="true"
+   Name="Intense Quote"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 1"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 1"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 2"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 2"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 2"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 3"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 3"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 3"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 4"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 4"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 4"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 5"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 5"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 5"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 6"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 6"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 6"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="19" QFormat="true"
+   Name="Subtle Emphasis"/>
+  <w:LsdException Locked="false" Priority="21" QFormat="true"
+   Name="Intense Emphasis"/>
+  <w:LsdException Locked="false" Priority="31" QFormat="true"
+   Name="Subtle Reference"/>
+  <w:LsdException Locked="false" Priority="32" QFormat="true"
+   Name="Intense Reference"/>
+  <w:LsdException Locked="false" Priority="33" QFormat="true" Name="Book Title"/>
+  <w:LsdException Locked="false" Priority="37" SemiHidden="true"
+   UnhideWhenUsed="true" Name="Bibliography"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="TOC Heading"/>
+  <w:LsdException Locked="false" Priority="41" Name="Plain Table 1"/>
+  <w:LsdException Locked="false" Priority="42" Name="Plain Table 2"/>
+  <w:LsdException Locked="false" Priority="43" Name="Plain Table 3"/>
+  <w:LsdException Locked="false" Priority="44" Name="Plain Table 4"/>
+  <w:LsdException Locked="false" Priority="45" Name="Plain Table 5"/>
+  <w:LsdException Locked="false" Priority="40" Name="Grid Table Light"/>
+  <w:LsdException Locked="false" Priority="46" Name="Grid Table 1 Light"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark"/>
+  <w:LsdException Locked="false" Priority="51" Name="Grid Table 6 Colorful"/>
+  <w:LsdException Locked="false" Priority="52" Name="Grid Table 7 Colorful"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 1"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 1"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 1"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 2"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 2"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 2"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 3"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 3"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 3"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 4"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 4"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 5"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 5"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 5"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 6"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 6"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 6"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 6"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 6"/>
+  <w:LsdException Locked="false" Priority="46" Name="List Table 1 Light"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark"/>
+  <w:LsdException Locked="false" Priority="51" Name="List Table 6 Colorful"/>
+  <w:LsdException Locked="false" Priority="52" Name="List Table 7 Colorful"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 1"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 1"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 1"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 2"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 2"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 2"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 3"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 3"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 3"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 4"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 4"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 5"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 5"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 5"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 6"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 6"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 6"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 6"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 6"/>
+ </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:\5B8B\4F53;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 680460288 22 0 262145 0;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;
+	mso-font-charset:1;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:0 0 0 0 0 0;}
+@font-face
+	{font-family:"Calibri Light";
+	panose-1:2 15 3 2 2 2 4 3 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-1610611985 1073750139 0 0 415 0;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-536870145 1073786111 1 0 415 0;}
+@font-face
+	{font-family:"Segoe UI";
+	panose-1:2 11 5 2 4 2 4 2 2 3;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-520084737 -1073683329 41 0 479 0;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 680460288 22 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+h1
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 1 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	font-weight:normal;}
+h2
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 2 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	font-weight:normal;}
+h3
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 3 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	font-weight:normal;}
+h4
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 4 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:4;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	font-weight:normal;}
+h5
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 5 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:5;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	font-weight:normal;}
+h6
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 6 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:6;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	font-weight:normal;}
+p.MsoHeading7, li.MsoHeading7, div.MsoHeading7
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 7 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:7;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.MsoHeading8, li.MsoHeading8, div.MsoHeading8
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 8 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:8;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.MsoHeading9, li.MsoHeading9, div.MsoHeading9
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 9 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	mso-outline-level:9;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-link:"Header Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	text-align:center;
+	mso-pagination:widow-orphan;
+	layout-grid-mode:char;
+	font-size:9.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-link:"Footer Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	layout-grid-mode:char;
+	font-size:9.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.MsoTitle, li.MsoTitle, div.MsoTitle
+	{mso-style-priority:10;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Title Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{mso-style-noshow:yes;
+	mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-noshow:yes;
+	mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoDocumentMap, li.MsoDocumentMap, div.MsoDocumentMap
+	{mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-link:"Document Map Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:9.0pt;
+	font-family:SimSun;
+	mso-bidi-font-family:"Times New Roman";}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{mso-style-priority:34;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 1";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#2E74B5;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 2";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#2E74B5;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 3";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#1F4D78;}
+span.Heading4Char
+	{mso-style-name:"Heading 4 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 4";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#2E74B5;
+	font-style:italic;}
+span.Heading5Char
+	{mso-style-name:"Heading 5 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 5";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#2E74B5;}
+span.Heading6Char
+	{mso-style-name:"Heading 6 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 6";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#1F4D78;}
+span.Heading7Char
+	{mso-style-name:"Heading 7 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 7";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#1F4D78;
+	font-style:italic;}
+span.Heading8Char
+	{mso-style-name:"Heading 8 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 8";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#272727;}
+span.Heading9Char
+	{mso-style-name:"Heading 9 Char";
+	mso-style-noshow:yes;
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 9";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#272727;
+	font-style:italic;}
+span.HeaderChar
+	{mso-style-name:"Header Char";
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:Header;
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;}
+span.FooterChar
+	{mso-style-name:"Footer Char";
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:Footer;
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;}
+span.TitleChar
+	{mso-style-name:"Title Char";
+	mso-style-priority:10;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:Title;
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	letter-spacing:-.5pt;}
+span.DocumentMapChar
+	{mso-style-name:"Document Map Char";
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Document Map";
+	font-family:"Segoe UI",sans-serif;
+	mso-ascii-font-family:"Segoe UI";
+	mso-hansi-font-family:"Segoe UI";
+	mso-bidi-font-family:"Segoe UI";}
+p.msotitlecxspfirst, li.msotitlecxspfirst, div.msotitlecxspfirst
+	{mso-style-name:msotitlecxspfirst;
+	mso-style-unhide:no;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:28.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.5pt;}
+p.msotitlecxspmiddle, li.msotitlecxspmiddle, div.msotitlecxspmiddle
+	{mso-style-name:msotitlecxspmiddle;
+	mso-style-unhide:no;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:28.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.5pt;}
+p.msotitlecxsplast, li.msotitlecxsplast, div.msotitlecxsplast
+	{mso-style-name:msotitlecxsplast;
+	mso-style-unhide:no;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:28.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.5pt;}
+p.msolistparagraphcxspfirst, li.msolistparagraphcxspfirst, div.msolistparagraphcxspfirst
+	{mso-style-name:msolistparagraphcxspfirst;
+	mso-style-unhide:no;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.msolistparagraphcxspmiddle, li.msolistparagraphcxspmiddle, div.msolistparagraphcxspmiddle
+	{mso-style-name:msolistparagraphcxspmiddle;
+	mso-style-unhide:no;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.msolistparagraphcxsplast, li.msolistparagraphcxsplast, div.msolistparagraphcxsplast
+	{mso-style-name:msolistparagraphcxsplast;
+	mso-style-unhide:no;
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.msopapdefault, li.msopapdefault, div.msopapdefault
+	{mso-style-name:msopapdefault;
+	mso-style-unhide:no;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;}
+span.1Char
+	{mso-style-name:"\6807\9898 1 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 1";
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;
+	font-weight:bold;}
+p.1, li.1, div.1
+	{mso-style-name:"\6807\9898 1";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 1 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.2Char
+	{mso-style-name:"\6807\9898 2 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 2";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	font-weight:bold;}
+p.2, li.2, div.2
+	{mso-style-name:"\6807\9898 2";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 2 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.3Char
+	{mso-style-name:"\6807\9898 3 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 3";
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;
+	font-weight:bold;}
+p.3, li.3, div.3
+	{mso-style-name:"\6807\9898 3";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 3 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.4Char
+	{mso-style-name:"\6807\9898 4 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 4";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	font-weight:bold;}
+p.4, li.4, div.4
+	{mso-style-name:"\6807\9898 4";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 4 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.5Char
+	{mso-style-name:"\6807\9898 5 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 5";
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;
+	font-weight:bold;}
+p.5, li.5, div.5
+	{mso-style-name:"\6807\9898 5";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 5 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.6Char
+	{mso-style-name:"\6807\9898 6 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 6";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	font-weight:bold;}
+p.6, li.6, div.6
+	{mso-style-name:"\6807\9898 6";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 6 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.7Char
+	{mso-style-name:"\6807\9898 7 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 7";
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;
+	font-weight:bold;}
+p.7, li.7, div.7
+	{mso-style-name:"\6807\9898 7";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 7 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.8Char
+	{mso-style-name:"\6807\9898 8 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 8";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";}
+p.8, li.8, div.8
+	{mso-style-name:"\6807\9898 8";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 8 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.9Char
+	{mso-style-name:"\6807\9898 9 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"\6807\9898 9";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";}
+p.9, li.9, div.9
+	{mso-style-name:"\6807\9898 9";
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 9 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.Char
+	{mso-style-name:"\9875\7709 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:\9875\7709;
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;}
+p.a, li.a, div.a
+	{mso-style-name:\9875\7709;
+	mso-style-unhide:no;
+	mso-style-link:"\9875\7709 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.Char0
+	{mso-style-name:"\9875\811A Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:\9875\811A;
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;}
+p.a0, li.a0, div.a0
+	{mso-style-name:\9875\811A;
+	mso-style-unhide:no;
+	mso-style-link:"\9875\811A Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.Char1
+	{mso-style-name:"\6807\9898 Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:\6807\9898;
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	font-weight:bold;}
+p.a1, li.a1, div.a1
+	{mso-style-name:\6807\9898;
+	mso-style-unhide:no;
+	mso-style-link:"\6807\9898 Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+span.Char2
+	{mso-style-name:"\6587\6863\7ED3\6784\56FE Char";
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:\6587\6863\7ED3\6784\56FE;
+	font-family:SimSun;
+	mso-ascii-font-family:SimSun;
+	mso-fareast-font-family:SimSun;
+	mso-hansi-font-family:SimSun;}
+p.a2, li.a2, div.a2
+	{mso-style-name:\6587\6863\7ED3\6784\56FE;
+	mso-style-unhide:no;
+	mso-style-link:"\6587\6863\7ED3\6784\56FE Char";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.msochpdefault, li.msochpdefault, div.msochpdefault
+	{mso-style-name:msochpdefault;
+	mso-style-unhide:no;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:SimSun;
+	mso-fareast-theme-font:minor-fareast;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	mso-default-props:yes;
+	font-size:10.0pt;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman",serif;}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1026"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72" style='tab-interval:.5in'>
+
+<div class=WordSection1>
+
+<p class=MsoTitle align=center style='margin-bottom:0in;margin-bottom:.0001pt;
+text-align:center'><span style='font-size:28.0pt;line-height:105%;font-family:
+"Calibri Light",sans-serif;letter-spacing:-.5pt'>FORCE-RISCV project guide</span></p>
+
+<h1 style='margin-top:12.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.3in;margin-bottom:.0001pt;text-indent:-.3in;page-break-after:avoid'><span
+style='font-size:16.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>1<span class=GramE>&nbsp;
+Coding</span> standard</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Applying a
+coding standard is very helpful when there are multiple contributors to the
+project, so that all contributed code has similar look and feel.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>This is a standard
+found on the web that seems to make quite a lot of sense:</span> <span
+style='font-size:12.0pt;line-height:105%'><a
+href="http://www.possibility.com/Cpp/CppCodingStandard.html">http://www.possibility.com/Cpp/CppCodingStandard.html</a>.</span></p>
+
+<p class=MsoNormal><b><span style='font-size:12.0pt;line-height:105%'>Like the
+author said: “It helps if the standard annoys everyone in some way so everyone
+feels they are on the same playing field.”</span></b></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The coding
+standard is also adopted by CMU ECE department: <a
+href="https://users.ece.cmu.edu/~eno/coding/CppCodingStandard.html">https://users.ece.cmu.edu/~eno/coding/CppCodingStandard.html</a></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>We are
+adopting from the original standard, while narrowed down on things like file
+name extensions (*.h and *.cc).</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In order to
+view this standard from within the repository, an amended version of the above page is
+saved/checked-in in the guide directory, you can view it here:</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'><a
+href="CppCodingStandard.html">CppCodingStandard.html</a>.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Additionally,
+both header and source file of a module should be wrapped in Force namespace.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Please refer
+to <i><span style='color:#7030A0'>base/<span class=SpellE>inc</span>/<span
+class=SpellE>Config.h</span></span></i><span style='color:#7030A0'> </span>and <i><span
+style='color:#7030A0'>base/sr/Config.cc</span></i><span style='color:#7030A0'> </span>as
+examples of applying the coding style.</span></p>
+
+<h1 style='margin-top:12.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.3in;margin-bottom:.0001pt;text-indent:-.3in;page-break-after:avoid'><span
+style='font-size:16.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>2<span class=GramE>&nbsp;
+<span class=SpellE>Doxygen</span></span></span><span style='mso-fareast-font-family:
+"Times New Roman"'><o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>We use <span
+class=SpellE>doxygen</span> to extract <span class=SpellE>doxygen</span>-style
+comments from the source code and generate documentation for the FORCE-RISCV code.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>2.1 <span
+class=SpellE>Buiding</span> <span class=SpellE>Doxygen</span> (if necessary)</span><span
+style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%'>Doxygen</span></span><span style='font-size:12.0pt;line-height:105%'> can
+be quite easily build from source code obtained from:</span> <span
+style='font-size:12.0pt;line-height:105%'><a
+href="http://www.stack.nl/~dimitri/doxygen/">http://www.stack.nl/~dimitri/doxygen/</a></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>And build
+following the steps from:</span> <span style='font-size:12.0pt;line-height:
+105%'><a href="http://www.stack.nl/~dimitri/doxygen/manual/install.html">http://www.stack.nl/~dimitri/doxygen/manual/install.html</a>:</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>tar</span></i></span><i><span style='font-size:
+12.0pt;line-height:105%;color:#7030A0'> -<span class=SpellE>zxvf</span>
+doxygen-tar-file.tar.gz</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>cd</span></i></span><i><span style='font-size:
+12.0pt;line-height:105%;color:#7030A0'> <span class=SpellE>doxygen</span>-xyz</span></i></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>mkdir</span></i></span></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'> build</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>cd</span></i></span><i><span style='font-size:
+12.0pt;line-height:105%;color:#7030A0'> build</span></i></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>cmake</span></i></span></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'> -G “Unix <span
+class=SpellE>Makefiles</span>” ..</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>make</span></i></span></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'># <span class=GramE>If</span> default <span class=SpellE>cmake</span>
+doesn’t work, use /<span class=SpellE>usr</span>/bin/<span class=SpellE>cmake</span></span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:#7030A0'><br
+clear=all>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.25in;margin-bottom:.0001pt;text-indent:-.25in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>2.2</span><span
+style='font-size:7.0pt;line-height:105%;font-family:"Times New Roman",serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'> </span><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>Generating code
+documentation</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>To generate
+documentation in doc (do not need to check in the auto-gen doc):</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>cd</span></i></span><i><span style='font-size:
+12.0pt;line-height:105%;color:#7030A0'> force-riscv</span></i></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>doxygen</span></i></span></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'> doc/<span
+class=SpellE>force.doxygen</span></span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Then load
+doc/<span class=SpellE>doxygen</span>/html/index.html in the browser to view
+the generated documentation.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Please take
+a look at the commenting style for <span class=SpellE>doxygen</span>, some of
+the code such as base/<span class=SpellE>inc</span>/<span class=SpellE>Config.h</span>,
+base/src/Config.cc <span class=SpellE>etc</span> has been commented in <span
+class=SpellE>doxygen</span> style:</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'><a
+href="http://www.stack.nl/~dimitri/doxygen/">http://www.stack.nl/~dimitri/doxygen/</a></span></p>
+
+<h1 style='margin-top:12.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.25in;margin-bottom:.0001pt;text-indent:-.25in;page-break-after:avoid'><span
+style='font-size:16.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>3<span class=GramE>&nbsp;
+Utilities</span></span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Utilities
+are built over time to facilitate code development in the project.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>3.1 Logging</span><span
+style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Always
+provide sensible logging information in the code to help
+debugging/tracing.&nbsp; Also try and strike a balance, don’t provide too much
+logging information.&nbsp; We can start with fewer logging lines and add more
+as needed.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Currently
+there are 7 logging levels, they are listed here from most verbose to less
+verbose:</span> <i><span style='font-size:12.0pt;line-height:105%;color:#7030A0'>trace,
+debug, info, warn, error, fail, notice.</span></i></p>
+
+<h3 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.5in;margin-bottom:.0001pt;text-indent:-.5in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#1F4D78'>3.1.1 Logging level
+switch</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>By default
+the logging level is set at error, which means only logging statements with
+error, fail, notice will be shown.&nbsp; The user can specify a different
+logging level on the command line using -l switch.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>For example:</span>
+<i><span style='font-size:12.0pt;line-height:105%;color:#7030A0'>bin/friscv -l
+debug …</span></i><span style='color:#7030A0'> </span><span style='font-size:
+12.0pt;line-height:105%'>will setup logging level to debug and the log will be
+more verbose than default.</span></p>
+
+<h3 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.5in;margin-bottom:.0001pt;text-indent:-.5in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#1F4D78'>3.1.2 Logging syntax</span><span
+style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>A logging
+statement is in this format <span class=GramE>LOG(</span>level) &lt;&lt;
+out-put-stream.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>For example:</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>LOG(</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>trace) &lt;&lt; “The
+user has specified <span class=SpellE>config</span> file \”” &lt;&lt; <span
+class=SpellE>file_name</span> &lt;&lt; “\”.” &lt;&lt; <span class=SpellE><span
+class=GramE>endl</span></span>;</span></i></p>
+
+<h3 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.5in;margin-bottom:.0001pt;text-indent:-.5in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#1F4D78'>3.1.3 Notice logging
+level</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Notice level
+will always show up in the log, so don’t use it extensively.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Example:</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>LOG(</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>notice) &lt;&lt;
+“Initial seed = 0x” &lt;&lt; hex &lt;&lt; seed &lt;&lt; <span class=SpellE>endl</span>;</span></i></p>
+
+<h3 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.5in;margin-bottom:.0001pt;text-indent:-.5in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#1F4D78'>3.1.4 Error logging
+level</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Error
+logging is for reporting error but not immediately exit the program.&nbsp;
+There are two types of handling after an error, either a variable containing
+the error state is passed back to the caller to handle, or an exception is
+thrown to be caught by proper exception handling code in the hierarchy.&nbsp;
+Also we usually include the function name where the error occur in the error
+message.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>For example:</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>LOG(</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>error) &lt;&lt;
+“{parse_bin32} Error parsing \”” &lt;&lt; <span class=SpellE>str</span>
+&lt;&lt; “\”, invalid argument.” &lt;&lt; <span class=SpellE><span class=GramE>endl</span></span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>*<span class=SpellE>error_status</span> = true;</span></i></p>
+
+<h3 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.5in;margin-bottom:.0001pt;text-indent:-.5in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#1F4D78'>3.1.5 Fail logging
+level</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Fail logging
+level is used when there is non-recoverable error and we want the program to
+exit immediately.&nbsp; So there will be a <span class=GramE>LOG(</span>fail)
+statement followed by a FAIL statement.&nbsp; It is not necessary to include
+function name <span class=SpellE>etc</span> in the error message, because the
+FAIL statement will include function name, file name, line number etc.&nbsp; If
+the logging level is set to more verbose than error, we assume the user wants
+to debug, and the FAIL statement will try to dump core.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In the FAIL
+statement, try to give a short, unique string as a brief description of the
+fail type.&nbsp; This will help in the binning of fail signatures.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Example of
+fail logging usage in code:</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>LOG(</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>fail) &lt;&lt; “Unknown
+logging level \’” &lt;&lt; <span class=SpellE>logLevel</span> &lt;&lt; “\’”.”
+&lt;&lt; <span class=SpellE><span class=GramE>endl</span></span>;</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>FAIL(</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>“unknown-log-level”);</span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>To observe a
+fail report in action, try this:</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>cd</span></i></span><i><span style='font-size:
+12.0pt;line-height:105%;color:#7030A0'> force-riscv</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>bin/friscv</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'> -l <span class=SpellE>abcd</span>
+-s 1234 …</span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>This will
+fail out due to that <span class=SpellE>abcd</span> is not a valid logging
+level.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>3.2 Utility functions</span><span
+style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>When you
+think a function might be useful in multiple locations in the project code, it
+might be a good idea to put it in base/<span class=SpellE>inc</span>/<span
+class=SpellE>UtilityFunctions.h</span> base/<span class=SpellE>src</span>/UtilityFunctions.cc.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>If such
+function is RISC-V architecture specific, like function implementing an RISC-V
+specific immediate expansion operation, then put it in riscv/<span class=SpellE>inc</span>/<span
+class=SpellE>UtilityFunctionsRISCV.h</span> riscv/<span class=SpellE>src</span>/UtilityFunctionsRISCV.cc.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The reason
+to do this is that although we currently only support RISC-V 64-bit architecture,
+it is entirely possible to support other architectures in the future, for
+example, we can relatively easily support RISC-V 32-bit in the future.  Other architectures could be support with some amount of work.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The <span
+class=SpellE>UtilityFunctions</span> files mostly include useful C functions.<o:p></o:p></span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>3.3 <span
+class=SpellE>ObjectRegistry</span><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>ObjectRegistry</span></i></span><span
+style='font-size:12.0pt;line-height:105%'> is a factory class that hold a
+template version of the light weight objects inheriting from <i
+style='mso-bidi-font-style:normal'><span style='color:#7030A0'>Object</span></i>
+class.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Given a
+class name, the <span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='color:#7030A0'>ObjectRegistry</span></i></span><i style='mso-bidi-font-style:
+normal'><span style='color:#7030A0'>::<span class=SpellE>ObjectInstance</span></span></i><span
+style='color:#7030A0'> </span>method will return a cloned object of the class
+type.<o:p></o:p></span></p>
+
+<h3 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.5in;margin-bottom:.0001pt;text-indent:-.5in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#1F4D78'>3.3.1 Register object<o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Objects
+inherit from <i style='mso-bidi-font-style:normal'><span style='color:#7030A0'>Object</span></i>
+class can be registered using <span class=SpellE><i style='mso-bidi-font-style:
+normal'><span style='color:#7030A0'>ObjectRegistry</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='color:#7030A0'>::<span
+class=SpellE>RegisterObject</span></span></i><span style='color:#7030A0'> </span>method.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In the base
+layer, all the Object-based classes can be registered inside <span
+class=SpellE><i style='mso-bidi-font-style:normal'><span style='color:#7030A0'>ObjectRegistry</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='color:#7030A0'>::Setup </span></i>method
+in the ObjectRegistry.cc file.<span style='mso-spacerun:yes'>  </span>For
+example:<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><i style='mso-bidi-font-style:
+normal'><span style='font-size:12.0pt;line-height:105%;color:#7030A0'>RegisterObject</span></i></span></span><span
+class=GramE><i style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>(</span></i></span><i style='mso-bidi-font-style:
+normal'><span style='font-size:12.0pt;line-height:105%;color:#7030A0'>new <span
+class=SpellE>RegisterField</span>());<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><i style='mso-bidi-font-style:
+normal'><span style='font-size:12.0pt;line-height:105%;color:#7030A0'>RegisterObject</span></i></span></span><span
+class=GramE><i style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>(</span></i></span><i style='mso-bidi-font-style:
+normal'><span style='font-size:12.0pt;line-height:105%;color:#7030A0'>new <span
+class=SpellE>BitField</span>());<o:p></o:p></span></i></p>
+
+<h3 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.5in;margin-bottom:.0001pt;text-indent:-.5in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#1F4D78'>3.3.2 Obtain a casted
+instance<o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Given the
+inheritance hierarchy, it is sometimes convenient to obtain a cloned object
+that has already been casted to an intermediate class type.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Suppose we
+have a <i style='mso-bidi-font-style:normal'><span style='color:#7030A0'>Res0RegisterField</span></i>
+class that inherit from <span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='color:#7030A0'>RegisterField</span></i></span> class, the <span
+class=SpellE><i style='mso-bidi-font-style:normal'><span style='color:#7030A0'>ObjectRegistry</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='color:#7030A0'>::<span
+class=SpellE>ObjectInstance</span></span></i><span style='color:#7030A0'> </span>method
+will only return an object of type <i style='mso-bidi-font-style:normal'><span
+style='color:#7030A0'>Object</span></i>, if we want to return the object as the
+type of <span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='color:#7030A0'>RegisterField</span></i></span>, we can do this:<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=GramE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>string</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> <span class=SpellE>sub_class_type</span> = “Res0RegisterField”;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><i style='mso-bidi-font-style:
+normal'><span style='font-size:12.0pt;line-height:105%;color:#7030A0'>const</span></i></span></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> <span class=SpellE>ObjectRegistry</span> *<span
+class=SpellE>obj_registry</span> =<span class=SpellE>ObjectRegistry</span>::Instance();<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>RegisterField</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> * <span class=SpellE>new_reg_fld</span> = <span
+class=SpellE>obj_registry</span>-&gt;<span class=SpellE>TypeInstance</span>&lt;<span
+class=SpellE>RegisterField</span><span class=GramE>&gt;(</span><span
+class=SpellE>sub_class_type</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The above
+example is not very useful, but if there are multiple sub-classes of <span
+class=SpellE>RegisterField</span> and we obtain their name in a variable, we
+can obtain a predictable <span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='color:#7030A0'>RegisterField</span></i></span> base class type to
+operate on.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The <span
+class=SpellE>TypeInstance</span>&lt;T&gt; method is a template function, where
+the T can be any type that inherits from Object class.<o:p></o:p></span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>3.4 <span
+class=SpellE>Fmt</span> object</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The <span
+class=SpellE>Fmt</span> object makes <span class=SpellE>iostreams</span>
+formatted I/O more like <span class=SpellE>printf</span>/<span class=SpellE>scanf</span>.&nbsp;&nbsp;
+For example, the equivalent <span class=GramE>to :</span></span></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp;&nbsp;&nbsp; <span class=SpellE><span class=GramE>printf</span></span><span
+class=GramE>(</span>“%08X\n”, x);</span></i></p>
+
+<p class=MsoNormal><span class=GramE><span style='font-size:12.0pt;line-height:
+105%'>is</span></span><span style='font-size:12.0pt;line-height:105%'>: </span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span class=SpellE><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>std</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>::<span class=SpellE>cout</span>
+&lt;&lt; fmtX0(x, 8) &lt;&lt; ‘\n’;</span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Supported formats
+include:</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span class=SpellE><span
+class=GramE><span style='font-size:12.0pt;line-height:105%'>fmt</span></span></span><span
+style='font-size:12.0pt;line-height:105%'>:&nbsp; default formatting</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span class=SpellE><span
+class=GramE><span style='font-size:12.0pt;line-height:105%'>fmtd</span></span></span><span
+style='font-size:12.0pt;line-height:105%'>: decimal</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span style='font-size:12.0pt;
+line-height:105%'>fmtd0: decimal with filling ‘0’</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span class=SpellE><span
+class=GramE><span style='font-size:12.0pt;line-height:105%'>fmto</span></span></span><span
+style='font-size:12.0pt;line-height:105%'>:&nbsp; octal</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span style='font-size:12.0pt;
+line-height:105%'>fmto0: octal with filling ‘0’</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span class=SpellE><span
+class=GramE><span style='font-size:12.0pt;line-height:105%'>fmtx</span></span></span><span
+style='font-size:12.0pt;line-height:105%'>:&nbsp; hex</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span style='font-size:12.0pt;
+line-height:105%'>fmtx0: hex with fill ‘0’</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span class=SpellE><span
+class=GramE><span style='font-size:12.0pt;line-height:105%'>fmtX</span></span></span><span
+style='font-size:12.0pt;line-height:105%'>: hex upper case</span></p>
+
+<p class=MsoNormal style='text-indent:9.0pt'><span style='font-size:12.0pt;
+line-height:105%'>fmtX0: hex upper case with fill ‘0’</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In all cases
+the arguments for <span class=SpellE><span class=GramE>fmtx</span></span><span
+class=GramE>(</span>) are operand, width and precision.&nbsp; If width and
+precision are not provided, they default to 0 and 6 respectively (following the
+normal <span class=SpellE>iostream</span> defaults). </span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:12.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>3.4 <span
+class=SpellE>Enum</span> classes</span><span style='mso-fareast-font-family:
+"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>When using <span
+class=SpellE>enums</span>, usually we need to add <span class=SpellE>enum</span>-to-string
+and string-to-<span class=SpellE>enum</span> translation functions.&nbsp; A
+script has been added in <i><span style='color:#7030A0'>utils/enum_classes/create_enum_files.py</span></i>
+to make this less tedious, we auto-generate those functions.  We also generate unit-tests for the Enum classes.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>When adding
+a new <span class=SpellE>Enum</span> type, simply add it in the
+base_enum_classes.py and do ‘make <span class=SpellE>enums</span>’, then <i><span
+style='color:#7030A0'>base/<span class=SpellE>inc</span>/<span class=SpellE>Enums.h</span></span></i>
+and <i><span style='color:#7030A0'>base/src/Enums.cc</span></i><span
+style='color:#7030A0'> </span>will be updated with the new <span class=SpellE>enum</span>
+type.&nbsp; The RISC-V specific Enums can be defined in riscv_enum_classes.py.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Adding new <span
+class=SpellE>enum</span> type is very simple, just add it in the <span
+class=SpellE>base_enum_classes_details</span> list.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The first
+list item is the <span class=SpellE>enum</span> type name.&nbsp; The actual
+name will have an ‘E’ prefix added to the provided <span class=SpellE>enum</span>
+type name.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The second
+list item is the <span class=SpellE>enum</span> base type, this is a C++11
+concept, usually using ‘unsigned char’ here unless the <span class=SpellE>enum</span>
+values cannot be contained in ‘unsigned char’ data type.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The third
+list item is some descriptions text that will show up as comments in the <span
+class=SpellE>Enums.h</span> file.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The fourth
+list item is itself a list, each list item in this list is an <span
+class=SpellE>enum</span> name and its corresponding value.</span></p>
+
+<h1 style='margin-top:12.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.25in;margin-bottom:.0001pt;text-indent:-.25in;page-break-after:avoid'><span
+style='font-size:16.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>4<span class=GramE>&nbsp;
+Unit</span> testing</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>We use a
+simple open source project named LEST as the support of our unit-testing
+framework.&nbsp; The reasons for picking LEST are its simplicity and easy to
+use, thus making doing unit-testing easy and even attractive.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>4.1 LEST project code</span><span
+style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The slogan
+of LEST is:</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:red'>L</span><span
+style='font-size:12.0pt;line-height:105%;color:#00B0F0'>est</span><span
+style='font-size:12.0pt;line-height:105%;color:red'> E</span><span
+style='font-size:12.0pt;line-height:105%;color:#00B0F0'>rrors</span><span
+style='font-size:12.0pt;line-height:105%;color:red'> </span><span class=SpellE><span
+style='font-size:12.0pt;line-height:105%;color:#00B0F0'>e</span><span
+style='font-size:12.0pt;line-height:105%;color:red'>S</span><span
+style='font-size:12.0pt;line-height:105%;color:#00B0F0'>cape</span></span><span
+style='font-size:12.0pt;line-height:105%;color:red'> T</span><span
+style='font-size:12.0pt;line-height:105%;color:#00B0F0'>esting</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The project
+site of LEST is here:</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'><a
+href="https://github.com/martinmoene/lest">https://github.com/martinmoene/lest</a></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Examples
+from LEST code has been added to: <i><span style='color:#7030A0'>force-riscv/<span
+class=SpellE>unit_tests</span>/examples. </span></i>You can do a make in that
+directory to example the behavior of those tests.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>4.2 Setting up a new
+test directory</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>To start a
+unit test directory, use the following command:</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>cd</span></i></span><i><span style='font-size:
+12.0pt;line-height:105%;color:#7030A0'> force-riscv/<span class=SpellE>unit_tests</span></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>./template/start_test.py –t <span class=SpellE>ModuleName</span></span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:black'>A
+directory named </span><span class=SpellE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>ModuleName</span></i></span><span
+style='font-size:12.0pt;line-height:105%;color:black'> will be created in </span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>force-riscv/<span
+class=SpellE>unit_tests</span>/tests.&nbsp; </span></i><span style='font-size:
+12.0pt;line-height:105%'>The command will fail if such directory already
+exists.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>When
+initially created, the directory will contain the following files:</span></p>
+
+<p class=MsoNormal><span class=SpellE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>Makefile</span></i></span></p>
+
+<p class=MsoNormal><span class=SpellE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>Makefile.target</span></i></span></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>ModuleName_test.cc</span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The <span
+class=SpellE><i><span style='color:#7030A0'>Makefile</span></i></span>
+shouldn’t need to be changed.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>If more
+source files (*.cc files) need to be pulled in, list them inside the <span
+class=SpellE><i><span style='color:#7030A0'>Makefile.target</span></i></span><span
+style='color:#7030A0'> </span>file assigned to <i><span style='color:#7030A0'>ALL_SRCS</span></i><span
+style='color:#7030A0'> </span>variable, in a white-space separated list.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Edit the <i><span
+style='color:#7030A0'>ModuleName_test.cc</span></i><span style='color:#7030A0'>
+</span>source file to add testing details.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Do a make in
+the <i><span style='color:#7030A0'>tests/<span class=SpellE>ModuleName</span></span></i><span
+style='color:#7030A0'> </span>directory after adding testing details, if passes
+compiling, an executable will be produced here: <i><span style='color:#7030A0'>tests/<span
+class=SpellE>ModuleName</span>/bin/<span class=SpellE>ModuleName_test</span></span></i>.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Execute <i><span
+style='color:#7030A0'>tests/<span class=SpellE>ModuleName</span>/bin/<span
+class=SpellE>ModuleName_test</span></span></i>, if every checks pass, the test
+will pass silently.&nbsp; Otherwise, error will be reported.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>4.3 Example of setting
+up a test directory</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>An example
+has been setup in the <i><span style='color:#7030A0'>force-riscv/<span class=SpellE>unit_tests</span>/<span
+class=SpellE>InstructionStructure</span></span></i><span style='color:#7030A0'>
+</span>directory.&nbsp; Please exam the <i><span style='color:#7030A0'>InstructionStructure.cc</span></i><span
+style='color:#7030A0'> </span>and <span class=SpellE><i><span style='color:
+#7030A0'>Makefile.target</span></i></span><span style='color:#7030A0'> </span>files
+in that directory to inspect details of the changes made to the default
+template files.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In summary,
+the changes to <span class=SpellE><i><span style='color:#7030A0'>Makefile.target</span></i></span><span
+style='color:#7030A0'> </span>are the addition of <i><span style='color:#7030A0'>InstructionStructure.cc,
+Log.cc, UtilityFunctions.cc</span></i>, referencing the source code containing
+functionalities used in the <i><span style='color:#7030A0'>InstructionStructure_test.cc</span></i><span
+style='color:#7030A0'> </span>file.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In the <i><span
+style='color:#7030A0'>InstructionStructure_test.cc</span></i><span
+style='color:#7030A0'> </span>file, necessary header files are included,
+testing/checking are done on a few features of the <span class=SpellE><i><span
+style='color:#7030A0'>OperandStructure</span></i></span> class.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>4.4 Unit test command
+line options</span><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>All unit
+test executables has a set of command line options provided by the underlying
+LEST library.&nbsp; You can run any of the unit test executable with ‘-h’
+option to show all available command line options.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Notably ‘-p’
+option is used to print out test passing statements even when all tests pass.</span></p>
+
+<h2 style='margin-top:2.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.4in;margin-bottom:.0001pt;text-indent:-.4in;page-break-after:avoid'><span
+style='font-size:13.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>4.5 Test FAIL calls</span><span
+style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In the <i><span
+style='color:#7030A0'>FORCE-RISCV</span></i> project code, <i><span style='color:
+#7030A0'>FAIL</span></i> calls are used quite a lot to report fatal
+errors.&nbsp; In order to test this execution path in unit testing, we have
+enhanced LEST code and added an <i><span style='color:#7030A0'>EXPECT_FAIL</span></i><span
+style='color:#7030A0'> </span>macro.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>In a testing
+scenario, you can setup object <span class=SpellE><i><span style='color:#7030A0'>TestObjest</span></i></span>
+in a state when calling its method <span class=SpellE><i><span
+style='color:#7030A0'>TestMethod</span></i></span> will result in a <span
+class=GramE><i><span style='color:#7030A0'>FAIL(</span></i></span><i><span
+style='color:#7030A0'>“test-object-fail”)</span></i><span style='color:#7030A0'>
+</span>call, which in non-unit-testing environment will exit the program with
+error message containing “test-object-fail” emitted.&nbsp; In unit-testing
+environment, you can verify that the fail path will be taken by using <i><span
+style='color:#7030A0'>EXPECT_FAIL</span></i> macro in the following syntax
+format:</span></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>EXPECT_<span class=GramE>FAIL(</span><span class=SpellE>TestObject.TestMethod</span>(),
+“test-object-fail”);</span></i></p>
+
+<h1 style='margin-top:12.0pt;margin-right:0in;margin-bottom:0in;margin-left:
+.3in;margin-bottom:.0001pt;text-indent:-.3in;page-break-after:avoid'><span
+style='font-size:16.0pt;line-height:105%;font-family:"Calibri Light",sans-serif;
+mso-fareast-font-family:"Times New Roman";color:#2E74B5'>5<span class=GramE>&nbsp;
+Module</span> development requirements</span><span style='mso-fareast-font-family:
+"Times New Roman"'><o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The
+following are the general requirements of developing modules of the FORCE-RISCV
+project:</span></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in'><span style='font-size:
+12.0pt;line-height:105%;font-family:Symbol'>·</span><span style='font-size:
+7.0pt;line-height:105%;font-family:"Times New Roman",serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-size:12.0pt;line-height:105%'>Follow the coding
+standard as much as possible.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in'><span style='font-size:
+12.0pt;line-height:105%;font-family:Symbol'>·</span><span style='font-size:
+7.0pt;line-height:105%;font-family:"Times New Roman",serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-size:12.0pt;line-height:105%'>Comment the code being
+developed in <span class=SpellE>Doxygen</span> detectable format, while working
+on the code, not leaving the comments to be done at a later time.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in'><span style='font-size:
+12.0pt;line-height:105%;font-family:Symbol'>·</span><span style='font-size:
+7.0pt;line-height:105%;font-family:"Times New Roman",serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span class=GramE><span style='font-size:12.0pt;line-height:105%'>To</span></span><span
+style='font-size:12.0pt;line-height:105%'> check-in a developed module code,
+the code need to compile cleanly without warning; resulting executable should
+be able to execute the smoke test without any issue; and there should be
+written unit tests and they should pass.&nbsp; One can always check in the
+initial version with accompanying simple tests, and check in more changes
+accompanied by more unit testing/checking.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in'><span style='font-size:
+12.0pt;line-height:105%;font-family:Symbol'>·</span><span style='font-size:
+7.0pt;line-height:105%;font-family:"Times New Roman",serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-size:12.0pt;line-height:105%'>When found or thought of
+a potential issue, try to prove it with adding testing/checking in the
+associated unit-testing code, then fix the module code to pass unit-tests.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in'><span style='font-size:
+12.0pt;line-height:105%;font-family:Symbol'>·</span><span style='font-size:
+7.0pt;line-height:105%;font-family:"Times New Roman",serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span class=GramE><span style='font-size:12.0pt;line-height:105%'>A</span></span><span
+style='font-size:12.0pt;line-height:105%'> regression system will be developed
+over time so that new addition need to pass regression before
+checking-in.&nbsp; In phase one proving unit-testing is enough for checking-in
+until we amass a meaningful regression.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-.25in'><span style='font-size:
+12.0pt;line-height:105%;font-family:Symbol'>·</span><span style='font-size:
+7.0pt;line-height:105%;font-family:"Times New Roman",serif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span><span style='font-size:12.0pt;line-height:105%'>Try to promote code that
+you think could be shared/reused to the <span class=SpellE>UtilityFunctions</span>
+module, or we can consider adding modules for it if the code size is
+significant.</span></p>
+
+</div>
+
+</body>
+
+</html>

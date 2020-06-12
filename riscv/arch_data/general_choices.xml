@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<choices_file>
+  <choices name="Starting jump" type="General">
+    <choice description="Use Branch" name="Branch" value="0x0" weight="0"/>
+    <choice description="Use RET" name="RET" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Ending test" type="General">
+    <choice description="Use Tube" name="Tube" value="0x0" weight="0"/>
+    <choice description="Use BranchToSelf" name="BranchSelf" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Privilege Switch - Target Privilege" type="General">
+    <choice description="U" name="U" value="0x0" weight="10"/>
+    <choice description="S" name="S" value="0x1" weight="10"/>
+    <choice description="H" name="H" value="0x2" weight="0"/>
+    <choice description="M" name="M" value="0x3" weight="10"/>
+  </choices>
+  <choices name="Privilege level switch to lower or same level" type="General">
+    <choice description="Use ECALL" name="ECALL" value="0x1" weight="10"/>
+    <choice description="Use xRET" name="xRET" value="0x2" weight="10"/>
+  </choices>
+  <choices name="Privilege Switch - Default Target State" type="General">
+    <choice description="keep the same" name="Same" value="0x2" weight="10"/>
+    <choice description="random selection" name="Random" value="0x4" weight="10"/>
+  </choices>
+  <choices name="Privilege Switch - Interrupt Mask" type="General">
+    <choice description="new xIE is 0" name="0" value="0x0" weight="10"/>
+    <choice description="new xIE is 1" name="1" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Privilege Switch - SUM Bit" type="General">
+    <choice description="new SUM is 0" name="0" value="0x0" weight="10"/>
+    <choice description="new SUM is 1" name="1" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Privilege Switch - MXR Bit" type="General">
+    <choice description="new MXR is 0" name="0" value="0x0" weight="10"/>
+    <choice description="new MXR is 1" name="1" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Privilege Switch - MPRV Bit" type="General">
+    <choice description="new MPRV is 0" name="0" value="0x0" weight="10"/>
+    <choice description="new MPRV is 1" name="1" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Reloading register alignment" type="General">
+    <choice description="Quadrupleword alignment" name="Quadruple word" value="0x10" weight="70"/>
+    <choice description="Doubleword alignment" name="Double word" value="0x8" weight="10"/>
+    <choice description="Singleword alignment" name="Word" value="0x4" weight="10"/>
+    <choice description="Byte alignment" name="Byte" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Reloading register methods" type="General">
+    <choice description="Using move instruction" name="Move" value="0x0" weight="40"/>
+    <choice description="Using load instruction" name="Load" value="0x1" weight="60"/>
+  </choices>
+  <choices name="Resolving free page range methods" type="General">
+    <choice description="resolving free pages in low range" name="low range" value="0x0" weight="40"/>
+    <choice description="resolving free pages in high range" name="high range" value="0x1" weight="40"/>
+    <choice description="resolving free pages cross range from high to low" name="cross range" value="0x2" weight="20"/>
+  </choices>
+</choices_file>

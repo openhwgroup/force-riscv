@@ -1,0 +1,1631 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 15">
+<meta name=Originator content="Microsoft Word 15">
+<link rel=File-List href="Register_files/filelist.xml">
+<link rel=themeData href="Register_files/themedata.thmx">
+<link rel=colorSchemeMapping href="Register_files/colorschememapping.xml">
+<!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:View>Print</w:View>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:TrackMoves>false</w:TrackMoves>
+  <w:TrackFormatting/>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:DoNotPromoteQF/>
+  <w:LidThemeOther>EN-US</w:LidThemeOther>
+  <w:LidThemeAsian>X-NONE</w:LidThemeAsian>
+  <w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>
+  <w:Compatibility>
+   <w:BreakWrappedTables/>
+   <w:SplitPgBreakAndParaMark/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+  <m:mathPr>
+   <m:mathFont m:val="Cambria Math"/>
+   <m:brkBin m:val="before"/>
+   <m:brkBinSub m:val="&#45;-"/>
+   <m:smallFrac m:val="off"/>
+   <m:dispDef/>
+   <m:lMargin m:val="0"/>
+   <m:rMargin m:val="0"/>
+   <m:defJc m:val="centerGroup"/>
+   <m:wrapIndent m:val="1440"/>
+   <m:intLim m:val="subSup"/>
+   <m:naryLim m:val="undOvr"/>
+  </m:mathPr></w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" DefUnhideWhenUsed="false"
+  DefSemiHidden="false" DefQFormat="false" DefPriority="99"
+  LatentStyleCount="371">
+  <w:LsdException Locked="false" Priority="0" QFormat="true" Name="Normal"/>
+  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 1"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 2"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 3"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 4"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 5"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 6"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 7"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 8"/>
+  <w:LsdException Locked="false" Priority="9" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="heading 9"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 6"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 7"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 8"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index 9"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 1"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 2"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 3"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 4"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 5"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 6"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 7"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 8"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" Name="toc 9"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Normal Indent"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="footnote text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="annotation text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="header"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="footer"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="index heading"/>
+  <w:LsdException Locked="false" Priority="35" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="caption"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="table of figures"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="envelope address"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="envelope return"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="footnote reference"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="annotation reference"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="line number"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="page number"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="endnote reference"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="endnote text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="table of authorities"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="macro"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="toa heading"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Bullet 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Number 5"/>
+  <w:LsdException Locked="false" Priority="10" QFormat="true" Name="Title"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Closing"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Signature"/>
+  <w:LsdException Locked="false" Priority="1" SemiHidden="true"
+   UnhideWhenUsed="true" Name="Default Paragraph Font"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text Indent"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="List Continue 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Message Header"/>
+  <w:LsdException Locked="false" Priority="11" QFormat="true" Name="Subtitle"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Salutation"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Date"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text First Indent"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text First Indent 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Note Heading"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text Indent 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Body Text Indent 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Block Text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Hyperlink"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="FollowedHyperlink"/>
+  <w:LsdException Locked="false" Priority="22" QFormat="true" Name="Strong"/>
+  <w:LsdException Locked="false" Priority="20" QFormat="true" Name="Emphasis"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Document Map"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Plain Text"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="E-mail Signature"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Top of Form"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Bottom of Form"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Normal (Web)"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Acronym"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Address"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Cite"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Code"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Definition"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Keyboard"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Preformatted"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Sample"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Typewriter"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="HTML Variable"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Normal Table"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="annotation subject"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="No List"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Outline List 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Outline List 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Outline List 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Simple 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Simple 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Simple 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Classic 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Colorful 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Colorful 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Colorful 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Columns 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 6"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 7"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Grid 8"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 4"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 5"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 6"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 7"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table List 8"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table 3D effects 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table 3D effects 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table 3D effects 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Contemporary"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Elegant"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Professional"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Subtle 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Subtle 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Web 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Web 2"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Web 3"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Balloon Text"/>
+  <w:LsdException Locked="false" Priority="39" Name="Table Grid"/>
+  <w:LsdException Locked="false" SemiHidden="true" UnhideWhenUsed="true"
+   Name="Table Theme"/>
+  <w:LsdException Locked="false" SemiHidden="true" Name="Placeholder Text"/>
+  <w:LsdException Locked="false" Priority="1" QFormat="true" Name="No Spacing"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 1"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 1"/>
+  <w:LsdException Locked="false" SemiHidden="true" Name="Revision"/>
+  <w:LsdException Locked="false" Priority="34" QFormat="true"
+   Name="List Paragraph"/>
+  <w:LsdException Locked="false" Priority="29" QFormat="true" Name="Quote"/>
+  <w:LsdException Locked="false" Priority="30" QFormat="true"
+   Name="Intense Quote"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 1"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 1"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 1"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 1"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 1"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 2"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 2"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 2"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 2"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 2"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 2"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 3"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 3"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 3"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 3"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 3"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 3"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 4"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 4"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 4"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 4"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 4"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 4"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 5"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 5"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 5"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 5"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 5"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 5"/>
+  <w:LsdException Locked="false" Priority="60" Name="Light Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="61" Name="Light List Accent 6"/>
+  <w:LsdException Locked="false" Priority="62" Name="Light Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="63" Name="Medium Shading 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="64" Name="Medium Shading 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="65" Name="Medium List 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="66" Name="Medium List 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="67" Name="Medium Grid 1 Accent 6"/>
+  <w:LsdException Locked="false" Priority="68" Name="Medium Grid 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="69" Name="Medium Grid 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="70" Name="Dark List Accent 6"/>
+  <w:LsdException Locked="false" Priority="71" Name="Colorful Shading Accent 6"/>
+  <w:LsdException Locked="false" Priority="72" Name="Colorful List Accent 6"/>
+  <w:LsdException Locked="false" Priority="73" Name="Colorful Grid Accent 6"/>
+  <w:LsdException Locked="false" Priority="19" QFormat="true"
+   Name="Subtle Emphasis"/>
+  <w:LsdException Locked="false" Priority="21" QFormat="true"
+   Name="Intense Emphasis"/>
+  <w:LsdException Locked="false" Priority="31" QFormat="true"
+   Name="Subtle Reference"/>
+  <w:LsdException Locked="false" Priority="32" QFormat="true"
+   Name="Intense Reference"/>
+  <w:LsdException Locked="false" Priority="33" QFormat="true" Name="Book Title"/>
+  <w:LsdException Locked="false" Priority="37" SemiHidden="true"
+   UnhideWhenUsed="true" Name="Bibliography"/>
+  <w:LsdException Locked="false" Priority="39" SemiHidden="true"
+   UnhideWhenUsed="true" QFormat="true" Name="TOC Heading"/>
+  <w:LsdException Locked="false" Priority="41" Name="Plain Table 1"/>
+  <w:LsdException Locked="false" Priority="42" Name="Plain Table 2"/>
+  <w:LsdException Locked="false" Priority="43" Name="Plain Table 3"/>
+  <w:LsdException Locked="false" Priority="44" Name="Plain Table 4"/>
+  <w:LsdException Locked="false" Priority="45" Name="Plain Table 5"/>
+  <w:LsdException Locked="false" Priority="40" Name="Grid Table Light"/>
+  <w:LsdException Locked="false" Priority="46" Name="Grid Table 1 Light"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark"/>
+  <w:LsdException Locked="false" Priority="51" Name="Grid Table 6 Colorful"/>
+  <w:LsdException Locked="false" Priority="52" Name="Grid Table 7 Colorful"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 1"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 1"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 1"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 2"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 2"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 2"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 3"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 3"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 3"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 4"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 4"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 5"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 5"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 5"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="Grid Table 1 Light Accent 6"/>
+  <w:LsdException Locked="false" Priority="47" Name="Grid Table 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="48" Name="Grid Table 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="49" Name="Grid Table 4 Accent 6"/>
+  <w:LsdException Locked="false" Priority="50" Name="Grid Table 5 Dark Accent 6"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="Grid Table 6 Colorful Accent 6"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="Grid Table 7 Colorful Accent 6"/>
+  <w:LsdException Locked="false" Priority="46" Name="List Table 1 Light"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark"/>
+  <w:LsdException Locked="false" Priority="51" Name="List Table 6 Colorful"/>
+  <w:LsdException Locked="false" Priority="52" Name="List Table 7 Colorful"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 1"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 1"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 1"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 1"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 1"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 1"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 2"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 2"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 2"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 2"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 2"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 2"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 3"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 3"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 3"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 3"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 3"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 3"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 4"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 4"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 4"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 4"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 4"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 4"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 5"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 5"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 5"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 5"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 5"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 5"/>
+  <w:LsdException Locked="false" Priority="46"
+   Name="List Table 1 Light Accent 6"/>
+  <w:LsdException Locked="false" Priority="47" Name="List Table 2 Accent 6"/>
+  <w:LsdException Locked="false" Priority="48" Name="List Table 3 Accent 6"/>
+  <w:LsdException Locked="false" Priority="49" Name="List Table 4 Accent 6"/>
+  <w:LsdException Locked="false" Priority="50" Name="List Table 5 Dark Accent 6"/>
+  <w:LsdException Locked="false" Priority="51"
+   Name="List Table 6 Colorful Accent 6"/>
+  <w:LsdException Locked="false" Priority="52"
+   Name="List Table 7 Colorful Accent 6"/>
+ </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;
+	mso-font-charset:1;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:variable;
+	mso-font-signature:0 0 0 0 0 0;}
+@font-face
+	{font-family:"Calibri Light";
+	panose-1:2 15 3 2 2 2 4 3 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-1610611985 1073750139 0 0 415 0;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-536870145 1073786111 1 0 415 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+h1
+	{mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Heading 1 Char";
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	color:#2E74B5;
+	font-weight:normal;}
+p.MsoTitle, li.MsoTitle, div.MsoTitle
+	{mso-style-priority:10;
+	mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-link:"Title Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:28.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.5pt;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-priority:9;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Heading 1";
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	color:#2E74B5;}
+span.TitleChar
+	{mso-style-name:"Title Char";
+	mso-style-priority:10;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:Title;
+	font-family:"Calibri Light",sans-serif;
+	mso-ascii-font-family:"Calibri Light";
+	mso-hansi-font-family:"Calibri Light";
+	letter-spacing:-.5pt;}
+p.msotitlecxspfirst, li.msotitlecxspfirst, div.msotitlecxspfirst
+	{mso-style-name:msotitlecxspfirst;
+	mso-style-unhide:no;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:28.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.5pt;}
+p.msotitlecxspmiddle, li.msotitlecxspmiddle, div.msotitlecxspmiddle
+	{mso-style-name:msotitlecxspmiddle;
+	mso-style-unhide:no;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:28.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.5pt;}
+p.msotitlecxsplast, li.msotitlecxsplast, div.msotitlecxsplast
+	{mso-style-name:msotitlecxsplast;
+	mso-style-unhide:no;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:28.0pt;
+	font-family:"Calibri Light",sans-serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";
+	letter-spacing:-.5pt;}
+p.msochpdefault, li.msochpdefault, div.msochpdefault
+	{mso-style-name:msochpdefault;
+	mso-style-unhide:no;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;
+	mso-bidi-font-family:"Times New Roman";}
+p.msopapdefault, li.msopapdefault, div.msopapdefault
+	{mso-style-name:msopapdefault;
+	mso-style-unhide:no;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:105%;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-theme-font:minor-fareast;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	mso-default-props:yes;
+	font-size:10.0pt;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-ascii-font-family:Calibri;
+	mso-hansi-font-family:Calibri;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.WordSection1
+	{page:WordSection1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Calibri",sans-serif;}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="1026"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+<title></title></head>
+
+<body lang=EN-US style='tab-interval:.5in'>
+
+<div class=WordSection1>
+
+<p class=MsoTitle>Register module requirements</p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The Register
+module from top down is consisted of <span class=SpellE>RegisterFile</span>,
+Register, <span class=SpellE>RegisterField</span>, <span class=SpellE>BitField</span>,
+<span class=SpellE><span class=GramE>PhysicalRegister</span></span>.</span></p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'><span style='mso-fareast-font-family:
+"Times New Roman"'>1.</span><span style='font-size:7.0pt;line-height:105%;
+font-family:"Times New Roman",serif;mso-fareast-font-family:"Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span><span class=SpellE><span style='mso-fareast-font-family:"Times New Roman"'>PhysicalRegister</span></span><span
+style='mso-fareast-font-family:"Times New Roman"'> class<o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>This is
+conceptually what is really representing a register in the hardware.&nbsp; But
+due to that we use the logical view Register class a lot more extensively, we
+use a shorter name for that class, but name the hardware register <span
+class=SpellE>PhysicalRegister</span>.</span></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>class</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'> <span class=SpellE>PhysicalRegister</span>
+: public Object {</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>public</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>:</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> Object * Clone() <span
+class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> <span class=SpellE>const</span>
+<span class=SpellE>std</span>::string <span class=SpellE>ToString</span>() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>virtual</span>
+<span class=SpellE>const</span> char* Type() <span class=SpellE>const</span> {
+return “<span class=SpellE>PhysicalRegister</span>”; }</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>void</span> Initialize(uint64 value,
+uint64 mask);</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=SpellE><span class=GramE>bool</span></span> <span
+class=SpellE>IsInitialized</span>(uint64 mask, <span class=SpellE>bool</span>*
+partial=NULL) <span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>uint64</span> Value(uint64 mask) <span
+class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>void</span> <span class=SpellE>SetValue</span>(uint64
+value, uint64 mask);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>InitialValue</span>(uint64 mask) <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>bool</span></span> <span class=SpellE>HasAttribute</span>(<span
+class=SpellE>ERegisterAttribute</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>SetAttribute</span>(<span class=SpellE>ERegisterAttribute</span>):<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>ClearAttribute</span>(<span class=SpellE>ERegisterAttribute</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>const</span></span> <span class=SpellE>std</span>::string&amp;
+Name() <span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>protected</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>:</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'> </span><span
+style='mso-spacerun:yes'> </span><span class=SpellE><span class=GramE>std</span></span><span
+class=GramE>::string</span> <span class=SpellE>mName</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>mInitialValue</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>mValue</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>mMask</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint32</span>
+<span class=SpellE>mSize</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint32</span>
+<span class=SpellE>mAttributes</span>; //!&lt; Bit map of register attributes </span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>};</span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:black'>The
+basic structure is as above, add more member variables or methods as necessary.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:black'>Clone
+method will return a copy constructed object of <span class=SpellE>PhysicalRegister</span>
+or its sub-type.</span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>ToString</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> method will return a string representation of
+the object.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:black'>Initialize
+will initial the whole or part of the <span class=SpellE>PhysicalRegister</span>,
+depending on the mask passed in.&nbsp; This method need to check if we are
+initial the whole or part of the <span class=SpellE>PhysicalRegister</span>
+more than once, report an error if that’s the case.</span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>IsInitialized</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> check if the whole <span class=SpellE>PhysicalRegister</span>
+or part of it (depending on the mask) is initialized, the partial parameter, if
+the pointer is provided, will be set to true if the register content was
+partially initialized.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:black'>Value
+method returns the current value of the whole <span class=SpellE>PhysicalRegister</span>
+or part of it (depending on the mask).&nbsp; Check should be done that the <span
+class=SpellE>PhysicalRegister</span> is initialized using the given mask,
+otherwise it should report an error.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>InitialValue</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> method returns the initial value of the whole <span
+class=SpellE>PhysicalRegister</span> or part of it (depending on the
+mask).<span style='mso-spacerun:yes'>  </span>Check should be done that the <span
+class=SpellE>PhysicalRegister</span> is initialized using the given mask,
+otherwise it should report an error.</span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>SetValue</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> method set a value to the whole <span
+class=SpellE>PhysicalRegister</span> or part of it (depending on the
+mask).&nbsp; Check should be done that the <span class=SpellE>PhysicalRegister</span>
+is initialized using the given mask, otherwise it should report an error.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span class=GramE><span style='font-size:
+12.0pt;line-height:105%;color:black'>mAttribute</span></span></span><span
+style='font-size:12.0pt;line-height:105%;color:black'> member variable contains
+a bit map of the multiple attributes, such as <span class=SpellE>HasValue</span>,
+Read, Write, etc.&nbsp; These attributes can be defined as bit-map type <span
+class=SpellE>enums</span>.&nbsp; Necessary <span class=SpellE>accessor</span>
+methods should be added to update the attributes.&nbsp; By default, Read=1,
+Write=1 meaning allow both read and write access, <span class=SpellE>HasValue</span>=0.&nbsp;
+After initialization or write then <span class=SpellE>HasValue</span>=1.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>HasAttribute</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> method return whether the register has a certain
+attribute or attributes set, it could be <span class=SpellE>HasValue</span>,
+Read, Write, or <span class=SpellE>ReadWrite</span>, etc.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>SetAttribute</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> and <span class=SpellE>ClearAttribute</span> set
+or clear one or more attributes.</span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;color:black'>The
+error report part use FAIL macro, it can be caught using EXPECT_FAIL macro in
+unit testing framework.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>Enums</span></span><span style='font-size:12.0pt;line-height:
+105%;color:black'> can be added through the utilities/enum_classes/base_enum_classes.py
+utility, detailed information will be added to project guide.</span></p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'><span style='mso-fareast-font-family:
+"Times New Roman"'>2.</span><span style='font-size:7.0pt;line-height:105%;
+font-family:"Times New Roman",serif;mso-fareast-font-family:"Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span><span class=SpellE><span style='mso-fareast-font-family:"Times New Roman"'>BitField</span></span><span
+style='mso-fareast-font-family:"Times New Roman"'> class<o:p></o:p></span></h1>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>BitField</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> class represent contiguous bits in a <span
+class=SpellE>RegisterField</span> that come from the same <span class=SpellE>PhysicalRegister</span>.<span
+style='mso-spacerun:yes'>  </span>A <span class=SpellE>RegisterField</span>
+could points to multiple <span class=SpellE>PhysicalRegisters</span>, this
+structure is supported with multiple <span class=SpellE>BitFields</span> in the
+<span class=SpellE>RegisterField</span> object that each points to different <span
+class=SpellE>PhysicalRegisters</span>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=GramE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>class</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> <span class=SpellE>BitField</span> : public Object {<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> Object * Clone() <span
+class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> <span class=SpellE>const</span>
+<span class=SpellE>std</span>::string <span class=SpellE>ToString</span>() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>virtual</span>
+<span class=SpellE>const</span> char* Type() <span class=SpellE>const</span> {
+return “<span class=SpellE>BitField</span>”; }</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>void</span> <span class=SpellE>InitializeField</span>(uint64
+value);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+Initialize(uint64 value);</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=SpellE><span class=GramE>bool</span></span> <span
+class=SpellE>IsInitialized</span>(<span class=SpellE>bool</span> *partial=NULL)
+<span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>uint64</span> Value() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>InitialValue</span>() <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>FieldValue</span>() <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>InitialFieldValue</span>() <span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>void</span> <span class=SpellE>SetFieldValue</span>(uint64
+value);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>SetValue</span>(uint64 value);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>bool</span></span> <span class=SpellE>HasAttribute</span>(<span
+class=SpellE>ERegisterAttribute</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>SetAttribute</span>(<span class=SpellE>ERegisterAttribute</span>):<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>ClearAttribute</span>(<span class=SpellE>ERegisterAttribute</span>);</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>protected</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>:</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>PhysicalRegister</span>*
+<span class=SpellE>mRegister</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>mMask</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint32</span>
+<span class=SpellE>mSize</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint32</span>
+<span class=SpellE>mShift</span>; </span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'><span
+style='mso-spacerun:yes'>  </span><span class=GramE>uint32</span> <span
+class=SpellE>mLsb</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>};<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%'>BitField</span></span><span style='font-size:12.0pt;line-height:105%'>
+served as a translation from logical Register view to the bits locations in the
+actual <span class=SpellE>PhysicalRegister</span>.<span
+style='mso-spacerun:yes'>  </span>Therefore a <span class=SpellE>BitField</span>
+object does not hold register value, it has a pointer to its associated <span
+class=SpellE>PhysicalRegister</span> object which hold the field value.<span
+style='mso-spacerun:yes'>  </span>The pointer should be setup after the
+register files are already loaded.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The <span
+class=SpellE>mMask</span> member variable is used to pass on the initialization
+to the <span class=SpellE>PhysicalRegister</span>.<span
+style='mso-spacerun:yes'>  </span>The bit-field value need to be shift left <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The <span
+class=SpellE>mShift</span> member variable indicates the LSB of the field in
+the associated <span class=SpellE>PhysicalRegister</span>.<span
+style='mso-spacerun:yes'>  </span>The <span class=SpellE>mLsb</span> member
+variable indicates the LSB of the field in the logical Register.<span
+style='mso-spacerun:yes'>  </span>Normally <span class=SpellE>mShift</span> and
+<span class=SpellE>mLsb</span> is the same.<span style='mso-spacerun:yes'> 
+</span>If in the register XML file the <span class=SpellE>lsb</span> attribute
+is omitted, which is the most cases, then <span class=SpellE>mLsb</span> will
+be set to the same as <span class=SpellE>mShift</span>.<span
+style='mso-spacerun:yes'>  </span>If the <span class=SpellE>lsb</span>
+attribute is provided for the <span class=SpellE>BitField</span> in the
+register XML file, then the <span class=SpellE>mLsb</span> variable should be
+set to that specified value.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%'>InitializeField</span></span><span style='font-size:12.0pt;line-height:
+105%'> method, the passed in value has been shifted to LSB=0, don’t need to
+apply <span class=SpellE>mLsb</span> shift.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Initialize
+method, the passed in value with LSB=<span class=SpellE>mLsb</span>, need to
+apply <span class=SpellE>mLsb</span> shift.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Similarly <span
+class=SpellE>FieldValue</span> method return a not yet shifted value with
+LSB=0, Value method return a shifted value with LSB=<span class=SpellE>mLsb</span>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Similarly <span
+class=SpellE>SetFieldValue</span> takes a field value that has been shifted to
+LSB=0.<span style='mso-spacerun:yes'>  </span><span class=SpellE>SetValue</span>
+takes a value with LSB=<span class=SpellE>mLsb</span>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Similarly <span
+class=SpellE>InitialFieldValue</span> method return a not yet shifted initial
+value with LSB=0, <span class=SpellE>InitialValue</span> method return a
+shifted value with LSB=<span class=SpellE>mLsb</span>.<o:p></o:p></span></p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'><span style='mso-fareast-font-family:
+"Times New Roman"'>3.</span><span style='font-size:7.0pt;line-height:105%;
+font-family:"Times New Roman",serif;mso-fareast-font-family:"Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span><span class=SpellE><span style='mso-fareast-font-family:"Times New Roman"'>RegisterField</span></span><span
+style='mso-fareast-font-family:"Times New Roman"'> class<o:p></o:p></span></h1>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;color:black'>RegisterField</span></span><span style='font-size:12.0pt;
+line-height:105%;color:black'> class represent bits in a logical Register that
+has a common name that come from the same <span class=SpellE>PhysicalRegister</span>.<span
+style='mso-spacerun:yes'>  </span>A <span class=SpellE>RegisterField</span>
+could points to multiple <span class=SpellE>PhysicalRegisters</span>, this
+structure is supported with multiple <span class=SpellE>BitFields</span> in the
+<span class=SpellE>RegisterField</span> object that each points to different <span
+class=SpellE>PhysicalRegisters</span>, supporting class of that kind of <span
+class=SpellE>RegisterField</span> can be added when needed.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=GramE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>class</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> <span class=SpellE>RegisterField</span> : public Object {<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> Object * Clone() <span
+class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> <span class=SpellE>const</span>
+<span class=SpellE>std</span>::string <span class=SpellE>ToString</span>() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>virtual</span>
+<span class=SpellE>const</span> char* Type() <span class=SpellE>const</span> {
+return “<span class=SpellE>RegisterField</span>”; }</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>void</span> <span class=SpellE>InitializeField</span>(uint64
+value);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+Initialize(uint64 value);</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=SpellE><span class=GramE>bool</span></span> <span
+class=SpellE>IsInitialized</span>(<span class=SpellE>bool</span> *partial=NULL)
+<span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>uint64</span> Value() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>InitialValue</span>() <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>FieldValue</span>() <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>InitialFieldValue</span>() <span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>void</span> <span class=SpellE>SetFieldValue</span>(uint64
+value);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>SetValue</span>(uint64 value);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>bool</span></span> <span class=SpellE>HasAttribute</span>(<span
+class=SpellE>ERegisterAttribute</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>SetAttribute</span>(<span class=SpellE>ERegisterAttribute</span>):<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>ClearAttribute</span>(<span class=SpellE>ERegisterAttribute</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>virtual</span>
+void Setup(<span class=SpellE>RegisterFile</span> * <span class=SpellE>registerFile</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>const</span></span> <span class=SpellE>std</span>::string&amp;
+Name() <span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>protected</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>:</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>std</span></span><span class=GramE>::string</span> <span
+class=SpellE>mPhysicalRegisterName</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>std</span></span><span class=GramE>::string</span> <span
+class=SpellE>mName</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint32</span>
+<span class=SpellE>mSize</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>std</span>::vector&lt;<span
+class=SpellE>BitField</span> *&gt; <span class=SpellE>mBitFields</span>;</span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>};<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span class=SpellE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>RegisterField</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> </span></i><span style='font-size:12.0pt;line-height:105%'>class
+is very similar to <span class=SpellE>BitField</span> class, only that <span
+class=SpellE>BitField</span> class is continuous bits, and <span class=SpellE>RegisterField</span>
+can contain one or multiple <span class=SpellE>BitField</span> objects.<span
+style='mso-spacerun:yes'>  </span>The Initialize method is useful when we
+initialize the top level logical Register with a full value, it can be passed
+down to all <span class=SpellE>BitFields</span> and each <span class=SpellE>BitField</span>
+take what they need by using their own masks.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%'>RegisterField</span></span><span style='font-size:12.0pt;line-height:
+105%'> has <span class=GramE>an</span> special Setup method, currently the main
+purpose is to obtain the <span class=SpellE>PhysicalRegister</span> pointer
+from <span class=SpellE>RegisterFile</span> by name lookup and pass down to all
+<span class=SpellE>BitFields</span>.<span style='mso-spacerun:yes'> 
+</span>This is necessary since we will be cloning the whole <span class=SpellE>RegisterField</span>
+from an initial PE/Thread to all other subsequent threads, and <span
+class=SpellE>BitFields</span> in different PE/Threads obviously cannot point to
+the same <span class=SpellE>PhysicalRegister</span> in most of the cases,
+therefore some special setup is needed.<i style='mso-bidi-font-style:normal'><span
+style='color:#7030A0'><o:p></o:p></span></i></span></p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'><span style='mso-fareast-font-family:
+"Times New Roman"'>4.</span><span style='font-size:7.0pt;line-height:105%;
+font-family:"Times New Roman",serif;mso-fareast-font-family:"Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span><span style='mso-fareast-font-family:"Times New Roman"'>Register class<o:p></o:p></span></h1>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>Register</span></i><span
+style='mso-fareast-font-family:"Times New Roman"'> </span><span
+style='font-size:12.0pt;line-height:105%;mso-fareast-font-family:"Times New Roman"'>class
+represent the logical view</span><span style='mso-fareast-font-family:"Times New Roman"'>
+of a register to the ISG.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=GramE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>class</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> Register : public Object {<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> Object * Clone() <span
+class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> <span class=SpellE>const</span>
+<span class=SpellE>std</span>::string <span class=SpellE>ToString</span>() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span>virtual <span
+class=SpellE>const</span> char* Type() <span class=SpellE>const</span> { return
+“Register”; }</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+Initialize(uint64 value);</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=SpellE><span class=GramE>bool</span></span> <span
+class=SpellE>IsInitialized</span>(<span class=SpellE>bool</span> *partial=NULL)
+<span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>uint64</span> Value() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint64</span>
+<span class=SpellE>InitialValue</span>() <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>SetValue</span>(uint64 value);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>bool</span></span> <span class=SpellE>HasAttribute</span>(<span
+class=SpellE>ERegisterAttribute</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>SetAttribute</span>(<span class=SpellE>ERegisterAttribute</span>):<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>ClearAttribute</span>(<span class=SpellE>ERegisterAttribute</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>virtual</span>
+void Setup(<span class=SpellE>RegisterFile</span> * <span class=SpellE>registerFile</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>const</span></span> <span class=SpellE>RegisterField</span>* <span
+class=SpellE>RegisterField</span>(<span class=SpellE>const</span> <span
+class=SpellE>std</span>::string&amp; name) <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>RegisterField</span>*
+<span class=SpellE><span class=GramE>RegisterField</span></span><span
+class=GramE>(</span><span class=SpellE>const</span> <span class=SpellE>std</span>::string&amp;
+name);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>bool</span></span> Boot() <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>void</span>
+<span class=SpellE>InitializeRandomly</span>();<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>const</span></span> <span class=SpellE>std</span>::string&amp;
+Name() <span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>protected</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>:</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>std</span></span><span class=GramE>::string</span> <span
+class=SpellE>mName</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>uint32</span>
+<span class=SpellE>mSize</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>bool</span></span> <span class=SpellE>mBoot</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>std</span>::vector&lt;<span
+class=SpellE>RegisterField</span> *&gt; <span class=SpellE>mRegisterFields</span>;</span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>};<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;mso-fareast-font-family:
+"Times New Roman"'>A <span style='color:#7030A0'>Register</span> instance might
+contain one or more <span class=SpellE><span style='color:#7030A0'>RegisterField</span></span>
+objects.<span style='mso-spacerun:yes'>  </span>Most of the methods are simply
+distributing down to <span class=SpellE><span style='color:#7030A0'>RegisterField</span>s</span>
+or gather up from <span class=SpellE><span style='color:#7030A0'>RegisterField</span>s</span>.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;mso-fareast-font-family:
+"Times New Roman"'>The <span class=SpellE><span style='color:#7030A0'>RegisterField</span></span>
+methods provide easy ways to get a <span class=SpellE><span style='color:#7030A0'>RegisterField</span></span>
+of a <span style='color:#7030A0'>Register</span> to operate on, if the <span
+class=SpellE><span style='color:#7030A0'>RegisterField</span></span> object
+cannot be found, an error should be reported.<span style='mso-spacerun:yes'> 
+</span>For example:<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;mso-fareast-font-family:"Times New Roman";color:#7030A0'>sctlr_reg</span></span><span
+style='font-size:12.0pt;line-height:105%;mso-fareast-font-family:"Times New Roman";
+color:#7030A0'>-&gt;<span class=SpellE><span class=GramE>RegisterField</span></span><span
+class=GramE>(</span>“M”)-&gt;Initialize(1); // okay<o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=SpellE><span style='font-size:12.0pt;line-height:
+105%;mso-fareast-font-family:"Times New Roman";color:#7030A0'>sctlr_reg</span></span><span
+style='font-size:12.0pt;line-height:105%;mso-fareast-font-family:"Times New Roman";
+color:#7030A0'>-&gt;<span class=SpellE><span class=GramE>RegisterField</span></span><span
+class=GramE>(</span>“XYZ”)-&gt;Value(); // fail<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;mso-fareast-font-family:
+"Times New Roman"'>The <span class=SpellE><span style='color:#7030A0'>mBoot</span></span>
+attribute indicates whether we should generate boot code sequence to initialize
+this register.<span style='mso-spacerun:yes'>  </span>This should be at logical
+<span style='color:#7030A0'>Register</span> level.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%;mso-fareast-font-family:
+"Times New Roman"'>The <span class=SpellE>InitializeRandomly</span> is the
+basic form of initialization, just randomizing the whole register
+randomly.<span style='mso-spacerun:yes'>  </span>More randomization methods will
+be added when related infrastructures are implemented.<o:p></o:p></span></p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'><span style='mso-fareast-font-family:
+"Times New Roman"'>5.</span><span style='font-size:7.0pt;line-height:105%;
+font-family:"Times New Roman",serif;mso-fareast-font-family:"Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span><span class=SpellE><span style='mso-fareast-font-family:"Times New Roman"'>RegisterFile</span></span><span
+style='mso-fareast-font-family:"Times New Roman"'> class<o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>All the
+registers in one PE is contained in a <span class=SpellE><span
+style='color:#7030A0'>RegisterFile</span></span> class.</span></p>
+
+<p class=MsoNormal><span class=GramE><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>class</span></i></span><i
+style='mso-bidi-font-style:normal'><span style='font-size:12.0pt;line-height:
+105%;color:#7030A0'> <span class=SpellE>RegisterFile</span> : public Object {<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> Object * Clone() <span
+class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'>&nbsp; <span class=GramE>virtual</span> <span class=SpellE>const</span>
+<span class=SpellE>std</span>::string <span class=SpellE>ToString</span>() <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>virtual</span>
+<span class=SpellE>const</span> <span class=SpellE>std</span>::string&amp;
+Type() <span class=SpellE>const</span> { return “<span class=SpellE>RegisterFile</span>”;
+}</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=GramE>virtual</span>
+void Setup(<span class=SpellE>RegisterFile</span> * <span class=SpellE>registerFile</span>);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>const</span></span> Register* Register(<span class=SpellE>const</span>
+<span class=SpellE>std</span>::string&amp; name) <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>RegisterField</span>*
+<span class=GramE>Register(</span><span class=SpellE>const</span> <span
+class=SpellE>std</span>::string&amp; name);<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>const</span></span> <span class=SpellE>PhysicalRegister</span>* <span
+class=SpellE>PhysicalRegister</span>(<span class=SpellE>std</span>::string&amp;
+name) <span class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>PhysicalRegister</span>*
+<span class=SpellE><span class=GramE>PhysicalRegister</span></span><span
+class=GramE>(</span><span class=SpellE>std</span>::string&amp; name) <span
+class=SpellE>const</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>const</span></span> <span class=SpellE>std</span>::string&amp;
+Name() <span class=SpellE>const</span>;</span></i></p>
+
+<p class=MsoNormal><span class=GramE><i><span style='font-size:12.0pt;
+line-height:105%;color:#7030A0'>protected</span></i></span><i><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>:</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE><span
+class=GramE>std</span></span><span class=GramE>::string</span> <span
+class=SpellE>mName</span>;</span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>std</span>::map&lt;<span
+class=SpellE>std</span>::string, Register*&gt; <span class=SpellE>mRegisters</span>;<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><i><span style='font-size:12.0pt;line-height:105%;
+color:#7030A0'><span style='mso-spacerun:yes'>  </span><span class=SpellE>std</span>::map&lt;<span
+class=SpellE>std</span>::string, <span class=SpellE>PhysicalRegister</span>*&gt;
+<span class=SpellE>mPhysicalRegisters</span>;</span></i></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:12.0pt;line-height:105%;color:#7030A0'>};<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The <span
+class=SpellE><span style='color:#7030A0'>RegisterFile</span></span> class
+mainly served as a container of all the <span style='color:#7030A0'>Register</span>
+and <span class=SpellE><span style='color:#7030A0'>PhysicalRegister</span></span>
+objects in the PE/Thread, lookup a <span style='color:#7030A0'>Register</span>
+or <span class=SpellE><span style='color:#7030A0'>PhysicalRegister</span></span>
+is the most active use case of this class.<span style='mso-spacerun:yes'> 
+</span>If a <span style='color:#7030A0'>Register</span> or <span class=SpellE><span
+style='color:#7030A0'>PhysicalRegister</span></span> with the given name cannot
+be found, an error should be reported.<o:p></o:p></span></p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'><span style='mso-fareast-font-family:
+"Times New Roman"'>6. Register file parsing.<o:p></o:p></span></h1>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>Register
+files will be generated with register-builder scripts.<span style='mso-spacerun:yes'>  </span>The
+parsing of register files can follow the way we parse instruction files.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>XML syntax
+can be added to Force/<span class=SpellE>config</span>/<span class=SpellE>force.config</span>
+file.<span style='mso-spacerun:yes'>  </span>Notice there might be multiple
+register files.<span style='mso-spacerun:yes'>  </span>For default classes, we
+can add XML syntax like the following:<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'><span
+style='mso-spacerun:yes'>  </span><span style='color:#7030A0'>&lt;<span
+class=SpellE>default_class</span> category=”Object” type=”<span class=SpellE>bit_field</span>”
+class=”<span class=SpellE>BitField</span>”/&gt;<o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>We will soon
+add an <span class=SpellE><span style='color:#7030A0'>ObjectRegistry</span></span><span
+style='color:#7030A0'> </span>so that various object can be cloned from
+registered objects, the object template can be found using the class names.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The register
+files can be loaded into <span class=SpellE><span style='color:#7030A0'>Config</span></span>
+class.<span style='mso-spacerun:yes'>  </span>In ways similar to the handling
+of instruction files in Config.cc.<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:12.0pt;line-height:105%'>The XML
+parser can be implemented similar to <span class=SpellE>InstructionParser</span>
+in InstructionSet.cc.<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>

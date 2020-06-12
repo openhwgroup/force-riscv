@@ -1,0 +1,272 @@
+<html>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 15 (filtered)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:"Calibri Light";
+	panose-1:2 15 3 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:0in;
+	line-height:106%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+h1
+	{mso-style-link:"Heading 1 Char";
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:0in;
+	margin-bottom:.0001pt;
+	line-height:106%;
+	page-break-after:avoid;
+	font-size:16.0pt;
+	font-family:"Calibri Light",sans-serif;
+	color:#2E74B5;
+	font-weight:normal;}
+a:link, span.MsoHyperlink
+	{color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#954F72;
+	text-decoration:underline;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:106%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	line-height:106%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:0in;
+	margin-left:.5in;
+	margin-bottom:.0001pt;
+	line-height:106%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+	{margin-top:0in;
+	margin-right:0in;
+	margin-bottom:8.0pt;
+	margin-left:.5in;
+	line-height:106%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-link:"Heading 1";
+	font-family:"Calibri Light",sans-serif;
+	color:#2E74B5;}
+.MsoChpDefault
+	{font-size:10.0pt;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link="#0563C1" vlink="#954F72">
+
+<div class=WordSection1>
+
+<p class=MsoNormal><span style='font-size:36.0pt;line-height:106%'>ELF
+input/output module requirements</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>An Elf I/O
+module needs to be provided to allow a test memory image to be written to or
+from disk, in ELF format. </span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The basic
+inputs to this module are a memory object (<i>Memory</i> class instance) and a
+path to an ELF file to be written to, or read from. </span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The
+requirements for the ELF writer are detailed herein. The general requirements
+for the ELF reader is that ELF files produced by this module should be able to
+be read back in, for test purposes.</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>Memory
+values written to the ELF file should be only for memory that has a specified
+initial value. Only the initial value for a memory item (and not the current
+value) should be written to the ELF file.</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The ELF file
+written is to contain binary, non-relocatable data.</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The ELF file
+will consist of one or more ELF <i>segments</i>.* Each ELF segment will contain
+N ELF <i>sections</i>, each one to contain a sequential block of memory. The
+address for each ELF section will be the starting address of the sequential
+block. The starting address (virtual and physical) of the segment will then be
+the address of the first section. </span></p>
+
+<p class=MsoNormal style='margin-left:.5in'><span style='font-size:12.0pt;
+line-height:106%'>*Note: starting out generated tests should easily be
+contained in a single segment. At some point the size of the tests (# of
+sections) may exceed the capacity of a single segment and therefore may require
+multiple segments.</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>Since all
+data stored in the <i>Memory</i> object is big endian, there is no requirement
+for separate instruction and data ELF sections in the test.</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The
+implementation for this module should attempt to take advantage of the existing
+open-source C++ ELFIO software API (</span><a
+href="http://elfio.sourceforge.net"><span style='font-size:14.0pt;line-height:
+106%'>http://elfio.sourceforge.net</span></a><span style='font-size:14.0pt;
+line-height:106%'>). </span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The starting
+address for the test should be recorded in the ELF file header. The ELF file
+class should be ELF64. The ELF machine type is specified in ArchInfo. The data should be
+marked as in big-endian format.</span></p>
+
+<p class=MsoListParagraph>&nbsp;</p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span>ElfIO class</h1>
+
+<p class=MsoListParagraphCxSpFirst style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>The ElfIO
+class provides the ISG a way to write out or read a test (memory) image to/from
+disk, in ELF format.</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>class ElfIO
+{</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>public: </span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>void
+WriteTestImage(Memory *memory, std::string elfFilePath);</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>vod
+ReadTestImage(Memory *memory,std::string elfFilePath);</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>&nbsp;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>private:</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>Memory
+*mMemory;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>Std::string
+mPath;</span></p>
+
+<p class=MsoListParagraphCxSpMiddle style='margin-left:.75in'><span
+style='font-size:14.0pt;line-height:106%;font-family:"Courier New"'>};</span></p>
+
+<p class=MsoListParagraphCxSpLast style='margin-left:.75in'>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The <b>WriteTestImage
+</b>method will create an in-memory ELF image from the input Memory class
+instance, then write out the ELF image to the specified file. </span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The inputs
+to this method are the handle of a Memory object, and an ELF filepath.</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The <b>ReadTestImage</b>
+method will populate a Memory class object, from the contents of an ELF file.
+The inputs to this method are a Memory object, and an ELF filepath. We assume
+that the input ELF file, was created using the <i>WriteTestImage</i> method in
+this class. </span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>Note: The <i>Memory</i>
+class interface should be enhanced with one or more iterators to allow the
+ELFIO methods to in turn iterate over the <i>Memory </i>class elements in order
+without directly accessing the (currently private) <i>Memory::mMap</i>
+container.</span></p>
+
+<h1 style='margin-left:.5in;text-indent:-.25in'>2.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;
+</span>Library code location</h1>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>After
+updating to the TOS code, within your Force code base, the header files for the
+ELFIO library can be found at:</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>Force/3rd_party/inc/elfio</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>The
+documentation PDF file for ELFIO library is checked in at:</span></p>
+
+<p class=MsoNormal><span style='font-size:14.0pt;line-height:106%'>Force/3rd_party/doc/elfio.pdf</span></p>
+
+</div>
+
+</body>
+
+</html>

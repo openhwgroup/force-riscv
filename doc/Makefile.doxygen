@@ -1,0 +1,50 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#*************************************************************************************************
+# To use:
+#
+#     cd ~Force                          -- or whereever you have Force srcs checked out to
+#     make -f doc/Makefile.doxygen       -- run doxygen on Force srcs
+#*************************************************************************************************
+
+DOXYGEN = /usr/bin/doxygen
+
+DOXYGEN_CONFIG = ./doc/force.doxygen
+
+all: dox_cpp dox_python dox_regression
+	@echo Done. Index for Force/cpp codebase: ./doc/doxygen/cpp/html/index.html
+	@echo Done. Index for Force/python codebase: ./doc/doxygen/py/html/index.html
+	@echo index for Force/python regression codebase: ./doc/doxygen/regress/html/index.html
+
+# generate documentation for Force/C++ code base...
+
+dox_cpp:
+	mkdir -p ./doc/doxygen/cpp
+	export DOX_OUT=./doc/doxygen/cpp;export DOX_SRCS='./riscv/inc ./riscv/src ./base/inc ./base/src';${DOXYGEN} ${DOXYGEN_CONFIG}
+
+# generate documentation for Force/python code base...
+
+dox_python:
+	mkdir -p ./doc/doxygen/py
+	export DOX_OUT=./doc/doxygen/py;export DOX_SRCS='./py/riscv ./py/riscv/exception_handlers ./py/base';${DOXYGEN} ${DOXYGEN_CONFIG}
+
+# generate documentation for Force/utils/regression code base...
+
+dox_regression:
+	mkdir -p ./doc/doxygen/regress
+	export DOX_OUT=./doc/doxygen/regress;export DOX_SRCS='./utils/regression ./utils/shared';${DOXYGEN} ${DOXYGEN_CONFIG}
+
+

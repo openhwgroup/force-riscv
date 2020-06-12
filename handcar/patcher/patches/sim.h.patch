@@ -1,0 +1,228 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+6,8c6,7
+< #include "debug_module.h"
+< #include "devices.h"
+< #include "log_file.h"
+---
+> #include "Force_Memory.h"
+> #include "Force_Enums.h"
+9a9
+> #include "devices.h"
+11,13d10
+< 
+< #include <fesvr/htif.h>
+< #include <fesvr/context.h>
+23c20
+< class sim_t : public htif_t, public simif_t
+---
+> class simlib_t : /*public htif_t,*/ public simif_t
+26,33c23,37
+<   sim_t(const char* isa, const char* priv, const char* varch, size_t _nprocs,
+<         bool halted, bool real_time_clint,
+<         reg_t initrd_start, reg_t initrd_end,
+<         reg_t start_pc, std::vector<std::pair<reg_t, mem_t*>> mems,
+<         std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices,
+<         const std::vector<std::string>& args, const std::vector<int> hartids,
+<         const debug_module_config_t &dm_config, const char *log_path);
+<   ~sim_t();
+---
+>   simlib_t(const char* isa, const char* priv, const char* varch, size_t _nprocs, bool halted,
+>         reg_t start_pc, /*std::vector<std::pair<reg_t, mem_t*>> mems, 
+>         std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices,*/
+>         const std::vector<int> hartids);/*,
+>         const debug_module_config_t &dm_config);*/
+>   ~simlib_t();
+> 
+>   // load the elf file and reset
+>   int load_program_now(const char* elfPath);
+> 
+>   // run the simulation incrementally
+>   int step_simulator(int target_id, int num_steps, int stx_failed);
+> 
+>   // fetch the instruction at the given pc using the debug_mmu and return the opcode and disassembly
+>   int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly);
+37a42
+>   void set_log(bool value);
+54a60
+> 
+56c62,73
+<   processor_t* get_core(size_t i) { return procs.at(i); }
+---
+> 
+>   processor_t* get_core(size_t i) 
+>   { 
+>     for(processor_t* proc_ptr : procs)
+>     {
+>       if(proc_ptr != nullptr && proc_ptr->get_state() != nullptr && proc_ptr->get_state()->pid == i)
+>         return proc_ptr; 
+>     }
+> 
+>     return nullptr;
+>   }
+> 
+58a76,80
+>   bool doesCoreWithIdExist(size_t i);
+> 
+>   // for debugging the sparse memory model
+>   void dump_sparse_memory(std::ostream & out);
+> 
+61a84,155
+>   //
+>   reg_t get_entry_point(){ return entry; };
+> 
+>   uint64_t get_csr_number(const std::string& input_name);
+>   uint64_t get_xpr_number(const std::string& input_name);
+>   uint64_t get_fpr_number(const std::string& input_name); 
+>   uint64_t get_vecr_number(const std::string& input_name);
+> 
+>   std::string get_csr_name(uint64_t index);
+>   std::string get_xpr_name(uint64_t index);
+>   std::string get_fpr_name(uint64_t index); 
+>   std::string get_vecr_name(uint64_t index);
+> 
+>   int read_csr(uint32_t procid, const std::string& input_name, uint64_t* value, uint32_t* length);
+>   int read_csr(uint32_t procid, uint64_t index, uint64_t* value, uint32_t* length);
+> 
+>   int read_xpr(uint32_t procid, const std::string& input_name, uint64_t* value, uint32_t* length);
+>   int read_xpr(uint32_t procid, uint64_t index, uint64_t* value, uint32_t* length);
+> 
+>   int read_fpr(uint32_t procid, const std::string& input_name, uint8_t* value, uint32_t* length);
+>   int read_fpr(uint32_t procid, uint64_t index, uint8_t* value, uint32_t* length);
+> 
+>   int read_vecr(uint32_t procid, const std::string& input_name, uint8_t* value, uint32_t* length);
+>   int read_vecr(uint32_t procid, uint64_t index, uint8_t* value, uint32_t* length);
+>   int partial_read_vecr(uint32_t procid, uint64_t index, uint8_t* pValue, uint32_t length, uint32_t offset);
+> 
+>   int write_csr(uint32_t procid, const std::string& input_name, const uint64_t* value, uint32_t length);
+>   int write_csr(uint32_t procid, uint64_t index, const uint64_t* value, uint32_t length);
+> 
+>   int write_xpr(uint32_t procid, const std::string& input_name, const uint64_t* value, uint32_t length);
+>   int write_xpr(uint32_t procid, uint64_t index, const uint64_t* value, uint32_t length);
+> 
+>   int write_fpr(uint32_t procid, const std::string& input_name, const uint8_t* value, uint32_t length);
+>   int write_fpr(uint32_t procid, uint64_t index, const uint8_t* value, uint32_t length);
+> 
+>   int write_vecr(uint32_t procid, const std::string& input_name, const uint8_t* value, uint32_t length);
+>   int write_vecr(uint32_t procid, uint64_t index, const uint8_t* value, uint32_t length);
+>   int partial_write_vecr(uint32_t procid, uint64_t index, const uint8_t* pValue, uint32_t length, uint32_t offset);
+> 
+>   void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes);
+>   void sparse_write(reg_t paddr, const uint8_t* bytes, size_t len);
+>   void sparse_write_multiword(reg_t paddr, const uint8_t* bytes, size_t len){};
+>   void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes);
+>   bool sparse_is_pa_initialized(reg_t paddr, size_t len);
+>   void initialize_multiword(reg_t taddr, size_t len, const void* src); // To support multiword initializations during elf loading
+> 
+>   bool set_pc_api(int procid, const std::string& name, const uint8_t* bytes, size_t len);
+>   bool get_pc_api(int procid, uint8_t* bytes, const std::string& name, size_t len);
+> 
+>   bool set_privilege_api(int procid, const uint64_t* val);
+>   bool get_privilege_api(int procid, uint64_t* val);
+> 
+>   // translate_virtual_address_api function: attempts to translate a virtual address into a physical address, returns any error information and also gathers the relevant pmp address and pmp configuration.
+>   //
+>   //  meaning of 'intent':
+>   //    0 - indicates a 'LOAD' access
+>   //    1 - indicates a 'STORE' access
+>   //    2 - indicates a 'FETCH' access
+>   //
+>   //  returns:
+>   //    0 - success
+>   //    1 - some pointer arguments were null
+>   //    2 - invalid procid
+>   //    3 - PMP problem with PA after address translation somehow
+>   //    4 - access exception while trying to check pmp status of page table entry PA
+>   //    5 - walk was unsuccessful and access type was FETCH
+>   //    6 - walk was unsuccessful and access type was LOAD
+>   //    7 - walk was unsuccessful and access type was STORE
+>   //    8 - walk was unsuccessful and access type was not any of the above
+>   //
+>   int translate_virtual_address_api(int procid, const uint64_t* vaddr, int intent, uint64_t* paddr, uint64_t* memattrs);
+> 
+63,64d156
+<   std::vector<std::pair<reg_t, mem_t*>> mems;
+<   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
+71,74d162
+<   std::unique_ptr<rom_device_t> boot_rom;
+<   std::unique_ptr<clint_t> clint;
+<   bus_t bus;
+<   log_file_t log_file;
+89,92d176
+<   // memory-mapped I/O routines
+<   char* addr_to_mem(reg_t addr);
+<   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
+<   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
+95,96c179,191
+<   // presents a prompt for introspection into the simulation
+<   void interactive();
+---
+>   // sparse memory routines
+>   Force::Memory _ForceSparseMemoryModel;
+>   uint64_t sparse_read(reg_t paddr, size_t len);
+>   void sparse_write(reg_t paddr, uint64_t value, size_t len);
+>   //bool sparse_is_pa_initialized(reg_t paddr, size_t len);
+>   void sparse_initialize_pa(reg_t paddr, const uint8_t* data, const uint8_t* attrs, uint32_t nBytes, Force::EMemDataType type);
+>   void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type);
+>   //void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes);
+>   //void sparse_write(reg_t paddr, const uint8_t* bytes, size_t len);
+> 
+> 
+>   reg_t entry;
+>   std::map<std::string, uint64_t> load_elf(const char* fn, reg_t* entry);
+98,116d192
+<   // functions that help implement interactive()
+<   void interactive_help(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_quit(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_run(const std::string& cmd, const std::vector<std::string>& args, bool noisy);
+<   void interactive_run_noisy(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_run_silent(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_vreg(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_reg(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_freg(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_fregs(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_fregd(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_pc(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_mem(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_str(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_until(const std::string& cmd, const std::vector<std::string>& args, bool noisy);
+<   void interactive_until_silent(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_until_noisy(const std::string& cmd, const std::vector<std::string>& args);
+<   reg_t get_reg(const std::vector<std::string>& args);
+<   freg_t get_freg(const std::vector<std::string>& args);
+119c195
+< 
+---
+>     
+128,129d203
+<   context_t* host;
+<   context_t target;
+131,133c205,209
+<   void idle();
+<   void read_chunk(addr_t taddr, size_t len, void* dst);
+<   void write_chunk(addr_t taddr, size_t len, const void* src);
+---
+>   //void idle();
+>   void read_chunk_partially_initialized(reg_t taddr, size_t len, void* dst);
+>   void clear_chunk(reg_t taddr, size_t len);
+>   //void initialize_multiword(reg_t taddr, size_t len, const void* src); // To support multiword initializations during elf loading
+>   void write_chunk(reg_t taddr, size_t len, const void* src);
+137,141d212
+< public:
+<   // Initialize this after procs, because in debug_module_t::reset() we
+<   // enumerate processors, which segfaults if procs hasn't been initialized
+<   // yet.
+<   debug_module_t debug_module;

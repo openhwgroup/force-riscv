@@ -1,0 +1,48 @@
+
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+FADD.Q#Quad-precision#RISCV
+FCLASS.Q##RISCV
+FCVT.D.Q##RISCV
+FCVT.L.Q##RISCV
+FCVT.LU.Q##RISCV
+FCVT.Q.D##RISCV
+FCVT.Q.L##RISCV
+FCVT.Q.LU##RISCV
+FCVT.Q.S##RISCV
+FCVT.Q.W##RISCV
+FCVT.Q.WU##RISCV
+FCVT.S.Q##RISCV
+FCVT.W.Q##RISCV
+FCVT.WU.Q##RISCV
+FDIV.Q#Quad-precision#RISCV
+FEQ.Q##RISCV
+FLE.Q##RISCV
+FLQ##RISCV
+FLT.Q##RISCV
+FMADD.Q#Quad-precision#RISCV
+FMAX.Q##RISCV
+FMIN.Q##RISCV
+FMSUB.Q#Quad-precision#RISCV
+FMUL.Q#Quad-precision#RISCV
+FNMADD.Q#Quad-precision#RISCV
+FNMSUB.Q#Quad-precision#RISCV
+FSGNJ.Q##RISCV
+FSGNJN.Q##RISCV
+FSGNJX.Q##RISCV
+FSQ##RISCV
+FSQRT.Q##RISCV
+FSUB.Q#Quad-precision#RISCV
+SRET##RISCV

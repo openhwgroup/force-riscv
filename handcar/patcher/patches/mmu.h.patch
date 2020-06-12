@@ -1,0 +1,330 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+15a16
+> #include "Force_Memory.h"
+17c18,60
+< // virtual memory configuration
+---
+> //!< MmuEvent - struct used to record memory events from simulator...
+> typedef enum _Memtype { Strong,Device,Normal } Memtype;
+> typedef unsigned int CacheType;
+> typedef unsigned int CacheAttrs;
+> struct MmuEvent
+> {
+>   MmuEvent(uint64_t _va, uint64_t _pa, Memtype _type, bool _has_stage_two, CacheType _outer_type, CacheAttrs _outer_attrs, CacheType _inner_type, CacheAttrs _inner_attrs)
+>     : va(_va), pa(_pa), type(_type), has_stage_two(_has_stage_two), outer_type(_outer_type), outer_attrs(_outer_attrs), inner_type(_inner_type), inner_attrs(_inner_attrs)
+>   {
+>   }
+> 
+>   uint64_t va;
+>   uint64_t pa;
+>   Memtype type;
+>   bool has_stage_two;
+>   CacheType outer_type;
+>   CacheAttrs outer_attrs;
+>   CacheType inner_type;
+>   CacheAttrs inner_attrs;
+> };
+> 
+> struct SimException {
+>   SimException() : mExceptionID(0), mExceptionAttributes(0), mpComments(""), mEPC(0) {}
+>   SimException(uint32_t exceptionID, uint32_t exceptionAttributes, const char* comments, uint64_t epc) :
+>     mExceptionID(exceptionID), mExceptionAttributes(exceptionAttributes), mpComments(comments), mEPC(epc) {}
+>   uint32_t mExceptionID; //!< 0x4E: eret. Other values are scause or mcause codes.   
+>   uint32_t  mExceptionAttributes;  //!< copied from tval. 
+>   const char* mpComments; //!<  exception comments, identifies enter, exit and m or s modes.
+>   uint64_t mEPC; //!< exception program counter.
+> };
+> 
+> extern "C" {
+>     // memory r/w callback
+>     void update_generator_memory(uint64_t virtualAddress, uint32_t memBank, uint64_t physicalAddress, uint32_t size, const char *pBytes, const char *pAccessType);
+> 
+>     // mmu update callback
+>     void update_mmu_event(MmuEvent *event);
+> 
+>     //exception handling callback
+>     void update_exception_event(const SimException* exception);
+> }
+> 
+> // virtual memory configuration TODO is this valid for all VM modes or is this some hardcoded / macro written cruft?
+72a116,127
+>   inline reg_t misaligned_load_partially_initialized(reg_t addr, size_t size)
+>   {
+> #ifdef RISCV_ENABLE_MISALIGNED
+>     reg_t res = 0;
+>     for (size_t i = 0; i < size; i++)
+>       res += (reg_t)load_partially_initialized_uint8(addr + i) << (i * 8);
+>     return res;
+> #else
+>     throw trap_load_address_misaligned(addr);
+> #endif
+>   }
+> 
+96,99c151,164
+<       size_t size = sizeof(type##_t); \
+<       if (likely(tlb_load_tag[vpn % TLB_ENTRIES] == vpn)) { \
+<         if (proc) READ_MEM(addr, size); \
+<         return from_le(*(type##_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr)); \
+---
+>       if (likely(tlb_load_tag[vpn % TLB_ENTRIES] == vpn)) \
+>       { \
+>         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
+>         type##_t sparse_load = type##_t(0); \
+>         uint64_t buff = 0ull; \
+>         size_t len = sizeof(type##_t); \
+>         buff = sim->sparse_read(paddr, len); \
+>         for(size_t byte_idx = 0; byte_idx < len; ++ byte_idx) \
+>         { \
+>             reinterpret_cast<uint8_t*>(&sparse_load)[byte_idx] = reinterpret_cast<uint8_t*>(&buff)[len -1 -byte_idx]; \
+>         } \
+>         /* confirm this */ sparse_load = from_le(sparse_load); \
+>         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&sparse_load), "read"); \
+>         return sparse_load; \
+102c167,176
+<         type##_t data = from_le(*(type##_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr)); \
+---
+>         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
+>         type##_t data = type##_t(0); \
+>         uint64_t buff = 0ull; \
+>         size_t len = sizeof(type##_t); \
+>         buff = sim->sparse_read(paddr, len); \
+>         for(size_t byte_idx = 0; byte_idx < len; ++ byte_idx) \
+>         { \
+>             reinterpret_cast<uint8_t*>(&data)[byte_idx] = reinterpret_cast<uint8_t*>(&buff)[len -1 -byte_idx]; \
+>         } \
+>         /* confirm this */ data = from_le(data); \
+108c182
+<         if (proc) READ_MEM(addr, size); \
+---
+>         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&data), "read"); \
+129,134c203,214
+< #ifndef RISCV_ENABLE_COMMITLOG
+< # define WRITE_MEM(addr, value, size) ({})
+< #else
+< # define WRITE_MEM(addr, val, size) \
+<   proc->state.log_mem_write.push_back(std::make_tuple(addr, val, size));
+< #endif
+---
+>   // template for functions that load an aligned value from memory
+>   #define load_func_partially_initialized(type)\
+>     inline type##_t load_partially_initialized_##type(reg_t addr) { \
+>       if (unlikely(addr & (sizeof(type##_t)-1))) \
+>         return misaligned_load_partially_initialized(addr, sizeof(type##_t)); \
+>       type##_t res; \
+>       load_slow_path_partially_initialized(addr, sizeof(type##_t), (uint8_t*)&res); \
+>       return res; \
+>     }
+> 
+>   load_func_partially_initialized(uint8)
+>   load_func_partially_initialized(uint64)
+142,145c222,236
+<       size_t size = sizeof(type##_t); \
+<       if (likely(tlb_store_tag[vpn % TLB_ENTRIES] == vpn)) { \
+<         if (proc) WRITE_MEM(addr, val, size); \
+<         *(type##_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr) = to_le(val); \
+---
+>       val = to_le(val); \
+>       if (likely(tlb_store_tag[vpn % TLB_ENTRIES] == vpn)) \
+>       { \
+>         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
+>         reg_t len = sizeof(type##_t); \
+>         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
+>         if(unlikely(! sim->sparse_is_pa_initialized(paddr, len))) \
+>         { \
+>             uint64_t attrs = 0ull; \
+>             sim->sparse_initialize_pa(paddr, (const uint8_t*)&val, reinterpret_cast<const uint8_t*>(&attrs), len, Force::EMemDataType::Both); \
+>         } \
+>         else \
+>         { \
+>             sim->sparse_write(paddr, (const uint8_t*)&val, len); \
+>         } \
+153,159c244,255
+<         if (proc) WRITE_MEM(addr, val, size); \
+<         *(type##_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr) = to_le(val); \
+<       } \
+<       else { \
+< 	type##_t le_val = to_le(val); \
+<         store_slow_path(addr, sizeof(type##_t), (const uint8_t*)&le_val); \
+<         if (proc) WRITE_MEM(addr, val, size); \
+---
+>         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
+>         reg_t len = sizeof(type##_t); \
+>         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
+>         if(unlikely(! sim->sparse_is_pa_initialized(paddr, len))) \
+>         { \
+>             uint64_t attrs = 0ull; \
+>             sim->sparse_initialize_pa(paddr, (const uint8_t*)&val, reinterpret_cast<const uint8_t*>(&attrs), len, Force::EMemDataType::Both); \
+>         } \
+>         else \
+>         { \
+>             sim->sparse_write(paddr, (const uint8_t*)&val, len); \
+>         } \
+161c257,259
+<   }
+---
+>       else \
+>        store_slow_path(addr, sizeof(type##_t), (const uint8_t*)&val); \
+>     }
+219,222c317,318
+<     if (auto host_addr = sim->addr_to_mem(paddr))
+<       load_reservation_address = refill_tlb(vaddr, paddr, host_addr, LOAD).target_offset + vaddr;
+<     else
+<       throw trap_load_access_fault(vaddr); // disallow LR to I/O space
+---
+>     load_reservation_address = refill_tlb(vaddr, paddr, 0ull /*host_addr*/, LOAD).target_offset + vaddr;
+>     return;
+228,231c324
+<     if (auto host_addr = sim->addr_to_mem(paddr))
+<       return load_reservation_address == refill_tlb(vaddr, paddr, host_addr, STORE).target_offset + vaddr;
+<     else
+<       throw trap_store_access_fault(vaddr); // disallow SC to I/O space
+---
+>     return load_reservation_address == refill_tlb(vaddr, paddr, 0ull /*host_addr*/, STORE).target_offset + vaddr;
+244c337,346
+<     insn_bits_t insn = from_le(*(uint16_t*)(tlb_entry.host_offset + addr));
+---
+>     uint16_t insn_buf = 0;
+>     uint64_t load_buff = 0ull;
+>     uint64_t muh_paddr = tlb_entry.target_offset + addr;
+>     size_t len = sizeof(uint16_t);
+>     load_buff = sim->sparse_read(muh_paddr, len); 
+>     reinterpret_cast<uint8_t*>(&insn_buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>     reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+> 
+>     insn_bits_t insn = from_le(insn_buf); 
+> 
+248c350,354
+<       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
+---
+>       load_buff = sim->sparse_read(muh_paddr + 2, len); 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+>       insn_buf = from_le(insn_buf);
+>       insn |= (insn_bits_t)(const int16_t)insn_buf << 16;
+250a357
+> 
+252,253c359,369
+<       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
+<       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
+---
+>       load_buff = sim->sparse_read(muh_paddr + 4, len); 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+>       insn_buf = from_le(insn_buf); 
+>       insn |= (insn_bits_t)(const int16_t)insn_buf << 32;
+> 
+>       load_buff = sim->sparse_read(muh_paddr + 2, len); 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+>       insn_buf = from_le(insn_buf); 
+>       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
+256,258c372,388
+<       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 6)) << 48;
+<       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
+<       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
+---
+>       load_buff = sim->sparse_read(muh_paddr + 6, len); 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+>       insn_buf = from_le(insn_buf); 
+>       insn |= (insn_bits_t)(const int16_t)insn_buf << 48;
+> 
+>       load_buff = sim->sparse_read(muh_paddr + 4, len); 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+>       insn_buf = from_le(insn_buf); 
+>       insn |= (insn_bits_t)(const uint16_t)insn_buf << 32;
+> 
+>       load_buff = sim->sparse_read(muh_paddr + 2, len); 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+>       insn_buf = from_le(insn_buf); 
+>       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
+310a441,458
+>   reg_t translate(reg_t addr, reg_t len, access_type type);
+> 
+>   // Translate a VA to a PA by performing a page table walk but don't set any state bits
+>   // and instead of throwing exceptions, return codes are used.
+>   //
+>   // Does a pmp check on the recovered PA.
+>   //
+>   //    returns:
+>   //        0 - walk was successful
+>   //        1 - PMP problem with PA after address translation somehow
+>   //        2 - access exception while trying to check pmp status of page table entry PA
+>   //        3 - walk was unsuccessful and access type was FETCH
+>   //        4 - walk was unsuccessful and access type was LOAD
+>   //        5 - walk was unsuccessful and access type was STORE
+>   //        6 - walk was unsuccessful and access type was not any of the above
+>   //        7 - walk would have been successful had paddr_ptr not been a null pointer
+>   int translate_api(reg_t addr, reg_t *paddr, uint64_t* pmp_info, reg_t len, access_type type);
+> 
+334a483,495
+>   // perform a page table walk but don't set any state bits
+>   // and instead of throwing exceptions, return codes are used:
+>   //
+>   //    returns:
+>   //        0 - walk was successful
+>   //        2 - access exception while trying to check pmp status of page table entry PA
+>   //        3 - walk was unsuccessful and access type was FETCH
+>   //        4 - walk was unsuccessful and access type was LOAD
+>   //        5 - walk was unsuccessful and access type was STORE
+>   //        6 - walk was unsuccessful and access type was not any of the above
+>   //        7 - walk would have been successful had paddr_ptr not been a null pointer
+>   int walk_api(reg_t addr, reg_t* paddr_ptr, access_type type, reg_t prv);
+> 
+340a502
+>   void load_slow_path_partially_initialized(reg_t addr, reg_t len, uint8_t* bytes);
+342,345c504,505
+<   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
+<   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
+<   bool mmio_ok(reg_t addr, access_type type);
+<   reg_t translate(reg_t addr, reg_t len, access_type type);
+---
+>   void initialize_slow_path(reg_t addr, reg_t len, const uint8_t* bytes);
+>   //reg_t translate(reg_t addr, reg_t len, access_type type);
+359,360c519,530
+<       uint16_t* ptr = (uint16_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr);
+<       int match = proc->trigger_match(OPERATION_EXECUTE, addr, from_le(*ptr));
+---
+>       uint16_t* ptr;
+>       uint16_t buf = 0;
+>       uint64_t load_buff = 0ull;
+>       reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr;
+> 
+>       load_buff = sim->sparse_read(paddr, sizeof(uint16_t)); 
+>       reinterpret_cast<uint8_t*>(&buf)[0] = reinterpret_cast<uint8_t*>(&load_buff)[1]; 
+>       reinterpret_cast<uint8_t*>(&buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
+>       buf = from_le(buf);
+>       ptr = &buf;
+> 
+>       int match = proc->trigger_match(OPERATION_EXECUTE, addr, *ptr);
+362c532
+<         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, from_le(*ptr));
+---
+>         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, *ptr);
+368,370c538,541
+<   inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
+<     return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
+<   }
+---
+>   //TODO see where even called and possibly remove
+>   //inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
+>   //  return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
+>   //}
+388a560
+>   reg_t pmp_ok_api(reg_t addr, reg_t* pmpaddr_ptr, uint8_t* pmpcfg_ptr, reg_t len, access_type type, reg_t mode);
