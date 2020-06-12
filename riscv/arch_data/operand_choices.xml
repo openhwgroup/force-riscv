@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<choices_file>
+  <choices name="GPRs" type="RegisterOperand">
+    <choice name="x0" value="0" weight="10"/>
+    <choice name="x1" value="1" weight="10"/>
+    <choice name="x2" value="2" weight="10"/>
+    <choice name="x3" value="3" weight="10"/>
+    <choice name="x4" value="4" weight="10"/>
+    <choice name="x5" value="5" weight="10"/>
+    <choice name="x6" value="6" weight="10"/>
+    <choice name="x7" value="7" weight="10"/>
+    <choice name="x8" value="8" weight="10"/>
+    <choice name="x9" value="9" weight="10"/>
+    <choice name="x10" value="10" weight="10"/>
+    <choice name="x11" value="11" weight="10"/>
+    <choice name="x12" value="12" weight="10"/>
+    <choice name="x13" value="13" weight="10"/>
+    <choice name="x14" value="14" weight="10"/>
+    <choice name="x15" value="15" weight="10"/>
+    <choice name="x16" value="16" weight="10"/>
+    <choice name="x17" value="17" weight="10"/>
+    <choice name="x18" value="18" weight="10"/>
+    <choice name="x19" value="19" weight="10"/>
+    <choice name="x20" value="20" weight="10"/>
+    <choice name="x21" value="21" weight="10"/>
+    <choice name="x22" value="22" weight="10"/>
+    <choice name="x23" value="23" weight="10"/>
+    <choice name="x24" value="24" weight="10"/>
+    <choice name="x25" value="25" weight="10"/>
+    <choice name="x26" value="26" weight="10"/>
+    <choice name="x27" value="27" weight="10"/>
+    <choice name="x28" value="28" weight="10"/>
+    <choice name="x29" value="29" weight="10"/>
+    <choice name="x30" value="30" weight="10"/>
+    <choice name="x31" value="31" weight="10"/>
+  </choices>
+  <choices name="Nonzero GPRs" type="RegisterOperand">
+    <choice name="x1" value="1" weight="10"/>
+    <choice name="x2" value="2" weight="10"/>
+    <choice name="x3" value="3" weight="10"/>
+    <choice name="x4" value="4" weight="10"/>
+    <choice name="x5" value="5" weight="10"/>
+    <choice name="x6" value="6" weight="10"/>
+    <choice name="x7" value="7" weight="10"/>
+    <choice name="x8" value="8" weight="10"/>
+    <choice name="x9" value="9" weight="10"/>
+    <choice name="x10" value="10" weight="10"/>
+    <choice name="x11" value="11" weight="10"/>
+    <choice name="x12" value="12" weight="10"/>
+    <choice name="x13" value="13" weight="10"/>
+    <choice name="x14" value="14" weight="10"/>
+    <choice name="x15" value="15" weight="10"/>
+    <choice name="x16" value="16" weight="10"/>
+    <choice name="x17" value="17" weight="10"/>
+    <choice name="x18" value="18" weight="10"/>
+    <choice name="x19" value="19" weight="10"/>
+    <choice name="x20" value="20" weight="10"/>
+    <choice name="x21" value="21" weight="10"/>
+    <choice name="x22" value="22" weight="10"/>
+    <choice name="x23" value="23" weight="10"/>
+    <choice name="x24" value="24" weight="10"/>
+    <choice name="x25" value="25" weight="10"/>
+    <choice name="x26" value="26" weight="10"/>
+    <choice name="x27" value="27" weight="10"/>
+    <choice name="x28" value="28" weight="10"/>
+    <choice name="x29" value="29" weight="10"/>
+    <choice name="x30" value="30" weight="10"/>
+    <choice name="x31" value="31" weight="10"/>
+  </choices>
+  <choices name="GPRs not x0, x2" type="RegisterOperand">
+    <choice name="x1" value="1" weight="10"/>
+    <choice name="x2" value="2" weight="10"/>
+    <choice name="x3" value="3" weight="10"/>
+    <choice name="x4" value="4" weight="10"/>
+    <choice name="x5" value="5" weight="10"/>
+    <choice name="x6" value="6" weight="10"/>
+    <choice name="x7" value="7" weight="10"/>
+    <choice name="x8" value="8" weight="10"/>
+    <choice name="x9" value="9" weight="10"/>
+    <choice name="x10" value="10" weight="10"/>
+    <choice name="x11" value="11" weight="10"/>
+    <choice name="x12" value="12" weight="10"/>
+    <choice name="x13" value="13" weight="10"/>
+    <choice name="x14" value="14" weight="10"/>
+    <choice name="x15" value="15" weight="10"/>
+    <choice name="x16" value="16" weight="10"/>
+    <choice name="x17" value="17" weight="10"/>
+    <choice name="x18" value="18" weight="10"/>
+    <choice name="x19" value="19" weight="10"/>
+    <choice name="x20" value="20" weight="10"/>
+    <choice name="x21" value="21" weight="10"/>
+    <choice name="x22" value="22" weight="10"/>
+    <choice name="x23" value="23" weight="10"/>
+    <choice name="x24" value="24" weight="10"/>
+    <choice name="x25" value="25" weight="10"/>
+    <choice name="x26" value="26" weight="10"/>
+    <choice name="x27" value="27" weight="10"/>
+    <choice name="x28" value="28" weight="10"/>
+    <choice name="x29" value="29" weight="10"/>
+    <choice name="x30" value="30" weight="10"/>
+    <choice name="x31" value="31" weight="10"/>
+  </choices>
+  <choices name="Prime GPRs" type="RegisterOperand">
+    <choice name="x8" value="0" weight="10"/>
+    <choice name="x9" value="1" weight="10"/>
+    <choice name="x10" value="2" weight="10"/>
+    <choice name="x11" value="3" weight="10"/>
+    <choice name="x12" value="4" weight="10"/>
+    <choice name="x13" value="5" weight="10"/>
+    <choice name="x14" value="6" weight="10"/>
+    <choice name="x15" value="7" weight="10"/>
+  </choices>
+  <choices name="32-bit SIMD/FP registers" type="RegisterOperand">
+    <choice name="S0" value="0" weight="10"/>
+    <choice name="S1" value="1" weight="10"/>
+    <choice name="S2" value="2" weight="10"/>
+    <choice name="S3" value="3" weight="10"/>
+    <choice name="S4" value="4" weight="10"/>
+    <choice name="S5" value="5" weight="10"/>
+    <choice name="S6" value="6" weight="10"/>
+    <choice name="S7" value="7" weight="10"/>
+    <choice name="S8" value="8" weight="10"/>
+    <choice name="S9" value="9" weight="10"/>
+    <choice name="S10" value="10" weight="10"/>
+    <choice name="S11" value="11" weight="10"/>
+    <choice name="S12" value="12" weight="10"/>
+    <choice name="S13" value="13" weight="10"/>
+    <choice name="S14" value="14" weight="10"/>
+    <choice name="S15" value="15" weight="10"/>
+    <choice name="S16" value="16" weight="10"/>
+    <choice name="S17" value="17" weight="10"/>
+    <choice name="S18" value="18" weight="10"/>
+    <choice name="S19" value="19" weight="10"/>
+    <choice name="S20" value="20" weight="10"/>
+    <choice name="S21" value="21" weight="10"/>
+    <choice name="S22" value="22" weight="10"/>
+    <choice name="S23" value="23" weight="10"/>
+    <choice name="S24" value="24" weight="10"/>
+    <choice name="S25" value="25" weight="10"/>
+    <choice name="S26" value="26" weight="10"/>
+    <choice name="S27" value="27" weight="10"/>
+    <choice name="S28" value="28" weight="10"/>
+    <choice name="S29" value="29" weight="10"/>
+    <choice name="S30" value="30" weight="10"/>
+    <choice name="S31" value="31" weight="10"/>
+  </choices>
+  <choices name="64-bit SIMD/FP registers" type="RegisterOperand">
+    <choice name="D0" value="0" weight="10"/>
+    <choice name="D1" value="1" weight="10"/>
+    <choice name="D2" value="2" weight="10"/>
+    <choice name="D3" value="3" weight="10"/>
+    <choice name="D4" value="4" weight="10"/>
+    <choice name="D5" value="5" weight="10"/>
+    <choice name="D6" value="6" weight="10"/>
+    <choice name="D7" value="7" weight="10"/>
+    <choice name="D8" value="8" weight="10"/>
+    <choice name="D9" value="9" weight="10"/>
+    <choice name="D10" value="10" weight="10"/>
+    <choice name="D11" value="11" weight="10"/>
+    <choice name="D12" value="12" weight="10"/>
+    <choice name="D13" value="13" weight="10"/>
+    <choice name="D14" value="14" weight="10"/>
+    <choice name="D15" value="15" weight="10"/>
+    <choice name="D16" value="16" weight="10"/>
+    <choice name="D17" value="17" weight="10"/>
+    <choice name="D18" value="18" weight="10"/>
+    <choice name="D19" value="19" weight="10"/>
+    <choice name="D20" value="20" weight="10"/>
+    <choice name="D21" value="21" weight="10"/>
+    <choice name="D22" value="22" weight="10"/>
+    <choice name="D23" value="23" weight="10"/>
+    <choice name="D24" value="24" weight="10"/>
+    <choice name="D25" value="25" weight="10"/>
+    <choice name="D26" value="26" weight="10"/>
+    <choice name="D27" value="27" weight="10"/>
+    <choice name="D28" value="28" weight="10"/>
+    <choice name="D29" value="29" weight="10"/>
+    <choice name="D30" value="30" weight="10"/>
+    <choice name="D31" value="31" weight="10"/>
+  </choices>
+  <choices name="Prime 64-bit SIMD/FP registers" type="RegisterOperand">
+    <choice name="D8" value="0" weight="10"/>
+    <choice name="D9" value="1" weight="10"/>
+    <choice name="D10" value="2" weight="10"/>
+    <choice name="D11" value="3" weight="10"/>
+    <choice name="D12" value="4" weight="10"/>
+    <choice name="D13" value="5" weight="10"/>
+    <choice name="D14" value="6" weight="10"/>
+    <choice name="D15" value="7" weight="10"/>
+  </choices>
+  <choices name="128-bit SIMD/FP registers" type="RegisterOperand">
+    <choice name="Q0" value="0" weight="10"/>
+    <choice name="Q1" value="1" weight="10"/>
+    <choice name="Q2" value="2" weight="10"/>
+    <choice name="Q3" value="3" weight="10"/>
+    <choice name="Q4" value="4" weight="10"/>
+    <choice name="Q5" value="5" weight="10"/>
+    <choice name="Q6" value="6" weight="10"/>
+    <choice name="Q7" value="7" weight="10"/>
+    <choice name="Q8" value="8" weight="10"/>
+    <choice name="Q9" value="9" weight="10"/>
+    <choice name="Q10" value="10" weight="10"/>
+    <choice name="Q11" value="11" weight="10"/>
+    <choice name="Q12" value="12" weight="10"/>
+    <choice name="Q13" value="13" weight="10"/>
+    <choice name="Q14" value="14" weight="10"/>
+    <choice name="Q15" value="15" weight="10"/>
+    <choice name="Q16" value="16" weight="10"/>
+    <choice name="Q17" value="17" weight="10"/>
+    <choice name="Q18" value="18" weight="10"/>
+    <choice name="Q19" value="19" weight="10"/>
+    <choice name="Q20" value="20" weight="10"/>
+    <choice name="Q21" value="21" weight="10"/>
+    <choice name="Q22" value="22" weight="10"/>
+    <choice name="Q23" value="23" weight="10"/>
+    <choice name="Q24" value="24" weight="10"/>
+    <choice name="Q25" value="25" weight="10"/>
+    <choice name="Q26" value="26" weight="10"/>
+    <choice name="Q27" value="27" weight="10"/>
+    <choice name="Q28" value="28" weight="10"/>
+    <choice name="Q29" value="29" weight="10"/>
+    <choice name="Q30" value="30" weight="10"/>
+    <choice name="Q31" value="31" weight="10"/>
+  </choices>
+  <choices name="Vector registers" type="RegisterOperand">
+    <choice name="v0" value="0" weight="10"/>
+    <choice name="v1" value="1" weight="10"/>
+    <choice name="v2" value="2" weight="10"/>
+    <choice name="v3" value="3" weight="10"/>
+    <choice name="v4" value="4" weight="10"/>
+    <choice name="v5" value="5" weight="10"/>
+    <choice name="v6" value="6" weight="10"/>
+    <choice name="v7" value="7" weight="10"/>
+    <choice name="v8" value="8" weight="10"/>
+    <choice name="v9" value="9" weight="10"/>
+    <choice name="v10" value="10" weight="10"/>
+    <choice name="v11" value="11" weight="10"/>
+    <choice name="v12" value="12" weight="10"/>
+    <choice name="v13" value="13" weight="10"/>
+    <choice name="v14" value="14" weight="10"/>
+    <choice name="v15" value="15" weight="10"/>
+    <choice name="v16" value="16" weight="10"/>
+    <choice name="v17" value="17" weight="10"/>
+    <choice name="v18" value="18" weight="10"/>
+    <choice name="v19" value="19" weight="10"/>
+    <choice name="v20" value="20" weight="10"/>
+    <choice name="v21" value="21" weight="10"/>
+    <choice name="v22" value="22" weight="10"/>
+    <choice name="v23" value="23" weight="10"/>
+    <choice name="v24" value="24" weight="10"/>
+    <choice name="v25" value="25" weight="10"/>
+    <choice name="v26" value="26" weight="10"/>
+    <choice name="v27" value="27" weight="10"/>
+    <choice name="v28" value="28" weight="10"/>
+    <choice name="v29" value="29" weight="10"/>
+    <choice name="v30" value="30" weight="10"/>
+    <choice name="v31" value="31" weight="10"/>
+  </choices>
+  <choices name="Integer data pattern" type="ChoicesOperand">
+    <choice name="All one" value="0x0" weight="10"/>
+    <choice name="All zero" value="0x1" weight="10"/>
+    <choice name="LSB zero" value="0x2" weight="10"/>
+    <choice name="LSB one" value="0x3" weight="10"/>
+    <choice name="MSB zero" value="0x4" weight="10"/>
+    <choice name="MSB one" value="0x5" weight="10"/>
+    <choice name="Signed saturated" value="0x6" weight="10"/>
+    <choice name="Unsigned saturated" value="0x7" weight="10"/>
+    <choice name="Signed almost saturated" value="0x8" weight="10"/>
+    <choice name="Unsigned almost saturated" value="0x9" weight="10"/>
+    <choice name="Signed saturated plug one" value="0xa" weight="10"/>
+    <choice name="Unsigned saturated plug one" value="0xb" weight="10"/>
+    <choice name="Random" value="0xc" weight="1000"/>
+  </choices>
+  <choices name="Floating-point data pattern" type="ChoicesOperand">
+    <choice name="Non-zero" value="0x0" weight="10"/>
+    <choice name="Positive-zero" value="0x1" weight="10"/>
+    <choice name="Negative-zero" value="0x2" weight="10"/>
+    <choice name="Positive-infinity" value="0x3" weight="10"/>
+    <choice name="Negative-infinity" value="0x4" weight="10"/>
+    <choice name="Quiet-nan" value="0x5" weight="10"/>
+    <choice name="Signal-nan" value="0x6" weight="10"/>
+    <choice name="Random" value="0x7" weight="1000"/>
+  </choices>
+  <choices name="FP-SIMD register data choices" type="ChoicesOperand">
+    <choice name="Integer data pattern" value="0x0" weight="10"/>
+    <choice name="Floating-point data pattern" value="0x1" weight="90"/>
+  </choices>
+  <choices name="Use addressing preamble" type="ChoicesOperand">
+    <choice name="no" value="0x0" weight="0"/>
+    <choice name="yes" value="0x1" weight="100"/>
+  </choices>
+  <choices name="PC alignment" type="ChoicesOperand">
+    <choice name="Aligned" value="0x0" weight="100"/>
+    <choice name="Unaligned" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Data alignment" type="ChoicesOperand">
+    <choice name="Aligned" value="0x0" weight="100"/>
+    <choice name="Unaligned" value="0x1" weight="0"/>
+    <choice name="Whole data aligned" value="0x2" weight="0"/>
+  </choices>
+  <choices name="Load data" type="ChoicesOperand">
+    <choice name="Load store address" value="0x0" weight="80"/>
+    <choice name="Branch address" value="0x1" weight="10"/>
+    <choice name="Random" value="0x2" weight="10"/>
+  </choices>
+  <choices name="Branch type choice" type="ChoicesOperand">
+    <choice name="Near branch" value="0x0" weight="50"/>
+    <choice name="Long branch" value="0x1" weight="50"/>
+  </choices>
+  <choices name="Ordered data alignment" type="ChoicesOperand">
+    <choice name="Aligned" value="0x0" weight="100"/>
+    <choice name="Unaligned" value="0x1" weight="0"/>
+    <choice name="Whole data aligned" value="0x2" weight="0"/>
+  </choices>
+  <choices name="Rounding mode" type="ImmediateOperand">
+    <choice name="RNE" value="0x0" weight="10"/>
+    <choice name="RTZ" value="0x1" weight="10"/>
+    <choice name="RDN" value="0x2" weight="10"/>
+    <choice name="RUP" value="0x3" weight="10"/>
+    <choice name="RMM" value="0x4" weight="10"/>
+    <choice name="DYN" value="0x7" weight="10"/>
+  </choices>
+  <choices name="Ret choice" type="ChoicesOperand">
+    <choice name="Legal return" value="0x0" weight="10"/>
+    <choice name="Illegal return" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Vector mask" type="ImmediateOperand">
+    <choice name="Vector result" value="0x0" weight="10"/>
+    <choice name="Unmasked" value="0x1" weight="10"/>
+  </choices>
+  <choices name="SP alignment" type="ChoicesOperand">
+    <choice name="Aligned" value="0x0" weight="0"/>
+    <choice name="Unaligned" value="0x1" weight="100"/>
+  </choices>
+  <choices name="Read after read address reuse" type="ChoicesOperand">
+    <choice name="No reuse" value="0x0" weight="100"/>
+    <choice name="Reuse" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Read after write address reuse" type="ChoicesOperand">
+    <choice name="No reuse" value="0x0" weight="100"/>
+    <choice name="Reuse" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Write after read address reuse" type="ChoicesOperand">
+    <choice name="No reuse" value="0x0" weight="100"/>
+    <choice name="Reuse" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Write after write address reuse" type="ChoicesOperand">
+    <choice name="No reuse" value="0x0" weight="100"/>
+    <choice name="Reuse" value="0x1" weight="0"/>
+  </choices>
+</choices_file>

@@ -1,0 +1,111 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+12c12
+<     return std::to_string((int)insn.i_imm()) + '(' + xpr_name[insn.rs1()] + ')';
+---
+>     return std::to_string((int)insn.i_imm()) + '(' + xpr_arch_name[insn.rs1()] + ')';
+18c18
+<     return std::to_string((int)insn.s_imm()) + '(' + xpr_name[insn.rs1()] + ')';
+---
+>     return std::to_string((int)insn.s_imm()) + '(' + xpr_arch_name[insn.rs1()] + ')';
+24c24
+<     return std::string("(") + xpr_name[insn.rs1()] + ')';
+---
+>     return std::string("(") + xpr_arch_name[insn.rs1()] + ')';
+30c30
+<     return xpr_name[insn.rd()];
+---
+>     return xpr_arch_name[insn.rd()];
+36c36
+<     return xpr_name[insn.rs1()];
+---
+>     return xpr_arch_name[insn.rs1()];
+42c42
+<     return xpr_name[insn.rs2()];
+---
+>     return xpr_arch_name[insn.rs2()];
+48c48
+<     return fpr_name[insn.rd()];
+---
+>     return fpr_arch_name[insn.rd()];
+54c54
+<     return fpr_name[insn.rs1()];
+---
+>     return fpr_arch_name[insn.rs1()];
+60c60
+<     return fpr_name[insn.rs2()];
+---
+>     return fpr_arch_name[insn.rs2()];
+66c66
+<     return fpr_name[insn.rs3()];
+---
+>     return fpr_arch_name[insn.rs3()];
+135c135
+<     return xpr_name[insn.rvc_rs1()];
+---
+>     return xpr_arch_name[insn.rvc_rs1()];
+141c141
+<     return xpr_name[insn.rvc_rs2()];
+---
+>     return xpr_arch_name[insn.rvc_rs2()];
+147c147
+<     return fpr_name[insn.rvc_rs2()];
+---
+>     return fpr_arch_name[insn.rvc_rs2()];
+153c153
+<     return xpr_name[insn.rvc_rs1s()];
+---
+>     return xpr_arch_name[insn.rvc_rs1s()];
+159c159
+<     return xpr_name[insn.rvc_rs2s()];
+---
+>     return xpr_arch_name[insn.rvc_rs2s()];
+165c165
+<     return fpr_name[insn.rvc_rs2s()];
+---
+>     return fpr_arch_name[insn.rvc_rs2s()];
+171c171
+<     return xpr_name[X_SP];
+---
+>     return xpr_arch_name[X_SP];
+215c215
+<     return std::to_string((int)insn.rvc_lwsp_imm()) + '(' + xpr_name[X_SP] + ')';
+---
+>     return std::to_string((int)insn.rvc_lwsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
+221c221
+<     return std::to_string((int)insn.rvc_ldsp_imm()) + '(' + xpr_name[X_SP] + ')';
+---
+>     return std::to_string((int)insn.rvc_ldsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
+227c227
+<     return std::to_string((int)insn.rvc_swsp_imm()) + '(' + xpr_name[X_SP] + ')';
+---
+>     return std::to_string((int)insn.rvc_swsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
+233c233
+<     return std::to_string((int)insn.rvc_sdsp_imm()) + '(' + xpr_name[X_SP] + ')';
+---
+>     return std::to_string((int)insn.rvc_sdsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
+239c239
+<     return std::to_string((int)insn.rvc_lw_imm()) + '(' + xpr_name[insn.rvc_rs1s()] + ')';
+---
+>     return std::to_string((int)insn.rvc_lw_imm()) + '(' + xpr_arch_name[insn.rvc_rs1s()] + ')';
+245c245
+<     return std::to_string((int)insn.rvc_ld_imm()) + '(' + xpr_name[insn.rvc_rs1s()] + ')';
+---
+>     return std::to_string((int)insn.rvc_ld_imm()) + '(' + xpr_arch_name[insn.rvc_rs1s()] + ')';
+271c271
+<     return std::string("(") + xpr_name[insn.rs1()] + ')';
+---
+>     return std::string("(") + xpr_arch_name[insn.rs1()] + ')';

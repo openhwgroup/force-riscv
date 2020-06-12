@@ -1,0 +1,91 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+28,31c28,31
+<   fprintf(log_file, "0x");
+<   for (int idx = width / 64 - 1; idx >= 0; --idx) {
+<     fprintf(log_file, "%016" PRIx64, arr[idx]);
+<   }
+---
+>   //fprintf(log_file, "0x");
+>   //for (int idx = width / 64 - 1; idx >= 0; --idx) {
+>   //  fprintf(log_file, "%016" PRIx64, arr[idx]);
+>   //}
+41c41
+<       fprintf(log_file, "0x%01" PRIx8, (uint8_t)lo);
+---
+>       //fprintf(log_file, "0x%01" PRIx8, (uint8_t)lo);
+44c44
+<       fprintf(log_file, "0x%04" PRIx16, (uint16_t)lo);
+---
+>       //fprintf(log_file, "0x%04" PRIx16, (uint16_t)lo);
+47c47
+<       fprintf(log_file, "0x%08" PRIx32, (uint32_t)lo);
+---
+>       //fprintf(log_file, "0x%08" PRIx32, (uint32_t)lo);
+50c50
+<       fprintf(log_file, "0x%016" PRIx64, lo);
+---
+>       //fprintf(log_file, "0x%016" PRIx64, lo);
+53c53
+<       fprintf(log_file, "0x%016" PRIx64 "%016" PRIx64, hi, lo);
+---
+>       //fprintf(log_file, "0x%016" PRIx64 "%016" PRIx64, hi, lo);
+71c71
+<   fprintf(log_file, "%1d ", priv);
+---
+>   //fprintf(log_file, "%1d ", priv);
+73c73
+<   fprintf(log_file, " (");
+---
+>   //fprintf(log_file, " (");
+75c75
+<   fprintf(log_file, ")");
+---
+>   //fprintf(log_file, ")");
+110c110
+<         fprintf(log_file, " e%ld m%ld l%ld", p->VU.vsew, p->VU.vlmul, p->VU.vl);
+---
+>         //fprintf(log_file, " e%ld m%ld l%ld", p->VU.vsew, p->VU.vlmul, p->VU.vl);
+115c115
+<       fprintf(log_file, " %c%2d ", prefix, rd);
+---
+>       //fprintf(log_file, " %c%2d ", prefix, rd);
+124c124
+<     fprintf(log_file, " mem ");
+---
+>     //fprintf(log_file, " mem ");
+129c129
+<     fprintf(log_file, " mem ");
+---
+>     //fprintf(log_file, " mem ");
+131c131
+<     fprintf(log_file, " ");
+---
+>     //fprintf(log_file, " ");
+134c134
+<   fprintf(log_file, "\n");
+---
+>   //fprintf(log_file, "\n");
+212c212
+<       if (unlikely(slow_path()))
+---
+>       if (true || unlikely(slow_path()))
+230,231c230,231
+<           if (debug && !state.serialized)
+<             disasm(fetch.insn);
+---
+>           //if (debug && !state.serialized)
+>           //  disasm(fetch.insn);

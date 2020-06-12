@@ -1,0 +1,1162 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+17a18
+> #include <cstring>
+19a21,23
+> //DEBUG
+> #include <iostream>
+> 
+23,28c27,30
+< processor_t::processor_t(const char* isa, const char* priv, const char* varch,
+<                          simif_t* sim, uint32_t id, bool halt_on_reset,
+<                          FILE* log_file)
+<   : debug(false), halt_request(false), sim(sim), ext(NULL), id(id), xlen(0),
+<   histogram_enabled(false), log_commits_enabled(false),
+<   log_file(log_file), halt_on_reset(halt_on_reset), last_pc(1), executions(1)
+---
+> processor_t::processor_t(const char* isa, const char* priv, const char* varch, simif_t* sim,
+>                          uint32_t pid, bool halt_on_reset)
+>   : debug(false), halt_request(false), sim(sim), ext(NULL), id(pid), xlen(0),
+>   halt_on_reset(halt_on_reset), last_pc(1), executions(1), state(pid)
+47,55d48
+< #ifdef RISCV_ENABLE_HISTOGRAM
+<   if (histogram_enabled)
+<   {
+<     fprintf(stderr, "PC Histogram size:%zu\n", pc_histogram.size());
+<     for (auto it : pc_histogram)
+<       fprintf(stderr, "%0" PRIx64 " %" PRIu64 "\n", it.first, it.second);
+<   }
+< #endif
+< 
+225c218
+<       register_extension(find_extension(std::string(ext, end - ext).c_str())());
+---
+>       //register_extension(find_extension(std::string(ext, end - ext).c_str())());
+241c234
+< void state_t::reset(reg_t max_isa)
+---
+> void state_t::reset(reg_t max_isa, uint32_t id)
+243a237,238
+>   prv = PRV_M;
+>   pid = id;
+246,247c241,242
+< 
+<   prv = PRV_M;
+---
+>   XPR.set_pid(id);
+>   FPR.set_pid(id);
+305a301
+>   memset(reg_file, 0, NVPR*(VLEN/8));   
+308a305,307
+> 
+>   //std::cout << "WARNING, vtype is hardcoded in the simulator (processor.cc, processor_t::vectorUnit_t::reset()), replace with vsetvl(i) ASAP." << std::endl;
+>   //set_vl(0, 0, 0, 0b0001000); // default to illegal configuration
+354,360d352
+< #ifndef RISCV_ENABLE_HISTOGRAM
+<   if (value) {
+<     fprintf(stderr, "PC Histogram support has not been properly enabled;");
+<     fprintf(stderr, " please re-build the riscv-isa-sim project using \"configure --enable-histogram\".\n");
+<     abort();
+<   }
+< #endif
+363,369d354
+< #ifdef RISCV_ENABLE_COMMITLOG
+< void processor_t::enable_log_commits()
+< {
+<   log_commits_enabled = true;
+< }
+< #endif
+< 
+372,373c357
+<   state.reset(max_isa);
+< 
+---
+>   state.reset(max_isa, id);
+462a447,453
+>   update_generator_register(this->id, "privilege", prv, 0x3ull, "write");
+> }
+> 
+> void processor_t::set_privilege_api(reg_t prv)
+> {
+>   mmu->flush_tlb();
+>   state.prv = legalize_privilege(prv);
+467,472c458,463
+<   state.debug_mode = true;
+<   state.dcsr.cause = cause;
+<   state.dcsr.prv = state.prv;
+<   set_privilege(PRV_M);
+<   state.dpc = state.pc;
+<   state.pc = DEBUG_ROM_ENTRY;
+---
+> //  state.debug_mode = true;
+> //  state.dcsr.cause = cause;
+> //  state.dcsr.prv = state.prv;
+> //  set_privilege(PRV_M);
+> //  state.dpc = state.pc;
+> //  state.pc = DEBUG_ROM_ENTRY;
+477,492c468,483
+<   if (debug) {
+<     fprintf(log_file, "core %3d: exception %s, epc 0x%016" PRIx64 "\n",
+<             id, t.name(), epc);
+<     if (t.has_tval())
+<       fprintf(log_file, "core %3d:           tval 0x%016" PRIx64 "\n",
+<               id, t.get_tval());
+<   }
+< 
+<   if (state.debug_mode) {
+<     if (t.cause() == CAUSE_BREAKPOINT) {
+<       state.pc = DEBUG_ROM_ENTRY;
+<     } else {
+<       state.pc = DEBUG_ROM_TVEC;
+<     }
+<     return;
+<   }
+---
+>   //if (debug) {
+>   //  fprintf(stderr, "core %3d: exception %s, epc 0x%016" PRIx64 "\n",
+>   //          id, t.name(), epc);
+>   //  if (t.has_tval())
+>   //    fprintf(stderr, "core %3d:           tval 0x%016" PRIx64 "\n", id,
+>   //        t.get_tval());
+>   //}
+> 
+>   //if (state.debug_mode) {
+>   //  //if (t.cause() == CAUSE_BREAKPOINT) {
+>   //  //  state.pc = DEBUG_ROM_ENTRY;
+>   //  //} else {
+>   //  //  state.pc = DEBUG_ROM_TVEC;
+>   //  //}
+>   //  return;
+>   //}
+498c489
+<     enter_debug_mode(DCSR_CAUSE_SWBP);
+---
+>     //enter_debug_mode(DCSR_CAUSE_SWBP);
+515a507,509
+>     SimException enter_s(state.scause, state.stval, "enter_s", epc);
+>     update_exception_event(&enter_s);
+> 
+528a523,525
+>     SimException enter_m(state.mcause, state.mtval, "enter_m", epc);
+>     update_exception_event(&enter_m);
+> 
+542,544c539,541
+<     if (executions != 1) {
+<       fprintf(log_file, "core %3d: Executed %" PRIx64 " times\n", id, executions);
+<     }
+---
+>     //if (executions != 1) {
+>     //  fprintf(log_file, "core %3d: Executed %" PRIx64 " times\n", id, executions);
+>     //}
+546,547c543,544
+<     fprintf(log_file, "core %3d: 0x%016" PRIx64 " (0x%08" PRIx64 ") %s\n",
+<             id, state.pc, bits, disassembler->disassemble(insn).c_str());
+---
+>     //fprintf(log_file, "core %3d: 0x%016" PRIx64 " (0x%08" PRIx64 ") %s\n",
+>     //        id, state.pc, bits, disassembler->disassemble(insn).c_str());
+569a567,569
+>   reg_t effective_value = 0;
+>   std::string text_name = std::string(csr_name(which));
+> 
+575a576
+>     {
+576a578,579
+>       effective_value = state.pmpaddr[i];
+>     }
+586a590
+>         effective_value = cfg;
+596a601
+>       effective_value = state.fflags;
+600a606
+>       effective_value = state.frm;
+608a615
+>         effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT) | (VU.vxsat << FSR_VXSAT_SHIFT) | (VU.vxrm << FSR_VXRM_SHIFT);
+609a617,618
+>       else
+>         effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT);
+648a658
+>       effective_value = state.mstatus;
+653a664,665
+> 
+>       effective_value = state.mip;
+657a670,671
+> 
+>       effective_value = state.mie;
+660a675,676
+> 
+>       effective_value = state.mideleg;
+670a687,688
+> 
+>       effective_value = state.medeleg;
+678a697,698
+> 
+>       effective_value = state.minstret;
+687a708
+>       effective_value = state.minstret;
+691a713
+>       effective_value = state.scounteren;
+694a717
+>       effective_value = state.mcounteren;
+717c740,741
+<         state.satp = val & (SATP64_PPN | SATP64_MODE | rv64_ppn_mask);
+---
+>       state.satp = val & (SATP64_PPN | SATP64_MODE | rv64_ppn_mask);
+>       effective_value = state.satp;
+720,729c744,813
+<     case CSR_SEPC: state.sepc = val & ~(reg_t)1; break;
+<     case CSR_STVEC: state.stvec = val & ~(reg_t)2; break;
+<     case CSR_SSCRATCH: state.sscratch = val; break;
+<     case CSR_SCAUSE: state.scause = val; break;
+<     case CSR_STVAL: state.stval = val; break;
+<     case CSR_MEPC: state.mepc = val & ~(reg_t)1; break;
+<     case CSR_MTVEC: state.mtvec = val & ~(reg_t)2; break;
+<     case CSR_MSCRATCH: state.mscratch = val; break;
+<     case CSR_MCAUSE: state.mcause = val; break;
+<     case CSR_MTVAL: state.mtval = val; break;
+---
+>     case CSR_SEPC: 
+>     {
+>         state.sepc = val & ~(reg_t)1; 
+> 
+>         effective_value = state.sepc;
+>         break;
+>     }
+>     case CSR_STVEC: 
+>     {
+>         state.stvec = val & ~(reg_t)2; 
+> 
+>         effective_value = state.stvec;
+>         break;
+>     }
+>     case CSR_SSCRATCH: 
+>     {
+>         state.sscratch = val; 
+> 
+>         effective_value = state.sscratch;
+>         break;
+>     }
+>     case CSR_SCAUSE: 
+>     {
+>         state.scause = val; 
+> 
+>         effective_value = state.scause;
+>         break;
+>     }
+>     case CSR_STVAL: 
+>     {
+>         state.stval = val; 
+> 
+>         effective_value = state.stval;
+>         break;
+>     }
+>     case CSR_MEPC: 
+>     {
+>         state.mepc = val & ~(reg_t)1; 
+> 
+>         effective_value = state.mepc;
+>         break;
+>     }
+>     case CSR_MTVEC: 
+>     {
+>         state.mtvec = val & ~(reg_t)2; 
+> 
+>         effective_value = state.mtvec;
+>         break;
+>     }
+>     case CSR_MSCRATCH: 
+>     {
+>         state.mscratch = val; 
+> 
+>         effective_value = state.mscratch;
+>         break;
+>     }
+>     case CSR_MCAUSE: 
+>     {
+>         state.mcause = val; 
+> 
+>         effective_value = state.mcause;
+>         break;
+>     }
+>     case CSR_MTVAL: 
+>     {
+>         state.mtval = val; 
+> 
+>         effective_value = state.mtval;
+>         break;
+>     }
+747a832,833
+> 
+>       effective_value = state.misa;
+752a839
+>         effective_value = state.tselect;
+777a865,867
+> 
+>         // If mcontrol_t had a more clear size it may make sense to bitcopy its contents.
+>         effective_value = val;
+785a876,877
+>         
+>         effective_value = val;
+791d882
+<       // TODO: ndreset and fullreset
+796a888,889
+>         
+>       memcpy(&effective_value, &(state.dcsr), sizeof(dcsr_t));
+799a893,894
+> 
+>       effective_value = state.dpc;
+802a898,899
+> 
+>       effective_value = state.dscratch0;
+805a903,904
+>     
+>       effective_value = state.dscratch1;
+809a909,910
+> 
+>       effective_value = VU.vstart;
+813a915,916
+> 
+>       effective_value = VU.vxsat;
+817a921,922
+> 
+>       effective_value = VU.vxrm;
+819a925,926
+> 
+>   update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "write");
+822,825c929,1291
+< // Note that get_csr is sometimes called when read side-effects should not
+< // be actioned.  In other words, Spike cannot currently support CSRs with
+< // side effects on reads.
+< reg_t processor_t::get_csr(int which)
+---
+> 
+> void processor_t::set_csr_api(int which, reg_t val)
+> {
+>    val = zext_xlen(val);
+>    reg_t supervisor_ints = supports_extension('S') ? MIP_SSIP | MIP_STIP | MIP_SEIP : 0;
+>    reg_t coprocessor_ints = (ext != NULL) << IRQ_COP;
+>    reg_t delegable_ints = supervisor_ints | coprocessor_ints;
+>    reg_t all_ints = delegable_ints | MIP_MSIP | MIP_MTIP;
+>  
+>    reg_t effective_value = 0;
+>    std::string text_name = std::string(csr_name(which));
+>  
+>    if (which >= CSR_PMPADDR0 && which < CSR_PMPADDR0 + state.n_pmp) {
+>      size_t i = which - CSR_PMPADDR0;
+>      bool locked = state.pmpcfg[i] & PMP_L;
+>      bool next_locked = i+1 < state.n_pmp && (state.pmpcfg[i+1] & PMP_L);
+>      bool next_tor = i+1 < state.n_pmp && (state.pmpcfg[i+1] & PMP_A) == PMP_TOR;
+>      if (!locked && !(next_locked && next_tor))
+>      {
+>        state.pmpaddr[i] = val & ((reg_t(1) << (MAX_PADDR_BITS - PMP_SHIFT)) - 1);
+>        effective_value = state.pmpaddr[i];
+>      }
+>  
+>      mmu->flush_tlb();
+>    }
+>  
+>    if (which >= CSR_PMPCFG0 && which < CSR_PMPCFG0 + state.n_pmp / 4) {
+>      for (size_t i0 = (which - CSR_PMPCFG0) * 4, i = i0; i < i0 + xlen / 8; i++) {
+>        if (!(state.pmpcfg[i] & PMP_L)) {
+>          uint8_t cfg = (val >> (8 * (i - i0))) & (PMP_R | PMP_W | PMP_X | PMP_A | PMP_L);
+>          cfg &= ~PMP_W | ((cfg & PMP_R) ? PMP_W : 0); // Disallow R=0 W=1
+>          state.pmpcfg[i] = cfg;
+>          effective_value = cfg;
+>        }
+>      }
+>      mmu->flush_tlb();
+>    }
+> 
+>   switch (which)
+>   {
+>     case CSR_FFLAGS:
+>       //dirty_fp_state;
+>       state.fflags = val & (FSR_AEXC >> FSR_AEXC_SHIFT);
+>       break;
+>     case CSR_FRM:
+>       //dirty_fp_state;
+>       state.frm = val & (FSR_RD >> FSR_RD_SHIFT);
+>       break;
+>     case CSR_FCSR:
+>       //dirty_fp_state; //DEBUG
+>       state.fflags = (val & FSR_AEXC) >> FSR_AEXC_SHIFT;
+>       state.frm = (val & FSR_RD) >> FSR_RD_SHIFT;
+>       if (supports_extension('V')) {
+>         VU.vxsat = (val & FSR_VXSAT) >> FSR_VXSAT_SHIFT;
+>         VU.vxrm = (val & FSR_VXRM) >> FSR_VXRM_SHIFT;
+>       }
+>       break;
+>     case CSR_MSTATUS: {
+>       if ((val ^ state.mstatus) &
+>           (MSTATUS_MPP | MSTATUS_MPRV | MSTATUS_SUM | MSTATUS_MXR))
+>         mmu->flush_tlb();
+> 
+>       bool has_fs = supports_extension('S') || supports_extension('F')
+>                   || supports_extension('V');
+>       bool has_vs = supports_extension('V');
+> 
+>       reg_t mask = MSTATUS_SIE | MSTATUS_SPIE | MSTATUS_MIE | MSTATUS_MPIE
+>                  | MSTATUS_MPRV
+>                  | (supports_extension('S') ? MSTATUS_SUM : 0)
+>                  | MSTATUS_MXR | MSTATUS_TW | MSTATUS_TVM | MSTATUS_TSR
+>                  | (has_fs ? MSTATUS_FS : 0)
+>                  | (has_vs ? MSTATUS_VS : 0)
+>                  | (ext ? MSTATUS_XS : 0);
+> 
+>       reg_t requested_mpp = legalize_privilege(get_field(val, MSTATUS_MPP));
+>       state.mstatus = set_field(state.mstatus, MSTATUS_MPP, requested_mpp);
+>       if (supports_extension('S'))
+>         mask |= MSTATUS_SPP;
+> 
+>       state.mstatus = (state.mstatus & ~mask) | (val & mask);
+> 
+>       bool dirty = (state.mstatus & MSTATUS_FS) == MSTATUS_FS;
+>       dirty |= (state.mstatus & MSTATUS_XS) == MSTATUS_XS;
+>       dirty |= (state.mstatus & MSTATUS_VS) == MSTATUS_VS;
+>       if (max_xlen == 32)
+>         state.mstatus = set_field(state.mstatus, MSTATUS32_SD, dirty);
+>       else
+>         state.mstatus = set_field(state.mstatus, MSTATUS64_SD, dirty);
+> 
+>       if (supports_extension('U'))
+>         state.mstatus = set_field(state.mstatus, MSTATUS_UXL, xlen_to_uxl(max_xlen));
+>       if (supports_extension('S'))
+>         state.mstatus = set_field(state.mstatus, MSTATUS_SXL, xlen_to_uxl(max_xlen));
+>       // U-XLEN == S-XLEN == M-XLEN
+>       xlen = max_xlen;
+>       break;
+>     }
+>     case CSR_MIP: {
+>       reg_t mask = supervisor_ints & (MIP_SSIP | MIP_STIP);
+>       state.mip = (state.mip & ~mask) | (val & mask);
+>       break;
+>     }
+>     case CSR_MIE:
+>       state.mie = (state.mie & ~all_ints) | (val & all_ints);
+>       break;
+>     case CSR_MIDELEG:
+>       state.mideleg = (state.mideleg & ~delegable_ints) | (val & delegable_ints);
+>       break;
+>     case CSR_MEDELEG: {
+>       reg_t mask =
+>         (1 << CAUSE_MISALIGNED_FETCH) |
+>         (1 << CAUSE_BREAKPOINT) |
+>         (1 << CAUSE_USER_ECALL) |
+>         (1 << CAUSE_FETCH_PAGE_FAULT) |
+>         (1 << CAUSE_LOAD_PAGE_FAULT) |
+>         (1 << CAUSE_STORE_PAGE_FAULT);
+>       state.medeleg = (state.medeleg & ~mask) | (val & mask);
+>       break;
+>     }
+>     //TODO why are we aliasing mcycle as minstret?
+>     case CSR_INSTRET:
+>     case CSR_MINSTRET:
+>     case CSR_CYCLE:
+>     case CSR_MCYCLE:
+>       if (xlen == 32)
+>         state.minstret = (state.minstret >> 32 << 32) | (val & 0xffffffffU);
+>       else
+>         state.minstret = val;
+>       // The ISA mandates that if an instruction writes instret, the write
+>       // takes precedence over the increment to instret.  However, Spike
+>       // unconditionally increments instret after executing an instruction.
+>       // Correct for this artifact by decrementing instret here.
+>       state.minstret--;
+>       break;
+>     case CSR_MINSTRETH:
+>     case CSR_MCYCLEH:
+>       state.minstret = (val << 32) | (state.minstret << 32 >> 32);
+>       state.minstret--; // See comment above.
+>       break;
+>     case CSR_SCOUNTEREN:
+>       state.scounteren = val;
+>       break;
+>     case CSR_MCOUNTEREN:
+>       state.mcounteren = val;
+>       break;
+>     case CSR_SSTATUS: {
+>       reg_t mask = SSTATUS_SIE | SSTATUS_SPIE | SSTATUS_SPP | SSTATUS_FS
+>                   | SSTATUS_XS | SSTATUS_SUM | SSTATUS_MXR
+>                   | (supports_extension('V') ? SSTATUS_VS : 0);
+>       return set_csr_api(CSR_MSTATUS, (state.mstatus & ~mask) | (val & mask));
+>      }
+>      case CSR_SIP: {
+>       reg_t mask = MIP_SSIP & state.mideleg;
+>       return set_csr_api(CSR_MIP, (state.mip & ~mask) | (val & mask));
+>      }
+>      case CSR_SIE:
+>       return set_csr_api(CSR_MIE,
+>                       (state.mie & ~state.mideleg) | (val & state.mideleg));
+> 
+>     case CSR_SATP: {
+>       reg_t rv64_ppn_mask = (reg_t(1) << (MAX_PADDR_BITS - PGSHIFT)) - 1;
+>       mmu->flush_tlb();
+>       if (max_xlen == 32)
+>         state.satp = val & (SATP32_PPN | SATP32_MODE);
+>       if (max_xlen == 64 && (get_field(val, SATP64_MODE) == SATP_MODE_OFF ||
+>                               get_field(val, SATP64_MODE) == SATP_MODE_SV39 ||
+>                               get_field(val, SATP64_MODE) == SATP_MODE_SV48))
+>       state.satp = val & (SATP64_PPN | SATP64_MODE | rv64_ppn_mask);
+>       break;
+>     }
+>     case CSR_SEPC: {
+>         state.sepc = val & ~(reg_t)1; 
+>         break;
+>     }
+>     case CSR_STVEC: {
+>         state.stvec = val & ~(reg_t)2; 
+>         break;
+>     }
+>     case CSR_SSCRATCH: {
+>         state.sscratch = val; 
+>         break;
+>     }
+>     case CSR_SCAUSE: {
+>         state.scause = val; 
+>         break;
+>     }
+>     case CSR_STVAL: {
+>         state.stval = val; 
+>         break;
+>     }
+>     case CSR_MEPC: {
+>         state.mepc = val & ~(reg_t)1; 
+>         break;
+>     }
+>     case CSR_MTVEC: {
+>         state.mtvec = val & ~(reg_t)2; 
+>         break;
+>     }
+>     case CSR_MSCRATCH: {
+>         state.mscratch = val; 
+>         break;
+>     }
+>     case CSR_MCAUSE: {
+>         state.mcause = val; 
+>         break;
+>     }
+>     case CSR_MTVAL: {
+>         state.mtval = val; 
+>         break;
+>     }
+>     case CSR_MISA: {
+>       // the write is ignored if increasing IALIGN would misalign the PC
+>       if (!(val & (1L << ('C' - 'A'))) && (state.pc & 2))
+>         break;
+> 
+>       if (!(val & (1L << ('F' - 'A'))))
+>         val &= ~(1L << ('D' - 'A'));
+> 
+>       // allow MAFDC bits in MISA to be modified
+>       reg_t mask = 0;
+>       mask |= 1L << ('M' - 'A');
+>       mask |= 1L << ('A' - 'A');
+>       mask |= 1L << ('F' - 'A');
+>       mask |= 1L << ('D' - 'A');
+>       mask |= 1L << ('C' - 'A');
+>       mask &= max_isa;
+> 
+>       state.misa = (val & mask) | (state.misa & ~mask);
+> 
+>       break;
+>     }
+>     case CSR_TSELECT:
+>       if (val < state.num_triggers) {
+>         state.tselect = val;
+>       }
+>       break;
+>     case CSR_TDATA1:
+>       {
+>         mcontrol_t *mc = &state.mcontrol[state.tselect];
+>         if (mc->dmode && !state.debug_mode) {
+>           break;
+>         }
+>         mc->dmode = get_field(val, MCONTROL_DMODE(xlen));
+>         mc->select = get_field(val, MCONTROL_SELECT);
+>         mc->timing = get_field(val, MCONTROL_TIMING);
+>         mc->action = (mcontrol_action_t) get_field(val, MCONTROL_ACTION);
+>         mc->chain = get_field(val, MCONTROL_CHAIN);
+>         mc->match = (mcontrol_match_t) get_field(val, MCONTROL_MATCH);
+>         mc->m = get_field(val, MCONTROL_M);
+>         mc->h = get_field(val, MCONTROL_H);
+>         mc->s = get_field(val, MCONTROL_S);
+>         mc->u = get_field(val, MCONTROL_U);
+>         mc->execute = get_field(val, MCONTROL_EXECUTE);
+>         mc->store = get_field(val, MCONTROL_STORE);
+>         mc->load = get_field(val, MCONTROL_LOAD);
+>         // Assume we're here because of csrw.
+>         if (mc->execute)
+>           mc->timing = 0;
+>         trigger_updated();
+>       }
+>       break;
+>     case CSR_TDATA2:
+>       if (state.mcontrol[state.tselect].dmode && !state.debug_mode) {
+>         break;
+>       }
+>       if (state.tselect < state.num_triggers) {
+>         state.tdata2[state.tselect] = val;
+>       }
+>       break;
+>     case CSR_DCSR:
+>       state.dcsr.prv = get_field(val, DCSR_PRV);
+>       state.dcsr.step = get_field(val, DCSR_STEP);
+>       // TODO: ndreset and fullreset
+>       state.dcsr.ebreakm = get_field(val, DCSR_EBREAKM);
+>       state.dcsr.ebreakh = get_field(val, DCSR_EBREAKH);
+>       state.dcsr.ebreaks = get_field(val, DCSR_EBREAKS);
+>       state.dcsr.ebreaku = get_field(val, DCSR_EBREAKU);
+>       state.dcsr.halt = get_field(val, DCSR_HALT);
+>       break;
+>     case CSR_DPC:
+>       state.dpc = val & ~(reg_t)1;
+>       break;
+>     case CSR_DSCRATCH:
+>       state.dscratch0 = val;
+>       break;
+>     case CSR_DSCRATCH + 1:
+>       state.dscratch1 = val;
+>       break;
+>     case CSR_VL:
+>       VU.vl = val;
+>     case CSR_VSTART:
+>       VU.vstart = val;
+>       break;
+>     case CSR_VTYPE:
+>       VU.vtype = val;
+>       break;
+>     case CSR_VXSAT:
+>       VU.vxsat = val;
+>       break;
+>     case CSR_VXRM:
+>       VU.vxrm = val;
+>       break;
+>   }
+> }
+> 
+> 
+> bool processor_t::set_pc_api(const std::string& name, const uint8_t* bytes, size_t len) //len advertises the size of the buffer
+> {
+>     if(bytes == nullptr)
+>     {
+>         return false;
+>     }
+> 
+>     if(name == std::string("PC") || name == std::string("pc"))
+>     {
+>         if(len != sizeof(state.pc))
+>         {
+>             return false;    
+>         }
+>         else
+>         {
+>             memcpy(&(state.pc), bytes, len);
+>             return true;
+>         }
+>     }
+>     else
+>     {
+>         return false;        
+>     }
+> }
+> 
+> bool processor_t::retrieve_pc_api(uint8_t* bytes, const std::string& name, size_t len) //len advertises the size of the buffer
+> {
+> 
+>     if(bytes == nullptr)
+>     {
+>         return false;
+>     }
+> 
+>     if(name == std::string("PC") || name == std::string("pc"))
+>     {
+>         if(len != sizeof(state.pc))
+>         {
+>             return false;    
+>         }
+>         else
+>         {
+>             memcpy(bytes, &(state.pc), len);
+>             return true;
+>         }
+>     }
+>     else
+>     {
+>         return false;        
+>     }
+> }
+> 
+> void processor_t::retrieve_privilege_api(reg_t* val)
+> {
+>   *val = state.prv;
+> }
+> 
+> reg_t processor_t::get_csr_api(int which)
+851c1317,1319
+<     require((which & ((xlen / 32) - 1)) == 0);
+---
+>     //require((which & ((xlen / 32) - 1)) == 0);
+>     if((which & ((xlen / 32) - 1)) != 0)
+>         return 0xDEADBEEFDEADBEEF;
+862,864c1330,1334
+<       require_fp;
+<       if (!supports_extension('F'))
+<         break;
+---
+>       //std::cout << "Checking require fp" << std::endl;
+>       //require_fp;
+>       //std::cout << "Past checking require fp" << std::endl;
+>       //if (!supports_extension('F'))
+>       //  break;
+867,869c1337,1339
+<       require_fp;
+<       if (!supports_extension('F'))
+<         break;
+---
+>       //require_fp;
+>       //if (!supports_extension('F'))
+>       //  break;
+872,874c1342,1345
+<       {require_fp;
+<       if (!supports_extension('F'))
+<         break;
+---
+>     {
+> //      {require_fp;
+> //      if (!supports_extension('F'))
+> //        break;
+880c1351
+<       }
+---
+>     }
+883,885d1353
+<       if (ctr_ok)
+<         return state.minstret;
+<       break;
+891,893d1358
+<       if (ctr_ok && xlen == 32)
+<         return state.minstret >> 32;
+<       break;
+896c1361
+<       if (xlen == 32)
+---
+>       //if (xlen == 32)
+898c1363
+<       break;
+---
+>       //break;
+922,923c1387,1388
+<       if (get_field(state.mstatus, MSTATUS_TVM))
+<         require_privilege(PRV_M);
+---
+>       //if (get_field(state.mstatus, MSTATUS_TVM))
+>       //  require_privilege(PRV_M);
+1009a1475,1855
+>       //require_vector_vs;
+>       //if (!supports_extension('V'))
+>       //  break;
+>       return VU.vstart;
+>     case CSR_VXSAT:
+>       //require_vector_vs;
+>       //if (!supports_extension('V'))
+>       //  break;
+>       return VU.vxsat;
+>     case CSR_VXRM:
+>       //require_vector_vs;
+>       //if (!supports_extension('V'))
+>       //  break;
+>       return VU.vxrm;
+>     case CSR_VL:
+>       //require_vector_vs;
+>       //if (!supports_extension('V'))
+>       ///  break;
+>       return VU.vl;
+>     case CSR_VTYPE:
+>       //require_vector_vs;
+>       //if (!supports_extension('V'))
+>       //  break;
+>       return VU.vtype;
+>   }
+> 
+>   return 0xDEADBEEFDEADBEEF; // Some CSRs appear in encoding.h but have no entry here for some reason.
+>   //throw trap_illegal_instruction(0);
+> }
+> 
+> 
+> //
+> //
+> // TODO the merge program ignored get_csr and only treaded get_csr_api 
+> //
+> 
+> // Note that get_csr is sometimes called when read side-effects should not
+> // be actioned.  In other words, Spike cannot currently support CSRs with
+> // side effects on reads.
+> reg_t processor_t::get_csr(int which)
+> {
+>   uint32_t ctr_en = -1;
+>   if (state.prv < PRV_M)
+>     ctr_en &= state.mcounteren;
+>   if (state.prv < PRV_S)
+>     ctr_en &= state.scounteren;
+>   bool ctr_ok = (ctr_en >> (which & 31)) & 1;
+> 
+>   reg_t effective_value = 0;
+>   std::string text_name = std::string(csr_name(which));
+> 
+>   if (ctr_ok) {
+>     if (which >= CSR_HPMCOUNTER3 && which <= CSR_HPMCOUNTER31)
+>     {
+>       effective_value = 0;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return 0;
+>     }
+>     if (xlen == 32 && which >= CSR_HPMCOUNTER3H && which <= CSR_HPMCOUNTER31H)
+>     {
+>       effective_value = 0;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return 0;
+>     }
+>   }
+>   if (which >= CSR_MHPMCOUNTER3 && which <= CSR_MHPMCOUNTER31)
+>   {
+>     effective_value = 0;
+>     update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>     return 0;
+>   }
+>   if (xlen == 32 && which >= CSR_MHPMCOUNTER3H && which <= CSR_MHPMCOUNTER31H)
+>   { 
+>     effective_value = 0;
+>     update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>     return 0;  
+>   }
+>   if (which >= CSR_MHPMEVENT3 && which <= CSR_MHPMEVENT31)
+>   {
+>     effective_value = 0;
+>     update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>     return 0;
+>   }
+>   if (which >= CSR_PMPADDR0 && which < CSR_PMPADDR0 + state.n_pmp)
+>   {
+>     effective_value = state.pmpaddr[which - CSR_PMPADDR0];
+>     update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>     return state.pmpaddr[which - CSR_PMPADDR0];
+>   }
+> 
+>   if (which >= CSR_PMPCFG0 && which < CSR_PMPCFG0 + state.n_pmp / 4) {
+>     require((which & ((xlen / 32) - 1)) == 0);
+>     
+>     reg_t res = 0;
+>     for (size_t i0 = (which - CSR_PMPCFG0) * 4, i = i0; i < i0 + xlen / 8 && i < state.n_pmp; i++)
+>       res |= reg_t(state.pmpcfg[i]) << (8 * (i - i0));
+> 
+>     effective_value = res;
+>     update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>     return res;
+>   }
+> 
+>   switch (which)
+>   {
+>     case CSR_FFLAGS:
+>       require_fp;
+>       if (!supports_extension('F'))
+>         break;
+>       effective_value = state.fflags;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.fflags;
+>     case CSR_FRM:
+>       require_fp;
+>       if (!supports_extension('F'))
+>         break;
+>       effective_value = state.frm;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.frm;
+>     case CSR_FCSR:
+>       {require_fp;
+>       if (!supports_extension('F'))
+>         break;
+>       uint32_t shared_flags = 0;
+>       if (supports_extension('V'))
+>             shared_flags = (VU.vxrm << FSR_VXRM_SHIFT) | (VU.vxsat << FSR_VXSAT_SHIFT);
+> 
+>       effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT) |
+>           shared_flags;
+> 
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return effective_value;
+>       }
+>     case CSR_INSTRET:
+>     case CSR_CYCLE:
+>       if (ctr_ok)
+>       {
+>         effective_value = state.minstret;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return state.minstret;
+>       }
+>       break;
+>     case CSR_MINSTRET:
+>     case CSR_MCYCLE:
+>       effective_value = state.minstret;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.minstret;
+>     case CSR_INSTRETH:
+>     case CSR_CYCLEH:
+>       if (ctr_ok && xlen == 32)
+>       {
+>         effective_value = state.minstret >> 32;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return state.minstret >> 32;
+>       }
+>       break;
+>     case CSR_MINSTRETH:
+>     case CSR_MCYCLEH:
+>       if (xlen == 32)
+>       {
+>         effective_value = state.minstret >> 32;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return state.minstret >> 32;
+>       }
+>       break;
+>     case CSR_SCOUNTEREN: 
+>         effective_value = state.scounteren;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return state.scounteren;
+>     case CSR_MCOUNTEREN: 
+>         effective_value = state.mcounteren;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return state.mcounteren;
+>     case CSR_MCOUNTINHIBIT: 
+>         effective_value = 0;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return 0;
+>     case CSR_SSTATUS: {
+>       reg_t mask = SSTATUS_SIE | SSTATUS_SPIE | SSTATUS_SPP | SSTATUS_FS
+>                  | (supports_extension('V') ? SSTATUS_VS : 0)
+>                  | SSTATUS_XS | SSTATUS_SUM | SSTATUS_MXR | SSTATUS_UXL;
+>       reg_t sstatus = state.mstatus & mask;
+>       if ((sstatus & SSTATUS_FS) == SSTATUS_FS ||
+>           (sstatus & SSTATUS_XS) == SSTATUS_XS)
+>         sstatus |= (xlen == 32 ? SSTATUS32_SD : SSTATUS64_SD);
+> 
+>       effective_value = sstatus;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return sstatus;
+>      }
+>     case CSR_SIP: 
+>       effective_value = state.mip & state.mideleg;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mip & state.mideleg;
+>     case CSR_SIE: 
+>       effective_value = state.mie & state.mideleg;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mie & state.mideleg;
+>     case CSR_SEPC: 
+>       effective_value = state.sepc & pc_alignment_mask();
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.sepc & pc_alignment_mask();
+>     case CSR_STVAL: 
+>       effective_value = state.stval;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.stval;
+>     case CSR_STVEC: 
+>       effective_value = state.stvec;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.stvec;
+>     case CSR_SCAUSE:
+>       if (max_xlen > xlen)
+>       {
+>         effective_value = state.scause | ((state.scause >> (max_xlen-1)) << (xlen-1));
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return state.scause | ((state.scause >> (max_xlen-1)) << (xlen-1));
+>       }
+>       effective_value = state.scause;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.scause;
+>     case CSR_SATP:
+>       if (get_field(state.mstatus, MSTATUS_TVM))
+>         require_privilege(PRV_M);
+>       effective_value = state.satp;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.satp;
+>     case CSR_SSCRATCH: 
+>       effective_value = state.sscratch;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.sscratch;
+>     case CSR_MSTATUS: 
+>       effective_value = state.mstatus;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mstatus;
+>     case CSR_MIP: 
+>       effective_value = state.mip;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mip;
+>     case CSR_MIE: 
+>       effective_value = state.mie;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mie;
+>     case CSR_MEPC:
+>       effective_value = state.mepc & pc_alignment_mask();
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mepc & pc_alignment_mask();
+>     case CSR_MSCRATCH:
+>       effective_value = state.mscratch;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mscratch;
+>     case CSR_MCAUSE:
+>       effective_value = state.mcause;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mcause;
+>     case CSR_MTVAL:
+>       effective_value = state.mtval;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mtval;
+>     case CSR_MISA:
+>       effective_value = state.misa;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.misa;
+>     case CSR_MARCHID:
+>       effective_value = 5;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return 5;
+>     case CSR_MIMPID: 
+>       effective_value = 0;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return 0;
+>     case CSR_MVENDORID:
+>       effective_value = 0;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return 0;
+>     case CSR_MHARTID:
+>       effective_value = id;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return id;
+>     case CSR_MTVEC: 
+>       effective_value = state.mtvec;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mtvec;
+>     case CSR_MEDELEG:
+>       if (!supports_extension('S'))
+>         break;
+> 
+>       effective_value = state.medeleg;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.medeleg;
+>     case CSR_MIDELEG: 
+>        if (!supports_extension('S'))
+>          break;
+> 
+>       effective_value = state.mideleg;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.mideleg;
+>     case CSR_TSELECT: 
+>       effective_value = state.tselect;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.tselect;
+>     case CSR_TDATA1:
+>       if (state.tselect < state.num_triggers) {
+>         reg_t v = 0;
+>         mcontrol_t *mc = &state.mcontrol[state.tselect];
+>         v = set_field(v, MCONTROL_TYPE(xlen), mc->type);
+>         v = set_field(v, MCONTROL_DMODE(xlen), mc->dmode);
+>         v = set_field(v, MCONTROL_MASKMAX(xlen), mc->maskmax);
+>         v = set_field(v, MCONTROL_SELECT, mc->select);
+>         v = set_field(v, MCONTROL_TIMING, mc->timing);
+>         v = set_field(v, MCONTROL_ACTION, mc->action);
+>         v = set_field(v, MCONTROL_CHAIN, mc->chain);
+>         v = set_field(v, MCONTROL_MATCH, mc->match);
+>         v = set_field(v, MCONTROL_M, mc->m);
+>         v = set_field(v, MCONTROL_H, mc->h);
+>         v = set_field(v, MCONTROL_S, mc->s);
+>         v = set_field(v, MCONTROL_U, mc->u);
+>         v = set_field(v, MCONTROL_EXECUTE, mc->execute);
+>         v = set_field(v, MCONTROL_STORE, mc->store);
+>         v = set_field(v, MCONTROL_LOAD, mc->load);
+>         effective_value = v;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return v;
+>       } else {
+>         effective_value = 0;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return 0;
+>       }
+>       break;
+>     case CSR_TDATA2:
+>       if (state.tselect < state.num_triggers) {
+>         effective_value = state.tdata2[state.tselect];
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return state.tdata2[state.tselect];
+>       } else {
+>         effective_value = 0;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return 0;
+>       }
+>       break;
+>     case CSR_TDATA3: 
+>         effective_value = 0;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return 0;
+>     case CSR_DCSR:
+>       {
+>         uint32_t v = 0;
+>         v = set_field(v, DCSR_XDEBUGVER, 1);
+>         v = set_field(v, DCSR_EBREAKM, state.dcsr.ebreakm);
+>         v = set_field(v, DCSR_EBREAKH, state.dcsr.ebreakh);
+>         v = set_field(v, DCSR_EBREAKS, state.dcsr.ebreaks);
+>         v = set_field(v, DCSR_EBREAKU, state.dcsr.ebreaku);
+>         v = set_field(v, DCSR_STOPCYCLE, 0);
+>         v = set_field(v, DCSR_STOPTIME, 0);
+>         v = set_field(v, DCSR_CAUSE, state.dcsr.cause);
+>         v = set_field(v, DCSR_STEP, state.dcsr.step);
+>         v = set_field(v, DCSR_PRV, state.dcsr.prv);
+>         effective_value = v;
+>         update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>         return v;
+>       }
+>     case CSR_DPC:
+>       if (!state.debug_mode)
+>         break;
+> 
+>       effective_value = state.dpc & pc_alignment_mask();
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.dpc & pc_alignment_mask();
+>     case CSR_DSCRATCH:
+>       if (!state.debug_mode)
+>         break;
+> 
+>       effective_value = state.dscratch0;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.dscratch0;
+>     case CSR_DSCRATCH + 1:
+>       if (!state.debug_mode)
+>         break;
+> 
+>       effective_value = state.dscratch1;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+>       return state.dscratch1;
+>     case CSR_VSTART:
+1010a1857,1858
+>       effective_value = VU.vstart;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+1015a1864,1865
+>       effective_value = VU.vxsat;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+1020a1871,1872
+>       effective_value = VU.vxrm;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+1023a1876,1877
+>       effective_value = VU.vl;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
+1026a1881,1882
+>       effective_value = VU.vtype;
+>       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");

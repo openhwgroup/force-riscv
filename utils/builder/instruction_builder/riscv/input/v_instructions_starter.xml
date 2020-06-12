@@ -1,0 +1,2353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<!--
+Add RISCV V extension instruction starter information in this file.
+-->
+<instruction_file>
+  <I name="VAADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VAADD.VV"/>
+  </I>
+  <I name="VAADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VAADD.VX"/>
+  </I>
+  <I name="VAADDU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VAADDU.VV"/>
+  </I>
+  <I name="VAADDU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VAADDU.VX"/>
+  </I>
+  <I name="VADC.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VADC.VI"/>
+  </I>
+  <I name="VADC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VADC.VV"/>
+  </I>
+  <I name="VADC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VADC.VX"/>
+  </I>
+  <I name="VADD.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VADD.VI"/>
+  </I>
+  <I name="VADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VADD.VV"/>
+  </I>
+  <I name="VADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VADD.VX"/>
+  </I>
+  <I name="VAND.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VAND.VI"/>
+  </I>
+  <I name="VAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VAND.VV"/>
+  </I>
+  <I name="VAND.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VAND.VX"/>
+  </I>
+  <I name="VASUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VASUB.VV"/>
+  </I>
+  <I name="VASUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VASUB.VX"/>
+  </I>
+  <I name="VASUBU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VASUBU.VV"/>
+  </I>
+  <I name="VASUBU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VASUBU.VX"/>
+  </I>
+  <I name="VCOMPRESS.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VCOMPRESS.VV"/>
+  </I>
+  <I name="VDIV.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VDIV.VV"/>
+  </I>
+  <I name="VDIV.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VDIV.VX"/>
+  </I>
+  <I name="VDIVU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VDIVU.VV"/>
+  </I>
+  <I name="VDIVU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VDIVU.VX"/>
+  </I>
+  <I name="VDOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VDOT.VV"/>
+  </I>
+  <I name="VDOTU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VDOTU.VV"/>
+  </I>
+  <I name="VFADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFADD.VF"/>
+  </I>
+  <I name="VFADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFADD.VV"/>
+  </I>
+  <I name="VFCLASS.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100011100000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFCLASS.V"/>
+  </I>
+  <I name="VFCVT.F.X.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010000110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFCVT.F.X.V"/>
+  </I>
+  <I name="VFCVT.F.XU.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010000100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFCVT.F.XU.V"/>
+  </I>
+  <I name="VFCVT.X.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010000010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFCVT.X.F.V"/>
+  </I>
+  <I name="VFCVT.XU.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010000000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFCVT.XU.F.V"/>
+  </I>
+  <I name="VFDIV.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFDIV.VF"/>
+  </I>
+  <I name="VFDIV.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFDIV.VV"/>
+  </I>
+  <I name="VFDOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFDOT.VV"/>
+  </I>
+  <I name="VFIRST" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010000100010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFIRST"/>
+  </I>
+  <I name="VFMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMACC.VF"/>
+  </I>
+  <I name="VFMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMACC.VV"/>
+  </I>
+  <I name="VFMADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMADD.VF"/>
+  </I>
+  <I name="VFMADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMADD.VV"/>
+  </I>
+  <I name="VFMAX.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMAX.VF"/>
+  </I>
+  <I name="VFMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMAX.VV"/>
+  </I>
+  <I name="VFMERGE.VF/VFMV.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101111011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMERGE.VF/VFMV.VF"/>
+  </I>
+  <I name="VFMIN.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMIN.VF"/>
+  </I>
+  <I name="VFMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMIN.VV"/>
+  </I>
+  <I name="VFMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMSAC.VF"/>
+  </I>
+  <I name="VFMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMSAC.VV"/>
+  </I>
+  <I name="VFMSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMSUB.VF"/>
+  </I>
+  <I name="VFMSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMSUB.VV"/>
+  </I>
+  <I name="VFMUL.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMUL.VF"/>
+  </I>
+  <I name="VFMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMUL.VV"/>
+  </I>
+  <I name="VFMV.F.S" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010000000000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMV.F.S"/>
+  </I>
+  <I name="VFMV.S.F" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="010000000001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFMV.S.F"/>
+  </I>
+  <I name="VFNCVT.F.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010101000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNCVT.F.F.W"/>
+  </I>
+  <I name="VFNCVT.F.X.W" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010100110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNCVT.F.X.W"/>
+  </I>
+  <I name="VFNCVT.F.XU.W" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010100100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNCVT.F.XU.W"/>
+  </I>
+  <I name="VFNCVT.ROD.F.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010101010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNCVT.ROD.F.F.W"/>
+  </I>
+  <I name="VFNCVT.X.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010100010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNCVT.X.F.W"/>
+  </I>
+  <I name="VFNCVT.XU.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010100000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNCVT.XU.F.W"/>
+  </I>
+  <I name="VFNMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011011011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMACC.VF"/>
+  </I>
+  <I name="VFNMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMACC.VV"/>
+  </I>
+  <I name="VFNMADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMADD.VF"/>
+  </I>
+  <I name="VFNMADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMADD.VV"/>
+  </I>
+  <I name="VFNMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011111011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMSAC.VF"/>
+  </I>
+  <I name="VFNMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMSAC.VV"/>
+  </I>
+  <I name="VFNMSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMSUB.VF"/>
+  </I>
+  <I name="VFNMSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFNMSUB.VV"/>
+  </I>
+  <I name="VFRDIV.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFRDIV.VF"/>
+  </I>
+  <I name="VFREDMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFREDMAX.VV"/>
+  </I>
+  <I name="VFREDMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFREDMIN.VV"/>
+  </I>
+  <I name="VFREDOSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFREDOSUM.VV"/>
+  </I>
+  <I name="VFREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFREDSUM.VV"/>
+  </I>
+  <I name="VFRSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001111011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFRSUB.VF"/>
+  </I>
+  <I name="VFSGNJ.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSGNJ.VF"/>
+  </I>
+  <I name="VFSGNJ.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSGNJ.VV"/>
+  </I>
+  <I name="VFSGNJN.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSGNJN.VF"/>
+  </I>
+  <I name="VFSGNJN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSGNJN.VV"/>
+  </I>
+  <I name="VFSGNJX.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSGNJX.VF"/>
+  </I>
+  <I name="VFSGNJX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSGNJX.VV"/>
+  </I>
+  <I name="VFSQRT.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100011000000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSQRT.V"/>
+  </I>
+  <I name="VFSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSUB.VF"/>
+  </I>
+  <I name="VFSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFSUB.VV"/>
+  </I>
+  <I name="VFWADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWADD.VF"/>
+  </I>
+  <I name="VFWADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWADD.VV"/>
+  </I>
+  <I name="VFWADD.W.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWADD.W.VF"/>
+  </I>
+  <I name="VFWADD.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWADD.W.VV"/>
+  </I>
+  <I name="VFWCVT.F.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010011000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWCVT.F.F.V"/>
+  </I>
+  <I name="VFWCVT.F.X.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010010110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWCVT.F.X.V"/>
+  </I>
+  <I name="VFWCVT.F.XU.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010010100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWCVT.F.XU.V"/>
+  </I>
+  <I name="VFWCVT.X.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010010010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWCVT.X.F.V"/>
+  </I>
+  <I name="VFWCVT.XU.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010010000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWCVT.XU.F.V"/>
+  </I>
+  <I name="VFWMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWMACC.VF"/>
+  </I>
+  <I name="VFWMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWMACC.VV"/>
+  </I>
+  <I name="VFWMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWMSAC.VF"/>
+  </I>
+  <I name="VFWMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWMSAC.VV"/>
+  </I>
+  <I name="VFWMUL.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWMUL.VF"/>
+  </I>
+  <I name="VFWMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWMUL.VV"/>
+  </I>
+  <I name="VFWNMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111011011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWNMACC.VF"/>
+  </I>
+  <I name="VFWNMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWNMACC.VV"/>
+  </I>
+  <I name="VFWNMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111111011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWNMSAC.VF"/>
+  </I>
+  <I name="VFWNMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWNMSAC.VV"/>
+  </I>
+  <I name="VFWREDOSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWREDOSUM.VV"/>
+  </I>
+  <I name="VFWREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWREDSUM.VV"/>
+  </I>
+  <I name="VFWSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWSUB.VF"/>
+  </I>
+  <I name="VFWSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWSUB.VV"/>
+  </I>
+  <I name="VFWSUB.W.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101101011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWSUB.W.VF"/>
+  </I>
+  <I name="VFWSUB.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101100011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFWSUB.W.VV"/>
+  </I>
+  <I name="VID" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010100100010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VID"/>
+  </I>
+  <I name="VIOTA" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010100100000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VIOTA"/>
+  </I>
+  <I name="VMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMACC.VV"/>
+  </I>
+  <I name="VMACC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMACC.VX"/>
+  </I>
+  <I name="VMADC.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMADC.VI"/>
+  </I>
+  <I name="VMADC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMADC.VV"/>
+  </I>
+  <I name="VMADC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMADC.VX"/>
+  </I>
+  <I name="VMADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMADD.VV"/>
+  </I>
+  <I name="VMADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMADD.VX"/>
+  </I>
+  <I name="VMAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMAND.VV"/>
+  </I>
+  <I name="VMANDNOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMANDNOT.VV"/>
+  </I>
+  <I name="VMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMAX.VV"/>
+  </I>
+  <I name="VMAX.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMAX.VX"/>
+  </I>
+  <I name="VMAXU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMAXU.VV"/>
+  </I>
+  <I name="VMAXU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMAXU.VX"/>
+  </I>
+  <I name="VMERGE/VMV.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMERGE/VMV.VI"/>
+  </I>
+  <I name="VMERGE/VMV.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMERGE/VMV.VV"/>
+  </I>
+  <I name="VMERGE/VMV.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMERGE/VMV.VX"/>
+  </I>
+  <I name="VMFEQ.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFEQ.VF"/>
+  </I>
+  <I name="VMFEQ.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFEQ.VV"/>
+  </I>
+  <I name="VMFGE.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111111011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFGE.VF"/>
+  </I>
+  <I name="VMFGT.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111011011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFGT.VF"/>
+  </I>
+  <I name="VMFLE.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFLE.VF"/>
+  </I>
+  <I name="VMFLE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFLE.VV"/>
+  </I>
+  <I name="VMFLT.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFLT.VF"/>
+  </I>
+  <I name="VMFLT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110110011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFLT.VV"/>
+  </I>
+  <I name="VMFNE.VF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111001011010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFNE.VF"/>
+  </I>
+  <I name="VMFNE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMFNE.VV"/>
+  </I>
+  <I name="VMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMIN.VV"/>
+  </I>
+  <I name="VMIN.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMIN.VX"/>
+  </I>
+  <I name="VMINU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMINU.VV"/>
+  </I>
+  <I name="VMINU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMINU.VX"/>
+  </I>
+  <I name="VMNAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMNAND.VV"/>
+  </I>
+  <I name="VMNOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMNOR.VV"/>
+  </I>
+  <I name="VMOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMOR.VV"/>
+  </I>
+  <I name="VMORNOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMORNOT.VV"/>
+  </I>
+  <I name="VMSBC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSBC.VV"/>
+  </I>
+  <I name="VMSBC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSBC.VX"/>
+  </I>
+  <I name="VMSBF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010100000010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSBF"/>
+  </I>
+  <I name="VMSEQ.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSEQ.VI"/>
+  </I>
+  <I name="VMSEQ.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSEQ.VV"/>
+  </I>
+  <I name="VMSEQ.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSEQ.VX"/>
+  </I>
+  <I name="VMSGT.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSGT.VI"/>
+  </I>
+  <I name="VMSGT.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSGT.VX"/>
+  </I>
+  <I name="VMSGTU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111100111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSGTU.VI"/>
+  </I>
+  <I name="VMSGTU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSGTU.VX"/>
+  </I>
+  <I name="VMSIF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010100000110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSIF"/>
+  </I>
+  <I name="VMSLE.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLE.VI"/>
+  </I>
+  <I name="VMSLE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLE.VV"/>
+  </I>
+  <I name="VMSLE.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLE.VX"/>
+  </I>
+  <I name="VMSLEU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLEU.VI"/>
+  </I>
+  <I name="VMSLEU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLEU.VV"/>
+  </I>
+  <I name="VMSLEU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLEU.VX"/>
+  </I>
+  <I name="VMSLT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLT.VV"/>
+  </I>
+  <I name="VMSLT.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLT.VX"/>
+  </I>
+  <I name="VMSLTU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLTU.VV"/>
+  </I>
+  <I name="VMSLTU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSLTU.VX"/>
+  </I>
+  <I name="VMSNE.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSNE.VI"/>
+  </I>
+  <I name="VMSNE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSNE.VV"/>
+  </I>
+  <I name="VMSNE.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSNE.VX"/>
+  </I>
+  <I name="VMSOF" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010100000100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMSOF"/>
+  </I>
+  <I name="VMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMUL.VV"/>
+  </I>
+  <I name="VMUL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMUL.VX"/>
+  </I>
+  <I name="VMULH.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMULH.VV"/>
+  </I>
+  <I name="VMULH.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMULH.VX"/>
+  </I>
+  <I name="VMULHSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMULHSU.VV"/>
+  </I>
+  <I name="VMULHSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMULHSU.VX"/>
+  </I>
+  <I name="VMULHU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMULHU.VV"/>
+  </I>
+  <I name="VMULHU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMULHU.VX"/>
+  </I>
+  <I name="VMV&lt;NF&gt;R.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMV&lt;NF&gt;R.VI"/>
+  </I>
+  <I name="VMV.S.X" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="010000000001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMV.S.X"/>
+  </I>
+  <I name="VMV.X.S" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010000000000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMV.X.S"/>
+  </I>
+  <I name="VMXNOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMXNOR.VV"/>
+  </I>
+  <I name="VMXOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VMXOR.VV"/>
+  </I>
+  <I name="VNCLIP.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNCLIP.VI"/>
+  </I>
+  <I name="VNCLIP.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNCLIP.VV"/>
+  </I>
+  <I name="VNCLIP.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNCLIP.VX"/>
+  </I>
+  <I name="VNCLIPU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011100111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNCLIPU.VI"/>
+  </I>
+  <I name="VNCLIPU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNCLIPU.VV"/>
+  </I>
+  <I name="VNCLIPU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNCLIPU.VX"/>
+  </I>
+  <I name="VNMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNMSAC.VV"/>
+  </I>
+  <I name="VNMSAC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNMSAC.VX"/>
+  </I>
+  <I name="VNMSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNMSUB.VV"/>
+  </I>
+  <I name="VNMSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNMSUB.VX"/>
+  </I>
+  <I name="VNSRA.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNSRA.VI"/>
+  </I>
+  <I name="VNSRA.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNSRA.VV"/>
+  </I>
+  <I name="VNSRA.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNSRA.VX"/>
+  </I>
+  <I name="VNSRL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNSRL.VI"/>
+  </I>
+  <I name="VNSRL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNSRL.VV"/>
+  </I>
+  <I name="VNSRL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VNSRL.VX"/>
+  </I>
+  <I name="VOR.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010100111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VOR.VI"/>
+  </I>
+  <I name="VOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VOR.VV"/>
+  </I>
+  <I name="VOR.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VOR.VX"/>
+  </I>
+  <I name="VPOPC" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010000100000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VPOPC"/>
+  </I>
+  <I name="VQMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VQMACC.VV"/>
+  </I>
+  <I name="VQMACC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VQMACC.VX"/>
+  </I>
+  <I name="VQMACCSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VQMACCSU.VV"/>
+  </I>
+  <I name="VQMACCSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VQMACCSU.VX"/>
+  </I>
+  <I name="VQMACCU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VQMACCU.VV"/>
+  </I>
+  <I name="VQMACCU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VQMACCU.VX"/>
+  </I>
+  <I name="VQMACCUS.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VQMACCUS.VX"/>
+  </I>
+  <I name="VREDAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDAND.VV"/>
+  </I>
+  <I name="VREDMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDMAX.VV"/>
+  </I>
+  <I name="VREDMAXU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDMAXU.VV"/>
+  </I>
+  <I name="VREDMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDMIN.VV"/>
+  </I>
+  <I name="VREDMINU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDMINU.VV"/>
+  </I>
+  <I name="VREDOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDOR.VV"/>
+  </I>
+  <I name="VREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDSUM.VV"/>
+  </I>
+  <I name="VREDXOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREDXOR.VV"/>
+  </I>
+  <I name="VREM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREM.VV"/>
+  </I>
+  <I name="VREM.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREM.VX"/>
+  </I>
+  <I name="VREMU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREMU.VV"/>
+  </I>
+  <I name="VREMU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VREMU.VX"/>
+  </I>
+  <I name="VRGATHER.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VRGATHER.VI"/>
+  </I>
+  <I name="VRGATHER.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VRGATHER.VV"/>
+  </I>
+  <I name="VRGATHER.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VRGATHER.VX"/>
+  </I>
+  <I name="VRSUB.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VRSUB.VI"/>
+  </I>
+  <I name="VRSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VRSUB.VX"/>
+  </I>
+  <I name="VSADD.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSADD.VI"/>
+  </I>
+  <I name="VSADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSADD.VV"/>
+  </I>
+  <I name="VSADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSADD.VX"/>
+  </I>
+  <I name="VSADDU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSADDU.VI"/>
+  </I>
+  <I name="VSADDU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSADDU.VV"/>
+  </I>
+  <I name="VSADDU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSADDU.VX"/>
+  </I>
+  <I name="VSBC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSBC.VV"/>
+  </I>
+  <I name="VSBC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSBC.VX"/>
+  </I>
+  <I name="VSLIDE1DOWN.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLIDE1DOWN.VX"/>
+  </I>
+  <I name="VSLIDE1UP.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLIDE1UP.VX"/>
+  </I>
+  <I name="VSLIDEDOWN.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLIDEDOWN.VI"/>
+  </I>
+  <I name="VSLIDEDOWN.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLIDEDOWN.VX"/>
+  </I>
+  <I name="VSLIDEUP.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011100111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLIDEUP.VI"/>
+  </I>
+  <I name="VSLIDEUP.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLIDEUP.VX"/>
+  </I>
+  <I name="VSLL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLL.VI"/>
+  </I>
+  <I name="VSLL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLL.VV"/>
+  </I>
+  <I name="VSLL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSLL.VX"/>
+  </I>
+  <I name="VSMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSMUL.VV"/>
+  </I>
+  <I name="VSMUL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSMUL.VX"/>
+  </I>
+  <I name="VSRA.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010010111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSRA.VI"/>
+  </I>
+  <I name="VSRA.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSRA.VV"/>
+  </I>
+  <I name="VSRA.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSRA.VX"/>
+  </I>
+  <I name="VSRL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSRL.VI"/>
+  </I>
+  <I name="VSRL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSRL.VV"/>
+  </I>
+  <I name="VSRL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSRL.VX"/>
+  </I>
+  <I name="VSSRA.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSRA.VI"/>
+  </I>
+  <I name="VSSRA.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSRA.VV"/>
+  </I>
+  <I name="VSSRA.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSRA.VX"/>
+  </I>
+  <I name="VSSRL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010100111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSRL.VI"/>
+  </I>
+  <I name="VSSRL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSRL.VV"/>
+  </I>
+  <I name="VSSRL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSRL.VX"/>
+  </I>
+  <I name="VSSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSUB.VV"/>
+  </I>
+  <I name="VSSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSUB.VX"/>
+  </I>
+  <I name="VSSUBU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSUBU.VV"/>
+  </I>
+  <I name="VSSUBU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSSUBU.VX"/>
+  </I>
+  <I name="VSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSUB.VV"/>
+  </I>
+  <I name="VSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSUB.VX"/>
+  </I>
+  <I name="VWADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADD.VV"/>
+  </I>
+  <I name="VWADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADD.VX"/>
+  </I>
+  <I name="VWADD.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADD.W.VV"/>
+  </I>
+  <I name="VWADD.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADD.W.VX"/>
+  </I>
+  <I name="VWADDU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADDU.VV"/>
+  </I>
+  <I name="VWADDU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADDU.VX"/>
+  </I>
+  <I name="VWADDU.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADDU.W.VV"/>
+  </I>
+  <I name="VWADDU.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWADDU.W.VX"/>
+  </I>
+  <I name="VWMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111010101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMACC.VV"/>
+  </I>
+  <I name="VWMACC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111011101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMACC.VX"/>
+  </I>
+  <I name="VWMACCSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMACCSU.VV"/>
+  </I>
+  <I name="VWMACCSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMACCSU.VX"/>
+  </I>
+  <I name="VWMACCU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMACCU.VV"/>
+  </I>
+  <I name="VWMACCU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMACCU.VX"/>
+  </I>
+  <I name="VWMACCUS.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMACCUS.VX"/>
+  </I>
+  <I name="VWMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMUL.VV"/>
+  </I>
+  <I name="VWMUL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMUL.VX"/>
+  </I>
+  <I name="VWMULSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMULSU.VV"/>
+  </I>
+  <I name="VWMULSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMULSU.VX"/>
+  </I>
+  <I name="VWMULU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110000101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMULU.VV"/>
+  </I>
+  <I name="VWMULU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110001101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWMULU.VX"/>
+  </I>
+  <I name="VWREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100010001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWREDSUM.VV"/>
+  </I>
+  <I name="VWREDSUMU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWREDSUMU.VV"/>
+  </I>
+  <I name="VWSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUB.VV"/>
+  </I>
+  <I name="VWSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUB.VX"/>
+  </I>
+  <I name="VWSUB.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101110101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUB.W.VV"/>
+  </I>
+  <I name="VWSUB.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101111101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUB.W.VX"/>
+  </I>
+  <I name="VWSUBU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUBU.VV"/>
+  </I>
+  <I name="VWSUBU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUBU.VX"/>
+  </I>
+  <I name="VWSUBU.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101100101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUBU.W.VV"/>
+  </I>
+  <I name="VWSUBU.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1101101101010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VWSUBU.W.VX"/>
+  </I>
+  <I name="VXOR.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010110111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VXOR.VI"/>
+  </I>
+  <I name="VXOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010110001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VXOR.VV"/>
+  </I>
+  <I name="VXOR.VX" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VXOR.VX"/>
+  </I>
+</instruction_file>

@@ -1,0 +1,38 @@
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+##########################################################################
+
+[Coding style]
+Quoted rationale:
+"Standardization is Important 
+
+It helps if the standard annoys everyone in some way so everyone feels they are on the same playing field. The proposal here has evolved over many projects, many companies,
+and literally a total of many weeks spent arguing. It is no particular person's style and is certainly open to local amendments. "
+
+The FORCE-RISCV project's coding style is largely derived from this coding style guide:
+http://www.possibility.com/Cpp/CppCodingStandard.html#names
+
+A more formal coding style guide will be provided very soon, so that contributors can follow the coding style, so that code from everyone has a common style.
+
+We have put together a Python coding standard here: doc/guide/Force_python_coding_guidelines.htm
+
+[Project guide]
+Please refer to this file for some insights into developing code for FORCE-RISCV: doc/guide/FORCE_project_guide.html
+
+[Regression]
+* Run the main regression while in the force-riscv directory, this should pass fully.
+  * ./utils/regression/master_run.py
+* Run the unit-tests regression while in the force-riscv directory, this should pass fully.
+  *  ./utils/regression/unit_tests.py

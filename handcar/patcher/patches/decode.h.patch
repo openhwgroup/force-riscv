@@ -1,0 +1,519 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+128a129,144
+> #include <typeinfo>
+> extern const char* xpr_arch_name[];
+> extern const char* fpr_arch_name[];
+> extern "C" {
+>   // update_generator_register function: for the given cpuid, this callback function is called by the simulator to notify the user that a register has been accessed.
+>   //
+>   //  inputs: 
+>   //      uint32_t cpuid -- refers to the processor ID
+>   //      const char* pRegisterName -- the name of the register (programmer's name)
+>   //      uint64_t value -- the data stored in the register after update
+>   //      uint64_t mask -- 1's indicate relevant bits
+>   //      const char* pAccessType -- indicates if the access was a read or write.
+>   //
+>   void update_generator_register(uint32_t cpuid, const char* pRegisterName, uint64_t value, uint64_t mask, const char* pAccessType);  //!< update generator register information when step an instruction
+> }
+> 
+132a149,162
+>   regfile_t(size_t id): pid(id) {};
+>   void set_pid(size_t id) {pid = id;};
+>   void do_callback(size_t i, T value, const char access_type[]) const
+>   {
+>     uint64_t mask = 0xffffffffffffffffull;
+>     uint64_t buffer = 0;
+> 
+>     memcpy(&buffer, &value, sizeof(uint64_t) < sizeof(T) ? sizeof(uint64_t) : sizeof(T));
+> 
+>     if(typeid(T) == typeid(float128_t))
+>         update_generator_register(pid, fpr_arch_name[i], buffer, mask, access_type); 
+>     else
+>         update_generator_register(pid, xpr_arch_name[i], buffer, mask, access_type);
+>   }
+136a167,173
+> 
+>     do_callback(i, value, "write");
+>   }
+>   void writeNoCallback(size_t i, T value)
+>   {
+>     if (!zero_reg || i != 0)
+>       data[i] = value;
+139a177,181
+>     do_callback(i, data[i], "read");
+>     return data[i];
+>   }
+>   const T& readNoCallback(size_t i) const
+>   {
+150a193
+>   size_t pid;
+205,206d247
+< #define dirty_fp_state (STATE.mstatus |= MSTATUS_FS | (xlen == 64 ? MSTATUS64_SD : MSTATUS32_SD))
+< #define dirty_ext_state (STATE.mstatus |= MSTATUS_XS | (xlen == 64 ? MSTATUS64_SD : MSTATUS32_SD))
+207a249,250
+> #define dirty_fp_state ((STATE.mstatus |= MSTATUS_FS | (xlen == 64 ? MSTATUS64_SD : MSTATUS32_SD)), update_generator_register(STATE.pid, "mstatus", STATE.mstatus, 0xffffffffffffffffull, "write"))
+> #define dirty_ext_state ((STATE.mstatus |= MSTATUS_XS | (xlen == 64 ? MSTATUS64_SD : MSTATUS32_SD)), update_generator_register(STATE.pid, "mstatus", STATE.mstatus, 0xffffffffffffffffull, "write"))
+248a292
+>                                update_generator_register(STATE.pid, "fcsr", P.get_csr_api(CSR_FCSR), 0xffffffffffffffffull, "write"); \
+379c423
+<     bool skip = ((P.VU.elt<uint64_t>(0, midx) >> mpos) & 0x1) == 0; \
+---
+>     bool skip = ((P.VU.elt_val<uint64_t>(0, midx) >> mpos) & 0x1) == 0; \
+548c592
+<     uint64_t &vdi = P.VU.elt<uint64_t>(insn.rd(), midx, true); \
+---
+>     uint64_t &vdi = P.VU.elt_ref<uint64_t>(insn.rd(), midx, true); \
+564,566c608,610
+<     uint64_t vs2 = P.VU.elt<uint64_t>(insn.rs2(), midx); \
+<     uint64_t vs1 = P.VU.elt<uint64_t>(insn.rs1(), midx); \
+<     uint64_t &res = P.VU.elt<uint64_t>(insn.rd(), midx, true); \
+---
+>     uint64_t vs2 = P.VU.elt_val<uint64_t>(insn.rs2(), midx); \
+>     uint64_t vs1 = P.VU.elt_val<uint64_t>(insn.rs1(), midx); \
+>     uint64_t &res = P.VU.elt_ref<uint64_t>(insn.rd(), midx, true); \
+605,607c649,651
+<   type_sew_t<x>::type &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true); \
+<   type_sew_t<x>::type vs1 = P.VU.elt<type_sew_t<x>::type>(rs1_num, i); \
+<   type_sew_t<x>::type vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i); \
+---
+>   type_sew_t<x>::type &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true); \
+>   type_sew_t<x>::type vs1 = P.VU.elt_val<type_sew_t<x>::type>(rs1_num, i); \
+>   type_sew_t<x>::type vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i); \
+612,614c656,658
+<   type_usew_t<x>::type &vd = P.VU.elt<type_usew_t<x>::type>(rd_num, i, true); \
+<   type_usew_t<x>::type vs1 = P.VU.elt<type_usew_t<x>::type>(rs1_num, i); \
+<   type_usew_t<x>::type vs2 = P.VU.elt<type_usew_t<x>::type>(rs2_num, i);
+---
+>   type_usew_t<x>::type &vd = P.VU.elt_ref<type_usew_t<x>::type>(rd_num, i, true); \
+>   type_usew_t<x>::type vs1 = P.VU.elt_val<type_usew_t<x>::type>(rs1_num, i); \
+>   type_usew_t<x>::type vs2 = P.VU.elt_val<type_usew_t<x>::type>(rs2_num, i);
+617c661
+<   type_usew_t<x>::type &vd = P.VU.elt<type_usew_t<x>::type>(rd_num, i, true); \
+---
+>   type_usew_t<x>::type &vd = P.VU.elt_ref<type_usew_t<x>::type>(rd_num, i, true); \
+619c663
+<   type_usew_t<x>::type vs2 = P.VU.elt<type_usew_t<x>::type>(rs2_num, i);
+---
+>   type_usew_t<x>::type vs2 = P.VU.elt_val<type_usew_t<x>::type>(rs2_num, i);
+622c666
+<   type_usew_t<x>::type &vd = P.VU.elt<type_usew_t<x>::type>(rd_num, i, true); \
+---
+>   type_usew_t<x>::type &vd = P.VU.elt_ref<type_usew_t<x>::type>(rd_num, i, true); \
+624c668
+<   type_usew_t<x>::type vs2 = P.VU.elt<type_usew_t<x>::type>(rs2_num, i);
+---
+>   type_usew_t<x>::type vs2 = P.VU.elt_val<type_usew_t<x>::type>(rs2_num, i);
+627,629c671,673
+<   type_sew_t<x>::type &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true); \
+<   type_sew_t<x>::type vs1 = P.VU.elt<type_sew_t<x>::type>(rs1_num, i); \
+<   type_sew_t<x>::type vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i);
+---
+>   type_sew_t<x>::type &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true); \
+>   type_sew_t<x>::type vs1 = P.VU.elt_val<type_sew_t<x>::type>(rs1_num, i); \
+>   type_sew_t<x>::type vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i);
+632c676
+<   type_sew_t<x>::type &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true); \
+---
+>   type_sew_t<x>::type &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true); \
+634c678
+<   type_sew_t<x>::type vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i);
+---
+>   type_sew_t<x>::type vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i);
+637c681
+<   type_sew_t<x>::type &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true); \
+---
+>   type_sew_t<x>::type &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true); \
+639c683
+<   type_sew_t<x>::type vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i);
+---
+>   type_sew_t<x>::type vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i);
+642,643c686,687
+<   type_sew_t<x>::type &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true); \
+<   type_usew_t<x>::type vs2 = P.VU.elt<type_usew_t<x>::type>(rs2_num, RS1);
+---
+>   type_sew_t<x>::type &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true); \
+>   type_usew_t<x>::type vs2 = P.VU.elt_val<type_usew_t<x>::type>(rs2_num, RS1);
+646,647c690,691
+<   auto &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true); \
+<   auto vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i + off);
+---
+>   auto &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true); \
+>   auto vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i + off);
+650,651c694,695
+<   auto &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true); \
+<   auto vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i - offset);
+---
+>   auto &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true); \
+>   auto vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i - offset);
+654,656c698,700
+<   auto &vd = P.VU.elt<type_usew_t<sew1>::type>(rd_num, i, true); \
+<   auto vs2_u = P.VU.elt<type_usew_t<sew2>::type>(rs2_num, i); \
+<   auto vs2 = P.VU.elt<type_sew_t<sew2>::type>(rs2_num, i); \
+---
+>   auto &vd = P.VU.elt_ref<type_usew_t<sew1>::type>(rd_num, i, true); \
+>   auto vs2_u = P.VU.elt_val<type_usew_t<sew2>::type>(rs2_num, i); \
+>   auto vs2 = P.VU.elt_val<type_sew_t<sew2>::type>(rs2_num, i); \
+660,662c704,706
+<   auto &vd = P.VU.elt<type_usew_t<sew1>::type>(rd_num, i, true); \
+<   auto vs2_u = P.VU.elt<type_usew_t<sew2>::type>(rs2_num, i); \
+<   auto vs2 = P.VU.elt<type_sew_t<sew2>::type>(rs2_num, i); \
+---
+>   auto &vd = P.VU.elt_ref<type_usew_t<sew1>::type>(rd_num, i, true); \
+>   auto vs2_u = P.VU.elt_val<type_usew_t<sew2>::type>(rs2_num, i); \
+>   auto vs2 = P.VU.elt_val<type_sew_t<sew2>::type>(rs2_num, i); \
+666,669c710,713
+<   auto &vd = P.VU.elt<type_usew_t<sew1>::type>(rd_num, i, true); \
+<   auto vs2_u = P.VU.elt<type_usew_t<sew2>::type>(rs2_num, i); \
+<   auto vs2 = P.VU.elt<type_sew_t<sew2>::type>(rs2_num, i); \
+<   auto vs1 = P.VU.elt<type_sew_t<sew1>::type>(rs1_num, i);
+---
+>   auto &vd = P.VU.elt_ref<type_usew_t<sew1>::type>(rd_num, i, true); \
+>   auto vs2_u = P.VU.elt_val<type_usew_t<sew2>::type>(rs2_num, i); \
+>   auto vs2 = P.VU.elt_val<type_sew_t<sew2>::type>(rs2_num, i); \
+>   auto vs1 = P.VU.elt_val<type_sew_t<sew1>::type>(rs1_num, i);
+672c716
+<   auto vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i); \
+---
+>   auto vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i); \
+675c719
+<   auto &vd = P.VU.elt<uint64_t>(rd_num, midx, true);
+---
+>   auto &vd = P.VU.elt_ref<uint64_t>(rd_num, midx, true);
+678,680c722,724
+<   auto vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i); \
+<   auto vs1 = P.VU.elt<type_sew_t<x>::type>(rs1_num, i); \
+<   auto &vd = P.VU.elt<uint64_t>(rd_num, midx, true);
+---
+>   auto vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i); \
+>   auto vs1 = P.VU.elt_val<type_sew_t<x>::type>(rs1_num, i); \
+>   auto &vd = P.VU.elt_ref<uint64_t>(rd_num, midx, true);
+683c727
+<   auto vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i); \
+---
+>   auto vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i); \
+686c730
+<   auto &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true);
+---
+>   auto &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true);
+689,691c733,735
+<   auto vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i); \
+<   auto vs1 = P.VU.elt<type_sew_t<x>::type>(rs1_num, i); \
+<   auto &vd = P.VU.elt<type_sew_t<x>::type>(rd_num, i, true);
+---
+>   auto vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i); \
+>   auto vs1 = P.VU.elt_val<type_sew_t<x>::type>(rs1_num, i); \
+>   auto &vd = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, i, true);
+831,832c875,876
+<   auto &vd_0_des = P.VU.elt<type_sew_t<x>::type>(rd_num, 0, true); \
+<   auto vd_0_res = P.VU.elt<type_sew_t<x>::type>(rs1_num, 0); \
+---
+>   auto &vd_0_des = P.VU.elt_ref<type_sew_t<x>::type>(rd_num, 0, true); \
+>   auto vd_0_res = P.VU.elt_val<type_sew_t<x>::type>(rs1_num, 0); \
+835c879
+<     auto vs2 = P.VU.elt<type_sew_t<x>::type>(rs2_num, i); \
+---
+>     auto vs2 = P.VU.elt_val<type_sew_t<x>::type>(rs2_num, i); \
+862,863c906,907
+<   auto &vd_0_des = P.VU.elt<type_usew_t<x>::type>(rd_num, 0, true); \
+<   auto vd_0_res = P.VU.elt<type_usew_t<x>::type>(rs1_num, 0); \
+---
+>   auto &vd_0_des = P.VU.elt_ref<type_usew_t<x>::type>(rd_num, 0, true); \
+>   auto vd_0_res = P.VU.elt_val<type_usew_t<x>::type>(rs1_num, 0); \
+866c910
+<     auto vs2 = P.VU.elt<type_usew_t<x>::type>(rs2_num, i);
+---
+>     auto vs2 = P.VU.elt_val<type_usew_t<x>::type>(rs2_num, i);
+1012,1013c1056,1057
+<   type_usew_t<sew1>::type &vd = P.VU.elt<type_usew_t<sew1>::type>(rd_num, i, true); \
+<   type_usew_t<sew2>::type vs2_u = P.VU.elt<type_usew_t<sew2>::type>(rs2_num, i); \
+---
+>   type_usew_t<sew1>::type &vd = P.VU.elt_ref<type_usew_t<sew1>::type>(rd_num, i, true); \
+>   type_usew_t<sew2>::type vs2_u = P.VU.elt_val<type_usew_t<sew2>::type>(rs2_num, i); \
+1015,1016c1059,1060
+<   type_sew_t<sew2>::type vs2 = P.VU.elt<type_sew_t<sew2>::type>(rs2_num, i); \
+<   type_sew_t<sew1>::type vs1 = P.VU.elt<type_sew_t<sew1>::type>(rs1_num, i); \
+---
+>   type_sew_t<sew2>::type vs2 = P.VU.elt_val<type_sew_t<sew2>::type>(rs2_num, i); \
+>   type_sew_t<sew1>::type vs1 = P.VU.elt_val<type_sew_t<sew1>::type>(rs1_num, i); \
+1111,1112c1155,1156
+<     sign##16_t vd_w = P.VU.elt<sign##16_t>(rd_num, i); \
+<     P.VU.elt<uint16_t>(rd_num, i, true) = \
+---
+>     sign##16_t vd_w = P.VU.elt_val<sign##16_t>(rd_num, i); \
+>     P.VU.elt_ref<uint16_t>(rd_num, i, true) = \
+1117,1118c1161,1162
+<     sign##32_t vd_w = P.VU.elt<sign##32_t>(rd_num, i); \
+<     P.VU.elt<uint32_t>(rd_num, i, true) = \
+---
+>     sign##32_t vd_w = P.VU.elt_val<sign##32_t>(rd_num, i); \
+>     P.VU.elt_ref<uint32_t>(rd_num, i, true) = \
+1123,1124c1167,1168
+<     sign##64_t vd_w = P.VU.elt<sign##64_t>(rd_num, i); \
+<     P.VU.elt<uint64_t>(rd_num, i, true) = \
+---
+>     sign##64_t vd_w = P.VU.elt_val<sign##64_t>(rd_num, i); \
+>     P.VU.elt_ref<uint64_t>(rd_num, i, true) = \
+1133,1134c1177,1178
+<     sign_d##16_t vd_w = P.VU.elt<sign_d##16_t>(rd_num, i); \
+<     P.VU.elt<uint16_t>(rd_num, i, true) = \
+---
+>     sign_d##16_t vd_w = P.VU.elt_val<sign_d##16_t>(rd_num, i); \
+>     P.VU.elt_ref<uint16_t>(rd_num, i, true) = \
+1139,1140c1183,1184
+<     sign_d##32_t vd_w = P.VU.elt<sign_d##32_t>(rd_num, i); \
+<     P.VU.elt<uint32_t>(rd_num, i, true) = \
+---
+>     sign_d##32_t vd_w = P.VU.elt_val<sign_d##32_t>(rd_num, i); \
+>     P.VU.elt_ref<uint32_t>(rd_num, i, true) = \
+1145,1146c1189,1190
+<     sign_d##64_t vd_w = P.VU.elt<sign_d##64_t>(rd_num, i); \
+<     P.VU.elt<uint64_t>(rd_num, i, true) = \
+---
+>     sign_d##64_t vd_w = P.VU.elt_val<sign_d##64_t>(rd_num, i); \
+>     P.VU.elt_ref<uint64_t>(rd_num, i, true) = \
+1155,1156c1199,1200
+<     sign##16_t &vd_w = P.VU.elt<sign##16_t>(rd_num, i, true); \
+<     sign##16_t vs2_w = P.VU.elt<sign##16_t>(rs2_num, i); \
+---
+>     sign##16_t &vd_w = P.VU.elt_ref<sign##16_t>(rd_num, i, true); \
+>     sign##16_t vs2_w = P.VU.elt_val<sign##16_t>(rs2_num, i); \
+1161,1162c1205,1206
+<     sign##32_t &vd_w = P.VU.elt<sign##32_t>(rd_num, i, true); \
+<     sign##32_t vs2_w = P.VU.elt<sign##32_t>(rs2_num, i); \
+---
+>     sign##32_t &vd_w = P.VU.elt_ref<sign##32_t>(rd_num, i, true); \
+>     sign##32_t vs2_w = P.VU.elt_val<sign##32_t>(rs2_num, i); \
+1167,1168c1211,1212
+<     sign##64_t &vd_w = P.VU.elt<sign##64_t>(rd_num, i, true); \
+<     sign##64_t vs2_w = P.VU.elt<sign##64_t>(rs2_num, i); \
+---
+>     sign##64_t &vd_w = P.VU.elt_ref<sign##64_t>(rd_num, i, true); \
+>     sign##64_t vs2_w = P.VU.elt_val<sign##64_t>(rs2_num, i); \
+1202,1203c1246,1247
+<     sign##32_t vd_w = P.VU.elt<sign##32_t>(rd_num, i); \
+<     P.VU.elt<uint32_t>(rd_num, i, true) = \
+---
+>     sign##32_t vd_w = P.VU.elt_val<sign##32_t>(rd_num, i); \
+>     P.VU.elt_ref<uint32_t>(rd_num, i, true) = \
+1208,1209c1252,1253
+<     sign##64_t vd_w = P.VU.elt<sign##64_t>(rd_num, i); \
+<     P.VU.elt<uint64_t>(rd_num, i, true) = \
+---
+>     sign##64_t vd_w = P.VU.elt_val<sign##64_t>(rd_num, i); \
+>     P.VU.elt_ref<uint64_t>(rd_num, i, true) = \
+1218,1219c1262,1263
+<     sign_d##32_t vd_w = P.VU.elt<sign_d##32_t>(rd_num, i); \
+<     P.VU.elt<uint32_t>(rd_num, i, true) = \
+---
+>     sign_d##32_t vd_w = P.VU.elt_val<sign_d##32_t>(rd_num, i); \
+>     P.VU.elt_ref<uint32_t>(rd_num, i, true) = \
+1224,1225c1268,1269
+<     sign_d##64_t vd_w = P.VU.elt<sign_d##64_t>(rd_num, i); \
+<     P.VU.elt<uint64_t>(rd_num, i, true) = \
+---
+>     sign_d##64_t vd_w = P.VU.elt_val<sign_d##64_t>(rd_num, i); \
+>     P.VU.elt_ref<uint64_t>(rd_num, i, true) = \
+1237,1238c1281,1282
+<   auto &vd_0_des = P.VU.elt<type_sew_t<sew2>::type>(rd_num, 0, true); \
+<   auto vd_0_res = P.VU.elt<type_sew_t<sew2>::type>(rs1_num, 0); \
+---
+>   auto &vd_0_des = P.VU.elt_ref<type_sew_t<sew2>::type>(rd_num, 0, true); \
+>   auto vd_0_res = P.VU.elt_val<type_sew_t<sew2>::type>(rs1_num, 0); \
+1241c1285
+<     auto vs2 = P.VU.elt<type_sew_t<sew1>::type>(rs2_num, i);
+---
+>     auto vs2 = P.VU.elt_val<type_sew_t<sew1>::type>(rs2_num, i);
+1265,1266c1309,1310
+<   auto &vd_0_des = P.VU.elt<type_usew_t<sew2>::type>(rd_num, 0, true); \
+<   auto vd_0_res = P.VU.elt<type_usew_t<sew2>::type>(rs1_num, 0); \
+---
+>   auto &vd_0_des = P.VU.elt_ref<type_usew_t<sew2>::type>(rd_num, 0, true); \
+>   auto vd_0_res = P.VU.elt_val<type_usew_t<sew2>::type>(rs1_num, 0); \
+1269c1313
+<     auto vs2 = P.VU.elt<type_usew_t<sew1>::type>(rs2_num, i);
+---
+>     auto vs2 = P.VU.elt_val<type_usew_t<sew1>::type>(rs2_num, i);
+1465c1509
+<       index[i] = P.VU.elt<uint8_t>(v, i); \
+---
+>       index[i] = P.VU.elt_val<uint8_t>(v, i); \
+1468c1512
+<       index[i] = P.VU.elt<uint16_t>(v, i); \
+---
+>       index[i] = P.VU.elt_val<uint16_t>(v, i); \
+1471c1515
+<       index[i] = P.VU.elt<uint32_t>(v, i); \
+---
+>       index[i] = P.VU.elt_val<uint32_t>(v, i); \
+1474c1518
+<       index[i] = P.VU.elt<uint64_t>(v, i); \
+---
+>       index[i] = P.VU.elt_val<uint64_t>(v, i); \
+1495c1539
+<         val = P.VU.elt<uint8_t>(vs3 + fn * vlmul, vreg_inx); \
+---
+>         val = P.VU.elt_val<uint8_t>(vs3 + fn * vlmul, vreg_inx); \
+1498c1542
+<         val = P.VU.elt<uint16_t>(vs3 + fn * vlmul, vreg_inx); \
+---
+>         val = P.VU.elt_val<uint16_t>(vs3 + fn * vlmul, vreg_inx); \
+1501c1545
+<         val = P.VU.elt<uint32_t>(vs3 + fn * vlmul, vreg_inx); \
+---
+>         val = P.VU.elt_val<uint32_t>(vs3 + fn * vlmul, vreg_inx); \
+1504c1548
+<         val = P.VU.elt<uint64_t>(vs3 + fn * vlmul, vreg_inx); \
+---
+>         val = P.VU.elt_val<uint64_t>(vs3 + fn * vlmul, vreg_inx); \
+1528c1572
+<           P.VU.elt<uint8_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+---
+>           P.VU.elt_ref<uint8_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+1531c1575
+<           P.VU.elt<uint16_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+---
+>           P.VU.elt_ref<uint16_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+1534c1578
+<           P.VU.elt<uint32_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+---
+>           P.VU.elt_ref<uint32_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+1537c1581
+<           P.VU.elt<uint64_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+---
+>           P.VU.elt_ref<uint64_t>(vd + fn * vlmul, vreg_inx, true) = val; \
+1591c1635
+<         p->VU.elt<uint8_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+---
+>         p->VU.elt_ref<uint8_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+1594c1638
+<         p->VU.elt<uint16_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+---
+>         p->VU.elt_ref<uint16_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+1597c1641
+<         p->VU.elt<uint32_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+---
+>         p->VU.elt_ref<uint32_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+1600c1644
+<         p->VU.elt<uint64_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+---
+>         p->VU.elt_ref<uint64_t>(rd_num + fn * vlmul, vreg_inx, true) = val; \
+1633,1634c1677,1678
+<     float32_t vs2 = P.VU.elt<float32_t>(rs2_num, i); \
+<     float32_t vs1 = P.VU.elt<float32_t>(rs1_num, i); \
+---
+>     float32_t vs2 = P.VU.elt_val<float32_t>(rs2_num, i); \
+>     float32_t vs1 = P.VU.elt_val<float32_t>(rs1_num, i); \
+1638c1682
+<     uint64_t &vdi = P.VU.elt<uint64_t>(rd_num, midx, true); \
+---
+>     uint64_t &vdi = P.VU.elt_ref<uint64_t>(rd_num, midx, true); \
+1642,1643c1686,1687
+<   float##width##_t vd_0 = P.VU.elt<float##width##_t>(rd_num, 0); \
+<   float##width##_t vs1_0 = P.VU.elt<float##width##_t>(rs1_num, 0); \
+---
+>   float##width##_t vd_0 = P.VU.elt_val<float##width##_t>(rd_num, 0); \
+>   float##width##_t vs1_0 = P.VU.elt_val<float##width##_t>(rs1_num, 0); \
+1647,1648c1691,1692
+<     int##width##_t &vd = P.VU.elt<int##width##_t>(rd_num, i, true); \
+<     float##width##_t vs2 = P.VU.elt<float##width##_t>(rs2_num, i); \
+---
+>     int##width##_t &vd = P.VU.elt_ref<int##width##_t>(rd_num, i, true); \
+>     float##width##_t vs2 = P.VU.elt_val<float##width##_t>(rs2_num, i); \
+1652c1696
+<   float64_t vd_0 = f64(P.VU.elt<float64_t>(rs1_num, 0).v); \
+---
+>   float64_t vd_0 = f64(P.VU.elt_val<float64_t>(rs1_num, 0).v); \
+1669c1713
+<     P.VU.elt<type_sew_t<x>::type>(rd_num, 0, true) = vd_0.v; \
+---
+>     P.VU.elt_ref<type_sew_t<x>::type>(rd_num, 0, true) = vd_0.v; \
+1693,1695c1737,1739
+<       float32_t &vd = P.VU.elt<float32_t>(rd_num, i, true); \
+<       float32_t vs1 = P.VU.elt<float32_t>(rs1_num, i); \
+<       float32_t vs2 = P.VU.elt<float32_t>(rs2_num, i); \
+---
+>       float32_t &vd = P.VU.elt_ref<float32_t>(rd_num, i, true); \
+>       float32_t vs1 = P.VU.elt_val<float32_t>(rs1_num, i); \
+>       float32_t vs2 = P.VU.elt_val<float32_t>(rs2_num, i); \
+1701,1703c1745,1747
+<       float64_t &vd = P.VU.elt<float64_t>(rd_num, i, true); \
+<       float64_t vs1 = P.VU.elt<float64_t>(rs1_num, i); \
+<       float64_t vs2 = P.VU.elt<float64_t>(rs2_num, i); \
+---
+>       float64_t &vd = P.VU.elt_ref<float64_t>(rd_num, i, true); \
+>       float64_t vs1 = P.VU.elt_val<float64_t>(rs1_num, i); \
+>       float64_t vs2 = P.VU.elt_val<float64_t>(rs2_num, i); \
+1742c1786
+<   float64_t vs2 = f32_to_f64(P.VU.elt<float32_t>(rs2_num, i)); \
+---
+>   float64_t vs2 = f32_to_f64(P.VU.elt_val<float32_t>(rs2_num, i)); \
+1753c1797
+<       float32_t &vd = P.VU.elt<float32_t>(rd_num, i, true); \
+---
+>       float32_t &vd = P.VU.elt_ref<float32_t>(rd_num, i, true); \
+1755c1799
+<       float32_t vs2 = P.VU.elt<float32_t>(rs2_num, i); \
+---
+>       float32_t vs2 = P.VU.elt_val<float32_t>(rs2_num, i); \
+1761c1805
+<       float64_t &vd = P.VU.elt<float64_t>(rd_num, i, true); \
+---
+>       float64_t &vd = P.VU.elt_ref<float64_t>(rd_num, i, true); \
+1763c1807
+<       float64_t vs2 = P.VU.elt<float64_t>(rs2_num, i); \
+---
+>       float64_t vs2 = P.VU.elt_val<float64_t>(rs2_num, i); \
+1782,1783c1826,1827
+<       float32_t vs2 = P.VU.elt<float32_t>(rs2_num, i); \
+<       float32_t vs1 = P.VU.elt<float32_t>(rs1_num, i); \
+---
+>       float32_t vs2 = P.VU.elt_val<float32_t>(rs2_num, i); \
+>       float32_t vs1 = P.VU.elt_val<float32_t>(rs1_num, i); \
+1790,1791c1834,1835
+<       float64_t vs2 = P.VU.elt<float64_t>(rs2_num, i); \
+<       float64_t vs1 = P.VU.elt<float64_t>(rs1_num, i); \
+---
+>       float64_t vs2 = P.VU.elt_val<float64_t>(rs2_num, i); \
+>       float64_t vs1 = P.VU.elt_val<float64_t>(rs1_num, i); \
+1809,1810c1853,1854
+<       float64_t &vd = P.VU.elt<float64_t>(rd_num, i, true); \
+<       float64_t vs2 = f32_to_f64(P.VU.elt<float32_t>(rs2_num, i)); \
+---
+>       float64_t &vd = P.VU.elt_ref<float64_t>(rd_num, i, true); \
+>       float64_t vs2 = f32_to_f64(P.VU.elt_val<float32_t>(rs2_num, i)); \
+1831,1833c1875,1877
+<       float64_t &vd = P.VU.elt<float64_t>(rd_num, i, true); \
+<       float64_t vs2 = f32_to_f64(P.VU.elt<float32_t>(rs2_num, i)); \
+<       float64_t vs1 = f32_to_f64(P.VU.elt<float32_t>(rs1_num, i)); \
+---
+>       float64_t &vd = P.VU.elt_ref<float64_t>(rd_num, i, true); \
+>       float64_t vs2 = f32_to_f64(P.VU.elt_val<float32_t>(rs2_num, i)); \
+>       float64_t vs1 = f32_to_f64(P.VU.elt_val<float32_t>(rs1_num, i)); \
+1852,1853c1896,1897
+<       float64_t &vd = P.VU.elt<float64_t>(rd_num, i, true); \
+<       float64_t vs2 = P.VU.elt<float64_t>(rs2_num, i); \
+---
+>       float64_t &vd = P.VU.elt_ref<float64_t>(rd_num, i, true); \
+>       float64_t vs2 = P.VU.elt_val<float64_t>(rs2_num, i); \
+1872,1874c1916,1918
+<       float64_t &vd = P.VU.elt<float64_t>(rd_num, i, true); \
+<       float64_t vs2 = P.VU.elt<float64_t>(rs2_num, i); \
+<       float64_t vs1 = f32_to_f64(P.VU.elt<float32_t>(rs1_num, i)); \
+---
+>       float64_t &vd = P.VU.elt_ref<float64_t>(rd_num, i, true); \
+>       float64_t vs2 = P.VU.elt_val<float64_t>(rs2_num, i); \
+>       float64_t vs1 = f32_to_f64(P.VU.elt_val<float32_t>(rs1_num, i)); \

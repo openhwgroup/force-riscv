@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<choices_file>
+  <choices name="Source Dependency" type="Dependence">
+    <choice name="Source after source" value="0x0" weight="10"/>
+    <choice name="Source after target" value="0x1" weight="10"/>
+    <choice name="No source dependence" value="0x2" weight="10"/>
+  </choices>
+  <choices name="Target Dependency" type="Dependence">
+    <choice name="Target after source" value="0x0" weight="10"/>
+    <choice name="Target after target" value="0x1" weight="10"/>
+    <choice name="No target dependence" value="0x2" weight="10"/>
+  </choices>
+  <choices name="Inter-Dependency Priority" type="Dependence">
+    <choice name="The neareast" value="0x0" weight="1"/>
+    <choice name="The farthest" value="0x1" weight="1"/>
+    <choice name="Optimal" value="0x2" weight="50"/>
+    <choice name="Random" value="0x3" weight="50"/>
+  </choices>
+  <choices name="The Optimal Inter-Dependency Direction" type="Dependence">
+    <choice name="From the nearest to the farthest" value="0x0" weight="50"/>
+    <choice name="From the farthest to the nearest" value="0x1" weight="50"/>
+  </choices>
+  <choices name="Register Dependency" type="Dependence">
+    <choice name="No dependency" value="0x0" weight="10"/>
+    <choice name="Inter-dependency" value="0x1" weight="10"/>
+    <choice name="Intra-dependency" value="0x2" weight="0"/>
+  </choices>
+  <choices name="Recover Speculative Dependency" type="Dependence">
+    <choice name="No" value="0x0" weight="0"/>
+    <choice name="Yes" value="0x1" weight="10"/>
+  </choices>
+</choices_file>

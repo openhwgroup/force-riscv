@@ -1,0 +1,119 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+1a2
+> 
+14c15
+< #include "debug_rom_defines.h"
+---
+> #include <iostream>
+153a155
+> 
+157c159
+<   void reset(reg_t max_isa);
+---
+>   void reset(reg_t max_isa, uint32_t id);
+219a222,225
+> 
+>   size_t pid;
+> 
+>   state_t(size_t id): pid(id), XPR(id), FPR(id) {};
+242,243c248,249
+<               simif_t* sim, uint32_t id, bool halt_on_reset,
+<               FILE *log_file);
+---
+>               simif_t* sim, uint32_t id, bool halt_on_reset
+>               );
+245a252,259
+>   bool set_pc_api(const std::string& name, const uint8_t* bytes, size_t len); //len advertises the size of the buffer
+>   bool retrieve_pc_api(uint8_t* bytes, const std::string& name, size_t len); //len advertises the size of the buffer
+> 
+>   void set_privilege_api(reg_t prv);
+>   void retrieve_privilege_api(reg_t* prv);
+>   reg_t get_csr_api(int which);
+>   void set_csr_api(int which, reg_t val);
+> 
+437c451,454
+<       // vector element for varies SEW
+---
+>       template<class T>
+>       void do_callback(reg_t vecRegIndex, reg_t eltIndex, const char pAccessType[]) const; 
+>   
+>       // vector element for varing SEW
+445c462,464
+< #ifdef WORDS_BIGENDIAN
+---
+>           reg_referenced[vReg] = 1;
+>   
+>           #ifdef WORDS_BIGENDIAN
+448,456c467,469
+<   	  n ^= elts_per_reg - 1;
+< #endif
+<           reg_referenced[vReg] = 1;
+< 
+< #ifdef RISCV_ENABLE_COMMITLOG
+<           if (is_write)
+<             p->get_state()->log_reg_write[((vReg) << 2) | 2] = {0, 0};
+< #endif
+< 
+---
+>           n ^= elts_per_reg - 1;
+>           #endif
+>   
+459a473,487
+>   
+>       template<class T>
+>         T elt_val(reg_t vecReg, reg_t n, bool is_write = false){
+>           T reg_val = elt<T>(vecReg, n, is_write);
+>           do_callback<T>(vecReg, n, "read"); 
+>           return reg_val;
+>         }
+>   
+>        template<class T>
+>         T& elt_ref(reg_t vecReg, reg_t n, bool is_write = false){
+>           T& r_reg_ref = elt<T>(vecReg, n, is_write);
+>           do_callback<T>(vecReg, n, "write"); 
+>           return r_reg_ref;
+>         }
+> 
+485a514,541
+> 
+> extern "C"{
+>   // update_vector_element function: for the given cpuid, this callback function is called by the simulator to notify the user that a vector register element has been read or written
+>   //
+>   //  inputs:
+>   //      uint32_t cpuid -- refers to the processor ID
+>   //      const char* pRegName -- the base name of the vector register does NOT include a suffix for physical register since this is a FORCE / hardware specific notion.
+>   //      uint32_t vecRegIndex -- the numerical index that goes with the vector register base name
+>   //      uint32_t eltIndex -- the numerical index of the element that is updated
+>   //      uint32_t eltByteWidth -- the number of bytes per element at the time of the update, used in FORCE with the eltIndex to dynamically associate physical registers for aggregated updates
+>   //      const uint8_t* value -- the contents of the ENTIRE vector register if this update is a "read" or *nothing* if this is a "write". 
+>   //      uint32_t byteLength -- should match the size of the ENTIRE vector register.
+>   //      const char* pAccessType -- should be "read" or "write".
+>   //
+>   void update_vector_element(uint32_t cpuid, const char *pRegName, uint32_t vecRegIndex, uint32_t eltIndex, uint32_t eltByteWidth, const uint8_t* pValue, uint32_t  byteLength, const char* pAccessType);
+> }
+> 
+> extern const char* vr_name[];
+> 
+> template<class T>
+> void processor_t::vectorUnit_t::do_callback(reg_t vecRegIndex, reg_t eltIndex, const char pAccessType[]) const  
+> {
+>   reg_t elts_per_reg = (VLEN >> 3) / (sizeof(T));
+>   vecRegIndex += eltIndex / elts_per_reg;
+> 
+>   uint8_t *p_reg_start = (uint8_t*)((char*)reg_file + vecRegIndex * (VLEN >> 3));
+>   update_vector_element(p->get_state()->pid, vr_name[vecRegIndex], vecRegIndex, eltIndex, sizeof(T), p_reg_start, (VLEN >> 3), pAccessType);
+> }

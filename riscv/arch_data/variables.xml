@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<variable_file>
+  <variable name="Inter-Dependency Window" value="1-20:90,21-30:10" type="Choice"/>
+  <variable name="Source Entropy Window" value="15-3" type="String"/>
+  <variable name="Target Entropy Window" value="9-2" type="String"/>
+  <variable name="Debug Single-Step Step-Factor" value="5" type="Value"/>
+  <variable name="Register Fields Ignored update" value="" type="String" />
+  <variable name="Ret Preamble Sequence Class" value="" type="String" />
+  <variable name="Unpredictable Registers" value="mepc" type="String" />
+  <variable name="System Physical Address Range" value="0x0-0xffffffffff" type="String" />
+  <variable name="Streaming address error" value="1" type="Value"/>
+  <variable name="Branch address error" value="0" type="Value"/>
+  <variable name="Enable register reloading" value="1" type="Value"/>
+  <variable name="Reloading registers number" value="20-15" type="String"/>
+  <variable name="Address table memory size" value="0x1000" type="Value"/>
+  <variable name="Default page table physical memory range" value="0x0-0xFFFFFFFFFFFF" type="String" />
+  <variable name="Page tables number per block allocating" value="0x200" type="Value" /> <!-- TODO make sure this works with Sv* reqs -->
+  <variable name="No data abort allowed" value="0" type="Value"/>
+  <variable name="No instruction abort allowed" value="0" type="Value"/>
+  <variable name="Semaphore Physical Address Range" value="0x0-0xffffffffff" type="String" />
+  <!-- TODO add page table physical memory range -->
+</variable_file>

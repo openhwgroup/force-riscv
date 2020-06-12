@@ -1,0 +1,506 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+6a7,9
+> //DEBUG
+> #include <iostream>
+> 
+8c11
+<  : sim(sim), proc(proc),
+---
+>  : sim(sim), proc(proc), 
+46a50,80
+> int mmu_t::translate_api(reg_t addr, reg_t* paddr, uint64_t* pmp_info, reg_t len, access_type type)
+> {
+>   int status = 0;
+> 
+>   reg_t mode = proc->state.prv;
+>   if (type != FETCH) {
+>     if (!proc->state.debug_mode && get_field(proc->state.mstatus, MSTATUS_MPRV))
+>       mode = get_field(proc->state.mstatus, MSTATUS_MPP);
+>   }
+> 
+>   reg_t temp_paddr = 0ull;
+>   status = walk_api(addr, &temp_paddr, type, mode);
+>   temp_paddr |= (addr & (PGSIZE-1));
+> 
+>   reg_t temp_pmpaddr = 0ull;
+>   uint8_t temp_pmpcfg = 0;
+>   if (status == 0 && !pmp_ok_api(temp_paddr, &temp_pmpaddr, &temp_pmpcfg, len, type, mode))
+>   {
+>     status = 1; // Failed pmp check, either there was no match or there was only a partial match of the PMP requriements for that physical address.
+>   }
+> 
+>   if(pmp_info != nullptr)
+>   {
+>     *pmp_info = (temp_pmpaddr << 6) | (uint64_t)temp_pmpcfg; // This implies a 56 bit address 
+>     std::cerr << "In translate_api, temp_pmpaddr is: " << std::hex << temp_pmpaddr << " while temp_pmpcfg is: " << std::hex << (uint64_t)temp_pmpcfg << std::endl;
+>   }
+> 
+>   *paddr = temp_paddr;
+>   return status;
+> }
+> 
+67,75c101
+< 
+<   if (auto host_addr = sim->addr_to_mem(paddr)) {
+<     return refill_tlb(vaddr, paddr, host_addr, FETCH);
+<   } else {
+<     if (!mmio_load(paddr, sizeof fetch_temp, (uint8_t*)&fetch_temp))
+<       throw trap_instruction_access_fault(vaddr);
+<     tlb_entry_t entry = {(char*)&fetch_temp - vaddr, paddr - vaddr};
+<     return entry;
+<   }
+---
+>   return refill_tlb(vaddr, paddr, 0 /*host_addr*/, FETCH);
+104c130,131
+< bool mmu_t::mmio_ok(reg_t addr, access_type type)
+---
+> //TODO similar fix as in above and the load reservation methods
+> void mmu_t::load_slow_path_partially_initialized(reg_t addr, reg_t len, uint8_t* bytes)
+106,108c133
+<   // Disallow access to debug region when not in debug mode
+<   if (addr >= DEBUG_START && addr <= DEBUG_END && proc && !proc->state.debug_mode)
+<     return false;
+---
+>   reg_t paddr = translate(addr, len, LOAD);
+110,111d134
+<   return true;
+< }
+113,116c136,137
+< bool mmu_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
+< {
+<   if (!mmio_ok(addr, LOAD))
+<     return false;
+---
+>   //if (true || auto host_addr = sim->addr_to_mem(paddr)) {
+>     //memcpy(bytes, host_addr, len);
+118,119c139,152
+<   return sim->mmio_load(addr, len, bytes);
+< }
+---
+>     // Do the same thing with the sparse memory model and verify
+>     //uint8_t buffer[len];
+>     //uint64_t buff = 0ull;
+>     //buff = sim->sparse_read(paddr, len);
+>     sim->sparse_read_partially_initialized(paddr, len, bytes);
+> 
+>   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "read"); 
+> 
+>     //bool same_data_was_loaded = true;
+>     //for(size_t byte_idx = 0; byte_idx < len; ++ byte_idx)
+>     //{
+>     //    same_data_was_loaded &= (reinterpret_cast<uint8_t*>(&buff)[byte_idx] == bytes[byte_idx]);
+>     //}
+>     //assert(same_data_was_loaded && "In mmu_t::load_slow_path there was a mismatch between the dense model and sparse model's load");
+121,124c154,160
+< bool mmu_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
+< {
+<   if (!mmio_ok(addr, STORE))
+<     return false;
+---
+>     if (tracer.interested_in_range(paddr, paddr + PGSIZE, LOAD))
+>       tracer.trace(paddr, len, LOAD);
+>     else
+>       refill_tlb(addr, paddr, 0 /*host_addr*/, LOAD);
+>   //} else if (!sim->mmio_load(paddr, len, bytes)) {
+>   //  throw trap_load_access_fault(addr);
+>   //}
+126c162,167
+<   return sim->mmio_store(addr, len, bytes);
+---
+>   if (!matched_trigger) {
+>     reg_t data = reg_from_bytes(len, bytes);
+>     matched_trigger = trigger_exception(OPERATION_LOAD, addr, data);
+>     if (matched_trigger)
+>       throw *matched_trigger;
+>   }
+128a170,171
+> 
+> //TODO similar fix as in above and the load reservation methods
+131a175
+>   uint64_t buff = 0ull;
+133,141c177,187
+<   if (auto host_addr = sim->addr_to_mem(paddr)) {
+<     memcpy(bytes, host_addr, len);
+<     if (tracer.interested_in_range(paddr, paddr + PGSIZE, LOAD))
+<       tracer.trace(paddr, len, LOAD);
+<     else
+<       refill_tlb(addr, paddr, host_addr, LOAD);
+<   } else if (!mmio_load(paddr, len, bytes)) {
+<     throw trap_load_access_fault(addr);
+<   }
+---
+>   buff = sim->sparse_read(paddr, len);
+>   for(size_t byte_idx = 0; byte_idx < len; ++ byte_idx)
+>   {
+>       bytes[byte_idx] = reinterpret_cast<uint8_t*>(&buff)[len -1 -byte_idx];
+>   }
+>   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "read"); 
+> 
+>   if (tracer.interested_in_range(paddr, paddr + PGSIZE, LOAD))
+>     tracer.trace(paddr, len, LOAD);
+>   else
+>     refill_tlb(addr, paddr, 0 /*host_addr*/, LOAD);
+150a197,227
+> // TODO again use the same fix as in above and load reservation methods
+> void mmu_t::initialize_slow_path(reg_t addr, reg_t len, const uint8_t* bytes)
+> {
+>   reg_t paddr = translate(addr, len, STORE);
+>   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "write"); 
+> 
+>   if (!matched_trigger) {
+>     reg_t data = reg_from_bytes(len, bytes);
+>     matched_trigger = trigger_exception(OPERATION_STORE, addr, data);
+>     if (matched_trigger)
+>       throw *matched_trigger;
+>   }
+> 
+>   // Initialize the memory if necessary
+>   if(! sim->sparse_is_pa_initialized(paddr, len))
+>   {
+>       uint64_t attrs = 0ull;
+>       sim->sparse_initialize_pa(paddr, bytes, reinterpret_cast<const uint8_t*>(&attrs), len, Force::EMemDataType::Both);
+>   }
+>   else
+>   {//perform the write
+>       sim->sparse_write(paddr, bytes, len);
+>   }
+>   if (tracer.interested_in_range(paddr, paddr + PGSIZE, STORE))
+>     tracer.trace(paddr, len, STORE);
+>   else
+>     refill_tlb(addr, paddr, 0 /*host_addr*/, STORE);
+> }
+> 
+> 
+> // TODO again use the same fix as in above and load reservation methods
+153a231,232
+>   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "write"); 
+> 
+162,169c241,249
+<   if (auto host_addr = sim->addr_to_mem(paddr)) {
+<     memcpy(host_addr, bytes, len);
+<     if (tracer.interested_in_range(paddr, paddr + PGSIZE, STORE))
+<       tracer.trace(paddr, len, STORE);
+<     else
+<       refill_tlb(addr, paddr, host_addr, STORE);
+<   } else if (!mmio_store(paddr, len, bytes)) {
+<     throw trap_store_access_fault(addr);
+---
+>   // Initialize the memory if necessary
+>   if(unlikely(! sim->sparse_is_pa_initialized(paddr, len)))
+>   {
+>       uint64_t attrs = 0ull;
+>       sim->sparse_initialize_pa(paddr, bytes, reinterpret_cast<const uint8_t*>(&attrs), len, Force::EMemDataType::Both);
+>   }
+>   else
+>   {//perform the write
+>     sim->sparse_write(paddr, bytes, len);
+170a251,255
+> 
+>   if (tracer.interested_in_range(paddr, paddr + PGSIZE, STORE))
+>     tracer.trace(paddr, len, STORE);
+>   else
+>     refill_tlb(addr, paddr, 0 /*host_addr*/, STORE);
+172a258
+> //TODO we can use as it, just put in some nonsense value for the host_addr and see if it affects execution trace
+200a287,337
+> reg_t mmu_t::pmp_ok_api(reg_t addr, reg_t* pmpaddr_ptr, uint8_t* pmpcfg_ptr, reg_t len, access_type type, reg_t mode)
+> {
+>   reg_t base = 0;
+>   for (size_t i = 0; i < proc->state.n_pmp; i++) {
+>     reg_t tor = proc->state.pmpaddr[i] << PMP_SHIFT;
+>     uint8_t cfg = proc->state.pmpcfg[i];
+> 
+>     if(pmpaddr_ptr != nullptr && pmpcfg_ptr != nullptr)
+>     {
+>         *pmpaddr_ptr = tor;
+>         *pmpcfg_ptr = cfg;
+>     }
+> 
+>     if (cfg & PMP_A) {
+>       bool is_tor = (cfg & PMP_A) == PMP_TOR;
+>       bool is_na4 = (cfg & PMP_A) == PMP_NA4;
+> 
+>       reg_t mask = (proc->state.pmpaddr[i] << 1) | (!is_na4);
+>       mask = ~(mask & ~(mask + 1)) << PMP_SHIFT;
+> 
+>       // Check each 4-byte sector of the access
+>       bool any_match = false;
+>       bool all_match = true;
+>       for (reg_t offset = 0; offset < len; offset += 1 << PMP_SHIFT) {
+>         reg_t cur_addr = addr + offset;
+>         bool napot_match = ((cur_addr ^ tor) & mask) == 0;
+>         bool tor_match = base <= cur_addr && cur_addr < tor;
+>         bool match = is_tor ? tor_match : napot_match;
+>         any_match |= match;
+>         all_match &= match;
+>       }
+> 
+>       if (any_match) {
+>         // If the PMP matches only a strict subset of the access, fail it
+>         if (!all_match)
+>           return false;
+> 
+>         return
+>           (mode == PRV_M && !(cfg & PMP_L)) ||
+>           (type == LOAD && (cfg & PMP_R)) ||
+>           (type == STORE && (cfg & PMP_W)) ||
+>           (type == FETCH && (cfg & PMP_X));
+>       }
+>     }
+> 
+>     base = tor;
+>   }
+> 
+>   return mode == PRV_M;
+> }
+> 
+287a425
+> 
+289a428
+>   //std::cout << "mmu_t::walk addr=0x" << std::hex << addr << " mode=0x" << mode << std::endl;
+293a433,434
+>   //std::cout << "mmu_t::walk vm.ptbase=0x" << std::hex << vm.ptbase << " levels=0x" << vm.levels << std::endl;
+> 
+304a446,447
+>   //std::cout << "mmu_t::walk va_bits=0x" << std::hex << va_bits << " xlen=0x" << proc->xlen << " mask=0x" << mask << " masked_msbs=0x" << masked_msbs << " levels=0x" << vm.levels << std::endl;
+> 
+307a451
+>     //std::cout << "mmu_t::walk i=0x" << std::hex << i << " ptshift=0x" << ptshift << " levels=0x" << vm.levels << std::endl;
+309c453
+< 
+---
+>     //std::cout << "mmu_t::walk idx=0x" << std::hex << idx << std::endl;
+312c456,458
+<     auto ppte = sim->addr_to_mem(pte_paddr);
+---
+>     //std::cout << "mmu_t::walk pte_paddr=0x" << std::hex << pte_paddr << std::endl;
+>     //auto ppte = sim->addr_to_mem(pte_paddr); //TODO replace with check that our memory model accepts this pa
+>     bool ppte = true;
+316c462,494
+<     reg_t pte = vm.ptesize == 4 ? from_le(*(uint32_t*)ppte) : from_le(*(uint64_t*)ppte);
+---
+>     uint64_t ppte_val = 0ull;
+>     //sim->sparse_read_partially_initialized(pte_paddr, sizeof(uint64_t), reinterpret_cast<uint8_t*>(ppte_val)); 
+>     //uint64_t buff = 0ull;
+>     //std::cerr << "length: " << len << " paddr: " << std::hex << paddr <<  std::endl;
+>     ppte_val = sim->sparse_read(pte_paddr, sizeof(uint64_t)); // In testing of the api version of this, it was noticed that reading in the commented out way was byte reversing the expected values.
+>     //std::cout << "mmu_t::walk ppte_val=0x" << std::hex << ppte_val << std::endl;
+> 
+>     uint64_t ppte_reversed_val = 0ull;
+>     uint8_t* val = (uint8_t*)&ppte_val;
+>     uint8_t* rev = (uint8_t*)&ppte_reversed_val;
+>     for (int i = 0; i < sizeof(uint64_t); i++)
+>     {
+>       rev[i] = val[sizeof(uint64_t)-1-i];
+>     }
+> 
+>     //std::cout << "mmut_t::walk ppte_reversed_val=0x" << std::hex << ppte_reversed_val << std::endl;
+>     ppte_val = ppte_reversed_val;
+> 
+>     //sim->sparse_read_partially_initialized(paddr, len, bytes);
+>     //bool same_data_was_loaded = true;
+>     //for(size_t byte_idx = 0; byte_idx < sizeof(uint64_t); ++ byte_idx)
+>     //{
+>     //    //same_data_was_loaded &= (reinterpret_cast<uint8_t*>(&buff)[len - 1 -byte_idx] == bytes[byte_idx]);
+>     //    //assert(false && reinterpret_cast<uint8_t*>(&ppte_val)[byte_idx] == reinterpret_cast<uint8_t*>(&buff)[sizeof(uint64_t) -1 -byte_idx] && "Did not match ppte val load");
+>     //    reinterpret_cast<uint8_t*>(&ppte_val)[byte_idx] = reinterpret_cast<uint8_t*>(&buff)[sizeof(uint64_t) -1 -byte_idx];
+>     //}
+> 
+>     //
+>     //
+>     // These endianness conversion functions are defined in the new version, do they work for our purposes or are they redundant with the above code?
+>     //
+>     //
+>     reg_t pte = vm.ptesize == 4 ? from_le((uint32_t)ppte_val) : from_le(ppte_val); //TODO load the actual data from the memory model
+318a497,498
+>     //std::cout << "mmu_t::walk pte=0x" << std::hex << pte << " ppn=0x" << ppn << std::endl;
+> 
+320a501
+>       //std::cout << "mmu_t::walk next level table base=0x" << std::hex << base << std::endl;
+321a503
+>       //std::cout << "mmu_t::walk u bit set causing page fault" << std::endl;
+323a506
+>       //std::cout << "mmu_t::walk v bit not set, or R+W not set causing page fault" << std::endl;
+327a511
+>       //std::cout << "mmu_t::walk non-executable, or load not readable causing page fault" << std::endl;
+329a514,515
+>       reg_t test_val = ppn & ((reg_t(1) << ptshift) - 1);
+>       //std::cout << "mmu_t::walk misaligned superpage val=0x" << std::hex << test_val << " causing page fault" << std::endl;
+338c524,528
+<         *(uint32_t*)ppte |= to_le((uint32_t)ad);
+---
+>         (uint32_t)ppte_val |= to_le((uint32_t)ad); //TODO replace with a write to the memory model data, needs an iso check during dev too
+>         sim->sparse_write(pte_paddr, reinterpret_cast<uint8_t*>(&ppte_val), vm.ptesize); //NOTE this was written as a write from pte rather than ppte_val which doesnt match the reference code intent.
+>         uint32_t debug_buff = 0;
+>         sim->sparse_read_partially_initialized(pte_paddr, vm.ptesize, reinterpret_cast<uint8_t*>(&debug_buff));
+>         assert(debug_buff == (uint32_t)ppte_val && "Failed to modify ppte_val correctly");
+342a533,534
+>       {
+>         //std::cout << "mmu_t::walk ad bits ad=0x" << std::hex << ad << " causing page fault" << std::endl;
+343a536
+>       }
+347a541,547
+> 
+>       //report the translation via the callback mechanism
+>       bool has_stage_two = (vm.levels > 1); 
+>       MmuEvent mmu_event(addr, value, Memtype::Normal, has_stage_two, 0, 0, 0, 0);
+>       update_mmu_event(&mmu_event);
+> 
+>       //std::cout << "mmu_t::walk end value=0x" << std::hex << value << std::endl;
+356a557,698
+>   }
+> }
+> 
+> int mmu_t::walk_api(reg_t addr, reg_t* paddr_ptr, access_type type, reg_t mode)
+> {
+>   vm_info vm = decode_vm_info(proc->max_xlen, mode, proc->get_state()->satp);
+>   if (vm.levels == 0){
+>     std::cerr << "vm.levels is zero" << std::endl; 
+>     *paddr_ptr = addr & ((reg_t(2) << (proc->xlen-1))-1); // zero-extend from xlen
+>     return 0;
+>   }
+> 
+>   bool s_mode = mode == PRV_S;
+>   bool sum = get_field(proc->state.mstatus, MSTATUS_SUM);
+>   bool mxr = get_field(proc->state.mstatus, MSTATUS_MXR);
+> 
+>   // verify bits xlen-1:va_bits-1 are all equal
+>   int va_bits = PGSHIFT + vm.levels * vm.idxbits;
+>   reg_t mask = (reg_t(1) << (proc->xlen - (va_bits-1))) - 1;
+>   reg_t masked_msbs = (addr >> (va_bits-1)) & mask;
+>   if (masked_msbs != 0 && masked_msbs != mask)
+>   {
+>       vm.levels = 0;
+>       std::cerr << "Failed test that bits xlen-1:va_bits-1 are all equal" << std::endl;
+>   }
+>   else
+>   {
+>       std::cerr << "Passed test that bits xlen-1:va_bits-1 are all equal" << std::endl;
+>   }
+>   
+> 
+>   reg_t base = vm.ptbase;
+>   for (int i = vm.levels - 1; i >= 0; i--) {
+>     int ptshift = i * vm.idxbits;
+>     reg_t idx = (addr >> (PGSHIFT + ptshift)) & ((1 << vm.idxbits) - 1);
+> 
+>     // check that physical address of PTE is legal
+>     auto pte_paddr = base + idx * vm.ptesize;
+> 
+>     std::cerr << "\tpte_paddr: " << std::hex << pte_paddr << std::endl;
+> 
+>     //auto ppte = sim->addr_to_mem(pte_paddr); //TODO replace with check that our memory model accepts this pa
+>     bool ppte = true;
+>     if (!ppte || !pmp_ok(pte_paddr, vm.ptesize, LOAD, PRV_S))
+>     {
+>         return 2; //access_exception
+>     }
+>     //  throw_access_exception(addr, type);
+> 
+>     uint64_t ppte_val = 0ull;
+>     //sim->sparse_read_partially_initialized(pte_paddr, sizeof(uint64_t), reinterpret_cast<uint8_t*>(ppte_val)); 
+> 
+>     uint64_t buff = 0ull;
+>     //std::cerr << "length: " << len << " paddr: " << std::hex << paddr <<  std::endl;
+>     //TODO make same changes to non api version
+>     ppte_val = sim->sparse_read(pte_paddr, sizeof(uint64_t));
+> 
+>     //std::cerr << "\tentry: " << std::hex << buff << std::endl;
+>     //sim->sparse_read_partially_initialized(paddr, len, bytes);
+>     //bool same_data_was_loaded = true;
+>     //for(size_t byte_idx = 0; byte_idx < sizeof(uint64_t); ++ byte_idx)
+>     //{
+>     //    //same_data_was_loaded &= (reinterpret_cast<uint8_t*>(&buff)[len - 1 -byte_idx] == bytes[byte_idx]);
+>     //    //assert(false && reinterpret_cast<uint8_t*>(&ppte_val)[byte_idx] == reinterpret_cast<uint8_t*>(&buff)[sizeof(uint64_t) -1 -byte_idx] && "Did not match ppte val load");
+>     //    reinterpret_cast<uint8_t*>(&ppte_val)[byte_idx] = reinterpret_cast<uint8_t*>(&buff)[sizeof(uint64_t) -1 -byte_idx];
+>     //}
+> 
+>     reg_t pte = vm.ptesize == 4 ? from_le((uint32_t)ppte_val) : from_le(ppte_val); //TODO load the actual data from the memory model
+>     reg_t ppn = pte >> PTE_PPN_SHIFT;
+> 
+>     std::cerr << "\tpte: " << std::hex << pte << std::endl;
+>     std::cerr << "\tppn: " << std::hex << ppn << std::endl;
+> 
+>     if (PTE_TABLE(pte)) { // next level of page table
+>       base = ppn << PGSHIFT;
+>       std::cerr << "\t\tgoing another level." << std::endl;
+>     } else if ((pte & PTE_U) ? s_mode && (type == FETCH || !sum) : !s_mode) {
+> 
+>       std::cerr << "\t\tproblem 1." << std::endl;
+>       break;
+>     } else if (!(pte & PTE_V) || (!(pte & PTE_R) && (pte & PTE_W))) {
+> 
+>       std::cerr << "\t\tproblem 2." << std::endl;
+>       std::cerr << "\t\tis !(pte & PTE_V)?: " << (!(pte & PTE_V)) << std::endl;
+>       std::cerr << "\t\tis !(pte & PTE_R)?: " << (!(pte & PTE_R)) << std::endl;
+>       std::cerr << "\t\tis (pte & PTE_W)?: " << (pte & PTE_W) << std::endl;
+> 
+>       break;
+>     } else if (type == FETCH ? !(pte & PTE_X) :
+>                type == LOAD ?  !(pte & PTE_R) && !(mxr && (pte & PTE_X)) :
+>                                !((pte & PTE_R) && (pte & PTE_W))) {
+> 
+>       std::cerr << "\t\tproblem 3." << std::endl;
+>       break;
+>     } else if ((ppn & ((reg_t(1) << ptshift) - 1)) != 0) {
+> 
+>       std::cerr << "\t\tproblem 4." << std::endl;
+>       break;
+>     } else {
+> 
+>       std::cerr << "\t\tvalid path." << std::endl;
+>       reg_t ad = PTE_A | ((type == STORE) * PTE_D);
+>       // take exception if access or possibly dirty bit is not set.
+>       if ((pte & ad) != ad){
+>          
+>       std::cerr << "\t\tproblem 5." << std::endl;
+>         break;
+>       }
+>       // for superpage mappings, make a fake leaf PTE for the TLB's benefit.
+>       reg_t vpn = addr >> PGSHIFT;
+>       reg_t value = (ppn | (vpn & ((reg_t(1) << ptshift) - 1))) << PGSHIFT;
+>       if(paddr_ptr != nullptr)
+>       {
+>         *paddr_ptr = value;
+> 
+>         return 0;
+>       }
+>       else
+>       {
+>         // this should have been caught earlier
+>         return 7;
+>       }
+>     }
+>   }
+> 
+>   switch (type) {
+>     case FETCH: 
+>     {
+>         return 3; // instruction page fault
+>     }
+>     case LOAD: 
+>     {
+>         return 4; // load page fault
+>     }
+>     case STORE: 
+>     {
+>         return 5; // store page fault
+>     }
+>     default: 
+>     {
+>         return 6; // got here without one of the three other access types; probably not supposed to happen.
+>     }

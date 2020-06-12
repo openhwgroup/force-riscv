@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<choices_file>
+  <!-- General Choices -->
+  <choices name="Page Allocation Scheme" type="Paging">
+    <choice description="Random Free Allocation" name="RandomFreeAlloc" value="0x0" weight="100"/>
+    <choice description="Flat Mapped Allocation" name="FlatMapAlloc" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Data Page Aliasing" type="Paging">
+    <choice description="No Aliasing" name="NoAliasing" value="0x0" weight="10"/>
+    <choice description="Aliasing" name="Aliasing" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Instruction Page Aliasing" type="Paging">
+    <choice description="No Aliasing" name="NoAliasing" value="0x0" weight="10"/>
+    <choice description="Aliasing" name="Aliasing" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Root Page Table Aliasing" type="Paging">
+    <choice description="Don't attempt aliasing" name="NoAlias" value="0x0" weight="10"/>
+    <choice description="Attempt aliasing first" name="Alias" value="0x1" weight="0"/>
+  </choices>
+
+  <!-- Page type choices -->
+  <choices name="SystemPage#S#stage 1" type="Paging">
+    <choice description="SystemPage=0" name="NotSystemPage" value="0x0" weight="100"/>
+    <choice description="SystemPage=1" name="IsSystemPage" value="0x1" weight="0"/>
+  </choices>
+  <choices name="SystemPage#U#stage 1" type="Paging">
+    <choice description="SystemPage=0" name="NotSystemPage" value="0x0" weight="100"/>
+    <choice description="SystemPage=1" name="IsSystemPage" value="0x1" weight="0"/>
+  </choices>
+
+  <!-- Page size choices -->
+  <choices name="Page size#4K granule#S#stage 1" type="Paging">
+    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
+    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
+    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
+    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
+  </choices>
+  <choices name="System Page size#4K granule#S#stage 1" type="Paging">
+    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
+    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
+    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
+    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
+  </choices>
+  <choices name="Page size#4K granule#U#stage 1" type="Paging">
+    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
+    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
+    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
+    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
+  </choices>
+  <choices name="System Page size#4K granule#U#stage 1" type="Paging">
+    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
+    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
+    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
+    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
+  </choices>
+
+  <choices name="D#S#stage 1" type="Paging">
+    <choice description="D=0" name="0" value="0x0" weight="100"/>
+    <choice description="D=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="A#S#stage 1" type="Paging">
+    <choice description="A=0" name="0" value="0x0" weight="100"/>
+    <choice description="A=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="G#S#stage 1" type="Paging">
+    <choice description="G=0" name="0" value="0x0" weight="100"/>
+    <choice description="G=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="U#S#stage 1" type="Paging">
+    <choice description="U=0" name="0" value="0x0" weight="100"/>
+    <choice description="U=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="X#S#stage 1" type="Paging">
+    <choice description="X=0" name="0" value="0x0" weight="0"/>
+    <choice description="X=1" name="1" value="0x1" weight="100"/>
+  </choices>
+  <choices name="W#S#stage 1" type="Paging">
+    <choice description="W=0" name="0" value="0x0" weight="0"/>
+    <choice description="W=1" name="1" value="0x1" weight="100"/>
+  </choices>
+  <choices name="R#S#stage 1" type="Paging">
+    <choice description="R=0" name="0" value="0x0" weight="0"/>
+    <choice description="R=1" name="1" value="0x1" weight="100"/>
+  </choices>
+
+  <choices name="D#U#stage 1" type="Paging">
+    <choice description="D=0" name="0" value="0x0" weight="100"/>
+    <choice description="D=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="A#U#stage 1" type="Paging">
+    <choice description="A=0" name="0" value="0x0" weight="100"/>
+    <choice description="A=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="G#U#stage 1" type="Paging">
+    <choice description="G=0" name="0" value="0x0" weight="100"/>
+    <choice description="G=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="U#U#stage 1" type="Paging">
+    <choice description="U=0" name="0" value="0x0" weight="0"/>
+    <choice description="U=1" name="1" value="0x1" weight="100"/>
+  </choices>
+  <choices name="X#U#stage 1" type="Paging">
+    <choice description="X=0" name="0" value="0x0" weight="0"/>
+    <choice description="X=1" name="1" value="0x1" weight="100"/>
+  </choices>
+  <choices name="W#U#stage 1" type="Paging">
+    <choice description="W=0" name="0" value="0x0" weight="0"/>
+    <choice description="W=1" name="1" value="0x1" weight="100"/>
+  </choices>
+  <choices name="R#U#stage 1" type="Paging">
+    <choice description="R=0" name="0" value="0x0" weight="0"/>
+    <choice description="R=1" name="1" value="0x1" weight="100"/>
+  </choices>
+
+  <choices name="Translation fault#level 0#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+  <choices name="Translation fault#level 1#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+  <choices name="Translation fault#level 2#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+  <choices name="Translation fault#level 3#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+
+  <choices name="Address size fault#level 0#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Address size fault#level 1#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Address size fault#level 2#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Address size fault#level 3#S#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Translation fault#level 0#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+  <choices name="Translation fault#level 1#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+  <choices name="Translation fault#level 2#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+  <choices name="Translation fault#level 3#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x1" weight="100"/>
+    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  </choices>
+
+  <choices name="Address size fault#level 0#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Address size fault#level 1#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Address size fault#level 2#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Address size fault#level 3#U#stage 1" type="Paging">
+    <choice description="No fault" name="false" value="0x0" weight="100"/>
+    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  </choices>
+
+</choices_file>

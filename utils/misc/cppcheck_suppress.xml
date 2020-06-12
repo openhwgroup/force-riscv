@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<suppression>
+<!-- Generated file suppressions -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/Enums.cc</fileName>
+    </suppress>
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>riscv/src/EnumsRISCV.cc</fileName>
+    </suppress>
+
+    <!-- BEWARE WHEN SPECIFYING LINE NUMBERS. THEY CAN CHANGE. -->
+
+<!-- Choices module -->
+    <!-- FAIL() is invoked if ref_cast is null -->
+    <suppress>
+        <id>nullPointerRedundantCheck</id>
+        <fileName>base/src/Choices.cc</fileName>
+        <symbolName>ref_cast</symbolName>
+    </suppress>
+
+<!-- Constraint module -->
+    <!-- assignment operator is not used in production -->
+    <suppress>
+        <id>operatorEqVarError</id>
+        <fileName>base/src/Constraint.cc</fileName>
+        <symbolName>ConstraintSet::mSize</symbolName>
+    </suppress>
+    <!-- assignment operator is not used in production -->
+    <suppress>
+        <id>operatorEqRetRefThis</id>
+        <fileName>base/src/Constraint.cc</fileName>
+        <lineNumber>911</lineNumber>
+    </suppress>
+
+<!-- ConstraintUtils module -->
+    <!-- distance() can return a signed value in some cases -->
+    <suppress>
+        <id>unsignedLessThanZero</id>
+        <fileName>base/src/ConstraintUtils.cc</fileName>
+        <symbolName>new_dist</symbolName>
+    </suppress>
+    <!-- distance() can return a signed value in some cases -->
+    <suppress>
+        <id>unsignedLessThanZero</id>
+        <fileName>base/src/ConstraintUtils.cc</fileName>
+        <symbolName>start_dist</symbolName>
+    </suppress>
+
+<!-- ImageIO module -->
+    <!-- function is highly useful for unit testing -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/ImageIO.cc</fileName>
+        <symbolName>LoadMemoryImage</symbolName>
+    </suppress>
+    <!-- function is highly useful for unit testing -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/ImageIO.cc</fileName>
+        <symbolName>LoadRegistersImage</symbolName>
+    </suppress>
+
+<!-- GenSequenceAgent module -->
+    <!-- dynamic_cast() could return nullptr due to a type mismatch -->
+    <suppress>
+        <id>knownConditionTrueFalse</id>
+        <fileName>base/src/GenSequenceAgent.cc</fileName>
+        <lineNumber>536</lineNumber>
+    </suppress>
+
+<!-- GenVirtualMemoryAgent module -->
+    <!-- handler_region could be assigned a non-null value -->
+    <suppress>
+        <id>knownConditionTrueFalse</id>
+        <fileName>base/src/GenVirtualMemoryAgent.cc</fileName>
+        <lineNumber>420</lineNumber>
+    </suppress>
+
+<!-- Operand module -->
+    <!-- reg_names could be populated by GetRelyUponRegisters() -->
+    <suppress>
+        <id>knownConditionTrueFalse</id>
+        <fileName>base/src/Operand.cc</fileName>
+        <lineNumber>418</lineNumber>
+    </suppress>
+
+<!-- OperandConstraintRISCV module -->
+    <!-- FAIL() is invoked if branch_opr_struct is null -->
+    <suppress>
+        <id>nullPointerRedundantCheck</id>
+        <fileName>riscv/src/OperandConstraintRISCV.cc</fileName>
+        <symbolName>branch_opr_struct</symbolName>
+    </suppress>
+
+<!-- ProfilingUtility module -->
+    <!-- functions are meant to be used for rudimentary profiling -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/ProfilingUtility.cc</fileName>
+    </suppress>
+
+<!-- ResourceAccess module -->
+    <!-- function is highly useful for unit testing -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/ResourceAccess.cc</fileName>
+        <symbolName>GetAccessAge</symbolName>
+    </suppress>
+
+<!-- SimAPI module -->
+    <!-- SimAPI provides an interface to the simulator shared object, so it generates a lot of
+        spurious unused function warnings -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/SimAPI.cc</fileName>
+    </suppress>
+
+<!-- ThreadGroup module -->
+    <!-- using std::transform here is a little messy because one would have to specify a template type as a lambda parameter -->
+    <suppress>
+        <id>useStlAlgorithm</id>
+        <fileName>base/src/ThreadGroup.cc</fileName>
+        <lineNumber>140</lineNumber>
+    </suppress>
+
+<!-- TestIO module -->
+    <!-- function is highly useful for unit testing -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/TestIO.cc</fileName>
+        <symbolName>CountSections</symbolName>
+    </suppress>
+    <!-- function is highly useful for unit testing -->
+    <suppress>
+        <id>unusedFunction</id>
+        <fileName>base/src/TestIO.cc</fileName>
+        <symbolName>ReadTestElf</symbolName>
+    </suppress>
+
+<!-- UtilityFunctions module -->
+    <!-- x and -x are complementary expressions for +, but not for & -->
+    <suppress>
+        <id>oppositeExpression</id>
+        <fileName>base/src/UtilityFunctions.cc</fileName>
+        <lineNumber>590</lineNumber>
+    </suppress>
+
+<!-- VmControlBlock module -->
+    <!-- the Validate() method can potentially append to an error string in addition to returning a flag -->
+    <suppress>
+        <id>useStlAlgorithm</id>
+        <fileName>base/src/VmControlBlock.cc</fileName>
+        <lineNumber>105</lineNumber>
+    </suppress>
+</suppression>

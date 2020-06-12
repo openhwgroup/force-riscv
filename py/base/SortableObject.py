@@ -1,0 +1,58 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+## Made the given object sortable and comparable
+#
+class SortableObject(object):
+    
+    def __init__(self):
+        # derived class MUST set up _mSortableName!
+        self._mSortableName = ""
+        
+    def __hash__(self):
+        return hash(self._mSortableName)
+
+    def __eq__(self, other):
+        if isinstance(other, SortableObject):
+            return (self._mSortableName == other._mSortableName)
+        elif isinstance(other, str):
+            return (self._mSortableName == other)
+        else:
+            return NotImplemented
+
+    def __lt__(self, other):
+        if isinstance(other, SortableObject):
+            return (self._mSortableName < other._mSortableName)
+        elif isinstance(other, str):
+            return (self._mSortableName < other)
+        else:
+            return NotImplemented
+
+    def __gt__(self, other):
+        if isinstance(other, SortableObject):
+            return (self._mSortableName > other._mSortableName)
+        elif isinstance(other, str):
+            return (self._mSortableName > other)
+        else:
+            return NotImplemented
+
+    def __ne__(self, other):
+        if isinstance(other, SortableObject):
+            return not(self._mSortableName == other._mSortableName)
+        elif isinstance(other, str):
+            return not(self._mSortableName == other)
+        else:
+            return NotImplemented

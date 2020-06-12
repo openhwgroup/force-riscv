@@ -1,0 +1,81 @@
+
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+
+FORCE-RISCV Contributions:
+
+Jingliang (Leo) Wang:
+- Architect/Project Manager/First contributor
+- VM system
+- Generator/GenAgent/GenQuery system
+- Constraint module
+- Instruction/Operand/Asm-output framework
+- Unit testing framework
+- Standard loop, BNT
+- Python API system, Test template structure, Thread scheduling
+- Choices, Random, Log, Notify, Object/ObjectRegistry modules
+- master_run regression workflow system
+- Compressed instructions
+
+Noah Sherrill:
+- Thread scheduling framework
+- Revision of enum generation
+- Revision of exception handler framework
+- Restore loop
+- Configurable state transition
+- Shared memory
+- Address solving
+- Improved API system to expose backend objects to front-end
+
+Stephen Edwards:
+- VM system
+- Register/RegisterFile
+- RISC-V IMAFD instructions
+- RISC-V priviledged instructions
+- Boot code
+- Register builder and tests
+
+Michael Brothers:
+- Address solving
+- Address table
+- master_run regression/workflow control system and apps
+- Handcar
+- conditional branches back-end
+- Fpix-riscv and plugins
+- Architectural data files
+
+Chris Le:
+- master_run regression/workflow control system
+- master_run compile application
+- master_run utility functions
+- vector instruction back-end implementation
+- register builder script
+- vector instruction builder script
+
+Morris Cook:
+- FPix ISS front-end
+- Exception handling.
+
+Howard Maler:
+- master_run regression/workflow control system
+
+James Thornsberry:
+- master_run regression/workflow control system
+
+Michael Vaden:
+- test templates
+- user manual updates
+
+

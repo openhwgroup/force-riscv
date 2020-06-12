@@ -1,0 +1,165 @@
+//
+// Copyright (C) [2020] Futurewei Technologies, Inc.
+//
+// FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+// THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+// FIT FOR A PARTICULAR PURPOSE.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <string>
+#include <ctype.h>
+#include <assert.h>
+
+#include "SimAPI.h"
+#include "SimEvent.h"
+#include "SimPlugin.h"
+#include "Log.h"
+#include "ParseGuide.h"
+
+using namespace std;
+using namespace Force;
+
+//***********************************************************************************************
+// Example - similar to ApiDump but more of a blank slate 
+//***********************************************************************************************
+
+namespace Force 
+{
+class Example: public Force::SimPlugin 
+{
+    public:
+        Example() {}
+  
+        const string Name() { return "Example"; }
+  
+        bool IsSupported(ESimThreadEventType aPEventType) const 
+        { 
+            bool is_supported = false;
+  
+            switch(aPEventType) 
+            {
+                case ESimThreadEventType::START_TEST:
+                case ESimThreadEventType::RESET:
+                case ESimThreadEventType::BOOT_CODE:
+                case ESimThreadEventType::FIRST_INSTRUCTION:
+                case ESimThreadEventType::PRE_STEP:
+                case ESimThreadEventType::POST_STEP:
+                case ESimThreadEventType::REGISTER_UPDATE:
+                case ESimThreadEventType::MEMORY_UPDATE:
+                case ESimThreadEventType::MMU_EVENT:
+                case ESimThreadEventType::EXCEPTION_EVENT:
+                case ESimThreadEventType::END_TEST:    
+                is_supported = true;
+                break;
+  
+                default: break;
+            }
+  
+            return is_supported;
+        };
+  
+        void parsePluginsClargs(vector<string> & plugins_cl_args){}
+  
+        void parsePluginsOptions(map<string, string> & arPluginsOptions){}
+  
+        void atTestStart() 
+        { 
+            cout << MethodName("atTestStart") << endl;
+        }
+  
+        void onReset() 
+        { 
+            cout << MethodName("onReset") << endl;
+        }
+  
+        void onBootCode() 
+        { 
+            cout << MethodName("onBootCode") << endl;
+        }
+  
+        void onMain() 
+        { 
+            cout << MethodName("onMain") << endl;
+        }
+  
+        void onPreStep() 
+        { 
+            cout << MethodName("onPreStep") << endl;
+        }
+  
+        void onRegisterUpdate(RegUpdate *apRegUpdate) 
+        { 
+            cout << MethodName("RegisterUpdate","") << endl;
+        }
+  
+        void onMemoryUpdate(MemUpdate *apMemUpdate) 
+        { 
+            cout << MethodName("onMemoryUpdate","") << "\n";
+        }
+  
+        void onMmuEvent(MmuEvent *apMMUEvent) 
+        { 
+            cout << MethodName("onMmuEvent","") << endl;
+        }
+  
+        void onException(ExceptionUpdate *apExceptionUpdate) 
+        { 
+            cout << MethodName("Exception") << endl;
+        }
+  
+        void atTestEnd() 
+        {
+            cout << MethodName("atTestEnd","Final PC") << endl;
+        }
+  
+        void onStep(vector<RegUpdate> *apRegUpdates, vector<MemUpdate> *apMemUpdates,
+                    vector<MmuEvent> *apMMUEvents, vector<ExceptionUpdate> *apExceptionUpdates) 
+        {
+            cout << MethodName("PostStep") << endl;
+        }
+   
+        const string MethodName(const string &arMName,string aDumpPC = "") 
+        { 
+            stringstream ss;
+            ss << "[Example::" << arMName << ", cpuid: " << CpuID();
+            if ( !aDumpPC.empty() ) 
+            {
+                uint64_t rval = 0;
+                uint64_t rmask = 0;
+                SimPtr()->ReadRegister(CpuID(),"PC",&rval,&rmask);
+                ss << "," << aDumpPC << ": 0x" << hex << rval << dec;
+            }
+            ss << "]"; 
+            return ss.str();
+        }
+    };
+}
+
+// plugin + 'extern C' methods to be compiled into shared library:
+
+extern "C" Force::SimPlugin* create()
+{
+  return new Force::Example();
+}
+
+extern "C" void destroy(Force::SimPlugin* t1)
+{
+  delete t1;
+}
+
+extern "C" int is_shared()
+{
+  return 0;  //!< each thread gets an instance
+}

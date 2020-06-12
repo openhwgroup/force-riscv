@@ -1,0 +1,68 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+
+Index: Force/utils/regression/classes/summary.py
+===================================================================
+--- Force/utils/regression/classes/summary.py	(revision 2829)
++++ Force/utils/regression/classes/summary.py	(working copy)
+@@ -5,7 +5,9 @@
+ from common.sys_utils import SysUtils
+ from common.msg_utils import Msg
+ from common.datetime_utils import DateTime
+-from common.threads import HiOldThread, workers_done_event, summary_done_event
++#from common.threads import HiOldThread, workers_done_event, summary_done_event
++from common.threads import HiOldThread, summary_done_event
++from future.threads_2 import workers_done_event
+ from common.kernel_objs import HiCriticalSection
+ 
+ from classes.collections import HiThreadedProducerConsumerQueue
+Index: Force/utils/regression/classes/task_controller.py
+===================================================================
+--- Force/utils/regression/classes/task_controller.py	(revision 2829)
++++ Force/utils/regression/classes/task_controller.py	(working copy)
+@@ -17,7 +17,8 @@
+ from common.msg_utils import Msg
+ 
+ from classes.control_item import CtrlItmKeys
+-from classes.process_queue import ProcessQueueItem
++#from classes.process_queue import ProcessQueueItem
++from future.process_queue_2 import ProcessQueueItem
+ from classes.controller import Controller
+ 
+ class TaskController(Controller):
+Index: Force/utils/regression/master_run.py
+===================================================================
+--- Force/utils/regression/master_run.py	(revision 2829)
++++ Force/utils/regression/master_run.py	(working copy)
+@@ -27,11 +27,15 @@
+ from classes.file_controller import FileController
+ from classes.task_controller import TaskController
+ from classes.control_item import ControlItem, CtrlItmKeys, CtrlItmDefs, ParentData
+-from classes.process_queue import ProcessQueue, ProcessAction
++#from classes.process_queue import ProcessQueue, ProcessAction
++from classes.process_queue import ProcessAction
++from future.process_queue_2 import ProcessQueue
+ 
+ 
+ # Parallel Run imports
+-from common.threads import HiOldThread, HiEvent, workers_done_event, summary_done_event
++#from common.threads import HiOldThread, HiEvent, workers_done_event, summary_done_event
++from common.threads import HiOldThread, HiEvent, summary_done_event
++from future.threads_2 import workers_done_event
+ 
+ shutdown_proc = None
+ 

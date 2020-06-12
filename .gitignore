@@ -1,0 +1,5 @@
+*.so
+__pycache__/
+make_area/
+output/
+.idea/
