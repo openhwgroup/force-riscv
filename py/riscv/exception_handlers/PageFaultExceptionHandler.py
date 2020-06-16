@@ -102,7 +102,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
             
         (rcode_reg_index,scratch_reg_index) = handler_regs.RegisterSet( ['rcode', 'scratch_reg'] )
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
-        self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 36, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 26, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
 
         # faulting address seems to be okay. lets move on...
         

@@ -296,6 +296,14 @@ namespace Force {
     }
   }
 
+  void RISCMultiVectorRegisterOperand::GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const
+  {
+    ConstraintSet reg_indices;
+    MultiVectorRegisterOperand::GetChosenRegisterIndices(gen, reg_indices);
+
+    GetRegisterIndices(reg_indices.LowerBound(), rRegIndices);
+  }
+
   uint32 RISCMultiVectorRegisterOperand::NumberRegisters() const
   {
     //TODO

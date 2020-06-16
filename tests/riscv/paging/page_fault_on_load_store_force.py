@@ -19,27 +19,32 @@ from PageFaultSequence import PageFaultSequence
 from PageFaultSequence import PageFaultResolutionType
 from riscv.ModifierUtils import PageFaultModifier
 
-## This test verifies recovery from a page fault on a branch operation.
 class MainSequence(PageFaultSequence):
 
     def __init__(self, gen_thread, name=None):
-        super().__init__(gen_thread, name)
-        self._mInstrList = ( 'JAL##RISCV', 'JALR##RISCV' )
-        self._mExceptionCodes = [ 12 ]
-        self._mExceptionSubCodes = {}   # no sub-codes for risc
+        super().__init__(gen_thread,name)
 
-    ## Create an instance of the appropriate page fault modifier.
+        # just a couple of load/stores...
+        
+        self._mInstrList = (
+            'LD##RISCV',
+            'SD##RISCV',
+            )
+
+        self._mExceptionCodes = ( 13, 15 ) # for risc-v, load: 13, store: 15
+        self._mExceptionSubCodes = { } # for now, riscv does not support exception sub-codes
+        
     def createPageFaultModifier(self):
-        return PageFaultModifier(self.genThread)
-    
-    ## Create a list of instructions to choose from to trigger a page fault.
-    def getInstructionList(self):
-        return self._mInstrList
+            return PageFaultModifier(self.genThread)
 
-    ## Return exception codes.
+    def getInstructionList(self):
+            return self._mInstrList
+
     def getExceptionCodes(self):
             return self._mExceptionCodes
-
+        
+        
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV
 EnvClass = EnvRISCV
+

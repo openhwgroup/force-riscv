@@ -431,6 +431,8 @@ namespace Force {
     const AddressingMode* mpChosenSolution; //!< Chosen addressing solution.
     std::vector<AddressingMode* > mSolutionChoices; //!< Solution choices.
     std::vector<AddressingMode* > mFilteredChoices; //!< Filtered choices.
+  private:
+    bool ShouldEnableAddressShortage(const Instruction& instr) const; //!< Indicate whether there is a potential shortage of base register choices with valid addresses.
   };
 
   /*!

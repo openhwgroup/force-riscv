@@ -103,7 +103,7 @@ namespace Force {
     Generator* gen_ptr = rShared.GetGenerator();
     Instruction* instr_ptr = rShared.GetInstruction();
     const Register* base_reg = GetRegister();
-    rBaseOperand.SetChoiceResultDirect(*gen_ptr, *instr_ptr, base_reg->IndexValue(), base_reg->Name());
+    rBaseOperand.SetChoiceResultDirect(*gen_ptr, *instr_ptr, base_reg->Name());
 
     if (IsFree()) {
       instr_ptr->SetOperandDataValue(rBaseOperand.Name(), BaseValue(), base_reg->Size());
@@ -673,7 +673,7 @@ namespace Force {
     Generator* gen_ptr = rShared.GetGenerator();
     Instruction* instr_ptr = rShared.GetInstruction();
     const Register* index_reg = Index();
-    index_opr->SetChoiceResultDirect(*gen_ptr, *instr_ptr, index_reg->IndexValue(), index_reg->Name());
+    index_opr->SetChoiceResultDirect(*gen_ptr, *instr_ptr, index_reg->Name());
 
     if (mpChosenIndexSolution->IsFree()) {
       instr_ptr->SetOperandDataValue(index_opr->Name(), IndexValue(), index_reg->Size());
@@ -987,7 +987,7 @@ namespace Force {
       if (IsNonSystemRegisterOperand(*opr)) {
         auto reg_opr = dynamic_cast<RegisterOperand*>(opr);
         const Register* reg_ptr = opr_solution.GetRegister();
-        reg_opr->SetChoiceResultDirect(*gen_ptr, *instr_ptr, reg_ptr->IndexValue(), reg_ptr->Name());
+        reg_opr->SetChoiceResultDirect(*gen_ptr, *instr_ptr, reg_ptr->Name());
 
         if (not reg_ptr->IsInitialized()) {
           instr_ptr->SetOperandDataValue(reg_opr->Name(), opr_solution.GetValue(), reg_ptr->Size());
@@ -1089,13 +1089,9 @@ namespace Force {
     }
 
     // try to set address shortage flag.
-    auto target_constr = mpAddressSolvingShared->TargetConstraint();
-    auto target_list_constr = mpAddressSolvingShared->TargetListConstraint();
-    bool forced_target = ((nullptr != target_constr)  or (target_list_constr.size() > 0));
-    auto constraint = mpBaseOperand->GetOperandConstraint();
-    if (instr.IsLoadStore() && mSolutionChoices.size() <= 1
-        && (not constraint->ConstraintForced()) && (not forced_target)) {
+    if (ShouldEnableAddressShortage(instr)) {
       auto gen_mode = gen.GetGenMode();
+
       if (not gen_mode->IsAddressShortage()) {
         gen_mode->EnableGenMode(EGenModeTypeBaseType(EGenModeType::AddressShortage));
       }
@@ -1375,6 +1371,36 @@ namespace Force {
   void AddressSolver::SetOperandResults()
   {
     mpChosenSolution->SetOperandResults(*mpAddressSolvingShared, *mpBaseOperand);
+  }
+
+  // We want to enable address shortage mode if we only have one solution for a load or store
+  // instruction that wasn't forced by constraints or by the instruction format.
+  bool AddressSolver::ShouldEnableAddressShortage(const Instruction& instr) const
+  {
+    bool enable_addr_shortage = true;
+
+    auto constraint = mpBaseOperand->GetOperandConstraint();
+    auto target_constr = mpAddressSolvingShared->TargetConstraint();
+    auto target_list_constr = mpAddressSolvingShared->TargetListConstraint();
+    bool forced_target = ((nullptr != target_constr) or (target_list_constr.size() > 0));
+    auto implied_reg_opr = dynamic_cast<ImpliedRegisterOperand*>(mpBaseOperand);
+    if (not instr.IsLoadStore()) {
+      enable_addr_shortage = false;
+    }
+    else if (mSolutionChoices.size() > 1) {
+      enable_addr_shortage = false;
+    }
+    else if (constraint->ConstraintForced()) {
+      enable_addr_shortage = false;
+    }
+    else if (forced_target) {
+      enable_addr_shortage = false;
+    }
+    else if (implied_reg_opr != nullptr) {
+      enable_addr_shortage = false;
+    }
+
+    return enable_addr_shortage;
   }
 
   bool AddressSolverWithOnlyChoice::GetAvailableBaseChoices(Generator& gen, Instruction& instr, std::vector<AddressingMode* >& rBaseChoices) const

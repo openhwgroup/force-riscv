@@ -267,10 +267,12 @@ namespace Force {
     mChoiceText = choice->Name();
   }
 
-  void ChoicesOperand::SetChoiceResultDirect(Generator& gen, Instruction& instr, uint32 value, const string& choiceText)
+  void ChoicesOperand::SetChoiceResultDirect(Generator& gen, Instruction& instr, const string& choiceText)
   {
-    mValue = value;
     mChoiceText = choiceText;
+    const RegisterFile* reg_file = gen.GetRegisterFile();
+    Register* reg = reg_file->RegisterLookup(choiceText);
+    mValue = reg->IndexValue();
   }
 
   void ChoicesOperand::Generate(Generator& gen, Instruction& instr)
@@ -360,7 +362,7 @@ namespace Force {
     EResourceType res_type = EResourceType(0);
     if (gen.OperandTypeToResourceType(mpStructure->mType, res_type)) {
       ConstraintSet* res_constr = new ConstraintSet();
-      GetRegisterIndices(Value(), *res_constr);
+      GetChosenRegisterIndices(gen, *res_constr);
       hot_resource->RecordAccess(mpStructure->mAccess, res_type, res_constr);
     }
   }
@@ -372,9 +374,9 @@ namespace Force {
     SaveResource(gen, instr);
   }
 
-  void RegisterOperand::SetChoiceResultDirect(Generator& gen, Instruction& instr, uint32 value, const std::string& choiceText)
+  void RegisterOperand::SetChoiceResultDirect(Generator& gen, Instruction& instr, const std::string& choiceText)
   {
-    ChoicesOperand::SetChoiceResultDirect(gen, instr, value, choiceText);
+    ChoicesOperand::SetChoiceResultDirect(gen, instr, choiceText);
     SetUnpredict(gen, instr);
     SaveResource(gen, instr);
   }
@@ -462,6 +464,13 @@ namespace Force {
   void RegisterOperand::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
   {
     rRegIndices.AddValue(regIndex);
+  }
+
+  void RegisterOperand::GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const
+  {
+    const RegisterFile* reg_file = gen.GetRegisterFile();
+    Register* reg = reg_file->RegisterLookup(mChoiceText);
+    rRegIndices.AddValue(reg->IndexValue());
   }
 
   RegisterOperand:: ~RegisterOperand()

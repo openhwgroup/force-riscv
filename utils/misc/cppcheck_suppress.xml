@@ -90,7 +90,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/GenVirtualMemoryAgent.cc</fileName>
-        <lineNumber>420</lineNumber>
+        <lineNumber>373</lineNumber>
     </suppress>
 
 <!-- Operand module -->

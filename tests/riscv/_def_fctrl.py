@@ -15,6 +15,7 @@
 #
 control_items = [ {"fname":"APIs/_def_fctrl.py",     "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"APIs/_noiss_fctrl.py",   "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"address_solving/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"loop/_def_fctrl.py",     "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"loop/_noiss_fctrl.py",   "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"branch/_def_fctrl.py",   "generator" : {"--cfg" : "config/riscv.config", }},

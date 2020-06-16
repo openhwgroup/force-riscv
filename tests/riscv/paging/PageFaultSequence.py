@@ -19,6 +19,7 @@ import os
 from base.Sequence import Sequence
 from base.ModifierUtils import AlignedDataOnlyChoicesModifier
 from riscv.PrivilegeLevel import PrivilegeLevelRISCV
+from riscv.ModifierUtils import PageFaultModifier
 
 ## This class provides a base sequence for testing various types of page faults.
 class PageFaultSequence(Sequence):
@@ -42,7 +43,7 @@ class PageFaultSequence(Sequence):
 
         instruction_list = self.getInstructionList()
         instr_count = 0
-        while (not self.hasPageFaultOccurred()) and instr_count < 100:
+        while (not self._hasPageFaultOccurred()) and instr_count < 100:
             pc_val = self.getPEstate("PC")
             instr_id = self.genInstruction(self.choice(instruction_list))
             instr_count += 1
@@ -62,6 +63,7 @@ class PageFaultSequence(Sequence):
 
     ## Create an instance of the appropriate page fault modifier.
     def createPageFaultModifier(self):
+        self.notice("[PageFaultSequence::createPageFaultModifier]")
         raise NotImplementedError()
 
     ## Get a list of instructions to choose from to trigger a page fault.
@@ -73,7 +75,10 @@ class PageFaultSequence(Sequence):
     # @param aFaultLevels  - the translation level at which the page fault has been triggered.
     # @param aFastHandlers - flag indicating whether or not fast handlers are enabled.
     def getPageFaultResolutionType(self, aFaultLevels, aFastHandlers):
-        raise NotImplementedError()
+        resolution_type = PageFaultResolutionType.RE_EXECUTE_INSTRUCTION
+        if aFastHandlers:
+            resolution_type = PageFaultResolutionType.SKIP_INSTRUCTION
+        return resolution_type
 
     ## Return the exception codes for the expected page fault type.
     def getExceptionCodes(self):
@@ -81,9 +86,10 @@ class PageFaultSequence(Sequence):
 
     ## Return whether the appropriate page fault has been triggered.
     def _hasPageFaultOccurred(self):
-        fault_levels = self._getFaultLevels()
-        return (len(fault_levels) > 0)
-
+        #fault_levels = self._getFaultLevels()
+        #return (len(fault_levels) > 0)
+        return self._expectedExceptionRecorded()
+    
     ## Verify that a page fault has been triggered and appropriately handled.
     #
     # @param aFaultingInstrId - the ID of the instruction that should have triggered a page fault.
@@ -114,22 +120,28 @@ class PageFaultSequence(Sequence):
         else:
             self.error("No verification provided for %s" % resolution_type)
 
+    ## Return true if a recorded exception code was one of the ones expected for this test
+    def _expectedExceptionRecorded(self):
+        for ec in self.getExceptionCodes():
+            if self.queryExceptionRecordsCount(ec) > 0:
+                return True
+        return False
+    
     ## Return the translation level(s) at which the appropriate page fault has been triggered, if any.
     def _getFaultLevels(self):
-        fault_levels = set()
-        except_list = self.queryExceptions()
-        for except_recx in except_list:
-            except_code = except_rec[0]
-
-            if except_code in self.getExceptionCodes():
-                # riscv does not have exception sub-code, still we may record a sub-code
-                # of sorts in the handler itself(?)...
-                except_sub_code = except_rec[-1]
-                matching_except_sub_codes = self.getExceptionSubCodes()
-                if except_sub_code in matching_except_sub_codes:
-                    fault_levels.add(matching_except_sub_codes[except_sub_code])
-
-            return fault_levels
+        # riscv does not have exception sub-code, still we may, at some point, record a sub-code
+        # of sorts in the handler itself(?)...
+        raise NotImplementedError()
+        #except_list = self.queryExceptions()
+        #for except_recx in except_list:
+        #    except_code = except_rec[0]
+        #    if except_code in self.getExceptionCodes():
+        #        except_sub_code = except_rec[-1]
+        #        matching_except_sub_codes = self.getExceptionSubCodes()
+        #        if except_sub_code in matching_except_sub_codes:
+        #            fault_levels.add(matching_except_sub_codes[except_sub_code])
+        #        fault_levels.add(except_code)
+        #return fault_levels
 
     ## Read the appropriate xepc register value and return it if it is valid.
     def _readXepcRegister(self):
