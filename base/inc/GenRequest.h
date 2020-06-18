@@ -54,8 +54,8 @@ namespace Force {
     virtual void AddDetail(const std::string& attrName, uint64 value) {} //!< Add request detail, with integer value parameter.
     virtual void AddDetail(const std::string& attrName, const std::string& valueStr); //!< Add request detail, with value string parameter.
     virtual const std::string ToString() const; //!< Return a string describing the current state of the GenRequest object.
-    virtual bool AddingInstruction() const { return false; } //!< Indicates whether the GenReuqest will result in adding instruction to the instruction stream, return false by default.
-    virtual bool DelayHandle() const { return true; } //!< Indicates whether the GenReuqest can be insert by other request, return true by default.
+    virtual bool AddingInstruction() const { return false; } //!< Indicates whether the GenRequest will result in adding instruction to the instruction stream, return false by default.
+    virtual bool DelayHandle() const { return true; } //!< Indicates whether the GenRequest can be insert by other request, return true by default.
     virtual const char* RequestType() const { return "GenRequest"; } //!< Return GenRequest type.
     virtual void CleanUp() { } //!< do some clean up
 
@@ -339,6 +339,13 @@ namespace Force {
   class GenBranchToTarget : public GenSequenceRequest {
   public:
     explicit GenBranchToTarget(uint64 target, bool near=false, bool noBnt = false); //!< Constructor with branch target value given.
+
+    // AddingInstruction() needs to return true for GenBranchToTarget to ensure we check for an
+    // instruction collision before processing GenBranchToTarget and creating the relevant
+    // GenInstructionRequests. Otherwise, the branch instructions are generated based on the
+    // pre-escape PC value and will miss the intended target.
+    bool AddingInstruction() const override { return true; } //!< Indicates whether the GenRequest will result in adding instruction to the instruction stream.
+
     const char* RequestType() const override { return "GenBranchToTarget"; } //!< Return GenBranchToTarget type.
     uint64 BranchTarget() const { return mTargetValue; } //!< Return the value of the branch target
     bool NearBranch() const { return mNear; } //!< Return whether a near branch need to be used.
@@ -402,7 +409,7 @@ namespace Force {
   public:
     GenEscapeCollision(); //!< Default constructor.
     const char* RequestType() const override { return "GenEscapeCollision"; } //!< Return GenEscapeCollision type.
-    bool DelayHandle() const override { return false; } //!< Indicates whether the GenReuqest can be insert by other request.
+    bool DelayHandle() const override { return false; } //!< Indicates whether the GenRequest can be insert by other request.
   protected:
     GenEscapeCollision(const GenEscapeCollision& rOther); //!< Copy constructor.
   };
@@ -459,7 +466,7 @@ namespace Force {
     ~GenReExecutionRequest(); //!< Destructor.
     const char* RequestType() const override { return "GenReExecutionRequest"; } //!< Return GenReExecutionRequest type.
     void AddDetail(const std::string& attrName, uint64 value) override; //!< Add request detail, with integer value parameter.
-    bool DelayHandle() const override { return false; } //!< Indicates whether the GenReuqest can be insert by other request.
+    bool DelayHandle() const override { return false; } //!< Indicates whether the GenRequest can be insert by other request.
     uint64 ReExecutionAddress() const { return mReExecutionAddress; } //!< Return re-execution address.
   protected:
     GenReExecutionRequest(const GenReExecutionRequest& rOther); //!< Copy constructor.
@@ -936,7 +943,7 @@ namespace Force {
     const std::string& StringVariable() const { return mString; } //!< Return string variable.
     uint64 ValueVariable() const { return mValue; } //!< Return value variable.
     bool IsValue() const { return mIsValue; } //!< Return whether the variable is in value form.
-    bool DelayHandle() const override { return false; } //!< Indicates whether the GenReuqest can be insert by other request.
+    bool DelayHandle() const override { return false; } //!< Indicates whether the GenRequest can be insert by other request.
     static GenStateRequest* GenStateRequestInstance(const std::string& rStateType); //!< Return a GenStateRequest instance based on the rStateType given.
   protected:
     GenStateRequest(const GenStateRequest& rOther); //!< Copy constructor.
@@ -1050,7 +1057,7 @@ namespace Force {
     ~GenHandleException(); //!< Destructor.
     uint32 Id() const { return mId; } //!< Return exception ID.
     const std::string& Description() const { return mDescription; } //!< Return exception description.
-    bool DelayHandle() const override { return false; } //!< Indicates whether the GenReuqest can be insert by other request.
+    bool DelayHandle() const override { return false; } //!< Indicates whether the GenRequest can be insert by other request.
   protected:
     GenHandleException(const GenHandleException& rOther); //!< Copy constructor.
   protected:
