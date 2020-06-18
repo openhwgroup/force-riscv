@@ -29,4 +29,5 @@ control_items = [
                 {"fname":"um_randomChoice_01_force.py",           "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 {"fname":"um_randomChoice_02_force.py",           "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 {"fname":"um_LoopControl_01_force.py",            "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"RVC_misaligned_force.py",               "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 ]
