@@ -1,0 +1,45 @@
+from riscv.EnvRISCV import EnvRISCV
+from riscv.GenThreadRISCV import GenThreadRISCV
+from base.Sequence import Sequence
+from DV.riscv.trees.instruction_tree import ALU_Int32_instructions
+from DV.riscv.trees.instruction_tree import ALU_Int64_instructions
+
+
+class MyMainSequence(Sequence):
+
+    def generate(self, **kargs):
+
+        # Use the Sequence.sample method which randomly selects N members of the list
+        # where N is specified in the second argument.  The first argument must be
+        # a list.  Sequence.sample does not support using a dictionary as the input
+
+        # build a list that corresponds to the key words in the dictionary
+        instr_list = []
+        for instr, weight in ALU_Int64_instructions.items():
+            instr_list.append(instr)
+
+        sublist = self.sample(instr_list, 5)
+
+        for instr in sublist:
+            self.notice(">>>>>  Instruction: {}".format(instr))
+
+
+        # Use the Sequence.choice method with a dictionary input which returns 
+        # one dictionary item as a (key, value) tuple
+        instr = self.choice(ALU_Int32_instructions)
+        self.notice(">>>>>  Instruction from self.choice:  {}".format(instr[0]))
+        self.genInstruction(instr[0])
+
+        # Use Sequence.choice with a tuple as the input
+        small_tuple = (sublist[0], sublist[1], sublist[2])
+        instr = self.choice(small_tuple)
+        self.notice(">>>>>  Instruction from self.choice using tuple: {}".format(instr))
+        self.genInstruction(instr)
+
+
+
+
+MainSequenceClass = MyMainSequence
+GenThreadClass = GenThreadRISCV
+EnvClass = EnvRISCV
+
