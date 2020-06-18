@@ -536,12 +536,12 @@ namespace Force {
       auto src_constr = src_accesses[i];
       if (nullptr != src_constr) {
         entropy->SourceEntropy().Increase(src_constr->Size());
-        LOG(notice) << "current source entropy:"<< entropy->SourceEntropy().Entropy() << ", resource type: " << int(i) << endl;
+        LOG(info) << "current source entropy:"<< entropy->SourceEntropy().Entropy() << ", resource type: " << int(i) << endl;
       }
       auto dest_constr = dest_accesses[i];
       if (nullptr != dest_constr) {
         entropy->DestEntropy().Increase(dest_constr->Size());
-        LOG(notice) << "current dest entropy:"<< entropy->DestEntropy().Entropy() << ", resource type: " << int(i) << endl;
+        LOG(info) << "current dest entropy:"<< entropy->DestEntropy().Entropy() << ", resource type: " << int(i) << endl;
       }
     }
   }

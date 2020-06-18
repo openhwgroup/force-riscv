@@ -4,16 +4,16 @@
     "ExceptionCode": "INSTRUCTION_ADDRESS_MISALIGNED",
     "ExceptionHandler":
     {
-      "ExceptionHandlerModule": "riscv.exception_handlers.FastExceptionHandlers",
-      "ExceptionHandlerClass": "FastSkipInstructionHandlerRISCV"
+      "ExceptionHandlerModule": "riscv.exception_handlers.FastRecoveryAddressHandler",
+      "ExceptionHandlerClass": "FastRecoveryAddressHandler"
     }
   },
   {
     "ExceptionCode": "INSTRUCTION_ACCESS_FAULT",
     "ExceptionHandler":
     {
-      "ExceptionHandlerModule": "riscv.exception_handlers.FastExceptionHandlers",
-      "ExceptionHandlerClass": "FastSkipInstructionHandlerRISCV"
+      "ExceptionHandlerModule": "riscv.exception_handlers.FastRecoveryAddressHandler",
+      "ExceptionHandlerClass": "FastRecoveryAddressHandler"
     }
   },
   {
@@ -108,8 +108,8 @@
     "ExceptionCode": "INSTRUCTION_PAGE_FAULT",
     "ExceptionHandler":
     {
-      "ExceptionHandlerModule": "riscv.exception_handlers.FastExceptionHandlers",
-      "ExceptionHandlerClass": "FastSkipInstructionHandlerRISCV"
+      "ExceptionHandlerModule": "riscv.exception_handlers.FastRecoveryAddressHandler",
+      "ExceptionHandlerClass": "FastRecoveryAddressHandler"
     }
   },
   {
