@@ -21,6 +21,7 @@
 
 namespace Force {
 
+  class GenPageRequest;
   class GenVirtualMemoryRequest;
 
   /*!
@@ -58,6 +59,8 @@ namespace Force {
     void RandomInitializeMemory(uint64 physAddr, uint32 size, uint32 bank, bool isInstr); //!< Randomly initialize a block of memory.
   protected:
     GenVirtualMemoryRequest* mpVirtualMemoryRequest; //!< Pointer to GenVirtualMemoryRequest object.
+  private:
+    void SetCommonPageRequestAttributes(const GenVirtualMemoryRequest& rGenVmReq, GenPageRequest* pPageReq); //!< Set PageRequest attributes common to different types of GenVirtualMemoryRequests.
   };
 
 }
