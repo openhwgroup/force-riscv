@@ -220,6 +220,11 @@ namespace Force {
     PcRelativeBranchOperand::Commit(gen, instr);
   }
 
+  OperandConstraint* CompressedRegisterOperandRISCV::InstantiateOperandConstraint() const
+  {
+    return new CompressedRegisterOperandRISCVConstraint();
+  }
+
   static void calculate_data_element_size(const LoadStoreOperandStructure* lsop_struct, const string& data_type, uint32 num_registers)
   {
     if (data_type == "8B") {

@@ -225,6 +225,7 @@ class OperandAdjustor(object):
     def set_reg_prime_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Prime GPRs"
+        aSrcOpr.oclass = "CompressedRegisterOperandRISCV"
         self.add_asm_op(aSrcOpr)
 
     def set_reg_prime_dp(self, aSrcOpr):

@@ -99,6 +99,32 @@ namespace Force {
 
   };
 
+
+    /*!
+    \class CompressedRegisterOperand
+    \brief Class handling operands with weighted choices.
+  */
+  class CompressedRegisterOperandRISCV : public RegisterOperand {
+  public:
+    Object* Clone() const override  //!< Return a cloned CompressedRegisterOperand object of the same type and same contents of the object.
+    {
+      return new CompressedRegisterOperandRISCV(*this);
+    }
+
+    const char* Type() const override { return "CompressedRegisterOperandRISCV"; } //!< Return the type of the CompressedRegisterOperandRISCV object in C string.
+
+    CompressedRegisterOperandRISCV() : RegisterOperand() { } //!< Constructor.
+    ~CompressedRegisterOperandRISCV() { } //!< Destructor
+  protected:
+    explicit CompressedRegisterOperandRISCV(const RegisterOperand& rOther) //!< Copy constructor.
+      : RegisterOperand(rOther)
+    {
+    }
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for CompressedRegisterOperandRISCV.
+  };
+
+  
   class VectorDataTraits;
 
   /*!
