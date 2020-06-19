@@ -14,5 +14,19 @@
 # limitations under the License.
 #
 control_items = [
-                {"fname":"basic_random_01_force.py", "generator":{"--cfg":"config/riscv.config", "--max-instr":50000, "--options":"\"instruction_count=100\"",}},
+                {"fname":"um_itree_01_force.py",                  "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_itree_02_force.py",                  "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_itree_03_force.py",                  "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_pageCrossing_01_force.py",           "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_pageCrossing_02_force.py",           "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_sequences_01_force.py",              "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_seqLibrary_01_force.py",             "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_regDependency_01_force.py",          "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_regDependency_02_force.py",          "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_choiceMod_01_force.py",              "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_choiceMod_02_force.py",              "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_EntryPoint_01_force.py",             "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_randomChoice_01_force.py",           "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_randomChoice_02_force.py",           "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"um_LoopControl_01_force.py",            "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 ]
