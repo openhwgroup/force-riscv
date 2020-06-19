@@ -18,7 +18,7 @@
 Add RISCV system registers starter information in this file.
 -->
 <registers>
-  <register description="User status register." index="0x0" name="ustatus" physical_register="ustatus" privilege="URW" size="64" type="SysReg">
+  <register boot="0" description="User status register." index="0x0" name="ustatus" physical_register="mstatus" privilege="URW" size="64" type="SysReg">
     <register_field name="WPRI_VAR" size="59">
       <bit_field shift="5" size="59"/>
     </register_field>
@@ -32,8 +32,58 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Floating-Point Accrued Exceptions." index="0x1" name="fflags" privilege="URW" size="0" type="SysReg"/>
-  <register description="Floating-Point Dynamic Rounding Mode." index="0x2" name="frm" privilege="URW" size="0" type="SysReg"/>
+  <register description="Floating-Point Accrued Exceptions." index="0x1" name="fflags" physical_register="fflags" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="59">
+      <bit_field shift="5" size="59"/>
+    </register_field>
+    <register_field name="NZ" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="DZ" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="OF" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="UF" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="NX" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Floating-Point Dynamic Rounding Mode." index="0x2" name="frm" physical_register="frm" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="61">
+      <bit_field shift="8" size="56"/>
+      <bit_field shift="0" size="5"/>
+    </register_field>
+    <register_field name="FRM" size="3">
+      <bit_field shift="5" size="3"/>
+    </register_field>
+  </register>
+  <register boot="0x5000" description="Floating-point control and status register." index="0x3" name="fcsr" physical_register="fcsr" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="56">
+      <bit_field shift="8" size="56"/>
+    </register_field>
+    <register_field name="FRM" size="3">
+      <bit_field shift="5" size="3"/>
+    </register_field>
+    <register_field name="NZ" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="DZ" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="OF" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="UF" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="NX" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
   <register description="User interrupt-enable register." index="0x4" name="uie" physical_register="uie" privilege="URW" size="64" type="SysReg">
     <register_field name="WPRI_VAR" size="55">
       <bit_field shift="9" size="55"/>
@@ -52,8 +102,19 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="User trap handler base address." index="0x5" name="utvec" privilege="URW" size="0" type="SysReg"/>
-  <register description="Scratch register for user trap handlers." index="0x40" name="uscratch" privilege="URW" size="0" type="SysReg"/>
+  <register description="User trap handler base address." index="0x5" name="utvec" physical_register="utvec" privilege="URW" size="64" type="SysReg">
+    <register_field name="BASE_VAR" size="62">
+      <bit_field shift="2" size="62"/>
+    </register_field>
+    <register_field name="MODE" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+  <register description="Scratch register for user trap handlers." index="0x40" name="uscratch" physical_register="uscratch" privilege="URW" size="64" type="SysReg">
+    <register_field name="SCRATCH" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
   <register description="User exception program counter." index="0x41" name="uepc" privilege="URW" size="0" type="SysReg"/>
   <register description="User trap cause." index="0x42" name="ucause" privilege="URW" size="0" type="SysReg"/>
   <register description="User bad address or instruction." index="0x43" name="utval" privilege="URW" size="0" type="SysReg"/>
@@ -75,7 +136,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Supervisor status register." index="0x100" name="sstatus" physical_register="sstatus" privilege="SRW" size="64" type="SysReg">
+  <register boot="0" description="Supervisor status register." index="0x100" name="sstatus" physical_register="mstatus" privilege="SRW" size="64" type="SysReg">
     <register_field name="SD" size="1">
       <bit_field shift="63" size="1"/>
     </register_field>
@@ -95,9 +156,13 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="MXR" size="1">
       <bit_field shift="19" size="1"/>
+      <choice description="No make executable readable" value="0x0" weight="10"/>
+      <choice description="Make executable readable" value="0x1" weight="0"/>
     </register_field>
     <register_field name="SUM" size="1">
       <bit_field shift="18" size="1"/>
+      <choice description="No Supervisor access to User Memory" value="0x0" weight="10"/>
+      <choice description="Supervisor access to User Memory" value="0x1" weight="0"/>
     </register_field>
     <register_field name="XS" size="2">
       <bit_field shift="15" size="2"/>
@@ -232,7 +297,11 @@ Add RISCV system registers starter information in this file.
     </register_field>
   </register>
   <register description="Scratch register for supervisor trap handlers." index="0x140" name="sscratch" privilege="SRW" size="0" type="SysReg"/>
-  <register description="Supervisor exception program counter." index="0x141" name="sepc" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor exception program counter." index="0x141" name="sepc" physical_register="sepc" privilege="SRW" size="64" type="SysReg">
+    <register_field name="SEPC" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
   <register description="Supervisor trap cause." index="0x142" name="scause" physical_register="scause" privilege="SRW" size="64" type="SysReg">
     <register_field name="INTERRUPT" size="1">
       <bit_field shift="63" size="1"/>
@@ -251,14 +320,14 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Supervisor address translation and protection." index="0x180" name="satp" physical_register="satp" privilege="SRW" size="64" type="SysReg">
+  <register boot="0x5001" description="Supervisor address translation and protection." index="0x180" name="satp" physical_register="satp" privilege="SRW" size="64" type="SysReg">
     <register_field name="MODE" size="4">
       <bit_field shift="60" size="4"/>
     </register_field>
     <register_field name="ASID" size="16">
       <bit_field shift="44" size="16"/>
     </register_field>
-    <register_field name="PPN" size="44">
+    <register_field name="PPN" size="44" init_policy="PpnInitPolicy">
       <bit_field shift="0" size="44"/>
     </register_field>
   </register>
@@ -357,7 +426,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="44"/>
     </register_field>
   </register>
-  <register description="Machine status register." index="0x300" name="mstatus" physical_register="mstatus" privilege="MRW" size="64" type="SysReg">
+  <register boot="0x5002" description="Machine status register." index="0x300" name="mstatus" physical_register="mstatus" privilege="MRW" size="64" type="SysReg">
     <register_field name="SD" size="1">
       <bit_field shift="63" size="1"/>
     </register_field>
@@ -367,13 +436,8 @@ Add RISCV system registers starter information in this file.
     <register_field name="MPV" size="1">
       <bit_field shift="39" size="1"/>
     </register_field>
-    <register_field name="WPRI" size="15">
+    <register_field name="GVA" size="1">
       <bit_field shift="38" size="1"/>
-      <bit_field shift="23" size="9"/>
-      <bit_field shift="9" size="2"/>
-      <bit_field shift="4" size="1"/>
-      <bit_field shift="2" size="1"/>
-      <bit_field shift="0" size="1"/>
     </register_field>
     <register_field name="MBE" size="1">
       <bit_field shift="37" size="1"/>
@@ -386,6 +450,13 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="UXL" size="2">
       <bit_field shift="32" size="2"/>
+    </register_field>
+    <register_field name="WPRI" size="14">
+      <bit_field shift="23" size="9"/>
+      <bit_field shift="9" size="2"/>
+      <bit_field shift="4" size="1"/>
+      <bit_field shift="2" size="1"/>
+      <bit_field shift="0" size="1"/>
     </register_field>
     <register_field name="TSR" size="1">
       <bit_field shift="22" size="1"/>
@@ -433,7 +504,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="1" size="1"/>
     </register_field>
   </register>
-  <register description="Machine status register." index="0x300" name="mstatus_hyp" physical_register="mstatus" privilege="MRW" size="64" type="SysReg">
+  <register description="Machine status register." index="0x300" name="mstatus_hyp" physical_register="mstatus" privilege="MRW" size="64" type="SysReg" choice="false">
     <register_field name="SD" size="1">
       <bit_field shift="63" size="1"/>
     </register_field>
@@ -505,7 +576,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="1" size="1"/>
     </register_field>
   </register>
-  <register description="ISA and extensions" index="0x301" name="misa" physical_register="misa" privilege="MRW" size="64" type="SysReg">
+  <register boot="0x5003" description="ISA and extensions" index="0x301" name="misa" physical_register="misa" privilege="MRW" size="64" type="SysReg">
     <register_field name="MXL" size="2">
       <bit_field shift="62" size="2"/>
     </register_field>
@@ -635,18 +706,6 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="CY" size="1">
       <bit_field shift="0" size="1"/>
-    </register_field>
-  </register>
-  <register description="Additional machine status register, RV32 only." index="0x310" name="mstatush" physical_register="mstatush" privilege="MRW" size="32" type="SysReg">
-    <register_field name="WPRI" size="30">
-      <bit_field shift="6" size="26"/>
-      <bit_field shift="0" size="4"/>
-    </register_field>
-    <register_field name="MBE" size="1">
-      <bit_field shift="5" size="1"/>
-    </register_field>
-    <register_field name="SBE" size="1">
-      <bit_field shift="4" size="1"/>
     </register_field>
   </register>
   <register description="Machine counter-inhibit register." index="0x320" name="mcountinhibit" physical_register="mcountinhibit" privilege="MRW" size="32" type="SysReg">
@@ -815,9 +874,13 @@ Add RISCV system registers starter information in this file.
     </register_field>
   </register>
   <register description="Physical memory protection configuration." index="0x3a0" name="pmpcfg0" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration, RV32 only." index="0x3a1" name="pmpcfg1" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection configuration." index="0x3a2" name="pmpcfg2" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration, RV32 only." index="0x3a3" name="pmpcfg3" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration." index="0x3a4" name="pmpcfg4" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration." index="0x3a6" name="pmpcfg6" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration." index="0x3a8" name="pmpcfg8" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration." index="0x3aa" name="pmpcfg10" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration." index="0x3ac" name="pmpcfg12" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration." index="0x3ae" name="pmpcfg14" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3b0" name="pmpaddr0" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3b1" name="pmpaddr1" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3b2" name="pmpaddr2" privilege="MRW" size="0" type="SysReg"/>
@@ -834,6 +897,54 @@ Add RISCV system registers starter information in this file.
   <register description="Physical memory protection address register." index="0x3bd" name="pmpaddr13" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3be" name="pmpaddr14" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3bf" name="pmpaddr15" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c0" name="pmpaddr16" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c1" name="pmpaddr17" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c2" name="pmpaddr18" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c3" name="pmpaddr19" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c4" name="pmpaddr20" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c5" name="pmpaddr21" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c6" name="pmpaddr22" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c7" name="pmpaddr23" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c8" name="pmpaddr24" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3c9" name="pmpaddr25" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ca" name="pmpaddr26" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3cb" name="pmpaddr27" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3cc" name="pmpaddr28" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3cd" name="pmpaddr29" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ce" name="pmpaddr30" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3cf" name="pmpaddr31" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d0" name="pmpaddr32" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d1" name="pmpaddr33" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d2" name="pmpaddr34" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d3" name="pmpaddr35" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d4" name="pmpaddr36" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d5" name="pmpaddr37" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d6" name="pmpaddr38" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d7" name="pmpaddr39" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d8" name="pmpaddr40" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3d9" name="pmpaddr41" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3da" name="pmpaddr42" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3db" name="pmpaddr43" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3dc" name="pmpaddr44" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3dd" name="pmpaddr45" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3de" name="pmpaddr46" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3df" name="pmpaddr47" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e0" name="pmpaddr48" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e1" name="pmpaddr49" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e2" name="pmpaddr50" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e3" name="pmpaddr51" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e4" name="pmpaddr52" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e5" name="pmpaddr53" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e6" name="pmpaddr54" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e7" name="pmpaddr55" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e8" name="pmpaddr56" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3e9" name="pmpaddr57" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ea" name="pmpaddr58" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3eb" name="pmpaddr59" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ec" name="pmpaddr60" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ed" name="pmpaddr61" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ee" name="pmpaddr62" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ef" name="pmpaddr63" privilege="MRW" size="0" type="SysReg"/>
   <register description="Hypervisor status register." index="0x600" name="hstatus" physical_register="hstatus" privilege="HRW" size="64" type="SysReg">
     <register_field name="WPRI_VAR" size="30">
       <bit_field shift="34" size="30"/>
@@ -841,16 +952,17 @@ Add RISCV system registers starter information in this file.
     <register_field name="VSXL" size="2">
       <bit_field shift="32" size="2"/>
     </register_field>
-    <register_field name="WPRI" size="19">
+    <register_field name="WPRI" size="18">
       <bit_field shift="23" size="9"/>
-      <bit_field shift="21" size="1"/>
       <bit_field shift="18" size="2"/>
       <bit_field shift="10" size="2"/>
-      <bit_field shift="6" size="1"/>
-      <bit_field shift="1" size="4"/>
+      <bit_field shift="0" size="5"/>
     </register_field>
     <register_field name="VTSR" size="1">
       <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="VTW" size="1">
+      <bit_field shift="21" size="1"/>
     </register_field>
     <register_field name="VTVM" size="1">
       <bit_field shift="20" size="1"/>
@@ -858,20 +970,20 @@ Add RISCV system registers starter information in this file.
     <register_field name="VGEIN" size="6">
       <bit_field shift="12" size="6"/>
     </register_field>
-    <register_field name="SP2V" size="1">
+    <register_field name="HU" size="1">
       <bit_field shift="9" size="1"/>
     </register_field>
-    <register_field name="SP2P" size="1">
+    <register_field name="SPVP" size="1">
       <bit_field shift="8" size="1"/>
     </register_field>
     <register_field name="SPV" size="1">
       <bit_field shift="7" size="1"/>
     </register_field>
+    <register_field name="GVA" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
     <register_field name="VSBE" size="1">
       <bit_field shift="5" size="1"/>
-    </register_field>
-    <register_field name="SPRV" size="1">
-      <bit_field shift="0" size="1"/>
     </register_field>
   </register>
   <register description="Hypervisor exception delegation register." index="0x602" name="hedeleg" physical_register="hedeleg" privilege="HRW" size="64" type="SysReg">
@@ -995,14 +1107,13 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Upper 32 bits of htimedelta, RV32 only." index="0x615" name="htimedeltah" privilege="HRW" size="0" type="SysReg"/>
-  <register description="Hypervisor bad guest physical address." index="0x643" name="htval" physical_register="htval" privilege="HRW" size="64" type="SysReg">
-    <register_field name="HTVAL_VAR" size="64">
+  <register description="Hypervisor interrupt pending." index="0x644" name="hip" physical_register="hip" privilege="HRW" size="64" type="SysReg">
+    <register_field name="INTERRUPTS_VAR" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Hypervisor interrupt pending." index="0x644" name="hip" physical_register="hip" privilege="HRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
+  <register description="Hypervisor virtual interrupt pending." index="0x645" name="hvip" physical_register="hvip" privilege="HRW" size="64" type="SysReg">
+    <register_field name="VIRTUAL INTERRUPTS_VAR" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
@@ -1012,10 +1123,19 @@ Add RISCV system registers starter information in this file.
     </register_field>
   </register>
   <register description="Hypervisor guest address translation and protection." index="0x680" name="hgatp" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Debug/Trace trigger register select." index="0x7a0" name="tselect" privilege="MRW" size="0" type="SysReg"/>
+  <register description="First Debug/Trace trigger data register." index="0x7a1" name="tdata1" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Second Debug/Trace trigger data register." index="0x7a2" name="tdata2" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Third Debug/Trace trigger data register." index="0x7a3" name="tdata3" privilege="MRW" size="0" type="SysReg"/>
   <register description="Debug control and status register." index="0x7b0" name="dcsr" privilege="DRW" size="0" type="SysReg"/>
   <register description="Debug PC." index="0x7b1" name="dpc" privilege="DRW" size="0" type="SysReg"/>
   <register description="Debug scratch register 0." index="0x7b2" name="dscratch0" privilege="DRW" size="0" type="SysReg"/>
   <register description="Debug scratch register 1." index="0x7b3" name="dscratch1" privilege="DRW" size="0" type="SysReg"/>
+  <register boot="0" description="Privilege register." class="ConfigureRegister" index="0x7c0" name="privilege" physical_register="privilege" size="2" type="Internal" choice="false">
+    <register_field name="MODE" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
   <register description="Machine cycle counter." index="0xb00" name="mcycle" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine instructions-retired counter." index="0xb02" name="minstret" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine performance-monitoring counter." index="0xb03" name="mhpmcounter3" privilege="MRW" size="0" type="SysReg"/>
@@ -1047,37 +1167,6 @@ Add RISCV system registers starter information in this file.
   <register description="Machine performance-monitoring counter." index="0xb1d" name="mhpmcounter29" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine performance-monitoring counter." index="0xb1e" name="mhpmcounter30" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine performance-monitoring counter." index="0xb1f" name="mhpmcounter31" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mcycle, RV32 only." index="0xb80" name="mcycleh" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of minstret, RV32 only." index="0xb82" name="minstreth" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter3, RV32 only." index="0xb83" name="mhpmcounter3h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter4, RV32 only." index="0xb84" name="mhpmcounter4h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter5, RV32 only." index="0xb85" name="mhpmcounter5h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter6, RV32 only." index="0xb86" name="mhpmcounter6h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter7, RV32 only." index="0xb87" name="mhpmcounter7h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter8, RV32 only." index="0xb88" name="mhpmcounter8h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter9, RV32 only." index="0xb89" name="mhpmcounter9h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter10, RV32 only." index="0xb8a" name="mhpmcounter10h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter11, RV32 only." index="0xb8b" name="mhpmcounter11h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter12, RV32 only." index="0xb8c" name="mhpmcounter12h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter13, RV32 only." index="0xb8d" name="mhpmcounter13h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter14, RV32 only." index="0xb8e" name="mhpmcounter14h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter15, RV32 only." index="0xb8f" name="mhpmcounter15h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter16, RV32 only." index="0xb90" name="mhpmcounter16h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter17, RV32 only." index="0xb91" name="mhpmcounter17h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter18, RV32 only." index="0xb92" name="mhpmcounter18h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter19, RV32 only." index="0xb93" name="mhpmcounter19h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter20, RV32 only." index="0xb94" name="mhpmcounter20h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter21, RV32 only." index="0xb95" name="mhpmcounter21h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter22, RV32 only." index="0xb96" name="mhpmcounter22h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter23, RV32 only." index="0xb97" name="mhpmcounter23h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter24, RV32 only." index="0xb98" name="mhpmcounter24h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter25, RV32 only." index="0xb99" name="mhpmcounter25h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter26, RV32 only." index="0xb9a" name="mhpmcounter26h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter27, RV32 only." index="0xb9b" name="mhpmcounter27h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter28, RV32 only." index="0xb9c" name="mhpmcounter28h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter29, RV32 only." index="0xb9d" name="mhpmcounter29h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter30, RV32 only." index="0xb9e" name="mhpmcounter30h" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of mhpmcounter31, RV32 only." index="0xb9f" name="mhpmcounter31h" privilege="MRW" size="0" type="SysReg"/>
   <register description="Cycle counter for RDCYCLE instruction." index="0xc00" name="cycle" privilege="URO" size="0" type="SysReg"/>
   <register description="Timer for RDTIME instruction." index="0xc01" name="time" privilege="URO" size="0" type="SysReg"/>
   <register description="Instructions-retired counter for RDINSTRET instruction." index="0xc02" name="instret" privilege="URO" size="0" type="SysReg"/>
@@ -1110,39 +1199,7 @@ Add RISCV system registers starter information in this file.
   <register description="Performance-monitoring counter." index="0xc1d" name="hpmcounter29" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1e" name="hpmcounter30" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1f" name="hpmcounter31" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of cycle, RV32 only." index="0xc80" name="cycleh" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of time, RV32 only." index="0xc81" name="timeh" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of instret, RV32 only." index="0xc82" name="instreth" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter3, RV32 only." index="0xc83" name="hpmcounter3h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter4, RV32 only." index="0xc84" name="hpmcounter4h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter5, RV32 only." index="0xc85" name="hpmcounter5h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter6, RV32 only." index="0xc86" name="hpmcounter6h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter7, RV32 only." index="0xc87" name="hpmcounter7h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter8, RV32 only." index="0xc88" name="hpmcounter8h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter9, RV32 only." index="0xc89" name="hpmcounter9h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter10, RV32 only." index="0xc8a" name="hpmcounter10h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter11, RV32 only." index="0xc8b" name="hpmcounter11h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter12, RV32 only." index="0xc8c" name="hpmcounter12h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter13, RV32 only." index="0xc8d" name="hpmcounter13h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter14, RV32 only." index="0xc8e" name="hpmcounter14h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter15, RV32 only." index="0xc8f" name="hpmcounter15h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter16, RV32 only." index="0xc90" name="hpmcounter16h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter17, RV32 only." index="0xc91" name="hpmcounter17h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter18, RV32 only." index="0xc92" name="hpmcounter18h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter19, RV32 only." index="0xc93" name="hpmcounter19h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter20, RV32 only." index="0xc94" name="hpmcounter20h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter21, RV32 only." index="0xc95" name="hpmcounter21h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter22, RV32 only." index="0xc96" name="hpmcounter22h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter23, RV32 only." index="0xc97" name="hpmcounter23h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter24, RV32 only." index="0xc98" name="hpmcounter24h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter25, RV32 only." index="0xc99" name="hpmcounter25h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter26, RV32 only." index="0xc9a" name="hpmcounter26h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter27, RV32 only." index="0xc9b" name="hpmcounter27h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter28, RV32 only." index="0xc9c" name="hpmcounter28h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter29, RV32 only." index="0xc9d" name="hpmcounter29h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter30, RV32 only." index="0xc9e" name="hpmcounter30h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Upper 32 bits of hpmcounter31, RV32 only." index="0xc9f" name="hpmcounter31h" privilege="URO" size="0" type="SysReg"/>
-  <register description="Hypervisor guest external interrupt pending." index="0xe07" name="hgeip" physical_register="hgeip" privilege="HRO" size="64" type="SysReg">
+  <register description="Hypervisor guest external interrupt pending." index="0xe12" name="hgeip" physical_register="hgeip" privilege="HRO" size="64" type="SysReg">
     <register_field name="GUEST EXTERNAL INTERRUPTS_VAR" size="63">
       <bit_field shift="1" size="63"/>
     </register_field>
@@ -1150,7 +1207,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Vendor ID." index="0xf11" name="mvendorid" physical_register="mvendorid" privilege="MRO" size="32" type="SysReg">
+  <register boot="0" description="Vendor ID." index="0xf11" name="mvendorid" physical_register="mvendorid" privilege="MRO" size="32" type="SysReg">
     <register_field name="BANK" size="25">
       <bit_field shift="7" size="25"/>
     </register_field>
@@ -1158,17 +1215,17 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="7"/>
     </register_field>
   </register>
-  <register description="Architecture ID." index="0xf12" name="marchid" physical_register="marchid" privilege="MRO" size="64" type="SysReg">
+  <register boot="0" description="Architecture ID." index="0xf12" name="marchid" physical_register="marchid" privilege="MRO" size="64" type="SysReg">
     <register_field name="ARCHITECTURE ID_VAR" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Implementation ID." index="0xf13" name="mimpid" physical_register="mimpid" privilege="MRO" size="64" type="SysReg">
+  <register boot="0" description="Implementation ID." index="0xf13" name="mimpid" physical_register="mimpid" privilege="MRO" size="64" type="SysReg">
     <register_field name="IMPLEMENTATION_VAR" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Hardware thread ID." index="0xf14" name="mhartid" physical_register="mhartid" privilege="MRO" size="64" type="SysReg">
+  <register boot="0" description="Hardware thread ID." index="0xf14" name="mhartid" physical_register="mhartid" privilege="MRO" size="64" type="SysReg">
     <register_field name="HART ID_VAR" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>

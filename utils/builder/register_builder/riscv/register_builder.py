@@ -79,16 +79,17 @@ def output_system_register_choices(aTree, aOutputFile):
     write.set('type', 'RegisterOperand')
 
     for register in registers:
-        choice = ET.Element('choice')
-        choice.set('description', '%s; %s' % (register.get('privilege'), register.get('description')[:-1]))
-        choice.set('name', register.get('name'))
-        choice.set('value', register.get('index'))
-        choice.set('weight', register.get('weight', '0'))
+        if register.get('choice', 'true') == 'true':
+            choice = ET.Element('choice')
+            choice.set('description', '%s; %s' % (register.get('privilege'), register.get('description')))
+            choice.set('name', register.get('name'))
+            choice.set('value', register.get('index'))
+            choice.set('weight', register.get('weight', '0'))
 
-        if 'R' in register.get('privilege'):
-            read.append(choice)
-        if 'W' in register.get('privilege'):
-            write.append(choice)
+            if 'R' in register.get('privilege'):
+                read.append(choice)
+            if 'W' in register.get('privilege'):
+                write.append(choice)
 
     output_root.append(read)
     output_root.append(write)
@@ -101,23 +102,23 @@ def output_register_field_choices(aTree, aOutputFile):
     output_root = ET.Element('choices_file')
 
     for register in registers:
-        fields = register.findall('.//register_field')
-        for field in fields:
-            choices = ET.Element('choices')
-            choices.set('name', '%s.%s' % (register.get('name'), field.get('name')))
-            choices.set('type', 'RegisterFieldValue')
-            count = 0
+        if register.get('choice', 'true') == 'true':
+            fields = register.findall('.//register_field')
+            for field in fields:
+                choices = field.findall('.//choice')
+                if choices:
+                    choices_element = ET.Element('choices')
+                    choices_element.set('name', '%s.%s' % (register.get('name'), field.get('name')))
+                    choices_element.set('type', 'RegisterFieldValue')
 
-            bits = field.findall('.//bit_field')
-            for bit in bits:
-                choice = ET.Element('choice')
-                choice.set('description', field.get('description', ''))
-                choice.set('value', hex(count))
-                choice.set('weight', field.get('weight', '10'))
-                choices.append(choice)
-                count += 1
+                    for choice in choices:
+                        choice_element = ET.Element('choice')
+                        choice_element.set('description', choice.get('description'))
+                        choice_element.set('value', choice.get('value'))
+                        choice_element.set('weight', choice.get('weight', '10'))
+                        choices_element.append(choice_element)
 
-            output_root.append(choices)
+                    output_root.append(choices_element)
 
     pretty_print_xml(aOutputFile, output_root)
 
@@ -131,10 +132,10 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
     register = ET.Element('register')
     register.set('index', aRegister.get('index'))
     register.set('name', aRegister.get('name'))
-    register.set('size', aRegister.get('size'))
+    register.set('size', '64' if str(aRegister.get('size')) == '0' else aRegister.get('size'))
     register.set('type', aRegister.get('type'))
     if aRegister.get('size') != '0':
-        register.set('boot', '1')
+        register.set('boot', aRegister.get('boot', '1'))
     else:
         register.set('boot', '0')
 
@@ -144,6 +145,8 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
         register_field.set('name', field.get('name'))
         register_field.set('physical_register', aRegister.get('physical_register'))
         register_field.set('size', field.get('size'))
+        if field.get('init_policy'):
+            register_field.set('init_policy', field.get('init_policy'))
 
         bits = field.findall('.//bit_field')
         for bit in bits:
@@ -154,12 +157,14 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
 
         register.append(register_field)
 
-    if aRegister.get('physical_register'):
+    if aRegister.get('physical_register') and aRegister.get('physical_register') == aRegister.get('name') or aRegister.get('physical_register') is None:
         physical_register = ET.Element('physical_register')
         physical_register.set('index', aRegister.get('index'))
-        physical_register.set('name', aRegister.get('physical_register'))
-        physical_register.set('size', aRegister.get('size'))
+        physical_register.set('name', aRegister.get('physical_register', aRegister.get('name')))
+        physical_register.set('size', '64' if str(aRegister.get('size')) == '0' else aRegister.get('size'))
         physical_register.set('type', aRegister.get('type'))
+        if aRegister.get('class'):
+            physical_register.set('class', aRegister.get('class'))
         aPhysicalRegisters.append(physical_register)
 
     aRegisterFile.append(register)

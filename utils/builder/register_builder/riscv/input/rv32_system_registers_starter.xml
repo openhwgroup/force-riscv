@@ -1,0 +1,110 @@
+<?xml version="1.0" ?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<!--
+Add RISCV RV32 system registers starter information in this file.
+-->
+<registers>
+  <register description="Additional machine status register, RV32 only." index="0x310" name="mstatush" physical_register="mstatush" privilege="MRW" size="32" type="SysReg">
+    <register_field name="WPRI" size="30">
+      <bit_field shift="6" size="26"/>
+      <bit_field shift="0" size="4"/>
+    </register_field>
+    <register_field name="MBE" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="SBE" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+  </register>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3a1" name="pmpcfg1" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3a3" name="pmpcfg3" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3a5" name="pmpcfg5" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3a7" name="pmpcfg7" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3a9" name="pmpcfg9" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3ab" name="pmpcfg11" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3ad" name="pmpcfg13" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration, RV32 only." index="0x3af" name="pmpcfg15" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of htimedelta, RV32 only." index="0x615" name="htimedeltah" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor bad guest physical address." index="0x643" name="htval" physical_register="htval" privilege="HRW" size="64" type="SysReg">
+    <register_field name="HTVAL_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Upper 32 bits of mcycle, RV32 only." index="0xb80" name="mcycleh" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of minstret, RV32 only." index="0xb82" name="minstreth" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter3, RV32 only." index="0xb83" name="mhpmcounter3h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter4, RV32 only." index="0xb84" name="mhpmcounter4h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter5, RV32 only." index="0xb85" name="mhpmcounter5h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter6, RV32 only." index="0xb86" name="mhpmcounter6h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter7, RV32 only." index="0xb87" name="mhpmcounter7h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter8, RV32 only." index="0xb88" name="mhpmcounter8h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter9, RV32 only." index="0xb89" name="mhpmcounter9h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter10, RV32 only." index="0xb8a" name="mhpmcounter10h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter11, RV32 only." index="0xb8b" name="mhpmcounter11h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter12, RV32 only." index="0xb8c" name="mhpmcounter12h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter13, RV32 only." index="0xb8d" name="mhpmcounter13h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter14, RV32 only." index="0xb8e" name="mhpmcounter14h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter15, RV32 only." index="0xb8f" name="mhpmcounter15h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter16, RV32 only." index="0xb90" name="mhpmcounter16h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter17, RV32 only." index="0xb91" name="mhpmcounter17h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter18, RV32 only." index="0xb92" name="mhpmcounter18h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter19, RV32 only." index="0xb93" name="mhpmcounter19h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter20, RV32 only." index="0xb94" name="mhpmcounter20h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter21, RV32 only." index="0xb95" name="mhpmcounter21h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter22, RV32 only." index="0xb96" name="mhpmcounter22h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter23, RV32 only." index="0xb97" name="mhpmcounter23h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter24, RV32 only." index="0xb98" name="mhpmcounter24h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter25, RV32 only." index="0xb99" name="mhpmcounter25h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter26, RV32 only." index="0xb9a" name="mhpmcounter26h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter27, RV32 only." index="0xb9b" name="mhpmcounter27h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter28, RV32 only." index="0xb9c" name="mhpmcounter28h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter29, RV32 only." index="0xb9d" name="mhpmcounter29h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter30, RV32 only." index="0xb9e" name="mhpmcounter30h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of mhpmcounter31, RV32 only." index="0xb9f" name="mhpmcounter31h" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of cycle, RV32 only." index="0xc80" name="cycleh" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of time, RV32 only." index="0xc81" name="timeh" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of instret, RV32 only." index="0xc82" name="instreth" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter3, RV32 only." index="0xc83" name="hpmcounter3h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter4, RV32 only." index="0xc84" name="hpmcounter4h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter5, RV32 only." index="0xc85" name="hpmcounter5h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter6, RV32 only." index="0xc86" name="hpmcounter6h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter7, RV32 only." index="0xc87" name="hpmcounter7h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter8, RV32 only." index="0xc88" name="hpmcounter8h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter9, RV32 only." index="0xc89" name="hpmcounter9h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter10, RV32 only." index="0xc8a" name="hpmcounter10h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter11, RV32 only." index="0xc8b" name="hpmcounter11h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter12, RV32 only." index="0xc8c" name="hpmcounter12h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter13, RV32 only." index="0xc8d" name="hpmcounter13h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter14, RV32 only." index="0xc8e" name="hpmcounter14h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter15, RV32 only." index="0xc8f" name="hpmcounter15h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter16, RV32 only." index="0xc90" name="hpmcounter16h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter17, RV32 only." index="0xc91" name="hpmcounter17h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter18, RV32 only." index="0xc92" name="hpmcounter18h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter19, RV32 only." index="0xc93" name="hpmcounter19h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter20, RV32 only." index="0xc94" name="hpmcounter20h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter21, RV32 only." index="0xc95" name="hpmcounter21h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter22, RV32 only." index="0xc96" name="hpmcounter22h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter23, RV32 only." index="0xc97" name="hpmcounter23h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter24, RV32 only." index="0xc98" name="hpmcounter24h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter25, RV32 only." index="0xc99" name="hpmcounter25h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter26, RV32 only." index="0xc9a" name="hpmcounter26h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter27, RV32 only." index="0xc9b" name="hpmcounter27h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter28, RV32 only." index="0xc9c" name="hpmcounter28h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter29, RV32 only." index="0xc9d" name="hpmcounter29h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter30, RV32 only." index="0xc9e" name="hpmcounter30h" privilege="URO" size="0" type="SysReg"/>
+  <register description="Upper 32 bits of hpmcounter31, RV32 only." index="0xc9f" name="hpmcounter31h" privilege="URO" size="0" type="SysReg"/>
+</registers>
