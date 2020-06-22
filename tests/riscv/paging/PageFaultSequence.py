@@ -48,7 +48,7 @@ class PageFaultSequence(Sequence):
             instr_id = self.genInstruction(self.choice(instruction_list))
             instr_count += 1
 
-        self._verifyPageFaultResolution(instr_id, pc_val)
+        #self._verifyPageFaultResolution(instr_id, pc_val)
 
         page_fault_mod.revert()
 
