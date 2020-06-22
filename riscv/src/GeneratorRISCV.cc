@@ -173,4 +173,10 @@ namespace Force {
   {
     mpGenPC->Advance(4);
   }
+
+  void GeneratorRISCV::AddArchImageThreadInfo(std::map<std::string, uint64>& rThreadInfo) const
+  {
+    rThreadInfo["PrivilegeLevel"] = mpPrivilegeField->InitialFieldValue();
+  }
+
 }

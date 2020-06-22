@@ -147,7 +147,7 @@ namespace Force {
     virtual uint32 PrivilegeLevel() const { return 0; } //!< Return exception level.
     virtual ConditionFlags GetConditionFlags() const = 0; //!< Return current condition flag values.  TODO need to go arch specific.
     virtual std::string GetGPRName(uint32 index) const = 0; //!< Return gpr name from index value.
-    virtual std::string GetGPRExcludes() const = 0; //!< Return gpr exclude indices in string format
+    virtual std::string GetGPRExcludes() const = 0; //!< Return gpr exclude indices in string format.
     virtual void SetupInstructionGroup(EInstructionGroupType iGrpType) { } //!< Setup for instruction group.
     virtual bool OperandTypeCompatible(ERegisterType regType, EOperandType oprType) const { return false; } //!< Check if the operand type is compatible with the register type.
     virtual bool OperandTypeToResourceType(EOperandType opType, EResourceType& rResType) const { return false; } //!< Convert operand type to resource type.
@@ -241,6 +241,7 @@ namespace Force {
     }
 
   protected:
+    virtual void AddArchImageThreadInfo(std::map<std::string, uint64>& rThreadInfo) const = 0; //!< Add architectural specific image thread info.
     void ProcessGenRequest(GenRequest* genRequest); //!< Process GenRequest transaction.
     void ReserveMemory(MemoryReservation* pMemReserv); //!< Reserve memory using a MemoryReservation object.
     void UnreserveMemory(MemoryReservation* pMemReserv); //!< Unreserve memory using a MemoryReservation object.

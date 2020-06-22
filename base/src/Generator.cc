@@ -1186,6 +1186,7 @@ namespace Force {
     thread_info["ThreadID"] = mThreadId;
     thread_info["BootPC"] = boot_pc;
     thread_info["InitialPC"] = initial_pc;
+    AddArchImageThreadInfo(thread_info);
     imagePrinter->PrintRegistersImage(output_name_img, thread_info, mpRegisterFile);
   }
 
