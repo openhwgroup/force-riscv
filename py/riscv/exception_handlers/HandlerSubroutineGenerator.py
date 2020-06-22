@@ -168,7 +168,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
 
         #mask and shift root PPN into address from atp register
         self.mAssemblyHelper.addLabel('PPN MASK')
-        self.mAssemblyHelper.genAndImmediate(self._mAtpRegIndex, 0xfffffffffff)
+        #self.mAssemblyHelper.genAndImmediate(self._mAtpRegIndex, 0xfffffffffff)
         self.mAssemblyHelper.genShiftLeftImmediate(self._mAtpRegIndex, self.PTE_SHIFT)
 
         #set up register to count levels walked

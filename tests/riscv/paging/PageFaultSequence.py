@@ -33,7 +33,7 @@ class PageFaultSequence(Sequence):
     def generate(self, **kwargs):
         (paging_opt, valid) = self.getOption("PagingDisabled")
         if valid and (paging_opt == 1):
-            self.error("Do not use 'PagingDisabled' option to insure paging stays enabled.")
+            self.error("'PagingDisabled' option set, can't generate page faults.")
 
         self.generatePreFaultInstructions()
 

@@ -33,11 +33,12 @@ class PageFaultModifier(ChoicesModifier):
             self.updatePageFaultChoices(level, privilege, weight)
 
     def updatePageFaultChoices(self, level, priv, weight):
-        choice_name = 'Translation fault#level {}#{}#stage 1'.format(level, priv)
+        choice_name = 'Invalid Descriptor#level {}#{}#stage 1'.format(level, priv)
         choice_dict = {'false':100-weight, 'true':weight}
         self.modifyPagingChoices(choice_name, choice_dict)
 
     def updatePageFaultsAll(self):
         for level in range(4):
-            for priv in ['S', 'U']:
-               self.updatePageFaultChoices(level, priv, 100)
+            #for priv in ['S', 'U']:
+            priv = 'S'
+            self.updatePageFaultChoices(level, priv, 100)

@@ -38,7 +38,7 @@ class MainSequence(PageFaultSequence):
 
     ## Return exception codes.
     def getExceptionCodes(self):
-            return self._mExceptionCodes
+        return self._mExceptionCodes
 
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV

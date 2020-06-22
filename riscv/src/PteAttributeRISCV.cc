@@ -54,7 +54,7 @@ namespace Force
       }
     }
 
-    auto choices_raw = rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Translation fault", level);
+    auto choices_raw = rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid Descriptor", level);
     std::unique_ptr<ChoiceTree> choices_tree(choices_raw);
     auto chosen_ptr = choices_tree->Choose();
     auto chosen_value = chosen_ptr->Value();
@@ -68,10 +68,14 @@ namespace Force
 
   void AddressPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
   {
-    uint32 level = rPte.ParentTableLevel();
-    uint32 addr_fault_value = 0;
-
-    auto req_constr = rPagingReq.GenAttributeConstraint(EPageGenAttributeType::AddrSizeFault);
+    //uint32 level = rPte.ParentTableLevel();
+    LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower() << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
+    mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
+   
+    //TODO rework into address error range fault, (i.e. top VA bits not all equal)
+    //uint32 addr_fault_value = 0;
+    
+    /*auto req_constr = rPagingReq.GenAttributeConstraint(EPageGenAttributeType::AddrSizeFault);
     if (nullptr != req_constr) // has addr size fault constraint in page request
     {
       uint32 req_fault = req_constr->ChooseValue();
@@ -83,11 +87,11 @@ namespace Force
       std::unique_ptr<ChoiceTree> choices_tree(choices_raw);
       auto chosen_ptr = choices_tree->Choose();
       addr_fault_value = chosen_ptr->Value();
-    }
+    }*/
 
-    rPte.SetPageGenAttribute(EPageGenAttributeType::AddrSizeFault, addr_fault_value);
+    //rPte.SetPageGenAttribute(EPageGenAttributeType::AddrSizeFault, addr_fault_value);
 
-    if (addr_fault_value != 0)
+    /*if (addr_fault_value != 0)
     {
       LOG(notice) << "{AddressPteAttributeRISCV::Generate} requesting address size fault level=" << level << endl;
       uint64 random_value = Random::Instance()->Random64(rVmas.GetControlBlock()->MaxPhysicalAddress() + 1, MAX_UINT64);
@@ -95,10 +99,8 @@ namespace Force
       mValue = (((random_value | rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask()); //TODO get hardcoded shift programatically
     }
     else
-    {
-      LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower() << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
-      mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
-    }
+    {*/
+    //}
   }
 
   void DAPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)

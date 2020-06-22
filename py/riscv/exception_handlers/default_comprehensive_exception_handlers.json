@@ -108,16 +108,16 @@
     "ExceptionCode": "ExceptionClassRISCV.INSTRUCTION_PAGE_FAULT",
     "ExceptionHandler":
     {
-      "ExceptionHandlerModule": "riscv.exception_handlers.SkipInstructionHandler",
-      "ExceptionHandlerClass": "SkipInstructionHandlerRISCV"
+      "ExceptionHandlerModule": "riscv.exception_handlers.PageFaultExceptionHandler",
+      "ExceptionHandlerClass": "PageFaultExceptionHandlerRISCV"
     }
   },
   {
     "ExceptionCode": "ExceptionClassRISCV.LOAD_PAGE_FAULT",
     "ExceptionHandler":
     {
-      "ExceptionHandlerModule": "riscv.exception_handlers.SkipInstructionHandler",
-      "ExceptionHandlerClass": "SkipInstructionHandlerRISCV"
+      "ExceptionHandlerModule": "riscv.exception_handlers.PageFaultExceptionHandler",
+      "ExceptionHandlerClass": "PageFaultExceptionHandlerRISCV"
     }
   },
   {
@@ -132,8 +132,8 @@
     "ExceptionCode": "ExceptionClassRISCV.STORE_AMO_PAGE_FAULT",
     "ExceptionHandler":
     {
-      "ExceptionHandlerModule": "riscv.exception_handlers.SkipInstructionHandler",
-      "ExceptionHandlerClass": "SkipInstructionHandlerRISCV"
+      "ExceptionHandlerModule": "riscv.exception_handlers.PageFaultExceptionHandler",
+      "ExceptionHandlerClass": "PageFaultExceptionHandlerRISCV"
     }
   }
 ]
