@@ -14,11 +14,12 @@
 
 # Introduction to the Register Modification Script
 
-NOTICE: The modification script still works, but most of the functionality is being merged into the new register builder script.
+    NOTICE: The modification script still works, but most of the functionality is being merged into the new register builder script.
 
-This register builder is used to create system register files.  The starting point is input/system_registers_starter.xml file which is maintained by manual editing, then uses modification scripts to edit those base files.
+This register builder is used to create system register files. The starting point is input/system_registers_starter.xml file which is maintained by manual editing, then uses modification scripts to edit those base files.
 
 Files:
+
     BootPriority.py - Contains a structure (containing an if statement) that selects proper boot priority (via name or type)
     ModifyRegisterFile.py - Controls the command line input for modifying the register file
     register_builder.py - Read the starter XML file, output necessary register files and choices files
@@ -26,6 +27,7 @@ Files:
     RiscVRegDef.py - Actual register definition file used to modify registers, register choices, and field choices
 
 How to run modification scripts:
+
     Command line: ./ModifyRegisterFile.py --system path/to/register_file.xml --register_choices path/to/register_choices.xml --data update.py
     
     where the system option specifies the system tree
@@ -33,6 +35,7 @@ How to run modification scripts:
           the data option specifies the modification script (automatically looks in the register_changes/ directory)
 
 How to use modification scripts:
+
     In general, the modification scripts are just predefined Python lists of dictionaries of the things that need to be modified. Example implementations are listed below.
 
     1) To add new registers:
