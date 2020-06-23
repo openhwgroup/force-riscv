@@ -14,11 +14,7 @@
 
 # Introduction to the Register Modification Script
 
-=========================================================================================================================================
-NOTICE:
-
-The modification script still works, but most of the functionality is being merged into the new register builder script.
-=========================================================================================================================================
+NOTICE: The modification script still works, but most of the functionality is being merged into the new register builder script.
 
 This register builder is used to create system register files.  The starting point is input/system_registers_starter.xml file which is maintained by manual editing, then uses modification scripts to edit those base files.
 
