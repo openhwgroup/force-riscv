@@ -1,18 +1,18 @@
-#
-# Copyright (C) [2020] Futurewei Technologies, Inc.
-#
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#  http://www.apache.org/licenses/LICENSE-2.0
-#
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+# Introduction to the Register Modification Script
 
 =========================================================================================================================================
 NOTICE:
@@ -30,8 +30,11 @@ Files:
     RiscVRegDef.py - Actual register definition file used to modify registers, register choices, and field choices
 
 How to run modification scripts:
-                                         System tree                        Choices tree                           Modification script (automatically looks in register_changes/)
     Command line: ./ModifyRegisterFile.py --system path/to/register_file.xml --register_choices path/to/register_choices.xml --data update.py
+    
+    where the system option specifies the system tree
+          the register_choices option specifies the choices tree
+          the data option specifies the modification script (automatically looks in the register_changes/ directory)
 
 How to use modification scripts:
     In general, the modification scripts are just predefined Python lists of dictionaries of the things that need to be modified. Example implementations are listed below.
@@ -71,7 +74,7 @@ How to use modification scripts:
     5) To delete register choices:
         delete_register_choices = [{'name':'register_choice_name'}] #Required: name of register choice
 
-Current issues/TODO list:
+List of current issues:
     1) The following modification features are implemented but have not been thoroughly tested: copy registers, changing specific register attributes, changing specific physical register attributes, adding new field choices, and updating field choice weights.
     2) The current version of the implementation of boot priority is a giant if statement. There are commented out lines denoting how to change a boot priority inside BootPriority.py, but in the future, this implementation should be redesigned to just use a table or prior/default definition as both of those would be less of a mess to deal with.
     3) Register field choices don't have proper descriptions as of yet (they all say "P L A C E H O L D E R").
