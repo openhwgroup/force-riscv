@@ -72,6 +72,8 @@ How to use modification scripts:
 
 List of current issues:
     1) The following modification features are implemented but have not been thoroughly tested: copy registers, changing specific register attributes, changing specific physical register attributes, adding new field choices, and updating field choice weights.
+
     2) The current version of the implementation of boot priority is a giant if statement. There are commented out lines denoting how to change a boot priority inside BootPriority.py, but in the future, this implementation should be redesigned to just use a table or prior/default definition as both of those would be less of a mess to deal with.
+
     3) Register field choices don't have proper descriptions as of yet (they all say "P L A C E H O L D E R").
 
