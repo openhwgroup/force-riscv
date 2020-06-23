@@ -103,11 +103,10 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         #self.mAssemblyHelper.addLabel('ATP MODE check') TODO add switching for diff modes
         self.callRoutine('TableWalkSV48')
 
-        #TODO see if pteregindex has correct value
-        #self.mAssemblyHelper.addLabel('End genTableWalk')
-        #self.mAssemblyHelper.genMoveRegister(self._mPteRegIndex, self._mR2)
-
         self._popExceptionSpecificRegisters()
+
+        #transfer fault level back to page fault handler via stack
+        self._mExceptionsStack.push(self._mWalkLevelRegIndex)
 
         self.mAssemblyHelper.genReturn()
 
@@ -216,9 +215,9 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
 
         #otherwise, setup next level walk addr from descriptor ppn
         self.mAssemblyHelper.addLabel('NEXT LEVEL WALK %d' % aCurLevel)
-        self.mAssemblyHelper.genAddImmediate(self._mWalkLevelRegIndex, -1)
+        self.mAssemblyHelper.genAddImmediate(self._mWalkLevelRegIndex, 0xfff)
 
         self.mAssemblyHelper.genMoveRegister(self._mR1, self._mPteRegIndex)
-        self.mAssemblyHelper.genAndImmediate(self._mR1, self.PPN_MASK)
+        #self.mAssemblyHelper.genAndImmediate(self._mR1, self.PPN_MASK)
         self.mAssemblyHelper.genShiftRightImmediate(self._mR1, self.PPN_SHIFT)
-        self.mAssemblyHelper.genShiftLeftImmediate(self._mAtpRegIndex, self._mR1, self.PTE_SHIFT)
+        self.mAssemblyHelper.genShiftLeftImmediate(self._mAtpRegIndex, self.PTE_SHIFT, self._mR1)
