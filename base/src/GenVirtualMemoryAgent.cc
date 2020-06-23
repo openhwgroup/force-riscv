@@ -162,25 +162,10 @@ namespace Force {
     }
 
     std::unique_ptr<GenPageRequest> local_page_req(vm_mapper->GenPageRequestRegulated(is_instr, va_access_type));
-
-    if (nullptr != va_req->MemAttrImplConstraint())
-    {
-      local_page_req->SetMemAttrImplConstraint(va_req->MemAttrImplConstraint());
-      LOG(trace) << "{GenVirtualMemoryAgent::GenVA} setting mem attr impl from request to: " << hex << local_page_req->MemAttrImplConstraint()->ToSimpleString() << endl;
-    }
-
-    if (nullptr != va_req->TargetAliasAttrsConstraint())
-    {
-      local_page_req->SetTargetAliasAttrsConstraint(va_req->MemAttrImplConstraint());
-      LOG(trace) << "{GenVirtualMemoryAgent::GenVA} setting target alias attrs from request to: " << hex << local_page_req->TargetAliasAttrsConstraint()->ToSimpleString() << endl;
-    }
+    SetCommonPageRequestAttributes(*va_req, local_page_req.get());
 
     local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ForceAlias, va_req->ForceAlias());
     local_page_req->SetAttributeValue(EPageRequestAttributeType::AliasPageId, va_req->PhysPageId());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::FlatMap, va_req->FlatMap());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ForceMemAttrs, va_req->ForceMemAttrs());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::CanAlias, va_req->CanAlias());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ForceNewAddr, va_req->ForceNewAddr());
 
     VaGenerator va_gen(vm_mapper, local_page_req.get());
     ret_va = va_gen.GenerateAddress(va_req->Align(), va_req->Size(), is_instr, va_access_type, va_req->MemoryRangesConstraint());
@@ -211,7 +196,6 @@ namespace Force {
     // << "GenVirtualMemoryAgent::GenVMVA" << endl;
     vm_va_req->mVA = 0x1000;
   }
-
 
   void GenVirtualMemoryAgent::GenPA()
   {
@@ -289,28 +273,13 @@ namespace Force {
       }
     }
 
-
     std::unique_ptr<GenPageRequest> local_page_req(vm_mapper->GenPageRequestRegulated(is_instr, EMemAccessType::ReadWrite));
+    SetCommonPageRequestAttributes(*vapa_req, local_page_req.get());
+
     //TODO determine if force alias should be option for GenVAforPA
-
-    if (nullptr != vapa_req->MemAttrImplConstraint())
-    {
-      local_page_req->SetMemAttrImplConstraint(vapa_req->MemAttrImplConstraint());
-      LOG(info) << "{GenVirtualMemoryAgent::GenVA} setting mem attr impl from request to: " << hex << local_page_req->MemAttrImplConstraint()->ToSimpleString() << endl;
-    }
-
-    if (nullptr != vapa_req->TargetAliasAttrsConstraint())
-    {
-      local_page_req->SetTargetAliasAttrsConstraint(vapa_req->MemAttrImplConstraint());
-      LOG(info) << "{GenVirtualMemoryAgent::GenVA} setting target alias attrs from request to: " << hex << local_page_req->TargetAliasAttrsConstraint()->ToSimpleString() << endl;
-    }
-
     //local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ForceAlias, vapa_req->ForceAlias());
+
     local_page_req->SetAttributeValue(EPageRequestAttributeType::PA, vapa_req->PhysAddr());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::FlatMap, vapa_req->FlatMap());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ForceMemAttrs, vapa_req->ForceMemAttrs());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::CanAlias, vapa_req->CanAlias());
-    local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ForceNewAddr, vapa_req->ForceNewAddr());
 
     if (vapa_req->BankSpecified(mem_bank)) {
       local_page_req->SetBankType(mem_bank);
@@ -517,6 +486,30 @@ namespace Force {
   {
     mpGenerator->SetupPageTableRegions();
     mpGenerator->UpdateVm();
+  }
+
+  void GenVirtualMemoryAgent::SetCommonPageRequestAttributes(const GenVirtualMemoryRequest& rGenVmReq, GenPageRequest* pPageReq)
+  {
+    if (nullptr != rGenVmReq.MemAttrImplConstraint())
+    {
+      pPageReq->SetMemAttrImplConstraint(rGenVmReq.MemAttrImplConstraint());
+      LOG(trace) << "{GenVirtualMemoryAgent::SetPageRequestAttributes} setting mem attr impl from request to: " << hex << pPageReq->MemAttrImplConstraint()->ToSimpleString() << endl;
+    }
+
+    if (nullptr != rGenVmReq.TargetAliasAttrsConstraint())
+    {
+      pPageReq->SetTargetAliasAttrsConstraint(rGenVmReq.MemAttrImplConstraint());
+      LOG(trace) << "{GenVirtualMemoryAgent::GenVA} setting target alias attrs from request to: " << hex << pPageReq->TargetAliasAttrsConstraint()->ToSimpleString() << endl;
+    }
+
+    if (rGenVmReq.PrivilegeLevelSpecified()) {
+      pPageReq->SetPrivilegeLevel(rGenVmReq.PrivilegeLevel());
+    }
+
+    pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::FlatMap, rGenVmReq.FlatMap());
+    pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::ForceMemAttrs, rGenVmReq.ForceMemAttrs());
+    pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::CanAlias, rGenVmReq.CanAlias());
+    pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::ForceNewAddr, rGenVmReq.ForceNewAddr());
   }
 
 }
