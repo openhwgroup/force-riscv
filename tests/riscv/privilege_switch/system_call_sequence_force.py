@@ -16,7 +16,9 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
+from base.ChoicesModifier import ChoicesModifier
 from DV.riscv.trees.instruction_tree import RV_G_instructions
+import RandomUtils
 
 ## This test evaluates invoking the privilege level switching function of the system call sequence
 # using a wide variety of parameters.
@@ -89,7 +91,10 @@ class MainSequence(Sequence):
             if ('TargetAddr' in params) or (skip_addr_validation != 1):
                 params['SkipAddrValidation'] = skip_addr_validation
 
-        # TODO(Noah): Add testing for AddrChoicesModID when there is time to do so.
+        if RandomUtils.random32(0, 4) == 4:
+            choices_mod = ChoicesModifier(self.genThread)
+            choices_mod.modifyPagingChoices('Page Allocation Scheme', {'RandomFreeAlloc': 0, 'FlatMapAlloc': 10})
+            params['AddrChoicesModID'] = choices_mod.registerSet()
 
         # TODO(Noah): Add testing for SUM, MXR and MPRV when support for changing those fields is
         # established.
@@ -167,11 +172,7 @@ class MainSequence(Sequence):
 
             # Don't specify a target address if we don't know which privilege level we're targeting;
             # otherwise we can't be sure our target address is valid
-            # TODO(Noah): Remove the restriction allowing target addresses for S and U Modes only
-            # when the current and target privilege levels are equal. Currently the U bit is set in
-            # the page descriptor to match the current privilege level regardless of the
-            # PrivilegeLevel parameter specified in genVA().
-            if (aTargetPrivLevel is not None) and (aTargetPrivLevel != 'Random') and ((aTargetPrivLevel == 3) or (aTargetPrivLevel == current_priv_level)):
+            if (aTargetPrivLevel is not None) and (aTargetPrivLevel != 'Random'):
                 target_addr = self.genVA(Size=4, Align=4, Type='I', PrivilegeLevel=aTargetPrivLevel)
             else:
                 target_addr = None
