@@ -145,6 +145,21 @@ fpix_sim.log | A text file that contains the disassembled instruction stream, th
 gen.log | Detailed output from FORCE-RISCV regarding the generation process.
 sim.log | A text file that contains the disassembled instruction stream as the instructions are being generated, along with the associated values of the registers and memory read and written by the instructions.  Similar to the fpix_sim.log but sim.log has some additional information and better formatting.
 
+### The process to build handcar_cosim.so
+
+The Handcar cosim shared object (utils/handcar/handcar_cosim.so) is implemented based on Spike ISS (https://github.com/riscv/riscv-isa-sim).  We implemented additional code to package Spike code into a shared object with well-defined C APIs.  Since the build process is slightly involved, we have included a prebuilt handcar_cosim.so inside the utils/handcar directory.
+
+The C header for the APIs can be found at: utils/handcar/handcar_cosim_wrapper.h
+
+The exact command steps to build the handcar_cosim.so yourself are contained in this script: handcar/regenerate_and_build.bash
+
+To build the handcar_cosim.so:
+
+    cd handcar
+    ./regenerate_and_build.bash
+
+If the regenerate_and_build.bash script failed for some reason, it might be a good idea to execute the commands in there step-by-step.  We intend to improve this process and make it more robust down the road.
+
 ### Near term roadmap
 * Finish support for paging exceptions and control
 * Finish support for Vector extension version 0.9
