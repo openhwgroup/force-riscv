@@ -446,9 +446,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genInstruction('SD##RISCV', {'rs1': pte_addr_reg_index, 'rs2': pte_value_reg_index, 'simm12': 0, 'NoRestriction': 1})
 
     def genSFENCE(self, vaddr_reg_index):
-        # no SFENCE instr???
-        #self.genInstruction('SFENCE##RISCV', {'rs1': vaddr_reg_index, 'rs2': 0, 'simm12': 0, 'NoRestriction': 1})
-        self.genInstruction('FENCE.I##RISCV', {'rs1': vaddr_reg_index, 'rs2': 0, 'simm12': 0, 'rd': 0, 'NoRestriction': 1})
+        self.genInstruction('SFENCE.VMA##RISCV', {'rs1': vaddr_reg_index, 'rs2': 0, 'NoRestriction': 1})
 
 
 

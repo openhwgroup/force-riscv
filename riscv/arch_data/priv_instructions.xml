@@ -20,6 +20,12 @@
     <O name="retoperand" type="Choices" choices="Ret choice" class="RetOperand"/>
     <asm format="MRET"/>
   </I>
+  <I name="SFENCE.VMA" isa="RISCV" group="System" extension="RV64Priv">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,11-7,6-0" value="0001001000000001110011"/>
+    <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <asm format="SFENCE.VMA %s, %s" op1="rs2" op2="rs1"/>
+  </I>
   <I name="SRET" isa="RISCV" class="RetInstruction" group="System" extension="RV64Priv">
     <O name="const_bits" type="Constant" bits="31-0" value="00010000001000000000000001110011"/>
     <O name="retoperand" type="Choices" choices="Ret choice" class="RetOperand"/>
