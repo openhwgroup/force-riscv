@@ -35,6 +35,8 @@ class DefaultFastSyncDispatcher(SyncDispatcherBaseRISCV):
     #  @param aExceptionCodeClass The class defining the possible exception codes for this level of
     #       dispatch granularity.
     def processDispatch(self, aHandlerContext, aExceptionCodeClass):
+
+        print("In processDispatch")
         scratch_reg_index = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.ALL, 1)
 
         err_code_reg_index = self._genLoadErrorCode(aHandlerContext)
@@ -47,10 +49,12 @@ class DefaultFastSyncDispatcher(SyncDispatcherBaseRISCV):
         self.mAssemblyHelper.genAddRegister(scratch_reg_index, err_code_reg_index)
         self.genInstruction('JALR##RISCV', {'rd': 0, 'rs1': scratch_reg_index, 'NoRestriction': 1})
 
+        print("In processDispatch")
+
     def _genLoadErrorCode(self, aHandlerContext):
         (_, err_code_reg_index) = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.ALL, 2)
 
-        self.mAssemblyHelper.genReadSystemRegister(err_code_reg_index, ('%scause' % self.privilegeLevel))
+        self.mAssemblyHelper.genReadSystemRegister(err_code_reg_index, ('%scause' % self.privilegeLevel.lower())) 
 
         # Drop the interrupt bit to isolate the error code
         self.mAssemblyHelper.genShiftLeftImmediate(err_code_reg_index, 1)

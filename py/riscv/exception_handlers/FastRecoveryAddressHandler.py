@@ -28,9 +28,7 @@ class FastRecoveryAddressHandler(ReusableSequence):
         self.debug('[FastRecoveryAddressHandler] generate handler address: 0x%x' % self.getPEstate('PC'))
 
         priv_level_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.PRIV_LEVEL_VALUE)
-        scratch_reg_indices = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 2)
-        scratch_reg_index = scratch_reg_indices[0]
-        recovery_reg_index = scratch_reg_indices[1]
+        (scratch_reg_index, recovery_reg_index) = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 2)
 
         handler_context.mAddrTable.getAddress(recovery_reg_index, scratch_reg_index)
 
