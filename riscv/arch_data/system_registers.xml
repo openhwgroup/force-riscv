@@ -22,6 +22,10 @@
     <physical_register index="0x3" name="fcsr" size="64" type="SysReg"/>
     <physical_register index="0x4" name="uie" size="64" type="SysReg"/>
     <physical_register index="0x5" name="utvec" size="64" type="SysReg"/>
+    <physical_register index="0x8" name="vstart" size="64" type="SysReg"/>
+    <physical_register index="0x9" name="vxsat" size="64" type="SysReg"/>
+    <physical_register index="0xa" name="vxrm" size="64" type="SysReg"/>
+    <physical_register index="0xf" name="vcsr" size="64" type="SysReg"/>
     <physical_register index="0x40" name="uscratch" size="64" type="SysReg"/>
     <physical_register index="0x41" name="uepc" size="64" type="SysReg"/>
     <physical_register index="0x42" name="ucause" size="64" type="SysReg"/>
@@ -193,6 +197,9 @@
     <physical_register index="0xC1D" name="hpmcounter29" size="64" type="SysReg"/>
     <physical_register index="0xC1E" name="hpmcounter30" size="64" type="SysReg"/>
     <physical_register index="0xC1F" name="hpmcounter31" size="64" type="SysReg"/>
+    <physical_register index="0xC20" name="vl" size="64" type="SysReg"/>
+    <physical_register index="0xC21" name="vtype" size="64" type="SysReg"/>
+    <physical_register index="0xC22" name="vlenb" size="64" type="SysReg"/>
     <physical_register index="0xE07" name="hgeip" size="64" type="SysReg"/>
     <physical_register index="0xF11" name="mvendorid" size="32" type="SysReg"/>
     <physical_register index="0xF12" name="marchid" size="64" type="SysReg"/>
@@ -290,6 +297,38 @@
       </register_field>
       <register_field name="MODE" physical_register="utvec" size="2">
         <bit_field shift="0" size="2"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0x8" name="vstart" size="64" type="SysReg">
+      <register_field name="VSTART" physical_register="vstart" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0x9" name="vxsat" size="64" type="SysReg">
+      <register_field name="RESERVED" physical_register="vxsat" size="63">
+        <bit_field shift="1" size="63"/>
+      </register_field>
+      <register_field name="VXSAT" physical_register="vxsat" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0xa" name="vxrm" size="64" type="SysReg">
+      <register_field name="RESERVED (WRITE 0)" physical_register="vxrm" size="62">
+        <bit_field shift="2" size="62"/>
+      </register_field>
+      <register_field name="VXRM" physical_register="vxrm" size="2">
+        <bit_field shift="0" size="2"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0xf" name="vcsr" size="64" type="SysReg">
+      <register_field name="RESERVED" physical_register="vcsr" size="61">
+        <bit_field shift="3" size="61"/>
+      </register_field>
+      <register_field name="VXRM" physical_register="vcsr" size="2">
+        <bit_field shift="1" size="2"/>
+      </register_field>
+      <register_field name="VXSAT" physical_register="vcsr" size="1">
+        <bit_field shift="0" size="1"/>
       </register_field>
     </register>
     <register boot="1" index="0x40" name="uscratch" size="64" type="SysReg">
@@ -1225,6 +1264,37 @@
     <register boot="0" index="0xb1d" name="mhpmcounter29" size="0" type="SysReg"/>
     <register boot="0" index="0xb1e" name="mhpmcounter30" size="0" type="SysReg"/>
     <register boot="0" index="0xb1f" name="mhpmcounter31" size="0" type="SysReg"/>
+    <register boot="1" index="0xc20" name="vl" size="64" type="SysReg">
+      <register_field name="VL" physical_register="vl" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0xc21" name="vtype" size="64" type="SysReg">
+      <register_field name="VILL" physical_register="vtype" size="1">
+        <bit_field shift="63" size="1"/>
+      </register_field>
+      <register_field name="RESERVED (WRITE 0)" physical_register="vtype" size="55">
+        <bit_field shift="8" size="55"/>
+      </register_field>
+      <register_field name="VMA" physical_register="vtype" size="1">
+        <bit_field shift="7" size="1"/>
+      </register_field>
+      <register_field name="VTA" physical_register="vtype" size="1">
+        <bit_field shift="6" size="1"/>
+      </register_field>
+      <register_field name="VLMUL" physical_register="vtype" size="3">
+        <bit_field shift="5" size="1"/>
+        <bit_field shift="0" size="2"/>
+      </register_field>
+      <register_field name="VSEW" physical_register="vtype" size="3">
+        <bit_field shift="2" size="3"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0xc22" name="vlenb" size="64" type="SysReg">
+      <register_field name="VLENB" physical_register="vlenb" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
     <register boot="0" index="0xb80" name="mcycleh" size="0" type="SysReg"/>
     <register boot="0" index="0xb82" name="minstreth" size="0" type="SysReg"/>
     <register boot="0" index="0xb83" name="mhpmcounter3h" size="0" type="SysReg"/>

@@ -275,10 +275,9 @@ namespace Force {
 
   void VectorLoadStoreOperand::Generate(Generator& gen, Instruction& instr)
   {
+    //TODO: if instruction contains ConstDataTypeOperand then calculate_data_size()
     auto vls_constr = mpOperandConstraint->CastInstance<VectorLoadStoreOperandConstraint>();
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-
-    //TODO: if instruction contains ConstDataTypeOperand then calculate_data_size()
     calculate_data_element_size(lsop_struct, vls_constr->VectorDataTypeOperand()->ChoiceText(), vls_constr->GetMultiRegisterOperand()->NumberRegisters());
     //TODO: else just pull info from vtype register
 
