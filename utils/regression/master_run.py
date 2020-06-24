@@ -63,15 +63,21 @@ from common.threads import HiOldThread, HiEvent, workers_done_event, summary_don
 
 shutdown_proc = None
 
-class LoadError( Exception ): pass
 
-class MasterRun( ModuleRun ):
+class LoadError( Exception ):
+    pass
+
+
+# class MasterRun( ModuleRun ):
+class MasterRun(object):
 
     cLsfWaitTime = 30 # seconds
 
     def __init__(self, aAppsInfo):
-        # print( "Got here (2.0)" )
-        super().__init__(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level, aAppsInfo)
+        self.module_dir, self.module_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
+        self._mAppsInfo = aAppsInfo
+        self.load_message_levels(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
+
         #print( "Got here (2.1)" )
 
         # persistent values
@@ -113,6 +119,39 @@ class MasterRun( ModuleRun ):
         shutdown_proc = self.trigger_shutdown
 
         # Msg.lout( CmdLine.Switches, "dbg", "Allowed Command Line Switches" ) # Labels.cmd_line_switches_allowed  )
+
+    def load_message_levels( self, arg_msg_lev, arg_def_lev ):
+        # load from the command line if specified or use the default
+        my_lev_str = self.option_def( arg_msg_lev, arg_def_lev )
+        #my_def = "crit+err+warn+info+noinfo"
+
+        #my_lev_str = self.option_def( "all", my_def, "-l"  )
+
+        # if a (+) or a (-) is found then the command line will be appended to or demoted by
+        if ( my_lev_str[0] == '+' ) or ( my_lev_str[0] == '-' ):
+            # use the default string to build a format string, then append the passed in value
+            my_fmt_str = "%s%s%s"%( arg_def_lev,"\%","s" )
+            my_lev_str =  my_fmt_str % ( my_lev_str )
+
+        # print( my_lev_str )
+        # finally no matter what set the levels that are to be active
+
+        my_level = Msg.translate_levelstr( my_lev_str )
+        # print( "Before: %x" % my_level )
+
+        Msg.set_level( my_level )
+
+    def option_def(self, aSwitch, aDefVal=None, aConversionFunc=None):
+        # TODO deprecate this
+        return_value = self._mAppsInfo.mCmdLineOpts.option_def(aSwitch, aDefVal)
+        if aConversionFunc and return_value is not None:
+            try:
+                return_value = aConversionFunc(return_value)
+            except (TypeError, ValueError) as ex:
+                Msg.warn('Invalid value "{}" provided for "{}".  Using default.'.format(repr(return_value), aSwitch))
+                return aDefVal
+
+        return return_value
 
     def load(self):
 
@@ -611,7 +650,7 @@ class MasterRun( ModuleRun ):
             Msg.user( "Expire [1], Output Base: %s" % ( str( my_output_base )), "EXPIRE" )
             Msg.info( "Output Directories Cleanup, Please wait ..." )
 
-            if int( arg_expire ) == Expire.all:#
+            if int( arg_expire ) == Expire.all:
 
                 Msg.info( "Building Directory List, [%s]" % ( my_output_base ))
                 my_dirs = PathUtils.list_dirs( my_output_base )
