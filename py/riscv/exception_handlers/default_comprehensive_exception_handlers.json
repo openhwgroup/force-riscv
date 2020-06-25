@@ -4,8 +4,8 @@
     "ExceptionCode": "ExceptionClassRISCV.INSTRUCTION_ADDRESS_MISALIGNED",
     "ExceptionHandler":
     {
-      "ExceptionHandlerModule": "riscv.exception_handlers.SkipInstructionHandler",
-      "ExceptionHandlerClass": "SkipInstructionHandlerRISCV"
+      "ExceptionHandlerModule": "riscv.exception_handlers.InstructionAddressMisalignedHandler",
+      "ExceptionHandlerClass": "InstructionAddressMisalignedHandlerRISCV"
     }
   },
   {
