@@ -25,7 +25,6 @@
     <physical_register index="0x8" name="vstart" size="64" type="SysReg"/>
     <physical_register index="0x9" name="vxsat" size="64" type="SysReg"/>
     <physical_register index="0xa" name="vxrm" size="64" type="SysReg"/>
-    <physical_register index="0xf" name="vcsr" size="64" type="SysReg"/>
     <physical_register index="0x40" name="uscratch" size="64" type="SysReg"/>
     <physical_register index="0x41" name="uepc" size="64" type="SysReg"/>
     <physical_register index="0x42" name="ucause" size="64" type="SysReg"/>
@@ -318,17 +317,6 @@
       </register_field>
       <register_field name="VXRM" physical_register="vxrm" size="2">
         <bit_field shift="0" size="2"/>
-      </register_field>
-    </register>
-    <register boot="1" index="0xf" name="vcsr" size="64" type="SysReg">
-      <register_field name="RESERVED" physical_register="vcsr" size="61">
-        <bit_field shift="3" size="61"/>
-      </register_field>
-      <register_field name="VXRM" physical_register="vcsr" size="2">
-        <bit_field shift="1" size="2"/>
-      </register_field>
-      <register_field name="VXSAT" physical_register="vcsr" size="1">
-        <bit_field shift="0" size="1"/>
       </register_field>
     </register>
     <register boot="1" index="0x40" name="uscratch" size="64" type="SysReg">

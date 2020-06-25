@@ -23,7 +23,7 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     aInstruction.name = escape(aInstruction.name)
     aInstruction.asm.format = escape(aInstruction.asm.format)
 
-    instruction_format = get_format(aInstruction)
+    instruction_format = clean_format(aInstruction.get_format())
 
     if instruction_format == 'vd/rd-vs2-vs1-vm':
         return adjust_vdrd_vs2_vs1_vm(aInstruction)
@@ -52,13 +52,20 @@ def v_ext_adjust_instruction_by_format(aInstruction):
 
     return False
 
-def get_format(aInstruction):
-    opr_names = list()
-    for opr in aInstruction.operands:
-        if opr.name != "const_bits" and opr.name != "vtype":
-            opr_names.append(opr.name)
+def clean_format(aInstructionFormat):
+    # removing unwanted operands via names
+    if 'vtype' in aInstructionFormat:
+        aInstructionFormat = aInstructionFormat.replace('vtype', '')
 
-    return "-".join(opr_names)
+    # cleaning double hypens and leading/trailing hyphens
+    if '--' in aInstructionFormat:
+        aInstructionFormat = aInstructionFormat.replace('--', '')
+    if aInstructionFormat.startswith('-'):
+        aInstructionFormat = aInstructionFormat[1:]
+    if aInstructionFormat.endswith('-'):
+        aInstructionFormat = aInstructionFormat[:-1]
+
+    return aInstructionFormat
 
 def record_instruction_format(aInstructionFormat):
     if aInstructionFormat in format_map:
