@@ -49,8 +49,8 @@ namespace Force {
       }
     }
 
-    LOG(fail) << "{VectorInstruction::LocateDataTypeOperand} data type operand not found." << endl;
-    FAIL("vector-data-type-operand-not-found");
+    //LOG(fail) << "{VectorInstruction::LocateDataTypeOperand} data type operand not found." << endl;
+    //FAIL("vector-data-type-operand-not-found");
   }
 
   VectorInstruction::VectorInstruction(const VectorInstruction& rOther)

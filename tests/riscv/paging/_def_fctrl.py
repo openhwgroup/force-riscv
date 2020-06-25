@@ -14,6 +14,11 @@
 # limitations under the License.
 #
 control_items = [ { "fname":"paging_force.py", "generator":{"--options":"\"PrivilegeLevel=1\"",}},
+                  { "fname":"paging_force.py", "generator":{"--options":"\"PrivilegeLevel=1,FlatMap=1\"",}},
+                  { "fname":"paging_loadstore_force.py", "generator":{"--options":"\"PrivilegeLevel=1\"",}},
                   { "fname":"paging_loadstore_force.py", "generator":{"--options":"\"PrivilegeLevel=1,FlatMap=1\"",}},
-                  
+                  { "fname":"page_fault_on_load_store_force.py", "generator":{"--options":"\"PrivilegeLevel=1,FlatMap=1\"",}},
+                  { "fname":"page_fault_on_branch_force.py", "generator":{"--options":"\"PrivilegeLevel=1,FlatMap=1\"",}},
+                  { "fname":"page_fault_on_load_store_force.py", "generator":{"--options":"\"PrivilegeLevel=1\"",}},
+                  { "fname":"page_fault_on_branch_force.py", "generator":{"--options":"\"PrivilegeLevel=1\"",}},
                   ]
