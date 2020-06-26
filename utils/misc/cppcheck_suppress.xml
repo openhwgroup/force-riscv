@@ -90,7 +90,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/GenVirtualMemoryAgent.cc</fileName>
-        <lineNumber>373</lineNumber>
+        <lineNumber>342</lineNumber>
     </suppress>
 
 <!-- Operand module -->
@@ -98,7 +98,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/Operand.cc</fileName>
-        <lineNumber>418</lineNumber>
+        <lineNumber>420</lineNumber>
     </suppress>
 
 <!-- OperandConstraintRISCV module -->
