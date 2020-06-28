@@ -356,10 +356,10 @@ namespace Force {
       try {
         amount = stoul(size_text);
       }
-      catch (invalid_argument) {
+      catch (invalid_argument&) {
         // Handled below by checking if amount is 0.
       }
-      catch (out_of_range) {
+      catch (out_of_range&) {
         // Handled below by checking if amount is 0.
       }
     }
