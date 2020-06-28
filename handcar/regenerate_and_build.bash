@@ -17,9 +17,17 @@
 #
 
 make clean
+git clone https://github.com/riscv/riscv-isa-sim standalone
+cd standalone
+git checkout 5d5ee23f574583145cd2093a1fdab677e313e1d2
+./configure
+make
+cd ..
 mkdir src
 mkdir spike_mod
 mkdir so_build/cosim/src
+mkdir bin
 ./create_handcar_files.bash  
 ./filesurgeon.py
 make -j8
+cp bin/handcar_cosim.so ../utils/handcar
