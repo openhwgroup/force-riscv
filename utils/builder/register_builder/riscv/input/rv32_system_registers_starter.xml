@@ -39,11 +39,6 @@ Add RISCV RV32 system registers starter information in this file.
   <register description="Physical memory protection configuration, RV32 only." index="0x3ad" name="pmpcfg13" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection configuration, RV32 only." index="0x3af" name="pmpcfg15" privilege="MRW" size="0" type="SysReg"/>
   <register description="Upper 32 bits of htimedelta, RV32 only." index="0x615" name="htimedeltah" privilege="HRW" size="0" type="SysReg"/>
-  <register description="Hypervisor bad guest physical address." index="0x643" name="htval" physical_register="htval" privilege="HRW" size="64" type="SysReg">
-    <register_field name="HTVAL_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
   <register description="Upper 32 bits of mcycle, RV32 only." index="0xb80" name="mcycleh" privilege="MRW" size="0" type="SysReg"/>
   <register description="Upper 32 bits of minstret, RV32 only." index="0xb82" name="minstreth" privilege="MRW" size="0" type="SysReg"/>
   <register description="Upper 32 bits of mhpmcounter3, RV32 only." index="0xb83" name="mhpmcounter3h" privilege="MRW" size="0" type="SysReg"/>

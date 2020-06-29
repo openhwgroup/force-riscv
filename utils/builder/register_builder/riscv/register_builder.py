@@ -84,7 +84,7 @@ def output_system_register_choices(aTree, aOutputFile):
             choice.set('description', '%s; %s' % (register.get('privilege'), register.get('description')))
             choice.set('name', register.get('name'))
             choice.set('value', register.get('index'))
-            choice.set('weight', register.get('weight', '0'))
+            choice.set('weight', register.get('choice_weight', '0'))
 
             if 'R' in register.get('privilege'):
                 read.append(choice)

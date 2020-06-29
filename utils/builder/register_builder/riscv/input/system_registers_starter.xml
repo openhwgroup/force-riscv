@@ -110,6 +110,13 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="2"/>
     </register_field>
   </register>
+  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="64" type="SysReg" choice="false">
+    <register_field name="VSTART" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Fixed-point Saturate Flag." index="0x9" name="vxsat" physical_register="fcsr" privilege="URW" size="64" type="SysReg" choice="false"/>
+  <register description="Vector start position." index="0xa" name="vxrm" physical_register="fcsr" privilege="URW" size="64" type="SysReg" choice="false"/>
   <register description="Scratch register for user trap handlers." index="0x40" name="uscratch" physical_register="uscratch" privilege="URW" size="64" type="SysReg">
     <register_field name="SCRATCH" size="64">
       <bit_field shift="0" size="64"/>
@@ -146,13 +153,12 @@ Add RISCV system registers starter information in this file.
     <register_field name="UXL" size="2">
       <bit_field shift="32" size="2"/>
     </register_field>
-    <register_field name="WPRI" size="22">
+    <register_field name="WPRI" size="21">
       <bit_field shift="20" size="12"/>
       <bit_field shift="17" size="1"/>
       <bit_field shift="9" size="4"/>
       <bit_field shift="7" size="1"/>
       <bit_field shift="2" size="3"/>
-      <bit_field shift="0" size="1"/>
     </register_field>
     <register_field name="MXR" size="1">
       <bit_field shift="19" size="1"/>
@@ -182,14 +188,13 @@ Add RISCV system registers starter information in this file.
     <register_field name="SIE" size="1">
       <bit_field shift="1" size="1"/>
     </register_field>
+    <register_field name="UIE" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
   </register>
   <register description="Supervisor exception delegation register." index="0x102" name="sedeleg" privilege="SRW" size="0" type="SysReg"/>
   <register description="Supervisor interrupt delegation register." index="0x103" name="sideleg" privilege="SRW" size="0" type="SysReg"/>
-  <register description="Supervisor interrupt-enable register." index="0x104" name="sie" physical_register="sie" privilege="SRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Supervisor interrupt-enable register." index="0x104" name="sie" physical_register="sie" privilege="SRW" size="0" type="SysReg"/>
   <register description="Supervisor trap handler base address." index="0x105" name="stvec" physical_register="stvec" privilege="SRW" size="64" type="SysReg">
     <register_field name="BASE_VAR" size="62">
       <bit_field shift="2" size="62"/>
@@ -310,16 +315,8 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="63"/>
     </register_field>
   </register>
-  <register description="Supervisor bad address or instruction." index="0x143" name="stval" physical_register="stval" privilege="SRW" size="64" type="SysReg">
-    <register_field name="STVAL_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
-  <register description="Supervisor interrupt pending." index="0x144" name="sip" physical_register="sip" privilege="SRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Supervisor bad address or instruction." index="0x143" name="stval" physical_register="stval" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor interrupt pending." index="0x144" name="sip" physical_register="sip" privilege="SRW" size="0" type="SysReg"/>
   <register boot="0x5001" description="Supervisor address translation and protection." index="0x180" name="satp" physical_register="satp" privilege="SRW" size="64" type="SysReg">
     <register_field name="MODE" size="4">
       <bit_field shift="60" size="4"/>
@@ -374,11 +371,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="1" size="1"/>
     </register_field>
   </register>
-  <register description="Virtual supervisor interrupt-enable register." index="0x204" name="vsie" physical_register="vsie" privilege="HRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Virtual supervisor interrupt-enable register." index="0x204" name="vsie" physical_register="sie" privilege="HRW" size="0" type="SysReg"/>
   <register description="Virtual supervisor trap handler base address." index="0x205" name="vstvec" physical_register="vstvec" privilege="HRW" size="64" type="SysReg">
     <register_field name="BASE_VAR" size="62">
       <bit_field shift="2" size="62"/>
@@ -410,11 +403,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Virtual supervisor interrupt pending." index="0x244" name="vsip" physical_register="vsip" privilege="HRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Virtual supervisor interrupt pending." index="0x244" name="vsip" physical_register="sip" privilege="HRW" size="0" type="SysReg"/>
   <register description="Virtual supervisor address translation and protection." index="0x280" name="vsatp" physical_register="vsatp" privilege="HRW" size="64" type="SysReg">
     <register_field name="MODE" size="4">
       <bit_field shift="60" size="4"/>
@@ -430,33 +419,18 @@ Add RISCV system registers starter information in this file.
     <register_field name="SD" size="1">
       <bit_field shift="63" size="1"/>
     </register_field>
-    <register_field name="WPRI_VAR" size="23">
-      <bit_field shift="40" size="23"/>
-    </register_field>
-    <register_field name="MPV" size="1">
-      <bit_field shift="39" size="1"/>
-    </register_field>
-    <register_field name="GVA" size="1">
-      <bit_field shift="38" size="1"/>
-    </register_field>
-    <register_field name="MBE" size="1">
-      <bit_field shift="37" size="1"/>
-    </register_field>
-    <register_field name="SBE" size="1">
-      <bit_field shift="36" size="1"/>
+    <register_field name="WPRI" size="40">
+      <bit_field shift="36" size="27"/>
+      <bit_field shift="23" size="9"/>
+      <bit_field shift="9" size="2"/>
+      <bit_field shift="6" size="1"/>
+      <bit_field shift="2" size="1"/>
     </register_field>
     <register_field name="SXL" size="2">
       <bit_field shift="34" size="2"/>
     </register_field>
     <register_field name="UXL" size="2">
       <bit_field shift="32" size="2"/>
-    </register_field>
-    <register_field name="WPRI" size="14">
-      <bit_field shift="23" size="9"/>
-      <bit_field shift="9" size="2"/>
-      <bit_field shift="4" size="1"/>
-      <bit_field shift="2" size="1"/>
-      <bit_field shift="0" size="1"/>
     </register_field>
     <register_field name="TSR" size="1">
       <bit_field shift="22" size="1"/>
@@ -491,17 +465,20 @@ Add RISCV system registers starter information in this file.
     <register_field name="MPIE" size="1">
       <bit_field shift="7" size="1"/>
     </register_field>
-    <register_field name="UBE" size="1">
-      <bit_field shift="6" size="1"/>
-    </register_field>
     <register_field name="SPIE" size="1">
       <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="UPIE" size="1">
+      <bit_field shift="4" size="1"/>
     </register_field>
     <register_field name="MIE" size="1">
       <bit_field shift="3" size="1"/>
     </register_field>
     <register_field name="SIE" size="1">
       <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="UIE" size="1">
+      <bit_field shift="0" size="1"/>
     </register_field>
   </register>
   <register description="Machine status register." index="0x300" name="mstatus_hyp" physical_register="mstatus" privilege="MRW" size="64" type="SysReg" choice="false">
@@ -587,21 +564,9 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="26"/>
     </register_field>
   </register>
-  <register description="Machine exception delegation register." index="0x302" name="medeleg" physical_register="medeleg" privilege="MRW" size="64" type="SysReg">
-    <register_field name="SYNCHRONOUS EXCEPTIONS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
-  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
-  <register description="Machine interrupt-enable register." index="0x304" name="mie" physical_register="mie" privilege="MRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Machine exception delegation register." index="0x302" name="medeleg" physical_register="medeleg" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine interrupt-enable register." index="0x304" name="mie" physical_register="mie" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine trap-handler base address." index="0x305" name="mtvec" physical_register="mtvec" privilege="MRW" size="64" type="SysReg">
     <register_field name="BASE_VAR" size="62">
       <bit_field shift="2" size="62"/>
@@ -835,13 +800,13 @@ Add RISCV system registers starter information in this file.
   <register description="Machine performance-monitoring event selector." index="0x33d" name="mhpmevent29" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine performance-monitoring event selector." index="0x33e" name="mhpmevent30" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine performance-monitoring event selector." index="0x33f" name="mhpmevent31" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Scratch register for machine trap handlers." index="0x340" name="mscratch" physical_register="mscratch" privilege="MRW" size="64" type="SysReg">
-    <register_field name="MSCRATCH_VAR" size="64">
+  <register description="Scratch register for machine trap handlers." index="0x340" name="mscratch" physical_register="mscratch" privilege="MRW" size="64" type="SysReg" choice_weight="10">
+    <register_field name="MSCRATCH" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
   <register description="Machine exception program counter." index="0x341" name="mepc" physical_register="mepc" privilege="MRW" size="64" type="SysReg">
-    <register_field name="MEPC_VAR" size="64">
+    <register_field name="MEPC" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
@@ -858,11 +823,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Machine interrupt pending." index="0x344" name="mip" physical_register="mip" privilege="MRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Machine interrupt pending." index="0x344" name="mip" physical_register="mip" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine trap instruction (transformed)." index="0x34a" name="mtinst" physical_register="mtinst" privilege="MRW" size="64" type="SysReg">
     <register_field name="MTINST_VAR" size="64">
       <bit_field shift="0" size="64"/>
@@ -875,12 +836,6 @@ Add RISCV system registers starter information in this file.
   </register>
   <register description="Physical memory protection configuration." index="0x3a0" name="pmpcfg0" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection configuration." index="0x3a2" name="pmpcfg2" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration." index="0x3a4" name="pmpcfg4" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration." index="0x3a6" name="pmpcfg6" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration." index="0x3a8" name="pmpcfg8" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration." index="0x3aa" name="pmpcfg10" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration." index="0x3ac" name="pmpcfg12" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection configuration." index="0x3ae" name="pmpcfg14" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3b0" name="pmpaddr0" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3b1" name="pmpaddr1" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3b2" name="pmpaddr2" privilege="MRW" size="0" type="SysReg"/>
@@ -897,54 +852,6 @@ Add RISCV system registers starter information in this file.
   <register description="Physical memory protection address register." index="0x3bd" name="pmpaddr13" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3be" name="pmpaddr14" privilege="MRW" size="0" type="SysReg"/>
   <register description="Physical memory protection address register." index="0x3bf" name="pmpaddr15" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c0" name="pmpaddr16" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c1" name="pmpaddr17" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c2" name="pmpaddr18" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c3" name="pmpaddr19" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c4" name="pmpaddr20" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c5" name="pmpaddr21" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c6" name="pmpaddr22" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c7" name="pmpaddr23" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c8" name="pmpaddr24" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3c9" name="pmpaddr25" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3ca" name="pmpaddr26" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3cb" name="pmpaddr27" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3cc" name="pmpaddr28" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3cd" name="pmpaddr29" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3ce" name="pmpaddr30" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3cf" name="pmpaddr31" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d0" name="pmpaddr32" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d1" name="pmpaddr33" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d2" name="pmpaddr34" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d3" name="pmpaddr35" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d4" name="pmpaddr36" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d5" name="pmpaddr37" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d6" name="pmpaddr38" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d7" name="pmpaddr39" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d8" name="pmpaddr40" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3d9" name="pmpaddr41" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3da" name="pmpaddr42" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3db" name="pmpaddr43" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3dc" name="pmpaddr44" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3dd" name="pmpaddr45" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3de" name="pmpaddr46" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3df" name="pmpaddr47" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e0" name="pmpaddr48" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e1" name="pmpaddr49" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e2" name="pmpaddr50" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e3" name="pmpaddr51" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e4" name="pmpaddr52" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e5" name="pmpaddr53" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e6" name="pmpaddr54" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e7" name="pmpaddr55" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e8" name="pmpaddr56" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3e9" name="pmpaddr57" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3ea" name="pmpaddr58" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3eb" name="pmpaddr59" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3ec" name="pmpaddr60" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3ed" name="pmpaddr61" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3ee" name="pmpaddr62" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Physical memory protection address register." index="0x3ef" name="pmpaddr63" privilege="MRW" size="0" type="SysReg"/>
   <register description="Hypervisor status register." index="0x600" name="hstatus" physical_register="hstatus" privilege="HRW" size="64" type="SysReg">
     <register_field name="WPRI_VAR" size="30">
       <bit_field shift="34" size="30"/>
@@ -954,15 +861,14 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="WPRI" size="18">
       <bit_field shift="23" size="9"/>
+      <bit_field shift="21" size="1"/>
       <bit_field shift="18" size="2"/>
       <bit_field shift="10" size="2"/>
-      <bit_field shift="0" size="5"/>
+      <bit_field shift="6" size="1"/>
+      <bit_field shift="1" size="4"/>
     </register_field>
     <register_field name="VTSR" size="1">
       <bit_field shift="22" size="1"/>
-    </register_field>
-    <register_field name="VTW" size="1">
-      <bit_field shift="21" size="1"/>
     </register_field>
     <register_field name="VTVM" size="1">
       <bit_field shift="20" size="1"/>
@@ -970,37 +876,25 @@ Add RISCV system registers starter information in this file.
     <register_field name="VGEIN" size="6">
       <bit_field shift="12" size="6"/>
     </register_field>
-    <register_field name="HU" size="1">
+    <register_field name="SP2V" size="1">
       <bit_field shift="9" size="1"/>
     </register_field>
-    <register_field name="SPVP" size="1">
+    <register_field name="SP2P" size="1">
       <bit_field shift="8" size="1"/>
     </register_field>
     <register_field name="SPV" size="1">
       <bit_field shift="7" size="1"/>
     </register_field>
-    <register_field name="GVA" size="1">
-      <bit_field shift="6" size="1"/>
-    </register_field>
     <register_field name="VSBE" size="1">
       <bit_field shift="5" size="1"/>
     </register_field>
-  </register>
-  <register description="Hypervisor exception delegation register." index="0x602" name="hedeleg" physical_register="hedeleg" privilege="HRW" size="64" type="SysReg">
-    <register_field name="SYNCHRONOUS EXCEPTIONS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
+    <register_field name="SPRV" size="1">
+      <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Hypervisor interrupt delegation register." index="0x603" name="hideleg" physical_register="hideleg" privilege="HRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
-  <register description="Hypervisor interrupt-enable register." index="0x604" name="hie" physical_register="hie" privilege="HRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Hypervisor exception delegation register." index="0x602" name="hedeleg" physical_register="hedeleg" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor interrupt delegation register." index="0x603" name="hideleg" physical_register="hideleg" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor interrupt-enable register." index="0x604" name="hie" physical_register="hie" privilege="HRW" size="0" type="SysReg"/>
   <register description="Hypervisor counter enable." index="0x606" name="hcounteren" physical_register="hcounteren" privilege="HRW" size="32" type="SysReg">
     <register_field name="HPM31" size="1">
       <bit_field shift="31" size="1"/>
@@ -1099,34 +993,19 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Hypervisor guest external interrupt-enable register." index="0x607" name="hgeie" physical_register="hgeie" privilege="HRW" size="64" type="SysReg">
-    <register_field name="GUEST EXTERNAL INTERRUPTS_VAR" size="63">
-      <bit_field shift="1" size="63"/>
-    </register_field>
-    <register_field name="0" size="1">
-      <bit_field shift="0" size="1"/>
-    </register_field>
-  </register>
-  <register description="Hypervisor interrupt pending." index="0x644" name="hip" physical_register="hip" privilege="HRW" size="64" type="SysReg">
-    <register_field name="INTERRUPTS_VAR" size="64">
+  <register description="Hypervisor guest external interrupt-enable register." index="0x607" name="hgeie" physical_register="hgeie" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor bad guest physical address." index="0x643" name="htval" physical_register="htval" privilege="HRW" size="64" type="SysReg">
+    <register_field name="HTVAL_VAR" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Hypervisor virtual interrupt pending." index="0x645" name="hvip" physical_register="hvip" privilege="HRW" size="64" type="SysReg">
-    <register_field name="VIRTUAL INTERRUPTS_VAR" size="64">
-      <bit_field shift="0" size="64"/>
-    </register_field>
-  </register>
+  <register description="Hypervisor interrupt pending." index="0x644" name="hip" physical_register="hip" privilege="HRW" size="0" type="SysReg"/>
   <register description="Hypervisor trap instruction (transformed)." index="0x64a" name="htinst" physical_register="htinst" privilege="HRW" size="64" type="SysReg">
     <register_field name="HTINST_VAR" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
   <register description="Hypervisor guest address translation and protection." index="0x680" name="hgatp" privilege="HRW" size="0" type="SysReg"/>
-  <register description="Debug/Trace trigger register select." index="0x7a0" name="tselect" privilege="MRW" size="0" type="SysReg"/>
-  <register description="First Debug/Trace trigger data register." index="0x7a1" name="tdata1" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Second Debug/Trace trigger data register." index="0x7a2" name="tdata2" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Third Debug/Trace trigger data register." index="0x7a3" name="tdata3" privilege="MRW" size="0" type="SysReg"/>
   <register description="Debug control and status register." index="0x7b0" name="dcsr" privilege="DRW" size="0" type="SysReg"/>
   <register description="Debug PC." index="0x7b1" name="dpc" privilege="DRW" size="0" type="SysReg"/>
   <register description="Debug scratch register 0." index="0x7b2" name="dscratch0" privilege="DRW" size="0" type="SysReg"/>
@@ -1199,14 +1078,38 @@ Add RISCV system registers starter information in this file.
   <register description="Performance-monitoring counter." index="0xc1d" name="hpmcounter29" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1e" name="hpmcounter30" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1f" name="hpmcounter31" privilege="URO" size="0" type="SysReg"/>
-  <register description="Hypervisor guest external interrupt pending." index="0xe12" name="hgeip" physical_register="hgeip" privilege="HRO" size="64" type="SysReg">
-    <register_field name="GUEST EXTERNAL INTERRUPTS_VAR" size="63">
-      <bit_field shift="1" size="63"/>
-    </register_field>
-    <register_field name="0" size="1">
-      <bit_field shift="0" size="1"/>
+  <register description="Vector length." index="0xc20" name="vl" physical_register="vl" privilege="URO" size="64" type="SysReg" choice="false">
+    <register_field name="VL" size="64">
+      <bit_field shift="0" size="64"/>
     </register_field>
   </register>
+  <register description="Vector data type register." index="0xc21" name="vtype" physical_register="vtype" privilege="URO" size="64" type="SysReg" choice="false">
+    <register_field name="VILL" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="RESERVED (WRITE 0)" size="55">
+      <bit_field shift="8" size="55"/>
+    </register_field>
+    <register_field name="VMA" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="VTA" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="VLMUL" size="3">
+      <bit_field shift="5" size="1"/>
+      <bit_field shift="0" size="2"/>
+    </register_field>
+    <register_field name="VSEW" size="3">
+      <bit_field shift="2" size="3"/>
+    </register_field>
+  </register>
+  <register description="VLEN/8 (vector register length in bytes)." index="0xc22" name="vlenb" physical_register="vlenb" privilege="URO" size="64" type="SysReg" choice="false">
+    <register_field name="VLENB" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Hypervisor guest external interrupt pending." index="0xe07" name="hgeip" physical_register="hgeip" privilege="HRO" size="0" type="SysReg"/>
   <register boot="0" description="Vendor ID." index="0xf11" name="mvendorid" physical_register="mvendorid" privilege="MRO" size="32" type="SysReg">
     <register_field name="BANK" size="25">
       <bit_field shift="7" size="25"/>
