@@ -37,24 +37,18 @@ class MyMainSequence(Sequence):
             # to the target size.  No page crossings here; every access is right
             # at the end of a page.
             if instr in LDST_Byte_instructions:
-                page_addr = 0xFFF
+                page_addr |= 0xFFF
             elif instr in LDST_Half_instructions:
-                page_addr = 0xFFE
+                page_addr |= 0xFFE
             elif instr in LDST_Word_instructions:
-                page_addr = 0xFFC
+                page_addr |= 0xFFC
             elif instr in LDST_Double_instructions:
-                page_addr = 0xFF8
+                page_addr |= 0xFF8
             else:
                 self.error(">>>>>  Hmmm...  {} is an unexpected instruction.".format(instr))
 
-            target_addr = page_addr
-
-            self.notice(">>>>>  Instruction: {}   Target addr: {:012x}".format(instr, target_addr))
-
-            self.genInstruction(instr, {"LSTarget":target_addr})
-
-
-
+            self.notice(">>>>>  Instruction: {}   Target addr: {:012x}".format(instr, page_addr))
+            self.genInstruction(instr, {"LSTarget":page_addr})
 
 
 ## Points to the MainSequence defined in this file
@@ -63,7 +57,5 @@ MainSequenceClass = MyMainSequence
 ## Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-
 ## Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-
