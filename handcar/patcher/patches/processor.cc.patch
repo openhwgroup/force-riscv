@@ -145,15 +145,36 @@
 <     enter_debug_mode(DCSR_CAUSE_SWBP);
 ---
 >     //enter_debug_mode(DCSR_CAUSE_SWBP);
-515a507,509
+504a496,498
+> 
+>   update_generator_register(this->id, "medeleg", deleg, 0xffffffffffffffffull, "read");
+> 
+506a501
+>   {
+507a503,504
+>     update_generator_register(this->id, "mideleg", deleg, 0xffffffffffffffffull, "read");
+>   }
+515a513,521
+>     update_generator_register(this->id, "stvec", state.stvec, 0xffffffffffffffffull, "read");
+>     update_generator_register(this->id, "PC", state.pc, 0xffffffffffffffffull, "write");
+>     update_generator_register(this->id, "scause", state.scause, 0xffffffffffffffffull, "write");
+>     update_generator_register(this->id, "sepc", state.sepc, 0xffffffffffffffffull, "write");
+>     update_generator_register(this->id, "stval", state.stval, 0xffffffffffffffffull, "write");
+> 
 >     SimException enter_s(state.scause, state.stval, "enter_s", epc);
 >     update_exception_event(&enter_s);
 > 
-528a523,525
+528a535,543
+>     update_generator_register(this->id, "mtvec", state.mtvec, 0xffffffffffffffffull, "read");
+>     update_generator_register(this->id, "PC", state.pc, 0xffffffffffffffffull, "write");
+>     update_generator_register(this->id, "mcause", state.mcause, 0xffffffffffffffffull, "write");
+>     update_generator_register(this->id, "mepc", state.mepc, 0xffffffffffffffffull, "write");
+>     update_generator_register(this->id, "mtval", state.mtval, 0xffffffffffffffffull, "write");
+> 
 >     SimException enter_m(state.mcause, state.mtval, "enter_m", epc);
 >     update_exception_event(&enter_m);
 > 
-542,544c539,541
+542,544c557,559
 <     if (executions != 1) {
 <       fprintf(log_file, "core %3d: Executed %" PRIx64 " times\n", id, executions);
 <     }
@@ -161,61 +182,61 @@
 >     //if (executions != 1) {
 >     //  fprintf(log_file, "core %3d: Executed %" PRIx64 " times\n", id, executions);
 >     //}
-546,547c543,544
+546,547c561,562
 <     fprintf(log_file, "core %3d: 0x%016" PRIx64 " (0x%08" PRIx64 ") %s\n",
 <             id, state.pc, bits, disassembler->disassemble(insn).c_str());
 ---
 >     //fprintf(log_file, "core %3d: 0x%016" PRIx64 " (0x%08" PRIx64 ") %s\n",
 >     //        id, state.pc, bits, disassembler->disassemble(insn).c_str());
-569a567,569
+569a585,587
 >   reg_t effective_value = 0;
 >   std::string text_name = std::string(csr_name(which));
 > 
-575a576
+575a594
 >     {
-576a578,579
+576a596,597
 >       effective_value = state.pmpaddr[i];
 >     }
-586a590
+586a608
 >         effective_value = cfg;
-596a601
+596a619
 >       effective_value = state.fflags;
-600a606
+600a624
 >       effective_value = state.frm;
-608a615
+608a633
 >         effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT) | (VU.vxsat << FSR_VXSAT_SHIFT) | (VU.vxrm << FSR_VXRM_SHIFT);
-609a617,618
+609a635,636
 >       else
 >         effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT);
-648a658
+648a676
 >       effective_value = state.mstatus;
-653a664,665
+653a682,683
 > 
 >       effective_value = state.mip;
-657a670,671
+657a688,689
 > 
 >       effective_value = state.mie;
-660a675,676
+660a693,694
 > 
 >       effective_value = state.mideleg;
-670a687,688
+670a705,706
 > 
 >       effective_value = state.medeleg;
-678a697,698
+678a715,716
 > 
 >       effective_value = state.minstret;
-687a708
+687a726
 >       effective_value = state.minstret;
-691a713
+691a731
 >       effective_value = state.scounteren;
-694a717
+694a735
 >       effective_value = state.mcounteren;
-717c740,741
+717c758,759
 <         state.satp = val & (SATP64_PPN | SATP64_MODE | rv64_ppn_mask);
 ---
 >       state.satp = val & (SATP64_PPN | SATP64_MODE | rv64_ppn_mask);
 >       effective_value = state.satp;
-720,729c744,813
+720,729c762,831
 <     case CSR_SEPC: state.sepc = val & ~(reg_t)1; break;
 <     case CSR_STVEC: state.stvec = val & ~(reg_t)2; break;
 <     case CSR_SSCRATCH: state.sscratch = val; break;
@@ -297,45 +318,45 @@
 >         effective_value = state.mtval;
 >         break;
 >     }
-747a832,833
+747a850,851
 > 
 >       effective_value = state.misa;
-752a839
+752a857
 >         effective_value = state.tselect;
-777a865,867
+777a883,885
 > 
 >         // If mcontrol_t had a more clear size it may make sense to bitcopy its contents.
 >         effective_value = val;
-785a876,877
+785a894,895
 >         
 >         effective_value = val;
-791d882
+791d900
 <       // TODO: ndreset and fullreset
-796a888,889
+796a906,907
 >         
 >       memcpy(&effective_value, &(state.dcsr), sizeof(dcsr_t));
-799a893,894
+799a911,912
 > 
 >       effective_value = state.dpc;
-802a898,899
+802a916,917
 > 
 >       effective_value = state.dscratch0;
-805a903,904
+805a921,922
 >     
 >       effective_value = state.dscratch1;
-809a909,910
+809a927,928
 > 
 >       effective_value = VU.vstart;
-813a915,916
+813a933,934
 > 
 >       effective_value = VU.vxsat;
-817a921,922
+817a939,940
 > 
 >       effective_value = VU.vxrm;
-819a925,926
+819a943,944
 > 
 >   update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "write");
-822,825c929,1291
+822,825c947,1309
 < // Note that get_csr is sometimes called when read side-effects should not
 < // be actioned.  In other words, Spike cannot currently support CSRs with
 < // side effects on reads.
@@ -704,13 +725,13 @@
 > }
 > 
 > reg_t processor_t::get_csr_api(int which)
-851c1317,1319
+851c1335,1337
 <     require((which & ((xlen / 32) - 1)) == 0);
 ---
 >     //require((which & ((xlen / 32) - 1)) == 0);
 >     if((which & ((xlen / 32) - 1)) != 0)
 >         return 0xDEADBEEFDEADBEEF;
-862,864c1330,1334
+862,864c1348,1352
 <       require_fp;
 <       if (!supports_extension('F'))
 <         break;
@@ -720,7 +741,7 @@
 >       //std::cout << "Past checking require fp" << std::endl;
 >       //if (!supports_extension('F'))
 >       //  break;
-867,869c1337,1339
+867,869c1355,1357
 <       require_fp;
 <       if (!supports_extension('F'))
 <         break;
@@ -728,7 +749,7 @@
 >       //require_fp;
 >       //if (!supports_extension('F'))
 >       //  break;
-872,874c1342,1345
+872,874c1360,1363
 <       {require_fp;
 <       if (!supports_extension('F'))
 <         break;
@@ -737,33 +758,33 @@
 > //      {require_fp;
 > //      if (!supports_extension('F'))
 > //        break;
-880c1351
+880c1369
 <       }
 ---
 >     }
-883,885d1353
+883,885d1371
 <       if (ctr_ok)
 <         return state.minstret;
 <       break;
-891,893d1358
+891,893d1376
 <       if (ctr_ok && xlen == 32)
 <         return state.minstret >> 32;
 <       break;
-896c1361
+896c1379
 <       if (xlen == 32)
 ---
 >       //if (xlen == 32)
-898c1363
+898c1381
 <       break;
 ---
 >       //break;
-922,923c1387,1388
+922,923c1405,1406
 <       if (get_field(state.mstatus, MSTATUS_TVM))
 <         require_privilege(PRV_M);
 ---
 >       //if (get_field(state.mstatus, MSTATUS_TVM))
 >       //  require_privilege(PRV_M);
-1009a1475,1855
+1009a1493,1873
 >       //require_vector_vs;
 >       //if (!supports_extension('V'))
 >       //  break;
@@ -1145,18 +1166,18 @@
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
 >       return state.dscratch1;
 >     case CSR_VSTART:
-1010a1857,1858
+1010a1875,1876
 >       effective_value = VU.vstart;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1015a1864,1865
+1015a1882,1883
 >       effective_value = VU.vxsat;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1020a1871,1872
+1020a1889,1890
 >       effective_value = VU.vxrm;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1023a1876,1877
+1023a1894,1895
 >       effective_value = VU.vl;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1026a1881,1882
+1026a1899,1900
 >       effective_value = VU.vtype;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");

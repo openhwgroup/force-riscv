@@ -50,7 +50,7 @@ class FastRecoveryAddressHandlerRISCV(FastExceptionHandlersBaseRISCV):
         self.debug('[FastRecoveryAddressHandlerRISCV] process exception %s, privilege level: %s' % (self.mErrCode, self.mPrivLevel))
 
         scratch_reg_index = self.mScratchRegisters[0]
-        recovery_reg_index = self.mScratchRegisters[0]
+        recovery_reg_index = self.mScratchRegisters[1]
 
         # get the next address from the address table
         self.mAddrTable.getAddress(recovery_reg_index, scratch_reg_index)
