@@ -88,13 +88,15 @@ namespace Force
     {
       uint64 error_val = 0x5A5A5A5A5A5A5A5Aull;
       error_val &= ~(rVmas.GetControlBlock()->MaxPhysicalAddress()-1);
-      LOG(trace) << "{AddressPteAttributeRISCV::Generate} error_val=0x" << hex << error_val << endl;
+      LOG(trace) << "{AddressPteAttributeRISCV::Generate} error_val=0x" << hex << error_val << " phys_lower=0x" << rPte.PhysicalLower() 
+                 << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
       LOG(notice) << "{AddressPteAttributeRISCV::Generate} requesting address error fault level=" << level << endl;
-      mValue = (((error_val ^ rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask()); //TODO get hardcoded shift programatically
+      mValue = ((error_val ^ rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
     }
     else
     {
-      LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower() << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
+      LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower() 
+                 << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
       mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
     }
   }
