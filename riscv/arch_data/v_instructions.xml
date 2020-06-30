@@ -2077,17 +2077,17 @@
   </I>
   <I name="VSETVL" isa="RISCV" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="10000001111010111"/>
-    <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
-    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="VSETVL %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
+    <asm format="VSETVL %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="VSETVLI" isa="RISCV" group="Vector">
     <O name="const_bits" type="Constant" bits="31-31,14-12,6-0" value="01111010111"/>
-    <O name="zimm10" type="Immediate" bits="30-20" class="SignedImmediateOperand"/>
-    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="VSETVLI %s, %s, %s" op1="zimm10" op2="rs1" op3="rd"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="zimm10" type="Immediate" bits="30-20" class="SignedImmediateOperand"/>
+    <asm format="VSETVLI %s, %s, %s" op1="rd" op2="rs1" op3="zimm10"/>
   </I>
   <I name="VSLIDE1DOWN.VX" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011111101010111"/>

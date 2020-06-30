@@ -2647,16 +2647,16 @@ Add RISCV V extension instruction starter information in this file.
   </I>
   <I name="VSETVL" isa="RISCV" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="10000001111010111"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="rs1" type="Register" bits="19-15"/>
     <O name="rd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rs2" type="Register" bits="24-20"/>
     <asm format="VSETVL"/>
   </I>
   <I name="VSETVLI" isa="RISCV" group="Vector">
     <O name="const_bits" type="Constant" bits="31-31,14-12,6-0" value="01111010111"/>
-    <O name="zimm[10:0]" type="Immediate" bits="30-20"/>
-    <O name="rs1" type="Register" bits="19-15"/>
     <O name="rd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="zimm[10:0]" type="Immediate" bits="30-20"/>
     <asm format="VSETVLI"/>
   </I>
 </instruction_file>

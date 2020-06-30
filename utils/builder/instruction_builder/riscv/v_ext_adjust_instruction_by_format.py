@@ -43,10 +43,10 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     elif instruction_format == 'vd/rd-rs1-vm':
         return adjust_vdrd_rs1_vm(aInstruction)
     # vsetvl/i instructions
-    elif instruction_format == 'rs2-rs1-rd':
-        return adjust_rs2_rs1_rd(aInstruction)
-    elif instruction_format == 'zimm[10:0]-rs1-rd':
-        return adjust_zimm_10_0_rs1_rd(aInstruction)
+    elif instruction_format == 'rd-rs1-rs2':
+        return adjust_rd_rs1_rs2(aInstruction)
+    elif instruction_format == 'rd-rs1-zimm[10:0]':
+        return adjust_rd_rs1_zimm_10_0(aInstruction)
     else:
         record_instruction_format(instruction_format)
 
@@ -73,18 +73,18 @@ def record_instruction_format(aInstructionFormat):
     else:
         format_map[aInstructionFormat] = 1
 
-def adjust_rs2_rs1_rd(aInstruction):
+def adjust_rd_rs1_rs2(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_rs2_int()
-    operand_adjustor.set_rs1_int()
     operand_adjustor.set_rd_int()
+    operand_adjustor.set_rs1_int()
+    operand_adjustor.set_rs2_int()
     return True
 
-def adjust_zimm_10_0_rs1_rd(aInstruction):
+def adjust_rd_rs1_zimm_10_0(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_imm('zimm[10:0]', 'zimm10', True)
-    operand_adjustor.set_rs1_int()
     operand_adjustor.set_rd_int()
+    operand_adjustor.set_rs1_int()
+    operand_adjustor.set_imm('zimm[10:0]', 'zimm10', True)
     return True
 
 def adjust_vdrd_rs1_vm(aInstruction):
