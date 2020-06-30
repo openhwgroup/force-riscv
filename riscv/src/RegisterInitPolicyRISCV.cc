@@ -64,4 +64,43 @@ namespace Force {
     LOG(notice) << "{PpnInitPolicy::RegisterFieldReloadValue} reloading " << pRegField->Name() << " of " << pRegField->PhysicalRegisterName() << endl;
     return 0;
   }
+
+  void VlInitPolicy::InitializeRegister(Register* pRegister) const
+  {
+    uint64 max_vector_len = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen);
+    SetRegisterInitialValue(pRegister, max_vector_len);
+  }
+
+  uint64 VlInitPolicy::RegisterReloadValue(Register* pRegister) const
+  {
+    LOG(notice) << "{VlInitPolicy::RegisterFieldReloadValue} reloading " << pRegister->Name() << endl;
+
+    uint64 max_vector_len = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen);
+    return max_vector_len;
+  }
+
+  void VstartInitPolicy::InitializeRegister(Register* pRegister) const
+  {
+    SetRegisterInitialValue(pRegister, 0);
+  }
+
+  uint64 VstartInitPolicy::RegisterReloadValue(Register* pRegister) const
+  {
+    LOG(notice) << "{VstartInitPolicy::RegisterFieldReloadValue} reloading " << pRegister->Name() << endl;
+
+    return 0;
+  }
+
+  void VtypeInitPolicy::InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree) const
+  {
+    SetRegisterFieldInitialValue(pRegField, 0);
+  }
+
+  uint64 VtypeInitPolicy::RegisterFieldReloadValue(RegisterField* pRegField) const
+  {
+    LOG(notice) << "{VtypeInitPolicy::RegisterFieldReloadValue} reloading " << pRegField->Name() << " of " << pRegField->PhysicalRegisterName() << endl;
+
+    return 0;
+  }
+
 }

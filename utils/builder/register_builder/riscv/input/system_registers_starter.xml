@@ -110,7 +110,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="2"/>
     </register_field>
   </register>
-  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="64" type="SysReg" choice="false">
+  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="64" type="SysReg" choice="false" init_policy="VstartInitPolicy">
     <register_field name="VSTART" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
@@ -170,10 +170,10 @@ Add RISCV system registers starter information in this file.
     <register_field name="UXL" size="2">
       <bit_field shift="32" size="2"/>
     </register_field>
-    <register_field name="WPRI" size="21">
+    <register_field name="WPRI" size="19">
       <bit_field shift="20" size="12"/>
       <bit_field shift="17" size="1"/>
-      <bit_field shift="9" size="4"/>
+      <bit_field shift="11" size="2"/>
       <bit_field shift="7" size="1"/>
       <bit_field shift="2" size="3"/>
     </register_field>
@@ -192,6 +192,13 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="FS" size="2">
       <bit_field shift="13" size="2"/>
+    </register_field>
+    <register_field name="VS" size="2">
+      <bit_field shift="9" size="2"/>
+      <choice description="Vector unit off" value="0x0" weight="0"/>
+      <choice description="Vector unit initial" value="0x1" weight="10"/>
+      <choice description="Vector unit clean" value="0x2" weight="10"/>
+      <choice description="Vector unit dirty" value="0x3" weight="10"/>
     </register_field>
     <register_field name="SPP" size="1">
       <bit_field shift="8" size="1"/>
@@ -364,10 +371,10 @@ Add RISCV system registers starter information in this file.
     <register_field name="UXL" size="2">
       <bit_field shift="32" size="2"/>
     </register_field>
-    <register_field name="WPRI" size="22">
+    <register_field name="WPRI" size="20">
       <bit_field shift="20" size="12"/>
       <bit_field shift="17" size="1"/>
-      <bit_field shift="9" size="4"/>
+      <bit_field shift="11" size="2"/>
       <bit_field shift="7" size="1"/>
       <bit_field shift="2" size="3"/>
       <bit_field shift="0" size="1"/>
@@ -383,6 +390,9 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="FS" size="2">
       <bit_field shift="13" size="2"/>
+    </register_field>
+    <register_field name="VS" size="2">
+      <bit_field shift="9" size="2"/>
     </register_field>
     <register_field name="SPP" size="1">
       <bit_field shift="8" size="1"/>
@@ -445,10 +455,9 @@ Add RISCV system registers starter information in this file.
     <register_field name="SD" size="1">
       <bit_field shift="63" size="1"/>
     </register_field>
-    <register_field name="WPRI" size="40">
+    <register_field name="WPRI" size="38">
       <bit_field shift="36" size="27"/>
       <bit_field shift="23" size="9"/>
-      <bit_field shift="9" size="2"/>
       <bit_field shift="6" size="1"/>
       <bit_field shift="2" size="1"/>
     </register_field>
@@ -484,6 +493,9 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="MPP" size="2">
       <bit_field shift="11" size="2"/>
+    </register_field>
+    <register_field name="VS" size="2">
+      <bit_field shift="9" size="2"/>
     </register_field>
     <register_field name="SPP" size="1">
       <bit_field shift="8" size="1"/>
@@ -1332,30 +1344,42 @@ Add RISCV system registers starter information in this file.
   <register description="Performance-monitoring counter." index="0xc1d" name="hpmcounter29" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1e" name="hpmcounter30" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1f" name="hpmcounter31" privilege="URO" size="0" type="SysReg"/>
-  <register description="Vector length." index="0xc20" name="vl" physical_register="vl" privilege="URO" size="64" type="SysReg" choice="false">
+  <register description="Vector length." index="0xc20" name="vl" physical_register="vl" privilege="URO" size="64" type="SysReg" choice="false" init_policy="VlInitPolicy">
     <register_field name="VL" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
   <register description="Vector data type register." index="0xc21" name="vtype" physical_register="vtype" privilege="URO" size="64" type="SysReg" choice="false">
-    <register_field name="VILL" size="1">
+    <register_field name="VILL" size="1" init_policy="VtypeInitPolicy">
       <bit_field shift="63" size="1"/>
     </register_field>
-    <register_field name="RESERVED (WRITE 0)" size="55">
+    <register_field name="RESERVED (WRITE 0)" size="55" init_policy="VtypeInitPolicy">
       <bit_field shift="8" size="55"/>
     </register_field>
-    <register_field name="VMA" size="1">
+    <register_field name="VMA" size="1" init_policy="VtypeInitPolicy">
       <bit_field shift="7" size="1"/>
     </register_field>
-    <register_field name="VTA" size="1">
+    <register_field name="VTA" size="1" init_policy="VtypeInitPolicy">
       <bit_field shift="6" size="1"/>
     </register_field>
     <register_field name="VLMUL" size="3">
       <bit_field shift="5" size="1"/>
       <bit_field shift="0" size="2"/>
+      <choice description="32 register groups" value="0x0" weight="10"/>
+      <choice description="16 register groups" value="0x1" weight="0"/>
+      <choice description="8 register groups" value="0x2" weight="0"/>
+      <choice description="4 register groups" value="0x3" weight="0"/>
     </register_field>
     <register_field name="VSEW" size="3">
       <bit_field shift="2" size="3"/>
+      <choice description="8-bit elements" value="0x0" weight="10"/>
+      <choice description="16-bit elements" value="0x1" weight="10"/>
+      <choice description="32-bit elements" value="0x2" weight="10"/>
+      <choice description="64-bit elements" value="0x3" weight="10"/>
+      <choice description="128-bit elements" value="0x4" weight="10"/>
+      <choice description="256-bit elements" value="0x5" weight="0"/>
+      <choice description="512-bit elements" value="0x6" weight="0"/>
+      <choice description="1028-bit elements" value="0x7" weight="0"/>
     </register_field>
   </register>
   <register description="VLEN/8 (vector register length in bytes)." index="0xc22" name="vlenb" physical_register="vlenb" privilege="URO" size="64" type="SysReg" choice="false">

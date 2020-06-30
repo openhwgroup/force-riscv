@@ -235,7 +235,7 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     def _processVlStateElement(self, aStateElem, aRegValGprIndex, aScratchGprIndex):
         # Read the current value of vtype and pass it to VSETVL in order to preserve the value of
         # vtype
-        self.genInstruction('CSRRS#register#RISCV', {'rd': aScratchGprIndex, 'rs1': 0, 'csr': state_elem.getRegisterIndex()})
+        self.genInstruction('CSRRS#register#RISCV', {'rd': aScratchGprIndex, 'rs1': 0, 'csr': aStateElem.getRegisterIndex()})
         self.genInstruction('VSETVL##RISCV', {'rd': 0, 'rs1': aRegValGprIndex, 'rs2': aScratchGprIndex})
 
 

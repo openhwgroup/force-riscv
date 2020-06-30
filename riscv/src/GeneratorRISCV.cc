@@ -115,6 +115,18 @@ namespace Force {
 
   void GeneratorRISCV::SetupInstructionGroup(EInstructionGroupType iGrpType)
   {
+    switch(iGrpType) {
+    case EInstructionGroupType::Vector:
+      RandomInitializeRegister("vstart", "");
+      RandomInitializeRegister("vxsat", "");
+      RandomInitializeRegister("vxrm", "");
+      RandomInitializeRegister("vl", "");
+      RandomInitializeRegister("vtype", "");
+      break;
+    default:
+      // No action needed for default case
+      break;
+    }
   }
 
   /*!

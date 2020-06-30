@@ -37,6 +37,9 @@ namespace Force
   {
 #ifndef UNIT_TEST
     AddInitPolicy(new PpnInitPolicy());
+    AddInitPolicy(new VlInitPolicy());
+    AddInitPolicy(new VstartInitPolicy());
+    AddInitPolicy(new VtypeInitPolicy());
 #endif
   }
 

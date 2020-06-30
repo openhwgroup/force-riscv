@@ -287,7 +287,7 @@
         <bit_field shift="0" size="2"/>
       </register_field>
     </register>
-    <register boot="1" index="0x8" name="vstart" size="64" type="SysReg">
+    <register boot="1" index="0x8" init_policy="VstartInitPolicy" name="vstart" size="64" type="SysReg">
       <register_field name="VSTART" physical_register="vstart" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
@@ -344,10 +344,10 @@
       <register_field name="UXL" physical_register="mstatus" size="2">
         <bit_field shift="32" size="2"/>
       </register_field>
-      <register_field name="WPRI" physical_register="mstatus" size="21">
+      <register_field name="WPRI" physical_register="mstatus" size="19">
         <bit_field shift="20" size="12"/>
         <bit_field shift="17" size="1"/>
-        <bit_field shift="9" size="4"/>
+        <bit_field shift="11" size="2"/>
         <bit_field shift="7" size="1"/>
         <bit_field shift="2" size="3"/>
       </register_field>
@@ -362,6 +362,9 @@
       </register_field>
       <register_field name="FS" physical_register="mstatus" size="2">
         <bit_field shift="13" size="2"/>
+      </register_field>
+      <register_field name="VS" physical_register="mstatus" size="2">
+        <bit_field shift="9" size="2"/>
       </register_field>
       <register_field name="SPP" physical_register="mstatus" size="1">
         <bit_field shift="8" size="1"/>
@@ -533,10 +536,10 @@
       <register_field name="UXL" physical_register="vsstatus" size="2">
         <bit_field shift="32" size="2"/>
       </register_field>
-      <register_field name="WPRI" physical_register="vsstatus" size="22">
+      <register_field name="WPRI" physical_register="vsstatus" size="20">
         <bit_field shift="20" size="12"/>
         <bit_field shift="17" size="1"/>
-        <bit_field shift="9" size="4"/>
+        <bit_field shift="11" size="2"/>
         <bit_field shift="7" size="1"/>
         <bit_field shift="2" size="3"/>
         <bit_field shift="0" size="1"/>
@@ -552,6 +555,9 @@
       </register_field>
       <register_field name="FS" physical_register="vsstatus" size="2">
         <bit_field shift="13" size="2"/>
+      </register_field>
+      <register_field name="VS" physical_register="vsstatus" size="2">
+        <bit_field shift="9" size="2"/>
       </register_field>
       <register_field name="SPP" physical_register="vsstatus" size="1">
         <bit_field shift="8" size="1"/>
@@ -614,10 +620,9 @@
       <register_field name="SD" physical_register="mstatus" size="1">
         <bit_field shift="63" size="1"/>
       </register_field>
-      <register_field name="WPRI" physical_register="mstatus" size="40">
+      <register_field name="WPRI" physical_register="mstatus" size="38">
         <bit_field shift="36" size="27"/>
         <bit_field shift="23" size="9"/>
-        <bit_field shift="9" size="2"/>
         <bit_field shift="6" size="1"/>
         <bit_field shift="2" size="1"/>
       </register_field>
@@ -653,6 +658,9 @@
       </register_field>
       <register_field name="MPP" physical_register="mstatus" size="2">
         <bit_field shift="11" size="2"/>
+      </register_field>
+      <register_field name="VS" physical_register="mstatus" size="2">
+        <bit_field shift="9" size="2"/>
       </register_field>
       <register_field name="SPP" physical_register="mstatus" size="1">
         <bit_field shift="8" size="1"/>
@@ -1413,22 +1421,22 @@
     <register boot="0" index="0xc1d" name="hpmcounter29" size="64" type="SysReg"/>
     <register boot="0" index="0xc1e" name="hpmcounter30" size="64" type="SysReg"/>
     <register boot="0" index="0xc1f" name="hpmcounter31" size="64" type="SysReg"/>
-    <register boot="1" index="0xc20" name="vl" size="64" type="SysReg">
+    <register boot="1" index="0xc20" init_policy="VlInitPolicy" name="vl" size="64" type="SysReg">
       <register_field name="VL" physical_register="vl" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
     <register boot="1" index="0xc21" name="vtype" size="64" type="SysReg">
-      <register_field name="VILL" physical_register="vtype" size="1">
+      <register_field init_policy="VtypeInitPolicy" name="VILL" physical_register="vtype" size="1">
         <bit_field shift="63" size="1"/>
       </register_field>
-      <register_field name="RESERVED (WRITE 0)" physical_register="vtype" size="55">
+      <register_field init_policy="VtypeInitPolicy" name="RESERVED (WRITE 0)" physical_register="vtype" size="55">
         <bit_field shift="8" size="55"/>
       </register_field>
-      <register_field name="VMA" physical_register="vtype" size="1">
+      <register_field init_policy="VtypeInitPolicy" name="VMA" physical_register="vtype" size="1">
         <bit_field shift="7" size="1"/>
       </register_field>
-      <register_field name="VTA" physical_register="vtype" size="1">
+      <register_field init_policy="VtypeInitPolicy" name="VTA" physical_register="vtype" size="1">
         <bit_field shift="6" size="1"/>
       </register_field>
       <register_field name="VLMUL" physical_register="vtype" size="3">
