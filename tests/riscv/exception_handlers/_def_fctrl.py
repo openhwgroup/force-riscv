@@ -15,6 +15,7 @@
 #
 control_items = [
     {"fname": "assembly_helper_force.py"},
+    {"fname": "exception_counts_force.py", "generator" : {"--options":"\"handlers_set=Fast\""} },
     {"fname": "exception_counts_force.py"},
     {"fname": "stack_force.py"},
     {"fname": "instruction_misaligned_exception_force.py", "options":{"max-instr":5000}, "generator" : { "--max-instr" : 5000, "--options":"\"PrivilegeLevel=3\""} },

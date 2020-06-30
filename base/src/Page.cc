@@ -380,9 +380,9 @@ namespace Force {
 
   uint32 TablePte::ParentTableLevel() const
   {
-    if (mTableLevel > 0)
+    if (mTableLevel >= 0)
     {
-      return mTableLevel - 1;
+      return mTableLevel + 1;
     }
 
     LOG(fail) << "{TablePte::ParentTableLevel} invalid table level: " << mTableLevel << endl;
