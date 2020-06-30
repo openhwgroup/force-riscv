@@ -556,14 +556,145 @@ Add RISCV system registers starter information in this file.
   <register boot="0x5003" description="ISA and extensions" index="0x301" name="misa" physical_register="misa" privilege="MRW" size="64" type="SysReg">
     <register_field name="MXL" size="2">
       <bit_field shift="62" size="2"/>
+      <choice description="Undefined" value="0x0" weight="0"/>
+      <choice description="ISA width is 32" value="0x1" weight="0"/>     
+      <choice description="ISA width is 64" value="0x2" weight="10"/>     
+      <choice description="ISA width is 128" value="0x3" weight="0"/>     
     </register_field>
     <register_field name="WLRL_VAR" size="36">
       <bit_field shift="26" size="36"/>
     </register_field>
-    <register_field name="EXTENSIONS" size="26">
-      <bit_field shift="0" size="26"/>
+    <register_field name="A" size="1">
+      <bit_field shift="0" size="1"/>
+      <choice description="Atomic extension is not supported" value="0x0" weight="0"/>
+      <choice description="Atomic extension is supported" value="0x1" weight="10"/>     
+    </register_field>    
+    <register_field name="B" size="1">
+      <bit_field shift="1" size="1"/>
+      <choice description="Bit-Manipulation extension is not supported" value="0x0" weight="10"/>
+      <choice description="Bit-Manipulation extension is supported" value="0x1" weight="0"/>     
     </register_field>
-  </register>
+    <register_field name="C" size="1">
+      <bit_field shift="2" size="1"/>
+      <choice description="Compressed extension is not supported" value="0x0" weight="0"/>
+      <choice description="Compressed extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="D" size="1">
+      <bit_field shift="3" size="1"/>
+      <choice description="Double-precision floating-point extension is not supported" value="0x0" weight="0"/>
+      <choice description="Double-precision floating-point extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="E" size="1">
+      <bit_field shift="4" size="1"/>
+      <choice description="RV32E base ISA is not supported" value="0x0" weight="10"/>
+      <choice description="RV32E base ISA is supported" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="F" size="1">
+      <bit_field shift="5" size="1"/>
+      <choice description="Single-precision floating-point extension is not supported" value="0x0" weight="0"/>
+      <choice description="Single-precision floating-point extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="G" size="1">
+      <bit_field shift="6" size="1"/>
+      <choice description="Additional standard extensions are not present" value="0x0" weight="10"/>
+      <choice description="Additional standard extensions are present" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="H" size="1">
+      <bit_field shift="7" size="1"/>
+      <choice description="Hypervisor extension is not supported" value="0x0" weight="10"/>
+      <choice description="Hypervisor extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="I" size="1">
+      <bit_field shift="8" size="1"/>
+      <choice description="Integer base ISA is not present" value="0x0" weight="0"/>
+      <choice description="Integer base ISA is present" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="J" size="1">
+      <bit_field shift="9" size="1"/>
+      <choice description="Dynamically Translated Languages extension is not supported" value="0x0" weight="10"/>
+      <choice description="Dynamically Translated Languages extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="K" size="1">
+      <bit_field shift="10" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="L" size="1">
+      <bit_field shift="11" size="1"/>
+      <choice description="Decimal Floating-Point extension is not supported" value="0x0" weight="10"/>
+      <choice description="Decimal Floating-Point extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="M" size="1">
+      <bit_field shift="12" size="1"/>
+      <choice description="Integer Multiply/Divide extension is not supported" value="0x0" weight="0"/>
+      <choice description="Integer Multiply/Divide  extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="N" size="1">
+      <bit_field shift="13" size="1"/>
+      <choice description="User-level interrupts are not supported" value="0x0" weight="10"/>
+      <choice description="User-level interrupts are supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="O" size="1">
+      <bit_field shift="14" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="P" size="1">
+      <bit_field shift="15" size="1"/>
+      <choice description="Packed-SIMD extension is not supported" value="0x0" weight="10"/>
+      <choice description="Packed-SIMD extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Q" size="1">
+      <bit_field shift="16" size="1"/>
+      <choice description="Quad-precision Floating-Point extension is not supported" value="0x0" weight="10"/>
+      <choice description="Quad-precision Floating-Point extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="R" size="1">
+      <bit_field shift="17" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="S" size="1">
+      <bit_field shift="18" size="1"/>
+      <choice description="Supervisor mode is not supported" value="0x0" weight="0"/>
+      <choice description="Supervisor mode is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="T" size="1">
+      <bit_field shift="19" size="1"/>
+      <choice description="Transactional Memory extension is not supported" value="0x0" weight="10"/>
+      <choice description="Transactional Memory extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="U" size="1">
+      <bit_field shift="20" size="1"/>
+      <choice description="User mode is not supported" value="0x0" weight="0"/>
+      <choice description="User mode is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="V" size="1">
+      <bit_field shift="21" size="1"/>
+      <choice description="Vector extension is not supported" value="0x0" weight="0"/>
+      <choice description="Vector extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="W" size="1">
+      <bit_field shift="22" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="X" size="1">
+      <bit_field shift="23" size="1"/>
+      <choice description="Non-standard extensions are not present" value="0x0" weight="10"/>
+      <choice description="Non-standard extensions are present" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Y" size="1">
+      <bit_field shift="24" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="Z" size="1">
+      <bit_field shift="25" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+  </register>  
   <register description="Machine exception delegation register." index="0x302" name="medeleg" physical_register="medeleg" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine interrupt-enable register." index="0x304" name="mie" physical_register="mie" privilege="MRW" size="0" type="SysReg"/>

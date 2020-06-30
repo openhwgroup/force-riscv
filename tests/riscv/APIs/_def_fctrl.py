@@ -43,5 +43,6 @@ control_items = [
                 {"fname":"CustomEntryPointTest_force.py",              "generator" : {"--cfg" : "config/riscv.config"}},
                 {"fname":"LoopControlTest_force.py",                   "generator" : {"--cfg" : "config/riscv.config"}},
                 {"fname":"InitializeRegisterTest_force.py",            "generator" : {"--cfg" : "config/riscv.config"}},
+                {"fname":"SetMisaInitialValue_force.py",               "generator" : {"--cfg" : "config/riscv.config"}},
                 #{"fname":"*_force.py", "options":{"max-instr":50000,}, "generator":{"--max-instr":50000,} },
                 ]

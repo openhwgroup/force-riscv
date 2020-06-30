@@ -733,8 +733,83 @@
       <register_field name="WLRL_VAR" physical_register="misa" size="36">
         <bit_field shift="26" size="36"/>
       </register_field>
-      <register_field name="EXTENSIONS" physical_register="misa" size="26">
-        <bit_field shift="0" size="26"/>
+      <register_field name="A" physical_register="misa" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+      <register_field name="B" physical_register="misa" size="1">
+        <bit_field shift="1" size="1"/>
+      </register_field>
+      <register_field name="C" physical_register="misa" size="1">
+        <bit_field shift="2" size="1"/>
+      </register_field>
+      <register_field name="D" physical_register="misa" size="1">
+        <bit_field shift="3" size="1"/>
+      </register_field>
+      <register_field name="E" physical_register="misa" size="1">
+        <bit_field shift="4" size="1"/>
+      </register_field>
+      <register_field name="F" physical_register="misa" size="1">
+        <bit_field shift="5" size="1"/>
+      </register_field>
+      <register_field name="G" physical_register="misa" size="1">
+        <bit_field shift="6" size="1"/>
+      </register_field>
+      <register_field name="H" physical_register="misa" size="1">
+        <bit_field shift="7" size="1"/>
+      </register_field>
+      <register_field name="I" physical_register="misa" size="1">
+        <bit_field shift="8" size="1"/>
+      </register_field>
+      <register_field name="J" physical_register="misa" size="1">
+        <bit_field shift="9" size="1"/>
+      </register_field>
+      <register_field name="K" physical_register="misa" size="1">
+        <bit_field shift="10" size="1"/>
+      </register_field>
+      <register_field name="L" physical_register="misa" size="1">
+        <bit_field shift="11" size="1"/>
+      </register_field>
+      <register_field name="M" physical_register="misa" size="1">
+        <bit_field shift="12" size="1"/>
+      </register_field>
+      <register_field name="N" physical_register="misa" size="1">
+        <bit_field shift="13" size="1"/>
+      </register_field>
+      <register_field name="O" physical_register="misa" size="1">
+        <bit_field shift="14" size="1"/>
+      </register_field>
+      <register_field name="P" physical_register="misa" size="1">
+        <bit_field shift="15" size="1"/>
+      </register_field>
+      <register_field name="Q" physical_register="misa" size="1">
+        <bit_field shift="16" size="1"/>
+      </register_field>
+      <register_field name="R" physical_register="misa" size="1">
+        <bit_field shift="17" size="1"/>
+      </register_field>
+      <register_field name="S" physical_register="misa" size="1">
+        <bit_field shift="18" size="1"/>
+      </register_field>
+      <register_field name="T" physical_register="misa" size="1">
+        <bit_field shift="19" size="1"/>
+      </register_field>
+      <register_field name="U" physical_register="misa" size="1">
+        <bit_field shift="20" size="1"/>
+      </register_field>
+      <register_field name="V" physical_register="misa" size="1">
+        <bit_field shift="21" size="1"/>
+      </register_field>
+      <register_field name="W" physical_register="misa" size="1">
+        <bit_field shift="22" size="1"/>
+      </register_field>
+      <register_field name="X" physical_register="misa" size="1">
+        <bit_field shift="23" size="1"/>
+      </register_field>
+      <register_field name="Y" physical_register="misa" size="1">
+        <bit_field shift="24" size="1"/>
+      </register_field>
+      <register_field name="Z" physical_register="misa" size="1">
+        <bit_field shift="25" size="1"/>
       </register_field>
     </register>
     <register boot="0" index="0x302" name="medeleg" size="64" type="SysReg"/>
