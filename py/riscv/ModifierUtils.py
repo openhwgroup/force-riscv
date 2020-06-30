@@ -23,9 +23,9 @@ class PageFaultModifier(ChoicesModifier):
         super().__init__(aGenThread, 'PageFaultModifier')
         self._mFaultTypes = [
                 'Invalid Descriptor',
-                'Address Error',
+                #'Va Address Error',
                 #'Invalid DA',
-                #'Misaligned Superpage',
+                'Misaligned Superpage',
                 #'Invalid XWR',
                 ]
 

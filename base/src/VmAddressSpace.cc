@@ -942,7 +942,7 @@ namespace Force {
     uint32 parent_low_bit = parentTable->LowestLookUpBit();
     uint32 table_step = mpControlBlock->GetRootPageTable(VA)->TableStep();
     table_obj->SetLookUpBitRange(parent_low_bit - table_step, parent_low_bit - 1);
-    table_obj->SetLevel(parentTable->TableLevel() + 1);
+    table_obj->SetLevel(parentTable->TableLevel() - 1);
     table_obj->SetMemoryBank(new_mem_type);
     table_obj->Generate(pPageReq, *this);
 

@@ -48,7 +48,7 @@ namespace Force
     if (nullptr != req_constr)
     {
       uint32 req_invalid = req_constr->ChooseValue();
-      LOG(notice) << "{ValidPteAttributeRISCV::Generate} requesting invalid? " << req_invalid << endl;
+      //LOG(notice) << "{ValidPteAttributeRISCV::Generate} requesting invalid? " << req_invalid << endl;
       if (req_invalid == 0) {
         return; // request valid PTE.
       }
@@ -78,13 +78,13 @@ namespace Force
     }
     else // choose from paging choices
     {
-      std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Address Error", level));
+      std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Misaligned Superpage", level));
       addr_fault_value = choices_tree->Choose()->Value();
     }
 
     rPte.SetPageGenAttribute(EPageGenAttributeType::AddrSizeFault, addr_fault_value);
 
-    if (addr_fault_value != 0)
+    /*if (addr_fault_value != 0)
     {
       uint64 error_val = 0x5A5A5A5A5A5A5A5Aull;
       error_val &= ~(rVmas.GetControlBlock()->MaxPhysicalAddress()-1);
@@ -94,11 +94,11 @@ namespace Force
       mValue = ((error_val ^ rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
     }
     else
-    {
+    {*/
       LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower() 
                  << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
       mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
-    }
+    //}
   }
 
   void DAPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
