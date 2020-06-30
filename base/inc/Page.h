@@ -47,6 +47,7 @@ namespace Force {
     ASSIGNMENT_OPERATOR_ABSENT(PageTableEntry);
     const std::string FullId() const; //!< Return PTE full ID.
     EPteType PteType() const; //!< Return PTE type.
+    EPteCategoryType PteCategory() const; //!< Return PTE category type.
     uint32 DescriptorSize() const; //!< Return PageTableEntry size in number of bits.
     uint64 Descriptor() const; //!< Return PageTableEntry descriptor.
     virtual std::string DescriptorDetails() const; //!< Return descriptor details in a string format.

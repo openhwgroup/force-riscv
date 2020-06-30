@@ -41,10 +41,10 @@
 
   <!-- Page size choices -->
   <choices name="Page size#4K granule#S#stage 1" type="Paging">
-    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
-    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
-    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
-    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
+    <choice description="4K page size" name="4K" value="0x0" weight="84"/>
+    <choice description="2M page size" name="2M" value="0x1" weight="10"/>
+    <choice description="1G page size" name="1G" value="0x2" weight="5"/>
+    <choice description="512G page size" name="512G" value="0x3" weight="1"/>
   </choices>
   <choices name="System Page size#4K granule#S#stage 1" type="Paging">
     <choice description="4K page size" name="4K" value="0x0" weight="100"/>
@@ -84,11 +84,7 @@
   </choices>
 
   <!-- Paging Exception Choices -->
-  <choices name="Invalid Descriptor#level 0#S#stage 1" type="Paging">
-    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
-    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
-  </choices>
-  <choices name="Invalid Descriptor#level 1#S#stage 1" type="Paging">
+  <choices name="Invalid Descriptor#level 3#S#stage 1" type="Paging">
     <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
     <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
@@ -96,16 +92,16 @@
     <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
     <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
-  <choices name="Invalid Descriptor#level 3#S#stage 1" type="Paging">
+  <choices name="Invalid Descriptor#level 1#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid Descriptor#level 0#S#stage 1" type="Paging">
     <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
     <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
 
-  <choices name="Misaligned Superpage#level 0#S#stage 1" type="Paging">
-    <choice description="valid address"   name="false" value="0x0" weight="100"/>
-    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
-  </choices>
-  <choices name="Misaligned Superpage#level 1#S#stage 1" type="Paging">
+  <choices name="Misaligned Superpage#level 3#S#stage 1" type="Paging">
     <choice description="valid address"   name="false" value="0x0" weight="100"/>
     <choice description="invalid address" name="true"  value="0x1" weight="0"/>
   </choices>
@@ -113,10 +109,20 @@
     <choice description="valid address"   name="false" value="0x0" weight="100"/>
     <choice description="invalid address" name="true"  value="0x1" weight="0"/>
   </choices>
-  <choices name="Misaligned Superpage#level 3#S#stage 1" type="Paging">
+  <choices name="Misaligned Superpage#level 1#S#stage 1" type="Paging">
     <choice description="valid address"   name="false" value="0x0" weight="100"/>
     <choice description="invalid address" name="true"  value="0x1" weight="0"/>
   </choices>
+
+  <choices name="Last Level Pointer#level 0#S#stage 1" type="Paging">
+    <choice description="valid XWRV" name="false" value="0x0" weight="100"/>
+    <choice description="invalid XWRV" name="true" value="0x1" weight="0"/>
+  </choices>
+
+  <!--<choices name="Misaligned Superpage#level 0#S#stage 1" type="Paging">
+    <choice description="valid address"   name="false" value="0x0" weight="100"/>
+    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
+  </choices>-->
 
   <choices name="Va Address Error#S#stage 1" type="Paging">
     <choice description="valid address"   name="false" value="0x0" weight="100"/>

@@ -21,53 +21,81 @@ class PageFaultModifier(ChoicesModifier):
 
     def __init__(self, aGenThread):
         super().__init__(aGenThread, 'PageFaultModifier')
-        self._mFaultTypes = [
+        self._mValidFaultTypes = [
                 'Invalid Descriptor',
+                'Misaligned Superpage',
+                'Last Level Pointer',
                 #'Va Address Error',
                 #'Invalid DA',
-                'Misaligned Superpage',
                 #'Invalid XWR',
                 ]
 
+        self._mValidFaultLevels = {
+                'Invalid Descriptor':[3,2,1,0],
+                'Misaligned Superpage':[3,2,1],
+                'Last Level Pointer':[0],
+                }
+
+        self._mValidPrivilegeLevels = {
+                'Invalid Descriptor':['S'],
+                'Misaligned Superpage':['S'],
+                'Last Level Pointer':['S'],
+                }
+
+
     def update(self, **kwargs):
-        level = 0
-        weight = 100
-        privilege = 'S'
-
         if 'All' in kwargs:
-            self.updateAllPageFaultChoices()
+            self.updateAllFaultChoices()
         else:
-            if 'Level' in kwargs:
-                level = kwargs['Level']
-            else:
-                level = RandomUtils.random32(0,3)
-
-            if 'Privilege' in kwargs:
-                privilege = kwargs['Privilege']
-
-            if 'Weight' in kwargs:
-                if kwargs['Weight'] > 100 or kwargs['Weight'] < 0:
-                   Log.error('invalid weight specified, must be in range [0, 100] weight={}'.format(kwargs['Weight']))
-                weight = kwargs['Weight']
-
             if 'Type' in kwargs:
-                if kwargs['Type'] in self._mFaultTypes:
-                    self.updatePageFaultChoices(level, privilege, weight, kwargs['Type'])
+                if kwargs['Type'] in self._mValidFaultTypes:
+                    self.updateFaultTypeChoices(kwargs['Type'], **kwargs)
                 else:
                     Log.error('invalid type specified, type={}'.format(kwargs['Type']))
             else:
-                self.updateAllTypePageFaultChoices(level, privilege, weight)
+                Log.error('specify All or fault name as kwarg to update choices.')
 
-    def updatePageFaultChoices(self, aLevel, aPriv, aWeight, aType):
+    def updatePageFaultChoice(self, aType, aLevel, aPriv, aWeight):
         choice_name = '{}#level {}#{}#stage 1'.format(aType, aLevel, aPriv)
         choice_dict = {'false':100-aWeight, 'true':aWeight}
         self.modifyPagingChoices(choice_name, choice_dict)
 
-    def updateAllTypePageFaultChoices(self, aLevel, aPriv, aWeight):
-        for fault_type in self._mFaultTypes:
-            self.updatePageFaultChoices(aLevel, aPriv, aWeight, fault_type)
+    def updateFaultTypeChoices(self, aType, **kwargs):
+        table_levels = None
+        priv_levels = None
+        weight = 0
 
-    def updateAllPageFaultChoices(self):
-        for level in range(4):
-            for privilege in ['S']: #,'U']
-                self.updateAllTypePageFaultChoices(level, privilege, 100)
+        if 'Level' in kwargs:
+            table_levels = kwargs['Level']
+        else:
+            table_levels = self._mValidFaultLevels[aType]
+
+        if 'Privilege' in kwargs:
+            priv_levels = kwargs['Privilege']
+        else:
+            priv_levels = self._mValidPrivilegeLevels[aType]
+
+        if 'Weight' in kwargs:
+            if kwargs['Weight'] not in range(101):
+                Log.error('invalid weight specified, please use integer between 0-100. weight={}'.format(kwargs['Weight']))
+            
+            weight = kwargs['Weight']
+        else:
+            weight = 100
+
+        for table_level in table_levels:
+            if table_level not in self._mValidFaultLevels[aType]:
+                Log.error('invalid table level={} for fault type={}'.format(table_level, aType))
+            for priv_level in priv_levels:
+                if priv_level not in self._mValidPrivilegeLevels[aType]:
+                    Log.error('invalid priv level={} for fault type={}'.format(priv_level, aType))
+
+                self.updatePageFaultChoice(aType, table_level, priv_level, weight)
+
+        #update additional choices based on type
+        #last level ptr needs superpage pagesizes weighted to 0
+        #misaligned superpage needs superpage pagesizes weighted to 100
+
+    def updateAllFaultChoices(self, **kwargs):
+        for fault_type in self._mValidFaultTypes:
+            self.updateFaultTypeChoices(fault_type, **kwargs)

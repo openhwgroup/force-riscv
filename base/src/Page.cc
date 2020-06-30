@@ -73,6 +73,11 @@ namespace Force {
     return mpStructure->mType;
   }
 
+  EPteCategoryType PageTableEntry::PteCategory() const
+  {
+    return mpStructure->mCategory;
+  }
+
   uint32 PageTableEntry::DescriptorSize() const
   {
     return mpStructure->Size();

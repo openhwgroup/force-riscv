@@ -20,13 +20,14 @@
 #include <VmasControlBlockRISCV.h>
 #include <Page.h>
 #include <ChoicesFilter.h>
-#include <Random.h>
+#include <RandomUtils.h>
 #include <PagingChoicesAdapter.h>
 #include <Generator.h>
 #include <Register.h>
 #include <PteStructure.h>
 #include <Choices.h>
 #include <UtilityFunctions.h>
+#include <UtilityFunctionsRISCV.h>
 #include <Log.h>
 
 #include <memory>
@@ -69,36 +70,31 @@ namespace Force
   void AddressPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
   {
     uint32 level = rPte.ParentTableLevel();
+    EPteCategoryType descr_type = rPte.PteCategory();
     uint32 addr_fault_value = 0;
-    auto req_constr = rPagingReq.GenAttributeConstraint(EPageGenAttributeType::AddrSizeFault);
-    if (nullptr != req_constr) // has addr size fault constraint in page request
-    {
-      uint32 req_fault = req_constr->ChooseValue();
-      if (req_fault != 0) addr_fault_value = 1;
-    }
-    else // choose from paging choices
+
+    if (level >= 1 && level <= 3 && descr_type == EPteCategoryType::Page)
     {
       std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Misaligned Superpage", level));
       addr_fault_value = choices_tree->Choose()->Value();
+      rPte.SetPageGenAttribute(EPageGenAttributeType::AddrSizeFault, addr_fault_value); //TODO update pagegenattr type to 'AddrFault' instead of address size fault
     }
 
-    rPte.SetPageGenAttribute(EPageGenAttributeType::AddrSizeFault, addr_fault_value);
-
-    /*if (addr_fault_value != 0)
+    if (addr_fault_value != 0)
     {
-      uint64 error_val = 0x5A5A5A5A5A5A5A5Aull;
-      error_val &= ~(rVmas.GetControlBlock()->MaxPhysicalAddress()-1);
+      LOG(info) << "{AddressPteAttributeRISCV::Generate} requesting misaligned superpage fault level=" << level << endl;
+      uint32 bit_range = table_level_to_addr_high_bit(level-1) - (mpStructure->Lsb() + 2);
+      uint64 error_val = random_value64(0x1ull, (0x1 << bit_range)-1) << (mpStructure->Lsb() + 2);
       LOG(trace) << "{AddressPteAttributeRISCV::Generate} error_val=0x" << hex << error_val << " phys_lower=0x" << rPte.PhysicalLower() 
                  << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
-      LOG(notice) << "{AddressPteAttributeRISCV::Generate} requesting address error fault level=" << level << endl;
-      mValue = ((error_val ^ rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
+      mValue = ((error_val | rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically*/
     }
     else
-    {*/
+    {
       LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower() 
                  << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
       mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
-    //}
+    }
   }
 
   void DAPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
