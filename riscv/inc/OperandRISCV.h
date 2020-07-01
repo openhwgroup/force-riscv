@@ -124,32 +124,43 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for CompressedRegisterOperandRISCV.
   };
 
-  
   /*!
-    \class VectorDataTypeOperand
-    \brief Base class of various vector operand data type operands.
+    \class VtypeLayoutOperand
+    \brief Operand class for vector register layouts corresponding to vtype.
   */
-  class VectorDataTypeOperand : public ChoicesOperand {
+  class VtypeLayoutOperand : public VectorLayoutOperand {
   public:
-    Object* Clone() const override  //!< Return a cloned VectorDataTypeOperand object of the same type and same contents of the object.
-    {
-      return new VectorDataTypeOperand(*this);
-    }
+    DEFAULT_CONSTRUCTOR_DEFAULT(VtypeLayoutOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VtypeLayoutOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VtypeLayoutOperand);
 
-    const char* Type() const override { return "VectorDataTypeOperand"; } //!< Return the type of the VectorDataTypeOperand object in C string.
-
-  VectorDataTypeOperand() : ChoicesOperand() { } //!< Constructor.
-    ~VectorDataTypeOperand() { } //!< Destructor
+    Object* Clone() const override { return new VtypeLayoutOperand(*this); } //!< Return a cloned VtypeLayoutOperand object of the same type and same contents of the object.
+    const char* Type() const override { return "VtypeLayoutOperand"; } //!< Return the type of the VtypeLayoutOperand object in C string.
   protected:
-    VectorDataTypeOperand(const VectorDataTypeOperand& rOther) //!< Copy constructor.
-      : ChoicesOperand(rOther)
-    {
-    }
-
-    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstaint object.
+    COPY_CONSTRUCTOR_DEFAULT(VtypeLayoutOperand);
+  private:
+    void GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
   };
 
-   /*!
+  /*!
+    \class WholeRegisterLayoutOperand
+    \brief Operand class for fixed vector register layouts that read or write the whole vector register.
+  */
+  class WholeRegisterLayoutOperand : public VectorLayoutOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(WholeRegisterLayoutOperand);
+
+    Object* Clone() const override { return new WholeRegisterLayoutOperand(*this); } //!< Return a cloned WholeRegisterLayoutOperand object of the same type and same contents of the object.
+    const char* Type() const override { return "WholeRegisterLayoutOperand"; } //!< Return the type of the WholeRegisterLayoutOperand object in C string.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
+  private:
+    void GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
+  };
+
+  /*!
     \class VectorLoadStoreOperand
     \brief Base class of vector load-store operands
   */
@@ -170,31 +181,6 @@ namespace Force {
     VectorLoadStoreOperand(const VectorLoadStoreOperand& rOther) : BaseOffsetLoadStoreOperand(rOther) { } //!< Copy constructor.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstaint object for BaseOffsetLoadStoreOperand.
 
-  };
-
-  /*!
-    \class ConstDataTypeOperand
-    \brief Base class of various constant vector operand data type operands.
-  */
-  class ConstDataTypeOperand : public VectorDataTypeOperand {
-  public:
-    Object* Clone() const override  //!< Return a cloned ConstDataTypeOperand object of the same type and same contents of the object.
-    {
-      return new ConstDataTypeOperand(*this);
-    }
-
-    const char* Type() const override { return "ConstDataTypeOperand"; } //!< Return the type of the ConstDataTypeOperand object in C string.
-
-    ConstDataTypeOperand() : VectorDataTypeOperand() { } //!< Constructor.
-    ~ConstDataTypeOperand() { } //!< Destructor
-
-    void Setup(Generator& gen, Instruction& instr) override { } //!< Especially overriden to do nothing here.
-    void Generate(Generator& gen, Instruction& instr) override { mChoiceText = Name(); } //!< Generate method overriden, simply copy Name() to mChoiceText
-  protected:
-     ConstDataTypeOperand(const ConstDataTypeOperand& rOther) //!< Copy constructor.
-      : VectorDataTypeOperand(rOther)
-    {
-    }
   };
 
   /*!

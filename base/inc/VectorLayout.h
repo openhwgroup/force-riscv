@@ -26,7 +26,7 @@ namespace Force {
   */
   struct VectorLayout {
     uint32 mElemSize; //!< The size in bits of each vector register element
-    uint32 mElemCount; //!< The number of elements per vector register
+    uint32 mElemCount; //!< The number of elements per vector register group
     uint32 mRegCount; //!< The number of registers per vector register group
   };
 

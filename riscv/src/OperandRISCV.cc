@@ -26,7 +26,9 @@
 #include <InstructionStructure.h>
 #include <Log.h>
 #include <Random.h>
+#include <Register.h>
 #include <VaGenerator.h>
+#include <VectorLayout.h>
 #include <VmMapper.h>
 
 #include <InstructionConstraintRISCV.h>
@@ -172,11 +174,6 @@ namespace Force {
     return new FullsizeConditionalBranchOperandConstraint();
   }
 
-  OperandConstraint* VectorDataTypeOperand::InstantiateOperandConstraint() const
-  {
-    return new VectorDataTypeOperandConstraint();
-  }
-
   OperandConstraint* CompressedConditionalBranchOperandRISCV::InstantiateOperandConstraint() const
   {
     return new CompressedConditionalBranchOperandConstraint();
@@ -220,61 +217,44 @@ namespace Force {
     return new CompressedRegisterOperandRISCVConstraint();
   }
 
-  static void calculate_data_element_size(const LoadStoreOperandStructure* lsop_struct, const string& data_type, uint32 num_registers)
+  void VtypeLayoutOperand::GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr)
   {
-    if (data_type == "8B") {
-      lsop_struct->SetDataSize(8 * num_registers);
-      lsop_struct->SetAlignment(1);
-      lsop_struct->SetElementSize(1);
-    }
-    else if (data_type == "4H") {
-      lsop_struct->SetDataSize(8 * num_registers);
-      lsop_struct->SetAlignment(2);
-      lsop_struct->SetElementSize(2);
-    }
-    else if (data_type == "2S") {
-      lsop_struct->SetDataSize(8 * num_registers);
-      lsop_struct->SetAlignment(4);
-      lsop_struct->SetElementSize(4);
-    }
-    else if (data_type == "1D") {
-      lsop_struct->SetDataSize(8 * num_registers);
-      lsop_struct->SetAlignment(8);
-      lsop_struct->SetElementSize(8);
-    }
-    else if (data_type == "16B" || data_type == "B") {
-      lsop_struct->SetDataSize(16 * num_registers);
-      lsop_struct->SetAlignment(1);
-      lsop_struct->SetElementSize(1);
-    }
-    else if (data_type == "8H" || data_type == "H") {
-      lsop_struct->SetDataSize(16 * num_registers);
-      lsop_struct->SetAlignment(2);
-      lsop_struct->SetElementSize(2);
-    }
-    else if (data_type == "4S" || data_type == "S") {
-      lsop_struct->SetDataSize(16 * num_registers);
-      lsop_struct->SetAlignment(4);
-      lsop_struct->SetElementSize(4);
-    }
-    else if (data_type == "2D" || data_type == "D") {
-      lsop_struct->SetDataSize(16 * num_registers);
-      lsop_struct->SetAlignment(8);
-      lsop_struct->SetElementSize(8);
-    }
-    else {
-      LOG(fail) << "unknown vector data type " << data_type << endl;
-      FAIL("unknown-vector-data-type");
-    }
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
+
+    const RegisterFile* reg_file = rGen.GetRegisterFile();
+    Register* vl_reg = reg_file->RegisterLookup("vl");
+    vec_layout.mElemCount = vl_reg->Value();
+
+    Register* vtype_reg = reg_file->RegisterLookup("vtype");
+    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("vsew");
+    vec_layout.mElemSize = (1 << vsew_field->FieldValue()) * 8;
+    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("vlmul");
+    vec_layout.mRegCount = (1 << vlmul_field->FieldValue());
+
+    instr_constr->SetVectorLayout(vec_layout);
+  }
+
+  void WholeRegisterLayoutOperand::GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
+
+    const RegisterFile* reg_file = rGen.GetRegisterFile();
+    Register* vlenb_reg = reg_file->RegisterLookup("vlenb");
+    vec_layout.mElemCount = vlenb_reg->Value();
+    vec_layout.mElemSize = 8;
+    vec_layout.mRegCount = 1;
+
+    instr_constr->SetVectorLayout(vec_layout);
   }
 
   void VectorLoadStoreOperand::Generate(Generator& gen, Instruction& instr)
   {
-    //TODO: if instruction contains ConstDataTypeOperand then calculate_data_size()
-    auto vls_constr = mpOperandConstraint->CastInstance<VectorLoadStoreOperandConstraint>();
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    calculate_data_element_size(lsop_struct, vls_constr->VectorDataTypeOperand()->ChoiceText(), vls_constr->GetMultiRegisterOperand()->NumberRegisters());
-    //TODO: else just pull info from vtype register
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    lsop_struct->SetDataSize(lsop_struct->ElementSize() * vec_layout->mElemCount);
 
     BaseOffsetLoadStoreOperand::Generate(gen, instr);
   }

@@ -135,6 +135,7 @@ namespace Force {
     RegisterObject(new ChoicesOperand());
     RegisterObject(new RegisterOperand());
     RegisterObject(new FpRegisterOperand());
+    RegisterObject(new VectorRegisterOperand());
     RegisterObject(new ImmediateGe1Operand());
     RegisterObject(new SameValueOperand());
     RegisterObject(new Minus1ValueOperand());

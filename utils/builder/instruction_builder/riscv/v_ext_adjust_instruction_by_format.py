@@ -23,7 +23,11 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     aInstruction.name = escape(aInstruction.name)
     aInstruction.asm.format = escape(aInstruction.asm.format)
 
-    instruction_format = clean_format(aInstruction.get_format())
+    # Get the format prior to adding the layout operand, so that it's not necessary to strip off the
+    # layout operand name.
+    instruction_format = aInstruction.get_format()
+
+    add_layout_operand(aInstruction)
 
     if instruction_format == 'vd/rd-vs2-vs1-vm':
         return adjust_vdrd_vs2_vs1_vm(aInstruction)
@@ -52,26 +56,16 @@ def v_ext_adjust_instruction_by_format(aInstruction):
 
     return False
 
-def clean_format(aInstructionFormat):
-    # removing unwanted operands via names
-    if 'vtype' in aInstructionFormat:
-        aInstructionFormat = aInstructionFormat.replace('vtype', '')
-
-    # cleaning double hypens and leading/trailing hyphens
-    if '--' in aInstructionFormat:
-        aInstructionFormat = aInstructionFormat.replace('--', '')
-    if aInstructionFormat.startswith('-'):
-        aInstructionFormat = aInstructionFormat[1:]
-    if aInstructionFormat.endswith('-'):
-        aInstructionFormat = aInstructionFormat[:-1]
-
-    return aInstructionFormat
-
 def record_instruction_format(aInstructionFormat):
     if aInstructionFormat in format_map:
         format_map[aInstructionFormat] += 1
     else:
         format_map[aInstructionFormat] = 1
+
+def add_layout_operand(aInstruction):
+    if aInstruction.name not in ('VSETVL', 'VSETVLI'):
+        operand_adjustor = VectorOperandAdjustor(aInstruction)
+        operand_adjustor.add_vtype_layout_operand()
 
 def adjust_rd_rs1_rs2(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)

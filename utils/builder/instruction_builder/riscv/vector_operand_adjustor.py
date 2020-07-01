@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 from operand_adjustor import OperandAdjustor
+from shared.instruction import Operand
 
 class VectorOperandAdjustor(OperandAdjustor):
     def __init__(self, aInstruction):
@@ -26,6 +27,13 @@ class VectorOperandAdjustor(OperandAdjustor):
                          'VFIRST',
                          'VMV.X.S',
                          'VFMV.F.S'}
+
+    def add_vtype_layout_operand(self):
+        layout_opr = Operand()
+        layout_opr.name = "vtype"
+        layout_opr.type = "SysReg"
+        layout_opr.oclass = "VtypeLayoutOperand"
+        self.mInstr.insert_operand(0, layout_opr)
 
     def set_reg_vec(self, aOperand):
         aOperand.type = "VECREG" #TODO: some might possibly be SIMDVR or FPR

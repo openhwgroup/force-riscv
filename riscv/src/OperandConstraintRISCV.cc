@@ -299,19 +299,6 @@ namespace Force {
       FAIL("expecting-register_operand");
     }
 
-    string vector_name[] = {"rs1", "vs3", "vd", "\0"};
-    for (unsigned i = 0; vector_name[i] != "\0"; i ++) {
-        auto vector_ptr = instr.FindOperand(vector_name[i]);
-        if (vector_ptr) {
-          mpVectorDataType = dynamic_cast<const ChoicesOperand* >(vector_ptr);
-          if (nullptr == mpVectorDataType) {
-            LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << vector_ptr->Name() << " to be \"ChoicesOperand\" type." << endl;
-            FAIL("expecting-choices_operand");
-          }
-          return;
-        }
-    }
-
     LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand to be \"ChoicesOperand\" type." << endl;
     FAIL("expecting-choices_operand");
   }

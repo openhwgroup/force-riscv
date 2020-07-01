@@ -113,8 +113,8 @@ namespace Force {
     ~VectorInstructionConstraint() override;
     ASSIGNMENT_OPERATOR_ABSENT(VectorInstructionConstraint);
 
-    const VectorLayout* GetVectorLayout() { return mpVectorLayout; } //!< Return vector register layout for the instruction.
-    void SetVectorLayout(const VectorLayout& rVectorLayout); //!< Set vector register layout for the instruction.
+    const VectorLayout* GetVectorLayout() const { return mpVectorLayout; } //!< Return vector register layout for the instruction.
+    void SetVectorLayout(const VectorLayout& rVectorLayout) const; //!< Set vector register layout for the instruction.
   private:
     VectorLayout* mpVectorLayout; //!< Vector register layout for the instruction
   };

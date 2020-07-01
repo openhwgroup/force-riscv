@@ -95,18 +95,6 @@ namespace Force {
     }
   };
 
-  /*!
-    \class VectorDataTypeOperandConstraint
-    \brief The class carries dynamic constraint properties for VectorDataTypeOperand.
-  */
-  class VectorDataTypeOperandConstraint : public ChoicesOperandConstraint {
-  public:
-    VectorDataTypeOperandConstraint() : ChoicesOperandConstraint() { } //!< Constructor.
-    ~VectorDataTypeOperandConstraint() { } //!< Destructor.
-  protected:
-    VectorDataTypeOperandConstraint(const VectorDataTypeOperandConstraint& rOther) : ChoicesOperandConstraint(rOther) { } //!< Copy constructor, not meant to be used.
-  };
-
   /**!
     \class CompressedConditionalBranchOperandConstraint
     \brief Implements special behavior in SetConditionalBranchTaken(...) and branch type specific methods for the Compressed extension branch instructions.
@@ -149,18 +137,16 @@ namespace Force {
   */
   class VectorLoadStoreOperandConstraint : public BaseOffsetLoadStoreOperandConstraint {
   public:
-    VectorLoadStoreOperandConstraint() : BaseOffsetLoadStoreOperandConstraint(), mpVectorDataType(nullptr), mpMultiRegisterOperand(nullptr) { } //!< Constructor.
-    ~VectorLoadStoreOperandConstraint() { mpVectorDataType = nullptr; mpMultiRegisterOperand = nullptr; } //!< Destructor.
+    VectorLoadStoreOperandConstraint() : BaseOffsetLoadStoreOperandConstraint(), mpMultiRegisterOperand(nullptr) { } //!< Constructor.
+    ~VectorLoadStoreOperandConstraint() { mpMultiRegisterOperand = nullptr; } //!< Destructor.
 
     ASSIGNMENT_OPERATOR_ABSENT(VectorLoadStoreOperandConstraint);
     void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints for BaseOffsetLoadStoreOperand
-    const ChoicesOperand* VectorDataTypeOperand() const { return mpVectorDataType; } //!< Return const pointer to vector data type operand.
     const MultiRegisterOperand* GetMultiRegisterOperand() const {return mpMultiRegisterOperand;}
   protected:
     VectorLoadStoreOperandConstraint(const VectorLoadStoreOperandConstraint& rOther) //!< Copy constructor, not meant to be used.
-      : BaseOffsetLoadStoreOperandConstraint(rOther), mpVectorDataType(nullptr), mpMultiRegisterOperand(nullptr) { }
+      : BaseOffsetLoadStoreOperandConstraint(rOther), mpMultiRegisterOperand(nullptr) { }
   protected:
-    const ChoicesOperand* mpVectorDataType; //!< Pointer to vector data type operand, if applicable.
     const MultiRegisterOperand* mpMultiRegisterOperand;
   };
 

@@ -101,7 +101,7 @@ namespace Force {
     delete mpVectorLayout;
   }
 
-  void VectorInstructionConstraint::SetVectorLayout(const VectorLayout& rVectorLayout)
+  void VectorInstructionConstraint::SetVectorLayout(const VectorLayout& rVectorLayout) const
   {
     (*mpVectorLayout) = rVectorLayout;
   }
