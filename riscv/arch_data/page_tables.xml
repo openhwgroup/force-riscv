@@ -15,7 +15,6 @@
  limitations under the License.
 -->
 <page_tables>
-  <!-- TODO determine if pte XML attributes are correct, or can be simplified -->
   <pte type="4K" category="Table" granule="4K" stage="1" class="TablePte">
     <pte_attribute type="RES0" bits="63-54" value="0000000000" class="ValuePteAttribute"/>
     <pte_attribute type="Address" bits="53-10" class="AddressPteAttributeRISCV"/>
@@ -43,8 +42,8 @@
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="2M" category="Page" granule="4K" level="1" stage="1">
-    <pte_attribute type="RES0" bits="63-54,18-10" value="0" class="ValuePteAttribute"/>
-    <pte_attribute type="Address" bits="53-19" class="AddressPteAttributeRISCV"/>
+    <pte_attribute type="RES0" bits="63-54" value="0" class="ValuePteAttribute"/>
+    <pte_attribute type="Address" bits="53-10" class="AddressPteAttributeRISCV"/>
     <pte_attribute type="SystemPage" bits="9" value="0"/>
     <pte_attribute type="RSW" bits="8" class="RandomPteAttribute"/>
     <pte_attribute type="DA" bits="7-6" class="DAPteAttributeRISCV"/>
@@ -56,8 +55,8 @@
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="1G" category="Page" granule="4K" level="2" stage="1">
-    <pte_attribute type="RES0" bits="63-54,27-10" value="0" class="ValuePteAttribute"/>
-    <pte_attribute type="Address" bits="53-28" class="AddressPteAttributeRISCV"/>
+    <pte_attribute type="RES0" bits="63-54" value="0" class="ValuePteAttribute"/>
+    <pte_attribute type="Address" bits="53-10" class="AddressPteAttributeRISCV"/>
     <pte_attribute type="SystemPage" bits="9" value="0"/>
     <pte_attribute type="RSW" bits="8" class="RandomPteAttribute"/>
     <pte_attribute type="DA" bits="7-6" class="DAPteAttributeRISCV"/>
@@ -69,8 +68,8 @@
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="512G" category="Page" granule="4K" level="3" stage="1">
-    <pte_attribute type="RES0" bits="63-54,36-10" value="0" class="ValuePteAttribute"/>
-    <pte_attribute type="Address" bits="53-37" class="AddressPteAttributeRISCV"/>
+    <pte_attribute type="RES0" bits="63-54" value="0" class="ValuePteAttribute"/>
+    <pte_attribute type="Address" bits="53-10" class="AddressPteAttributeRISCV"/>
     <pte_attribute type="SystemPage" bits="9" value="0"/>
     <pte_attribute type="RSW" bits="8" class="RandomPteAttribute"/>
     <pte_attribute type="DA" bits="7-6" class="DAPteAttributeRISCV"/>

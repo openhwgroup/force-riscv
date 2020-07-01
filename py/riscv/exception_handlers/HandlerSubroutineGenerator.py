@@ -103,10 +103,12 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         #self.mAssemblyHelper.addLabel('ATP MODE check') TODO add switching for diff modes
         self.callRoutine('TableWalkSV48')
 
+        #save walk level value in temp register so we don't lose value on pop
+        self.mAssemblyHelper.genMoveRegister(self._mR1, self._mWalkLevelRegIndex)
         self._popExceptionSpecificRegisters()
 
         #transfer fault level back to page fault handler via stack
-        self._mExceptionsStack.push(self._mWalkLevelRegIndex)
+        self._mExceptionsStack.push(self._mR1)
 
         self.mAssemblyHelper.genReturn()
 

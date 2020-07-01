@@ -83,10 +83,11 @@ namespace Force
     if (addr_fault_value != 0)
     {
       LOG(info) << "{AddressPteAttributeRISCV::Generate} requesting misaligned superpage fault level=" << level << endl;
-      uint32 bit_range = table_level_to_addr_high_bit(level-1) - (mpStructure->Lsb() + 2);
-      uint64 error_val = random_value64(0x1ull, (0x1 << bit_range)-1) << (mpStructure->Lsb() + 2);
-      LOG(trace) << "{AddressPteAttributeRISCV::Generate} error_val=0x" << hex << error_val << " phys_lower=0x" << rPte.PhysicalLower() 
-                 << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
+      uint32 level_bits = level * 9;
+      uint64 error_val = random_value64(0x1ull, (0x1 << level_bits) - 1) << 12; 
+      LOG(trace) << "{AddressPteAttributeRISCV::Generate} error_val=0x" << hex << error_val 
+                 << " phys_lower=0x" << rPte.PhysicalLower() << " mask=0x" << mpStructure->Mask() 
+                 << " lsb=0x" << mpStructure->Lsb() << endl;
       mValue = ((error_val | rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically*/
     }
     else
