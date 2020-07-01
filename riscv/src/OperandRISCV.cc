@@ -227,9 +227,9 @@ namespace Force {
     vec_layout.mElemCount = vl_reg->Value();
 
     Register* vtype_reg = reg_file->RegisterLookup("vtype");
-    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("vsew");
+    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
     vec_layout.mElemSize = (1 << vsew_field->FieldValue()) * 8;
-    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("vlmul");
+    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
     vec_layout.mRegCount = (1 << vlmul_field->FieldValue());
 
     instr_constr->SetVectorLayout(vec_layout);
