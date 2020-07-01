@@ -25,6 +25,7 @@
 #include <GenRequest.h>
 #include <ResourceDependence.h>
 #include <Log.h>
+#include <VectorLayout.h>
 
 using namespace std;
 
@@ -88,6 +89,21 @@ namespace Force {
     : InstructionConstraint(rOther), mpLoadStoreOperand(nullptr)
   {
 
+  }
+
+  VectorInstructionConstraint::VectorInstructionConstraint()
+    : InstructionConstraint(), mpVectorLayout(new VectorLayout())
+  {
+  }
+
+  VectorInstructionConstraint::~VectorInstructionConstraint()
+  {
+    delete mpVectorLayout;
+  }
+
+  void VectorInstructionConstraint::SetVectorLayout(const VectorLayout& rVectorLayout)
+  {
+    (*mpVectorLayout) = rVectorLayout;
   }
 
 }

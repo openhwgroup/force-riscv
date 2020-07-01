@@ -365,4 +365,15 @@ namespace Force {
     SetUnpredictable(true);
     LOG(notice) << "{UnpredictStoreInstruction::Generate} Set instructon to be unpredicted" << endl;
   }
+
+  InstructionConstraint* VectorInstruction::InstantiateInstructionConstraint() const
+  {
+    return new VectorInstructionConstraint();
+  }
+
+  InstructionConstraint* VectorLoadStoreInstruction::InstantiateInstructionConstraint() const
+  {
+    return new VectorLoadStoreInstructionConstraint();
+  }
+
 }

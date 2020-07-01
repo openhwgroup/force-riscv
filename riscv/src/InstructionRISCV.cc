@@ -20,7 +20,6 @@
 #include <Generator.h>
 #include <GenRequest.h>
 #include <Log.h>
-#include <Register.h>
 
 /*!
   \file InstructionRISCV.cc
@@ -30,44 +29,6 @@
 using namespace std;
 
 namespace Force {
-
-  void VectorInstruction::Setup(const GenInstructionRequest& instrReq, Generator& gen)
-  {
-    Instruction::Setup(instrReq, gen);
-
-    LocateDataTypeOperand();
-  }
-
-  void VectorInstruction::LocateDataTypeOperand()
-  {
-    const VectorDataTypeOperand* vec_dt_opr = nullptr;
-    for (auto opr_ptr : mOperands) {
-      vec_dt_opr = dynamic_cast<const VectorDataTypeOperand* >(opr_ptr);
-      if (nullptr != vec_dt_opr) {
-        dynamic_cast<VectorInstructionConstraint* >(mpInstructionConstraint)->SetDataTypeOperand(vec_dt_opr);
-        return;
-      }
-    }
-
-    //LOG(fail) << "{VectorInstruction::LocateDataTypeOperand} data type operand not found." << endl;
-    //FAIL("vector-data-type-operand-not-found");
-  }
-
-  VectorInstruction::VectorInstruction(const VectorInstruction& rOther)
-    : Instruction(rOther)
-  {
-
-  }
-
-  InstructionConstraint* VectorInstruction::InstantiateInstructionConstraint() const
-  {
-    return new VectorInstructionConstraint();
-  }
-
-  InstructionConstraint* VectorLoadStoreInstruction::InstantiateInstructionConstraint() const
-  {
-    return new VectorLoadStoreInstructionConstraint();
-  }
 
   void RetInstruction::Setup(const GenInstructionRequest& instrReq, Generator& gen)
   {
@@ -99,5 +60,5 @@ namespace Force {
   {
     return new RetInstructionConstraint();
   }
-}
 
+}

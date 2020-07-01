@@ -125,8 +125,6 @@ namespace Force {
   };
 
   
-  class VectorDataTraits;
-
   /*!
     \class VectorDataTypeOperand
     \brief Base class of various vector operand data type operands.
@@ -142,8 +140,6 @@ namespace Force {
 
   VectorDataTypeOperand() : ChoicesOperand() { } //!< Constructor.
     ~VectorDataTypeOperand() { } //!< Destructor
-
-    virtual void SetDataTraits(VectorDataTraits& dataTraits) const;
   protected:
     VectorDataTypeOperand(const VectorDataTypeOperand& rOther) //!< Copy constructor.
       : ChoicesOperand(rOther)
@@ -226,7 +222,6 @@ namespace Force {
     }
 
     const std::string AssemblyText() const override; //!< Return assembly text output of the register list.
-    void SetupDataTraits(Generator& gen, Instruction& instr) override; //!< Setup RISCMultiVectorRegisterOperand data traits.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of the appropriate OperandConstraint object.
     const std::string GetNextRegisterName(uint32& indexVar) const; //!< Return the name of the next register in the list.
     ChoicesFilter* GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return the choices filter.

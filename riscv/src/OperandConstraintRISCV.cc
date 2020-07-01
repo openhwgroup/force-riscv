@@ -103,61 +103,6 @@ namespace Force {
     //LOG(notice) << " constraints (with reserved regs removed): " << mpConstraintSet->ToSimpleString() << endl;
   }
 
-  
-  void VectorDataTraits::SetTraits(const std::string& choiceText)
-  {
-    mTypeName = choiceText;
-    if (choiceText == "8B") {
-      mLanes = 8;
-      mElementSize = 1;
-    }
-    else if (choiceText == "16B" || choiceText == "B") {
-      mLanes = 16;
-      mElementSize = 1;
-    }
-    else if (choiceText == "4H") {
-      mLanes = 4;
-      mElementSize = 2;
-    }
-    else if (choiceText == "8H" || choiceText == "H") {
-      mLanes = 8;
-      mElementSize = 2;
-    }
-    else if (choiceText == "2S") {
-      mLanes = 2;
-      mElementSize = 4;
-    }
-    else if (choiceText == "4S" || choiceText == "S") {
-      mLanes = 4;
-      mElementSize = 4;
-    }
-    else if (choiceText == "1D") {
-      mLanes = 1;
-      mElementSize = 8;
-    }
-    else if (choiceText == "2D" || choiceText == "D") {
-      mLanes = 2;
-      mElementSize = 8;
-    }
-    else if (choiceText == "1Q") {
-      mLanes = 1;
-      mElementSize = 16;
-    }
-    else if (choiceText == "4B") {
-      mLanes = 4;
-      mElementSize = 1;
-    }
-    else if (choiceText == "2H") {
-        mLanes = 2;
-        mElementSize = 2;
-    }
-    else {
-      LOG(error) << "Unhandled data type \"" << choiceText << "\"." << endl;
-    }
-
-    mVectorSize = mLanes * mElementSize;
-  }
-
   void ConditionalBranchOperandRISCVConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
   {
     PcRelativeBranchOperandConstraint::Setup(gen, instr, operandStruct);

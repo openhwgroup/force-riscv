@@ -69,7 +69,6 @@ namespace Force {
 
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());
-    obj_registry->RegisterObject(new VectorInstruction());
     obj_registry->RegisterObject(new VectorLoadStoreInstruction());
   }
 

@@ -177,11 +177,6 @@ namespace Force {
     return new VectorDataTypeOperandConstraint();
   }
 
-  void VectorDataTypeOperand::SetDataTraits(VectorDataTraits& dataTraits) const
-  {
-    dataTraits.SetTraits(mChoiceText);
-  }
-
   OperandConstraint* CompressedConditionalBranchOperandRISCV::InstantiateOperandConstraint() const
   {
     return new CompressedConditionalBranchOperandConstraint();
@@ -327,20 +322,6 @@ namespace Force {
     out_str << " }";
 
     return out_str.str();
-  }
-
-  void RISCMultiVectorRegisterOperand::SetupDataTraits(Generator& gen, Instruction& instr)
-  {
-    auto opr_constr_ptr = static_cast<RISCVectorRegisterOperandConstraint*>(mpOperandConstraint);
-    auto instr_constr_ptr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
-
-    if (nullptr == instr_constr_ptr) {
-      LOG(fail) << "{SetupDataTraits} expecting instruction \"" << instr.FullName() << "\" to be \"VectorInstruction\" type." << endl;
-      FAIL("incorrect-instruction-type");
-    }
-    opr_constr_ptr->SetDataTraits(instr_constr_ptr->DataTraits());
-    
-    mDataType = opr_constr_ptr->DataTraits()->mTypeName;
   }
 
   OperandConstraint* RISCMultiVectorRegisterOperand::InstantiateOperandConstraint() const

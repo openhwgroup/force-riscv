@@ -128,6 +128,7 @@ namespace Force {
     RegisterObject(new LoadStoreInstruction());
     RegisterObject(new SystemCallInstruction());
     RegisterObject(new UnpredictStoreInstruction());
+    RegisterObject(new VectorInstruction());
 
     // Operand based objects
     RegisterObject(new ImmediateOperand());

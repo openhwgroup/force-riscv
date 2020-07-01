@@ -82,36 +82,17 @@ namespace Force {
     }
   };
   
-  /*!
-    \struct VectorDataTraits
-    \brief Data traits of SIMD vector
-  */
-  struct VectorDataTraits {
-    std::string mTypeName; //!< Data type name.
-    uint32 mLanes; //!< Number of lanes.
-    uint32 mElementSize; //!< Element size in bytes.
-    uint32 mVectorSize; //!< Total vector size in bytes.
-    bool mIsFP; //!< Is data in floating point format.
-
-    VectorDataTraits() : mTypeName(), mLanes(0), mElementSize(0), mVectorSize(0), mIsFP(false) { } //!< Constructor.
-    void SetTraits(const std::string& choiceText); //!< Set vector data traits given the choice name.
-  };
-
   class RISCVectorRegisterOperandConstraint : public VectorRegisterOperandConstraint {
   public:
-    RISCVectorRegisterOperandConstraint() : VectorRegisterOperandConstraint(), mpDataTraits(nullptr) { } //!< Constructor.
+    RISCVectorRegisterOperandConstraint() : VectorRegisterOperandConstraint() { } //!< Constructor.
     ~RISCVectorRegisterOperandConstraint() { } //!< Destructor.
     ASSIGNMENT_OPERATOR_ABSENT(RISCVectorRegisterOperandConstraint);
     void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints.
-    void SetDataTraits(const VectorDataTraits* vecDataTraits) { mpDataTraits = vecDataTraits; } //!< Set pointer to data traits object.
-    const VectorDataTraits* DataTraits() const { return mpDataTraits; } //!< Return pointer to data traits object.
   protected:
     RISCVectorRegisterOperandConstraint(const RISCVectorRegisterOperandConstraint& rOther) //!!< Copy constructor, not meant to be used.
-      : VectorRegisterOperandConstraint(rOther), mpDataTraits(nullptr)
+      : VectorRegisterOperandConstraint(rOther)
     {
     }
-
-    const VectorDataTraits* mpDataTraits; //!< Pointer to vector data traits object.
   };
 
   /*!
