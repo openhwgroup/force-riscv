@@ -51,6 +51,11 @@ def v_ext_adjust_instruction_by_format(aInstruction):
         return adjust_rd_rs1_rs2(aInstruction)
     elif instruction_format == 'rd-rs1-zimm[10:0]':
         return adjust_rd_rs1_zimm_10_0(aInstruction)
+    # vl<nf>r/vs<nf>r instructions
+    elif instruction_format == 'vd-rs1':
+        return adjust_vd_rs1(aInstruction)
+    elif instruction_format == 'vs3-rs1':
+        return adjust_vs3_rs1(aInstruction)
     else:
         record_instruction_format(instruction_format)
 
@@ -66,6 +71,18 @@ def add_layout_operand(aInstruction):
     if aInstruction.name not in ('VSETVL', 'VSETVLI'):
         operand_adjustor = VectorOperandAdjustor(aInstruction)
         operand_adjustor.add_vtype_layout_operand()
+
+def adjust_vd_rs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_rs1_sp()
+    return True
+
+def adjust_vs3_rs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vs3()
+    operand_adjustor.set_rs1_sp()
+    return True
 
 def adjust_rd_rs1_rs2(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)

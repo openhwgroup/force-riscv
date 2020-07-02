@@ -56,6 +56,11 @@ class VectorOperandAdjustor(OperandAdjustor):
         vs2_opr.access = 'Read'
         self.set_reg_vec(vs2_opr)
 
+    def set_vs3(self):
+        vs3_opr = self.mInstr.find_operand('vs3')
+        vs3_opr.access = 'Read'
+        self.set_reg_vec(vs3_opr)
+
     def set_vdrd_int(self):
         vdrd_opr = self.mInstr.find_operand('vd/rd')
         if vdrd_opr.name in self.rd_dictionary:
