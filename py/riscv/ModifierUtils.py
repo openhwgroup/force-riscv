@@ -24,7 +24,7 @@ class PageFaultModifier(ChoicesModifier):
         self._mValidFaultTypes = [
                 'Invalid Descriptor',
                 'Misaligned Superpage',
-                'Last Level Pointer',
+                #'Last Level Pointer',
                 #'Va Address Error',
                 #'Invalid DA',
                 #'Invalid XWR',
@@ -104,5 +104,5 @@ class PageFaultModifier(ChoicesModifier):
 
     def updateSuperpageSizeChoices(self, aWeight):
         choice_name = 'Page size#4K granule#S#stage 1'
-        choice_dict = {'4K':100-aWeight, '2M':aWeight, '1G':aWeight, '512G':aWeight}
+        choice_dict = {'4K':101-aWeight, '2M':aWeight, '1G':aWeight, '512G':aWeight}
         self.modifyPagingChoices(choice_name, choice_dict)
