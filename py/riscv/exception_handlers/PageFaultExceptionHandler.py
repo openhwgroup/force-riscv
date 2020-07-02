@@ -98,11 +98,15 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         # is the faulting address properly sign extended?...
 
+        self.mAssemblyHelper.logDebugSymbol('PAGE_FAULT_HANDLER entered...')
+
         self.callRoutine('CheckFaultAddress')  # returns 0 if successful
             
+        self.mAssemblyHelper.logDebugSymbol('Return from CheckFaultAddress.')
+        
         (rcode_reg_index,scratch_reg_index) = handler_regs.RegisterSet( ['rcode', 'scratch_reg'] )
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
-        self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 26, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 24, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
 
         # faulting address seems to be okay. lets move on...
         
@@ -110,24 +114,28 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         handler_subroutine_generator = handler_context.mMemBankHandlerRegistry.mHandlerSubroutineGenerator
 
-        if handler_subroutine_generator.hasGeneratedRoutine('TableWalk'):  # remoce once riscv table walk is in place
-            handler_subroutine_generator.callRoutine('TableWalk')
-        else:
-            # work around(?) 'til table-walk code in place...
-            (scratch_reg_index, priv_level_reg_index) = handler_regs.RegisterSet( ['scratch_reg', 'priv_level'] )
-            self.mAssemblyHelper.genIncrementExceptionReturnAddress(scratch_reg_index, priv_level_reg_index)
-            self.mAssemblyHelper.genRelativeBranchToLabel(16, 'PAGE_FAULT_HANDLER_EXIT')
-
-        # pick up TableWalk subroutine 'return values'...
-
+        self.mAssemblyHelper.logDebugSymbol('Calling TableWalk...')
+        
         pte_level_reg_index = handler_regs.RegisterIndex('pte_level')
-        self.mHandlerStack.pop(pte_level_reg_index)  # 3rd argument (pte level register index) should have been pushed onto exceptions stack
-                                                     # need to get its value and remove it from the stack
+        ec_code_reg_index   = handler_regs.RegisterIndex('ec_code')
+        
+        handler_subroutine_generator.callRoutine('TableWalk')
 
+        self.mAssemblyHelper.genMoveRegister(pte_level_reg_index,ec_code_reg_index)
+
+        self.mAssemblyHelper.logDebugSymbol('Return from TableWalk.')
+
+        self.mAssemblyHelper.logDebugSymbol('After TableWalk,pte level reg: x%d' % pte_level_reg_index)
+        
         # after table-walk, we now know what page table level the error occurred on, and thus the page-table-entry type, and can proceed
         # with identifying/correcting the fault, if possible...
-        
+
+        (pte_reg_index, pet_level_reg_index) = handler_regs.RegisterSet( ['pte_value', 'pte_level'] )
+        self.mAssemblyHelper.logDebugSymbol('Calling ClearPageFault... pte reg: x%d, pte level x%d' % (pte_reg_index, pte_level_reg_index))
+
         self.callRoutine('ClearPageFault')
+
+        self.mAssemblyHelper.logDebugSymbol('Returned from ClearPageFault.')
 
         self.mAssemblyHelper.addLabel('PAGE_FAULT_HANDLER_EXIT')
         self.mHandlerStack.freeStackFrame() # restore 'handler-saved' registers,
@@ -167,7 +175,9 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.debug('[PageFaultExceptionHandlerRISC] clear page fault code address: 0x%x' % self.getPEstate('PC'))
         
         self.mAssemblyHelper.clearLabels('CheckFaultAddress')
-        
+
+        self.mAssemblyHelper.logDebugSymbol('CheckFaultAddress entered...')
+
         (sign_bit_reg_index, stval_reg_index, rcode_reg_index, scratch_reg_index, scratch_reg2_index, addr_mask_reg_index ) = handler_regs.RegisterSet( [ 'sign_bit', 'stval', 'rcode', 'scratch_reg', 'scratch_reg2', 'scratch_reg3' ] )
 
         self.privilegeLevel = handler_context.mPrivLevel
@@ -256,6 +266,8 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.privilegeLevel = handler_context.mPrivLevel
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
+
+        self.mAssemblyHelper.logDebugSymbol('ClearPageFault entered, pte reg: x%d, pte level x%d' % (pte_reg_index, pte_level_reg_index) )
 
         # get faulting address...
 

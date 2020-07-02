@@ -107,8 +107,9 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         self.mAssemblyHelper.genMoveRegister(self._mR1, self._mWalkLevelRegIndex)
         self._popExceptionSpecificRegisters()
 
-        #transfer fault level back to page fault handler via stack
-        self._mExceptionsStack.push(self._mR1)
+        #transfer fault level back to page fault handler via error code register
+        ec_code_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.EC_VALUE)
+        self.mAssemblyHelper.genMoveRegister(ec_code_reg_index, self._mR1)
 
         self.mAssemblyHelper.genReturn()
 
