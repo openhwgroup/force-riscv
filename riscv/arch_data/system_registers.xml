@@ -1447,7 +1447,7 @@
         <bit_field shift="2" size="3"/>
       </register_field>
     </register>
-    <register boot="1" index="0xc22" name="vlenb" size="64" type="SysReg">
+    <register boot="1" class="ReadOnlyRegister" index="0xc22" name="vlenb" size="64" type="SysReg">
       <register_field name="VLENB" physical_register="vlenb" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>

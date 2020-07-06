@@ -55,7 +55,12 @@ namespace Force {
 
     for (auto reg_ptr : regList)
     {
-      mRegisterList.push_back(new RegisterElement(reg_ptr));
+      if (reg_ptr->IsLargeRegister()) {
+        mRegisterList.push_back(new LargeRegisterElement(reg_ptr));
+      }
+      else {
+        mRegisterList.push_back(new RegisterElement(reg_ptr));
+      }
     }
   }
 
@@ -119,9 +124,7 @@ namespace Force {
         case ERegisterType::SysReg: //TODO add custom SysReg ordering/processing if necessary
         {
          // << "{BootOrderRISCV::AdjustOrder} sysreg name=" << reg_name << endl;
-          //Swap any system registers to a sublist we maintain in the front
-          auto sys_reg_list_end = next(mRegisterList.begin(), num_sys_regs++);
-          iter_swap(it, sys_reg_list_end);
+          InsertSystemRegister(it, num_sys_regs);
 
           //Since we don't want to revisit any registers, advance our place in the list as normal.
           ++it;
@@ -160,5 +163,26 @@ namespace Force {
   //{
     // TODO add instruction barrier if necessary.
   //}
+
+  void BootOrderRISCV::InsertSystemRegister(const list<BootElement*>::iterator& rBootElemItr, size_t& numSysRegs)
+  {
+    // Swap any system registers to a sublist we maintain in the front
+    auto sys_reg_list_end = next(mRegisterList.begin(), numSysRegs++);
+    iter_swap(rBootElemItr, sys_reg_list_end);
+
+    // vtype needs to be initialized before vl, so make sure vtype is first in the list
+    Register* reg = (*sys_reg_list_end)->GetRegister();
+    if (reg->Name() == "vtype") {
+      auto vl_itr = find_if(mRegisterList.begin(), mRegisterList.end(),
+        [](const BootElement* pBootElem) {
+          Register* reg = pBootElem->GetRegister();
+          return (reg->Name() == "vl");
+        });
+
+      if (vl_itr != mRegisterList.end()) {
+        iter_swap(vl_itr, sys_reg_list_end);
+      }
+    }
+  }
 
 }

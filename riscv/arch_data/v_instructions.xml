@@ -2670,4 +2670,13 @@
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
     <asm format="VXOR.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
+  <I name="VL1R.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010001110000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="RISCMultiVectorRegisterOperand"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL1R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
 </instruction_file>

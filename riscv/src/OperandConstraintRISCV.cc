@@ -298,9 +298,6 @@ namespace Force {
       LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << multi_ptr->Name() << " to be \"MultiRegisterOperand\" type." << endl;
       FAIL("expecting-register_operand");
     }
-
-    LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand to be \"ChoicesOperand\" type." << endl;
-    FAIL("expecting-choices_operand");
   }
 
 }

@@ -1349,7 +1349,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Vector data type register." index="0xc21" name="vtype" physical_register="vtype" privilege="URO" size="64" type="SysReg" choice="false">
+  <register description="Vector data type register." index="0xc21" name="vtype" physical_register="vtype" privilege="URW" size="64" type="SysReg" choice="true">
     <register_field name="VILL" size="1" init_policy="VtypeInitPolicy">
       <bit_field shift="63" size="1"/>
     </register_field>
@@ -1382,7 +1382,7 @@ Add RISCV system registers starter information in this file.
       <choice description="1028-bit elements" value="0x7" weight="0"/>
     </register_field>
   </register>
-  <register description="VLEN/8 (vector register length in bytes)." index="0xc22" name="vlenb" physical_register="vlenb" privilege="URO" size="64" type="SysReg" choice="false">
+  <register description="VLEN/8 (vector register length in bytes)." class="ReadOnlyRegister" index="0xc22" name="vlenb" physical_register="vlenb" privilege="URO" size="64" type="SysReg" choice="false">
     <register_field name="VLENB" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>

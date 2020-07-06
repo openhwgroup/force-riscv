@@ -206,6 +206,9 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
     else:
         register.set('boot', '0')
 
+    if aRegister.get('class') and (aRegister.get('class') != 'ConfigureRegister'):
+        register.set('class', aRegister.get('class'))
+
     if aRegister.get('init_policy'):
         register.set('init_policy', aRegister.get('init_policy'))
 
@@ -233,7 +236,7 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
         physical_register.set('name', aRegister.get('physical_register', aRegister.get('name')))
         physical_register.set('size', '64' if str(aRegister.get('size')) == '0' else aRegister.get('size'))
         physical_register.set('type', aRegister.get('type'))
-        if aRegister.get('class'):
+        if aRegister.get('class') == 'ConfigureRegister':
             physical_register.set('class', aRegister.get('class'))
         aPhysicalRegisters.append(physical_register)
 

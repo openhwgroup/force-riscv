@@ -187,6 +187,7 @@
     <choice description="URO; Performance-monitoring counter." name="hpmcounter29" value="0xc1d" weight="0"/>
     <choice description="URO; Performance-monitoring counter." name="hpmcounter30" value="0xc1e" weight="0"/>
     <choice description="URO; Performance-monitoring counter." name="hpmcounter31" value="0xc1f" weight="0"/>
+    <choice description="URW; Vector data type register." name="vtype" value="0xc21" weight="0"/>
     <choice description="HRO; Hypervisor guest external interrupt pending." name="hgeip" value="0xe07" weight="0"/>
     <choice description="MRO; Vendor ID." name="mvendorid" value="0xf11" weight="0"/>
     <choice description="MRO; Architecture ID." name="marchid" value="0xf12" weight="0"/>
@@ -333,5 +334,6 @@
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter29" value="0xb1d" weight="0"/>
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter30" value="0xb1e" weight="0"/>
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter31" value="0xb1f" weight="0"/>
+    <choice description="URW; Vector data type register." name="vtype" value="0xc21" weight="0"/>
   </choices>
 </choices_file>

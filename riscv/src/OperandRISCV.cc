@@ -18,6 +18,7 @@
 #include <AddressSolver.h>
 #include <BntNode.h>
 #include <ChoicesFilter.h>
+#include <Config.h>
 #include <Constraint.h>
 #include <GenException.h>
 #include <GenRequest.h>
@@ -240,10 +241,13 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
 
-    const RegisterFile* reg_file = rGen.GetRegisterFile();
-    Register* vlenb_reg = reg_file->RegisterLookup("vlenb");
-    vec_layout.mElemCount = vlenb_reg->Value();
     vec_layout.mElemSize = 8;
+
+    // TODO(Noah): Replace the vector length configuration value with the value of vlenb when it
+    // becomes possible to read vlenb from the simulator and if it is determined to be a better
+    // approach.
+    vec_layout.mElemCount = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / vec_layout.mElemSize;
+
     vec_layout.mRegCount = 1;
 
     instr_constr->SetVectorLayout(vec_layout);
