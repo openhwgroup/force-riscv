@@ -187,7 +187,7 @@
     <physical_register index="0xc1f" name="hpmcounter31" size="64" type="SysReg"/>
     <physical_register index="0xc20" name="vl" size="64" type="SysReg"/>
     <physical_register index="0xc21" name="vtype" size="64" type="SysReg"/>
-    <physical_register index="0xc22" name="vlenb" size="64" type="SysReg"/>
+    <physical_register index="0xc22" name="vlenb" reset="0x10" size="64" type="SysReg"/>
     <physical_register index="0xe07" name="hgeip" size="64" type="SysReg"/>
     <physical_register index="0xf11" name="mvendorid" size="32" type="SysReg"/>
     <physical_register index="0xf12" name="marchid" size="64" type="SysReg"/>

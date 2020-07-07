@@ -238,6 +238,10 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
         physical_register.set('type', aRegister.get('type'))
         if aRegister.get('class') == 'ConfigureRegister':
             physical_register.set('class', aRegister.get('class'))
+
+        if aRegister.get('reset'):
+            physical_register.set('reset', aRegister.get('reset'))
+
         aPhysicalRegisters.append(physical_register)
 
     aRegisterFile.append(register)
