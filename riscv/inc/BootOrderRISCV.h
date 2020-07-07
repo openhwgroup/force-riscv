@@ -43,7 +43,7 @@ namespace Force {
     BootOrderRISCV(const BootOrderRISCV& rOther); //!< Copy constructor.
     //void AppendInstructionBarrier(std::vector<GenRequest*>& rRequests) override; //!< Append instruction barrier.
   private:
-    void InsertSystemRegister(const std::list<BootElement*>::iterator& rBootElemItr, size_t& numSysRegs);
+    void InsertSystemRegister(const std::list<BootElement*>::iterator& rBootElemItr, size_t& numSysRegs); //!< Move the specified system register boot element into the appropriate place in the boot element list.
   };
 
 }

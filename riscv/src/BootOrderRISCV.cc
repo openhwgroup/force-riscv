@@ -170,7 +170,7 @@ namespace Force {
     auto sys_reg_list_end = next(mRegisterList.begin(), numSysRegs++);
     iter_swap(rBootElemItr, sys_reg_list_end);
 
-    // vtype needs to be initialized before vl, so make sure vtype is first in the list
+    // vtype needs to be initialized before vl, so make sure vtype precedes vl in the list
     Register* reg = (*sys_reg_list_end)->GetRegister();
     if (reg->Name() == "vtype") {
       auto vl_itr = find_if(mRegisterList.begin(), mRegisterList.end(),
