@@ -37,11 +37,12 @@ class PageFaultSequence(Sequence):
 
         self.generatePreFaultInstructions()
 
-        self.notice("Applying all level and exception level page fault choices")
+        self.notice("Applying all valid level and exception level page fault choices")
         page_fault_mod = self.createPageFaultModifier()
-        page_fault_mod.apply(**{"All":1})
-        #page_fault_mod.apply(**{"Type":"Invalid Descriptor"})
-        #page_fault_mod.apply(**{"Type":"Misaligned Superpage"})
+        #page_fault_mod.apply(**{"All":1})
+        page_fault_mod.apply(**{"Type":"Invalid Descriptor"})
+        page_fault_mod.apply(**{"Type":"Misaligned Superpage"})
+        #page_fault_mod.apply(**{"Type":"Last Level Pointer"})
 
         instruction_list = self.getInstructionList()
         instr_count = 0

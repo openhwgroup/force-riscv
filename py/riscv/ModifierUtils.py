@@ -24,7 +24,7 @@ class PageFaultModifier(ChoicesModifier):
         self._mValidFaultTypes = [
                 'Invalid Descriptor',
                 'Misaligned Superpage',
-                #'Last Level Pointer',
+                'Last Level Pointer',
                 #'Va Address Error',
                 #'Invalid DA',
                 #'Invalid XWR',
