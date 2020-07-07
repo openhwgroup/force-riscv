@@ -291,13 +291,6 @@ namespace Force {
       LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
       FAIL("expecting-register_operand");
     }
-    //TODO: properly address the MultiRegisterOperand
-    auto multi_ptr = instr.FindOperand("vd");
-    mpMultiRegisterOperand = dynamic_cast<const MultiRegisterOperand* >(multi_ptr);
-    if (nullptr == mpMultiRegisterOperand) {
-      LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << multi_ptr->Name() << " to be \"MultiRegisterOperand\" type." << endl;
-      FAIL("expecting-register_operand");
-    }
   }
 
 }

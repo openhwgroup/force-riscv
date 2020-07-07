@@ -35,6 +35,13 @@ class VectorOperandAdjustor(OperandAdjustor):
         layout_opr.oclass = "VtypeLayoutOperand"
         self.mInstr.insert_operand(0, layout_opr)
 
+    def add_whole_register_layout_operand(self):
+        layout_opr = Operand()
+        layout_opr.name = "B"
+        layout_opr.type = "Immediate"
+        layout_opr.oclass = "WholeRegisterLayoutOperand"
+        self.mInstr.insert_operand(0, layout_opr)
+
     def set_reg_vec(self, aOperand):
         aOperand.type = "VECREG" #TODO: some might possibly be SIMDVR or FPR
         aOperand.choices = "Vector registers"
@@ -61,6 +68,11 @@ class VectorOperandAdjustor(OperandAdjustor):
         vs3_opr.access = 'Read'
         self.set_reg_vec(vs3_opr)
 
+    def set_vs3_ls_source(self):
+        vs3_opr = self.mInstr.find_operand('vs3')
+        vs3_opr.oclass = 'RISCMultiVectorRegisterOperand'
+        self.set_vs3()
+
     def set_vdrd_int(self):
         vdrd_opr = self.mInstr.find_operand('vd/rd')
         if vdrd_opr.name in self.rd_dictionary:
@@ -75,6 +87,11 @@ class VectorOperandAdjustor(OperandAdjustor):
         vd_opr = self.mInstr.find_operand('vd')
         vd_opr.access = 'Write'
         self.set_reg_vec(vd_opr)
+
+    def set_vd_ls_dest(self):
+        vd_opr = self.mInstr.find_operand('vd')
+        vd_opr.oclass = 'RISCMultiVectorRegisterOperand'
+        self.set_vd()
 
     def set_vdrd_sp(self):
         vdrd_opr = self.mInstr.find_operand('vd/rd')

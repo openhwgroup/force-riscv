@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from shared.instruction import add_addressing_operand
 from vector_operand_adjustor import VectorOperandAdjustor
 from xml.sax.saxutils import escape
 
@@ -68,20 +69,47 @@ def record_instruction_format(aInstructionFormat):
         format_map[aInstructionFormat] = 1
 
 def add_layout_operand(aInstruction):
-    if aInstruction.name not in ('VSETVL', 'VSETVLI'):
+    if aInstruction.name not in ('VSETVL', 'VSETVLI', 'VL1R.V', 'VS1R.V'):
         operand_adjustor = VectorOperandAdjustor(aInstruction)
         operand_adjustor.add_vtype_layout_operand()
+    elif aInstruction.name in ('VL1R.V', 'VS1R.V'):
+        operand_adjustor = VectorOperandAdjustor(aInstruction)
+        operand_adjustor.add_whole_register_layout_operand()
 
 def adjust_vd_rs1(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd()
-    operand_adjustor.set_rs1_sp()
+    operand_adjustor.set_vd_ls_dest()
+    operand_adjustor.set_rs1_int_ls_base()
+
+    attr_dict = dict()
+    subop_dict = dict()
+    subop_dict["base"] = "rs1"
+    attr_dict["alignment"] = 1
+    attr_dict["base"] = "rs1"
+    attr_dict["data-size"] = 1
+    attr_dict["element-size"] = 1
+    attr_dict["mem-access"] = "Read"
+
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+
     return True
 
 def adjust_vs3_rs1(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3()
-    operand_adjustor.set_rs1_sp()
+    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_rs1_int_ls_base()
+
+    attr_dict = dict()
+    subop_dict = dict()
+    subop_dict["base"] = "rs1"
+    attr_dict["alignment"] = 1
+    attr_dict["base"] = "rs1"
+    attr_dict["data-size"] = 1
+    attr_dict["element-size"] = 1
+    attr_dict["mem-access"] = "Read"
+
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+
     return True
 
 def adjust_rd_rs1_rs2(aInstruction):
