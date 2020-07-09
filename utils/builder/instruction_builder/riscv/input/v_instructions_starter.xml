@@ -964,29 +964,44 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VMAXU.VX"/>
   </I>
-  <I name="VMERGE/VMV.VI" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101110111010111"/>
+  <I name="VMERGE.VIM" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01011100111010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="simm5" type="Immediate" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VMERGE/VMV.VI"/>
+    <asm format="VMERGE.VIM"/>
   </I>
-  <I name="VMERGE/VMV.VV" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101110001010111"/>
+  <I name="VMERGE.VVM" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01011100001010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VMERGE/VMV.VV"/>
+    <asm format="VMERGE.VVM"/>
   </I>
-  <I name="VMERGE/VMV.VX" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0101111001010111"/>
+  <I name="VMERGE.VXM" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01011101001010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VMERGE/VMV.VX"/>
+    <asm format="VMERGE.VXM"/>
+  </I>
+  <I name="VMV.V.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0101111000000001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <asm format="VMV.V.V"/>
+  </I>
+  <I name="VMV.V.X" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0101111000001001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VMV.V.X"/>
+  </I>
+  <I name="VMV.V.I" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0101111000000111010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="simm5" type="Immediate" bits="19-15"/>
+    <asm format="VMV.V.I"/>
   </I>
   <I name="VMFEQ.VF" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110001011010111"/>
