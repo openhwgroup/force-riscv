@@ -29,8 +29,7 @@ make_dir:
 
 .PHONY: registers
 registers: system_registers system_register_choices register_field_choices
-	@echo 'Building Registers: all'
-	@$(REGISTER_BUILDER)
+	@echo Done
 
 .PHONY: system_registers
 system_registers: $(REGISTER_BUILDER)

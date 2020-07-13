@@ -12,27 +12,32 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
-# Introduction to the Register Modification Script
+# Introduction to the Register Builder script, with register modification script option.
 
-    NOTICE: The modification script still works, but most of the functionality is being merged into the new register builder script.
+    NOTICE: The modification script functionality has been merged into the register builder script.
 
-This register builder is used to create system register files. The starting point is input/system_registers_starter.xml file which is maintained by manual editing, then uses modification scripts to edit those base files.
+    The register builder is used to create system register files. The starting point is the system registers 'starter' file (default is input/system_registers_starter.xml),
+    which is maintained by manual editing.
+    
+    In addition to the starter file, a modification script may be used to edit in changes, to the system register files produced from processing the starter file.
 
 Files:
 
-    BootPriority.py - Contains a structure (containing an if statement) that selects proper boot priority (via name or type)
-    ModifyRegisterFile.py - Controls the command line input for modifying the register file
-    register_builder.py - Read the starter XML file, output necessary register files and choices files
-    register_changes/ - Location for all register change modification files; currently only contains the change file needed for initial bring up of the system
-    RiscVRegDef.py - Actual register definition file used to modify registers, register choices, and field choices
+    register_builder.py - Read the starter XML file, output necessary register files and choices files, apply modifications.
+    
+    The register builder script relies on the following files:
+
+    	BootPriority.py - Contains a structure (containing an if statement) that selects proper boot priority (via name or type)
+    	ModifyRegisterFile.py - Controls the command line input for modifying the register file
+    	RiscVRegDef.py - Actual register definition file used to modify registers, register choices, and field choices
+
+    	register_changes/ - Location for all register change modification files. At this time, all register modification scripts must reside in the register_changes sub-directory.
 
 How to run modification scripts:
 
-    Command line: ./ModifyRegisterFile.py --system path/to/register_file.xml --register_choices path/to/register_choices.xml --data update.py
-    
-    where the system option specifies the system tree
-          the register_choices option specifies the choices tree
-          the data option specifies the modification script (automatically looks in the register_changes/ directory)
+    A modification script may be specified as an command line option to the register_builder.py script. Use './register_builder -h' to view usage, including how to specify a
+    modification script.
+
 
 How to use modification scripts:
 

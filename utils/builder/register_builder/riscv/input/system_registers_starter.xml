@@ -115,8 +115,25 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Fixed-point Saturate Flag." index="0x9" name="vxsat" physical_register="fcsr" privilege="URW" size="64" type="SysReg" choice="false"/>
-  <register description="Vector start position." index="0xa" name="vxrm" physical_register="fcsr" privilege="URW" size="64" type="SysReg" choice="false"/>
+  
+  <register description="Fixed-point Saturate Flag." index="0x9" name="vxsat" physical_register="vxsat" privilege="URW" size="64" type="SysReg" choice="false">
+    <register_field name="RESERVED" size="63">
+      <bit_field shift="1" size="63"/>
+    </register_field>
+    <register_field name="VXSAT" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+    
+  <register description="Vector start position." index="0xa" name="vxrm" physical_register="vxrm" privilege="URW" size="64" type="SysReg" choice="false">
+    <register_field name="RESERVED" size="62">
+      <bit_field shift="2" size="62"/>
+    </register_field>
+    <register_field name="VXRM" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+
   <register description="Scratch register for user trap handlers." index="0x40" name="uscratch" physical_register="uscratch" privilege="URW" size="64" type="SysReg">
     <register_field name="SCRATCH" size="64">
       <bit_field shift="0" size="64"/>
@@ -990,7 +1007,7 @@ Add RISCV system registers starter information in this file.
     <register_field name="VSXL" size="2">
       <bit_field shift="32" size="2"/>
     </register_field>
-    <register_field name="WPRI" size="18">
+    <register_field name="WPRI" size="19">
       <bit_field shift="23" size="9"/>
       <bit_field shift="21" size="1"/>
       <bit_field shift="18" size="2"/>
