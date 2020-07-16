@@ -55,10 +55,8 @@ namespace Force
       }
     }
 
-    auto choices_raw = rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid Descriptor", level);
-    std::unique_ptr<ChoiceTree> choices_tree(choices_raw);
-    auto chosen_ptr = choices_tree->Choose();
-    auto chosen_value = chosen_ptr->Value();
+    std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid Descriptor", level));
+    auto chosen_value = choices_tree->Choose()->Value();
     if (chosen_value != 1) // page translation fault is selected
     {
       rPte.SetPageGenAttribute(EPageGenAttributeType::Invalid, 1);
@@ -126,12 +124,20 @@ namespace Force
 
   void XPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
   {
+    uint32 level = rPte.ParentTableLevel();
+    uint32 last_level_ptr_fault = 0;
+    if (level == 0)
+    {
+      std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
+      last_level_ptr_fault = choices_tree->Choose()->Value();
+    }
+
     auto mem_access = rPagingReq.MemoryAccessType();
     //bool user_access = (rVmas.GetControlBlock()->PrivilegeLevel() == EPrivilegeLevelType::U);
     bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
     uint32 iap = 0;
 
-    LOG(trace) << "{RPteAttributeRISCV::Generate} user_access=" << user_access << endl;
+    LOG(trace) << "{XPteAttributeRISCV::Generate} user_access=" << user_access << endl;
 
     switch (mem_access)
     {
@@ -156,16 +162,30 @@ namespace Force
         FAIL("x_pte_gen_invalid_mem_access");
         break;
     }
+
+    if (last_level_ptr_fault != 0)
+    {
+      mValue = 0;
+      LOG(info) << "{XPteAttributeRISCV::Generate} overriding x to 0 for last level ptr fault" << endl;
+    }
   }
 
   void WPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
   {
+    uint32 level = rPte.ParentTableLevel();
+    uint32 last_level_ptr_fault = 0;
+    if (level == 0)
+    {
+      std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
+      last_level_ptr_fault = choices_tree->Choose()->Value();
+    }
+
     auto mem_access = rPagingReq.MemoryAccessType();
     //bool user_access = (rVmas.GetControlBlock()->PrivilegeLevel() == EPrivilegeLevelType::U);
     bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
     uint32 dap = 0;
 
-    LOG(trace) << "{RPteAttributeRISCV::Generate} user_access=" << user_access << endl;
+    LOG(trace) << "{WPteAttributeRISCV::Generate} user_access=" << user_access << endl;
 
     switch (mem_access)
     {
@@ -191,10 +211,24 @@ namespace Force
         FAIL("w_pte_gen_invalid_mem_access");
         break;
     }
+    
+    if (last_level_ptr_fault != 0)
+    {
+      mValue = 0;
+      LOG(info) << "{WPteAttributeRISCV::Generate} overriding w to 0 for last level ptr fault" << endl;
+    }
   }
 
   void RPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
   {
+    uint32 level = rPte.ParentTableLevel();
+    uint32 last_level_ptr_fault = 0;
+    if (level == 0)
+    {
+      std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
+      last_level_ptr_fault = choices_tree->Choose()->Value();
+    }
+
     auto mem_access = rPagingReq.MemoryAccessType();
     //bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
     bool user_access = (rVmas.GetControlBlock()->PrivilegeLevel() == EPrivilegeLevelType::U);
@@ -225,6 +259,12 @@ namespace Force
         LOG(fail) << "{RPteAttributeRISCV::Generate} invalid or unsupported mem access type=" << EMemAccessType_to_string(mem_access) << endl;
         FAIL("r_pte_gen_invalid_mem_access");
         break;
+    }
+    
+    if (last_level_ptr_fault != 0)
+    {
+      mValue = 0;
+      LOG(info) << "{RPteAttributeRISCV::Generate} overriding r to 0 for last level ptr fault" << endl;
     }
   }
 

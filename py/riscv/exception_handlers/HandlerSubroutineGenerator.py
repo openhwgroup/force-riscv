@@ -211,12 +211,17 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         #check pte pointer
         self.mAssemblyHelper.genMoveImmediate(self._mR1, self.PTE_PTR_VAL)
         self.mAssemblyHelper.genAndImmediate(self._mR2, self.PTE_XWRV_MASK)
-        self.mAssemblyHelper.genConditionalBranchToLabel(self._mR2, self._mR1, 4, 'EQ', 'NEXT LEVEL WALK %d' % aCurLevel) 
+        self.mAssemblyHelper.genConditionalBranchToLabel(self._mR2, self._mR1, 4, 'EQ', 'LAST LEVEL CHECK %d' % aCurLevel) 
         
         #if PTE is a leaf node, we can return.
         self.mAssemblyHelper.genReturn()
 
         #otherwise, setup next level walk addr from descriptor ppn
+        self.mAssemblyHelper.addLabel('LAST LEVEL CHECK %d' % aCurLevel)
+        self.mAssemblyHelper.genConditionalBranchToLabel(self._mWalkLevelRegIndex, 0, 4, 'NE', 'NEXT LEVEL WALK %d' % aCurLevel)
+        #if this is a level 0 descriptor, return
+        self.mAssemblyHelper.genReturn()
+
         self.mAssemblyHelper.addLabel('NEXT LEVEL WALK %d' % aCurLevel)
         self.mAssemblyHelper.genAddImmediate(self._mWalkLevelRegIndex, 0xfff)
 
