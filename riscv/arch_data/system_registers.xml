@@ -22,6 +22,8 @@
     <physical_register index="0x4" name="uie" size="64" type="SysReg"/>
     <physical_register index="0x5" name="utvec" size="64" type="SysReg"/>
     <physical_register index="0x8" name="vstart" size="64" type="SysReg"/>
+    <physical_register index="0x9" name="vxsat" size="64" type="SysReg"/>
+    <physical_register index="0xa" name="vxrm" size="64" type="SysReg"/>
     <physical_register index="0x40" name="uscratch" size="64" type="SysReg"/>
     <physical_register index="0x41" name="uepc" size="64" type="SysReg"/>
     <physical_register index="0x42" name="ucause" size="64" type="SysReg"/>
@@ -292,8 +294,22 @@
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register boot="1" index="0x9" name="vxsat" size="64" type="SysReg"/>
-    <register boot="1" index="0xa" name="vxrm" size="64" type="SysReg"/>
+    <register boot="1" index="0x9" name="vxsat" size="64" type="SysReg">
+      <register_field name="RESERVED" physical_register="vxsat" size="63">
+        <bit_field shift="1" size="63"/>
+      </register_field>
+      <register_field name="VXSAT" physical_register="vxsat" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0xa" name="vxrm" size="64" type="SysReg">
+      <register_field name="RESERVED" physical_register="vxrm" size="62">
+        <bit_field shift="2" size="62"/>
+      </register_field>
+      <register_field name="VXRM" physical_register="vxrm" size="2">
+        <bit_field shift="0" size="2"/>
+      </register_field>
+    </register>
     <register boot="1" index="0x40" name="uscratch" size="64" type="SysReg">
       <register_field name="SCRATCH" physical_register="uscratch" size="64">
         <bit_field shift="0" size="64"/>
@@ -1107,7 +1123,7 @@
       <register_field name="VSXL" physical_register="hstatus" size="2">
         <bit_field shift="32" size="2"/>
       </register_field>
-      <register_field name="WPRI" physical_register="hstatus" size="18">
+      <register_field name="WPRI" physical_register="hstatus" size="19">
         <bit_field shift="23" size="9"/>
         <bit_field shift="21" size="1"/>
         <bit_field shift="18" size="2"/>
