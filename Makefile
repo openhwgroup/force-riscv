@@ -14,23 +14,23 @@
 # limitations under the License.
 #
 all:
-	@make riscv
-	@make fpix
+	@$(MAKE) riscv
+	@$(MAKE) fpix
 
 .PHONY: riscv
 riscv:
-	@cd riscv;make
+	@cd riscv; $(MAKE)
 
 
 .PHONY: fpix
 fpix:
-	@cd fpix;make
+	@cd fpix; $(MAKE)
 
 .PHONY: tests
 tests:
 	@rm -fr output
-	@cd riscv;make tests
-	@cd utils/regression/seedgen; make all
+	@cd riscv;$(MAKE) tests
+	@cd utils/regression/seedgen; $(MAKE) all
 
 .PHONY: enums
 enums:
