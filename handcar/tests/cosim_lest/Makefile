@@ -26,8 +26,8 @@ vpath %.cc src
 vpath %.d $(DEP_DIR)
 
 all:
-	@make make_dir
-	@make bin/initialize_and_terminate
+	@$(MAKE) make_dir
+	@$(MAKE) bin/initialize_and_terminate
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 -include $(ALL_DEPS)

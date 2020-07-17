@@ -28,8 +28,8 @@ enums:
 
 .PHONY: clean
 clean:
-	@cd riscv; make clean
-	cd plugins; make clean
+	@cd riscv; $(MAKE) clean
+	cd plugins; $(MAKE) clean
 
 .PHONY: plugins
 plugins:

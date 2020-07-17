@@ -29,7 +29,7 @@ fpix:
 .PHONY: tests
 tests:
 	@rm -fr output
-	@cd riscv;$(MAKE) tests
+	@cd riscv; $(MAKE) tests
 	@cd utils/regression/seedgen; $(MAKE) all
 
 .PHONY: enums
@@ -41,6 +41,6 @@ handlers:
 
 .PHONY: clean
 clean:
-	@cd riscv; make clean
-	@cd fpix; make clean
-	@cd utils/regression/seedgen; make clean
+	@cd riscv; $(MAKE) clean
+	@cd fpix; $(MAKE) clean
+	@cd utils/regression/seedgen; $(MAKE) clean

@@ -19,10 +19,10 @@ INSTALL_DIR=../../../../riscv/arch_data
 
 .PHONY: all
 all:
-	@make make_dir
-	@make instructions
-	@make install
-	@make clean
+	@$(MAKE) make_dir
+	@$(MAKE) instructions
+	@$(MAKE) install
+	@$(MAKE) clean
 
 .PHONY: make_dir
 make_dir:

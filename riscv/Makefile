@@ -35,7 +35,7 @@ vpath %.d $(DEP_DIR)
 all:
 	@$(MAKE) make_dir
 	@$(MAKE) ../bin/friscv
-	@cd ../utils/handcar;make
+	@cd ../utils/handcar; $(MAKE)
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 -include $(ALL_DEPS)
@@ -67,4 +67,4 @@ deps:
 clean:
 	rm -rf make_area
 	rm -f ../bin/friscv
-	@cd ../utils/handcar; make clean
+	@cd ../utils/handcar; $(MAKE) clean

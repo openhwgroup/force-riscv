@@ -20,10 +20,10 @@ ARCH_DATA_DIR=../../../../riscv/arch_data/
 
 .PHONY: all
 all:
-	@make setup
-	@make riscv_tests
-	@make install
-	@make clean
+	@$(MAKE) setup
+	@$(MAKE) riscv_tests
+	@$(MAKE) install
+	@$(MAKE) clean
 
 input:
 	@mkdir input
