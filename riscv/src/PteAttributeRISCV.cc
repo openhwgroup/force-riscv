@@ -120,6 +120,18 @@ namespace Force
         FAIL("da_pte_gen_invalid_mem_access");
         break;
     }
+    
+    uint32 level = rPte.ParentTableLevel();
+    uint32 fault_value = 1;
+
+    std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid DA", level));
+    fault_value = choices_tree->Choose()->Value();
+
+    if (fault_value != 1)
+    {
+      LOG(info) << "{DAPteAttributeRISCV::Generate} invalid DA bit fault generated value=0x" << hex << fault_value << endl;
+      mValue = fault_value;
+    }
   }
 
   void XPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)

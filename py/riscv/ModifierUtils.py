@@ -25,8 +25,8 @@ class PageFaultModifier(ChoicesModifier):
                 'Invalid Descriptor',
                 'Misaligned Superpage',
                 'Last Level Pointer',
+                'Invalid DA',
                 #'Va Address Error',
-                #'Invalid DA',
                 #'Invalid XWR',
                 ]
 
@@ -34,12 +34,14 @@ class PageFaultModifier(ChoicesModifier):
                 'Invalid Descriptor':[3,2,1,0],
                 'Misaligned Superpage':[3,2,1],
                 'Last Level Pointer':[0],
+                'Invalid DA':[0,1,2,3],
                 }
 
         self._mValidPrivilegeLevels = {
                 'Invalid Descriptor':['S'],
                 'Misaligned Superpage':['S'],
                 'Last Level Pointer':['S'],
+                'Invalid DA':['S'],
                 }
 
 

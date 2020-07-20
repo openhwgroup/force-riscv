@@ -101,6 +101,23 @@
     <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
 
+  <choices name="Invalid DA#level 3#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid DA#level 2#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid DA#level 1#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid DA#level 0#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+
   <choices name="Misaligned Superpage#level 3#S#stage 1" type="Paging">
     <choice description="valid address"   name="false" value="0x0" weight="100"/>
     <choice description="invalid address" name="true"  value="0x1" weight="0"/>
