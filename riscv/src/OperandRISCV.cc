@@ -218,7 +218,7 @@ namespace Force {
     return new CompressedRegisterOperandRISCVConstraint();
   }
 
-  void VtypeLayoutOperand::GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr)
+  void VtypeLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
@@ -236,7 +236,7 @@ namespace Force {
     instr_constr->SetVectorLayout(vec_layout);
   }
 
-  void WholeRegisterLayoutOperand::GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr)
+  void WholeRegisterLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
@@ -268,7 +268,7 @@ namespace Force {
     return new VectorLoadStoreOperandConstraint();
   }
 
-  void RISCMultiVectorRegisterOperand::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
+  void MultiVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
   {
     uint32 end_index = regIndex + NumberRegisters() - 1;
     if (end_index > 31) {
@@ -279,7 +279,7 @@ namespace Force {
     }
   }
 
-  void RISCMultiVectorRegisterOperand::GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const
+  void MultiVectorRegisterOperandRISCV::GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const
   {
     ConstraintSet reg_indices;
     MultiVectorRegisterOperand::GetChosenRegisterIndices(gen, reg_indices);
@@ -287,7 +287,7 @@ namespace Force {
     GetRegisterIndices(reg_indices.LowerBound(), rRegIndices);
   }
 
-  uint32 RISCMultiVectorRegisterOperand::NumberRegisters() const
+  uint32 MultiVectorRegisterOperandRISCV::NumberRegisters() const
   {
     //TODO
     //get vtype register
@@ -296,7 +296,7 @@ namespace Force {
     return 1;
   }
 
-  const std::string RISCMultiVectorRegisterOperand::AssemblyText() const
+  const std::string MultiVectorRegisterOperandRISCV::AssemblyText() const
   {
     stringstream out_str;
 
@@ -308,19 +308,19 @@ namespace Force {
     return out_str.str();
   }
 
-  OperandConstraint* RISCMultiVectorRegisterOperand::InstantiateOperandConstraint() const
+  OperandConstraint* MultiVectorRegisterOperandRISCV::InstantiateOperandConstraint() const
   {
     return new VectorRegisterOperandConstraint();
   }
 
-  const std::string RISCMultiVectorRegisterOperand::GetNextRegisterName(uint32& indexVar) const
+  const std::string MultiVectorRegisterOperandRISCV::GetNextRegisterName(uint32& indexVar) const
   {
     ++indexVar;
     if (indexVar > 31) indexVar = 0;
     return "V" + indexVar;
   }
 
-  ChoicesFilter* RISCMultiVectorRegisterOperand::GetChoicesFilter(const ConstraintSet* pConstrSet) const
+  ChoicesFilter* MultiVectorRegisterOperandRISCV::GetChoicesFilter(const ConstraintSet* pConstrSet) const
   {
     return new ConstraintChoicesFilter(pConstrSet);
   }

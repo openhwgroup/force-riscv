@@ -646,6 +646,13 @@ namespace Force {
     return new GroupOperandConstraint();
   }
 
+  void VectorLayoutOperand::Setup(Generator& gen, Instruction& instr)
+  {
+    Operand::Setup(gen, instr);
+
+    SetupVectorLayout(gen, instr);
+  }
+
   OperandConstraint* AddressingOperand::InstantiateOperandConstraint() const
   {
     return new AddressingOperandConstraint();

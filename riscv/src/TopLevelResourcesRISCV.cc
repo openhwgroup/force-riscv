@@ -56,7 +56,7 @@ namespace Force {
     obj_registry->RegisterObject(new VtypeLayoutOperand());
     obj_registry->RegisterObject(new WholeRegisterLayoutOperand());
     obj_registry->RegisterObject(new VectorLoadStoreOperand());
-    obj_registry->RegisterObject(new RISCMultiVectorRegisterOperand());
+    obj_registry->RegisterObject(new MultiVectorRegisterOperandRISCV());
 
     // Register Paging related objects.
     obj_registry->RegisterObject(new ValidPteAttributeRISCV());

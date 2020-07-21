@@ -452,11 +452,11 @@ namespace Force {
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorLayoutOperand);
     ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperand);
 
-    void Generate(Generator& gen, Instruction& instr) override { GenerateVectorLayout(gen, instr); } //!< Generate operand details.
+    void Setup(Generator& gen, Instruction& instr) override; //!< Setup conditions, constraining mechanisms before generating operand.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorLayoutOperand);
   private:
-    virtual void GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr) = 0; //!< Determine and set the vector layout attributes.
+    virtual void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) = 0; //!< Determine and set the vector layout attributes.
   };
 
   class AddressSolver;

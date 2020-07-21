@@ -139,7 +139,7 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VtypeLayoutOperand);
   private:
-    void GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
+    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
   };
 
   /*!
@@ -157,7 +157,7 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
   private:
-    void GenerateVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
+    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
   };
 
   /*!
@@ -184,25 +184,25 @@ namespace Force {
   };
 
   /*!
-    \class RISCMultiVectorRegisterOperand
+    \class MultiVectorRegisterOperandRISCV
     \brief Operand class handling number of registers
   */
-  class RISCMultiVectorRegisterOperand : public MultiVectorRegisterOperand {
+  class MultiVectorRegisterOperandRISCV : public MultiVectorRegisterOperand {
   public:
-    Object* Clone() const override //!< Return a cloned RISCMultiVectorRegisterOperand object of the same type and same contents of the object.
+    Object* Clone() const override //!< Return a cloned MultiVectorRegisterOperandRISCV object of the same type and same contents of the object.
     {
-      return new RISCMultiVectorRegisterOperand(*this);
+      return new MultiVectorRegisterOperandRISCV(*this);
     }
 
-    const char* Type() const override { return "RISCMultiVectorRegisterOperand"; } //!< Return the type as C string.
+    const char* Type() const override { return "MultiVectorRegisterOperandRISCV"; } //!< Return the type as C string.
 
-    RISCMultiVectorRegisterOperand() : MultiVectorRegisterOperand(), mDataType() { } //!< Constructor.
-    ~RISCMultiVectorRegisterOperand() { } //!< Destructor
+    MultiVectorRegisterOperandRISCV() : MultiVectorRegisterOperand(), mDataType() { } //!< Constructor.
+    ~MultiVectorRegisterOperandRISCV() { } //!< Destructor
     void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
     void GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const override; //!< Return the chosen register indices in a ConstraintSet.
     uint32 NumberRegisters() const override; //!< Return number of registers in the list.
   protected:
-    RISCMultiVectorRegisterOperand(const RISCMultiVectorRegisterOperand& rOther) //!< Copy constructor.
+    MultiVectorRegisterOperandRISCV(const MultiVectorRegisterOperandRISCV& rOther) //!< Copy constructor.
       : MultiVectorRegisterOperand(rOther), mDataType(rOther.mDataType)
     {
     }

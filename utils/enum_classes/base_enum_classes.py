@@ -236,4 +236,7 @@ enum_classes_details = [
     ["Endianness", "unsigned char", "Byte order",
      [("LittleEndian", 0), ("BigEndian", 1)]
     ],
+    ["VectorRegisterOperandLayoutType", "unsigned char", "Relative layout of vector register operand",
+     [("Standard", 0), ("Wide", 1)]
+    ],
 ]

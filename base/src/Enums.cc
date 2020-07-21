@@ -6215,4 +6215,55 @@ namespace Force {
     return EEndianness::LittleEndian;
   }
 
+
+  unsigned char EVectorRegisterOperandLayoutTypeSize = 2;
+
+  const string EVectorRegisterOperandLayoutType_to_string(EVectorRegisterOperandLayoutType in_enum)
+  {
+    switch (in_enum) {
+    case EVectorRegisterOperandLayoutType::Standard: return "Standard";
+    case EVectorRegisterOperandLayoutType::Wide: return "Wide";
+    default:
+      unknown_enum_value("EVectorRegisterOperandLayoutType", (unsigned char)(in_enum));
+    }
+    return "";
+  }
+
+  EVectorRegisterOperandLayoutType string_to_EVectorRegisterOperandLayoutType(const string& in_str)
+  {
+    string enum_type_name = "EVectorRegisterOperandLayoutType";
+    char hash_value = in_str.at(0);
+
+    switch (hash_value) {
+    case 83:
+      validate(in_str, "Standard", enum_type_name);
+      return EVectorRegisterOperandLayoutType::Standard;
+    case 87:
+      validate(in_str, "Wide", enum_type_name);
+      return EVectorRegisterOperandLayoutType::Wide;
+    default:
+      unknown_enum_name(enum_type_name, in_str);
+    }
+    return EVectorRegisterOperandLayoutType::Standard;
+  }
+
+  EVectorRegisterOperandLayoutType try_string_to_EVectorRegisterOperandLayoutType(const string& in_str, bool& okay)
+  {
+    okay = true;
+    char hash_value = in_str.at(0);
+
+    switch (hash_value) {
+    case 83:
+      okay = (in_str == "Standard");
+      return EVectorRegisterOperandLayoutType::Standard;
+    case 87:
+      okay = (in_str == "Wide");
+      return EVectorRegisterOperandLayoutType::Wide;
+    default:
+      okay = false;
+      return EVectorRegisterOperandLayoutType::Standard;
+    }
+    return EVectorRegisterOperandLayoutType::Standard;
+  }
+
 }

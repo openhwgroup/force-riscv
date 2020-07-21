@@ -82,14 +82,14 @@ namespace Force {
     }
   };
   
-  class RISCVectorRegisterOperandConstraint : public VectorRegisterOperandConstraint {
+  class VectorRegisterOperandConstraintRISCV : public VectorRegisterOperandConstraint {
   public:
-    RISCVectorRegisterOperandConstraint() : VectorRegisterOperandConstraint() { } //!< Constructor.
-    ~RISCVectorRegisterOperandConstraint() { } //!< Destructor.
-    ASSIGNMENT_OPERATOR_ABSENT(RISCVectorRegisterOperandConstraint);
+    VectorRegisterOperandConstraintRISCV() : VectorRegisterOperandConstraint() { } //!< Constructor.
+    ~VectorRegisterOperandConstraintRISCV() { } //!< Destructor.
+    ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandConstraintRISCV);
     void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints.
   protected:
-    RISCVectorRegisterOperandConstraint(const RISCVectorRegisterOperandConstraint& rOther) //!!< Copy constructor, not meant to be used.
+    VectorRegisterOperandConstraintRISCV(const VectorRegisterOperandConstraintRISCV& rOther) //!!< Copy constructor, not meant to be used.
       : VectorRegisterOperandConstraint(rOther)
     {
     }

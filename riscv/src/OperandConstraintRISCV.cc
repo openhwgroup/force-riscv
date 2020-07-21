@@ -16,12 +16,13 @@
 #include <OperandConstraintRISCV.h>
 
 #include <Instruction.h>
+#include <InstructionConstraint.h>
 #include <InstructionStructure.h>
 #include <Constraint.h>
 #include <Random.h>
 #include <Log.h>
 #include <Operand.h>
-
+#include <VectorLayout.h>
 #include <Generator.h>
 #include <Register.h>
 #include <RegisterReserver.h>
@@ -272,9 +273,26 @@ namespace Force {
     LOG(notice) << "{FullsizeConditionalBranchOperandConstraint::SetConditionalBranchTaken} condition branch is set to " << ((mTaken) ? "taken" : "not taken") << endl;
   }
 
-  void RISCVectorRegisterOperandConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
+  void VectorRegisterOperandConstraintRISCV::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
   {
-    RegisterOperandConstraint::Setup(gen, instr, operandStruct);
+    VectorRegisterOperandConstraint::Setup(gen, instr, operandStruct);
+
+    if (mConstraintForced) {
+      return;
+    }
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    uint32 reg_count = vec_layout->mRegCount;
+
+    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&operandStruct);
+    if (vec_reg_operand_struct->GetLayoutType() == EVectorRegisterOperandLayoutType::Wide) {
+      reg_count *= 2;
+    }
+
+    // Remove all register indices that are not multiples of the register count, as they are not
+    // legal choices
+    mpConstraintSet->FilterAlignedElements(get_align_mask(reg_count));
   }
 
   void VectorLoadStoreOperandConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)

@@ -193,6 +193,23 @@ namespace Force {
     std::string mDiffers; //!< Names of the different choices settting.
   };
 
+  /*!
+    \class VectorRegisterOperandStructure
+    \brief Record static structural information about a vector register operand.
+  */
+  class VectorRegisterOperandStructure : public ChoicesOperandStructure {
+  public:
+    VectorRegisterOperandStructure();
+    COPY_CONSTRUCTOR_ABSENT(VectorRegisterOperandStructure);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorRegisterOperandStructure);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandStructure);
+
+    void SetLayoutType(const EVectorRegisterOperandLayoutType layoutType) { mLayoutType = layoutType; }
+    EVectorRegisterOperandLayoutType GetLayoutType() const { return mLayoutType; }
+  private:
+    EVectorRegisterOperandLayoutType mLayoutType;
+  };
+
   class ConstraintSet;
 
   /*!

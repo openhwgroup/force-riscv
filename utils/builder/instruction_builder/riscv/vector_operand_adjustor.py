@@ -70,7 +70,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vs3_ls_source(self):
         vs3_opr = self.mInstr.find_operand('vs3')
-        vs3_opr.oclass = 'RISCMultiVectorRegisterOperand'
+        vs3_opr.oclass = 'MultiVectorRegisterOperandRISCV'
         self.set_vs3()
 
     def set_vdrd_int(self):
@@ -90,7 +90,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vd_ls_dest(self):
         vd_opr = self.mInstr.find_operand('vd')
-        vd_opr.oclass = 'RISCMultiVectorRegisterOperand'
+        vd_opr.oclass = 'MultiVectorRegisterOperandRISCV'
         self.set_vd()
 
     def set_vdrd_sp(self):

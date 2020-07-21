@@ -124,6 +124,11 @@ namespace Force {
     return out_str.str();
   }
 
+  VectorRegisterOperandStructure::VectorRegisterOperandStructure()
+    : mLayoutType(EVectorRegisterOperandLayoutType::Standard)
+  {
+  }
+
   ExcludeOperandStructure::~ExcludeOperandStructure()
   {
     delete mpExcludeConstraint;

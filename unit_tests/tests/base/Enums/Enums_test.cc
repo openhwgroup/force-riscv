@@ -3677,6 +3677,41 @@ CASE( "tests for EEndianness" ) {
   }
 },
 
+
+CASE( "tests for EVectorRegisterOperandLayoutType" ) {
+
+  SETUP ( "setup EVectorRegisterOperandLayoutType" )  {
+
+    SECTION( "test enum to string conversion" ) {
+      EXPECT(EVectorRegisterOperandLayoutType_to_string(EVectorRegisterOperandLayoutType::Standard) == "Standard");
+      EXPECT(EVectorRegisterOperandLayoutType_to_string(EVectorRegisterOperandLayoutType::Wide) == "Wide");
+    }
+
+    SECTION( "test string to enum conversion" ) {
+      EXPECT(string_to_EVectorRegisterOperandLayoutType("Standard") == EVectorRegisterOperandLayoutType::Standard);
+      EXPECT(string_to_EVectorRegisterOperandLayoutType("Wide") == EVectorRegisterOperandLayoutType::Wide);
+    }
+
+    SECTION( "test string to enum conversion with non-matching string" ) {
+      EXPECT_THROWS_AS(string_to_EVectorRegisterOperandLayoutType("S_andard"), EnumTypeError);
+    }
+
+    SECTION( "test non-throwing string to enum conversion" ) {
+      bool okay = false;
+      EXPECT(try_string_to_EVectorRegisterOperandLayoutType("Standard", okay) == EVectorRegisterOperandLayoutType::Standard);
+      EXPECT(okay);
+      EXPECT(try_string_to_EVectorRegisterOperandLayoutType("Wide", okay) == EVectorRegisterOperandLayoutType::Wide);
+      EXPECT(okay);
+    }
+
+    SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
+      bool okay = false;
+      try_string_to_EVectorRegisterOperandLayoutType("S_andard", okay);
+      EXPECT(!okay);
+    }
+  }
+},
+
 };
 
 int main(int argc, char* argv[])
