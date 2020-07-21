@@ -25,7 +25,9 @@ import os
 ## 
 # Purpose: used to configure an argparse argument parser instantiated in module_run a superclass to master_run
 # Caveats: setting defaults still requires the user to change the defaults in the Defaults class as well as in this CommandLineParameters class.
-#          
+#
+
+
 class CommandLineParameters(object):
     usage = """
   Master Regression and Performance Utility
@@ -63,7 +65,7 @@ class CommandLineParameters(object):
                                                                                  "  control directory."], 
         ["-d"            , "--control-dir=" , 1, {"metavar":""}                , "- When present, overrides the default control path, \"<test-base>/tests\". This\n"
                                                                                  "  option can   be a full path or a relative path from the master run directory.\n"
-                                                                                 "  If a path was specied as part of the control file name on the command line this\n"
+                                                                                 "  If a path was specified as part of the control file name on the command line this\n"
                                                                                  "  option is ignored."],
         ["-c"            , "--config="      , 1, {"metavar":""}                , "- When present, overrides the default config file name, \"_def_fcfg.py\", located\n"
                                                                                  "  in the config directory   which is found in the module directory which equates\n"
@@ -124,7 +126,7 @@ class CommandLineParameters(object):
                            "in each control item line in any control file, unless overridden the default or\n" \
                            "specified values are persistent until changed"
     _parameters_persisting_yes_override = [
-        # "short option"                      "number of additonal args"          "help text
+        # "short option"                      "number of additional args"         "help text
         # |                 "long option"     |  "additional specifications"      |
         # |                 |                 |  |                                |
         # |                 |                 |  |                                |
@@ -227,47 +229,49 @@ class CommandLineParameters(object):
                                                                                  "  \t                    required levels in the client."],
         ]
 
-    #These three lists are used as arguments to module_run
+    # These three lists are used as arguments to module_run
     group_names = [_group_1_name, _group_2_name, _group_3_name, _group_4_name, _group_5_name]
     group_descriptions = [_group_1_description, _group_2_description, _group_3_description, _group_4_description, _group_5_description]
     group_parameters = [_parameters_general_options, _parameters_persisting_no_override, _parameters_persisting_yes_override, _parameters_non_persistent, _parameters_others]
 
-    #the following variable is for compatibility with the single argument constructor in cmdline_utils.py
+    # the following variable is for compatibility with the single argument constructor in cmdline_utils.py
     parameters = []
     for param_list in group_parameters:
         parameters.extend(param_list)
-            
+
+
 class Modes(object):
     # mode strings
-    mock    = "mock"
-    perf    = "perf"
+    mock = "mock"
+    perf = "perf"
     regress = "regress"
-    count   = "count"
+    count = "count"
 
 
 class Expire(object):
     none = None
-    clean ="clean"
+    clean = "clean"
     purge = "purge"
-    all   = int(0)
+    all = int(0)
+
 
 class Defaults(object):
-    expire     = Expire.none
-    mode       = Modes.regress
+    expire = Expire.none
+    mode = Modes.regress
     msg_level = "crit+err+warn+info+noinfo"
     help = False
     num_runs = 1
     process = "write-only"
-    fctrl_name  = "_def_fctrl.py"      # default control file
-    fctrl_dir   = "../../tests"        # location of the default control file relative to master run
-    fcfg_name   = "_def_riscv_fcfg.py" # default config file
-    run_name="forrest_run.py"          # default processing client
-    run_dir="."                        # default processing client location
-    run_launcher="local"               # default launch mode for the client processor
-    run_fctrl="_def_frun.py"           # default processing client control file
-    test_base="../../tests"            # default tests root directory
+    fctrl_name = "_def_fctrl.py"      # default control file
+    fctrl_dir = "../../tests"         # location of the default control file relative to master run
+    fcfg_name = "_def_riscv_fcfg.py"  # default config file
+    run_name = "forrest_run.py"       # default processing client
+    run_dir = "."                     # default processing client location
+    run_launcher = "local"            # default launch mode for the client processor
+    run_fctrl = "_def_frun.py"        # default processing client control file
+    test_base = "../../tests"         # default tests root directory
     process_max = 16
-    timeout  = 600
+    timeout = 600
     keep = ""
     max_fails = 10
     client_lev = None
@@ -275,15 +279,17 @@ class Defaults(object):
     suffix = None
     iss = {}
 
+
 class Formats(object):
     # output directories
-    main_output_dir    = "%s/output"
-    perf_output_dir    = "performance"
+    main_output_dir = "%s/output"
+    perf_output_dir = "performance"
     regress_output_dir = "regression"
-    msg_level          = "crit+err+warn+info+noinfo%s"
-    summ_level         = "Summary Level: %d"
-    exec_num_runs      = "Executing %d of %d num-runs"
-    out_dir            = "Output Directory: %s"
+    msg_level = "crit+err+warn+info+noinfo%s"
+    summ_level = "Summary Level: %d"
+    exec_num_runs = "Executing %d of %d num-runs"
+    out_dir = "Output Directory: %s"
+
 
 class EnVars( object ):
     test_base    = "TEST_BASE"

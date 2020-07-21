@@ -14,9 +14,10 @@
 # limitations under the License.
 #
 from classes.ApplicationOption import CommandLineOption, AppCmdLineOption, AppPathCmdLineOption, ApplicationOption, ParameterProcessor
+from common.msg_utils import Msg
 from common.path_utils import PathUtils
 from common.version_ctrl_utils import VersionCtrlUtils
-from common.msg_utils import Msg
+
 
 ## Define additional RTL specific command line parameters
 #
@@ -36,7 +37,8 @@ class RtlCmdLineOptions(object):
                  AppPathCmdLineOption('root',  "",         1, None, "- Specify RTL root.  When present, overrides the default RTL path specified in \"PROJ_ROOT\" environmental variable.",  \
                                       None, "PROJ_ROOT"),
                  ]
- 
+
+
 ## Used to process application specific parameters
 #
 class RtlParametersProcessor(ParameterProcessor):
@@ -51,14 +53,15 @@ class RtlParametersProcessor(ParameterProcessor):
         meta_conv_path = PathUtils.append_path(aCmdLineOptions.mProgramPath, 'metaargs_to_plusargs.py')
         self.mAppParameters.setParameter("meta_converter", meta_conv_path)
 
-        #determine svn revision information and store as a parameter
-        version_info = VersionCtrlUtils.get_svn_revision(rtl_root)
-        if version_info[1] is not None:
-            Msg.info("Failed to determine RTL svn version: " + version_info[1])
-            self.mAppParameters.setParameter("version", -1)
-        else:
-            self.mAppParameters.setParameter("version", version_info[0])
+        # determine svn revision information and store as a parameter
+        version_data = VersionCtrlUtils.get_scm_revisions(rtl_root)
+        version_output = VersionCtrlUtils.get_version_output(version_data)
+
+        Msg.info("\nRTL Version Data:\n%s" % version_output)
+
+        self.mAppParameters.setParameter("version", version_data)
         self.mAppParameters.setParameter("version_dir", rtl_root)
+
 
 ## Defined application options not configured on the master_run command line.
 #
@@ -77,6 +80,7 @@ class RtlAppOptions(object):
         ApplicationOption('img_modify', 'imgmodify.py', ''), #script that generates dat files from the ELF files for use with force_init=on
         ApplicationOption('tst_handler', 'tstHandler.py', '') #script that creates hex files from the dat files for use with force_init=on
         ]
+
 
 ## Process rtl control data
 #
