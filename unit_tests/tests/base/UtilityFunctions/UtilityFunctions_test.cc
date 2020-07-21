@@ -106,6 +106,18 @@ CASE( "Test set 1 for Utility Functions" ) {
         shift = get_align_shift (1073741824); // 1024 x 1024 x 1024
         EXPECT ( shift == (uint32)30 );
 
+        // get align mask
+        EXPECT(get_align_mask(4) == 0xFFFFFFFFFFFFFFFCull);
+        EXPECT(get_align_mask(32) == 0xFFFFFFFFFFFFFFE0ull);
+        EXPECT(get_align_mask(get_alignment(0xFFFFFFFFFFFFFFF8)) == 0xFFFFFFFFFFFFFFF8ull);
+        EXPECT_FAIL(get_align_mask(9), "invalid-alignment");
+
+        // get alignment
+        EXPECT(get_alignment(0xFFFFFFFFFFFFFFFC) == 4ull);
+        EXPECT(get_alignment(0xFFFFFFFFFFFFFFE0) == 32ull);
+        EXPECT(get_alignment(get_align_mask(8)) == 8ull);
+        EXPECT_FAIL(get_alignment(0x9978B7E2A8D4B1A8), "invalid-alignment");
+
         // get aligned value
         EXPECT(get_aligned_value(0xD7BC8A07, 8) == 0xD7BC8A00ull);
         EXPECT(get_aligned_value(0xE395B563DFC6, 128) == 0xE395B563DF80ull);

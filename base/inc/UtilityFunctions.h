@@ -33,6 +33,8 @@ namespace Force {
   uint64 data_array_to_element_value_little_endian(cuint8* data_array, cuint32 num_bytes); //!< Convert byte stream data array in little endian byte order to element value.
   void verify_alignment(uint64 align); //!< Verify that the align variable contains a valid alignment value.
   uint32 get_align_shift(uint64 align); //!< Return align shift for a given align size.
+  uint64 get_align_mask(cuint64 align); //!< Return align mask for a given align size.
+  uint64 get_alignment(cuint64 alignMask); //!< Return alignment for a given align mask. This is the inverse of get_align_mask().
   uint64 get_aligned_value(cuint64 value, cuint64 align); //!< Return value aligned to the specified alignment.
   uint64 sign_extend64(uint64 value, uint32 size); //!< Sign extend a value with the spedificed size.
   uint32 sign_extend32(uint32 value, uint32 size); //!<  Sign extend a value with the spedificed size.
