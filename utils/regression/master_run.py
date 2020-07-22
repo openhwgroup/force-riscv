@@ -300,7 +300,7 @@ class MasterRun(object):
             self.generator   = { }
             self.rtl         = { }
             self.performance = CtrlItmDefs.performance
-            self.regression = CtrlItmDefs.regression
+            self.regression  = CtrlItmDefs.regression
             Msg.user( "iss        : %s" % ( str( self.iss         )))
             Msg.user( "generator  : %s" % ( str( self.generator   )))
             Msg.user( "rtl        : %s" % ( str( self.rtl         )))
@@ -475,38 +475,26 @@ class MasterRun(object):
                 SysUtils.sleep_seconds_with_progress(sec_delay)
                 Msg.info ("Waiting done, resumed master run")
 
-    ## Queries the sequence apps for their SVN revision number
-    #
     def writeVersionInfo(self):
+        out_line_fmt = "{}, scm_system: {}, revision number: {}, location: {}, url: {}\n"
+        version_info = ""
+        for app_tag, app_config in self._mAppsInfo.mTagToApp.items():
+            Msg.user('app_tag: %s, app_config: %s' % (app_tag, app_config))
+            version_data = app_config.parameter("version")
+            for item in version_data:
+                if item['status']:
+                    version_info += out_line_fmt.format(app_config.name(),
+                                                        item['scm_type'],
+                                                        str(item['version']),
+                                                        item["folder"],
+                                                        item['url'])
         with open(self.output_dir + "version_info.txt", "w+") as outfile:
-            for app_tag, app_config in self._mAppsInfo.mTagToApp.items():
-                try:
-                    if isinstance(app_config.parameter("version"), list):
-                        for index in range(len(app_config.parameter("version"))):
-                            outfile.write(app_config.name() +
-                                          ", revision number: " + str(app_config.parameter("version")[index]) +
-                                          ", location: " + app_config.parameter("version_dir")[index] + "\n")
-                    else:
-                        outfile.write(app_config.name() +
-                                      ", revision number: " + str(app_config.parameter("version")) +
-                                      ", location: " + app_config.parameter("version_dir") + "\n")
-                except KeyError:
-                    continue
+            if version_info:
+                outfile.write(version_info)
+            else:
+                outfile.write("No version information found")
 
-    def writeVersionInfo_new(self):
-        with open(self.output_dir + "version_info.txt", "w+") as outfile:
-            for app_tag, app_config in self._mAppsInfo.mTagToApp.items():
-                version_data = app_config.parameter("version")
-                if not isinstance(version_data, list):
-                    version_data = [version_data]
-                for item in version_data:
-                    out_line = "{}, scm_system: {}, revision number: {}, location: {}\n"
-                    outfile.write(out_line.format(app_config.name(),
-                                                  item['scm_type'],
-                                                  str(item['rev_number']),
-                                                  item["version_dir"]))
-
-    ## Call the report methods from each of the sequence apps. Some apps report, others pass through
+    # Call the report methods from each of the sequence apps. Some apps report, others pass through
     def modulesReport(self):
         for app_cfg in self._mAppsInfo.mSequenceApps:
             reporter = app_cfg.createReporter()

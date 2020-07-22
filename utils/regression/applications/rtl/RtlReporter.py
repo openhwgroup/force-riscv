@@ -22,7 +22,7 @@ import os.path
 class RtlReporter(object):
     def __init__(self):
         self.mReportNameBase = None #"name of top level control file"
-        self.mForceSvnVersion = None #"query for parameter version from dictionary in shared object"
+        self.mForceScmVersion = None #"query for parameter version from dictionary in shared object"
         self.mRtlWasEnabled = None #"even though this was a standard module, was it actually used?"
         self.mReportingWasSkipped = None #"if the user deliberately said no reporting?"
         self.mReportDumpXml = None #"do we want an xml dump instead of an upload?"
@@ -30,7 +30,7 @@ class RtlReporter(object):
         self.mTotalCycleCount = None 
         self.mTotalInstructionCount = None
 
-    ## Resolve the values of the member variables using information available from the top level inter module shared object and perform reporting
+    # Resolve the values of the member variables using information available from the top level inter module shared object and perform reporting
     #
     def report(self, aAppsInfo, aMyTag):
 
@@ -42,21 +42,21 @@ class RtlReporter(object):
             self.mRegressionOutputDirectory = mr_info.get("output_dir", None)
 
         force_info = aAppsInfo.mTagToReportInfo.get("generator", None)
-        if force_info: #force info was in the report info dictionary
-            self.mForceSvnVersion = force_info.get("version", None)
-        else: #force info was obtainable from the config object
+        if force_info:  # force info was in the report info dictionary
+            self.mForceScmVersion = force_info.get("version", None)
+        else:  # force info was obtainable from the config object
             force_info = aAppsInfo.mTagToApp.get('generator')
-            self.mForceSvnVersion = force_info.parameter('version')
+            self.mForceScmVersion = force_info.parameter('version')
 
         rtl_config = aAppsInfo.mTagToApp.get('rtl', None)
         if rtl_config:
             self.mRtlWasEnabled = rtl_config.parameter('rtl')
         
-            #If the rtl app was active, check if the user disabled reporting
+            # If the rtl app was active, check if the user disabled reporting
             if self.mRtlWasEnabled:
                 self.mReportingWasSkipped = rtl_config.parameter('rtl.report.skip')
 
-                #If reporting was enabled, continue to resolve information
+                # If reporting was enabled, continue to resolve information
                 if not self.mReportingWasSkipped:
                     self.mReportDumpXml = rtl_config.parameter('rtl.report.xml')
                     rtl_report_name = rtl_config.parameter('rtl.report.name')
@@ -65,11 +65,24 @@ class RtlReporter(object):
                         rtl_report_name = self.mReportBaseName.strip(".py")
 
                     time_stamp = datetime.utcnow()
-                    time_string = "_%0.4d%0.2d%0.2d_%0.2d%0.2d" % (time_stamp.year, time_stamp.month, time_stamp.day, time_stamp.hour, time_stamp.minute)
+                    time_string = "_%0.4d%0.2d%0.2d_%0.2d%0.2d" % \
+                                  (time_stamp.year,
+                                   time_stamp.month,
+                                   time_stamp.day,
+                                   time_stamp.hour,
+                                   time_stamp.minute)
 
+                    version = ''
                     revision_stamp = ""
-                    if self.mForceSvnVersion:
-                        revision_stamp = "_r" + str(self.mForceSvnVersion)
+
+                    for item in self.mForceScmVersion:
+                        if item.get('status', False):
+                            version = item['version']
+                            # prefer git data, otherwise keep looking for valid version
+                            if item['scm_type'] == 'git':
+                                break
+                    if version:
+                        revision_stamp = "_r" + str(version)
 
                     rtl_report_name = rtl_report_name + time_string + revision_stamp
 
@@ -79,7 +92,7 @@ class RtlReporter(object):
                     report_script_path = PathUtils.real_path(aAppsInfo.mMainAppPath + "/" + report_script_path)
                     report_directory = PathUtils.real_path(self.mRegressionOutputDirectory + "/../../")
 
-                    #What about the report path?  We get that from the master_run output_dir
+                    # What about the report path?  We get that from the master_run output_dir
                     report_command = report_script_path + " --report-dir " + report_directory + " --name " + rtl_report_name
                     if self.mReportDumpXml:
                         report_command += " --dump-xml"
@@ -89,10 +102,10 @@ class RtlReporter(object):
                     Msg.dbg("Report directory: " + str(report_directory))
                     Msg.dbg("Reporting command: " + str(report_command))
         
-                    #actually execute the report script
+                    # actually execute the report script
                     report.callFromPython(report_command)
 
-                    #create or append metrics file
+                    # create or append metrics file
                     rtl_metrics_path = rtl_control_data.get('rtl_metrics_path', None)
                     home = os.path.expanduser('~')
                     rtl_metrics_path = rtl_metrics_path.replace('~', home) 

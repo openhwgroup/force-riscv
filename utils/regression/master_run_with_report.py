@@ -52,7 +52,7 @@ class RunWithReport(object):
 
         # find Force revision
         self._mRtlRoot = self._getRtlRoot(self._mRunParameters.rtl_root)
-        self._mRtlRev = self._getSvnRev(self._mRtlRoot)
+        self._mRtlRev = self._getScmRev(self._mRtlRoot)
         self._mTestDir = self._getTestDir()
         self._mReportName = self._getReportName()
         self._mReportCommand = self._getReportCommand()
@@ -85,7 +85,7 @@ class RunWithReport(object):
         if self._mRunParameters.force_path is None:
             print ("ERROR: FORCE path is not specified.")
             sys.exit(1)
-        force_rev = self._getSvnRev(self._mRunParameters.force_path)
+        force_rev = self._getScmRev(self._mRunParameters.force_path)
         return force_rev
         
     def reportOnly(self):
@@ -97,7 +97,7 @@ class RunWithReport(object):
     def masterOnly(self):
         return self._mRunParameters.master_only
         
-    def _getSvnRev( self, aPath ):
+    def _getScmRev(self, aPath):
         rev, err_msg = VersionCtrlUtils.get_svn_revision(aPath)
         if err_msg:
             print("ERROR: failed to get SVN version for %s : %s" % (aPath, err_msg))

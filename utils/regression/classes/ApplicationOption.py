@@ -23,9 +23,9 @@ from common.path_utils import PathUtils
 class ApplicationOption(object):
  
     def __init__(self, aName, aDefault, aEnvVar=None):
-         self._mName = aName
-         self._mDefault = aDefault
-         self._mEnvVar = aEnvVar
+        self._mName = aName
+        self._mDefault = aDefault
+        self._mEnvVar = aEnvVar
 
     def name(self):
         return self._mName
@@ -170,6 +170,7 @@ class ParameterProcessor(object):
     def __init__(self, aAppOptions, aCmdLineOptions):
         self.mAppParameters = ApplicationParameters()
         self.mAppParameters.resolveParameters(aAppOptions, aCmdLineOptions)
+        self.mAppParameters.setParameter("version", [])
 
 
 ## Options only used in control item level and not the master_run command line level
