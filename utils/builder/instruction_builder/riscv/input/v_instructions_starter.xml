@@ -55,21 +55,21 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="simm5" type="Immediate" bits="19-15"/>
-    <asm format="VADC.VI"/>
+    <asm format="VADC.VIM"/>
   </I>
   <I name="VADC.VVM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000000001010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vs1" type="Register" bits="19-15"/>
-    <asm format="VADC.VV"/>
+    <asm format="VADC.VVM"/>
   </I>
   <I name="VADC.VXM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000001001010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <asm format="VADC.VX"/>
+    <asm format="VADC.VXM"/>
   </I>
   <I name="VADD.VI" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000000111010111"/>
@@ -843,12 +843,11 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VFWSUB.W.VV"/>
   </I>
-  <I name="VID" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010100100010101010111"/>
-    <O name="vd/rd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
+  <I name="VID.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-12,6-0" value="01010000000100010101010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VID"/>
+    <asm format="VID.V"/>
   </I>
   <I name="VIOTA" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010100100000101010111"/>
@@ -1861,14 +1860,14 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vs1" type="Register" bits="19-15"/>
-    <asm format="VSBC.VV"/>
+    <asm format="VSBC.VVM"/>
   </I>
   <I name="VSBC.VXM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01001001001010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <asm format="VSBC.VX"/>
+    <asm format="VSBC.VXM"/>
   </I>
   <I name="VSLIDE1DOWN.VX" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011111101010111"/>
