@@ -93,12 +93,15 @@ class PageFaultModifier(ChoicesModifier):
                     Log.error('invalid priv level={} for fault type={}'.format(priv_level, aType))
 
                 self.updatePageFaultChoice(aType, table_level, priv_level, weight)
-        
-        #update additional choices based on type
-        if aType == 'Misaligned Superpage':
-            self.updateSuperpageSizeChoices(100) #needs superpage descriptor
-        elif aType == 'Last Level Pointer':
-            self.updateSuperpageSizeChoices(0) #needs level 0 (4K) table descriptor 
+
+        if 'All' in kwargs:
+            #ensure we can get both superpages/full walks for last level ptr + misaligned superpage
+            self.updateSuperpageSizeChoices(50)
+        else:
+            if aType == 'Misaligned Superpage':
+                self.updateSuperpageSizeChoices(100) #needs superpage descriptor
+            elif aType == 'Last Level Pointer':
+                self.updateSuperpageSizeChoices(0) #needs level 0 (4K) table descriptor 
 
     def updateAllFaultChoices(self, **kwargs):
         for fault_type in self._mValidFaultTypes:
