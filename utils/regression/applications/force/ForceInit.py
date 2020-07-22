@@ -51,7 +51,7 @@ class ForceParametersProcessor(ParameterProcessor):
         version_data = VersionCtrlUtils.get_scm_revisions(force_dir)
         version_output = VersionCtrlUtils.get_version_output(version_data)
 
-        Msg.info("\nForce Version Data:\n%s" % version_output)
+        Msg.info("Force Version Data:\n%s" % version_output)
 
         self.mAppParameters.setParameter("version", version_data)
         self.mAppParameters.setParameter("version_dir", force_dir)

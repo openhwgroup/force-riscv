@@ -57,7 +57,7 @@ class RtlParametersProcessor(ParameterProcessor):
         version_data = VersionCtrlUtils.get_scm_revisions(rtl_root)
         version_output = VersionCtrlUtils.get_version_output(version_data)
 
-        Msg.info("\nRTL Version Data:\n%s" % version_output)
+        Msg.info("RTL Version Data:\n%s" % version_output)
 
         self.mAppParameters.setParameter("version", version_data)
         self.mAppParameters.setParameter("version_dir", rtl_root)

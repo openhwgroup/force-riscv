@@ -152,21 +152,20 @@ class VersionCtrlUtils(object):
         return version_info
 
     @classmethod
-    def get_version_output(cls, version_data):
+    def get_version_output(cls, a_version_data):
         """Returns a formatted string containing all pertinent SCM data,
         ready for logging.
 
-        :param version_data: Result of get_scm_revisions()
-        :type version_data: list
+        :param a_version_data: Result of get_scm_revisions()
+        :type a_version_data: list
         :return: Formatted string of SCM data
         :rtype: str
         """
-        out_line_fmt = "{}, scm_type: {}, revision number: {}, location: {}, url: {}"
+        out_line_fmt = "scm_type: {}, revision number: {}, location: {}, url: {}"
         version_output = ""
-        for item in version_data:
+        for item in a_version_data:
             if item.get('status', False):
-                version_output += out_line_fmt.format('RTL',
-                                                      item['scm_type'],
+                version_output += out_line_fmt.format(item['scm_type'],
                                                       str(item['version']),
                                                       item["folder"],
                                                       item['url'])
