@@ -16,7 +16,7 @@
 
 The easy way to build handcar:
 
-1) Clone riscv-isa-sim git version 5d5ee23f574583145cd2093a1fdab677e313e1d2 to directory standalone. Retrieve from https://github.com/riscv/riscv-isa-sim
+1) Clone riscv-isa-sim git version 61f0dab33f7e529cc709908840311a8a7dcb23ce to directory standalone. Retrieve from https://github.com/riscv/riscv-isa-sim
 
 2) There, configure and make. Refer to build instructions provided at https://github.com/riscv/riscv-isa-sim .
    Some of the files (like the instruction files) created in the configuring and build process are needed by handcar.

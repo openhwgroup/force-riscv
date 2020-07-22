@@ -25,18 +25,19 @@
 <   void reset(reg_t max_isa);
 ---
 >   void reset(reg_t max_isa, uint32_t id);
-219a222,225
+219a222,226
 > 
 >   size_t pid;
 > 
 >   state_t(size_t id): pid(id), XPR(id), FPR(id) {};
-242,243c248,249
+>   state_t(): pid(0), XPR(0), FPR(0) {};
+251,252c258,259
 <               simif_t* sim, uint32_t id, bool halt_on_reset,
 <               FILE *log_file);
 ---
 >               simif_t* sim, uint32_t id, bool halt_on_reset
 >               );
-245a252,259
+254a262,269
 >   bool set_pc_api(const std::string& name, const uint8_t* bytes, size_t len); //len advertises the size of the buffer
 >   bool retrieve_pc_api(uint8_t* bytes, const std::string& name, size_t len); //len advertises the size of the buffer
 > 
@@ -45,20 +46,20 @@
 >   reg_t get_csr_api(int which);
 >   void set_csr_api(int which, reg_t val);
 > 
-437c451,454
+467c482,485
 <       // vector element for varies SEW
 ---
 >       template<class T>
 >       void do_callback(reg_t vecRegIndex, reg_t eltIndex, const char pAccessType[]) const; 
 >   
 >       // vector element for varing SEW
-445c462,464
+475c493,495
 < #ifdef WORDS_BIGENDIAN
 ---
 >           reg_referenced[vReg] = 1;
 >   
 >           #ifdef WORDS_BIGENDIAN
-448,456c467,469
+478,486c498,500
 <   	  n ^= elts_per_reg - 1;
 < #endif
 <           reg_referenced[vReg] = 1;
@@ -72,7 +73,7 @@
 >           n ^= elts_per_reg - 1;
 >           #endif
 >   
-459a473,487
+489a504,518
 >   
 >       template<class T>
 >         T elt_val(reg_t vecReg, reg_t n, bool is_write = false){
@@ -88,7 +89,7 @@
 >           return r_reg_ref;
 >         }
 > 
-485a514,541
+515a545,572
 > 
 > extern "C"{
 >   // update_vector_element function: for the given cpuid, this callback function is called by the simulator to notify the user that a vector register element has been read or written

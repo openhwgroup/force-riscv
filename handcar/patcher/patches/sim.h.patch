@@ -29,22 +29,20 @@
 23c20
 < class sim_t : public htif_t, public simif_t
 ---
-> class simlib_t : /*public htif_t,*/ public simif_t
-26,33c23,37
+> class simlib_t : public simif_t
+26,34c23,34
 <   sim_t(const char* isa, const char* priv, const char* varch, size_t _nprocs,
 <         bool halted, bool real_time_clint,
 <         reg_t initrd_start, reg_t initrd_end,
 <         reg_t start_pc, std::vector<std::pair<reg_t, mem_t*>> mems,
 <         std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices,
 <         const std::vector<std::string>& args, const std::vector<int> hartids,
-<         const debug_module_config_t &dm_config, const char *log_path);
+<         const debug_module_config_t &dm_config, const char *log_path,
+<         bool dtb_enabled, const char *dtb_file);
 <   ~sim_t();
 ---
 >   simlib_t(const char* isa, const char* priv, const char* varch, size_t _nprocs, bool halted,
->         reg_t start_pc, /*std::vector<std::pair<reg_t, mem_t*>> mems, 
->         std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices,*/
->         const std::vector<int> hartids);/*,
->         const debug_module_config_t &dm_config);*/
+>         reg_t start_pc, const std::vector<int> hartids);
 >   ~simlib_t();
 > 
 >   // load the elf file and reset
@@ -55,11 +53,15 @@
 > 
 >   // fetch the instruction at the given pc using the debug_mmu and return the opcode and disassembly
 >   int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly);
-37a42
+38a39
 >   void set_log(bool value);
-54a60
+49a51,53
+>   void set_dtb_enabled(bool value) {
+>     this->dtb_enabled = value;
+>   }
+52a57
 > 
-56c62,73
+54c59,70
 <   processor_t* get_core(size_t i) { return procs.at(i); }
 ---
 > 
@@ -74,13 +76,13 @@
 >     return nullptr;
 >   }
 > 
-58a76,80
+56a73,77
 >   bool doesCoreWithIdExist(size_t i);
 > 
 >   // for debugging the sparse memory model
 >   void dump_sparse_memory(std::ostream & out);
 > 
-61a84,155
+59a81,152
 >   //
 >   reg_t get_entry_point(){ return entry; };
 > 
@@ -153,20 +155,25 @@
 >   //
 >   int translate_virtual_address_api(int procid, const uint64_t* vaddr, int intent, uint64_t* paddr, uint64_t* memattrs);
 > 
-63,64d156
+61,62d153
 <   std::vector<std::pair<reg_t, mem_t*>> mems;
 <   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
-71,74d162
+69,75d159
+<   std::string dtb;
+<   std::string dtb_file;
+<   bool dtb_enabled;
 <   std::unique_ptr<rom_device_t> boot_rom;
 <   std::unique_ptr<clint_t> clint;
 <   bus_t bus;
 <   log_file_t log_file;
-89,92d176
+86a171
+>   bool dtb_enabled;
+89,92d173
 <   // memory-mapped I/O routines
 <   char* addr_to_mem(reg_t addr);
 <   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
 <   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
-95,96c179,191
+96,97c177,189
 <   // presents a prompt for introspection into the simulation
 <   void interactive();
 ---
@@ -183,7 +190,7 @@
 > 
 >   reg_t entry;
 >   std::map<std::string, uint64_t> load_elf(const char* fn, reg_t* entry);
-98,116d192
+99,118d190
 <   // functions that help implement interactive()
 <   void interactive_help(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_quit(const std::string& cmd, const std::vector<std::string>& args);
@@ -193,6 +200,7 @@
 <   void interactive_vreg(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_reg(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_freg(const std::string& cmd, const std::vector<std::string>& args);
+<   void interactive_fregh(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_fregs(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_fregd(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_pc(const std::string& cmd, const std::vector<std::string>& args);
@@ -203,14 +211,14 @@
 <   void interactive_until_noisy(const std::string& cmd, const std::vector<std::string>& args);
 <   reg_t get_reg(const std::vector<std::string>& args);
 <   freg_t get_freg(const std::vector<std::string>& args);
-119c195
+121c193
 < 
 ---
 >     
-128,129d203
+130,131d201
 <   context_t* host;
 <   context_t target;
-131,133c205,209
+133,135c203,207
 <   void idle();
 <   void read_chunk(addr_t taddr, size_t len, void* dst);
 <   void write_chunk(addr_t taddr, size_t len, const void* src);
@@ -220,7 +228,7 @@
 >   void clear_chunk(reg_t taddr, size_t len);
 >   //void initialize_multiword(reg_t taddr, size_t len, const void* src); // To support multiword initializations during elf loading
 >   void write_chunk(reg_t taddr, size_t len, const void* src);
-137,141d212
+139,143d210
 < public:
 <   // Initialize this after procs, because in debug_module_t::reset() we
 <   // enumerate processors, which segfaults if procs hasn't been initialized
