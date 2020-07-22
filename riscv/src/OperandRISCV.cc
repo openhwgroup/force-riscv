@@ -310,7 +310,7 @@ namespace Force {
 
   OperandConstraint* MultiVectorRegisterOperandRISCV::InstantiateOperandConstraint() const
   {
-    return new VectorRegisterOperandConstraint();
+    return new VectorRegisterOperandConstraintRISCV();
   }
 
   const std::string MultiVectorRegisterOperandRISCV::GetNextRegisterName(uint32& indexVar) const

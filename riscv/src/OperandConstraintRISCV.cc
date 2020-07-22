@@ -281,6 +281,10 @@ namespace Force {
       return;
     }
 
+    if (mpConstraintSet == nullptr) {
+      mpConstraintSet = DefaultConstraintSet(operandStruct);
+    }
+
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     uint32 reg_count = vec_layout->mRegCount;

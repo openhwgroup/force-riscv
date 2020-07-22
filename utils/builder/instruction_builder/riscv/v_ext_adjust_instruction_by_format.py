@@ -30,6 +30,8 @@ def v_ext_adjust_instruction_by_format(aInstruction):
 
     add_layout_operand(aInstruction)
 
+    adjust_register_layout(aInstruction)
+
     if instruction_format == 'vd/rd-vs2-vs1-vm':
         return adjust_vdrd_vs2_vs1_vm(aInstruction)
     elif instruction_format == 'vd-vs2-vs1-vm':
@@ -86,6 +88,15 @@ def add_layout_operand(aInstruction):
     elif aInstruction.name in ('VL1R.V', 'VS1R.V'):
         operand_adjustor = VectorOperandAdjustor(aInstruction)
         operand_adjustor.add_whole_register_layout_operand()
+
+# Account for non-standard register layouts due to widening and narrowing instructions
+def adjust_register_layout(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    if aInstruction.name.startswith('VW') or aInstruction.name.startswith('VFW'):
+        operand_adjustor.set_wide_dest()
+
+    if '.W' in aInstruction.name:
+        operand_adjustor.set_wide_source()
 
 def adjust_vd_rs1(aInstruction):
     if aInstruction.iclass == 'VectorLoadStoreInstruction':
