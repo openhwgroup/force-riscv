@@ -89,7 +89,9 @@
 >           return r_reg_ref;
 >         }
 > 
-515a545,572
+503a533
+>       reg_t set_vl_api(reg_t reqVL, reg_t newType);
+515a546,573
 > 
 > extern "C"{
 >   // update_vector_element function: for the given cpuid, this callback function is called by the simulator to notify the user that a vector register element has been read or written

@@ -82,7 +82,48 @@
 >   update_generator_register(p->id, "vl", vl, 0xffffffffffffffff, "write");
 416a430
 >   update_generator_register(p->id, "vstart", vstart, 0xffffffffffffffff, "write");
-431,443d444
+420a435,474
+> reg_t processor_t::vectorUnit_t::set_vl_api(reg_t reqVL, reg_t newType){
+>   int new_vlmul = 0;
+>   if (vtype != newType){
+>     vtype = newType;
+>     vsew = 1 << (BITS(newType, 4, 2) + 3);
+>     new_vlmul = (BITS(newType, 5, 5) << 2) | BITS(newType, 1, 0);
+>     new_vlmul = (int8_t)(new_vlmul << 5) >> 5;
+>     vflmul = new_vlmul >= 0 ? 1 << new_vlmul : 1.0 / (1 << -new_vlmul);
+>     vlmax = (VLEN/vsew) * vflmul;
+>     vemul = vflmul;
+>     veew = vsew;
+>     vta = BITS(newType, 6, 6);
+>     vma = BITS(newType, 7, 7);
+>     vediv = 1 << BITS(newType, 9, 8);
+> 
+>     vill = !(vflmul >= 0.125 && vflmul <= 8)
+>            || vsew > ELEN
+>            || vflmul < ((float)vsew / ELEN)
+>            || vediv != 1
+>            || (newType >> 8) != 0;
+> 
+>     if (vill) {
+>       vlmax = 0;
+>       vtype = UINT64_MAX << (p->get_xlen() - 1);
+>     }
+>   }
+> 
+>   // set vl
+>   if (vlmax == 0) {
+>     vl = 0;
+>   } else {
+>     vl = reqVL > vlmax ? vlmax : reqVL;
+>   }
+> 
+>   vstart = 0;
+>   //setvl_count++;
+>   return vl;
+> }
+> 
+> 
+431,437d484
 < #ifndef RISCV_ENABLE_HISTOGRAM
 <   if (value) {
 <     fprintf(stderr, "PC Histogram support has not been properly enabled;");
@@ -90,22 +131,22 @@
 <     abort();
 <   }
 < #endif
-< }
-< 
+440,446d486
 < #ifdef RISCV_ENABLE_COMMITLOG
 < void processor_t::enable_log_commits()
 < {
 <   log_commits_enabled = true;
-445d445
+< }
 < #endif
-449,450c449
+< 
+449,450c489
 <   state.reset(max_isa);
 < 
 ---
 >   state.reset(max_isa, id);
-501a501
+501a541
 > 	//TODO need to add register read callback calls here
-561a562,568
+561a602,608
 >   update_generator_register(this->id, "privilege", prv, 0x3ull, "write");
 > }
 > 
@@ -113,7 +154,7 @@
 > {
 >   mmu->flush_tlb();
 >   state.prv = legalize_privilege(prv);
-566,571c573,578
+566,571c613,618
 <   state.debug_mode = true;
 <   state.dcsr.cause = cause;
 <   state.dcsr.prv = state.prv;
@@ -127,7 +168,7 @@
 > //  set_privilege(PRV_M);
 > //  state.dpc = state.pc;
 > //  state.pc = DEBUG_ROM_ENTRY;
-576,591c583,598
+576,591c623,638
 <   if (debug) {
 <     fprintf(log_file, "core %3d: exception %s, epc 0x%016" PRIx64 "\n",
 <             id, t.name(), epc);
@@ -161,20 +202,20 @@
 >   //  //}
 >   //  return;
 >   //}
-597c604
+597c644
 <     enter_debug_mode(DCSR_CAUSE_SWBP);
 ---
 >     //enter_debug_mode(DCSR_CAUSE_SWBP);
-603a611,613
+603a651,653
 > 
 >   update_generator_register(this->id, "medeleg", deleg, 0xffffffffffffffffull, "read");
 > 
-605a616
+605a656
 >   {
-606a618,619
+606a658,659
 >     update_generator_register(this->id, "mideleg", deleg, 0xffffffffffffffffull, "read");
 >   }
-614a628,636
+614a668,676
 >     update_generator_register(this->id, "stvec", state.stvec, 0xffffffffffffffffull, "read");
 >     update_generator_register(this->id, "PC", state.pc, 0xffffffffffffffffull, "write");
 >     update_generator_register(this->id, "scause", state.scause, 0xffffffffffffffffull, "write");
@@ -184,7 +225,7 @@
 >     SimException enter_s(state.scause, state.stval, "enter_s", epc);
 >     update_exception_event(&enter_s);
 > 
-627a650,658
+627a690,698
 >     update_generator_register(this->id, "mtvec", state.mtvec, 0xffffffffffffffffull, "read");
 >     update_generator_register(this->id, "PC", state.pc, 0xffffffffffffffffull, "write");
 >     update_generator_register(this->id, "mcause", state.mcause, 0xffffffffffffffffull, "write");
@@ -194,7 +235,7 @@
 >     SimException enter_m(state.mcause, state.mtval, "enter_m", epc);
 >     update_exception_event(&enter_m);
 > 
-641,643c672,674
+641,643c712,714
 <     if (executions != 1) {
 <       fprintf(log_file, "core %3d: Executed %" PRIx64 " times\n", id, executions);
 <     }
@@ -202,68 +243,68 @@
 >     //if (executions != 1) {
 >     //  fprintf(log_file, "core %3d: Executed %" PRIx64 " times\n", id, executions);
 >     //}
-645,646c676,677
+645,646c716,717
 <     fprintf(log_file, "core %3d: 0x%016" PRIx64 " (0x%08" PRIx64 ") %s\n",
 <             id, state.pc, bits, disassembler->disassemble(insn).c_str());
 ---
 >     //fprintf(log_file, "core %3d: 0x%016" PRIx64 " (0x%08" PRIx64 ") %s\n",
 >     //        id, state.pc, bits, disassembler->disassemble(insn).c_str());
-668a700,702
+668a740,742
 >   reg_t effective_value = 0;
 >   std::string text_name = std::string(csr_name(which));
 > 
-679a714
+679a754
 >     {
-680a716,718
+680a756,758
 >     }
 > 
 >     effective_value = state.pmpaddr[i];
-688a727,728
+688a767,768
 >      //TODO here we need a callback call for each pmpcfg that is altered, right now this
 >      //just does the very last one.
-695a736,739
+695a776,779
 >         effective_value = cfg;
 > 
 > 	//TODO this will cause at least two updates for the same write, BUT it will indicate that multiple entries in the pmpcfg array were written if this happens. This is a stopgap.
 > 	update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "write");
-705a750
+705a790
 >       effective_value = state.fflags;
-709a755
+709a795
 >       effective_value = state.frm;
-714a761
+714a801
 >       effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT);
-719a767
+719a807
 >       effective_value = (VU.vxsat << VCSR_VXSAT_SHIFT) | (VU.vxrm << VCSR_VXRM_SHIFT);
-757a806
+757a846
 >       effective_value = state.mstatus;
-762a812,813
+762a852,853
 > 
 >       effective_value = state.mip;
-766a818,819
+766a858,859
 > 
 >       effective_value = state.mie;
-769a823,824
+769a863,864
 > 
 >       effective_value = state.mideleg;
-779a835,836
+779a875,876
 > 
 >       effective_value = state.medeleg;
-787a845,846
+787a885,886
 > 
 >       effective_value = state.minstret;
-796a856
+796a896
 >       effective_value = state.minstret;
-800a861
+800a901
 >       effective_value = state.scounteren;
-803a865
+803a905
 >       effective_value = state.mcounteren;
-821c883
+821c923
 <       if (max_xlen == 32)
 ---
 >       if (max_xlen == 32){		
-822a885
+822a925
 >       }	
-825,826c888,891
+825,826c928,931
 <                              get_field(val, SATP64_MODE) == SATP_MODE_SV48))
 <         state.satp = val & (SATP64_PPN | SATP64_MODE | rv64_ppn_mask);
 ---
@@ -271,7 +312,7 @@
 >       	state.satp = val & (SATP64_PPN | SATP64_MODE | rv64_ppn_mask);
 >       }
 >       effective_value = state.satp;
-829,838c894,963
+829,838c934,1003
 <     case CSR_SEPC: state.sepc = val & ~(reg_t)1; break;
 <     case CSR_STVEC: state.stvec = val & ~(reg_t)2; break;
 <     case CSR_SSCRATCH: state.sscratch = val; break;
@@ -353,51 +394,50 @@
 >         effective_value = state.mtval;
 >         break;
 >     }
-856a982,983
+856a1022,1023
 > 
 >       effective_value = state.misa;
-861a989
+861a1029
 >         effective_value = state.tselect;
-886a1015,1017
+886a1055,1057
 > 
 >         // If mcontrol_t had a more clear size it may make sense to bitcopy its contents.
 >         effective_value = val;
-894a1026,1027
+894a1066,1067
 >         
 >         effective_value = val;
-900d1032
+900d1072
 <       // TODO: ndreset and fullreset
-905a1038,1039
+905a1078,1079
 >         
 >       memcpy(&effective_value, &(state.dcsr), sizeof(dcsr_t));
-908a1043,1044
+908a1083,1084
 > 
 >       effective_value = state.dpc;
-911a1048,1049
+911a1088,1089
 > 
 >       effective_value = state.dscratch0;
-914a1053,1054
+914a1093,1094
 >     
 >       effective_value = state.dscratch1;
-918a1059,1060
+918a1099,1100
 > 
 >       effective_value = VU.vstart;
-922a1065,1066
+922a1105,1106
 > 
 >       effective_value = VU.vxsat;
-926a1071,1072
+926a1111,1112
 > 
 >       effective_value = VU.vxrm;
-928a1075,1076
+928a1115,1116
 > 
 >   update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "write");
-931,934c1079,1446
+931,934c1119,1484
 < // Note that get_csr is sometimes called when read side-effects should not
 < // be actioned.  In other words, Spike cannot currently support CSRs with
 < // side effects on reads.
 < reg_t processor_t::get_csr(int which)
 ---
-> 
 > void processor_t::set_csr_api(int which, reg_t val)
 > {
 >    val = zext_xlen(val);
@@ -689,14 +729,14 @@
 >     case CSR_DSCRATCH1:
 >       state.dscratch1 = val;
 >       break;
->     case CSR_VL:
->       VU.vl = val;
->       break;
 >     case CSR_VSTART:
 >       VU.vstart = val;
 >       break;
+>     case CSR_VL:
+>       VU.vl = VU.set_vl_api(val, VU.vtype);
+>       break;
 >     case CSR_VTYPE:
->       VU.vtype = val;
+>       VU.set_vl_api(VU.vl, val);
 >       break;
 >     case CSR_VXSAT:
 >       VU.vxsat = val & 0x1ul;
@@ -706,7 +746,6 @@
 >       break;
 >   }
 > }
-> 
 > 
 > bool processor_t::set_pc_api(const std::string& name, const uint8_t* bytes, size_t len) //len advertises the size of the buffer
 > {
@@ -765,15 +804,15 @@
 > }
 > 
 > reg_t processor_t::get_csr_api(int which)
-965c1477,1479
+965c1515,1517
 <     require((which & ((xlen / 32) - 1)) == 0);
 ---
 >     //require((which & ((xlen / 32) - 1)) == 0);
 >     if((which & ((xlen / 32) - 1)) != 0)
 >         return 0xDEADBEEFDEADBEEF;
-966a1481
+966a1519
 >     //TODO use this as the example for the callback call in the set_csr non-api function
-976,978c1491,1495
+976,978c1529,1533
 <       require_fp;
 <       if (!supports_extension('F'))
 <         break;
@@ -783,7 +822,7 @@
 >       //std::cout << "Past checking require fp" << std::endl;
 >       //if (!supports_extension('F'))
 >       //  break;
-981,983c1498,1500
+981,983c1536,1538
 <       require_fp;
 <       if (!supports_extension('F'))
 <         break;
@@ -791,42 +830,42 @@
 >       //require_fp;
 >       //if (!supports_extension('F'))
 >       //  break;
-986,988c1503,1504
+986,988c1541,1542
 <       require_fp;
 <       if (!supports_extension('F'))
 <         break;
 ---
 >       //if (!supports_extension('F'))
 >       //  break;
-991,992c1507,1508
+991,992c1545,1546
 <       if (!supports_extension('V'))
 <         break;
 ---
 >       //if (!supports_extension('V'))
 >       //  break;
-996,998d1511
+996,998d1549
 <       if (ctr_ok)
 <         return state.minstret;
 <       break;
-1004,1006d1516
+1004,1006d1554
 <       if (ctr_ok && xlen == 32)
 <         return state.minstret >> 32;
 <       break;
-1009c1519
+1009c1557
 <       if (xlen == 32)
 ---
 >       //if (ctr_ok && xlen == 32)
-1011c1521
+1011c1559
 <       break;
 ---
 >       //break;
-1035,1036c1545,1546
+1035,1036c1583,1584
 <       if (get_field(state.mstatus, MSTATUS_TVM))
 <         require_privilege(PRV_M);
 ---
 >       //if (get_field(state.mstatus, MSTATUS_TVM))
 >       //  require_privilege(PRV_M);
-1122a1633,2026
+1122a1671,2064
 >       //require_vector_vs;
 >       //if (!supports_extension('V'))
 >       //  break;
@@ -1221,25 +1260,25 @@
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
 >       return state.dscratch1;
 >     case CSR_VSTART:
-1123a2028,2029
+1123a2066,2067
 >       effective_value = VU.vstart;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1130a2037,2038
+1130a2075,2076
 >       effective_value = VU.vxsat;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1135a2044,2045
+1135a2082,2083
 >       effective_value = VU.vxrm;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1138a2049,2050
+1138a2087,2088
 >       effective_value = VU.vl;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1143a2056,2057
+1143a2094,2095
 >       effective_value = VU.vtype;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1148a2063,2064
+1148a2101,2102
 >       effective_value = VU.vlenb;
 >       update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "read");
-1249a2166
+1249a2204
 >   	update_generator_register(this->id, "mip", state.mip, 0xffffffffffffffff, "read");
-1264a2182
+1264a2220
 >   	update_generator_register(this->id, "mip", state.mip, 0xffffffffffffffff, "read");
