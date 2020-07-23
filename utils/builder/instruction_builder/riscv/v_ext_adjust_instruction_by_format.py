@@ -45,16 +45,10 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     # unary instruction formats
     elif instruction_format == 'vd/rd-vs2-vm':
         return adjust_vdrd_vs2_vm(aInstruction)
-    elif instruction_format == 'rd-vs2-vm':
-        return adjust_rd_vs2_vm(aInstruction)
-    elif instruction_format == 'rd-vs2':
-        return adjust_rd_vs2(aInstruction)
     elif instruction_format == 'vd-rs1-vm':
         return adjust_vd_rs1_vm(aInstruction)
     elif instruction_format == 'vd/rd-rs1-vm':
         return adjust_vdrd_rs1_vm(aInstruction)
-    elif instruction_format == 'vd-vm':
-        return adjust_vd_vm(aInstruction)
     # vsetvl/i instructions
     elif instruction_format == 'rd-rs1-rs2':
         return adjust_rd_rs1_rs2(aInstruction)
@@ -71,8 +65,6 @@ def v_ext_adjust_instruction_by_format(aInstruction):
         return adjust_vd_simm5(aInstruction)
     elif instruction_format == 'vd-vs1':
         return adjust_vd_vs1(aInstruction)
-    elif instruction_format == 'vd-vs2':
-        return adjust_vd_vs2(aInstruction)
     # vl<nf>r/vs<nf>r instructions
     elif instruction_format == 'vd-rs1':
         return adjust_vd_rs1(aInstruction)
@@ -195,25 +187,6 @@ def adjust_vdrd_vs2_vm(aInstruction):
     operand_adjustor.set_vm()
     return True
 
-def adjust_vd_vm(aInstruction):
-    operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd()
-    operand_adjustor.set_vm()
-    return True
-
-def adjust_rd_vs2_vm(aInstruction):
-    operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_rd_int()
-    operand_adjustor.set_vs2()
-    operand_adjustor.set_vm()
-    return True
-
-def adjust_rd_vs2(aInstruction):
-    operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_rd_int()
-    operand_adjustor.set_vs2()
-    return True
-
 def adjust_vdrd_vs2_vs1_vm(aInstruction):
     funct3 = aInstruction.find_operand('const_bits').value[6:9]
     operand_adjustor = VectorOperandAdjustor(aInstruction)
@@ -230,12 +203,6 @@ def adjust_vd_vs1(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vd()
     operand_adjustor.set_vs1()
-    return True
-
-def adjust_vd_vs2(aInstruction):
-    operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd()
-    operand_adjustor.set_vs2()
     return True
 
 def adjust_vd_vs2_vs1(aInstruction):
