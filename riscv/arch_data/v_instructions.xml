@@ -457,20 +457,18 @@
     <asm format="VFMUL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMV.F.S" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010000000000011010111"/>
+    <O name="const_bits" type="Constant" bits="31-25,19-15,14-12,6-0" value="0100001000000011010111"/>
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
-    <asm format="VFMV.F.S %s, %s, %s" op1="rd" op2="vs2" op3="vm"/>
+    <asm format="VFMV.F.S %s, %s" op1="rd" op2="vs2"/>
   </I>
   <I name="VFMV.S.F" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="010000000001011010111"/>
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0100001000001011010111"/>
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
-    <asm format="VFMV.S.F %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+    <asm format="VFMV.S.F %s, %s" op1="vd" op2="rs1"/>
   </I>
   <I name="VFNCVT.F.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="100010101000011010111"/>

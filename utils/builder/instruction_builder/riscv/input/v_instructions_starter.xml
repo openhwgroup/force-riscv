@@ -410,17 +410,15 @@ Add RISCV V extension instruction starter information in this file.
     <asm format="VFMUL.VV"/>
   </I>
   <I name="VFMV.F.S" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,19-15,14-12,6-0" value="010000000000011010111"/>
+    <O name="const_bits" type="Constant" bits="31-25,19-15,14-12,6-0" value="0100001000000011010111"/>
     <O name="vd/rd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VFMV.F.S"/>
   </I>
   <I name="VFMV.S.F" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="010000000001011010111"/>
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0100001000001011010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VFMV.S.F"/>
   </I>
   <I name="VFNCVT.F.F.W" isa="RISCV" class="VectorInstruction" group="Vector">

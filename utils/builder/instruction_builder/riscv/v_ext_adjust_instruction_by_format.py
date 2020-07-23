@@ -45,6 +45,8 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     # unary instruction formats
     elif instruction_format == 'vd/rd-vs2-vm':
         return adjust_vdrd_vs2_vm(aInstruction)
+    elif instruction_format == 'vd/rd-vs2':
+        return adjust_vdrd_vs2(aInstruction)
     elif instruction_format == 'rd-vs2-vm':
         return adjust_rd_vs2_vm(aInstruction)
     elif instruction_format == 'rd-vs2':
@@ -125,7 +127,10 @@ def adjust_vd_rs1(aInstruction):
     else:
         operand_adjustor = VectorOperandAdjustor(aInstruction)
         operand_adjustor.set_vd()
-        operand_adjustor.set_rs1_int()
+        if '.F' in aInstruction.name:
+            operand_adjustor.set_rs1_sp()
+        else:
+            operand_adjustor.set_rs1_int()
 
     return True
 
@@ -193,6 +198,15 @@ def adjust_vdrd_vs2_vm(aInstruction):
         operand_adjustor.set_vdrd_int()
     operand_adjustor.set_vs2()
     operand_adjustor.set_vm()
+    return True
+
+def adjust_vdrd_vs2(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    if '.F' in aInstruction.name:
+        operand_adjustor.set_vdrd_sp()
+    else:
+        operand_adjustor.set_vdrd_int()
+    operand_adjustor.set_vs2()
     return True
 
 def adjust_vd_vm(aInstruction):
