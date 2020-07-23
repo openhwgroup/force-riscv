@@ -1430,7 +1430,7 @@ Add RISCV V extension instruction starter information in this file.
   </I>
   <I name="VMV.S.X" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="0100000000001101010111"/>
-    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VMV.S.X"/>
   </I>
@@ -2388,13 +2388,13 @@ Add RISCV V extension instruction starter information in this file.
     <asm format="VSETVLI"/>
   </I>
   <I name="VL1R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010001110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VL1R.V"/>
   </I>
   <I name="VS1R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010001110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VS1R.V"/>

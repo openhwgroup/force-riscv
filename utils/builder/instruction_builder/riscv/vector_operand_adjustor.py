@@ -75,7 +75,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vdrd_int(self):
         vdrd_opr = self.mInstr.find_operand('vd/rd')
-        if self.mInstr.name in self.rd_dictionary:
+        if vdrd_opr.name in self.rd_dictionary:
             vdrd_opr.name = 'rd'
             self.set_reg_int(vdrd_opr)
         else:
@@ -95,7 +95,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vdrd_sp(self):
         vdrd_opr = self.mInstr.find_operand('vd/rd')
-        if self.mInstr.name in self.rd_dictionary:
+        if vdrd_opr.name in self.rd_dictionary:
             vdrd_opr.name = 'rd'
             self.set_reg_sp(vdrd_opr)
         else:
