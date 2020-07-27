@@ -125,12 +125,10 @@ void VectorElementUpdates::translateElementToRegisterUpdates(SimAPI& rApiHandle,
     }    
 
     std::vector<uint8_t> rval_buff;
-    std::vector<uint8_t> mask_buff;
     if(not mElementWriteUpdates.empty())
     {
       access_type_temp = "write";
       rval_buff.resize(mVectorLogicalRegisterWidth);
-      mask_buff.resize(mVectorLogicalRegisterWidth);
       rApiHandle.PartialReadLargeRegister(mProcessorId, mVectorRegisterName.c_str(), &rval_buff.at(0), mVectorLogicalRegisterWidth, 0);
     }
 
@@ -145,7 +143,6 @@ void VectorElementUpdates::translateElementToRegisterUpdates(SimAPI& rApiHandle,
       uint64 rval_temp = 0x0ull;
       uint64 mask_temp = 0xffffffffffffffffull;  
       memcpy(&rval_temp, &rval_buff.at(mPhysRegSize * phys_reg_idx), mPhysRegSize);
-      memcpy(&mask_temp, &mask_buff.at(mPhysRegSize * phys_reg_idx), mPhysRegSize);
 
       std::string regname_temp = mVectorRegisterName + mVectorPhysicalRegisterNames.at(phys_reg_idx);
       RegUpdate reg_update_temp(mProcessorId, regname_temp.c_str(), rval_temp, mask_temp, access_type_temp.c_str());
