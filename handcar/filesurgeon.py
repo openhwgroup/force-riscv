@@ -1609,9 +1609,10 @@ SPIKE_SOURCE_FILENAMES = ["fesvr/option_parser.cc", "riscv/cachesim.cc", "riscv/
 SPIKE_HEADER_FILENAMES = ["fesvr/option_parser.h", "fesvr/elf.h", "riscv/arith.h", "riscv/cachesim.h", "riscv/common.h", "riscv/encoding.h", "riscv/mmu.h", "riscv/opcodes.h", "riscv/simif.h", "riscv/trap.h", "riscv/tracer.h", "riscv/insn_template.h", "riscv/extension.h", "riscv/memtracer.h", "riscv/byteorder.h", "insn_list.h", "icache.h"] 
 
 #All these ones need to be turned into patch operations rather than file replacements to the extent possible
-REPLACEMENT_SOURCE_FILENAMES = ["mmu.cc", "simlib.cc", "processor.cc", "execute.cc", "regnames.cc", "disasm.cc"] 
+REPLACEMENT_SOURCE_FILENAMES = ["mmu.cc", "simlib.cc", "processor.cc", "execute.cc", "extensions.cc", "regnames.cc", "disasm.cc"] 
 REPLACEMENT_HEADER_FILENAMES = ["config.h", "mmu.h", "simif.h", "simlib.h", "specialize.h", "primitives.h", "processor.h", "devices.h", "decode.h", "disasm.h"] #TODO identify the original source counterparts for these 
 REPLACEMENT_INSTRUCTION_HEADER_FILENAMES = ["mret.h", "sret.h"]
+GLOB_REPLACEMENT_INSTRUCTION_HEADER_FILENAMES = ["insns/*.h"]
 
 if(NOISY):
     print("###\n### Copying original Spike files and then modifying them. Output will be in src and inc directories.\n###")
@@ -1647,6 +1648,10 @@ copy_files(REPLACEMENTS_DIRECTORY, REPLACEMENT_HEADER_FILENAMES, "./inc")
 makedir("./inc/insns")
 copy_files(ORIGINAL_INSTRUCTION_HEADERS_DIRECTORY, INSTRUCTION_HEADER_FILENAMES, "./inc/insns") 
 copy_files(REPLACEMENTS_DIRECTORY, REPLACEMENT_INSTRUCTION_HEADER_FILENAMES, "./inc/insns")
+
+import glob
+for f in glob.glob(str(REPLACEMENTS_DIRECTORY + "/" + GLOB_REPLACEMENT_INSTRUCTION_HEADER_FILENAMES[0])):
+    copy(f, "./inc/insns")
 
 makedir('./inc/fesvr')
 copy('inc/option_parser.h', 'inc/fesvr/option_parser.h')
