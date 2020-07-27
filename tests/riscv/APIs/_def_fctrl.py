@@ -23,6 +23,7 @@ control_items = [
                 #fails#{"fname":"api_getPageInfo_01_force.py",                "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 {"fname":"api_verifyVirtualAddress_01_force.py",       "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 {"fname":"api_genFreePagesRange_01_force.py",          "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"skip_boot_force.py",                         "generator" : {"--cfg" : "config/riscv.config", "--options":"\"SkipBootCode=1\""}},
                 {"fname":"Constraint_force.py",                        "generator" : {"--cfg" : "config/riscv.config"}},
                 {"fname":"LoadImmediate_force.py",                     "generator" : {"--cfg" : "config/riscv.config"}},
                 {"fname":"State_force.py",                             "generator" : {"--cfg" : "config/riscv.config"}},
