@@ -46,9 +46,9 @@ def create_quad_precision_app_register(aIndex):
     return q_reg
 
 def create_vector_app_register(aIndex):
-    v_reg = Register(**{'name':"V%d" % aIndex, 'length':128, 'index':aIndex, 'type':"VECREG", 'class':"LargeRegister", 'boot':0x3000})
-    for i in range(0, 2):
-        v_field = RegisterField("V%d_%d" % (aIndex, i))
+    v_reg = Register(**{'name':"v%d" % aIndex, 'length':512, 'index':aIndex, 'type':"VECREG", 'class':"LargeRegister", 'boot':0x3000})
+    for i in range(8):
+        v_field = RegisterField("v%d_%d" % (aIndex, i))
         v_field.mPhysicalRegister = "v%d_%d" % (aIndex, i)
         v_bfield = BitField(64, 0)
         v_field.mBitFields.append(v_bfield)
@@ -66,8 +66,8 @@ def build_app_registers():
         app_register_doc.addRegister(create_app_register("x%d" % i, 64, i, "GPR", None, 0x1000))
 
     # Add zero register
-    app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("zero", 64, 0, "GPR", "PhysicalRegisterRazwi", 0))
-    app_register_doc.addRegister(create_app_register("x0", 64, 0, "ZR", "ReadOnlyZeroRegister", 0, "zero"))
+    app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("x0", 64, 0, "GPR", "PhysicalRegisterRazwi", 0))
+    app_register_doc.addRegister(create_app_register("x0", 64, 0, "ZR", "ReadOnlyZeroRegister", 0, "x0"))
 
     # Add PC register
     app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("PC", 64, 32, "PC"))
@@ -88,8 +88,9 @@ def build_app_registers():
 
     # add vector registers V0-V31
     for i in range(0, 32):
-        app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("v%d_0" % i, 64, i, "VECREG", aSubIndex=0))
-        app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("v%d_1" % i, 64, i, "VECREG", aSubIndex=1))
+        for sub_index in range(8):
+            app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("v%d_%d" % (i, sub_index), 64, i, "VECREG", aSubIndex=sub_index))
+
         app_register_doc.addRegister(create_vector_app_register(i))
 
     app_register_doc.writeXmlFile('output/app_registers.xml')
