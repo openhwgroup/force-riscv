@@ -21,11 +21,19 @@ from classes.ApplicationsInfo import ApplicationsInfo, ApplicationConfig
 from common.cmdline_utils import CmdLineOpts
 from common.msg_utils import Msg
 
-## Manage applications that make up the master run workflow.
-#
-class ApplicationsSetup(object):
 
-    def __init__(self, aCmdLineParameters, aSysArgs, aConfigPath=None, aSingleRun=False, aAddOpts=False):
+## Manage applications that make up the master run workflow.
+##
+class ApplicationsSetup(object):
+    """Manage applications that make up the master run workflow."""
+
+    def __init__(self,
+                 aCmdLineParameters,
+                 aSysArgs,
+                 aConfigPath=None,
+                 aSingleRun=False,
+                 aAddOpts=False):
+        """Initialize ApplicationSetup object."""
         lsf_info = self._getAppConfig('lsf')
         self._mAppsInfo = ApplicationsInfo(lsf_info)
 
@@ -37,12 +45,21 @@ class ApplicationsSetup(object):
 
         # Populate single run applications options
         if aSingleRun:
-            # TODO: The output directory hasn't been initialized when we get to this point, so we aren't able to determine if the workflow file should be written
-            #  to output/regression/ or output/performance/ yet. Ideally we would set up all of master run before doing any application setup, but the current
-            #  implementation is the other way around. Fixing this issue is too large an effort for something this small, but this should be revisited when 1) we
-            #  decide to knock out some of the major technical debt that master run has accrued, 2) we decide on being able to include workflow in control files,
-            #  or 3) we decide to start explicitly logging workflow files. For now, workflow is being passed into forrest run via the config file.
-            #self._mAppsInfo.mConfigPath = self._buildTemporaryWorkflowFile(single_run_app_opts, sequence_app_opts)
+            """ TODO: The output directory hasn't been initialized when
+             we get to this point, so we aren't able to determine if the 
+             workflow file should be written to output/regression/ or 
+             output/performance/ yet. Ideally we would set up all of 
+             master run before doing any application setup, but the 
+             current implementation is the other way around. Fixing this
+             issue is too large an effort for something this small, but
+             this should be revisited when 1) we decide to knock out
+             some of the major technical debt that master run has
+             accrued, 2) we decide on being able to include workflow in
+             control files, or 3) we decide to start explicitly logging
+             workflow files. For now, workflow is being passed into
+             forrest run via the config file."""
+
+            # self._mAppsInfo.mConfigPath = self._buildTemporaryWorkflowFile(single_run_app_opts, sequence_app_opts)
 
             for app_name, app_opts in single_run_app_opts:
                 app_info = self._getAppConfig(app_name)
@@ -66,36 +83,66 @@ class ApplicationsSetup(object):
         if aAddOpts:
             self._resolveParameters()
 
+    # TODO:
+    """Currently, the workflow file is arranged as a list of tuples:
+    (application name, list of dictionaries associated with the app).
+    The way workflow parsing works right now is to split each
+    dictionary into a key and value and append them to existing
+    lists of values for the associated key. It is the application's
+    responsibility to handle the list of options for each key. Since
+    this feature was originally intended for use with the Iss
+    application and Iss has only 1 option (path), it works perfectly.
+    Issues arise when this functionality is adapted for future
+    applications which may have more than 1 optional option: if the
+    first dictionary for app X contained 2 key-value pairs (a:'a',
+    b:'b') and the second contained a single (a:'a2'), the
+    application would get 2 lists of different sizes (a:['a', 'a2']
+    b:['b']) and would be unable to determine which a-value the
+    single b-value maps to.
+    There are 2 clear solutions available:
+    The first is to change master run's behavior: how it handles
+    options, and loading them into their respective applications.
+    Doing this would not require each application having its own
+    custom handling of multiple dictionaries, however would change
+    some core functionality of master run.
+    The second is to modify this current workflow parser to pass
+    entire dictionaries into applications instead of a list for each
+    option. This does not change any major master run functionality
+    but requires custom handling in each application."""
+
     ## Adds options to provided system arguments to resolve later
     #
-    def _addWorkflowToSysArgs(self, aSysArgs, aAppName, aAppOpts): # TODO: Currently, the workflow file is arranged as a list of tuples: (application name, list of
-        for option, value in aAppOpts.items():                     #  dictionaries associated with the app). The way workflow parsing works right now is to split
-            argument = '--%s.%s' % (aAppName, option)              #  each dictionary into a key and value and append them to existing lists of values for the
-            if argument in aSysArgs:                               #  associated key. It is the application's responsibility to handle the list of options for each
-                if value is not None:                              #  key. Since this feature was originally intended for use with the Iss application and Iss has
-                    option_index = aSysArgs.index(argument) + 1    #  only 1 option (path), it works perfectly. Issues arise when this functionality is adapted for
-                    new_argument = [aSysArgs[option_index]]        #  future applications which may have more than 1 optional option: if the first dictionary for
-                    # Add new argument to existing options         #  app X contained 2 key-value pairs (a:'a', b:'b') and the second contained a single (a:'a2'),
-                    if isinstance(value, list):                    #  the application would get 2 lists of different sizes (a:['a', 'a2'], b:['b']) and would be
-                        new_argument.extend(value)                 #  unable to determine which a-value the single b-value maps to.
-                        aSysArgs[option_index] = new_argument      #
-                    else:                                          #  There are 2 clear solutions available. The first is to change master run's behavior: how it handles
-                        new_argument.append(value)                 #  options, and loading them into their respective applications. Doing this would not require each
-                        aSysArgs[option_index] = new_argument      #  application having its own custom handling of multiple dictionaries, however would change some core
-            else: # Argument does not exist yet                    #  functionality of master run. The second is to modify this current workflow parser to pass entire
-                aSysArgs.append(argument)                          #  dictionaries into applications instead of a list for each option. This does not change any major
-                if value is not None:                              #  master run functionality but requires custom handling in each application.
+    def _addWorkflowToSysArgs(self, aSysArgs, aAppName, aAppOpts):
+        """Adds options to provided system arguments to resolve later"""
+        for option, value in aAppOpts.items():
+            argument = '--%s.%s' % (aAppName, option)
+            if argument in aSysArgs:
+                if value is not None:
+                    option_index = aSysArgs.index(argument) + 1
+                    new_argument = [aSysArgs[option_index]]
+                    # Add new argument to existing options
+                    if isinstance(value, list):
+                        new_argument.extend(value)
+                        aSysArgs[option_index] = new_argument
+                    else:
+                        new_argument.append(value)
+                        aSysArgs[option_index] = new_argument
+            else: # Argument does not exist yet
+                aSysArgs.append(argument)
+                if value is not None:
                     aSysArgs.append(value)
 
     ## Retrieve workflow from the provided path to add to aSysArgs to parse when building mCmdLineOpts later
     #
     def _getWorkflow(self, aConfigPath):
+        """Retrieve workflow from the provided path to add to aSysArgs to parse when building mCmdLineOpts later"""
         # Check workflow in config file first
         try:
             Msg.info('Using workflow from: %s' % aConfigPath)
             config_module = SourceFileLoader('config', aConfigPath).load_module()
             return (config_module.single_run_app_opts, config_module.sequence_app_opts)
-        except AttributeError: # aConfigPath is None or the specified config file does not contain workflow
+        except AttributeError:
+            # aConfigPath is None or the specified config file does not contain workflow
             if aConfigPath:
                 Msg.info('Workflow improperly defined in %s' % aConfigPath)
             else:
@@ -108,11 +155,13 @@ class ApplicationsSetup(object):
             return (config_module.single_run_app_opts, config_module.sequence_app_opts)
         except AttributeError:
             if os.environ.get('MASTER_RUN_CONFIG'):
-                Msg.info('Workflow improperly defined in MASTER_RUN_CONFIG: %s' % os.environ.get('MASTER_RUN_CONFIG'))
+                Msg.info('Workflow improperly defined in MASTER_RUN_CONFIG: '
+                         '%s' % os.environ.get('MASTER_RUN_CONFIG'))
             else:
                 Msg.info('MASTER_RUN_CONFIG environment variable is not set.')
         except FileNotFoundError: # MASTER_RUN_CONFIG environment variable is set, but cannot be found
-            Msg.err('MASTER_RUN_CONFIG is currently set to %s. Please ensure that it exists.' % os.environ.get('MASTER_RUN_CONFIG'))
+            Msg.err('MASTER_RUN_CONFIG is currently set to %s. '
+                    'Please ensure that it exists.' % os.environ.get('MASTER_RUN_CONFIG'))
             sys.exit(1) # Assume typo so quit
 
         # Use default last
@@ -128,11 +177,13 @@ class ApplicationsSetup(object):
     ## Return the ApplicationsInfo object
     #
     def getApplicationsInfo(self):
+        """Return the ApplicationsInfo object"""
         return self._mAppsInfo
 
     ## Import and create instance of ApplicationConfig for the requested application
     #
     def _getAppConfig(self, aAppName):
+        """Import and create instance of ApplicationConfig for the requested application"""
         app_module = importlib.import_module('.' + aAppName, 'applications')
         app_cfg = ApplicationConfig(aAppName, app_module)
         return app_cfg
@@ -140,6 +191,7 @@ class ApplicationsSetup(object):
     ## Iterate through all ApplicationConfig objects to add application specific command line parameters
     #
     def _addAppOptions(self, aCmdLineParameters):
+        """Iterate through all ApplicationConfig objects to add application specific command line parameters"""
         for app_cfg in self._mAppsInfo.mAllAppsOrder:
             app_cmdline_opts = app_cfg.getCmdLineOptions()
             if app_cmdline_opts is not None:
@@ -155,6 +207,7 @@ class ApplicationsSetup(object):
     ## Iterate through all ApplicationConfig objects to pass back parsed command line options and resolve application parameters.
     #
     def _resolveParameters(self):
+        """Iterate through all ApplicationConfig objects to pass back parsed command line options and resolve application parameters."""
         for app_cfg in self._mAppsInfo.mAllAppsOrder:
             app_parms_processor_cls = app_cfg.getParametersProcessorClass()
             if app_parms_processor_cls is not None:

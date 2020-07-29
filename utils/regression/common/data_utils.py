@@ -2,14 +2,14 @@ import sys
 from io import StringIO
 
 
+## Outputs obj representation into a readable format.
+#
 def dump_repr(obj, lvl=0, file=sys.stdout):
     """Outputs obj representation into a readable format.
 
-    :param obj: Object to be displayed hierarchically
-    :type obj: object
-    :param lvl: Level of indention.  Mostly used internally by regressive calls.
-    :type lvl: int
-    :param file: file
+    :param object obj: Object to be displayed hierarchically
+    :param int lvl: Level of indention.  Mostly used internally.
+    :param io.TextIOWrapper file: FileHandle for output
     """
     indent = '   '
     if isinstance(obj, dict):
@@ -43,6 +43,8 @@ def dump_repr(obj, lvl=0, file=sys.stdout):
         print('%s%s,' % (lvl * indent, repr(obj)), file=file)
 
 
+## Return a str with output from dump_repr()
+#
 def dump_str(obj):
     """Return a str with output from dump_repr()
 
@@ -55,13 +57,13 @@ def dump_str(obj):
         return buf.getvalue()
 
 
+## Returns a list containing the indices of val in the list.
+#
 def indices(a_list, val):
-    """Always returns a list containing the indices of val in the list.
+    """Returns a list containing the indices of val in the list.
 
-    :param a_list: List to be searched.
-    :type a_list: list
-    :param val: Item to be found in a_list
-    :type val: object
+    :param list|str a_list: List to be searched.
+    :param object val: Item to be found in a_list
     :return: List of integer indexes of val in a_list
     :rtype: list
     """

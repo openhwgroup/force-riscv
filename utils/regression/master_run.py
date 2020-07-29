@@ -115,6 +115,7 @@ class MasterRun(object):
         self.limit_fails = False
         self.crit_sec = HiCriticalSection()
         self.processor_name = None
+        self.fctrl = None
 
         self.terminated = False
 
@@ -164,7 +165,6 @@ class MasterRun(object):
         return return_value
 
     def load(self):
-
         # Msg.user( "MasterRun::load" )
         self.init_all()
         # create the top level FileController

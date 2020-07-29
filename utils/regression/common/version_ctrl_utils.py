@@ -16,23 +16,25 @@
 from pathlib import Path
 import re
 from common.sys_utils import SysUtils
+from common.data_utils import indices
 
 
+## This class contains several methods used to interface with the various scm systems used by the project.
+#
 class VersionCtrlUtils(object):
     """This class contains several methods used to interface with the various
     scm systems used by the project."""
 
+    ## Returns an initialized data structure to hold SCM version data.
+    #
     @classmethod
     def get_scm_data(cls, scm_type, a_path, a_cmd):
         """Returns an initialized data structure to hold SCM version data.
 
-        :param scm_type: 'svn' or 'git'
-        :type scm_type: str
-        :param a_path: Project base folder
-        :type a_path: str
-        :param a_cmd: Command to return scm status detail
-        :type a_cmd: str
-        :return: Data structure for SCM data
+        :param str scm_type: 'svn' or 'git'
+        :param str a_path: Project base folder
+        :param str a_cmd: Command to return scm status detail
+        :return: dict containing SCM data
         :rtype: dict
         """
         version_info = {'scm_type': scm_type,
@@ -50,9 +52,11 @@ class VersionCtrlUtils(object):
 
         return version_info, cmd_output
 
+    ## Returns a populated data structure holding svn version data.
+    #
     @classmethod
     def get_svn_revision(cls, a_path):
-        """Returns an populated data structure holding svn version data.
+        """Returns a populated data structure holding svn version data.
 
         :param a_path: Project base folder
         :type a_path: str
@@ -76,17 +80,36 @@ class VersionCtrlUtils(object):
 
         return version_info
 
+    ## Scan a_string and parse out the tags and comment
+    #
+    @classmethod
+    def parse_git_log_line(cls, a_string):
+        """Scan a_string and parse out the tags and comment
+
+        :param str a_string: Result from 'git log' after removing the version #
+        """
+        data_dict = {'tags': [], 'comment': a_string}
+        if '(' not in a_string or ')' not in a_string:
+            return data_dict
+        start = indices(a_string, '(')[0]
+        end = indices(a_string, ')')[0]
+        if end < start:
+            return data_dict
+        data_dict['tags'] = a_string[start + 1: end].split(',')
+        data_dict['comment'] = a_string[end + 1:].strip()
+        return data_dict
+
+    ## Returns a populated data structure holding git version data.
+    #
     @classmethod
     def get_git_revision(cls, a_path):
-        """Returns an populated data structure holding git version data.
+        """Returns a populated data structure holding git version data.
 
-        :param a_path: Project base folder
-        :type a_path: str
+        :param str a_path: Project base folder
         :return: Data structure holding git data
         :rtype: dict
         """
-
-        status_cmd = "cd %s; git reflog | awk 'NR<2'" % a_path
+        status_cmd = "cd %s; git log --oneline -n1 " % a_path
         version_info, cmd_output = cls.get_scm_data('git', a_path, status_cmd)
 
         if version_info['error_msg']:
@@ -96,17 +119,12 @@ class VersionCtrlUtils(object):
         line = cmd_output.split('\n')[0]
         words = line.split()
         # Example:
-        #     words = ['4419c7a', 'HEAD@{0}:', 'commit:', 'Moved',
-        #              'command-line', 'parsing', 'to', 'inside',
-        #              'master_run']
+        #     words = ['46a13f1', '(origin/vector,', 'alt/vector)', 'RISC',
+        #              'vector', 'instructions:', 'reserved', 'encoding',
+        #              'fixes']
         version_info['version'] = words[0]
-        version_info['tags'] = []
-        version_info['comment'] = []
-
-        if 'commit:' in words[1:]:
-            i = words.index('commit:')
-            version_info['tags'].extend(words[1:i])
-            version_info['comment'] = ' '.join(words[i+1:])
+        parsed_data = cls.parse_git_log_line(' '.join(words[1:]))
+        version_info.update(parsed_data)
 
         version_info['status'] = True
 
@@ -122,17 +140,16 @@ class VersionCtrlUtils(object):
 
         return version_info
 
+    ## Returns a populated data structure holding all valid version data from all supported SCM tools (git and svn currently.)
+    #
     @classmethod
     def get_scm_revisions(cls, a_path):
-        """Returns an populated data structure holding all valid version data
+        """Returns a populated data structure holding all valid version data
         from all supported SCM tools (git and svn currently.)
 
-        :param a_path: Project base folder
-        :type a_path: str
+        :param str a_path: Project base folder
         :return: Data structure holding all valid scm data
-        :rtype: list
         """
-
         version_info = []
 
         # Get SVN info
@@ -151,15 +168,15 @@ class VersionCtrlUtils(object):
 
         return version_info
 
+    ## Returns a formatted string containing all pertinent SCM data, ready for logging.
+    #
     @classmethod
     def get_version_output(cls, a_version_data):
         """Returns a formatted string containing all pertinent SCM data,
         ready for logging.
 
-        :param a_version_data: Result of get_scm_revisions()
-        :type a_version_data: list
+        :param list a_version_data: Result of get_scm_revisions()
         :return: Formatted string of SCM data
-        :rtype: str
         """
         out_line_fmt = "scm_type: {}, revision number: {}, location: {}, url: {}"
         version_output = ""
@@ -169,4 +186,9 @@ class VersionCtrlUtils(object):
                                                       str(item['version']),
                                                       item["folder"],
                                                       item['url'])
+            if item.get('tags', []):
+                version_output += "\ntags: {}".format(item['tags'])
+            if item.get('comment', []):
+                version_output += ", comment: {}".format(item['comment'])
+
         return version_output

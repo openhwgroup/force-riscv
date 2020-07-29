@@ -60,7 +60,13 @@ class ForceParametersProcessor(ParameterProcessor):
 ## Process force control data
 #
 def processForceControlData(aControlData, aAppParameters):
-    if aAppParameters is None: return # TODO Temporary, to avoid failing in forrest run, to remove.
+    """
+    :param object aControlData:
+    :param object aAppParameters:
+    :return:
+    """
+    if aAppParameters is None:
+        return # TODO Temporary, to avoid failing in forrest run, to remove.
 
     key = 'path'
     if aAppParameters.parameter(key):

@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+
 ## A minimal object to hold the application parameters
 #
 class ApplicationParameters(object):
@@ -34,6 +36,7 @@ class ApplicationParameters(object):
 
     def commandLineSpecified(self, aParmName):
         return self._mParameters[aParmName + " from cmdline"]
+
 
 ## Configuration information for individual application
 #
@@ -88,6 +91,7 @@ class ApplicationConfig(object):
     #
     def createReporter(self):
         return self._mModule.ReporterClass()
+
 
 ## Container of all application components.
 #

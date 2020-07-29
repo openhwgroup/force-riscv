@@ -127,4 +127,3 @@ class RtlReporter(object):
                         for space in range(20 - len(str(self.mTotalInstructionCount))):
                             outfile.write(" ")
                         outfile.write(str(self.mTotalInstructionCount) + "||\n")                                                 
-
