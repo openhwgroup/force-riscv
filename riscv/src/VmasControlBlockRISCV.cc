@@ -255,6 +255,7 @@ namespace Force {
     auto set_system_pagereq_lambda = [=] (GenPageRequest* pPageReq, const PhysicalRegion* pPhysRegion) {
       pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::FlatMap, true); // use flat-map.
       pPageReq->SetPteAttribute(EPteAttributeType::SystemPage, 1); // Set the sw-configurable system page indicator to a 1 for system pages
+      pPageReq->SetPrivilegeLevel(mPrivilegeLevel);
       pPageReq->SetBankType(pPhysRegion->MemoryBank());
     };
 
