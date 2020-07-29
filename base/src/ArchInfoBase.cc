@@ -264,6 +264,7 @@ namespace Force {
                                config_ptr->NumCores(), /* # cores */
                                config_ptr->NumThreads(), /* # threads */
                                pa_size, /* physical address size */
+                               config_ptr->LimitValue(ELimitType::MaxPhysicalVectorLen), /* vector register length */
                                "./sim.log", /* ignore for now */
                                true
                                );

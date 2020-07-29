@@ -151,7 +151,11 @@ namespace Force {
 		   << std::endl;
     }
 
-    mpSimDllAPI->initialize_simulator("");
+    stringstream varch;
+    varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mVectorRegLen;
+    string varch_str = varch.str();
+
+    mpSimDllAPI->initialize_simulator(varch_str.c_str());
   }
 
   //!< write out simulation trace file (if any), send 'terminate' directive to simulator, close sim dll...

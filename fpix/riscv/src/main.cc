@@ -60,6 +60,7 @@ int main(int argc, char* argv[]) {
                         my_config.NumberOfCores(), /* # cores */
                         my_config.ThreadsPerCpu(), /* # threads */
                         my_config.PhysicalAddressSize(), /* physical address size */
+                        my_config.VectorRegisterLength(), /* vector register length */
                         "./fpix_sim.log", /* simulator debug trace file */
                         true
                        );

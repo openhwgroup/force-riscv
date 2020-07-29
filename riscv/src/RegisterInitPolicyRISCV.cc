@@ -67,7 +67,7 @@ namespace Force {
 
   void VlInitPolicy::InitializeRegister(Register* pRegister) const
   {
-    uint64 max_vector_len = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen);
+    uint64 max_vector_len = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / 8;
     SetRegisterInitialValue(pRegister, max_vector_len);
   }
 
@@ -75,7 +75,7 @@ namespace Force {
   {
     LOG(notice) << "{VlInitPolicy::RegisterFieldReloadValue} reloading " << pRegister->Name() << endl;
 
-    uint64 max_vector_len = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen);
+    uint64 max_vector_len = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / 8;
     return max_vector_len;
   }
 
