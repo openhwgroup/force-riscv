@@ -214,8 +214,8 @@
     <choice description="16-bit elements" value="0x1" weight="10"/>
     <choice description="32-bit elements" value="0x2" weight="10"/>
     <choice description="64-bit elements" value="0x3" weight="10"/>
-    <choice description="128-bit elements" value="0x4" weight="10"/>
-    <choice description="256-bit elements" value="0x5" weight="10"/>
+    <choice description="128-bit elements" value="0x4" weight="0"/>
+    <choice description="256-bit elements" value="0x5" weight="0"/>
     <choice description="512-bit elements" value="0x6" weight="0"/>
     <choice description="1028-bit elements" value="0x7" weight="0"/>
   </choices>
