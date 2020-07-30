@@ -163,7 +163,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
     #   Generate code to check/correct page fault due to input address not correctly
     #   sign extended...
     #*****************************************************************************************
-    
+
     def generateCheckFaultAddress(self, **kwargs):
         self.notice("[PageFaultExceptionHandlerRISC] generating code to clear page fault condition/address sign extension...")
         
@@ -182,13 +182,19 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.mAssemblyHelper.logDebugSymbol('CheckFaultAddress entered...')
 
-        (sign_bit_reg_index, stval_reg_index, rcode_reg_index, scratch_reg_index, scratch_reg2_index, addr_mask_reg_index ) = handler_regs.RegisterSet( [ 'sign_bit', 'stval', 'rcode', 'scratch_reg', 'scratch_reg2', 'scratch_reg3' ] )
+        (sign_bit_reg_index, stval_reg_index, rcode_reg_index, scratch_reg_index, scratch_reg2_index, addr_mask_reg_index, priv_level_reg_index ) = handler_regs.RegisterSet( [ 'sign_bit', 'stval', 'rcode', 'scratch_reg', 'scratch_reg2', 'scratch_reg3', 'priv_level' ] )
 
         self.privilegeLevel = handler_context.mPrivLevel
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
 
-        # retreive fault address...
-        self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, ('%stval' % priv_level.name.lower()) )
+        # retreive fault address based on current privilege level...
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 3)
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, priv_level_reg_index, 6, 'NE', 'S PRIV')
+        self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, 'mtval')
+        self.mAssemblyHelper.genRelativeBranchToLabel(4, 'M PRIV')
+        self.mAssemblyHelper.addLabel('S PRIV')
+        self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, 'stval')
+        self.mAssemblyHelper.addLabel('M PRIV')
         
         # determine where the sign bit should be... - store result in sign_reg_index
         self.mAssemblyHelper.genMoveImmediate(sign_bit_reg_index, 1) # will hold index of sign bit
@@ -219,7 +225,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genInstruction('AND##RISCV', {'rd': scratch_reg_index, 'rs1': stval_reg_index, 'rs2': addr_mask_reg_index} )
         self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0)
         self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 4, 'NE', 'CLEAR_ADDR_BITS')
-        self.mAssemblyHelper.genRelativeBranchToLabel(20, 'NO_STVAL_UPDATE') # address is okay
+        self.mAssemblyHelper.genRelativeBranchToLabel(28, 'NO_STVAL_UPDATE') # address is okay
 
         # clear upper address bits...
         self.mAssemblyHelper.addLabel('CLEAR_ADDR_BITS')
@@ -230,14 +236,22 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         # upper bits of address should be one...
         self.mAssemblyHelper.addLabel('CHECK_ONE')
         self.genInstruction('AND##RISCV', {'rd': scratch_reg_index, 'rs1': stval_reg_index, 'rs2': addr_mask_reg_index} )
-        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, addr_mask_reg_index, 10, 'EQ', 'NO_STVAL_UPDATE')
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, addr_mask_reg_index, 18, 'EQ', 'NO_STVAL_UPDATE')
         
         # set upper address bits...
         self.genInstruction('OR##RISCV', {'rd': stval_reg_index, 'rs1': stval_reg_index, 'rs2': addr_mask_reg_index} )
         
         # was able to correct the fault address. write corrected address, clear return code...
         self.mAssemblyHelper.addLabel('UPDATE_STVAL')
-        self.mAssemblyHelper.genWriteSystemRegister( ('%stval' % priv_level.name.lower()), stval_reg_index )
+        # write back fault address based on current privilege level...
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 3)
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, priv_level_reg_index, 6, 'NE', 'S PRIV W')
+        self.mAssemblyHelper.genWriteSystemRegister('mtval', stval_reg_index)
+        self.mAssemblyHelper.genRelativeBranchToLabel(4, 'M PRIV W')
+        self.mAssemblyHelper.addLabel('S PRIV W')
+        self.mAssemblyHelper.genWriteSystemRegister('stval', stval_reg_index)
+        self.mAssemblyHelper.addLabel('M PRIV W')
+
         self.mAssemblyHelper.genMoveImmediate(rcode_reg_index, 0)
         self.mAssemblyHelper.genReturn()
 
