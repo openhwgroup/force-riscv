@@ -23,7 +23,8 @@ from common.data_utils import indices
 #
 class VersionCtrlUtils(object):
     """This class contains several methods used to interface with the various
-    scm systems used by the project."""
+    scm systems used by the project.
+    """
 
     ## Returns an initialized data structure to hold SCM version data.
     #
@@ -42,7 +43,6 @@ class VersionCtrlUtils(object):
                         'error_msg': None,
                         'folder': a_path,
                         'url': ''}
-
         cmd_output, valid = SysUtils.get_command_output(a_cmd)
 
         if not valid:
@@ -58,14 +58,13 @@ class VersionCtrlUtils(object):
     def get_svn_revision(cls, a_path):
         """Returns a populated data structure holding svn version data.
 
-        :param a_path: Project base folder
-        :type a_path: str
+        :param str a_path: Project base folder
         :return: Data structure holding svn data
         :rtype: dict
         """
         svn_revision_pattern = re.compile(r'^Revision: (\d+)')
-
         status_cmd = "svn info %s" % a_path
+
         version_info, cmd_output = cls.get_scm_data('svn', a_path, status_cmd)
 
         if version_info['error_msg']:
@@ -89,14 +88,19 @@ class VersionCtrlUtils(object):
         :param str a_string: Result from 'git log' after removing the version #
         """
         data_dict = {'tags': [], 'comment': a_string}
+
         if '(' not in a_string or ')' not in a_string:
             return data_dict
+
         start = indices(a_string, '(')[0]
         end = indices(a_string, ')')[0]
+
         if end < start:
             return data_dict
+
         data_dict['tags'] = a_string[start + 1: end].split(',')
         data_dict['comment'] = a_string[end + 1:].strip()
+
         return data_dict
 
     ## Returns a populated data structure holding git version data.
@@ -109,23 +113,21 @@ class VersionCtrlUtils(object):
         :return: Data structure holding git data
         :rtype: dict
         """
-        status_cmd = "cd %s; git log --oneline -n1 " % a_path
+        status_cmd = "cd %s; git log --oneline -n1 --decorate " % a_path
         version_info, cmd_output = cls.get_scm_data('git', a_path, status_cmd)
-
         if version_info['error_msg']:
             return version_info
 
         # Only process first line
         line = cmd_output.split('\n')[0]
-        words = line.split()
-        # Example:
-        #     words = ['46a13f1', '(origin/vector,', 'alt/vector)', 'RISC',
-        #              'vector', 'instructions:', 'reserved', 'encoding',
-        #              'fixes']
-        version_info['version'] = words[0]
-        parsed_data = cls.parse_git_log_line(' '.join(words[1:]))
-        version_info.update(parsed_data)
+        spaces = indices(line, ' ')
 
+        if not spaces:
+            version_info['error_msg'] = "Command error: %s" % cmd_output
+
+        version_info['version'] = line[:spaces[0]]
+        parsed_data = cls.parse_git_log_line(line[spaces[0]+1:])
+        version_info.update(parsed_data)
         version_info['status'] = True
 
         # get origin URL
@@ -165,7 +167,6 @@ class VersionCtrlUtils(object):
             l_ver = cls.get_git_revision(a_path)
             if l_ver:
                 version_info.append(l_ver)
-
         return version_info
 
     ## Returns a formatted string containing all pertinent SCM data, ready for logging.
@@ -187,7 +188,7 @@ class VersionCtrlUtils(object):
                                                       item["folder"],
                                                       item['url'])
             if item.get('tags', []):
-                version_output += "\ntags: {}".format(item['tags'])
+                version_output += ", tags: {}".format(item['tags'])
             if item.get('comment', []):
                 version_output += ", comment: {}".format(item['comment'])
 
