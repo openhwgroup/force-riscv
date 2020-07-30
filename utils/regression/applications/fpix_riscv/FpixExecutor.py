@@ -17,7 +17,7 @@
 # comment: implements FpixExecutor which serves as a Class Wrapper for
 #          for executing the simulator family in client processing apps
 
-from executors.iss_executor import *
+from executors.iss_executor import IssExecutor, Msg, SysUtils, IssResult
 from classes.ApplicationOption import ControlItemOption
 import re
 
