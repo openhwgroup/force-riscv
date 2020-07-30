@@ -123,6 +123,19 @@ class MainSequence(Sequence):
         for _ in range(self.random32(0, 5)):
             self.genInstruction(self.choice(random_instructions))
 
+def gen_thread_initialization(gen_thread):
+    (delegate_opt, valid) = gen_thread.getOption("DelegateExceptions")
+    if valid and delegate_opt == 1:
+        delegation_enables = ChoicesModifier(gen_thread)
+        weightDict = { "0x0":0, "0x1":50 }
+        delegation_enables.modifyRegisterFieldValueChoices( 'medeleg.Instruction address misaligned', weightDict )
+        delegation_enables.commitSet()
+
+    (paging_opt, valid) = gen_thread.getOption("PagingDisabled")
+    if valid and paging_opt == 1:
+        gen_thread.initializeRegister(name='satp', value=0, field='MODE')
+
+GenThreadInitialization = gen_thread_initialization
 
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV

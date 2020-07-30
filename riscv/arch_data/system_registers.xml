@@ -828,7 +828,68 @@
         <bit_field shift="25" size="1"/>
       </register_field>
     </register>
-    <register boot="0" index="0x302" name="medeleg" size="64" type="SysReg"/>
+    <register boot="1" index="0x302" name="medeleg" size="64" type="SysReg">
+      <register_field name="RESERVED 1" physical_register="medeleg" size="8">
+        <bit_field shift="16" size="8"/>
+      </register_field>
+      <register_field name="CUSTOM USE 1" physical_register="medeleg" size="8">
+        <bit_field shift="24" size="8"/>
+      </register_field>
+      <register_field name="RESERVED 2" physical_register="medeleg" size="16">
+        <bit_field shift="32" size="16"/>
+      </register_field>
+      <register_field name="CUSTOM USE 2" physical_register="medeleg" size="16">
+        <bit_field shift="48" size="16"/>
+      </register_field>
+      <register_field name="Instruction address misaligned" physical_register="medeleg" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+      <register_field name="Instruction access fault" physical_register="medeleg" size="1">
+        <bit_field shift="1" size="1"/>
+      </register_field>
+      <register_field name="Illegal instruction" physical_register="medeleg" size="1">
+        <bit_field shift="2" size="1"/>
+      </register_field>
+      <register_field name="Breakpoint" physical_register="medeleg" size="1">
+        <bit_field shift="3" size="1"/>
+      </register_field>
+      <register_field name="Load address misaligned" physical_register="medeleg" size="1">
+        <bit_field shift="4" size="1"/>
+      </register_field>
+      <register_field name="Load access fault" physical_register="medeleg" size="1">
+        <bit_field shift="5" size="1"/>
+      </register_field>
+      <register_field name="Store/AMO address misaligned" physical_register="medeleg" size="1">
+        <bit_field shift="6" size="1"/>
+      </register_field>
+      <register_field name="Store/AMO access fault" physical_register="medeleg" size="1">
+        <bit_field shift="7" size="1"/>
+      </register_field>
+      <register_field name="Environment call from U-mode" physical_register="medeleg" size="1">
+        <bit_field shift="8" size="1"/>
+      </register_field>
+      <register_field name="Environment call from S-mode" physical_register="medeleg" size="1">
+        <bit_field shift="9" size="1"/>
+      </register_field>
+      <register_field name="RESERVED 3" physical_register="medeleg" size="1">
+        <bit_field shift="10" size="1"/>
+      </register_field>
+      <register_field name="RESERVED - Environment call from M-mode" physical_register="medeleg" size="1">
+        <bit_field shift="11" size="1"/>
+      </register_field>
+      <register_field name="Instruction page fault" physical_register="medeleg" size="1">
+        <bit_field shift="12" size="1"/>
+      </register_field>
+      <register_field name="Load page fault" physical_register="medeleg" size="1">
+        <bit_field shift="13" size="1"/>
+      </register_field>
+      <register_field name="RESERVED 4" physical_register="medeleg" size="1">
+        <bit_field shift="14" size="1"/>
+      </register_field>
+      <register_field name="Store/AMO page fault" physical_register="medeleg" size="1">
+        <bit_field shift="15" size="1"/>
+      </register_field>
+    </register>
     <register boot="0" index="0x303" name="mideleg" size="64" type="SysReg"/>
     <register boot="0" index="0x304" name="mie" size="64" type="SysReg"/>
     <register boot="1" index="0x305" name="mtvec" size="64" type="SysReg">

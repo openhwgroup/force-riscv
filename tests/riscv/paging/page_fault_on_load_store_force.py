@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from PageFaultSequence import PageFaultSequence
 from PageFaultSequence import PageFaultResolutionType
+from base.ChoicesModifier import ChoicesModifier
 from riscv.ModifierUtils import PageFaultModifier
 
 class MainSequence(PageFaultSequence):
@@ -42,8 +43,19 @@ class MainSequence(PageFaultSequence):
 
     def getExceptionCodes(self):
             return self._mExceptionCodes
-        
-        
+
+def gen_thread_initialization(gen_thread):
+    (delegate_opt, valid) = gen_thread.getOption("DelegateExceptions")
+    if valid and delegate_opt == 1:
+        # enable exception delegation for some portion of the generated tests...
+        delegation_enables = ChoicesModifier(gen_thread)
+        weightDict = { "0x0":0, "0x1":50 }
+        delegation_enables.modifyRegisterFieldValueChoices( 'medeleg.Load page fault', weightDict )
+        delegation_enables.modifyRegisterFieldValueChoices( 'medeleg.Store/AMO page fault', weightDict )
+        delegation_enables.commitSet()
+    
+GenThreadInitialization = gen_thread_initialization
+
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV
 EnvClass = EnvRISCV

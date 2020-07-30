@@ -78,10 +78,19 @@ namespace Force {
     std::map<string, uint64> field_map;
 
     // misa init...
-    field_map["WLRL_VAR"] = 0; 
-    mpGenerator->InitializeRegisterFields("misa", field_map);
+    field_map["WLRL_VAR"] = 0;                                 // zero out 
+    mpGenerator->InitializeRegisterFields("misa", field_map);  //   multi-bit reserved field
     mpGenerator->RandomInitializeRegister("misa", "");
 
+    // medeleg init...
+    field_map.clear();
+    field_map["RESERVED 1"] = 0;                                 //
+    field_map["CUSTOM USE 1"] = 0;                               // zero out 
+    field_map["RESERVED 2"] = 0;                                 //   multi-bit reserved fields
+    field_map["CUSTOM USE 2"] = 0;                               //
+    mpGenerator->InitializeRegisterFields("medeleg", field_map); //
+    mpGenerator->RandomInitializeRegister("medeleg", "");
+    
     //mstatus init
     field_map.clear();
     field_map["SXL"] = 0x2;
