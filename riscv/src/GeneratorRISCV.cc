@@ -120,8 +120,10 @@ namespace Force {
       RandomInitializeRegister("vstart", "");
       RandomInitializeRegister("vxsat", "");
       RandomInitializeRegister("vxrm", "");
-      RandomInitializeRegister("vl", "");
+
+      // vtype needs to be initialized before vl, so we can calculate a valid value for vl
       RandomInitializeRegister("vtype", "");
+      RandomInitializeRegister("vl", "");
       break;
     default:
       // No action needed for default case

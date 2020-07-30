@@ -60,6 +60,8 @@ namespace Force {
     uint64 RegisterReloadValue(Register* pRegister) const override; //!< Reload register value.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VlInitPolicy);
+  private:
+    uint64 GetVlmax() const; //!< Get the maximum valid vl value.
   };
 
   /*!
