@@ -1391,6 +1391,7 @@ SOFTFLOAT_SOURCE_FILENAMES = [
 "s_propagateNaNF16UI.c",
 "s_shortShiftRight128.c",
 "f128_classify.c",
+"f16_classify.c",
 "f16_eq.c",
 "f32_eq_signaling.c",
 "f64_isSignalingNaN.c",
