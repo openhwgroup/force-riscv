@@ -31,9 +31,9 @@ namespace Force {
     mVectorElementUpdates(), mThreadSummaries(),
     mOfsApiTrace(),
     mOfsSimTrace(),
-    mVecRegWidth(16u),
-    mVecPhysRegNames{"_0", "_1"},
-    mNumPhysRegs(2u),
+    mVecRegWidth(0),
+    mVecPhysRegNames(),
+    mNumPhysRegs(0),
     mPhysRegSize(8u)
   {
   }
@@ -240,6 +240,15 @@ namespace Force {
      ThreadSummary& thread_sum = mThreadSummaries[CpuId];
      thread_sum.mExitCode = exitCode;
      thread_sum.mSummary = pMsg;
+  }
+
+  void SimAPI::SetVectorRegisterWidth(cuint64 vecRegWidthBits)
+  {
+    mVecRegWidth = vecRegWidthBits / 8;
+    mNumPhysRegs = mVecRegWidth / mPhysRegSize;
+    for (uint64 sub_index = 0; sub_index < mNumPhysRegs; sub_index++) {
+      mVecPhysRegNames.push_back("_" + to_string(sub_index));
+    }
   }
 
   //!< copy simulator step updates...

@@ -151,6 +151,8 @@ namespace Force {
 		   << std::endl;
     }
 
+    SetVectorRegisterWidth(rConfig.mVectorRegLen);
+
     stringstream varch;
     varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mVectorRegLen;
     string varch_str = varch.str();
@@ -383,77 +385,44 @@ namespace Force {
 
   //!< write simulator register. mask indicates which bits to write...
 
-  void SimApiHANDCAR::WriteRegister(uint32 CpuID,const char *regname,uint64 rval, uint64 rmask)
+  void SimApiHANDCAR::WriteRegister(uint32 CpuID, const char *regname, uint64 rval, uint64 rmask)
   {
     if (mOfsApiTrace.is_open()) {
       char tbuf[1024];
-      sprintf(tbuf,"  sim_api.write_simulator_register(0x%x,\"%s\", 0x%llx, 0x%llx);\n", 
+      sprintf(tbuf,"  sim_api.write_simulator_register(0x%x,\"%s\", 0x%llx, 0x%llx);\n",
               CpuID,regname,(unsigned long long) rval,(unsigned long long) rmask);
       mOfsApiTrace << tbuf << std::endl;
     }
 
     //Remove any suffix the generator has attached to the register name, the simulator doesn't use the suffix.
+    // TODO make this available for Quad FP
     int errorcode = 0;
-    char* p_edited_regname = nullptr;
-    const char* p_fp_reg_f = strstr(regname, "f");
-    const char* p_v_reg_v = strstr(regname, "v");
-    const char* p_phys_reg_suffix = strstr(regname, "_"); 
-
-
-    if(p_phys_reg_suffix != nullptr)
-    {
-      if(p_fp_reg_f != nullptr)
-      {
-  
-        ptrdiff_t arch_regname_length = p_phys_reg_suffix - p_fp_reg_f;
-        p_edited_regname = new char[arch_regname_length+1];
-        p_edited_regname[arch_regname_length] = '\0';
-  
-        memcpy(p_edited_regname, regname, arch_regname_length);
-  
-        errorcode = mpSimDllAPI->write_simulator_register(CpuID, p_edited_regname, rval, rmask);
-        delete[] p_edited_regname;
-      }
-      else if(p_v_reg_v != nullptr)
-      {
-        //try to parse a number from the suffix. TODO make this available for Quad FP
-        int phys_reg_index = -1;
-        string number_suffix = p_phys_reg_suffix;
-        if(number_suffix.size() > 2)
-        {
-          number_suffix[0] = ' ';
-          stringstream phys_reg_index_ss;
-          phys_reg_index_ss << number_suffix;
-          phys_reg_index_ss >> phys_reg_index; //If this stream extraction does not work it is thought that an exception is thrown here
-        }
- 
-        ptrdiff_t arch_regname_length = p_phys_reg_suffix - p_v_reg_v;
-        p_edited_regname = new char[arch_regname_length+1];
-        p_edited_regname[arch_regname_length] = '\0';
-  
-        memcpy(p_edited_regname, regname, arch_regname_length);
-        //errorcode = mpSimDllAPI->write_simulator_register(CpuID, p_edited_regname, rval, rmask);
-        errorcode = mpSimDllAPI->partial_write_large_register(CpuID, p_edited_regname, reinterpret_cast<const uint8_t*>(&rval), sizeof(rval), phys_reg_index*sizeof(rval)); 
-        delete[] p_edited_regname;
-      }
-      else
-        errorcode = -1;
+    string reg_name = regname;
+    uint64 underscore_pos = reg_name.find("_");
+    string reg_name_no_suffix = reg_name.substr(0, underscore_pos);
+    if (underscore_pos == string::npos) {
+      errorcode = mpSimDllAPI->write_simulator_register(CpuID, reg_name_no_suffix.c_str(), rval, rmask);
     }
-    else
-    {
-      errorcode = mpSimDllAPI->write_simulator_register(CpuID, regname, rval, rmask);
+    else if (reg_name[0] == 'f') {
+      errorcode = mpSimDllAPI->write_simulator_register(CpuID, reg_name_no_suffix.c_str(), rval, rmask);
+    }
+    else if (reg_name[0] == 'v') {
+      uint32 phys_reg_sub_index = stoul(reg_name.substr(underscore_pos + 1));
+      errorcode = mpSimDllAPI->partial_write_large_register(CpuID, reg_name_no_suffix.c_str(), reinterpret_cast<const uint8_t*>(&rval), sizeof(rval), phys_reg_sub_index * sizeof(rval));
+    }
+    else {
+      errorcode = -1;
     }
 
     //std::cout << "SimApiHANDCAR::WriteRegister(...) : " << regname << " val: " << std::hex << rval << std::endl;
 
     if (0 != errorcode) {
       stringstream err_stream;
-      err_stream << "Error code: " << errorcode << ", Problems writing simulator register. CPU ID: " << hex << CpuID 
-                 << ", register: '" << regname << "', value: 0x" << rval 
+      err_stream << "Error code: " << errorcode << ", Problems writing simulator register. CPU ID: " << hex << CpuID
+                 << ", register: '" << regname << "', value: 0x" << rval
                  << ", mask: 0x" << rmask << dec << "\n";
       throw SimulationError(err_stream.str());
     }
-
   }
 
   //!< request simulator to 'inject event(s)...

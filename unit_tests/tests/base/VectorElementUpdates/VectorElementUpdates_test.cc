@@ -78,6 +78,7 @@ void TurnOn(uint32 cpuId) override {} //!< Turn the Iss thread on.
 void EnterSpeculativeMode(uint32 cpuId) override {} //!< The CPU thread enters speculative mode.
 void LeaveSpeculativeMode(uint32 cpuId) override {} //!< The CPU thread leaves speculative mode.
 void RecordExceptionUpdate(const SimException *pException) override {} //!< Record exceptions.
+void SetVectorRegisterWidth(cuint64 vecRegWidthBits) { SimAPI::SetVectorRegisterWidth(vecRegWidthBits); }
 
 //Values used by ReadRegister. To be set directly in the tests.
 uint64 registerValue[2];
@@ -285,6 +286,7 @@ CASE( "Testing VectorElementUpdate::translateElementToRegisterUpdates(...)" ) {
         std::vector<VectorElementUpdates> vecEltUpdates;
         vecEltUpdates.emplace_back(processorId, aVecLogRegWidth, aVecPhysRegNames, physRegSize, numPhysRegs);
         SimAPIStub stub;
+        stub.SetVectorRegisterWidth(aVecLogRegWidth * 8);
         SimAPI* apihandle = &stub;
 
         //-----------------------------------------
@@ -363,6 +365,7 @@ CASE( "Testing SimAPI::RecordVectorRegisterUpdate" ) {
         std::vector<VectorElementUpdates> vecEltUpdates;
         vecEltUpdates.emplace_back(processorId, aVecLogRegWidth, aVecPhysRegNames, physRegSize, numPhysRegs);
         SimAPIStub stub;
+        stub.SetVectorRegisterWidth(aVecLogRegWidth * 8);
         SimAPI* apihandle = &stub;
 
         std::vector<RegUpdate> rRegisterUpdates;
