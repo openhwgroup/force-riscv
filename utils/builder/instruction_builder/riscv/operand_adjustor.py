@@ -78,6 +78,10 @@ class OperandAdjustor(object):
         rs2_opr.access = "Read"
         self.set_reg_int(rs2_opr)
 
+    def set_rs2_int_ls_base(self):
+        rs2_opr = self.mInstr.find_operand("rs2")
+        self.set_reg_nonzero_int(rs2_opr)
+
     def set_rs3_int(self):
         rs3_opr = self.mInstr.find_operand("rs3")
         rs3_opr.access = "Read"

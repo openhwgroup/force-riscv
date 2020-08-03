@@ -963,10 +963,145 @@
     <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
     <O name="B" type="VectorLayout" class="WholeRegisterLayoutOperand" reg-count="1"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
     </O>
     <asm format="VL1R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VL2R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL2R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VL3R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL3R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VL4R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL4R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VL5R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL5R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VL6R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL6R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VL7R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL7R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VL8R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VL8R.V %s, %s" op1="vd" op2="rs1"/>
+  </I>
+  <I name="VLE1024.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000100000001110000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE1024.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+  </I>
+  <I name="VLE128.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000100000000000000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE128.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+  </I>
+  <I name="VLE16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001010000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE16.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+  </I>
+  <I name="VLE256.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000100000001010000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE256.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+  </I>
+  <I name="VLE32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001100000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE32.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+  </I>
+  <I name="VLE512.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000100000001100000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE512.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+  </I>
+  <I name="VLE64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001110000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE64.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
+  </I>
+  <I name="VLE8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000000000000111"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VLE8.V %s, %s, %s" op1="vd" op2="rs1" op3="vm"/>
   </I>
   <I name="VMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1011010101010111"/>
@@ -2045,10 +2180,73 @@
     <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
     <O name="B" type="VectorLayout" class="WholeRegisterLayoutOperand" reg-count="1"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
     </O>
     <asm format="VS1R.V %s, %s" op1="vs3" op2="rs1"/>
+  </I>
+  <I name="VS2R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VS2R.V %s, %s" op1="vs3" op2="rs1"/>
+  </I>
+  <I name="VS3R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VS3R.V %s, %s" op1="vs3" op2="rs1"/>
+  </I>
+  <I name="VS4R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VS4R.V %s, %s" op1="vs3" op2="rs1"/>
+  </I>
+  <I name="VS5R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VS5R.V %s, %s" op1="vs3" op2="rs1"/>
+  </I>
+  <I name="VS6R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VS6R.V %s, %s" op1="vs3" op2="rs1"/>
+  </I>
+  <I name="VS7R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VS7R.V %s, %s" op1="vs3" op2="rs1"/>
+  </I>
+  <I name="VS8R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
+    <O name="B" type="Immediate" class="WholeRegisterLayoutOperand"/>
+    <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
+    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+    </O>
+    <asm format="VS8R.V %s, %s" op1="vs3" op2="rs1"/>
   </I>
   <I name="VSADD.VI" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010111010111"/>
