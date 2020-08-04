@@ -47,6 +47,18 @@ using namespace std;
 
 namespace Force {
 
+  void VectorMaskOperand::Generate(Generator& gen, Instruction& instr)
+  {
+    mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
+
+    ChoicesOperand::Generate(gen, instr);
+  }
+
+  OperandConstraint* VectorMaskOperand::InstantiateOperandConstraint() const
+  {
+    return new VectorMaskOperandConstraint();
+  }
+
   void BaseOffsetBranchOperand::Generate(Generator& gen, Instruction& instr)
   {
     if (instr.NoRestriction()) {

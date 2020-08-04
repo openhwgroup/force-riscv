@@ -63,12 +63,15 @@ namespace Force {
 
     void ApplyUserRequest(const OperandRequest& rOprReq); //!< Apply user request details.
     void SubConstraintValue(uint64 value, const OperandStructure& rOperandStruct) const; //!< Subtract value from constraint set.
+    void SubDifferOperandValues(const Instruction& rInstr, const OperandStructure& rOperandStruct); //!< Subtract values of operands that must have different values from the constraint set, so this operand is generated with a different value.
   protected:
     OperandConstraint(const OperandConstraint& rOther); //!< Copy constructor, not meant to be used.
     ConstraintSet* DefaultConstraintSet(const OperandStructure& rOperandStruct) const; //!< Return a default ConstraintSet object.
   protected:
     mutable ConstraintSet* mpConstraintSet; //!< Pointer to constraint set for the operand.
     bool mConstraintForced; //!< Return true if constraint is forced from the front end with single value.
+  private:
+    virtual bool IsDifferValueAllowed(cuint64 value) const { return false; } //!< Return true if the specified value can be used for both this operand and its differ operands.
   };
 
   /*!

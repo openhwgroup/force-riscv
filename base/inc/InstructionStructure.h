@@ -86,7 +86,7 @@ namespace Force {
   */
   class OperandStructure {
   public:
-  OperandStructure() : mName(), mShortName(), mClass(), mType(EOperandType(0)), mAccess(ERegAttrType::Read), mSize(0), mMask(0), mEncodingBits(), mSlave(false), mUopParamType(UopParamBool) { } //!< Constructor, empty
+  OperandStructure() : mName(), mShortName(), mClass(), mType(EOperandType(0)), mAccess(ERegAttrType::Read), mSize(0), mMask(0), mEncodingBits(), mSlave(false), mUopParamType(UopParamBool), mDiffers() { } //!< Constructor, empty
     virtual ~OperandStructure() { } //!< Destructor, virtual
     const std::string& Name() const { return mName; }
     const std::string& ShortName() const { return mShortName; }
@@ -95,7 +95,8 @@ namespace Force {
 
     void SetBits(const std::string& bits_str); //!< Assign the opcode bits occupied by the operand.
     uint32 Encoding(uint32 opr_value) const;   //!< Encode the operand value into its opcode bits.
-    virtual void SetDiffers(const std::string& differ) { } //<! set differs, do nothing in default
+    void AddDiffer(const std::string& differ) { mDiffers.push_back(differ); } //<! Add name of operand that must have a different value
+    const std::vector<std::string>& GetDiffers() const { return mDiffers; } //<! Get names of operands that must have a different value
     virtual const std::string ToString() const; //!< Return string representing the Operand structure details.
 
     /*!
@@ -139,6 +140,8 @@ namespace Force {
     std::vector<EncodingBits> mEncodingBits; //!< Opcode bits of the operand.
     bool mSlave; //!< slave operand which is sub-ordered by its master
     EUopParameterType mUopParamType; //!< type to be used in the Uop interface if applicable
+  private:
+    std::vector<std::string> mDiffers; //!< Names of operands that must have a different value
   };
 
   /*!
@@ -175,22 +178,6 @@ namespace Force {
     COPY_CONSTRUCTOR_ABSENT(ChoicesOperandStructure); //!< Copy constructor absent.
   public:
     std::vector<std::string> mChoices; //!< Names of the choices settting.
-  };
-
-  /*!
-    \class DifferOperandStructure
-    \brief Record static structural information about an choice operand with differrent register.
-  */
-  class DifferOperandStructure : public ChoicesOperandStructure {
-  public:
-    DifferOperandStructure() : ChoicesOperandStructure(), mDiffers() { } //!< Constructor, empty
-    ~DifferOperandStructure() { } //!< Destructor, virtual
-    void SetDiffers(const std::string& differ) override { mDiffers = differ;}
-    const std::string& Differs() const { return mDiffers; }
-  private:
-    COPY_CONSTRUCTOR_ABSENT(DifferOperandStructure); //!< Copy constructor absent.
-  protected:
-    std::string mDiffers; //!< Names of the different choices settting.
   };
 
   /*!

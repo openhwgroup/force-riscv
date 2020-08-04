@@ -20,6 +20,21 @@
 #include <OperandConstraint.h>
 
 namespace Force {
+
+   /*!
+    \class VectorMaskOperandConstraint
+    \brief The class carries dynamic constraint properties for VectorMaskOperand.
+  */
+  class VectorMaskOperandConstraint : public ChoicesOperandConstraint {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorMaskOperandConstraint);
+    COPY_CONSTRUCTOR_ABSENT(VectorMaskOperandConstraint);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorMaskOperandConstraint);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorMaskOperandConstraint);
+  private:
+    bool IsDifferValueAllowed(cuint64 value) const override;
+  };
+
   class ConstraintSet;
 
   /*!

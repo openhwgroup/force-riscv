@@ -21,7 +21,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VAADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VAADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -30,7 +30,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VAADD.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VAADDU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -39,7 +39,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VAADDU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VAADDU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -48,7 +48,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VAADDU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VADC.VIM" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -81,7 +81,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VADD.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -90,7 +90,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -99,7 +99,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VADD.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VAND.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -108,7 +108,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VAND.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -117,7 +117,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VAND.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VAND.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -126,7 +126,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VAND.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VASUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -135,7 +135,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VASUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VASUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -144,7 +144,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VASUB.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VASUBU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -153,7 +153,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VASUBU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VASUBU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -162,7 +162,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VASUBU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VCOMPRESS.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -171,7 +171,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VCOMPRESS.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VDIV.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -180,7 +180,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VDIV.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VDIV.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -189,7 +189,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VDIV.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VDIVU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -198,7 +198,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VDIVU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VDIVU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -207,7 +207,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VDIVU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VDOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -216,7 +216,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VDOT.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VDOTU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -225,7 +225,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VDOTU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -234,7 +234,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFADD.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -243,7 +243,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFCLASS.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -251,7 +251,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFCLASS.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFCVT.F.X.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -259,7 +259,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFCVT.F.X.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFCVT.F.XU.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -267,7 +267,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFCVT.F.XU.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFCVT.X.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -275,7 +275,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFCVT.X.F.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFCVT.XU.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -283,7 +283,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFCVT.XU.F.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFDIV.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -292,7 +292,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFDIV.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFDIV.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -301,7 +301,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFDIV.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFDOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -310,7 +310,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFDOT.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFIRST.M" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -318,7 +318,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
     <asm format="VFIRST.M %s, %s, %s" op1="rd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -327,7 +327,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMACC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -336,7 +336,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMACC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -345,7 +345,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMADD.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -354,7 +354,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMAX.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -363,7 +363,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMAX.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -372,7 +372,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMAX.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMERGE.VF/VFMV.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -381,7 +381,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMERGE.VF/VFMV.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMIN.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -390,7 +390,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMIN.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -399,7 +399,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMIN.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -408,7 +408,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMSAC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -417,7 +417,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMSAC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -426,7 +426,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMSUB.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -435,7 +435,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMUL.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -444,7 +444,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMUL.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -453,7 +453,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFMUL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFMV.F.S" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -475,7 +475,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNCVT.F.F.W %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFNCVT.F.X.W" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -483,7 +483,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNCVT.F.X.W %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFNCVT.F.XU.W" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -491,7 +491,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNCVT.F.XU.W %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFNCVT.ROD.F.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -499,7 +499,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNCVT.ROD.F.F.W %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFNCVT.X.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -507,7 +507,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNCVT.X.F.W %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFNCVT.XU.F.W" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -515,7 +515,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNCVT.XU.F.W %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFNMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -524,7 +524,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMACC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFNMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -533,7 +533,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMACC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFNMADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -542,7 +542,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMADD.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFNMADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -551,7 +551,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFNMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -560,7 +560,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMSAC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFNMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -569,7 +569,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMSAC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFNMSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -578,7 +578,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMSUB.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFNMSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -587,7 +587,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFNMSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFRDIV.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -596,7 +596,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFRDIV.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFREDMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -605,7 +605,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFREDMAX.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFREDMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -614,7 +614,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFREDMIN.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFREDOSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -623,7 +623,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFREDOSUM.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -632,7 +632,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFREDSUM.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFRSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -641,7 +641,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFRSUB.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFSGNJ.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -650,7 +650,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSGNJ.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFSGNJ.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -659,7 +659,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSGNJ.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFSGNJN.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -668,7 +668,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSGNJN.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFSGNJN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -677,7 +677,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSGNJN.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFSGNJX.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -686,7 +686,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSGNJX.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFSGNJX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -695,7 +695,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSGNJX.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFSQRT.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -703,7 +703,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSQRT.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -712,7 +712,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSUB.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -721,7 +721,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -730,7 +730,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWADD.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -739,7 +739,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWADD.W.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -748,7 +748,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWADD.W.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWADD.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -757,7 +757,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWADD.W.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWCVT.F.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -765,7 +765,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWCVT.F.F.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFWCVT.F.X.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -773,7 +773,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWCVT.F.X.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFWCVT.F.XU.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -781,7 +781,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWCVT.F.XU.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFWCVT.X.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -789,7 +789,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWCVT.X.F.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFWCVT.XU.F.V" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -797,7 +797,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWCVT.XU.F.V %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VFWMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -806,7 +806,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWMACC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -815,7 +815,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWMACC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -824,7 +824,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWMSAC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -833,7 +833,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWMSAC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWMUL.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -842,7 +842,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWMUL.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -851,7 +851,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWMUL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWNMACC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -860,7 +860,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWNMACC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWNMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -869,7 +869,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWNMACC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWNMSAC.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -878,7 +878,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWNMSAC.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWNMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -887,7 +887,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWNMSAC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWREDOSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -896,7 +896,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWREDOSUM.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -905,7 +905,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWREDSUM.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -914,7 +914,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWSUB.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -923,7 +923,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VFWSUB.W.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -932,7 +932,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWSUB.W.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VFWSUB.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -941,14 +941,14 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VFWSUB.W.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VID.V" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-12,6-0" value="01010000000100010101010111"/>
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VID.V %s, %s" op1="vd" op2="vm"/>
   </I>
   <I name="VIOTA" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -956,7 +956,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VIOTA %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VL1R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
@@ -974,7 +974,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMACC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMACC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -983,7 +983,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMACC.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMADC.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -992,7 +992,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMADC.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMADC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1001,7 +1001,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMADC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMADC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1010,7 +1010,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMADC.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1019,7 +1019,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1028,7 +1028,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMADD.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1037,7 +1037,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMAND.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMANDNOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1046,7 +1046,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMANDNOT.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1055,7 +1055,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMAX.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMAX.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1064,7 +1064,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMAX.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMAXU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1073,7 +1073,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMAXU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMAXU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1082,7 +1082,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMAXU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMERGE.VIM" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1115,7 +1115,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFEQ.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMFEQ.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1124,7 +1124,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFEQ.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMFGE.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1133,7 +1133,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFGE.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMFGT.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1142,7 +1142,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFGT.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMFLE.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1151,7 +1151,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFLE.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMFLE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1160,7 +1160,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFLE.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMFLT.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1169,7 +1169,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFLT.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMFLT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1178,7 +1178,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFLT.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMFNE.VF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1187,7 +1187,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFNE.VF %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMFNE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1196,7 +1196,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMFNE.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1205,7 +1205,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMIN.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMIN.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1214,7 +1214,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMIN.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMINU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1223,7 +1223,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMINU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMINU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1232,7 +1232,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMINU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMNAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1241,7 +1241,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMNAND.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMNOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1250,7 +1250,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMNOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1259,7 +1259,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMORNOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1268,7 +1268,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMORNOT.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSBC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1277,7 +1277,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSBC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSBC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1286,7 +1286,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSBC.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSBF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1294,7 +1294,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSBF %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VMSEQ.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1303,7 +1303,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSEQ.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMSEQ.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1312,7 +1312,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSEQ.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSEQ.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1321,7 +1321,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSEQ.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSGT.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1330,7 +1330,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSGT.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMSGT.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1339,7 +1339,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSGT.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSGTU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1348,7 +1348,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSGTU.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMSGTU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1357,7 +1357,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSGTU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSIF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1365,7 +1365,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSIF %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VMSLE.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1374,7 +1374,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLE.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMSLE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1383,7 +1383,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLE.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSLE.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1392,7 +1392,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLE.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSLEU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1401,7 +1401,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLEU.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMSLEU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1410,7 +1410,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLEU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSLEU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1419,7 +1419,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLEU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSLT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1428,7 +1428,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLT.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSLT.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1437,7 +1437,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLT.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSLTU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1446,7 +1446,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLTU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSLTU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1455,7 +1455,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSLTU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSNE.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1464,7 +1464,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSNE.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMSNE.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1473,7 +1473,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSNE.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMSNE.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1482,7 +1482,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSNE.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMSOF" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1490,7 +1490,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMSOF %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
   </I>
   <I name="VMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1499,7 +1499,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMUL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMUL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1508,7 +1508,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMUL.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMULH.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1517,7 +1517,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMULH.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMULH.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1526,7 +1526,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMULH.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMULHSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1535,7 +1535,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMULHSU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMULHSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1544,7 +1544,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMULHSU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMULHU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1553,7 +1553,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMULHU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMULHU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1562,7 +1562,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMULHU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMV.S.X" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1634,7 +1634,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMXNOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VMXOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1643,7 +1643,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VMXOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VNCLIP.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1652,7 +1652,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNCLIP.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VNCLIP.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1661,7 +1661,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNCLIP.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VNCLIP.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1670,7 +1670,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNCLIP.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VNCLIPU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1679,7 +1679,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNCLIPU.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VNCLIPU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1688,7 +1688,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNCLIPU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VNCLIPU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1697,7 +1697,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNCLIPU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VNMSAC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1706,7 +1706,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNMSAC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VNMSAC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1715,7 +1715,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNMSAC.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VNMSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1724,7 +1724,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNMSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VNMSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1733,7 +1733,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNMSUB.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VNSRA.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1742,7 +1742,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNSRA.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VNSRA.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1751,7 +1751,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNSRA.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VNSRA.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1760,7 +1760,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNSRA.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VNSRL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1769,7 +1769,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNSRL.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VNSRL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1778,7 +1778,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNSRL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VNSRL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1787,7 +1787,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VNSRL.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VOR.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1796,7 +1796,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VOR.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1805,7 +1805,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VOR.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1814,7 +1814,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VOR.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VPOPC.M" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1822,7 +1822,7 @@
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
     <asm format="VPOPC.M %s, %s, %s" op1="rd" op2="vs2" op3="vm"/>
   </I>
   <I name="VQMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1831,7 +1831,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VQMACC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VQMACC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1840,7 +1840,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VQMACC.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VQMACCSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1849,7 +1849,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VQMACCSU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VQMACCSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1858,7 +1858,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VQMACCSU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VQMACCU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1867,7 +1867,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VQMACCU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VQMACCU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1876,7 +1876,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VQMACCU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VQMACCUS.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1885,7 +1885,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VQMACCUS.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VREDAND.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1894,7 +1894,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDAND.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREDMAX.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1903,7 +1903,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDMAX.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREDMAXU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1912,7 +1912,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDMAXU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREDMIN.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1921,7 +1921,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDMIN.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREDMINU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1930,7 +1930,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDMINU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREDOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1939,7 +1939,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1948,7 +1948,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDSUM.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREDXOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1957,7 +1957,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREDXOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1966,7 +1966,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREM.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREM.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1975,7 +1975,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREM.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VREMU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1984,7 +1984,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREMU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VREMU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -1993,7 +1993,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VREMU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VRGATHER.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2002,7 +2002,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VRGATHER.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VRGATHER.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2011,7 +2011,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VRGATHER.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VRGATHER.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2020,7 +2020,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VRGATHER.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VRSUB.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2029,7 +2029,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VRSUB.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VRSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2038,7 +2038,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VRSUB.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VS1R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
@@ -2056,7 +2056,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSADD.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2065,7 +2065,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2074,7 +2074,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSADD.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSADDU.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2083,7 +2083,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSADDU.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSADDU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2092,7 +2092,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSADDU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSADDU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2101,7 +2101,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSADDU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSBC.VVM" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2140,7 +2140,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLIDE1DOWN.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSLIDE1UP.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2149,7 +2149,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLIDE1UP.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSLIDEDOWN.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2158,7 +2158,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLIDEDOWN.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSLIDEDOWN.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2167,7 +2167,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLIDEDOWN.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSLIDEUP.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2176,7 +2176,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLIDEUP.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSLIDEUP.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2185,7 +2185,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLIDEUP.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSLL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2194,7 +2194,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLL.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSLL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2203,7 +2203,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSLL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2212,7 +2212,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSLL.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2221,7 +2221,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSMUL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSMUL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2230,7 +2230,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSMUL.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSRA.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2239,7 +2239,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSRA.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSRA.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2248,7 +2248,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSRA.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSRA.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2257,7 +2257,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSRA.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSRL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2266,7 +2266,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSRL.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSRL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2275,7 +2275,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSRL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSRL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2284,7 +2284,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSRL.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSSRA.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2293,7 +2293,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSRA.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSSRA.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2302,7 +2302,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSRA.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSSRA.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2311,7 +2311,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSRA.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSSRL.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2320,7 +2320,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSRL.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VSSRL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2329,7 +2329,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSRL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSSRL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2338,7 +2338,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSRL.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2347,7 +2347,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2356,7 +2356,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSUB.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSSUBU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2365,7 +2365,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSUBU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSSUBU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2374,7 +2374,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSSUBU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2383,7 +2383,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2392,7 +2392,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VSUB.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWADD.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2401,7 +2401,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADD.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWADD.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2410,7 +2410,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADD.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWADD.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2419,7 +2419,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADD.W.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWADD.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2428,7 +2428,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADD.W.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWADDU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2437,7 +2437,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADDU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWADDU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2446,7 +2446,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADDU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWADDU.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2455,7 +2455,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADDU.W.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWADDU.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2464,7 +2464,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWADDU.W.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2473,7 +2473,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMACC.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWMACC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2482,7 +2482,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMACC.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWMACCSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2491,7 +2491,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMACCSU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWMACCSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2500,7 +2500,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMACCSU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWMACCU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2509,7 +2509,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMACCU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWMACCU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2518,7 +2518,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMACCU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWMACCUS.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2527,7 +2527,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMACCUS.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWMUL.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2536,7 +2536,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMUL.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWMUL.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2545,7 +2545,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMUL.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWMULSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2554,7 +2554,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMULSU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWMULSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2563,7 +2563,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMULSU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWMULU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2572,7 +2572,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMULU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWMULU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2581,7 +2581,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWMULU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWREDSUM.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2590,7 +2590,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWREDSUM.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWREDSUMU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2599,7 +2599,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWREDSUMU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWSUB.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2608,7 +2608,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUB.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWSUB.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2617,7 +2617,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUB.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWSUB.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2626,7 +2626,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUB.W.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWSUB.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2635,7 +2635,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUB.W.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWSUBU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2644,7 +2644,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUBU.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWSUBU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2653,7 +2653,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUBU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VWSUBU.W.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2662,7 +2662,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUBU.W.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VWSUBU.W.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2671,7 +2671,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" layout="Wide"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers" layout="Wide"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VWSUBU.W.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VXOR.VI" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2680,7 +2680,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VXOR.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VXOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2689,7 +2689,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vs1" type="VECREG" bits="19-15" access="Read" choices="Vector registers"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VXOR.VV %s, %s, %s, %s" op1="vd" op2="vs2" op3="vs1" op4="vm"/>
   </I>
   <I name="VXOR.VX" isa="RISCV" class="VectorInstruction" group="Vector">
@@ -2698,7 +2698,7 @@
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
     <asm format="VXOR.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
 </instruction_file>

@@ -209,6 +209,17 @@ namespace Force {
     }
 
     /*!
+      Process the differ attribute of an operand.
+    */
+    void process_differ_attribute(const string& attr_value, OperandStructure* op_struct)
+    {
+      StringSplitter string_splitter(attr_value, ',');
+      while (not string_splitter.EndOfString()) {
+        op_struct->AddDiffer(string_splitter.NextSubString());
+      }
+    }
+
+    /*!
       Process attributes of \<O\> element.  Make sure not to use the mpOperandStructure pointer here, since get_operand_structure could return either mpOperandStructure or mpGroupOperandStructure.
     */
     void process_operand_attributes(pugi::xml_node& node)
@@ -245,8 +256,7 @@ namespace Force {
             cast_struct->mChoices.push_back(attr.value());
           }
           else if (strcmp(attr_name, "differ") == 0) {
-            auto cast_struct = dynamic_cast<DifferOperandStructure* > (op_struct);
-            cast_struct-> SetDiffers(attr.value());
+            process_differ_attribute(attr.value(), op_struct);
           }
           else if (strcmp(attr_name, "exclude") == 0) {
             auto cast_struct = dynamic_cast<ExcludeOperandStructure* > (op_struct);
@@ -452,11 +462,6 @@ namespace Force {
         return mpOperandStructure;
       }
 
-      auto const differ_attr = node.attribute("differ");
-      if (not differ_attr.empty()) {
-        mpOperandStructure = new DifferOperandStructure();
-        return mpOperandStructure;
-      }
       auto const choices_attr = node.attribute("choices");
       if (not choices_attr.empty()) {
         mpOperandStructure = new ChoicesOperandStructure();

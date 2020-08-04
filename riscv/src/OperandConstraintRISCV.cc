@@ -38,6 +38,11 @@ using namespace std;
 
 namespace Force {
 
+  bool VectorMaskOperandConstraint::IsDifferValueAllowed(cuint64 value) const
+  {
+    return (value == 1);
+  }
+
   void BaseOffsetBranchOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
     BranchOperandConstraint::Setup(rGen, rInstr, rOperandStruct);

@@ -74,6 +74,20 @@ namespace Force {
     mpConstraintSet->SubValue(value);
   }
 
+  void OperandConstraint::SubDifferOperandValues(const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    if (not mConstraintForced) {
+      for (const string& differ : rOperandStruct.GetDiffers()) {
+        const Operand* opr = rInstr.FindOperand(differ, true);
+        uint64 opr_val = opr->Value();
+
+        if (not IsDifferValueAllowed(opr_val)) {
+          SubConstraintValue(opr->Value(), *(opr->GetOperandStructure()));
+        }
+      }
+    }
+  }
+
   ConstraintSet* OperandConstraint::DefaultConstraintSet(const OperandStructure& rOperandStruct) const
   {
     return new ConstraintSet(0, (1u << rOperandStruct.mSize) - 1);

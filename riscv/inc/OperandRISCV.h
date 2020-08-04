@@ -20,6 +20,26 @@
 
 namespace Force {
 
+  /*!
+    \class VectorMaskOperand
+    \brief Operand class for vector mask bits.
+  */
+  class VectorMaskOperand : public ChoicesOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorMaskOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorMaskOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorMaskOperand);
+
+    Object* Clone() const override { return new VectorMaskOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorMaskOperand"; } //!< Return a string describing the actual type of the Object.
+
+    void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorMaskOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+  };
+
   class BaseOffsetBranchOperandConstraint;
 
   /*!

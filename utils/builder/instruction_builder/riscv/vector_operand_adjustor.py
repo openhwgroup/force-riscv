@@ -51,6 +51,10 @@ class VectorOperandAdjustor(OperandAdjustor):
         vm_opr = self.mInstr.find_operand('vm')
         vm_opr.type = 'Choices'
         vm_opr.choices = 'Vector mask'
+        vm_opr.oclass = 'VectorMaskOperand'
+        if self.mInstr.find_operand('vd', fail_not_found=False):
+            vm_opr.differ = 'vd'
+
         self.add_asm_op(vm_opr)
 
     def set_vs1(self):
