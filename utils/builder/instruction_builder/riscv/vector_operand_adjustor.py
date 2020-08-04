@@ -47,6 +47,11 @@ class VectorOperandAdjustor(OperandAdjustor):
         aOperand.choices = "Vector registers"
         self.add_asm_op(aOperand)
 
+    def set_reg_vec_nonzero(self, aOperand):
+        aOperand.type = "VECREG"
+        aOperand.choices = "Nonzero vector registers"
+        self.add_asm_op(aOperand)
+
     def set_vm(self):
         vm_opr = self.mInstr.find_operand('vm')
         vm_opr.type = 'Choices'
@@ -100,6 +105,12 @@ class VectorOperandAdjustor(OperandAdjustor):
         vd_opr = self.mInstr.find_operand('vd')
         vd_opr.access = 'Write'
         self.set_reg_vec(vd_opr)
+
+    def set_vd_nonzero(self):
+        vd_opr = self.mInstr.find_operand('vd$\\neq$0')
+        vd_opr.name = 'vd'
+        vd_opr.access = 'Write'
+        self.set_reg_vec_nonzero(vd_opr)
 
     def set_vd_ls_dest(self):
         vd_opr = self.mInstr.find_operand('vd')

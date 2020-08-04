@@ -52,21 +52,21 @@ Add RISCV V extension instruction starter information in this file.
   </I>
   <I name="VADC.VIM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000000111010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vd$\neq$0" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="simm5" type="Immediate" bits="19-15"/>
     <asm format="VADC.VIM"/>
   </I>
   <I name="VADC.VVM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000000001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vd$\neq$0" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vs1" type="Register" bits="19-15"/>
     <asm format="VADC.VVM"/>
   </I>
   <I name="VADC.VXM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000001001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vd$\neq$0" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VADC.VXM"/>
@@ -1855,14 +1855,14 @@ Add RISCV V extension instruction starter information in this file.
   </I>
   <I name="VSBC.VVM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01001000001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vd$\neq$0" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vs1" type="Register" bits="19-15"/>
     <asm format="VSBC.VVM"/>
   </I>
   <I name="VSBC.VXM" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01001001001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vd$\neq$0" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VSBC.VXM"/>

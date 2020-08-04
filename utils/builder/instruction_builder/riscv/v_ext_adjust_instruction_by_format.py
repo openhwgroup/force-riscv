@@ -65,10 +65,16 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     # vmerge and vmv instructions
     elif instruction_format == 'vd-vs2-simm5':
         return adjust_vd_vs2_simm5(aInstruction)
+    elif instruction_format == 'vd$\\neq$0-vs2-simm5':
+        return adjust_vd_nonzero_vs2_simm5(aInstruction)
     elif instruction_format == 'vd-vs2-vs1':
         return adjust_vd_vs2_vs1(aInstruction)
+    elif instruction_format == 'vd$\\neq$0-vs2-vs1':
+        return adjust_vd_nonzero_vs2_vs1(aInstruction)
     elif instruction_format == 'vd-vs2-rs1':
         return adjust_vd_vs2_rs1(aInstruction)
+    elif instruction_format == 'vd$\\neq$0-vs2-rs1':
+        return adjust_vd_nonzero_vs2_rs1(aInstruction)
     elif instruction_format == 'vd-simm5':
         return adjust_vd_simm5(aInstruction)
     elif instruction_format == 'vd-vs1':
@@ -271,6 +277,13 @@ def adjust_vd_vs2_vs1(aInstruction):
     operand_adjustor.set_vs1()
     return True
 
+def adjust_vd_nonzero_vs2_vs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd_nonzero()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_vs1()
+    return True
+
 def adjust_vd_vs2_vs1_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vd()
@@ -292,6 +305,13 @@ def adjust_vd_vs2_simm5(aInstruction):
     operand_adjustor.set_imm('simm5', 'simm5', True)
     return True
 
+def adjust_vd_nonzero_vs2_simm5(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd_nonzero()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_imm('simm5', 'simm5', True)
+    return True
+
 def adjust_vd_vs2_simm5_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vd()
@@ -303,6 +323,13 @@ def adjust_vd_vs2_simm5_vm(aInstruction):
 def adjust_vd_vs2_rs1(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vd()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_rs1_int()
+    return True
+
+def adjust_vd_nonzero_vs2_rs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd_nonzero()
     operand_adjustor.set_vs2()
     operand_adjustor.set_rs1_int()
     return True
