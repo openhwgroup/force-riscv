@@ -265,6 +265,11 @@ namespace Force {
     auto implied_reg = reg_file->RegisterLookup(rOperandStruct.Name());
     mRegisterIndex = implied_reg->IndexValue();
 
+    // Implied registers don't have associated choices, as there is only one option, so we need to
+    // create a single-choice tree here to fully set up the ChoicesOperandConstraint
+    mpChoiceTree = new ChoiceTree("ImpliedRegister", 0, 10);
+    mpChoiceTree->AddChoice(new Choice(implied_reg->Name(), mRegisterIndex, 10));
+
     if (mConstraintForced) {
       LOG(info) << "constraint already forced, ignore reservation check" << endl;
       return;

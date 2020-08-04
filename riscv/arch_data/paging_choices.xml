@@ -38,17 +38,13 @@
     <choice description="SystemPage=0" name="NotSystemPage" value="0x0" weight="100"/>
     <choice description="SystemPage=1" name="IsSystemPage" value="0x1" weight="0"/>
   </choices>
-  <choices name="SystemPage#U#stage 1" type="Paging">
-    <choice description="SystemPage=0" name="NotSystemPage" value="0x0" weight="100"/>
-    <choice description="SystemPage=1" name="IsSystemPage" value="0x1" weight="0"/>
-  </choices>
 
   <!-- Page size choices -->
   <choices name="Page size#4K granule#S#stage 1" type="Paging">
-    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
-    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
-    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
-    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
+    <choice description="4K page size" name="4K" value="0x0" weight="84"/>
+    <choice description="2M page size" name="2M" value="0x1" weight="10"/>
+    <choice description="1G page size" name="1G" value="0x2" weight="5"/>
+    <choice description="512G page size" name="512G" value="0x3" weight="1"/>
   </choices>
   <choices name="System Page size#4K granule#S#stage 1" type="Paging">
     <choice description="4K page size" name="4K" value="0x0" weight="100"/>
@@ -56,19 +52,8 @@
     <choice description="1G page size" name="1G" value="0x2" weight="0"/>
     <choice description="512G page size" name="512G" value="0x3" weight="0"/>
   </choices>
-  <choices name="Page size#4K granule#U#stage 1" type="Paging">
-    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
-    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
-    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
-    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
-  </choices>
-  <choices name="System Page size#4K granule#U#stage 1" type="Paging">
-    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
-    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
-    <choice description="1G page size" name="1G" value="0x2" weight="0"/>
-    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
-  </choices>
 
+  <!-- Descriptor Attributes -->
   <choices name="D#S#stage 1" type="Paging">
     <choice description="D=0" name="0" value="0x0" weight="100"/>
     <choice description="D=1" name="1" value="0x1" weight="0"/>
@@ -98,101 +83,62 @@
     <choice description="R=1" name="1" value="0x1" weight="100"/>
   </choices>
 
-  <choices name="D#U#stage 1" type="Paging">
-    <choice description="D=0" name="0" value="0x0" weight="100"/>
-    <choice description="D=1" name="1" value="0x1" weight="0"/>
+  <!-- Paging Exception Choices -->
+  <choices name="Invalid Descriptor#level 3#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
-  <choices name="A#U#stage 1" type="Paging">
-    <choice description="A=0" name="0" value="0x0" weight="100"/>
-    <choice description="A=1" name="1" value="0x1" weight="0"/>
+  <choices name="Invalid Descriptor#level 2#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
-  <choices name="G#U#stage 1" type="Paging">
-    <choice description="G=0" name="0" value="0x0" weight="100"/>
-    <choice description="G=1" name="1" value="0x1" weight="0"/>
+  <choices name="Invalid Descriptor#level 1#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
-  <choices name="U#U#stage 1" type="Paging">
-    <choice description="U=0" name="0" value="0x0" weight="0"/>
-    <choice description="U=1" name="1" value="0x1" weight="100"/>
-  </choices>
-  <choices name="X#U#stage 1" type="Paging">
-    <choice description="X=0" name="0" value="0x0" weight="0"/>
-    <choice description="X=1" name="1" value="0x1" weight="100"/>
-  </choices>
-  <choices name="W#U#stage 1" type="Paging">
-    <choice description="W=0" name="0" value="0x0" weight="0"/>
-    <choice description="W=1" name="1" value="0x1" weight="100"/>
-  </choices>
-  <choices name="R#U#stage 1" type="Paging">
-    <choice description="R=0" name="0" value="0x0" weight="0"/>
-    <choice description="R=1" name="1" value="0x1" weight="100"/>
+  <choices name="Invalid Descriptor#level 0#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
   </choices>
 
-  <choices name="Translation fault#level 0#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  <choices name="Invalid DA#level 3#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
   </choices>
-  <choices name="Translation fault#level 1#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  <choices name="Invalid DA#level 2#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
   </choices>
-  <choices name="Translation fault#level 2#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  <choices name="Invalid DA#level 1#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
   </choices>
-  <choices name="Translation fault#level 3#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
-  </choices>
-
-  <choices name="Address size fault#level 0#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
-  </choices>
-  <choices name="Address size fault#level 1#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
-  </choices>
-  <choices name="Address size fault#level 2#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
-  </choices>
-  <choices name="Address size fault#level 3#S#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  <choices name="Invalid DA#level 0#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
   </choices>
 
-  <choices name="Translation fault#level 0#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  <choices name="Misaligned Superpage#level 3#S#stage 1" type="Paging">
+    <choice description="valid address"   name="false" value="0x0" weight="100"/>
+    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
   </choices>
-  <choices name="Translation fault#level 1#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  <choices name="Misaligned Superpage#level 2#S#stage 1" type="Paging">
+    <choice description="valid address"   name="false" value="0x0" weight="100"/>
+    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
   </choices>
-  <choices name="Translation fault#level 2#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
-  </choices>
-  <choices name="Translation fault#level 3#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x1" weight="100"/>
-    <choice description="Fault" name="true" value="0x0" weight="0"/>
+  <choices name="Misaligned Superpage#level 1#S#stage 1" type="Paging">
+    <choice description="valid address"   name="false" value="0x0" weight="100"/>
+    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
   </choices>
 
-  <choices name="Address size fault#level 0#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
+  <choices name="Last Level Pointer#level 0#S#stage 1" type="Paging">
+    <choice description="valid XWRV" name="false" value="0x0" weight="100"/>
+    <choice description="invalid XWRV" name="true" value="0x1" weight="0"/>
   </choices>
-  <choices name="Address size fault#level 1#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
-  </choices>
-  <choices name="Address size fault#level 2#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
-  </choices>
-  <choices name="Address size fault#level 3#U#stage 1" type="Paging">
-    <choice description="No fault" name="false" value="0x0" weight="100"/>
-    <choice description="Fault" name="true" value="0x1" weight="0"/>
+
+  <choices name="Va Address Error#S#stage 1" type="Paging">
+    <choice description="valid address"   name="false" value="0x0" weight="100"/>
+    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
   </choices>
 
 </choices_file>

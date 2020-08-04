@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<registers>
+  <physical_registers>
+    <physical_register index="0x180" name="satp" size="64" type="SysReg"/>
+    <physical_register index="0x300" name="mstatus" size="64" type="SysReg"/>
+    <physical_register index="0x301" name="misa" size="64" type="SysReg"/>
+  </physical_registers>
+  <register_file name="RISC-V Registers">
+    <register boot="0x5001" index="0x180" name="satp" size="64" type="SysReg">
+      <register_field name="MODE" physical_register="satp" size="4">
+        <bit_field shift="60" size="4"/>
+      </register_field>
+      <register_field name="ASID" physical_register="satp" size="16">
+        <bit_field shift="44" size="16"/>
+      </register_field>
+      <register_field init_policy="PpnInitPolicy" name="PPN" physical_register="satp" size="44">
+        <bit_field shift="0" size="44"/>
+      </register_field>
+    </register>
+    <register boot="0x5002" index="0x300" name="mstatus" size="64" type="SysReg">
+      <register_field name="SD" physical_register="mstatus" size="1">
+        <bit_field shift="63" size="1"/>
+      </register_field>
+      <register_field name="WPRI" physical_register="mstatus" size="40">
+        <bit_field shift="36" size="27"/>
+        <bit_field shift="23" size="9"/>
+        <bit_field shift="9" size="2"/>
+        <bit_field shift="6" size="1"/>
+        <bit_field shift="2" size="1"/>
+      </register_field>
+      <register_field name="SXL" physical_register="mstatus" size="2">
+        <bit_field shift="34" size="2"/>
+      </register_field>
+      <register_field name="UXL" physical_register="mstatus" size="2">
+        <bit_field shift="32" size="2"/>
+      </register_field>
+      <register_field name="TSR" physical_register="mstatus" size="1">
+        <bit_field shift="22" size="1"/>
+      </register_field>
+      <register_field name="TW" physical_register="mstatus" size="1">
+        <bit_field shift="21" size="1"/>
+      </register_field>
+      <register_field name="TVM" physical_register="mstatus" size="1">
+        <bit_field shift="20" size="1"/>
+      </register_field>
+      <register_field name="MXR" physical_register="mstatus" size="1">
+        <bit_field shift="19" size="1"/>
+      </register_field>
+      <register_field name="SUM" physical_register="mstatus" size="1">
+        <bit_field shift="18" size="1"/>
+      </register_field>
+      <register_field name="MPRV" physical_register="mstatus" size="1">
+        <bit_field shift="17" size="1"/>
+      </register_field>
+      <register_field name="XS" physical_register="mstatus" size="2">
+        <bit_field shift="15" size="2"/>
+      </register_field>
+      <register_field name="FS" physical_register="mstatus" size="2">
+        <bit_field shift="13" size="2"/>
+      </register_field>
+      <register_field name="MPP" physical_register="mstatus" size="2">
+        <bit_field shift="11" size="2"/>
+      </register_field>
+      <register_field name="SPP" physical_register="mstatus" size="1">
+        <bit_field shift="8" size="1"/>
+      </register_field>
+      <register_field name="MPIE" physical_register="mstatus" size="1">
+        <bit_field shift="7" size="1"/>
+      </register_field>
+      <register_field name="SPIE" physical_register="mstatus" size="1">
+        <bit_field shift="5" size="1"/>
+      </register_field>
+      <register_field name="UPIE" physical_register="mstatus" size="1">
+        <bit_field shift="4" size="1"/>
+      </register_field>
+      <register_field name="MIE" physical_register="mstatus" size="1">
+        <bit_field shift="3" size="1"/>
+      </register_field>
+      <register_field name="SIE" physical_register="mstatus" size="1">
+        <bit_field shift="1" size="1"/>
+      </register_field>
+      <register_field name="UIE" physical_register="mstatus" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+    </register>
+    <register boot="0x5003" index="0x301" name="misa" size="64" type="SysReg">
+      <register_field name="WLRL_VAR" physical_register="misa" size="36">
+        <bit_field shift="26" size="36"/>
+      </register_field>
+      <register_field name="EXTENSIONS" physical_register="misa" size="26">
+        <bit_field shift="0" size="26"/>
+      </register_field>
+      <register_field name="MXL" physical_register="misa" size="2">
+        <bit_field shift="62" size="2"/>
+      </register_field>
+    </register>
+  </register_file>
+</registers>

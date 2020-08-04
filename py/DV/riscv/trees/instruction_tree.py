@@ -44,7 +44,7 @@ RV64A             completed
 Zicsr             completed
 Zifencei          completed
 RV_A              completed                       = RV32A + RV64A
-RV_C              pending                           Will not contain instructions exclusive to RV32C or RV128C.
+RV_C              completed                         Does not contain instructions exclusive to RV32C or RV128C.
 RV_V              pending                         = ALU_V + LDST_V
 RV_G              completed                       = RV32I + RV64I + RV32F + RV64F + RV32D + RV64D + RV32M + RV64M + RV32A + RV64A + Zicsr + Zifencei
                                                     (More succinctly, RV64I plus the standard extensions: I, M, A, F, D, Zicsr, Zifencei.)
@@ -52,7 +52,7 @@ Trap_Return       pending                         = {URET, SRET, MRET, WFI}
 Fence             pending                         = {SFENCE.VMA, HFENCE.BVMA, HFENCE.GVMA}
 
 RV_ALL_NoVector   pending                         = RV_G + RV_C + Trap_Return + Fence
-RV_ALL            pending                         = ALL_RISCV_NoVector + V_ALL
+RV_ALL            pending                         = ALL_RISCV_NoVector + RV_V
 
 
 
@@ -67,8 +67,8 @@ Regular loads and stores
   LDST_Int             completed                            = LD_Int + ST_Int
   LDST_Float           completed                            = LD_Float + ST_Float
   LDST_IntFloat        completed                            = LDST_Int + LDST_Float
-  LDST_IntFloatC       pending                              = LDST_IntFloat + (LDST_C)
-  LDST_All             partially completed, missing C & V   = LDST_IntFloat + (LDST_C + LDST_V)
+  LDST_IFC             completed                            = LDST_IntFloat + LDST_C
+  LDST_All             partially completed, missing V       = LDST_IntFloat + LDST_C + (LDST_V)
   LDST_Byte            completed
   LDST_Half            completed
   LDST_Word            completed
@@ -78,21 +78,21 @@ Regular ALU Int
   ALU_Int32            completed                            = RV32I - loads - stores - branches - jumps
   ALU_Int64            completed                            = RV64I - loads - stores
   ALU_M                completed                            = RV32M + RV64M
-  ALU_Int_All          partially complete, missing C        = ALU_Int32 + ALU_Int64 + ALU_M + (ALU_Int_C)
+  ALU_Int_All          completed                            = ALU_Int32 + ALU_Int64 + ALU_M + ALU_Int_C
   BranchJump           completed
 
 Regular ALU Float
   ALU_Float_Single     completed                            = RV32S + RV64S - loads - stores - FCVT
   ALU_Float_Double     completed                            = RV32D + RV64D - loads - stores - FCVT
   FCVT                 completed
-  ALU_Float_All        partially completed, missing C       = ALU_Float_Single + ALU_Float_Double + (ALU_Float_C)
+  ALU_Float_All        completed                            = ALU_Float_Single + ALU_Float_Double 
 
 C extension
-  LD_C                 pending
-  ST_C                 pending
-  LDST_C               pending                              = LD_C + ST_C
-  BranchJumpC          pending
-  ALU_Int_C            pending
+  LD_C                 completed
+  ST_C                 completed
+  LDST_C               completed                            = LD_C + ST_C
+  BranchJump_C         completed
+  ALU_Int_C            completed
 
 V extension
   LD_V                 pending
@@ -128,8 +128,8 @@ RV32I_instructions = {
     'BLT##RISCV':10,
     'BLTU##RISCV':10,
     'BNE##RISCV':10,
-    # 'EBREAK##RISCV':10,
-    # 'ECALL##RISCV':10,
+    'EBREAK##RISCV':0,     # disabled for now - set weight to 0
+    'ECALL##RISCV':0,      # disabled for now - set weight to 0
     'FENCE##RISCV':10,
     'JAL##RISCV':10,
     'JALR##RISCV':10,
@@ -458,7 +458,11 @@ LDST_Word_instructions = {
     'FSW##RISCV':10,
     'SW##RISCV':10,
     'LW##RISCV':10,
-    'LWU##RISCV':10
+    'LWU##RISCV':10,
+    'C.LW##RISCV':10,
+    'C.SW##RISCV':10,
+    'C.LWSP##RISCV':10,
+    'C.SWSP##RISCV':10
     }
 
 LDST_Word_map = InstructionMap('LDST_Word_instructions', LDST_Word_instructions)
@@ -468,7 +472,15 @@ LDST_Double_instructions = {
     'FLD##RISCV':10,
     'FSD##RISCV':10,
     'SD##RISCV':10,
-    'LD##RISCV':10
+    'LD##RISCV':10,
+    'C.FLD##RISCV':10,
+    'C.FSD##RISCV':10,
+    'C.LD##RISCV':10,
+    'C.SD##RISCV':10,
+    'C.FLDSP##RISCV':10,
+    'C.FSDSP##RISCV':10,
+    'C.LDSP##RISCV':10,
+    'C.SDSP##RISCV':10
     }
 
 LDST_Double_map = InstructionMap('LDST_Double_instructions', LDST_Double_instructions)
@@ -488,10 +500,43 @@ LDST_Float_map = InstructionMap('LDST_Float_instructions', LDST_Float_instructio
 LDST_IntFloat_instructions = Merge(LDST_Float_instructions, LDST_Int_instructions)
 LDST_IntFloat_map = InstructionMap('LDST_IntFloat_instructions', LDST_IntFloat_instructions)
 
-# Needs C & V 
-LDST_All_instructions = Merge(LDST_IntFloat_instructions)
-LDST_All_map = InstructionMap('LDST_All_instructions', LDST_IntFloat_instructions)
 
+
+LD_C_instructions = {
+    "C.FLD##RISCV": 10,
+    "C.LD##RISCV": 10,
+    "C.LW##RISCV": 10,
+    "C.FLDSP##RISCV": 10,
+    "C.LDSP##RISCV": 10,
+    "C.LWSP##RISCV": 10
+    }
+
+LD_C_map = InstructionMap('LD_C_instructions', LD_C_instructions)
+
+ST_C_instructions = {
+    "C.FSD##RISCV": 10,
+    "C.SD##RISCV": 10,
+    "C.SW##RISCV": 10,
+    "C.FSDSP##RISCV": 10,
+    "C.SDSP##RISCV": 10,
+    "C.SWSP##RISCV": 10
+    }
+
+ST_C_map = InstructionMap('ST_C_instructions', ST_C_instructions)
+
+LDST_C_instructions = Merge(LD_C_instructions, ST_C_instructions)
+LDST_C_map = InstructionMap('LDST_C_instructions', LDST_C_instructions)
+
+
+# All LDST except vector
+LDST_IFC_instructions = Merge(LDST_IntFloat_instructions, LDST_C_instructions)
+LDST_IFC_map = InstructionMap('LDST_IFC_instructions', LDST_IFC_instructions)
+
+
+# All LDST -   >>>> Needs V added <<<<<<
+LDST_All_instructions = Merge(LDST_IFC_instructions)
+#LDST_All_instructions = Merge(LDST_IntFloat_instructions)
+LDST_All_map = InstructionMap('LDST_All_instructions', LDST_All_instructions)
 
 
 
@@ -559,10 +604,6 @@ ALU_Int64_instructions = {
     }
 
 ALU_Int64_map = InstructionMap('ALU_Int64_instructions', ALU_Int64_instructions)
-
-# Missing C
-ALU_Int_All_instructions = Merge(ALU_Int32_instructions, ALU_Int64_instructions, ALU_M_instructions)
-ALU_Int_All_map = InstructionMap('ALU_Int_All_instructions', ALU_Int_All_instructions)
 
 
 
@@ -649,7 +690,6 @@ FCVT_instructions = {
 
 FCVT_map = InstructionMap('FCVT_instructions', FCVT_instructions)
 
-# Missing C
 ALU_Float_All_instructions = Merge(ALU_Float_Single_instructions, ALU_Float_Double_instructions)
 ALU_Float_All_map = InstructionMap('ALU_Float_All_instructions', ALU_Float_All_instructions)
 
@@ -657,36 +697,11 @@ ALU_Float_All_map = InstructionMap('ALU_Float_All_instructions', ALU_Float_All_i
 
 
 
-
-
-
-
-LD_C_instructions = {
-    "C.FLD##4YRISCV": 10,
-    "C.FLDSP##RISCV": 10,
-    "C.LD##RISCV": 10,
-    "C.LDSP##RISCV": 10
-    }
-
-LD_C_map = InstructionMap('LD_C_instructions', LD_C_instructions)
-
-
-ST_C_instructions = {
-    "C.SD##RISCV": 10,
-    "C.SDSP##RISCV": 10,
-    "C.FSD##RISCV": 10,
-    "C.FSDSP##RISCV": 10
-    }
-
-ST_C_map = InstructionMap('ST_C_instructions', ST_C_instructions)
-
-
 BranchJump_C_instructions = {
     "C.BEQZ##RISCV": 10,
     "C.BNEZ##RISCV": 10,
     "C.EBREAK##RISCV": 10,
     "C.J##RISCV": 10,
-    "C.JALR##RISCV": 10,
     "C.JR##RISCV": 10
     }
 
@@ -719,14 +734,18 @@ ALU_Int_C_instructions = {
 ALU_Int_C_map = InstructionMap('ALU_Int_C_instructions', ALU_Int_C_instructions)
 
 
-C_instructions = {
+RV_C_instructions = Merge(ALU_Int_C_instructions, BranchJump_C_instructions, LDST_C_instructions)
+
+RV_C_map = {
         ALU_Int_C_map : 10,
         BranchJump_C_map : 10,
-        ST_C_map : 10,
-        LD_C_map : 10
+        LDST_C_map : 10
         }
 
 
+
+ALU_Int_All_instructions = Merge(ALU_Int32_instructions, ALU_Int64_instructions, ALU_M_instructions, ALU_Int_C_instructions)
+ALU_Int_All_map = InstructionMap('ALU_Int_All_instructions', ALU_Int_All_instructions)
 
 
 

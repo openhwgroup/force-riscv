@@ -23,27 +23,25 @@
 # Contributors: Howard Maler, Noah Sherrill, Amit Kumar, Jingliang(Leo) Wang, Venkat Srinivasan
 
 # General imports
-import sys, traceback, os, signal, argparse
+import signal
+import sys
+import traceback
 
-# from force_init import the_force_root
-from master_init import Modes, Formats, CmdLine, Labels, Defaults, EnVars, Expire, CommandLineParameters
-
-# since there will be a significant amount of directory manipulation import the path utils
-# ancestor class
-from classes.module_run import ModuleRun
-
+import common.cmdline_utils as CmdLineUtils
+from classes.performance_summary import PerformanceSummary
+from classes.regression_summary import RegressionSummary
+from classes.summary import SummaryLevel
+from common.datetime_utils import DateTime
+from common.kernel_objs import HiCriticalSection
+from common.msg_utils import Msg
 # general shared utility and data structure classes
 from common.path_utils import PathUtils
 from common.sys_utils import SysUtils
-from common.msg_utils import Msg
-from common.datetime_utils import DateTime
-from common.kernel_objs import HiCriticalSection
+# from force_init import the_force_root
+from master_init import Modes, Formats, CmdLine, Defaults, EnVars, Expire, CommandLineParameters
 
-import common.cmdline_utils as CmdLineUtils
-
-from classes.summary import SummaryLevel
-from classes.regression_summary import RegressionSummary
-from classes.performance_summary import PerformanceSummary
+# since there will be a significant amount of directory manipulation import the path utils
+# ancestor class
 
 try:
     from classes.file_controller import FileController
@@ -53,6 +51,7 @@ try:
     from classes.cleanup_rules import CleanUpRules
 except ImportError:
     print('Please run \'make tests\'')
+    traceback.print_exc(file=sys.stdout)
     sys.exit(1)
 
 from classes.ApplicationsSetup import ApplicationsSetup
@@ -63,15 +62,33 @@ from common.threads import HiOldThread, HiEvent, workers_done_event, summary_don
 
 shutdown_proc = None
 
-class LoadError( Exception ): pass
 
-class MasterRun( ModuleRun ):
+class LoadError( Exception ):
+    pass
 
-    cLsfWaitTime = 30 # seconds
 
-    def __init__(self, aAppsInfo):
-        # print( "Got here (2.0)" )
-        super().__init__(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level, aAppsInfo)
+# class MasterRun( ModuleRun ):
+class MasterRun(object):
+
+    cLsfWaitTime = 30  # seconds
+
+    def __init__(self):
+        try:
+            self.mCmdLineParms = CommandLineParameters
+            self.mConfigArgs = retrieveConfigArgument(sys.argv[1:])
+            self.mAppsSetup = ApplicationsSetup(self.mCmdLineParms, sys.argv, self.mConfigArgs, True, True)
+            self._mAppsInfo = self.mAppsSetup.getApplicationsInfo()
+        except SystemExit as aSysExit:
+            sys.exit(int(str(aSysExit)))
+        except:
+            print("[ERROR] - An Unhandled Error has Occurred during applications setup of " + str(sys.argv[0]))
+            traceback.print_exc(file=sys.stdout)
+            sys.exit(44)
+
+        self.module_dir, self.module_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
+        # self._mAppsInfo = apps_info
+        self.load_message_levels(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
+
         #print( "Got here (2.1)" )
 
         # persistent values
@@ -80,8 +97,8 @@ class MasterRun( ModuleRun ):
         self._mAppsInfo.mTestBaseDir = None
         self._mAppsInfo.mToolPath = self.module_dir
         self.fctrl_dir = None
-        self.mode      = None
-        self.summary   = None
+        self.mode = None
+        self.summary = None
         self.process_queue = None
         self.client_lev = False
         self.default_root = ""
@@ -89,7 +106,7 @@ class MasterRun( ModuleRun ):
         self.ctrl_item = ControlItem()
 
         # no propogate values
-        self.num_runs  = None
+        self.num_runs = None
         self.sum_level = None
 
         self.item_data = {}
@@ -99,6 +116,7 @@ class MasterRun( ModuleRun ):
         self.limit_fails = False
         self.crit_sec = HiCriticalSection()
         self.processor_name = None
+        self.fctrl = None
 
         self.terminated = False
 
@@ -114,8 +132,40 @@ class MasterRun( ModuleRun ):
 
         # Msg.lout( CmdLine.Switches, "dbg", "Allowed Command Line Switches" ) # Labels.cmd_line_switches_allowed  )
 
-    def load(self):
+    def load_message_levels( self, arg_msg_lev, arg_def_lev ):
+        # load from the command line if specified or use the default
+        my_lev_str = self.option_def( arg_msg_lev, arg_def_lev )
+        #my_def = "crit+err+warn+info+noinfo"
 
+        #my_lev_str = self.option_def( "all", my_def, "-l"  )
+
+        # if a (+) or a (-) is found then the command line will be appended to or demoted by
+        if ( my_lev_str[0] == '+' ) or ( my_lev_str[0] == '-' ):
+            # use the default string to build a format string, then append the passed in value
+            my_fmt_str = "%s%s%s"%( arg_def_lev,"\%","s" )
+            my_lev_str =  my_fmt_str % ( my_lev_str )
+
+        # print( my_lev_str )
+        # finally no matter what set the levels that are to be active
+
+        my_level = Msg.translate_levelstr( my_lev_str )
+        # print( "Before: %x" % my_level )
+
+        Msg.set_level( my_level )
+
+    def option_def(self, aSwitch, aDefVal=None, aConversionFunc=None):
+        # TODO deprecate this
+        return_value = self._mAppsInfo.mCmdLineOpts.option_def(aSwitch, aDefVal)
+        if aConversionFunc and return_value is not None:
+            try:
+                return_value = aConversionFunc(return_value)
+            except (TypeError, ValueError) as ex:
+                Msg.warn('Invalid value "{}" provided for "{}".  Using default.'.format(repr(return_value), aSwitch))
+                return aDefVal
+
+        return return_value
+
+    def load(self):
         # Msg.user( "MasterRun::load" )
         self.init_all()
         # create the top level FileController
@@ -251,7 +301,7 @@ class MasterRun( ModuleRun ):
             self.generator   = { }
             self.rtl         = { }
             self.performance = CtrlItmDefs.performance
-            self.regression = CtrlItmDefs.regression
+            self.regression  = CtrlItmDefs.regression
             Msg.user( "iss        : %s" % ( str( self.iss         )))
             Msg.user( "generator  : %s" % ( str( self.generator   )))
             Msg.user( "rtl        : %s" % ( str( self.rtl         )))
@@ -426,21 +476,26 @@ class MasterRun( ModuleRun ):
                 SysUtils.sleep_seconds_with_progress(sec_delay)
                 Msg.info ("Waiting done, resumed master run")
 
-    ## Queries the sequence apps for their SVN revision number
-    #
     def writeVersionInfo(self):
+        out_line_fmt = "{}, scm_system: {}, revision number: {}, location: {}, url: {}\n"
+        version_info = ""
+        for app_tag, app_config in self._mAppsInfo.mTagToApp.items():
+            Msg.user('app_tag: %s, app_config: %s' % (app_tag, app_config))
+            version_data = app_config.parameter("version")
+            for item in version_data:
+                if item['status']:
+                    version_info += out_line_fmt.format(app_config.name(),
+                                                        item['scm_type'],
+                                                        str(item['version']),
+                                                        item["folder"],
+                                                        item['url'])
         with open(self.output_dir + "version_info.txt", "w+") as outfile:
-            for app_tag, app_config in self._mAppsInfo.mTagToApp.items():
-                try:
-                    if isinstance(app_config.parameter("version"), list):
-                        for index in range(len(app_config.parameter("version"))):
-                            outfile.write(app_config.name() + ", revision number: " + str(app_config.parameter("version")[index]) + ", location: " + app_config.parameter("version_dir")[index] +  "\n")
-                    else:
-                        outfile.write(app_config.name() + ", revision number: " + str(app_config.parameter("version")) + ", location: " + app_config.parameter("version_dir") +  "\n")
-                except KeyError:
-                    continue
+            if version_info:
+                outfile.write(version_info)
+            else:
+                outfile.write("No version information found")
 
-    ## Call the report methods from each of the sequence apps. Some apps report, others pass through
+    # Call the report methods from each of the sequence apps. Some apps report, others pass through
     def modulesReport(self):
         for app_cfg in self._mAppsInfo.mSequenceApps:
             reporter = app_cfg.createReporter()
@@ -453,7 +508,6 @@ class MasterRun( ModuleRun ):
     @staticmethod
     def to_hex(a_value):
         return hex(int(a_value, 0))
-
 
     # populate the general options
     def populate_options(self):
@@ -594,7 +648,7 @@ class MasterRun( ModuleRun ):
 
     # def prepend_default_path( self, arg_path ):
     #     return PathUtils.append_path( self.default_root, arg_path )
-    #
+
     # An expire value has been found
     # There are several possibilities
     # 1. "clean" was pass on the command line, in this case remove the output directory which should
@@ -611,7 +665,7 @@ class MasterRun( ModuleRun ):
             Msg.user( "Expire [1], Output Base: %s" % ( str( my_output_base )), "EXPIRE" )
             Msg.info( "Output Directories Cleanup, Please wait ..." )
 
-            if int( arg_expire ) == Expire.all:#
+            if int( arg_expire ) == Expire.all:
 
                 Msg.info( "Building Directory List, [%s]" % ( my_output_base ))
                 my_dirs = PathUtils.list_dirs( my_output_base )
@@ -643,6 +697,7 @@ class MasterRun( ModuleRun ):
     def run_mode(self):
         return self.mode
 
+
 def sig_interrupt_handler(signal, frame):
     # Allows us to catch SIGINTs and inform child threads to quit at next chance.
     # Since the child threads are daemons, this should not be needed, but we can remove this at a later date.
@@ -653,29 +708,21 @@ def sig_interrupt_handler(signal, frame):
 
     sys.exit(-1)
 
+
 def retrieveConfigArgument(aArguments):
     config_argument = CmdLineUtils.basicCommandLineArgumentRetrieval(aArguments, '-c', '--config', str, 1)
 
     # PathUtils.resolvePath() lets us retrieve the entire file path from a string
     return PathUtils.resolvePath(config_argument.config[0]) if config_argument.config is not None else None
 
-if __name__ == "__main__":
 
+def main():
     signal.signal(signal.SIGINT, sig_interrupt_handler)
     my_pwd = None
 
-    try:
-        apps_info = ApplicationsSetup(CommandLineParameters, sys.argv, retrieveConfigArgument(sys.argv[1:]), True, True).getApplicationsInfo()
-    except SystemExit as aSysExit:
-        sys.exit(int(str(aSysExit)))
-    except:
-        print( "[ERROR] - An Unhandled Error has Occurred during applications setup of " + str( sys.argv[0] ))
-        traceback.print_exc( file=sys.stdout )
-        sys.exit( 44 )
-
     print( "\n=======================================\n\tInitializing ....\n=======================================\n" )
     try:
-        my_module = MasterRun(apps_info)
+        my_module = MasterRun()
 
         # save current working directory
         my_pwd = PathUtils.current_dir()
@@ -717,11 +764,14 @@ if __name__ == "__main__":
         pass
 
     finally:
-        # {todo}
+        # TODO
         # change back to original directory
 
-        if not my_pwd is None:
+        if my_pwd is not None:
             # Msg.dbg( "Restoring Original Directory: " + my_pwd )
             PathUtils.chdir( my_pwd )
 
+
+if __name__ == "__main__":
+    main()
 

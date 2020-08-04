@@ -245,7 +245,7 @@ namespace Force {
         if (opr_ptr->IsRegisterOperand()) {
           if (mpGenerator->OperandTypeCompatible(regType, opr_ptr->OperandType())) {
             auto reg_opr = dynamic_cast<const RegisterOperand* >(opr_ptr);
-            reg_opr->GetRegisterIndices(reg_opr->Value(), alloc_constr);
+            reg_opr->GetChosenRegisterIndices(*mpGenerator, alloc_constr);
           }
         }
       }

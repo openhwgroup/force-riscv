@@ -24,6 +24,7 @@
 
 #include <Generator.h>
 #include <Register.h>
+#include <RegisterReserver.h>
 
 #include <algorithm>
 
@@ -61,6 +62,48 @@ namespace Force {
     }
   }
 
+
+  void CompressedRegisterOperandRISCVConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    ChoicesOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    if (mConstraintForced) {
+      LOG(info) << "constraint already forced, ignore reservation check" << endl;
+      return;
+    }
+
+    auto reg_file = rGen.GetRegisterFile();
+    const ConstraintSet* read_reserv_constr = nullptr;
+    const ConstraintSet* write_reserv_constr = nullptr;
+    if (not reg_file->GetRegisterReserver()->HasReservations(rOperandStruct.mType, rOperandStruct.mAccess, read_reserv_constr, write_reserv_constr)) {
+      // << "no reservation constraints for: " << rOperandStruct.Name() << endl;
+      return;
+    }
+
+    // << "YES reservation constraints for: " << rOperandStruct.Name() << " read constr? " << (read_reserv_constr != nullptr)
+    // << " write constr? " << (write_reserv_constr != nullptr) << endl;
+    if (nullptr == mpConstraintSet) {
+      mpConstraintSet = DefaultConstraintSet(rOperandStruct);
+    }
+    //LOG(notice) << " default constraints: " << mpConstraintSet->ToSimpleString() << endl;
+    if (nullptr != read_reserv_constr) {
+      //LOG(notice) << " read constr " << read_reserv_constr->ToSimpleString() << endl;
+      ConstraintSet compressed_read_reserv_constr = *read_reserv_constr;
+      compressed_read_reserv_constr.SubtractFromElements(8);
+      //LOG(notice) << " 'prime' read constr " << compressed_read_reserv_constr.ToSimpleString() << endl;
+      mpConstraintSet->SubConstraintSet(compressed_read_reserv_constr);
+    }
+    if (nullptr != write_reserv_constr) {
+      //LOG(notice) << " write constr " << write_reserv_constr->ToSimpleString() << endl;
+      ConstraintSet compressed_write_reserv_constr = *write_reserv_constr;
+      compressed_write_reserv_constr.SubtractFromElements(8);
+      //LOG(notice) << " 'prime' write constr " << compressed_write_reserv_constr.ToSimpleString() << endl;
+      mpConstraintSet->SubConstraintSet(compressed_write_reserv_constr);
+    }
+    //LOG(notice) << " constraints (with reserved regs removed): " << mpConstraintSet->ToSimpleString() << endl;
+  }
+
+  
   void VectorDataTraits::SetTraits(const std::string& choiceText)
   {
     mTypeName = choiceText;

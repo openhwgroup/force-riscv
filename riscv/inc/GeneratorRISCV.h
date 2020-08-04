@@ -51,7 +51,9 @@ namespace Force {
     bool OperandTypeCompatible(ERegisterType regType, EOperandType oprType) const override; //!< Check if the operand type is compatible with the register type.
     bool OperandTypeToResourceType(EOperandType opType, EResourceType& rResType) const override; //!< Convert operand type to resource type.
     uint32 GetResourceCount(EResourceType rResType) const override; //!< Return resource count for a certain resource type.
-    void AdvancePC() override; //!< Advance Generator PC by default value
+    void AdvancePC() override; //!< Advance Generator PC by default value.
+  protected:
+    void AddArchImageThreadInfo(std::map<std::string, uint64>& rThreadInfo) const override; //!< Add architectural specific image thread info.
   protected:
     RegisterField* mpPrivilegeField; //!<Privilege level internal register field pointer
   };

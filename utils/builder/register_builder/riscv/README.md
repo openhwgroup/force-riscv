@@ -1,39 +1,46 @@
-#
-# Copyright (C) [2020] Futurewei Technologies, Inc.
-#
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#  http://www.apache.org/licenses/LICENSE-2.0
-#
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+ Copyright (C) [2020] Futurewei Technologies, Inc.
 
-=========================================================================================================================================
-NOTICE:
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-The modification script still works, but most of the functionality is being merged into the new register builder script.
-=========================================================================================================================================
+  http://www.apache.org/licenses/LICENSE-2.0
 
-This register builder is used to create system register files.  The starting point is input/system_registers_starter.xml file which is maintained by manual editing, then uses modification scripts to edit those base files.
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+# Introduction to the Register Builder script, with register modification script option.
+
+    NOTICE: The modification script functionality has been merged into the register builder script.
+
+    The register builder is used to create system register files. The starting point is the system registers 'starter' file (default is input/system_registers_starter.xml),
+    which is maintained by manual editing.
+    
+    In addition to the starter file, a modification script may be used to edit in changes, to the system register files produced from processing the starter file.
 
 Files:
-    BootPriority.py - Contains a structure (containing an if statement) that selects proper boot priority (via name or type)
-    ModifyRegisterFile.py - Controls the command line input for modifying the register file
-    register_builder.py - Read the starter XML file, output necessary register files and choices files
-    register_changes/ - Location for all register change modification files; currently only contains the change file needed for initial bring up of the system
-    RiscVRegDef.py - Actual register definition file used to modify registers, register choices, and field choices
+
+    register_builder.py - Read the starter XML file, output necessary register files and choices files, apply modifications.
+    
+    The register builder script relies on the following files:
+
+    	BootPriority.py - Contains a structure (containing an if statement) that selects proper boot priority (via name or type)
+    	ModifyRegisterFile.py - Controls the command line input for modifying the register file
+    	RiscVRegDef.py - Actual register definition file used to modify registers, register choices, and field choices
+
+    	register_changes/ - Location for all register change modification files. At this time, all register modification scripts must reside in the register_changes sub-directory.
 
 How to run modification scripts:
-                                         System tree                        Choices tree                           Modification script (automatically looks in register_changes/)
-    Command line: ./ModifyRegisterFile.py --system path/to/register_file.xml --register_choices path/to/register_choices.xml --data update.py
+
+    A modification script may be specified as an command line option to the register_builder.py script. Use './register_builder -h' to view usage, including how to specify a
+    modification script.
+
 
 How to use modification scripts:
+
     In general, the modification scripts are just predefined Python lists of dictionaries of the things that need to be modified. Example implementations are listed below.
 
     1) To add new registers:
@@ -71,8 +78,11 @@ How to use modification scripts:
     5) To delete register choices:
         delete_register_choices = [{'name':'register_choice_name'}] #Required: name of register choice
 
-Current issues/TODO list:
+List of current issues:
+
     1) The following modification features are implemented but have not been thoroughly tested: copy registers, changing specific register attributes, changing specific physical register attributes, adding new field choices, and updating field choice weights.
+
     2) The current version of the implementation of boot priority is a giant if statement. There are commented out lines denoting how to change a boot priority inside BootPriority.py, but in the future, this implementation should be redesigned to just use a table or prior/default definition as both of those would be less of a mess to deal with.
+
     3) Register field choices don't have proper descriptions as of yet (they all say "P L A C E H O L D E R").
 

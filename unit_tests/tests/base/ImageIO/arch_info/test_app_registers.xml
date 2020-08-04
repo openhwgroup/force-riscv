@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<registers>
+  <physical_registers>
+    <physical_register name="x1" index="1" size="64" type="GPR"/>
+    <physical_register name="f0_0" index="0" size="64" type="FPR" sub_index="0"/>
+    <physical_register name="f1_0" index="1" size="64" type="FPR" sub_index="0"/>
+    <physical_register name="v0_0" index="0" size="64" type="VECREG" sub_index="0"/>
+    <physical_register name="v0_1" index="0" size="64" type="VECREG" sub_index="1"/>
+  </physical_registers>
+  <register_file name="RISC-V Registers">
+    <register name="x1" index="1" size="64" type="GPR" boot="0x1000">
+      <register_field name="x1" physical_register="x1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="S1" index="1" size="32" type="FPR" boot="0x3000">
+      <register_field name="S1" physical_register="f1_0" size="32">
+        <bit_field shift="0" size="32"/>
+      </register_field>
+    </register>
+    <register name="D0" index="0" size="64" type="FPR" boot="0x3000">
+      <register_field name="D0" physical_register="f0_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v0" index="0" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v0_0" physical_register="v0_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v0_1" physical_register="v0_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+  </register_file>
+</registers>

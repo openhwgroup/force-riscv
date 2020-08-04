@@ -55,35 +55,43 @@
 <   fprintf(log_file, ")");
 ---
 >   //fprintf(log_file, ")");
-110c110
-<         fprintf(log_file, " e%ld m%ld l%ld", p->VU.vsew, p->VU.vlmul, p->VU.vl);
+110,114c110,114
+<         fprintf(log_file, " e%ld %s%ld l%ld",
+<                 p->VU.vsew,
+<                 p->VU.vflmul < 1 ? "mf" : "m",
+<                 p->VU.vflmul < 1 ? (reg_t)(1 / p->VU.vflmul) : (reg_t)p->VU.vflmul,
+<                 p->VU.vl);
 ---
->         //fprintf(log_file, " e%ld m%ld l%ld", p->VU.vsew, p->VU.vlmul, p->VU.vl);
-115c115
+>         //fprintf(log_file, " e%ld %s%ld l%ld",
+>         //        p->VU.vsew,
+>         //        p->VU.vflmul < 1 ? "mf" : "m",
+>         //        p->VU.vflmul < 1 ? (reg_t)(1 / p->VU.vflmul) : (reg_t)p->VU.vflmul,
+>         //        p->VU.vl);
+119c119
 <       fprintf(log_file, " %c%2d ", prefix, rd);
 ---
 >       //fprintf(log_file, " %c%2d ", prefix, rd);
-124c124
+128c128
 <     fprintf(log_file, " mem ");
 ---
 >     //fprintf(log_file, " mem ");
-129c129
+133c133
 <     fprintf(log_file, " mem ");
 ---
 >     //fprintf(log_file, " mem ");
-131c131
+135c135
 <     fprintf(log_file, " ");
 ---
 >     //fprintf(log_file, " ");
-134c134
+138c138
 <   fprintf(log_file, "\n");
 ---
 >   //fprintf(log_file, "\n");
-212c212
+237c237
 <       if (unlikely(slow_path()))
 ---
 >       if (true || unlikely(slow_path()))
-230,231c230,231
+255,256c255,256
 <           if (debug && !state.serialized)
 <             disasm(fetch.insn);
 ---

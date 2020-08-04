@@ -36,9 +36,25 @@ class AddressTableRISCV(Sequence):
     def tableIndex(self):
         return self.table_index
 
-    def getAddress(self, reg_index):
-        # TODO
-        pass
+    def getAddress(self, reg_index, scratch_index):
+        #Load the value pointed to by the reg table_index into reg reg_index and then increment the value in the reg table_index by 8
+        self.genInstruction('LD##RISCV', {'rd': reg_index, 'rs1': self.table_index, 'simm12': 0, 'NoRestriction': 1})
+        self.genInstruction('ADDI##RISCV', {'rd': self.table_index, 'rs1': self.table_index, 'simm12': 8})
+
+        #get scratch GPR and load it with the number 1 
+        self.genInstruction('ADDI##RISCV', {'rd': scratch_index, 'rs1': 0, 'simm12': 1})
+
+        #Compare the value that had been loaded into reg reg_index to one. One means the table entry after this one is actually the address of another table.
+        pc = self.getPEstate("PC")
+        self.genInstruction('BNE##RISCV', {'rs1': scratch_index, 'rs2': reg_index, 'simm12': 8, 'NoBnt': 1, 'NoRestriction': 1})
+        self.setPEstate("PC", pc + 4)
+
+        #Load the value pointed to by the reg table_index into reg table_index.
+        self.genInstruction('LD##RISCV', {'rd': self.table_index, 'rs1': self.table_index, 'simm12': 0, 'NoRestriction': 1})
+
+        #Load the value pointed to by the reg table_index into reg reg_index and then increment the value in the reg table_index by 8
+        self.genInstruction('LD##RISCV', {'rd': reg_index, 'rs1': self.table_index, 'simm12': 0, 'NoRestriction': 1})
+        self.genInstruction('ADDI##RISCV', {'rd': self.table_index, 'rs1': self.table_index, 'simm12': 8})
 
 
 ## AddressTableManagerRISCV class

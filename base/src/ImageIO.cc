@@ -222,21 +222,17 @@ namespace Force {
         auto reg_name = segment_ptr->Name();
         auto values = segment_ptr->Values();
         uint32 size = values.size();
-        if (size > 1)  // handle Z and V registers.
+
+        // If size is greater than 1, reg_name is a logical register name; otherwise, it is a
+        // physical register name
+        if (size > 1)
         {
-          string index = reg_name.substr(1, 1);
-          for (uint32 i = 0; i < 2; ++i) {
-            auto phys_reg_ptr = registerFile->PhysicalRegisterLookup("V" + index + "_" + to_string(i));
-            phys_reg_ptr->Initialize(values[size - i - 1].mData, phys_reg_ptr->Mask());
+          vector<uint64> reg_values;
+          for (auto itr = values.crbegin(); itr != values.crend(); ++itr) {
+            reg_values.push_back(itr->mData);
           }
-          for (uint32 i = 2; i < size; ++i) {
-            auto phys_reg_ptr = registerFile->PhysicalRegisterLookup("Z" + index + "_" + to_string(i));
-            phys_reg_ptr->Initialize(values[size - i - 1].mData, phys_reg_ptr->Mask());
-          }
-        }
-        else if (reg_name[0] == 'P' and isdigit(reg_name[1])) // Handle P registers
-        {
-          registerFile->InitializeRegister(reg_name, values[0].mData, nullptr);
+
+          registerFile->InitializeRegister(reg_name, reg_values, nullptr);
         }
         else
         {
@@ -428,7 +424,7 @@ namespace Force {
       }
       for (auto phys_reg_ptr : phys_regs_set) {
         segmentPtr->mName = phys_reg_ptr->Name();
-        segmentPtr->AddValueUnit(phys_reg_ptr->InitialValue(phys_reg_ptr->Mask()), phys_reg_ptr->Size()/8);
+        segmentPtr->AddValueUnit(phys_reg_ptr->InitialValue(pReg->GetPhysicalRegisterMask(*phys_reg_ptr)), phys_reg_ptr->Size()/8);
       }
       break;
     }

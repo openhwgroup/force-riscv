@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<registers>
+  <physical_registers>
+    <physical_register index="0x3" name="fcsr" size="64" type="SysReg"/>
+    <physical_register index="0x105" name="stvec" size="64" type="SysReg"/>
+    <physical_register index="0x106" name="scounteren" size="32" type="SysReg"/>
+    <physical_register index="0x180" name="satp" size="64" type="SysReg"/>
+    <physical_register index="0x300" name="mstatus" size="64" type="SysReg"/>
+    <physical_register index="0x340" name="mscratch" size="64" type="SysReg"/>
+    <physical_register index="0x3A0" name="pmpcfg0" size="64" type="SysReg"/>
+  </physical_registers>
+  <register_file name="RISC-V Registers">
+    <register boot="0x5000" index="0x3" name="fcsr" size="64" type="SysReg">
+      <register_field_res0 name="RES0" physical_register="fcsr" size="56">
+        <bit_field shift="8" size="56"/>
+      </register_field_res0>
+      <register_field name="FRM" physical_register="fcsr" size="3">
+        <bit_field shift="5" size="3"/>
+      </register_field>
+      <register_field name="NZ" physical_register="fcsr" size="1">
+        <bit_field shift="4" size="1"/>
+      </register_field>
+      <register_field name="DZ" physical_register="fcsr" size="1">
+        <bit_field shift="3" size="1"/>
+      </register_field>
+      <register_field name="OF" physical_register="fcsr" size="1">
+        <bit_field shift="2" size="1"/>
+      </register_field>
+      <register_field name="UF" physical_register="fcsr" size="1">
+        <bit_field shift="1" size="1"/>
+      </register_field>
+      <register_field name="NX" physical_register="fcsr" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+    </register>
+    <register boot="0" index="0x100" name="sstatus" size="64" type="SysReg">
+      <register_field name="WPRI" physical_register="mstatus" size="22">
+        <bit_field shift="20" size="12"/>
+        <bit_field shift="17" size="1"/>
+        <bit_field shift="9" size="4"/>
+        <bit_field shift="7" size="1"/>
+        <bit_field shift="2" size="3"/>
+        <bit_field shift="0" size="1"/>
+      </register_field>
+      <register_field name="SD" physical_register="mstatus" size="1">
+        <bit_field shift="63" size="1"/>
+      </register_field>
+      <register_field name="WPRI_VAR" physical_register="mstatus" size="29">
+        <bit_field shift="34" size="29"/>
+      </register_field>
+      <register_field name="UXL" physical_register="mstatus" size="2">
+        <bit_field shift="32" size="2"/>
+      </register_field>
+      <register_field name="MXR" physical_register="mstatus" size="1">
+        <bit_field shift="19" size="1"/>
+      </register_field>
+      <register_field name="SUM" physical_register="mstatus" size="1">
+        <bit_field shift="18" size="1"/>
+      </register_field>
+      <register_field name="XS" physical_register="mstatus" size="2">
+        <bit_field shift="15" size="2"/>
+      </register_field>
+      <register_field name="FS" physical_register="mstatus" size="2">
+        <bit_field shift="13" size="2"/>
+      </register_field>
+      <register_field name="SPP" physical_register="mstatus" size="1">
+        <bit_field shift="8" size="1"/>
+      </register_field>
+      <register_field name="UBE" physical_register="mstatus" size="1">
+        <bit_field shift="6" size="1"/>
+      </register_field>
+      <register_field name="SPIE" physical_register="mstatus" size="1">
+        <bit_field shift="5" size="1"/>
+      </register_field>
+      <register_field name="UPIE" physical_register="mstatus" size="1">
+        <bit_field shift="4" size="1"/>
+      </register_field>
+      <register_field name="SIE" physical_register="mstatus" size="1">
+        <bit_field shift="1" size="1"/>
+      </register_field>
+      <register_field name="UIE" physical_register="mstatus" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0x105" name="stvec" size="64" type="SysReg">
+      <register_field name="MODE" physical_register="stvec" size="2">
+        <bit_field shift="0" size="2"/>
+      </register_field>
+      <register_field name="BASE_VAR" physical_register="stvec" size="62">
+        <bit_field shift="2" size="62"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0x106" name="scounteren" size="32" type="SysReg">
+      <register_field name="HPM6" physical_register="scounteren" size="1">
+        <bit_field shift="6" size="1"/>
+      </register_field>
+      <register_field name="HPM19" physical_register="scounteren" size="1">
+        <bit_field shift="19" size="1"/>
+      </register_field>
+      <register_field name="HPM29" physical_register="scounteren" size="1">
+        <bit_field shift="29" size="1"/>
+      </register_field>
+      <register_field name="HPM31" physical_register="scounteren" size="1">
+        <bit_field shift="31" size="1"/>
+      </register_field>
+      <register_field name="HPM30" physical_register="scounteren" size="1">
+        <bit_field shift="30" size="1"/>
+      </register_field>
+      <register_field name="HPM24" physical_register="scounteren" size="1">
+        <bit_field shift="24" size="1"/>
+      </register_field>
+      <register_field name="HPM17" physical_register="scounteren" size="1">
+        <bit_field shift="17" size="1"/>
+      </register_field>
+      <register_field name="HPM14" physical_register="scounteren" size="1">
+        <bit_field shift="14" size="1"/>
+      </register_field>
+      <register_field name="HPM8" physical_register="scounteren" size="1">
+        <bit_field shift="8" size="1"/>
+      </register_field>
+      <register_field name="HPM5" physical_register="scounteren" size="1">
+        <bit_field shift="5" size="1"/>
+      </register_field>
+      <register_field name="HPM10" physical_register="scounteren" size="1">
+        <bit_field shift="10" size="1"/>
+      </register_field>
+      <register_field name="HPM23" physical_register="scounteren" size="1">
+        <bit_field shift="23" size="1"/>
+      </register_field>
+      <register_field name="IR" physical_register="scounteren" size="1">
+        <bit_field shift="2" size="1"/>
+      </register_field>
+      <register_field name="HPM18" physical_register="scounteren" size="1">
+        <bit_field shift="18" size="1"/>
+      </register_field>
+      <register_field name="HPM9" physical_register="scounteren" size="1">
+        <bit_field shift="9" size="1"/>
+      </register_field>
+      <register_field name="CY" physical_register="scounteren" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+      <register_field name="HPM26" physical_register="scounteren" size="1">
+        <bit_field shift="26" size="1"/>
+      </register_field>
+      <register_field name="HPM13" physical_register="scounteren" size="1">
+        <bit_field shift="13" size="1"/>
+      </register_field>
+      <register_field name="HPM12" physical_register="scounteren" size="1">
+        <bit_field shift="12" size="1"/>
+      </register_field>
+      <register_field name="HPM21" physical_register="scounteren" size="1">
+        <bit_field shift="21" size="1"/>
+      </register_field>
+      <register_field name="HPM11" physical_register="scounteren" size="1">
+        <bit_field shift="11" size="1"/>
+      </register_field>
+      <register_field name="HPM16" physical_register="scounteren" size="1">
+        <bit_field shift="16" size="1"/>
+      </register_field>
+      <register_field name="HPM22" physical_register="scounteren" size="1">
+        <bit_field shift="22" size="1"/>
+      </register_field>
+      <register_field name="HPM3" physical_register="scounteren" size="1">
+        <bit_field shift="3" size="1"/>
+      </register_field>
+      <register_field name="HPM20" physical_register="scounteren" size="1">
+        <bit_field shift="20" size="1"/>
+      </register_field>
+      <register_field name="HPM28" physical_register="scounteren" size="1">
+        <bit_field shift="28" size="1"/>
+      </register_field>
+      <register_field name="HPM25" physical_register="scounteren" size="1">
+        <bit_field shift="25" size="1"/>
+      </register_field>
+      <register_field name="HPM27" physical_register="scounteren" size="1">
+        <bit_field shift="27" size="1"/>
+      </register_field>
+      <register_field name="HPM4" physical_register="scounteren" size="1">
+        <bit_field shift="4" size="1"/>
+      </register_field>
+      <register_field name="TM" physical_register="scounteren" size="1">
+        <bit_field shift="1" size="1"/>
+      </register_field>
+      <register_field name="HPM15" physical_register="scounteren" size="1">
+        <bit_field shift="15" size="1"/>
+      </register_field>
+      <register_field name="HPM7" physical_register="scounteren" size="1">
+        <bit_field shift="7" size="1"/>
+      </register_field>
+    </register>
+    <register boot="0x5001" index="0x180" name="satp" size="64" type="SysReg">
+      <register_field name="MODE" physical_register="satp" size="4">
+        <bit_field shift="60" size="4"/>
+      </register_field>
+      <register_field name="ASID" physical_register="satp" size="16">
+        <bit_field shift="44" size="16"/>
+      </register_field>
+      <register_field init_policy="PpnInitPolicy" name="PPN" physical_register="satp" size="44">
+        <bit_field shift="0" size="44"/>
+      </register_field>
+    </register>
+    <register boot="0x5002" index="0x300" name="mstatus" size="64" type="SysReg">
+      <register_field name="SD" physical_register="mstatus" size="1">
+        <bit_field shift="63" size="1"/>
+      </register_field>
+      <register_field name="WPRI" physical_register="mstatus" size="40">
+        <bit_field shift="36" size="27"/>
+        <bit_field shift="23" size="9"/>
+        <bit_field shift="9" size="2"/>
+        <bit_field shift="6" size="1"/>
+        <bit_field shift="2" size="1"/>
+      </register_field>
+      <register_field name="SXL" physical_register="mstatus" size="2">
+        <bit_field shift="34" size="2"/>
+      </register_field>
+      <register_field name="UXL" physical_register="mstatus" size="2">
+        <bit_field shift="32" size="2"/>
+      </register_field>
+      <register_field name="TSR" physical_register="mstatus" size="1">
+        <bit_field shift="22" size="1"/>
+      </register_field>
+      <register_field name="TW" physical_register="mstatus" size="1">
+        <bit_field shift="21" size="1"/>
+      </register_field>
+      <register_field name="TVM" physical_register="mstatus" size="1">
+        <bit_field shift="20" size="1"/>
+      </register_field>
+      <register_field name="MXR" physical_register="mstatus" size="1">
+        <bit_field shift="19" size="1"/>
+      </register_field>
+      <register_field name="SUM" physical_register="mstatus" size="1">
+        <bit_field shift="18" size="1"/>
+      </register_field>
+      <register_field name="MPRV" physical_register="mstatus" size="1">
+        <bit_field shift="17" size="1"/>
+      </register_field>
+      <register_field name="XS" physical_register="mstatus" size="2">
+        <bit_field shift="15" size="2"/>
+      </register_field>
+      <register_field name="FS" physical_register="mstatus" size="2">
+        <bit_field shift="13" size="2"/>
+      </register_field>
+      <register_field name="MPP" physical_register="mstatus" size="2">
+        <bit_field shift="11" size="2"/>
+      </register_field>
+      <register_field name="SPP" physical_register="mstatus" size="1">
+        <bit_field shift="8" size="1"/>
+      </register_field>
+      <register_field name="MPIE" physical_register="mstatus" size="1">
+        <bit_field shift="7" size="1"/>
+      </register_field>
+      <register_field name="SPIE" physical_register="mstatus" size="1">
+        <bit_field shift="5" size="1"/>
+      </register_field>
+      <register_field name="UPIE" physical_register="mstatus" size="1">
+        <bit_field shift="4" size="1"/>
+      </register_field>
+      <register_field name="MIE" physical_register="mstatus" size="1">
+        <bit_field shift="3" size="1"/>
+      </register_field>
+      <register_field name="SIE" physical_register="mstatus" size="1">
+        <bit_field shift="1" size="1"/>
+      </register_field>
+      <register_field name="UIE" physical_register="mstatus" size="1">
+        <bit_field shift="0" size="1"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0x340" name="mscratch" size="64" type="SysReg">
+      <register_field name="MSCRATCH" physical_register="mscratch" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register boot="0" index="0x3a0" name="pmpcfg0" size="64" type="SysReg">
+      <register_field name="pmp0cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="0" size="8"/>
+      </register_field>
+      <register_field name="pmp1cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="8" size="8"/>
+      </register_field>
+      <register_field name="pmp2cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="16" size="8"/>
+      </register_field>
+      <register_field name="pmp3cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="24" size="8"/>
+      </register_field>
+      <register_field name="pmp4cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="32" size="8"/>
+      </register_field>
+      <register_field name="pmp5cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="40" size="8"/>
+      </register_field>
+      <register_field name="pmp6cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="48" size="8"/>
+      </register_field>
+      <register_field name="pmp7cfg" physical_register="pmpcfg0" size="8">
+        <bit_field shift="56" size="8"/>
+      </register_field>
+    </register>
+  </register_file>
+</registers>

@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from PageFaultSequence import PageFaultSequence
 from PageFaultSequence import PageFaultResolutionType
+from base.ChoicesModifier import ChoicesModifier
 from riscv.ModifierUtils import PageFaultModifier
 
 ## This test verifies recovery from a page fault on a branch operation.
@@ -25,7 +26,7 @@ class MainSequence(PageFaultSequence):
     def __init__(self, gen_thread, name=None):
         super().__init__(gen_thread, name)
         self._mInstrList = ( 'JAL##RISCV', 'JALR##RISCV' )
-        self._mExceptionCodes = ( 12 )
+        self._mExceptionCodes = [ 12 ]
         self._mExceptionSubCodes = {}   # no sub-codes for risc
 
     ## Create an instance of the appropriate page fault modifier.
@@ -36,20 +37,20 @@ class MainSequence(PageFaultSequence):
     def getInstructionList(self):
         return self._mInstrList
 
-    ## Return exception sub-codes.
-    def getExceptionSubCodes(self):
-        return self._mExceptionSubCodes
+    ## Return exception codes.
+    def getExceptionCodes(self):
+        return self._mExceptionCodes
 
-    ## Return the expected resolution type for the page fault.
-    #
-    #  @param aFaultLevels  - the translation level at which the page fault was triggered.
-    #  @param aFastHandlers - indicates whether or not the fast handlers are enabled.
-    def getPageFaultResolutionType(self, aFaultLevels, aFastHandlers):
-        resolution_type = PageFaultResolutionType.SKIP_INSTRUCTION
-        if any([x in aFaultLevels for x in (0, 1, 2, 3)]) and (not FastHandlers):
-            resolution_type = PageFaultResolutionType.RE_EXECUTE_INSTRUCTION
-        return resolution_type
-
+def gen_thread_initialization(gen_thread):
+    (delegate_opt, valid) = gen_thread.getOption("DelegateExceptions")
+    if valid and delegate_opt == 1:
+        # enable exception delegation for some portion of the generated tests...
+        delegation_enables = ChoicesModifier(gen_thread)
+        weightDict = { "0x0":0, "0x1":50 }
+        delegation_enables.modifyRegisterFieldValueChoices( 'medeleg.Instruction page fault', weightDict )
+        delegation_enables.commitSet()
+    
+GenThreadInitialization = gen_thread_initialization
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV
 EnvClass = EnvRISCV

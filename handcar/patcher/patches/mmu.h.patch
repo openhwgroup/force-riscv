@@ -187,14 +187,14 @@
 ---
 >     load_reservation_address = refill_tlb(vaddr, paddr, 0ull /*host_addr*/, LOAD).target_offset + vaddr;
 >     return;
-228,231c324
+231,234c327
 <     if (auto host_addr = sim->addr_to_mem(paddr))
 <       return load_reservation_address == refill_tlb(vaddr, paddr, host_addr, STORE).target_offset + vaddr;
 <     else
 <       throw trap_store_access_fault(vaddr); // disallow SC to I/O space
 ---
 >     return load_reservation_address == refill_tlb(vaddr, paddr, 0ull /*host_addr*/, STORE).target_offset + vaddr;
-244c337,346
+247c340,349
 <     insn_bits_t insn = from_le(*(uint16_t*)(tlb_entry.host_offset + addr));
 ---
 >     uint16_t insn_buf = 0;
@@ -207,7 +207,7 @@
 > 
 >     insn_bits_t insn = from_le(insn_buf); 
 > 
-248c350,354
+251c353,357
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
 ---
 >       load_buff = sim->sparse_read(muh_paddr + 2, len); 
@@ -215,9 +215,9 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf);
 >       insn |= (insn_bits_t)(const int16_t)insn_buf << 16;
-250a357
+253a360
 > 
-252,253c359,369
+255,256c362,372
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
 ---
@@ -232,7 +232,7 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf); 
 >       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
-256,258c372,388
+259,261c375,391
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 6)) << 48;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
@@ -254,7 +254,7 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf); 
 >       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
-310a441,458
+313a444,461
 >   reg_t translate(reg_t addr, reg_t len, access_type type);
 > 
 >   // Translate a VA to a PA by performing a page table walk but don't set any state bits
@@ -273,7 +273,7 @@
 >   //        7 - walk would have been successful had paddr_ptr not been a null pointer
 >   int translate_api(reg_t addr, reg_t *paddr, uint64_t* pmp_info, reg_t len, access_type type);
 > 
-334a483,495
+337a486,498
 >   // perform a page table walk but don't set any state bits
 >   // and instead of throwing exceptions, return codes are used:
 >   //
@@ -287,9 +287,9 @@
 >   //        7 - walk would have been successful had paddr_ptr not been a null pointer
 >   int walk_api(reg_t addr, reg_t* paddr_ptr, access_type type, reg_t prv);
 > 
-340a502
+343a505
 >   void load_slow_path_partially_initialized(reg_t addr, reg_t len, uint8_t* bytes);
-342,345c504,505
+345,348c507,508
 <   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
 <   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
 <   bool mmio_ok(reg_t addr, access_type type);
@@ -297,7 +297,7 @@
 ---
 >   void initialize_slow_path(reg_t addr, reg_t len, const uint8_t* bytes);
 >   //reg_t translate(reg_t addr, reg_t len, access_type type);
-359,360c519,530
+362,363c522,533
 <       uint16_t* ptr = (uint16_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr);
 <       int match = proc->trigger_match(OPERATION_EXECUTE, addr, from_le(*ptr));
 ---
@@ -313,11 +313,11 @@
 >       ptr = &buf;
 > 
 >       int match = proc->trigger_match(OPERATION_EXECUTE, addr, *ptr);
-362c532
+365c535
 <         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, from_le(*ptr));
 ---
 >         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, *ptr);
-368,370c538,541
+371,373c541,544
 <   inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
 <     return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 <   }
@@ -326,5 +326,5 @@
 >   //inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
 >   //  return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 >   //}
-388a560
+391a563
 >   reg_t pmp_ok_api(reg_t addr, reg_t* pmpaddr_ptr, uint8_t* pmpcfg_ptr, reg_t len, access_type type, reg_t mode);

@@ -29,8 +29,8 @@ vpath %.cc . ../../base/src
 vpath %.d $(DEP_DIR)
 
 all:
-	@make make_dir
-	@make ../../bin/SimApiHANDCAR.so
+	@$(MAKE) make_dir
+	@$(MAKE) ../../bin/SimApiHANDCAR.so
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 -include $(ALL_DEPS)

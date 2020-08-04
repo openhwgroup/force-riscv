@@ -23,7 +23,7 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     aInstruction.name = escape(aInstruction.name)
     aInstruction.asm.format = escape(aInstruction.asm.format)
 
-    instruction_format = aInstruction.get_format()
+    instruction_format = clean_format(aInstruction.get_format())
 
     if instruction_format == 'vd/rd-vs2-vs1-vm':
         return adjust_vdrd_vs2_vs1_vm(aInstruction)
@@ -42,16 +42,50 @@ def v_ext_adjust_instruction_by_format(aInstruction):
         return adjust_vd_rs1_vm(aInstruction)
     elif instruction_format == 'vd/rd-rs1-vm':
         return adjust_vdrd_rs1_vm(aInstruction)
+    # vsetvl/i instructions
+    elif instruction_format == 'rs2-rs1-rd':
+        return adjust_rs2_rs1_rd(aInstruction)
+    elif instruction_format == 'zimm[10:0]-rs1-rd':
+        return adjust_zimm_10_0_rs1_rd(aInstruction)
     else:
         record_instruction_format(instruction_format)
 
     return False
+
+def clean_format(aInstructionFormat):
+    # removing unwanted operands via names
+    if 'vtype' in aInstructionFormat:
+        aInstructionFormat = aInstructionFormat.replace('vtype', '')
+
+    # cleaning double hypens and leading/trailing hyphens
+    if '--' in aInstructionFormat:
+        aInstructionFormat = aInstructionFormat.replace('--', '')
+    if aInstructionFormat.startswith('-'):
+        aInstructionFormat = aInstructionFormat[1:]
+    if aInstructionFormat.endswith('-'):
+        aInstructionFormat = aInstructionFormat[:-1]
+
+    return aInstructionFormat
 
 def record_instruction_format(aInstructionFormat):
     if aInstructionFormat in format_map:
         format_map[aInstructionFormat] += 1
     else:
         format_map[aInstructionFormat] = 1
+
+def adjust_rs2_rs1_rd(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_rs2_int()
+    operand_adjustor.set_rs1_int()
+    operand_adjustor.set_rd_int()
+    return True
+
+def adjust_zimm_10_0_rs1_rd(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_imm('zimm[10:0]', 'zimm10', True)
+    operand_adjustor.set_rs1_int()
+    operand_adjustor.set_rd_int()
+    return True
 
 def adjust_vdrd_rs1_vm(aInstruction):
     funct3 = aInstruction.find_operand('const_bits').value[11:14]

@@ -98,11 +98,15 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         # is the faulting address properly sign extended?...
 
+        self.mAssemblyHelper.logDebugSymbol('PAGE_FAULT_HANDLER entered...')
+
         self.callRoutine('CheckFaultAddress')  # returns 0 if successful
             
+        self.mAssemblyHelper.logDebugSymbol('Return from CheckFaultAddress.')
+        
         (rcode_reg_index,scratch_reg_index) = handler_regs.RegisterSet( ['rcode', 'scratch_reg'] )
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
-        self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 36, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 26, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
 
         # faulting address seems to be okay. lets move on...
         
@@ -110,24 +114,32 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         handler_subroutine_generator = handler_context.mMemBankHandlerRegistry.mHandlerSubroutineGenerator
 
-        if handler_subroutine_generator.hasGeneratedRoutine('TableWalk'):  # remoce once riscv table walk is in place
-            handler_subroutine_generator.callRoutine('TableWalk')
-        else:
-            # work around(?) 'til table-walk code in place...
-            (scratch_reg_index, priv_level_reg_index) = handler_regs.RegisterSet( ['scratch_reg', 'priv_level'] )
-            self.mAssemblyHelper.genIncrementExceptionReturnAddress(scratch_reg_index, priv_level_reg_index)
-            self.mAssemblyHelper.genRelativeBranchToLabel(16, 'PAGE_FAULT_HANDLER_EXIT')
-
-        # pick up TableWalk subroutine 'return values'...
-
+        self.mAssemblyHelper.logDebugSymbol('Calling TableWalk...')
+        
         pte_level_reg_index = handler_regs.RegisterIndex('pte_level')
-        self.mHandlerStack.pop(pte_level_reg_index)  # 3rd argument (pte level register index) should have been pushed onto exceptions stack
-                                                     # need to get its value and remove it from the stack
+        ec_code_reg_index   = handler_regs.RegisterIndex('ec_code')
+        
+        handler_subroutine_generator.callRoutine('TableWalk')
 
+        self.mAssemblyHelper.genMoveRegister(pte_level_reg_index,ec_code_reg_index)
+
+        # restore 'error code' register value:
+        cause_reg_index = handler_regs.RegisterIndex('cause')
+        self.mAssemblyHelper.genMoveRegister(ec_code_reg_index,cause_reg_index)
+        
+        self.mAssemblyHelper.logDebugSymbol('Return from TableWalk.')
+
+        self.mAssemblyHelper.logDebugSymbol('After TableWalk,pte level reg: x%d' % pte_level_reg_index)
+        
         # after table-walk, we now know what page table level the error occurred on, and thus the page-table-entry type, and can proceed
         # with identifying/correcting the fault, if possible...
-        
+
+        (pte_reg_index, pet_level_reg_index) = handler_regs.RegisterSet( ['pte_value', 'pte_level'] )
+        self.mAssemblyHelper.logDebugSymbol('Calling ClearPageFault... pte reg: x%d, pte level x%d' % (pte_reg_index, pte_level_reg_index))
+
         self.callRoutine('ClearPageFault')
+
+        self.mAssemblyHelper.logDebugSymbol('Returned from ClearPageFault.')
 
         self.mAssemblyHelper.addLabel('PAGE_FAULT_HANDLER_EXIT')
         self.mHandlerStack.freeStackFrame() # restore 'handler-saved' registers,
@@ -151,7 +163,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
     #   Generate code to check/correct page fault due to input address not correctly
     #   sign extended...
     #*****************************************************************************************
-    
+
     def generateCheckFaultAddress(self, **kwargs):
         self.notice("[PageFaultExceptionHandlerRISC] generating code to clear page fault condition/address sign extension...")
         
@@ -167,14 +179,22 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.debug('[PageFaultExceptionHandlerRISC] clear page fault code address: 0x%x' % self.getPEstate('PC'))
         
         self.mAssemblyHelper.clearLabels('CheckFaultAddress')
-        
-        (sign_bit_reg_index, stval_reg_index, rcode_reg_index, scratch_reg_index, scratch_reg2_index, addr_mask_reg_index ) = handler_regs.RegisterSet( [ 'sign_bit', 'stval', 'rcode', 'scratch_reg', 'scratch_reg2', 'scratch_reg3' ] )
+
+        self.mAssemblyHelper.logDebugSymbol('CheckFaultAddress entered...')
+
+        (sign_bit_reg_index, stval_reg_index, rcode_reg_index, scratch_reg_index, scratch_reg2_index, addr_mask_reg_index, priv_level_reg_index ) = handler_regs.RegisterSet( [ 'sign_bit', 'stval', 'rcode', 'scratch_reg', 'scratch_reg2', 'scratch_reg3', 'priv_level' ] )
 
         self.privilegeLevel = handler_context.mPrivLevel
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
 
-        # retreive fault address...
-        self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, ('%stval' % priv_level.name.lower()) )
+        # retreive fault address based on current privilege level...
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 3)
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, priv_level_reg_index, 6, 'NE', 'S PRIV')
+        self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, 'mtval')
+        self.mAssemblyHelper.genRelativeBranchToLabel(4, 'M PRIV')
+        self.mAssemblyHelper.addLabel('S PRIV')
+        self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, 'stval')
+        self.mAssemblyHelper.addLabel('M PRIV')
         
         # determine where the sign bit should be... - store result in sign_reg_index
         self.mAssemblyHelper.genMoveImmediate(sign_bit_reg_index, 1) # will hold index of sign bit
@@ -205,7 +225,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genInstruction('AND##RISCV', {'rd': scratch_reg_index, 'rs1': stval_reg_index, 'rs2': addr_mask_reg_index} )
         self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0)
         self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 4, 'NE', 'CLEAR_ADDR_BITS')
-        self.mAssemblyHelper.genRelativeBranchToLabel(20, 'NO_STVAL_UPDATE') # address is okay
+        self.mAssemblyHelper.genRelativeBranchToLabel(28, 'NO_STVAL_UPDATE') # address is okay
 
         # clear upper address bits...
         self.mAssemblyHelper.addLabel('CLEAR_ADDR_BITS')
@@ -216,14 +236,22 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         # upper bits of address should be one...
         self.mAssemblyHelper.addLabel('CHECK_ONE')
         self.genInstruction('AND##RISCV', {'rd': scratch_reg_index, 'rs1': stval_reg_index, 'rs2': addr_mask_reg_index} )
-        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, addr_mask_reg_index, 10, 'EQ', 'NO_STVAL_UPDATE')
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, addr_mask_reg_index, 18, 'EQ', 'NO_STVAL_UPDATE')
         
         # set upper address bits...
         self.genInstruction('OR##RISCV', {'rd': stval_reg_index, 'rs1': stval_reg_index, 'rs2': addr_mask_reg_index} )
         
         # was able to correct the fault address. write corrected address, clear return code...
         self.mAssemblyHelper.addLabel('UPDATE_STVAL')
-        self.mAssemblyHelper.genWriteSystemRegister( ('%stval' % priv_level.name.lower()), stval_reg_index )
+        # write back fault address based on current privilege level...
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 3)
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, priv_level_reg_index, 6, 'NE', 'S PRIV W')
+        self.mAssemblyHelper.genWriteSystemRegister('mtval', stval_reg_index)
+        self.mAssemblyHelper.genRelativeBranchToLabel(4, 'M PRIV W')
+        self.mAssemblyHelper.addLabel('S PRIV W')
+        self.mAssemblyHelper.genWriteSystemRegister('stval', stval_reg_index)
+        self.mAssemblyHelper.addLabel('M PRIV W')
+
         self.mAssemblyHelper.genMoveImmediate(rcode_reg_index, 0)
         self.mAssemblyHelper.genReturn()
 
@@ -257,6 +285,8 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.privilegeLevel = handler_context.mPrivLevel
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
 
+        self.mAssemblyHelper.logDebugSymbol('ClearPageFault entered, pte reg: x%d, pte level x%d' % (pte_reg_index, pte_level_reg_index) )
+
         # get faulting address...
 
         self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, ('%stval' % priv_level.name.lower()) ) 
@@ -282,101 +312,109 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         # index > 0 and R/W/X bits clear? - table pointer pte...
 
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_level_reg_index, scratch_reg_index, 28, 'EQ', 'NOT_TABLE_PTE') #br if pte level == 0
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_level_reg_index, scratch_reg_index, 10, 'EQ', 'NOT_TABLE_PTE') #br if pte level == 0
         self.mAssemblyHelper.genAndImmediate(scratch_reg_index, 0xe, pte_reg_index)  # isolate R/W/X bits    # br if R/W/X != 0
         self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0)
-        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 22, 'NE', 'NOT_TABLE_PTE')
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 4, 'NE', 'NOT_TABLE_PTE')
         
         # table pte - HOW DID WE GET HERE? WE ONLY EXPECT ACCESS FAULT ON TABLE PTE???
 
-        self.mAssemblyHelper.genIncrementExceptionReturnAddress(scratch_reg_index, priv_level_reg_index)  # 8
         self.mAssemblyHelper.genReturn()
         self.mAssemblyHelper.addLabel('NOT_TABLE_PTE')
 
         # leaf pte...
 
+        # !!! DONT MESS WITH MXR YET. CAUSES PROBLEMS FOR VmPagingMapper
+        
         # X-bit set, fault is on load, xstatus.mxr clear? - set sstatus.mxr...
 
-        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 13)
-        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 22, 'NE', 'NOT_MXR')
+        #self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 13)
+        #self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 22, 'NE', 'NOT_MXR')
         # fault IS on load...
-        self.mAssemblyHelper.genAndImmediate(scratch_reg_index, 8, pte_reg_index)
-        self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 8)
-        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 16, 'NE', 'NOT_MXR')
+        #self.mAssemblyHelper.genAndImmediate(scratch_reg_index, 8, pte_reg_index)
+        #self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 8)
+        #self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 16, 'NE', 'NOT_MXR')
         # PTE/X bit IS set...
-        self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, ('%sstatus' % priv_level.name.lower()) )
-        self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 1)
-        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index,19)
-        self.mAssemblyHelper.genOrRegister(scratch_reg2_index, scratch_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 6, 'EQ', 'NOT_MXR')
+        #self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, ('%sstatus' % priv_level.name.lower()) )
+        #self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 1)
+        #self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index,19)
+        #self.mAssemblyHelper.genOrRegister(scratch_reg2_index, scratch_reg_index)
+        #self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 6, 'EQ', 'NOT_MXR')
         # xstatus.mxr IS clear...
-        self.mAssemblyHelper.genWriteSystemRegister( ('%sstatus' % priv_level.name.lower()), scratch_reg2_index)
-        self.mAssemblyHelper.genReturn()
+        #self.mAssemblyHelper.genWriteSystemRegister( ('%sstatus' % priv_level.name.lower()), scratch_reg2_index)
+        #self.mAssemblyHelper.genReturn()
 
-        self.mAssemblyHelper.addLabel('NOT_MXR')
+        #self.mAssemblyHelper.addLabel('NOT_MXR')
 
-        # R-bit clear? - if so, set it and return (no sfence needed)...
+        # R-bit clear? - if so, set it, issue sfence and return...
 
         self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 2, pte_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 6, 'EQ', 'NOT_R_BIT')
-        # write updated pte and return...
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 24, 'EQ', 'NOT_R_BIT')
+        # write updated pte, issue sfence...
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'RBIT_CLEAR')
         self.mAssemblyHelper.genReturn()
+        
         self.mAssemblyHelper.addLabel('NOT_R_BIT')
 
         # Store and W-bit clear? - if so, set it, issue sfence, and return...
 
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 15)
-        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 12, 'NE', 'NOT_W_BIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 28, 'NE', 'NOT_W_BIT')
         self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 4, pte_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 8, 'EQ', 'NOT_W_BIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 24, 'EQ', 'NOT_W_BIT')
         # write updated pte, issue sfence...
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
-        self.genSFENCE(stval_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'WBIT_CLEAR')
         self.mAssemblyHelper.genReturn()
+
         self.mAssemblyHelper.addLabel('NOT_W_BIT')
         
         # instr and X-bit clear? - if so, set it, issue sfence, and return...
 
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 12)
-        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 12, 'NE', 'NOT_X_BIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 28, 'NE', 'NOT_X_BIT')
         self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 8, pte_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 8, 'EQ', 'NOT_X_BIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 24, 'EQ', 'NOT_X_BIT')
         # write updated pte, issue sfence...
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
-        self.genSFENCE(stval_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'XBIT_CLEAR')
         self.mAssemblyHelper.genReturn()
+        
         self.mAssemblyHelper.addLabel('NOT_X_BIT')
 
         # user-mode and U-bit clear?  - if so, set it, issue sfence, and return...
 
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
-        self.mAssemblyHelper.genConditionalBranchToLabel(prev_priv_level_reg_index, scratch_reg_index, 12, 'NE', 'NOT_UBIT_USER_MODE')
+        self.mAssemblyHelper.genConditionalBranchToLabel(prev_priv_level_reg_index, scratch_reg_index, 28, 'NE', 'NOT_UBIT_USER_MODE')
         self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 0x10, pte_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 8, 'EQ', 'NOT_U_BIT_USER_MODE')
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 24, 'EQ', 'NOT_U_BIT_USER_MODE')
         # write updated pte, issue sfence...
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
-        self.genSFENCE(stval_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'UBIT_CLEAR')
         self.mAssemblyHelper.genReturn()
+        
         self.mAssemblyHelper.addLabel('NOT_UBIT_USER_MODE')
 
         # is A-bit clear? - if so, set it and return...
 
         self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 0x40, pte_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 6, 'EQ', 'NOT_A_BIT')
-        # write updated pte...
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 24, 'EQ', 'NOT_A_BIT')
+        # write updated pte, issue sfence...
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'ABIT_CLEAR')
         self.mAssemblyHelper.genReturn()
         self.mAssemblyHelper.addLabel('NOT_A_BIT')
 
         # is Store and D-bit clear? - if so, set it and return...
  
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 15)
-        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 10, 'NE', 'NOT_D_BIT')
+        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 28, 'NE', 'NOT_D_BIT')
         self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 0x80, pte_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 6, 'EQ', 'NOT_D_BIT')
-        # write updated pte...
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 24, 'EQ', 'NOT_D_BIT')
+        # write updated pte, issue sfence...
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'DBIT_CLEAR')
         self.mAssemblyHelper.genReturn()
         self.mAssemblyHelper.addLabel('NOT_D_BIT')
 
@@ -437,18 +475,43 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.mAssemblyHelper.addLabel('NOT_SUPER_PAGE_FIXUP')
 
-        # oops! can't recover. skip offending instruction...
-        self.mAssemblyHelper.genIncrementExceptionReturnAddress(scratch_reg_index, priv_level_reg_index)
+        # ERROR IF UNABLE TO CORRECT FAULT...
         self.mAssemblyHelper.genReturn()
 
-
+        
+    # generate code to write PTE to memory...
+    
     def genWritePTE(self, pte_addr_reg_index, pte_value_reg_index):
         self.genInstruction('SD##RISCV', {'rs1': pte_addr_reg_index, 'rs2': pte_value_reg_index, 'simm12': 0, 'NoRestriction': 1})
 
-    def genSFENCE(self, vaddr_reg_index):
-        # no SFENCE instr???
-        #self.genInstruction('SFENCE##RISCV', {'rs1': vaddr_reg_index, 'rs2': 0, 'simm12': 0, 'NoRestriction': 1})
-        self.genInstruction('FENCE.I##RISCV', {'rs1': vaddr_reg_index, 'rs2': 0, 'simm12': 0, 'rd': 0, 'NoRestriction': 1})
+        
+    # generate code to setup/issue sfence.vma instruction, to in effect cause a tlb flush for a faulting address.
+    # we ASSUME a leaf PTE
+    
+    def genSFENCE(self, vaddr_reg_index, pte_value_reg_index, scratch_reg_index, scratch_reg2_index, label_prefix):
+        # global bit is bit 5 of pte value...
+        self.mAssemblyHelper.genAndImmediate(scratch_reg_index, 0x20, pte_value_reg_index)
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0x20)
+        self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg_index, scratch_reg2_index, 6, 'NE', '%s_SFENCE_NON_GLOBAL' % label_prefix)
+
+        
+        # flush tlb entry - global...
+        self.genInstruction('SFENCE.VMA##RISCV', {'rs1': vaddr_reg_index, 'rs2': 0, 'NoRestriction': 1})
+        self.mAssemblyHelper.genRelativeBranchToLabel(10, '%s_SFENCE_EXIT' % label_prefix)
+
+        self.mAssemblyHelper.addLabel('%s_SFENCE_NON_GLOBAL' % label_prefix)
+
+
+        # flush tlb entry - non-global so use asid...
+
+        self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, 'satp' )
+        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index,4)         # isolate satp.asid field
+        self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index,48)
+        
+        self.genInstruction('SFENCE.VMA##RISCV', {'rs1': vaddr_reg_index, 'rs2': scratch_reg_index, 'NoRestriction': 1})
+
+        self.mAssemblyHelper.addLabel('%s_SFENCE_EXIT' % label_prefix)
+
 
 
 

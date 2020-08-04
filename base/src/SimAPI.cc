@@ -124,7 +124,7 @@ namespace Force {
 
       for(unsigned char byte : rMemUp.bytes)
       {
-        mOfsSimTrace << uint64_t(byte);
+        mOfsSimTrace << setfill('0') << setw(2) << uint64_t(byte);
       }
 
       mOfsSimTrace << "\n";

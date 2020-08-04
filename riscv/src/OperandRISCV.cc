@@ -220,6 +220,11 @@ namespace Force {
     PcRelativeBranchOperand::Commit(gen, instr);
   }
 
+  OperandConstraint* CompressedRegisterOperandRISCV::InstantiateOperandConstraint() const
+  {
+    return new CompressedRegisterOperandRISCVConstraint();
+  }
+
   static void calculate_data_element_size(const LoadStoreOperandStructure* lsop_struct, const string& data_type, uint32 num_registers)
   {
     if (data_type == "8B") {
@@ -270,10 +275,9 @@ namespace Force {
 
   void VectorLoadStoreOperand::Generate(Generator& gen, Instruction& instr)
   {
+    //TODO: if instruction contains ConstDataTypeOperand then calculate_data_size()
     auto vls_constr = mpOperandConstraint->CastInstance<VectorLoadStoreOperandConstraint>();
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-
-    //TODO: if instruction contains ConstDataTypeOperand then calculate_data_size()
     calculate_data_element_size(lsop_struct, vls_constr->VectorDataTypeOperand()->ChoiceText(), vls_constr->GetMultiRegisterOperand()->NumberRegisters());
     //TODO: else just pull info from vtype register
 
@@ -294,6 +298,14 @@ namespace Force {
     } else {
       rRegIndices.AddRange(regIndex, end_index);
     }
+  }
+
+  void RISCMultiVectorRegisterOperand::GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const
+  {
+    ConstraintSet reg_indices;
+    MultiVectorRegisterOperand::GetChosenRegisterIndices(gen, reg_indices);
+
+    GetRegisterIndices(reg_indices.LowerBound(), rRegIndices);
   }
 
   uint32 RISCMultiVectorRegisterOperand::NumberRegisters() const

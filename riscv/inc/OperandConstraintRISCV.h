@@ -66,6 +66,23 @@ namespace Force {
   };
 
   /*!
+    \class CompressedRegisterOperandRISCVConstraint
+    \brief The class (Setup method) translates GPR reserved register indices into Riscv compressed instruction set 'prime' register indices.
+  */
+  class CompressedRegisterOperandRISCVConstraint : public RegisterOperandConstraint {
+  public:
+    CompressedRegisterOperandRISCVConstraint() : RegisterOperandConstraint() { } //!< Constructor.
+    ~CompressedRegisterOperandRISCVConstraint() { } //!< Destructor.
+    ASSIGNMENT_OPERATOR_ABSENT(CompressedRegisterOperandRISCVConstraint);
+    void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints.
+  protected:
+    CompressedRegisterOperandRISCVConstraint(const CompressedRegisterOperandRISCVConstraint& rOther) //!!< Copy constructor, not meant to be used.
+      : RegisterOperandConstraint(rOther)
+    {
+    }
+  };
+  
+  /*!
     \struct VectorDataTraits
     \brief Data traits of SIMD vector
   */

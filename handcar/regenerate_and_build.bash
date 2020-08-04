@@ -19,7 +19,7 @@
 make clean
 git clone https://github.com/riscv/riscv-isa-sim standalone
 cd standalone
-git checkout 5d5ee23f574583145cd2093a1fdab677e313e1d2
+git checkout 61f0dab33f7e529cc709908840311a8a7dcb23ce
 ./configure
 make
 cd ..
