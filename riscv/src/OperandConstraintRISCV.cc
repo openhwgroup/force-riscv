@@ -38,9 +38,11 @@ using namespace std;
 
 namespace Force {
 
-  bool VectorMaskOperandConstraint::IsDifferValueAllowed(cuint64 value) const
+  void VectorMaskOperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
   {
-    return (value == 1);
+    if (differVal == 0) {
+      rAdjDifferValues.AddValue(differVal);
+    }
   }
 
   void BaseOffsetBranchOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
@@ -302,6 +304,39 @@ namespace Force {
     // Remove all register indices that are not multiples of the register count, as they are not
     // legal choices
     mpConstraintSet->FilterAlignedElements(get_align_mask(reg_count));
+  }
+
+  void VectorRegisterOperandConstraintRISCV::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rOperandStruct);
+    auto differ_vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rDifferOperandStruct);
+    EVectorRegisterOperandLayoutType layout_type = vec_reg_operand_struct->GetLayoutType();
+    EVectorRegisterOperandLayoutType differ_layout_type = differ_vec_reg_operand_struct->GetLayoutType();
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    uint32 reg_count = vec_layout->mRegCount;
+
+    // If the operands have the same layout type, they will only conflict if they have the same
+    // exact value. However, if the operands have different layouts, we need to ensure that the
+    // register ranges used by the operands don't overlap. For example, if this operand is wide, the
+    // differ operand has the value 7 and the register count is 2, this operand will conflict if it
+    // uses the value 4 because the register range will include registers 4, 5, 6 and 7.
+    if (layout_type == differ_layout_type) {
+      rAdjDifferValues.AddValue(differVal);
+    }
+    else if (layout_type == EVectorRegisterOperandLayoutType::Wide) {
+      uint64 align_mask = get_align_mask(reg_count * 2);
+      rAdjDifferValues.AddValue(differVal & align_mask);
+    }
+    else if (differ_layout_type == EVectorRegisterOperandLayoutType::Wide) {
+      rAdjDifferValues.AddValue(differVal);
+      rAdjDifferValues.AddValue(differVal + reg_count);
+    }
+    else {
+      LOG(fail) << "{VectorRegisterOperandConstraintRISCV::GetDifferValues} unexpected layout types " << EVectorRegisterOperandLayoutType_to_string(layout_type) << " and " << EVectorRegisterOperandLayoutType_to_string(differ_layout_type) << endl;
+      FAIL("unexpected-layout-types");
+    }
   }
 
   void VectorLoadStoreOperandConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)

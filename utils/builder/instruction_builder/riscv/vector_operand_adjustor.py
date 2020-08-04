@@ -62,10 +62,19 @@ class VectorOperandAdjustor(OperandAdjustor):
         vs1_opr.access = 'Read'
         self.set_reg_vec(vs1_opr)
 
+    def set_vs1_differ_vd(self):
+        vs1_opr = self.mInstr.find_operand('vs1', fail_not_found=False)
+        if vs1_opr:
+            vs1_opr.differ = 'vd'
+
     def set_vs2(self):
         vs2_opr = self.mInstr.find_operand('vs2')
         vs2_opr.access = 'Read'
         self.set_reg_vec(vs2_opr)
+
+    def set_vs2_differ_vd(self):
+        vs2_opr = self.mInstr.find_operand('vs2')
+        vs2_opr.differ = 'vd'
 
     def set_vs3(self):
         vs3_opr = self.mInstr.find_operand('vs3')

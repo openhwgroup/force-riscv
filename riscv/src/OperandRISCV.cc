@@ -280,6 +280,13 @@ namespace Force {
     return new VectorLoadStoreOperandConstraint();
   }
 
+  void MultiVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)
+  {
+    mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
+
+    MultiVectorRegisterOperand::Generate(gen, instr);
+  }
+
   void MultiVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
   {
     uint32 end_index = regIndex + NumberRegisters() - 1;

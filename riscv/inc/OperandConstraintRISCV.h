@@ -32,7 +32,7 @@ namespace Force {
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorMaskOperandConstraint);
     ASSIGNMENT_OPERATOR_ABSENT(VectorMaskOperandConstraint);
   private:
-    bool IsDifferValueAllowed(cuint64 value) const override;
+    void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const override; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
   };
 
   class ConstraintSet;
@@ -108,6 +108,8 @@ namespace Force {
       : VectorRegisterOperandConstraint(rOther)
     {
     }
+  private:
+    void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const override; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
   };
 
   /**!

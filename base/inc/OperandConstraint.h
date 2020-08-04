@@ -71,7 +71,7 @@ namespace Force {
     mutable ConstraintSet* mpConstraintSet; //!< Pointer to constraint set for the operand.
     bool mConstraintForced; //!< Return true if constraint is forced from the front end with single value.
   private:
-    virtual bool IsDifferValueAllowed(cuint64 value) const { return false; } //!< Return true if the specified value can be used for both this operand and its differ operands.
+    virtual void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const { } //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
   };
 
   /*!

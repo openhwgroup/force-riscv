@@ -78,12 +78,14 @@ namespace Force {
   {
     if (not mConstraintForced) {
       for (const string& differ : rOperandStruct.GetDiffers()) {
-        const Operand* opr = rInstr.FindOperand(differ, true);
-        uint64 opr_val = opr->Value();
-
-        if (not IsDifferValueAllowed(opr_val)) {
-          SubConstraintValue(opr->Value(), *(opr->GetOperandStructure()));
+        if (mpConstraintSet == nullptr) {
+          mpConstraintSet = DefaultConstraintSet(rOperandStruct);
         }
+
+        const Operand* opr = rInstr.FindOperand(differ, true);
+        ConstraintSet adj_differ_values;
+        GetAdjustedDifferValues(rInstr, rOperandStruct, *(opr->GetOperandStructure()), opr->Value(), adj_differ_values);
+        mpConstraintSet->SubConstraintSet(adj_differ_values);
       }
     }
   }

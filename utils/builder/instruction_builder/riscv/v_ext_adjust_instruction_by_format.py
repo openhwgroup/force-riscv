@@ -101,12 +101,24 @@ def add_layout_operand(aInstruction):
 
 # Account for non-standard register layouts due to widening and narrowing instructions
 def adjust_register_layout(aInstruction):
-    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    wide_dest = False
     if aInstruction.name.startswith('VW') or aInstruction.name.startswith('VFW'):
-        operand_adjustor.set_wide_dest()
+        wide_dest = True
 
+    wide_source = False
     if '.W' in aInstruction.name:
+        wide_source = True
+
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    if wide_dest:
+        operand_adjustor.set_wide_dest()
+        operand_adjustor.set_vs1_differ_vd()
+
+    if wide_source:
         operand_adjustor.set_wide_source()
+
+    if wide_dest != wide_source:
+        operand_adjustor.set_vs2_differ_vd()
 
 def adjust_vd_rs1(aInstruction):
     if aInstruction.iclass == 'VectorLoadStoreInstruction':
