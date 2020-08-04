@@ -51,6 +51,7 @@ try:
     from classes.cleanup_rules import CleanUpRules
 except ImportError:
     print('Please run \'make tests\'')
+    traceback.print_exc(file=sys.stdout)
     sys.exit(1)
 
 from classes.ApplicationsSetup import ApplicationsSetup
