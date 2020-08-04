@@ -1372,7 +1372,7 @@ Add RISCV system registers starter information in this file.
     </register_field>
     <register_field name="VSEW" size="3">
       <bit_field shift="2" size="3"/>
-      <choice description="8-bit elements" value="0x0" weight="10"/>
+      <choice description="8-bit elements" value="0x0" weight="0"/>
       <choice description="16-bit elements" value="0x1" weight="10"/>
       <choice description="32-bit elements" value="0x2" weight="10"/>
       <choice description="64-bit elements" value="0x3" weight="10"/>
