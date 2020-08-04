@@ -39,7 +39,7 @@ else
   PYTHON_LIB := $(FORCE_PYTHON_LIB)
 endif
 
-OPTIMIZATION = -O1
+OPTIMIZATION = -Os
 
 OBJ_DIR = make_area/obj
 DEP_DIR = make_area/dep
