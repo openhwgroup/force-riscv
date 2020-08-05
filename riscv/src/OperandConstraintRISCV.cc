@@ -297,9 +297,7 @@ namespace Force {
     uint32 reg_count = vec_layout->mRegCount;
 
     auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&operandStruct);
-    if (vec_reg_operand_struct->GetLayoutType() == EVectorRegisterOperandLayoutType::Wide) {
-      reg_count *= 2;
-    }
+    reg_count *= vec_reg_operand_struct->GetLayoutMultiple();
 
     // Remove all register indices that are not multiples of the register count, as they are not
     // legal choices
@@ -310,8 +308,8 @@ namespace Force {
   {
     auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rOperandStruct);
     auto differ_vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rDifferOperandStruct);
-    EVectorRegisterOperandLayoutType layout_type = vec_reg_operand_struct->GetLayoutType();
-    EVectorRegisterOperandLayoutType differ_layout_type = differ_vec_reg_operand_struct->GetLayoutType();
+    uint32 layout_multiple = vec_reg_operand_struct->GetLayoutMultiple();
+    uint32 differ_layout_multiple = differ_vec_reg_operand_struct->GetLayoutMultiple();
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
@@ -322,20 +320,16 @@ namespace Force {
     // register ranges used by the operands don't overlap. For example, if this operand is wide, the
     // differ operand has the value 7 and the register count is 2, this operand will conflict if it
     // uses the value 4 because the register range will include registers 4, 5, 6 and 7.
-    if (layout_type == differ_layout_type) {
+    if (layout_multiple == differ_layout_multiple) {
       rAdjDifferValues.AddValue(differVal);
     }
-    else if (layout_type == EVectorRegisterOperandLayoutType::Wide) {
-      uint64 align_mask = get_align_mask(reg_count * 2);
+    else if (layout_multiple > differ_layout_multiple) {
+      uint64 align_mask = get_align_mask(reg_count * layout_multiple);
       rAdjDifferValues.AddValue(differVal & align_mask);
     }
-    else if (differ_layout_type == EVectorRegisterOperandLayoutType::Wide) {
-      rAdjDifferValues.AddValue(differVal);
-      rAdjDifferValues.AddValue(differVal + reg_count);
-    }
     else {
-      LOG(fail) << "{VectorRegisterOperandConstraintRISCV::GetDifferValues} unexpected layout types " << EVectorRegisterOperandLayoutType_to_string(layout_type) << " and " << EVectorRegisterOperandLayoutType_to_string(differ_layout_type) << endl;
-      FAIL("unexpected-layout-types");
+      uint32 range_max = differVal + (reg_count * differ_layout_multiple);
+      rAdjDifferValues.AddRange(differVal, range_max);
     }
   }
 

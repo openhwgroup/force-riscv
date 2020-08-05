@@ -1301,20 +1301,6 @@ namespace Force {
   extern EEndianness try_string_to_EEndianness(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
   typedef unsigned char EEndiannessBaseType; //!< Define a type name for the enum base data type.
 
-
-  /*!
-    Relative layout of vector register operand
-  */
-  enum class EVectorRegisterOperandLayoutType : unsigned char {
-    Standard = 0,
-    Wide = 1,
-  };
-  extern unsigned char EVectorRegisterOperandLayoutTypeSize;
-  extern const std::string EVectorRegisterOperandLayoutType_to_string(EVectorRegisterOperandLayoutType in_enum); //!< Get string name for enum.
-  extern EVectorRegisterOperandLayoutType string_to_EVectorRegisterOperandLayoutType(const std::string& in_str); //!< Get enum value for string name.
-  extern EVectorRegisterOperandLayoutType try_string_to_EVectorRegisterOperandLayoutType(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
-  typedef unsigned char EVectorRegisterOperandLayoutTypeBaseType; //!< Define a type name for the enum base data type.
-
 }
 
 #endif

@@ -125,7 +125,7 @@ namespace Force {
   }
 
   VectorRegisterOperandStructure::VectorRegisterOperandStructure()
-    : mLayoutType(EVectorRegisterOperandLayoutType::Standard)
+    : mLayoutMultiple(1)
   {
   }
 

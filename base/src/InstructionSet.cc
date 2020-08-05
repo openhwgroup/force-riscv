@@ -367,9 +367,9 @@ namespace Force {
             auto cast_struct = dynamic_cast<AluOperandStructure*> (op_struct);
             cast_struct->SetOperationType(string_to_EAluOperationType(attr.value()));
           }
-          else if (strcmp(attr_name, "layout") == 0) {
+          else if (strcmp(attr_name, "layout-multiple") == 0) {
             auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
-            cast_struct->SetLayoutType(string_to_EVectorRegisterOperandLayoutType(attr.value()));
+            cast_struct->SetLayoutMultiple(parse_uint32(attr.value()));
           }
           else if (strcmp(attr_name, "reg-count") == 0) {
             auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);

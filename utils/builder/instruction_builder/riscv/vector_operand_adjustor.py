@@ -128,13 +128,13 @@ class VectorOperandAdjustor(OperandAdjustor):
             self.set_reg_vec(vdrd_opr)
         vdrd_opr.access = 'Write'
 
-    def set_wide_dest(self):
+    def set_wide_dest(self, aLayoutMultiple=2):
         dest_opr = self.mInstr.find_operand('vd', fail_not_found=False)
         if dest_opr is None:
             dest_opr = self.mInstr.find_operand('vd/rd')
 
-        dest_opr.layout = 'Wide'
+        dest_opr.layoutMultiple = aLayoutMultiple
 
-    def set_wide_source(self):
+    def set_wide_source(self, aLayoutMultiple=2):
         vs2_opr = self.mInstr.find_operand('vs2')
-        vs2_opr.layout = 'Wide'
+        vs2_opr.layoutMultiple = aLayoutMultiple
