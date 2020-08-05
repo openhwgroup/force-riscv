@@ -49,6 +49,7 @@ try:
     from classes.control_item import ControlItem, CtrlItmKeys, CtrlItmDefs
     from classes.process_queue import ProcessQueue
     from classes.cleanup_rules import CleanUpRules
+    from classes.module_run import ModuleRun
 except ImportError:
     print('Please run \'make tests\'')
     traceback.print_exc(file=sys.stdout)
@@ -67,8 +68,7 @@ class LoadError( Exception ):
     pass
 
 
-# class MasterRun( ModuleRun ):
-class MasterRun(object):
+class MasterRun( ModuleRun ):
 
     cLsfWaitTime = 30  # seconds
 
@@ -76,8 +76,7 @@ class MasterRun(object):
         try:
             self.mCmdLineParms = CommandLineParameters
             self.mConfigArgs = retrieveConfigArgument(sys.argv[1:])
-            self.mAppsSetup = ApplicationsSetup(self.mCmdLineParms, sys.argv, self.mConfigArgs, True, True)
-            self._mAppsInfo = self.mAppsSetup.getApplicationsInfo()
+
         except SystemExit as aSysExit:
             sys.exit(int(str(aSysExit)))
         except:
@@ -85,17 +84,10 @@ class MasterRun(object):
             traceback.print_exc(file=sys.stdout)
             sys.exit(44)
 
+        super().__init__(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
+
         self.module_dir, self.module_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
-        # self._mAppsInfo = apps_info
-        self.load_message_levels(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
 
-        #print( "Got here (2.1)" )
-
-        # persistent values
-        self._mAppsInfo.mMainAppPath = PathUtils.include_trailing_path_delimiter(self.module_dir) + "../.." # TODO still keep main app path for now.
-        self._mAppsInfo.mProcessMax = self.option_def( CmdLine.Switches[CmdLine.process_max], None, self.to_int )
-        self._mAppsInfo.mTestBaseDir = None
-        self._mAppsInfo.mToolPath = self.module_dir
         self.fctrl_dir = None
         self.mode = None
         self.summary = None
@@ -132,44 +124,20 @@ class MasterRun(object):
 
         # Msg.lout( CmdLine.Switches, "dbg", "Allowed Command Line Switches" ) # Labels.cmd_line_switches_allowed  )
 
-    def load_message_levels( self, arg_msg_lev, arg_def_lev ):
-        # load from the command line if specified or use the default
-        my_lev_str = self.option_def( arg_msg_lev, arg_def_lev )
-        #my_def = "crit+err+warn+info+noinfo"
-
-        #my_lev_str = self.option_def( "all", my_def, "-l"  )
-
-        # if a (+) or a (-) is found then the command line will be appended to or demoted by
-        if ( my_lev_str[0] == '+' ) or ( my_lev_str[0] == '-' ):
-            # use the default string to build a format string, then append the passed in value
-            my_fmt_str = "%s%s%s"%( arg_def_lev,"\%","s" )
-            my_lev_str =  my_fmt_str % ( my_lev_str )
-
-        # print( my_lev_str )
-        # finally no matter what set the levels that are to be active
-
-        my_level = Msg.translate_levelstr( my_lev_str )
-        # print( "Before: %x" % my_level )
-
-        Msg.set_level( my_level )
-
-    def option_def(self, aSwitch, aDefVal=None, aConversionFunc=None):
-        # TODO deprecate this
-        return_value = self._mAppsInfo.mCmdLineOpts.option_def(aSwitch, aDefVal)
-        if aConversionFunc and return_value is not None:
-            try:
-                return_value = aConversionFunc(return_value)
-            except (TypeError, ValueError) as ex:
-                Msg.warn('Invalid value "{}" provided for "{}".  Using default.'.format(repr(return_value), aSwitch))
-                return aDefVal
-
-        return return_value
+    def init_app_setup(self):
+        if not self.m_app_setup:
+            self.m_app_setup = ApplicationsSetup(self.mCmdLineParms, sys.argv, self.mConfigArgs, True, True)
+            self.m_app_info = self.m_app_setup.getApplicationsInfo()
+            self.m_app_info.mMainAppPath = PathUtils.include_trailing_path_delimiter(self.module_dir) + "../.."  # TODO still keep main app path for now.
+            self.m_app_info.mProcessMax = self.option_def(CmdLine.Switches[CmdLine.process_max], None, self.to_int)
+            self.m_app_info.mTestBaseDir = None
+            self.m_app_info.mToolPath = self.module_dir
 
     def load(self):
         # Msg.user( "MasterRun::load" )
         self.init_all()
         # create the top level FileController
-        self.fctrl = FileController(self.process_queue, self._mAppsInfo)
+        self.fctrl = FileController(self.process_queue, self.m_app_info)
 
         # Msg.lout( self.options, "user", "Initial Option Values" )
         self.item_data[CtrlItmKeys.fname]   = self.fctrl_name
@@ -179,7 +147,7 @@ class MasterRun(object):
             self.item_data['rtl'] = self.rtl
 
         try:
-            self.ctrl_item.load( self._mAppsInfo, self.item_data )
+            self.ctrl_item.load(self.m_app_info, self.item_data)
         except:
             Msg.err("Unable to load initial control item.")
             raise
@@ -196,7 +164,7 @@ class MasterRun(object):
         Msg.dbg( "MasterRun::run()" )
 
         # Run single run applications here before anything else is done
-        for app_cfg in self._mAppsInfo.mSingleRunApps:
+        for app_cfg in self.m_app_info.mSingleRunApps:
             app_executor = app_cfg.createExecutor()
             app_executor.load(self.ctrl_item)
             if not app_executor.skip():
@@ -229,13 +197,13 @@ class MasterRun(object):
             if type(self.summary) is RegressionSummary: # TODO: total_cycle_count and total_instruction_count are specific to RegressionSummary and
                                                         #  are used in the rtl application's reporter (PerformanceSummary does not contain either).
                                                         #  Do the rtl application and performance mode ever get run at the same time?
-                self._mAppsInfo.mTagToReportInfo.update({"master_run":{"total_cycle_count":self.summary.total_cycle_count,
+                self.m_app_info.mTagToReportInfo.update({"master_run":{"total_cycle_count":self.summary.total_cycle_count,
                                                                        "total_instruction_count":self.summary.total_instruction_count,
                                                                        "initial_control_file":self.fctrl_name,
                                                                        "output_dir":self.output_dir}})
 
         if self.mode == "count":
-            Msg.info("Total tasks counted in control file tree: " + str(self._mAppsInfo.mNumTestsCount) + "\n")
+            Msg.info("Total tasks counted in control file tree: " + str(self.m_app_info.mNumTestsCount) + "\n")
 
         if self.terminated:
             Msg.info("####\n#### Reached max fails limit before test was completed.\n####")
@@ -359,12 +327,12 @@ class MasterRun(object):
         # extract the initial control file information
         # self.fctrl_dir is now the fully qualified path to the first control file, thus
         self.fctrl_dir, self.fctrl_name = self.locate_control_file()
-        self._mAppsInfo.mTestBaseDir  = self.locate_directory( CmdLine.Switches[ CmdLine.test_base], EnVars.test_base , self.fctrl_dir if self.fctrl_dir is not None else Defaults.test_base)
+        self.m_app_info.mTestBaseDir  = self.locate_directory(CmdLine.Switches[ CmdLine.test_base], EnVars.test_base, self.fctrl_dir if self.fctrl_dir is not None else Defaults.test_base)
 
         Msg.user( "Module Path      : %s" % ( str( self.module_dir )), "INITIAL_DIRS")
         Msg.user( "Main Control File: %s" % ( str( self.fctrl_name )), "INITIAL_DIRS")
         Msg.user( "Main Control Dir : %s" % ( str( self.fctrl_dir  )), "INITIAL_DIRS")
-        Msg.user( "Test Root        : %s" % ( str( self._mAppsInfo.mTestBaseDir)), "INITIAL_DIRS")
+        Msg.user( "Test Root        : %s" % (str(self.m_app_info.mTestBaseDir)), "INITIAL_DIRS")
 
     def locate_control_file( self ):
         # populate the initial control file, if none is specified then use the default
@@ -479,7 +447,7 @@ class MasterRun(object):
     def writeVersionInfo(self):
         out_line_fmt = "{}, scm_system: {}, revision number: {}, location: {}, url: {}\n"
         version_info = ""
-        for app_tag, app_config in self._mAppsInfo.mTagToApp.items():
+        for app_tag, app_config in self.m_app_info.mTagToApp.items():
             Msg.user('app_tag: %s, app_config: %s' % (app_tag, app_config))
             version_data = app_config.parameter("version")
             for item in version_data:
@@ -497,9 +465,9 @@ class MasterRun(object):
 
     # Call the report methods from each of the sequence apps. Some apps report, others pass through
     def modulesReport(self):
-        for app_cfg in self._mAppsInfo.mSequenceApps:
+        for app_cfg in self.m_app_info.mSequenceApps:
             reporter = app_cfg.createReporter()
-            reporter.report(self._mAppsInfo, app_cfg.tag())
+            reporter.report(self.m_app_info, app_cfg.tag())
 
     @staticmethod
     def to_int(a_value):
@@ -535,7 +503,7 @@ class MasterRun(object):
         self.num_runs  = self.option_def( CmdLine.Switches[ CmdLine.num_runs  ], Defaults.num_runs, self.to_int )
         self.sum_level = self.option_def( CmdLine.Switches[ CmdLine.sum_level ], SummaryLevel.Fail, self.to_int )
         #my_usr_lbl = Msg.set_label( "user", "PROCESS" )
-        Msg.user( "process-max: %d" % (self._mAppsInfo.mProcessMax), "MASTER")
+        Msg.user( "process-max: %d" % (self.m_app_info.mProcessMax), "MASTER")
         #Msg.set_label( "user", my_usr_lbl )
 
     # create the proper summary
@@ -553,7 +521,7 @@ class MasterRun(object):
             self.summary = RegressionSummary( self.output_dir, clean_up_rules )
         else:
             self.mode = Modes.count
-            self._mAppsInfo.mMode = "count"
+            self.m_app_info.mMode = "count"
             self.summary = RegressionSummary( self.output_dir, clean_up_rules )
 
         if self.summary is not None:
@@ -575,7 +543,7 @@ class MasterRun(object):
         self.process_queue.process_cmd  = self.process_cmd
         self.process_queue.processor_name = self.processor_name
         self.process_queue.summary      = self.summary
-        self.process_queue.process_max  = self._mAppsInfo.mProcessMax
+        self.process_queue.process_max  = self.m_app_info.mProcessMax
 
         self.process_queue.launcher_type = self.launcher_type
         Msg.user( "Done Event: %s" % (str( workers_done_event)), "MAIN")
@@ -635,8 +603,8 @@ class MasterRun(object):
                 my_process_cmd += " -l " + my_msg_lev
                 Msg.user( "Process Cmd: %s" % (str(my_process_cmd)), "PROCESS_CMD" )
 
-        if self._mAppsInfo.mConfigPath is not None:
-            my_process_cmd += " -w %s" % self._mAppsInfo.mConfigPath
+        if self.m_app_info.mConfigPath is not None:
+            my_process_cmd += " -w %s" % self.m_app_info.mConfigPath
         my_process_cmd += " -f %s"
 
         self.processor_name = my_run_name.replace( ".py", "" ).replace( "_run", "" )
@@ -646,9 +614,6 @@ class MasterRun(object):
 
         # Msg.dbg( "Process Cmd: %s" % (self.process_cmd))
 
-    # def prepend_default_path( self, arg_path ):
-    #     return PathUtils.append_path( self.default_root, arg_path )
-
     # An expire value has been found
     # There are several possibilities
     # 1. "clean" was pass on the command line, in this case remove the output directory which should
@@ -657,7 +622,7 @@ class MasterRun(object):
     # 3. a zero (0) was passed on the command line
     # 4. a none zero integer was passed on the command line, purge all directories related to the mode
     # if none of these are found and exception is raised in all cases master_run terminates immediately
-    def handle_expire(self, arg_expire, arg_mask ):
+    def handle_expire(self, arg_expire, arg_mask):
 
         try:
             Msg.user( "Expire: %s, Mask: %s" % ( str( arg_expire), str( arg_mask )), "EXPIRE" )
@@ -686,9 +651,9 @@ class MasterRun(object):
                 my_expiredate = DateTime.DateDelta( int( my_expire ))
                 PathUtils.expire( my_full_dir, my_expiredate )
 
-        except Exception as arg_ex:
+        except Exception as ex:
             Msg.error_trace()
-            Msg.err( str( arg_ex ))
+            Msg.err( str( ex ))
 
         finally:
             Msg.info( "Operation Complete, Restart Master Run to continue ..." )
@@ -734,12 +699,10 @@ def main():
         if not PathUtils.chdir( my_module.output_dir, True ):
             Msg.dbg( "Unable to change into: " + my_module.output_dir + ", using the current directory for output" )
 
-        Msg.info( "\nConcurrent Operations: %s" % ( str( my_module._mAppsInfo.mProcessMax)))
+        Msg.info( "\nConcurrent Operations: %s" % (str(my_module.m_app_info.mProcessMax)))
         my_module.run()
 
         Msg.info( "Test Completed ....\n" )
-
-    #    print( "[ERROR] Parsing Command Line: %s\n" % ( str( arg_ex )))
 
     except FileNotFoundError as arg_ex:
         # Msg.error_trace("[ERROR] -  " + str(arg_ex) )
