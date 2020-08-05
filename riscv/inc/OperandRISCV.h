@@ -216,7 +216,7 @@ namespace Force {
 
     const char* Type() const override { return "MultiVectorRegisterOperandRISCV"; } //!< Return the type as C string.
 
-    MultiVectorRegisterOperandRISCV() : MultiVectorRegisterOperand(), mDataType() { } //!< Constructor.
+    MultiVectorRegisterOperandRISCV() : MultiVectorRegisterOperand(), mDataType(), mRegCount(0) { } //!< Constructor.
     ~MultiVectorRegisterOperandRISCV() { } //!< Destructor
     void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
     void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
@@ -224,16 +224,17 @@ namespace Force {
     uint32 NumberRegisters() const override; //!< Return number of registers in the list.
   protected:
     MultiVectorRegisterOperandRISCV(const MultiVectorRegisterOperandRISCV& rOther) //!< Copy constructor.
-      : MultiVectorRegisterOperand(rOther), mDataType(rOther.mDataType)
+      : MultiVectorRegisterOperand(rOther), mDataType(rOther.mDataType), mRegCount(rOther.mRegCount)
     {
     }
 
-    const std::string AssemblyText() const override; //!< Return assembly text output of the register list.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of the appropriate OperandConstraint object.
     const std::string GetNextRegisterName(uint32& indexVar) const; //!< Return the name of the next register in the list.
     ChoicesFilter* GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return the choices filter.
 
     std::string mDataType; //!< Data type of the multi vector list in string.
+  private:
+    uint32 mRegCount; //!< The number of registers per vector register group
   };
 
 }

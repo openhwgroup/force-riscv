@@ -31,15 +31,16 @@ class VectorOperandAdjustor(OperandAdjustor):
     def add_vtype_layout_operand(self):
         layout_opr = Operand()
         layout_opr.name = "vtype"
-        layout_opr.type = "SysReg"
+        layout_opr.type = "VectorLayout"
         layout_opr.oclass = "VtypeLayoutOperand"
         self.mInstr.insert_operand(0, layout_opr)
 
-    def add_whole_register_layout_operand(self):
+    def add_whole_register_layout_operand(self, aRegCount=1):
         layout_opr = Operand()
         layout_opr.name = "B"
-        layout_opr.type = "Immediate"
+        layout_opr.type = "VectorLayout"
         layout_opr.oclass = "WholeRegisterLayoutOperand"
+        layout_opr.regCount = aRegCount
         self.mInstr.insert_operand(0, layout_opr)
 
     def set_reg_vec(self, aOperand):

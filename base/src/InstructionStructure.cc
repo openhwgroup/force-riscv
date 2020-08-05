@@ -175,6 +175,11 @@ namespace Force {
     }
   }
 
+  VectorLayoutOperandStructure::VectorLayoutOperandStructure()
+    : mRegCount(0)
+  {
+  }
+
   // TODO this need improvement
   // * Improve performance.
   bool LoadStoreOperandStructure::AtomicOrderedAccess() const

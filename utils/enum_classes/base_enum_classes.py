@@ -19,7 +19,7 @@ enum_classes_details = [
       ("BranchNotTakenLimit", 7), ("SpeculativeBntLevelLimit", 8), ("MaxPhysicalVectorLen", 9),  ("ErrRegisterNumber", 10), ("SpeculativeBntInstructionLimit", 11)]
     ],
     ["OperandType", "unsigned char", "Operand types in the instruction files",
-     [("Constant", 0), ("Immediate", 1), ("Choices", 2), ("Register", 3), ("GPR", 4), ("GPRSP", 5), ("FPR", 6), ("SIMDSR", 7), ("SIMDVR", 8), ("SysReg", 9), ("Branch", 10), ("LoadStore", 11), ("AuthBranch", 12), ("AuthLoadStore", 13), ("SystemOp", 14), ("VECREG", 15), ("PREDREG", 16), ("ALU", 17), ("DataProcessing", 18)]
+     [("Constant", 0), ("Immediate", 1), ("Choices", 2), ("Register", 3), ("GPR", 4), ("GPRSP", 5), ("FPR", 6), ("SIMDSR", 7), ("SIMDVR", 8), ("SysReg", 9), ("Branch", 10), ("LoadStore", 11), ("AuthBranch", 12), ("AuthLoadStore", 13), ("SystemOp", 14), ("VECREG", 15), ("PREDREG", 16), ("ALU", 17), ("DataProcessing", 18), ("VectorLayout", 19)]
     ],
      ["MemDataType", "unsigned char", "Memory data types in memory model",
       [("Init", 1),("Instruction", 2), ("Data", 4), ("Both", 6)]

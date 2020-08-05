@@ -234,6 +234,23 @@ namespace Force {
   };
 
   /*!
+    \class VectorLayoutOperandStructure
+    \brief Record static structural information about a vector layout operand.
+  */
+  class VectorLayoutOperandStructure : public OperandStructure {
+  public:
+    VectorLayoutOperandStructure();
+    COPY_CONSTRUCTOR_ABSENT(VectorLayoutOperandStructure);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLayoutOperandStructure);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperandStructure);
+
+    uint32 GetRegisterCount() const { return mRegCount; } //!< Get the number of registers per vector register group.
+    void SetRegisterCount(cuint32 regCount) { mRegCount = regCount; } //!< Set the number of registers per vector register group.
+  private:
+    uint32 mRegCount; //!< The number of registers per vector register group.
+  };
+
+  /*!
     \class AddressingOperandStructure
     \brief Record static structural information about an addressing operand.
   */

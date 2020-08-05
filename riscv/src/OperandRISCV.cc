@@ -260,7 +260,8 @@ namespace Force {
     // approach.
     vec_layout.mElemCount = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / vec_layout.mElemSize;
 
-    vec_layout.mRegCount = 1;
+    auto vec_layout_opr_struct = mpStructure->CastOperandStructure<VectorLayoutOperandStructure>();
+    vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount();
 
     instr_constr->SetVectorLayout(vec_layout);
   }
@@ -282,6 +283,10 @@ namespace Force {
 
   void MultiVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)
   {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    mRegCount = vec_layout->mRegCount;
+
     mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
 
     MultiVectorRegisterOperand::Generate(gen, instr);
@@ -289,12 +294,13 @@ namespace Force {
 
   void MultiVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
   {
-    uint32 end_index = regIndex + NumberRegisters() - 1;
-    if (end_index > 31) {
-      rRegIndices.AddRange(regIndex, 31);
-      rRegIndices.AddRange(0, end_index - 32);
-    } else {
+    uint32 end_index = regIndex + mRegCount - 1;
+    if (end_index < 31) {
       rRegIndices.AddRange(regIndex, end_index);
+    }
+    else {
+      LOG(fail) << "{MultiVectorRegisterOperandRISCV::GetRegisterIndices} ending register index " << dec << end_index << " is not valid" << endl;
+      FAIL("invalid-register-index");
     }
   }
 
@@ -308,23 +314,7 @@ namespace Force {
 
   uint32 MultiVectorRegisterOperandRISCV::NumberRegisters() const
   {
-    //TODO
-    //get vtype register
-    //extract vlmul and compare to table in spec
-    //return value in table (but for now just use 1)
-    return 1;
-  }
-
-  const std::string MultiVectorRegisterOperandRISCV::AssemblyText() const
-  {
-    stringstream out_str;
-
-    out_str << "{ " << mChoiceText << "." << mDataType;
-    for (auto extra_reg : mExtraRegisters)
-      out_str << ", " << extra_reg << "." << mDataType;
-    out_str << " }";
-
-    return out_str.str();
+    return mRegCount;
   }
 
   OperandConstraint* MultiVectorRegisterOperandRISCV::InstantiateOperandConstraint() const
@@ -336,7 +326,7 @@ namespace Force {
   {
     ++indexVar;
     if (indexVar > 31) indexVar = 0;
-    return "V" + indexVar;
+    return "v" + to_string(indexVar);
   }
 
   ChoicesFilter* MultiVectorRegisterOperandRISCV::GetChoicesFilter(const ConstraintSet* pConstrSet) const

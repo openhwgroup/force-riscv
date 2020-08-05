@@ -98,12 +98,16 @@ def record_instruction_format(aInstructionFormat):
         format_map[aInstructionFormat] = 1
 
 def add_layout_operand(aInstruction):
-    if aInstruction.name not in ('VSETVL', 'VSETVLI', 'VL1R.V', 'VS1R.V'):
-        operand_adjustor = VectorOperandAdjustor(aInstruction)
-        operand_adjustor.add_vtype_layout_operand()
-    elif aInstruction.name in ('VL1R.V', 'VS1R.V'):
-        operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    if aInstruction.name in ('VL1R.V', 'VS1R.V'):
         operand_adjustor.add_whole_register_layout_operand()
+    elif aInstruction.name in ('VMV1R.V', 'VMV2R.V', 'VMV4R.V', 'VMV8R.V'):
+        reg_count = int(aInstruction.name[3])
+        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
+    elif aInstruction.name in ('VSETVL', 'VSETVLI'):
+        pass  # No vector layout operand required
+    else:
+        operand_adjustor.add_vtype_layout_operand()
 
 # Account for non-standard register layouts due to widening and narrowing instructions
 def adjust_register_layout(aInstruction):

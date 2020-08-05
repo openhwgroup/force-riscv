@@ -371,6 +371,10 @@ namespace Force {
             auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
             cast_struct->SetLayoutType(string_to_EVectorRegisterOperandLayoutType(attr.value()));
           }
+          else if (strcmp(attr_name, "reg-count") == 0) {
+            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
+            cast_struct->SetRegisterCount(parse_uint32(attr.value()));
+          }
 
           // TODO(Noah): Devise and implement a better way of processing attributes generically when there is time to
           // do so. For now, keep the DataProcessing attribute processing at the end.
@@ -459,6 +463,10 @@ namespace Force {
       }
       else if (strcmp(opr_type, "VECREG") == 0) {
         mpOperandStructure = new VectorRegisterOperandStructure();
+        return mpOperandStructure;
+      }
+      else if (strcmp(opr_type, "VectorLayout") == 0) {
+        mpOperandStructure = new VectorLayoutOperandStructure();
         return mpOperandStructure;
       }
 
