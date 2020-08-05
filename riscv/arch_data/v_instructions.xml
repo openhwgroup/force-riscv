@@ -1566,7 +1566,7 @@
     <asm format="VMULHU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
   <I name="VMV.S.X" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="0100000000001101010111"/>
+    <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="0100001000001101010111"/>
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
@@ -1594,7 +1594,7 @@
     <asm format="VMV.V.X %s, %s" op1="vd" op2="rs1"/>
   </I>
   <I name="VMV.X.S" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-25,19-15,14-12,6-0" value="0100000000000101010111"/>
+    <O name="const_bits" type="Constant" bits="31-25,19-15,14-12,6-0" value="0100001000000101010111"/>
     <O name="vtype" type="SysReg" class="VtypeLayoutOperand"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>

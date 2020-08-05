@@ -1427,13 +1427,13 @@ Add RISCV V extension instruction starter information in this file.
     <asm format="VMV8R.VI"/>
   </I>
   <I name="VMV.S.X" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="0100000000001101010111"/>
+    <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="0100001000001101010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VMV.S.X"/>
   </I>
   <I name="VMV.X.S" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-25,19-15,14-12,6-0" value="0100000000000101010111"/>
+    <O name="const_bits" type="Constant" bits="31-25,19-15,14-12,6-0" value="0100001000000101010111"/>
     <O name="rd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <asm format="VMV.X.S"/>
