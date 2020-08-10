@@ -77,17 +77,20 @@ namespace Force {
 
     std::map<string, uint64> field_map;
 
-    //misa init
-    //TODO potentially enable N - User level interrupts, and V - Vector extension (based on .7 draft of riscv-v ext document)
-    field_map["MXL"] = 0x2; //encodes MXLEN val of 64 - current register file based on XLEN=64 assumption
+    // misa init...
+    field_map["WLRL_VAR"] = 0;                                 // zero out 
+    mpGenerator->InitializeRegisterFields("misa", field_map);  //   multi-bit reserved field
+    mpGenerator->RandomInitializeRegister("misa", "");
 
-    field_map["EXTENSIONS"] = 0;
-    for (char ext : "MAFDC") {
-      field_map["EXTENSIONS"] |= 1L << (ext - 'A');
-    }
-
-    mpGenerator->InitializeRegisterFields("misa", field_map);
-
+    // medeleg init...
+    field_map.clear();
+    field_map["RESERVED 1"] = 0;                                 //
+    field_map["CUSTOM USE 1"] = 0;                               // zero out 
+    field_map["RESERVED 2"] = 0;                                 //   multi-bit reserved fields
+    field_map["CUSTOM USE 2"] = 0;                               //
+    mpGenerator->InitializeRegisterFields("medeleg", field_map); //
+    mpGenerator->RandomInitializeRegister("medeleg", "");
+    
     //mstatus init
     field_map.clear();
     field_map["SXL"] = 0x2;

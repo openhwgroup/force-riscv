@@ -127,7 +127,8 @@ namespace Force {
 
   void PageTable::ConstructPageTableWalk(uint64 VA, Page* pageObj, VmAddressSpace* pVmas, const GenPageRequest& pPageReq)
   {
-    uint32 level_gap = (pageObj->Level() - TableLevel());
+    //uint32 level_gap = (pageObj->Level() - TableLevel());
+    uint32 level_gap = (TableLevel() - pageObj->Level());
     if (level_gap > MAX_PAGE_TABLE_LEVEL) {
       LOG(fail) << "{VmAddressSpace::ConstructPageTableWalk} level gap too large: " << dec << level_gap << " page level " << pageObj->Level() << " table level " << TableLevel() << endl;
       FAIL("table-level-gap-too-large");

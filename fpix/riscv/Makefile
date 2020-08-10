@@ -30,9 +30,9 @@ vpath %.cc ../src ./src ../../3rd_party/src ../../base/src ../../utils/handcar
 vpath %.d $(DEP_DIR)
 
 all:
-	@make make_dir
-	@make inc/usage.h
-	@make ../bin/fpix_riscv
+	@$(MAKE) make_dir
+	@$(MAKE) inc/usage.h
+	@$(MAKE) ../bin/fpix_riscv
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 -include $(ALL_DEPS)

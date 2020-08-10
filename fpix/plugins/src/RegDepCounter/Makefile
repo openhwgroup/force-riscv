@@ -24,7 +24,7 @@ PLUGIN_HDRS := $(shell find ./ -name '*.h')
 
 all:
 	@mkdir -p ../../bin
-	@make ../../bin/$(TARGET_NAME).so
+	@$(MAKE) ../../bin/$(TARGET_NAME).so
 
 ../../bin/$(TARGET_NAME).so: $(PLUGIN_SRCS) $(PLUGIN_HDRS)
 	$(CC) $(CFLAGS) $(INC_PATHS) -fPIC -shared -o $@ $(PLUGIN_SRCS)

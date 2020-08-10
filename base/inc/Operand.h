@@ -228,7 +228,7 @@ namespace Force {
 
     bool IsImmediateOperand() const override { return true; }  //!< Indicate if it is an immediate operand
     void GetAvailableChoices(std::vector<const Choice*>& rChoicesList) const; //!< Return available choices.
-    virtual void SetChoiceResultDirect(Generator& gen, Instruction& instr, uint32 value, const std::string& choiceText); //!< Set choice result.
+    virtual void SetChoiceResultDirect(Generator& gen, Instruction& instr, const std::string& choiceText); //!< Set choice result.
   protected:
     ChoicesOperand(const ChoicesOperand& rOther) //!< Copy constructor.
       : Operand(rOther), mChoiceText()
@@ -265,8 +265,9 @@ namespace Force {
     bool IsImmediateOperand() const override { return false; }  //!< Indicate if it is an immediate operand
     bool IsRegisterOperand() const override { return true; }   //!< indicate if it is a register operand
     void AddWriteConstraint(Generator& gen) const; //!< Add write related constraint.
-    virtual void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const; //!< Return the register indices in a ConstraintSet.
-    void SetChoiceResultDirect(Generator& gen, Instruction& instr, uint32 value, const std::string& choiceText) override; //!< Set choice result direct overrided.
+    virtual void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
+    virtual void GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const; //!< Return the chosen register indices in a ConstraintSet.
+    void SetChoiceResultDirect(Generator& gen, Instruction& instr, const std::string& choiceText) override; //!< Set choice result direct overrided.
     void SubConstraintValue(uint32 value) const;
   protected:
     explicit RegisterOperand(const ChoicesOperand& rOther) //!< Copy constructor.

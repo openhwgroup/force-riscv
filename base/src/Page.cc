@@ -73,6 +73,11 @@ namespace Force {
     return mpStructure->mType;
   }
 
+  EPteCategoryType PageTableEntry::PteCategory() const
+  {
+    return mpStructure->mCategory;
+  }
+
   uint32 PageTableEntry::DescriptorSize() const
   {
     return mpStructure->Size();
@@ -380,9 +385,9 @@ namespace Force {
 
   uint32 TablePte::ParentTableLevel() const
   {
-    if (mTableLevel > 0)
+    if (mTableLevel >= 0)
     {
-      return mTableLevel - 1;
+      return mTableLevel + 1;
     }
 
     LOG(fail) << "{TablePte::ParentTableLevel} invalid table level: " << mTableLevel << endl;

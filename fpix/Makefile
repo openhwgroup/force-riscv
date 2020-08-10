@@ -14,13 +14,13 @@
 # limitations under the License.
 #
 all:
-	@make riscv
-	@make plugins
+	@$(MAKE) riscv
+	@$(MAKE) plugins
 
 
 .PHONY: riscv
 riscv:
-	@cd riscv;make
+	@cd riscv; $(MAKE)
 
 .PHONY: enums
 enums:
@@ -28,9 +28,9 @@ enums:
 
 .PHONY: clean
 clean:
-	@cd riscv; make clean
-	cd plugins; make clean
+	@cd riscv; $(MAKE) clean
+	cd plugins; $(MAKE) clean
 
 .PHONY: plugins
 plugins:
-	cd plugins; make
+	cd plugins; $(MAKE)

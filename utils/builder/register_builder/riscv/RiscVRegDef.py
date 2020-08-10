@@ -394,6 +394,8 @@ class RegisterFile:
         self.mRegisterChoicesTree = None
         self.mFieldChoicesTree = None
 
+        self.mLicenseText = None
+        
         if aXmlFile and len(aXmlFile) > 0:
             self.parseXmlFile(aXmlFile)
 
@@ -411,6 +413,16 @@ class RegisterFile:
                     self.mRegisterChoicesTree = ET.parse(aXmlFile[key])
                 elif key == 'field_choices':
                     self.mFieldChoicesTree = ET.parse(aXmlFile[key])
+                elif key == 'system_tree':
+                    self.mSystemTree = aXmlFile[key]
+                elif key == 'app_tree':
+                    self.mApplicationTree = aXmlFile[key]
+                elif key == 'impl_tree':
+                    self.mImplementationTree = aXmlFile[key]
+                elif key == 'register_choices_tree':
+                    self.mRegisterChoicesTree = aXmlFile[key]
+                elif key == 'field_choices_tree':
+                    self.mFieldChoicesTree = aXmlFile[key]
                 else:
                     print('Unable to initiate RegisterFile with XML file type: \'%s\'' % key)
             else:
@@ -915,7 +927,8 @@ class RegisterFile:
                 break
 
     ## Writes register file from system register tree
-    def outputRiscVRegisterFileFromTree(self, aSystemRegisterFile):
+    def outputRiscVRegisterFileFromTree(self, aSystemRegisterFile, aLicenseText = None):
+        self.mLicenseText = aLicenseText
         self.outputRiscVRegisterFile(aSystemRegisterFile, False, 'system')
 
     ## Generic RISCV register file writer
@@ -929,7 +942,8 @@ class RegisterFile:
                 self.prettyPrint(self.mImplementationTree, 'index', aRegisterFile)
             else:
                 print('Label \'%s\' unrecognized while writing register file' % aLabel)
-
+        self.mLicenseText = None
+        
     ## Writes xml file with some internal formatting
     def prettyPrint(self, aTree, aAttribute, aOutput):
         self.sortTree(aTree.getroot(), aAttribute)
@@ -937,6 +951,8 @@ class RegisterFile:
         # removing extra whitespace that gets added by toprettyxml()
         xml_str = os.linesep.join([s for s in xml_str.splitlines() if s.strip()])
         with open(aOutput, 'w') as f:
+            if self.mLicenseText != None:
+                f.write(self.mLicenseText)
             f.write(xml_str)
 
     ## Sorts tree provided via root
@@ -959,19 +975,23 @@ class RegisterFile:
             return aChild.get(aAttribute)
 
     ## Writes register file from application register tree
-    def outputAppRegisterFileFromTree(self, aAppRegisterFile):
+    def outputAppRegisterFileFromTree(self, aAppRegisterFile, aLicenseText = None):
+        self.mLicenseText = aLicenseText
         self.outputRiscVRegisterFile(aAppRegisterfile, False, 'app')
 
     ## Writes register file from implementation register tree
-    def outputImplRegisterFileFromTree(self, aImplRegisterFile):
+    def outputImplRegisterFileFromTree(self, aImplRegisterFile, aLicenseText = None):
+        self.mLicenseText = aLicenseText
         self.outputRiscVRegisterFile(aImplRegisterFile, True, 'impl')
 
     ## Writes register choices file
-    def outputRiscVRegisterChoicesFile(self, aRegisterChoicesFile):
+    def outputRiscVRegisterChoicesFile(self, aRegisterChoicesFile, aLicenseText = None):
         if self.mRegisterChoicesTree is not None:
+            self.mLicenseText = aLicenseText
             self.prettyPrint(self.mRegisterChoicesTree, 'value', aRegisterChoicesFile)
 
     ## Writes register field choices file
-    def outputRiscVRegisterFieldChoicesFile(self, aRegisterFieldChoicesFile):
+    def outputRiscVRegisterFieldChoicesFile(self, aRegisterFieldChoicesFile, aLicenseText = None):
         if self.mFieldChoicesTree is not None:
+            self.mLicenseText = aLicenseText
             self.prettyPrint(self.mFieldChoicesTree, 'name', aRegisterFieldChoicesFile)

@@ -99,6 +99,32 @@ namespace Force {
 
   };
 
+
+    /*!
+    \class CompressedRegisterOperand
+    \brief Class handling operands with weighted choices.
+  */
+  class CompressedRegisterOperandRISCV : public RegisterOperand {
+  public:
+    Object* Clone() const override  //!< Return a cloned CompressedRegisterOperand object of the same type and same contents of the object.
+    {
+      return new CompressedRegisterOperandRISCV(*this);
+    }
+
+    const char* Type() const override { return "CompressedRegisterOperandRISCV"; } //!< Return the type of the CompressedRegisterOperandRISCV object in C string.
+
+    CompressedRegisterOperandRISCV() : RegisterOperand() { } //!< Constructor.
+    ~CompressedRegisterOperandRISCV() { } //!< Destructor
+  protected:
+    explicit CompressedRegisterOperandRISCV(const RegisterOperand& rOther) //!< Copy constructor.
+      : RegisterOperand(rOther)
+    {
+    }
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for CompressedRegisterOperandRISCV.
+  };
+
+  
   class VectorDataTraits;
 
   /*!
@@ -190,7 +216,8 @@ namespace Force {
 
     RISCMultiVectorRegisterOperand() : MultiVectorRegisterOperand(), mDataType() { } //!< Constructor.
     ~RISCMultiVectorRegisterOperand() { } //!< Destructor
-    void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return register indices in a ConstraintSet.
+    void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
+    void GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const override; //!< Return the chosen register indices in a ConstraintSet.
     uint32 NumberRegisters() const override; //!< Return number of registers in the list.
   protected:
     RISCMultiVectorRegisterOperand(const RISCMultiVectorRegisterOperand& rOther) //!< Copy constructor.

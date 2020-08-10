@@ -25,5 +25,6 @@ namespace Force {
   void privilege_prefix(std::string& rStr, uint32 priv, bool upper=false);
   void privilege_prefix(std::string& rStr, EPrivilegeLevelType priv, bool upper=false);
   bool illegal_exception_return(uint32 targetPriv, uint32 currentPriv);
+  uint32 table_level_to_addr_high_bit(uint32 level);
 }
 #endif //Force_UtilityFunctionsRISCV_H

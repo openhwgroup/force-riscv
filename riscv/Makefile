@@ -33,9 +33,9 @@ vpath %.cc ./src ../3rd_party/src ../base/src
 vpath %.d $(DEP_DIR)
 
 all:
-	@make make_dir
-	@make ../bin/friscv
-	@cd ../utils/handcar;make
+	@$(MAKE) make_dir
+	@$(MAKE) ../bin/friscv
+	@cd ../utils/handcar; $(MAKE)
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 -include $(ALL_DEPS)
@@ -57,7 +57,7 @@ make_dir:
 
 .PHONY: tests
 tests:
-	@cd ../utils/builder/test_builder/riscv; make all
+	@cd ../utils/builder/test_builder/riscv; $(MAKE) all
 
 .PHONY: deps
 deps:
@@ -67,4 +67,4 @@ deps:
 clean:
 	rm -rf make_area
 	rm -f ../bin/friscv
-	@cd ../utils/handcar; make clean
+	@cd ../utils/handcar; $(MAKE) clean

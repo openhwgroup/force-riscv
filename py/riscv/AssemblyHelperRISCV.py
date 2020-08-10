@@ -34,6 +34,18 @@ class AssemblyHelperRISCV(AssemblyHelper):
             self.genAddImmediate(aScratchRegIndex, 4)
             self.genWriteSystemRegister(('%sepc' % priv_level.name.lower()), aScratchRegIndex)
 
+    ## Generate instructions to set the system register containing the exception return address
+    # to the provided recovery address. This will generally result in skipping the instruction that
+    # triggered the exception and resuming execution at the recovery address.
+    #
+    #  @param aScratchRegIndex The index of a register that can be freely modified.
+    #  @param aRecoveryRegIndex The index of a register that contains the desired recovery address.
+    #  @param aPrivLevelRegIndex The index of a register containing a value representing the current
+    #       privilege level.
+    def genProvidedExceptionReturnAddress(self, aScratchRegIndex, aRecoveryRegIndex, aPrivLevelRegIndex):
+        for priv_level in self.genPrivilegeLevelInstructions(aPrivLevels=tuple(PrivilegeLevelRISCV)[1:], aInstrCountPerLevel=1, aScratchRegIndex=aScratchRegIndex, aPrivLevelRegIndex=aPrivLevelRegIndex):
+            self.genWriteSystemRegister(('%sepc' % priv_level.name.lower()), aRecoveryRegIndex)
+
     ## Generate a relative branch instruction to the specified address.
     #
     #  @param aTargetAddr The target address of the branch.

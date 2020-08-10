@@ -203,7 +203,16 @@ namespace Force {
     char** opp = &op;
     char** disp = &dis;
 
-    if (0 != mpSimDllAPI->get_disassembly(pPc, opp, disp)) {
+    int rcode = mpSimDllAPI->get_disassembly(pPc, opp, disp);
+
+    if (rcode == 1) {
+      // A page fault on a branch could result in an exception. The disassembly call in the simulator
+      // will fail since there is no mapping for the fault address. The expected return code in
+      // this case is 1...
+      strcpy(op,"00000000");
+      strcpy(dis,"?");
+    } else if (rcode != 0) {
+      // any other non-zero return code is NOT expected...
       stringstream err_stream;
       err_stream << "Problems getting disassembly" << "\n";
       throw SimulationError(err_stream.str());

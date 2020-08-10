@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-control_items = [ { "fname":"paging_force.py","generator":{"--options":"\"PrivilegeLevel=1\"","--noiss":None,}},
-                  { "fname":"paging_loadstore_force.py","generator":{"--options":"\"PrivilegeLevel=1,FlatMap=1\"","--noiss":None,}},
+control_items = [ { "fname":"paging_force.py"           ,"generator":{"--options":"\"PrivilegeLevel=1\"","--noiss":None,}},
+                  { "fname":"paging_loadstore_force.py" ,"generator":{"--options":"\"PrivilegeLevel=1\"","--noiss":None,}},
+                  { "fname":"paging_force.py"           ,"generator":{"--options":"\"PrivilegeLevel=1,FlatMap=1\"","--noiss":None,}},
+                  { "fname":"paging_loadstore_force.py" ,"generator":{"--options":"\"PrivilegeLevel=1,FlatMap=1\"","--noiss":None,}},
                   ]

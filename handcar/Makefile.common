@@ -15,27 +15,26 @@
 #
 
 ifndef FORCE_CC
-  CC := /software/public/gcc/5.1/centos6.6/bin/g++
-  CXX := /software/public/gcc/5.1/centos6.6/bin/g++
+$(error !!! Please make sure FORCE_CC environment variable is pointing to your C++ compiler !!!)
 else
   CXX := $(FORCE_CC)
   CC := $(FORCE_CC)
 endif
 
 ifndef FORCE_PYTHON_VER
-  PYTHON_VER := 3.4
+$(error !!! Please specify Python version to use !!!)
 else
   PYTHON_VER := $(FORCE_PYTHON_VER)
 endif
 
 ifndef FORCE_PYTHON_INC
-  PYTHON_INC := /software/public/python/3.4.1/include/python3.4m
+$(error !!! Please specify Python include directory path !!!)
 else
   PYTHON_INC := $(FORCE_PYTHON_INC)
 endif
 
 ifndef FORCE_PYTHON_LIB
-  PYTHON_LIB := /software/public/python/3.4.1/lib
+$(error !!! Please specify Python library directory path !!!)
 else
   PYTHON_LIB := $(FORCE_PYTHON_LIB)
 endif
@@ -45,9 +44,17 @@ OPTIMIZATION = -O1
 OBJ_DIR = make_area/obj
 DEP_DIR = make_area/dep
 
+# Check if python3.?m library exist
+TEST_PYTHON_LIB=$(PYTHON_LIB)/libpython$(PYTHON_VER)m.so
+ifneq ("$(wildcard $(TEST_PYTHON_LIB))","")
+    PYTHON_LIB_TYPE=m
+else
+    PYTHON_LIB_TYPE=
+endif
+
 #CFLAGS = -Wall -std=c++11 -gdwarf-3 -m64 -Werror $(OPTIMIZATION) 
 CFLAGS = -Wall -std=c++11 -gdwarf-3 -m64 -g $(OPTIMIZATION) # g++ is failing to see through Spike's nested combination of macros and includes in riscv/processor.cc 
-LFLAGS = -lpthread -static-libstdc++ -static-libgcc -L$(PYTHON_LIB) -lpython$(PYTHON_VER)m -lutil -ldl -rdynamic
+LFLAGS = -lpthread -static-libstdc++ -static-libgcc -L$(PYTHON_LIB) -lpython$(PYTHON_VER)$(PYTHON_LIB_TYPE) -lutil -ldl -rdynamic
 
 ALL_OBJS := $(ALL_SRCS:%.cc=$(OBJ_DIR)/%.o)
 ALL_DEPS := $(ALL_SRCS:%.cc=$(DEP_DIR)/%.d)

@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from classes.ApplicationOption import AppCmdLineOption, AppPathCmdLineOption, ParameterProcessor, CommandLineOption
+from classes.ApplicationOption import AppPathCmdLineOption, ParameterProcessor
 from common.path_utils import PathUtils
 from common.version_ctrl_utils import VersionCtrlUtils
 from common.msg_utils import Msg
-from common.sys_utils import SysUtils
+
 
 ## Define additional FORCE specific command line parameters
 #
@@ -31,6 +31,7 @@ class ForceCmdLineOptions(object):
     #                               |    "default value"  |    |   "help text"
     #                               |           |         |    |       |
     cOptions = [AppPathCmdLineOption('path',  "../../bin/force", 1, None, "- Path to FORCE binary", None, "FORCE_PATH")]
+
 
 ## Used to process application specific parameters
 #
@@ -46,19 +47,26 @@ class ForceParametersProcessor(ParameterProcessor):
         if not PathUtils.check_exe(force_path):
             raise Exception(force_path + " does not exist or is not executable, confirm valid exe")
 
-        #determine svn revision information and store as a parameter
-        version_info = VersionCtrlUtils.get_svn_revision(force_dir)
-        if version_info[1] is not None:
-            Msg.info("Failed to determine Force svn version: " + version_info[1])
-            self.mAppParameters.setParameter("version", -1)
-        else:
-            self.mAppParameters.setParameter("version", version_info[0])
+        # determine svn revision information and store as a parameter
+        version_data = VersionCtrlUtils.get_scm_revisions(force_dir)
+        version_output = VersionCtrlUtils.get_version_output(version_data)
+
+        Msg.info("Force Version Data:\n%s" % version_output)
+
+        self.mAppParameters.setParameter("version", version_data)
         self.mAppParameters.setParameter("version_dir", force_dir)
+
 
 ## Process force control data
 #
 def processForceControlData(aControlData, aAppParameters):
-    if aAppParameters is None: return # TODO Temporary, to avoid failing in forrest run, to remove.
+    """
+    :param object aControlData:
+    :param object aAppParameters:
+    :return:
+    """
+    if aAppParameters is None:
+        return # TODO Temporary, to avoid failing in forrest run, to remove.
 
     key = 'path'
     if aAppParameters.parameter(key):

@@ -124,9 +124,11 @@ namespace Force {
 
   void AddressTableManager::SyncDifferentMemoryBankAddressTable() const
   {
-    uint32 high_index = 1;
-    uint32 mem_bank = uint32(mpCurrentAddressTable->GetBankType());
-    mAddressTables[high_index-mem_bank]->SetCurrentAddress(mAddressTables[mem_bank]->GetCurrentAddress());
+    uint64 current_address = mpCurrentAddressTable->GetCurrentAddress();
+
+    for(auto table_ptr : mAddressTables){
+      table_ptr->SetCurrentAddress(current_address);	
+    }
   }
 
 }

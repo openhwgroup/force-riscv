@@ -28,6 +28,7 @@ from functools import partial
 def usage(extra=None):
     usage_str = """Run quick regression
   -h, --help print this help message
+  --clean Run "make clean" in each unit test directory before running "make".
   --force-path point to force path.
   --nopicky disable -Weffc++ compiler flag.
   -x, --process-max The maximum number of concurrent execution threads.
@@ -54,6 +55,7 @@ def unit_tests():
     try:
         my_oplist = [
             "help",
+            "clean",
             "force-path=",
             "nopicky",
             "process-max=",
@@ -67,6 +69,7 @@ def unit_tests():
         print ( "Please Run \"" + sys.argv[0] + " -h or --help\" for usage information\n")
         sys.exit(1)
 
+    clean_build = False
     force_path = None
     process_max = 16
     print_fails = False
@@ -76,6 +79,8 @@ def unit_tests():
         if o in ("-h", "--help"):
             usage()
             sys.exit(0)
+        elif o == "--clean":
+            clean_build = True
         elif o == "--force-path":
             force_path = a
         elif o == "--nopicky":
@@ -97,12 +102,12 @@ def unit_tests():
     force_path = os.path.abspath(force_path)
     (_, unit_tests_path) = verify_force_path(force_path)
 
-    run_unit_tests(unit_tests_path, process_max, print_fails, nopicky)
+    run_unit_tests(unit_tests_path, process_max, print_fails, nopicky, clean_build)
 
     sys.exit(0)
 
 
-def run_unit_tests(unit_tests_path, num_parallel_workers, print_fails, nopicky):
+def run_unit_tests(unit_tests_path, num_parallel_workers, print_fails, nopicky, clean_build):
     verify_dir_writable(unit_tests_path)
 
     p = Pool(num_parallel_workers)
@@ -122,7 +127,7 @@ def run_unit_tests(unit_tests_path, num_parallel_workers, print_fails, nopicky):
                     arg_tuple = (test_path, test_dirname, job_output_queue)
                     arg_array.append(arg_tuple)
 
-    run_one_test = partial(run_one_unit_test, nopicky)
+    run_one_test = partial(run_one_unit_test, nopicky, clean_build)
     p.map(run_one_test, arg_array)
     p.close()
     p.join()
@@ -147,14 +152,16 @@ def run_unit_tests(unit_tests_path, num_parallel_workers, print_fails, nopicky):
         print ("%s failures.\n" % (num_fails))
 
 
-def run_one_unit_test(nopicky, arg_tuple):
+def run_one_unit_test(nopicky, clean_build, arg_tuple):
     (test_path, test_dirname, execution_queue) = arg_tuple
     cur_path = os.getcwd()
     os.chdir(test_path)
 
-    cmd = "make clean"
-    process_return = execute_command(cmd)
-    success = (process_return.retcode == 0)
+    success = True
+    if clean_build:
+        cmd = "make clean"
+        process_return = execute_command(cmd)
+        success = (process_return.retcode == 0)
 
     make_duration = 0.0
     if success:

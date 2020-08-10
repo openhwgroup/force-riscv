@@ -34,8 +34,8 @@ vpath %.cc $(FORCE_DIR)/riscv/src $(FORCE_DIR)/3rd_party/src $(FORCE_DIR)/base/s
 vpath %.d $(DEP_DIR)
 
 all:
-	@make make_dir
-	@make bin/$(TARGET_NAME)
+	@$(MAKE) make_dir
+	@$(MAKE) bin/$(TARGET_NAME)
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 -include $(ALL_DEPS)

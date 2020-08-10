@@ -29,6 +29,10 @@ class GlobalInitSeqRISCV(GlobalInitSequence):
         self.setGlobalState("ResetPC", PcConfig.get_reset_pc())
         self.virtualMemoryRequest("PhysicalRegion", {"RegionType":"ResetRegion", "Size":PcConfig.get_reset_region_size(), "Type":'I', "Bank":0})
 
+        (skip_boot, skip_boot_valid) = self.genThread.getOption("SkipBootCode")
+        if skip_boot_valid and skip_boot == 1:
+            self.setGlobalState("ResetPC", PcConfig.get_base_initial_pc())
+
     def allocateHandlerSetMemory(self):
         handler_memory_size = self.getHandlerMemorySize()
         self.virtualMemoryRequest("PhysicalRegion", {"RegionType":"HandlerMemory", "Size":handler_memory_size, "Align":0x10000, "Type":'I', "Bank":0})

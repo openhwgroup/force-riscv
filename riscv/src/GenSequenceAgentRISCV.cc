@@ -552,7 +552,7 @@ namespace Force {
     const Register* inter_reg_ptr = interRegPtr;
 
     if (inter_reg_ptr == nullptr) {
-      inter_reg_ptr = GetRandomGPR('X'); // getting a random GPR
+      inter_reg_ptr = GetRandomGPR('x'); // getting a random GPR
       GetReloadBaseAddressSequence(inter_reg_ptr, 8, reqSeq);
     }
 

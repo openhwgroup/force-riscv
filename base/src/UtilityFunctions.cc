@@ -543,7 +543,7 @@ namespace Force {
   */
   uint32 get_root_level_low_bit(uint32 highBit, uint32 lowBit, uint32 tableStep)
   {
-    uint32 table_low = 0;
+    /*uint32 table_low = 0;
     uint32 check_table_low = lowBit;
     uint32 table_levels = 0;
 
@@ -559,8 +559,8 @@ namespace Force {
 
     levels_lowbit = table_low;
     levels_lowbit |= table_levels << 16;
-    return(levels_lowbit);
-
+    return(levels_lowbit);*/
+    return 0x10027ul; //TODO update to switch off other high bit values
   }
 
   uint64 round_up_power2(uint64 x)

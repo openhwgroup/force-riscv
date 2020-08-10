@@ -53,7 +53,7 @@
 > //Persistent options class and support, designed to keep consistency with Spike's existing options
 > //Options storage manages the setting and retrieval of options stored as OptionsPrimitives
 > class OptionsStorage
-20,122c40,92
+20,94c40,50
 <   fprintf(stderr, "Spike RISC-V ISA Simulator " SPIKE_VERSION "\n\n");
 <   fprintf(stderr, "usage: spike [host options] <target program> [target options]\n");
 <   fprintf(stderr, "Host Options:\n");
@@ -129,6 +129,64 @@
 <   in.seekg(fileoff, std::ios::beg);
 <   in.read(read_buf, read_sz);
 < }
+---
+>   //OptionsPrimitive is a record type used to store the definition of an option as well as its settings either default or after user modification.
+>   struct OptionsPrimitive
+>   {
+>     bool mIsUsed;
+>     char mShortName;
+>     std::string mLongName;
+>     bool mNeedsVal;
+>     bool mNeedsPath;
+>     uint64_t mVal;
+>     std::string mPath;
+>   };
+96,103c52,58
+< bool sort_mem_region(const std::pair<reg_t, mem_t*> &a,
+<                        const std::pair<reg_t, mem_t*> &b)
+< {
+<   if (a.first == b.first)
+<     return (a.second->size() < b.second->size());
+<   else
+<     return (a.first < b.first);
+< }
+---
+>   enum DESCRIPTIVE_INITIALIZATION_VALUES : bool
+>   {
+>     NEEDS_VAL = true,
+>     NEEDS_PATH = true,
+>     USED = true,
+>     UNUSED = false
+>   };
+105,175c60,92
+< void merge_overlapping_memory_regions(std::vector<std::pair<reg_t, mem_t*>>& mems)
+< {
+<   // check the user specified memory regions and merge the overlapping or
+<   // eliminate the containing parts
+<   std::sort(mems.begin(), mems.end(), sort_mem_region);
+<   reg_t start_page = 0, end_page = 0;
+<   std::vector<std::pair<reg_t, mem_t*>>::reverse_iterator it = mems.rbegin();
+<   std::vector<std::pair<reg_t, mem_t*>>::reverse_iterator _it = mems.rbegin();
+<   for(; it != mems.rend(); ++it) {
+<     reg_t _start_page = it->first/PGSIZE;
+<     reg_t _end_page = _start_page + it->second->size()/PGSIZE;
+<     if (_start_page >= start_page && _end_page <= end_page) {
+<       // contains
+<       mems.erase(std::next(it).base());
+<     }else if ( _start_page < start_page && _end_page > start_page) {
+<       // overlapping
+<       _it->first = _start_page;
+<       if (_end_page > end_page)
+<         end_page = _end_page;
+<       mems.erase(std::next(it).base());
+<     }else {
+<       _it = it;
+<       start_page = _start_page;
+<       end_page = _end_page;
+<       assert(start_page < end_page);
+<     }
+<   }
+< }
 < 
 < static std::vector<std::pair<reg_t, mem_t*>> make_mems(const char* arg)
 < {
@@ -149,8 +207,23 @@
 <     if (!*p || *p != ':')
 <       help();
 <     auto size = strtoull(p + 1, &p, 0);
-<     if ((size | base) % PGSIZE != 0)
+< 
+<     // page-align base and size
+<     auto base0 = base, size0 = size;
+<     size += base0 % PGSIZE;
+<     base -= base0 % PGSIZE;
+<     if (size % PGSIZE != 0)
+<       size += PGSIZE - size % PGSIZE;
+< 
+<     if (base + size < base)
 <       help();
+< 
+<     if (size != size0) {
+<       fprintf(stderr, "Warning: the memory at  [0x%llX, 0x%llX] has been realigned\n"
+<                       "to the %ld KiB page size: [0x%llX, 0x%llX]\n",
+<               base0, base0 + size0 - 1, PGSIZE / 1024, base, base + size - 1);
+<     }
+< 
 <     res.push_back(std::make_pair(reg_t(base), new mem_t(size)));
 <     if (!*p)
 <       break;
@@ -158,26 +231,6 @@
 <       help();
 <     arg = p + 1;
 ---
->   //OptionsPrimitive is a record type used to store the definition of an option as well as its settings either default or after user modification.
->   struct OptionsPrimitive
->   {
->     bool mIsUsed;
->     char mShortName;
->     std::string mLongName;
->     bool mNeedsVal;
->     bool mNeedsPath;
->     uint64_t mVal;
->     std::string mPath;
->   };
-> 
->   enum DESCRIPTIVE_INITIALIZATION_VALUES : bool
->   {
->     NEEDS_VAL = true,
->     NEEDS_PATH = true,
->     USED = true,
->     UNUSED = false
->   };
-> 
 >   enum ERROR_CODES : int
 >   {
 >     SUCCESS = 0,
@@ -211,11 +264,10 @@
 >     const char arg2[] = "no_elf\0";
 >     memcpy(_stored_argv[0], arg1, strlen(arg1)+1);
 >     memcpy(_stored_argv[_stored_argc-1], arg2, strlen(arg2)+1);
-124,125d93
+178,180c95,472
+<   merge_overlapping_memory_regions(res);
 <   return res;
 < }
-127c95,483
-< int main(int argc, char** argv)
 ---
 >   
 >   // _unpackFlatOptions function: takes a space separated options string, formatted as it would be for command line arguments for the Spike original executable, 
@@ -595,7 +647,9 @@
 >   {
 >     return _stored_argc;
 >   } 
-> 
+182c474,483
+< int main(int argc, char** argv)
+---
 > 
 >   // These can't be methods of OptionsStorage, but they need access to OptionsStorage private that ought not be more widely exposed.
 >   friend void initialize_simulator(const char* options);
@@ -606,7 +660,7 @@
 > 
 > 
 > void initialize_simulator(const char* options)
-128a485,536
+183a485,536
 >   // Hopefully the user has called set_simulator_parameter a number of times before calling initialize_simulator, but handle the contingency if they didn't.
 >   if(_pOptionsStorage == nullptr)
 >   {
@@ -659,27 +713,25 @@
 >     printf("\n");
 >   }
 >   
-137,138d544
+192,193d544
 <   size_t initrd_size;
 <   reg_t initrd_start = 0, initrd_end = 0;
-140,144d545
+195,199d545
 <   std::vector<std::pair<reg_t, mem_t*>> mems;
 <   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
 <   std::unique_ptr<icache_sim_t> ic;
 <   std::unique_ptr<dcache_sim_t> dc;
 <   std::unique_ptr<cache_sim_t> l2;
-146,149d546
+201,204d546
 <   bool log_commits = false;
 <   const char *log_path = nullptr;
 <   std::function<extension_t*()> extension;
 <   const char* initrd = NULL;
-153,154c550,551
+208,210d549
+<   const char* dtb_file = NULL;
 <   uint16_t rbb_port = 0;
 <   bool use_rbb = false;
----
->   //uint16_t rbb_port = 0;
->   //bool use_rbb = false;
-156,164d552
+212,220d550
 <   debug_module_config_t dm_config = {
 <     .progbufsize = 2,
 <     .max_bus_master_bits = 0,
@@ -689,15 +741,15 @@
 <     .support_abstract_csr_access = true,
 <     .support_haltgroups = true
 <   };
-166c554
+222c552
 < 
 ---
 >  
-170c558
+226c556
 < 
 ---
 >  
-179,221d566
+235,277d564
 <   auto const device_parser = [&plugin_devices](const char *s) {
 <     const std::string str(s);
 <     std::istringstream stream(str);
@@ -741,18 +793,14 @@
 <     plugin_devices.emplace_back(base, new mmio_plugin_device_t(name, args));
 <   };
 < 
-223,224d567
+279,280d565
 <   parser.help(&suggest_help);
 <   parser.option('h', "help", 0, [&](const char* s){help(0);});
-229c572
+285d569
 <   parser.option('m', 0, 1, [&](const char* s){mems = make_mems(s);});
----
->   //parser.option('m', 0, 1, [&](const char* s){_pMemories = new std::vector<std::pair<reg_t, mem_t*>>(std::move(make_mems(s)));});
-232c575
+288d571
 <   parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoi(s);});
----
-> //  parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoi(s);});
-235,237c578,580
+291,293c574,576
 <   parser.option(0, "ic", 1, [&](const char* s){ic.reset(new icache_sim_t(s));});
 <   parser.option(0, "dc", 1, [&](const char* s){dc.reset(new dcache_sim_t(s));});
 <   parser.option(0, "l2", 1, [&](const char* s){l2.reset(cache_sim_t::construct(s, "L2$"));});
@@ -760,15 +808,15 @@
 >   parser.option(0, "ic", 1, [&](const char* s){ic = new icache_sim_t(s);});
 >   parser.option(0, "dc", 1, [&](const char* s){dc = new dcache_sim_t(s);});
 >   parser.option(0, "l2", 1, [&](const char* s){l2 = cache_sim_t::construct(s, "L2$");});
-242,243c585,586
+298,299c581
 <   parser.option(0, "device", 1, device_parser);
 <   parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
 ---
-> //  parser.option(0, "device", 1, device_parser);
 >   //parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
-246d588
+302,303d583
+<   parser.option(0, "dtb", 1, [&](const char *s){dtb_file = s;});
 <   parser.option(0, "initrd", 1, [&](const char* s){initrd = s;});
-255,275d596
+312,332d591
 <   parser.option(0, "dm-progsize", 1,
 <       [&](const char* s){dm_config.progbufsize = atoi(s);});
 <   parser.option(0, "dm-sba", 1,
@@ -790,7 +838,7 @@
 <   parser.option(0, "log", 1,
 <                 [&](const char* s){log_path = s;});
 < 
-277,312c598,602
+334,368c593,597
 <   std::vector<std::string> htif_args(argv1, (const char*const*)argv + argc);
 <   if (mems.empty())
 <     mems = make_mems("2048");
@@ -812,7 +860,7 @@
 < 
 <   sim_t s(isa, priv, varch, nprocs, halted, real_time_clint,
 <       initrd_start, initrd_end, start_pc, mems, plugin_devices, htif_args,
-<       std::move(hartids), dm_config, log_path);
+<       std::move(hartids), dm_config, log_path, dtb_enabled, dtb_file);
 <   std::unique_ptr<remote_bitbang_t> remote_bitbang((remote_bitbang_t *) NULL);
 <   std::unique_ptr<jtag_dtm_t> jtag_dtm(
 <       new jtag_dtm_t(&s.debug_module, dmi_rti));
@@ -820,7 +868,6 @@
 <     remote_bitbang.reset(new remote_bitbang_t(rbb_port, &(*jtag_dtm)));
 <     s.set_remote_bitbang(&(*remote_bitbang));
 <   }
-<   s.set_dtb_enabled(dtb_enabled);
 < 
 <   if (dump_dts) {
 <     printf("%s", s.get_dts());
@@ -829,11 +876,11 @@
 < 
 ---
 >  
->   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, start_pc, /**_pMemories, *_pPluginDevices, */
->     hartids);//, dm_config);
+>   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, start_pc, 
+>     hartids);
 >   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
 >  
-319,321c609,838
+375,377c604,910
 <     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
 <     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
 <     if (extension) s.get_core(i)->register_extension(extension());
@@ -1068,48 +1115,35 @@
 >     category = 2;
 >     index = _pSimulatorTopLevel->get_fpr_number(std::string(pRegName));
 >     temp_name = _pSimulatorTopLevel->get_fpr_name(index);
-324,326c841,846
-<   s.set_debug(debug);
-<   s.configure_log(log, log_commits);
-<   s.set_histogram(histogram);
----
+>   }
+> 
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
 >     category = 3;
 >     index = _pSimulatorTopLevel->get_vecr_number(std::string(pRegName));
 >     temp_name = _pSimulatorTopLevel->get_vecr_name(index);
 >   }
-328c848,852
-<   auto return_code = s.run();
----
+> 
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
 >     category = 4; //fail category
 >     status = 3;
 >   }
-330,331c854,859
-<   for (auto& mem : mems)
-<     delete mem.second;
----
+> 
 >   //PC is a special case since its not directly writeable in Spike code
 >   if(strcmp(pRegName, "PC") == 0 || strcmp(pRegName, "pc") == 0)
 >   {
 >     category = 5;
 >     status = 0;
 >   }
-333,334c861,866
-<   for (auto& plugin_device : plugin_devices)
-<     delete plugin_device.second;
----
+> 
 >   //privilege is internal register to force, should bypass CSR/register and access state of proc
 >   if(strcmp(pRegName, "PRIVILEGE") == 0 || strcmp(pRegName, "privilege") == 0)
 >   {
 >     category = 6;
 >     status = 0;
 >   }
-336c868,943
-<   return return_code;
----
+> 
 >   // Check the category of the register and try to obtain the name
 >   uint32_t my_length = length;
 >   switch(category)
@@ -1158,8 +1192,11 @@
 >   if(pRegName == nullptr || pValue == nullptr || _pSimulatorTopLevel == nullptr)
 >   {
 >     return 1;
->   }
-> 
+380,382c913,948
+<   s.set_debug(debug);
+<   s.configure_log(log, log_commits);
+<   s.set_histogram(histogram);
+---
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 3; // Four is not one of the admissible categories
@@ -1186,7 +1223,7 @@
 >   }
 > 
 >   return status;
-337a945,1252
+> }
 > 
 > 
 > int partial_write_large_register(int target_id, const char* pRegName, const uint8_t* pValue, uint32_t length, uint32_t offset)
@@ -1196,20 +1233,28 @@
 >   {
 >     return 1;
 >   }
-> 
+384c950,954
+<   auto return_code = s.run();
+---
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 3; // Four is not one of the admissible categories
 >   uint64_t index = _pSimulatorTopLevel->get_vecr_number(std::string(pRegName));
 >   std::string temp_name = _pSimulatorTopLevel->get_vecr_name(index);
-> 
+386,387c956,961
+<   for (auto& mem : mems)
+<     delete mem.second;
+---
 >   // Check if this is any of the other types of register
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
 >     category = 4; //fail category
 >     status = 3;
 >   }
-> 
+389,390c963,973
+<   for (auto& plugin_device : plugin_devices)
+<     delete plugin_device.second;
+---
 >   // Check the category of the register and try to obtain the name
 >   switch(category)
 >   {
@@ -1221,9 +1266,11 @@
 >     default:
 >       status = 3; // failure
 >   }
-> 
+392c975
+<   return return_code;
+---
 >   return status;
-> }
+393a977,1247
 > 
 > 
 > int write_simulator_register(int target_id, const char* pRegName, const uint8_t* data, int length)

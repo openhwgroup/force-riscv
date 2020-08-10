@@ -24,6 +24,8 @@ def priv_adjust_instruction_by_format(instr):
 
     instr_format = instr.get_format()
 
+    #print("XXX %s: '%s'" % (instr.name, instr_format))
+    
     if instr_format == "rs2-rs1":
         return adjust_rs2_rs1(instr)
     elif instr_format == "rs1-rd":
@@ -50,6 +52,14 @@ def dump_format_map():
         print ("Format: %s, count: %d" % (key, value))
 
 def adjust_rs2_rs1(instr):
+    if instr.name in ["SFENCE.VMA"]:
+        instr.group = "System"
+        instr.extension = "RV64Priv"
+        opr_adjustor = OperandAdjustor(instr)
+        opr_adjustor.set_rs2_int()
+        opr_adjustor.set_rs1_int()
+        return True
+    
     return False
 
 def adjust_rs1_rd(instr):
