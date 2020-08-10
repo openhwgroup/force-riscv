@@ -14,11 +14,14 @@
 // limitations under the License.
 //
 #include <VectorElementUpdates.h>
+#include <Log.h>
 #include <SimAPI.h>
 #include <string.h>
 #include <vector>
 #include <set>
 #include <algorithm>
+
+using namespace std;
 
 namespace Force
 {
@@ -44,11 +47,9 @@ bool VectorElementUpdate::GetPhysicalRegisterIndices(cuint32 physRegSize, cuint3
 
 bool VectorElementUpdates::insert(uint32 processorId, const char* pRegisterName, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pEntireRegValue, uint32 regByteWidth, const char* pAccessType)
 {
-  bool success = validateInsertArguments(processorId, pRegisterName, eltIndex, eltByteWidth, pEntireRegValue, regByteWidth, pAccessType);
-  if(not success) {
-    return false;
-  }
+  validateInsertArguments(processorId, pRegisterName, eltIndex, eltByteWidth, pEntireRegValue, regByteWidth, pAccessType);
 
+  bool success = true;
   VectorElementUpdate tentative_update(eltIndex, eltByteWidth);
 
   if(strcmp(pAccessType, "read") == 0)
@@ -94,7 +95,8 @@ bool VectorElementUpdates::insert(uint32 processorId, const char* pRegisterName,
   }
   else
   {
-    success = false;
+    LOG(fail) << "{VectorElementUpdates::insert} unknown access type " << pAccessType << endl;
+    FAIL("invalid-vector-element-update");
   }
 
   return success;
@@ -151,7 +153,7 @@ void VectorElementUpdates::translateElementToRegisterUpdates(SimAPI& rApiHandle,
   }
 }
 
-bool VectorElementUpdates::validateInsertArguments(uint32 processorId, const char* pRegisterName, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pEntireRegValue, uint32 regByteWidth, const char* pAccessType)
+void VectorElementUpdates::validateInsertArguments(uint32 processorId, const char* pRegisterName, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pEntireRegValue, uint32 regByteWidth, const char* pAccessType)
 {
   bool valid = true;
   if(pRegisterName == nullptr || pEntireRegValue == nullptr || pAccessType == nullptr) {
@@ -171,7 +173,10 @@ bool VectorElementUpdates::validateInsertArguments(uint32 processorId, const cha
     valid = false;
   }
 
-  return valid;
+  if (not valid) {
+    LOG(fail) << "{VectorElementUpdates::validateInsertArguments} one or more vector element update arguments has an invalid value" << endl;
+    FAIL("invalid-vector-element-update");
+  }
 }
 
 } 

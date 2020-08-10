@@ -167,9 +167,7 @@ CASE( "Testing VectorElementUpdates::insert(...)" ) {
         uint32 aRegByteWidth = 16;
         const char aAccessType[] = "not_a_recognized_access_type";
 
-        bool success = vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType);
-
-        EXPECT(not success);
+        EXPECT_FAIL(vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType), "invalid-vector-element-update");
      }
 
      SECTION ("Insert one, register size larger than expected, access type read") {
@@ -177,9 +175,7 @@ CASE( "Testing VectorElementUpdates::insert(...)" ) {
         uint32 aRegByteWidth = 32;
         const char aAccessType[] = "read";
 
-        bool success = vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType);
-
-        EXPECT(not success);
+        EXPECT_FAIL(vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType), "invalid-vector-element-update");
      }
 
      SECTION ("Insert one, register size smaller than expected, access type read") {
@@ -187,9 +183,7 @@ CASE( "Testing VectorElementUpdates::insert(...)" ) {
         uint32 aRegByteWidth = 8;
         const char aAccessType[] = "read";
 
-        bool success = vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType);
-
-        EXPECT(not success);
+        EXPECT_FAIL(vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType), "invalid-vector-element-update");
      }
 
      SECTION ("Insert several, value fits, access type write") {
@@ -215,9 +209,7 @@ CASE( "Testing VectorElementUpdates::insert(...)" ) {
         uint32 aRegByteWidth = 16;
         const char aAccessType[] = "read";
 
-        bool success = vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType);
-
-        EXPECT(not success);
+        EXPECT_FAIL(vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType), "invalid-vector-element-update");
      }
 
      SECTION ("Nominal read case, except aEntireRegValue is null") {
@@ -226,9 +218,7 @@ CASE( "Testing VectorElementUpdates::insert(...)" ) {
         uint32 aRegByteWidth = 16;
         const char aAccessType[] = "read";
 
-        bool success = vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType);
-
-        EXPECT(not success);
+        EXPECT_FAIL(vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType), "invalid-vector-element-update");
      }
 
      SECTION ("Nominal read case, except aAccessType is null") {
@@ -236,9 +226,7 @@ CASE( "Testing VectorElementUpdates::insert(...)" ) {
         uint32 aRegByteWidth = 16;
         const char* aAccessType = nullptr;
 
-        bool success = vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType);
-
-        EXPECT(not success);
+        EXPECT_FAIL(vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType), "invalid-vector-element-update");
      }
 
      SECTION ("Trying to add a duplicate entry") {
@@ -264,6 +252,13 @@ CASE( "Testing VectorElementUpdates::insert(...)" ) {
         EXPECT(success);
      }
 
+     SECTION ("Nominal read case, except element index exceeds register size") {
+        const char* aRegName = "v1";
+        uint32 aRegByteWidth = 16;
+        const char aAccessType[] = "read";
+
+        EXPECT_FAIL(vecEltUpdates[0].insert(processorId, aRegName, 4, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType), "invalid-vector-element-update");
+     }
    }
 },
 
@@ -316,20 +311,6 @@ CASE( "Testing VectorElementUpdate::translateElementToRegisterUpdates(...)" ) {
           success &= (not regUpdates.empty());
 
           EXPECT(success);
-
-        }
-
-        SECTION("Insert an 'unknown' update, then attempt to translate") {
-          const char aAccessType[] = "bogus";
-  
-          bool success = vecEltUpdates[0].insert(processorId, aRegName, aEltIndex, aEltByteWidth, aEntireRegValue, aRegByteWidth, aAccessType);
-
-          std::vector<RegUpdate> regUpdates;
-          vecEltUpdates[0].translateElementToRegisterUpdates(*apihandle, regUpdates);
-
-          success |= (not regUpdates.empty());
-
-          EXPECT(not success);
 
         }
 
