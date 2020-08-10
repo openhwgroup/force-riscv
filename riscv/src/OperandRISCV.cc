@@ -285,7 +285,8 @@ namespace Force {
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    mRegCount = vec_layout->mRegCount;
+    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(mpStructure);
+    mRegCount = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
 
     mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
 

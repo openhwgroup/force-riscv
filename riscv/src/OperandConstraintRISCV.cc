@@ -294,10 +294,8 @@ namespace Force {
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    uint32 reg_count = vec_layout->mRegCount;
-
     auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&operandStruct);
-    reg_count *= vec_reg_operand_struct->GetLayoutMultiple();
+    uint32 reg_count = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
 
     // Remove all register indices that are not multiples of the register count, as they are not
     // legal choices
