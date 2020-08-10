@@ -21,7 +21,8 @@ import RandomUtils
 
 ## This test verifies that a basic add vector instruction can be generated and executed. It verifies
 # that the initial values are correctly communicated to the simulator and that the resulting values
-# are successfully returned. The test assumes the use of 32-bit vector register elements.
+# are successfully returned. The test assumes the use of 512-bit vector registers and 32-bit vector
+# register elements.
 class MainSequence(Sequence):
 
     def generate(self, **kargs):
@@ -38,7 +39,7 @@ class MainSequence(Sequence):
         elem_vals_2 = self._initializeVectorRegister(reg_name_2)
 
         for _ in range(RandomUtils.random32(25, 50)):
-            instr_id = self.genInstruction('VADD.VV##RISCV', {'vd': reg_index_1, 'vs1': reg_index_1, 'vs2': reg_index_2, 'vm': 1})
+            self.genInstruction('VADD.VV##RISCV', {'vd': reg_index_1, 'vs1': reg_index_1, 'vs2': reg_index_2, 'vm': 1})
 
             for (elem_index, val) in enumerate(elem_vals_2):
                 elem_vals_1[elem_index] += val
@@ -52,6 +53,7 @@ class MainSequence(Sequence):
                 if field_val != expected_field_val:
                     self.error('Register field %s has unexpected value; Expected=0x%x, Actual=0x%x' % (field_name, expected_field_val, field_val))
 
+    ## Initialize the specified vector register and return a list of 32-bit element values.
     def _initializeVectorRegister(self, aRegName):
         elem_vals = []
         for elem_index in range(16):
@@ -65,11 +67,19 @@ class MainSequence(Sequence):
 
         return elem_vals
 
+    ## Get the value of a 64-bit field for a vector register.
+    #
+    #  @param aSubIndex A 64-bit vector register field index.
+    #  @param aElemVals A list of 32-bit element values.
     def _getFieldValue(self, aSubIndex, aElemVals):
         field_value = aElemVals[2 * aSubIndex]
         field_value |= aElemVals[2 * aSubIndex + 1] << 32
         return field_value
 
+    ## Fail if the valid flag is false.
+    #
+    #  @param aRegName The index of the register.
+    #  @param aValid A flag indicating whether the specified register has a valid value.
     def _assertValidRegisterValue(self, aRegName, aValid):
         if not aValid:
             self.error('Value for register %s is invalid' % aRegName)

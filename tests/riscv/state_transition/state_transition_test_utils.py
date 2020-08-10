@@ -176,6 +176,7 @@ def verifyState(aSequence, aExpectedStateData):
 
 ## Fail if the valid flag is false.
 #
+#  @param aSequence A Sequence object.
 #  @param aRegName The index of the register.
 #  @param aValid A flag indicating whether the specified register has a valid value.
 def assertValidRegisterValue(aSequence, aRegName, aValid):
