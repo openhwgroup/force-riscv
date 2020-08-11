@@ -1,5 +1,6 @@
 *.so
 *.sw*
+*.pyc
 __pycache__/
 make_area/
 output/

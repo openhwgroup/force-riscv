@@ -46,63 +46,47 @@ from classes.exec_controller import ExecuteController
 from classes.control_item import ControlItem, CtrlItmKeys
 from classes.ApplicationsSetup import ApplicationsSetup
 
-the_output_dir = None
+# the_output_dir = None
 
-class ForrestRun( object ):
 
-    def __init__(self, aAppsInfo):
-        self.module_dir, self.module_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
-        self._mAppsInfo = aAppsInfo
-        self.load_message_levels(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
+class ForrestRun(ModuleRun):
+
+    def __init__(self):
+        super().__init__(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
 
         self.frun_name = None
         self.frun_dir  = None
+        self.fctrl = None
 
         self.item_data = {}
         self.options = {}
 
-    def load_message_levels( self, arg_msg_lev, arg_def_lev ):
-        # load from the command line if specified or use the default
-        my_lev_str = self.option_def( arg_msg_lev, arg_def_lev )
-        #my_def = "crit+err+warn+info+noinfo"
-
-        #my_lev_str = self.option_def( "all", my_def, "-l"  )
-
-        # if a (+) or a (-) is found then the command line will be appended to or demoted by
-        if ( my_lev_str[0] == '+' ) or ( my_lev_str[0] == '-' ):
-            # use the default string to build a format string, then append the passed in value
-            my_fmt_str = "%s%s%s"%( arg_def_lev,"\%","s" )
-            my_lev_str =  my_fmt_str % ( my_lev_str )
-
-        # print( my_lev_str )
-        # finally no matter what set the levels that are to be active
-
-        my_level = Msg.translate_levelstr( my_lev_str )
-        # print( "Before: %x" % my_level )
-
-        Msg.set_level( my_level )
-
-    def option_def(self, aSwitch, aDefVal=None, aConversionFunc=None):
-        # TODO deprecate this
-        return_value = self._mAppsInfo.mCmdLineOpts.option_def(aSwitch, aDefVal)
-        if aConversionFunc and return_value is not None:
-            try:
-                return_value = aConversionFunc(return_value)
-            except (TypeError, ValueError) as ex:
-                Msg.warn('Invalid value "{}" provided for "{}".  Using default.'.format(repr(return_value), aSwitch))
-                return aDefVal
-
-        return return_value
+        self.fcontrol = None
+        
+    def init_app_setup(self):
+        try:
+            self.m_app_setup = ApplicationsSetup(CommandLineParameters,
+                                                 sys.argv,
+                                                 CmdLineUtils.basicCommandLineArgumentRetrieval(sys.argv[1:], '-w',
+                                                                                         '--workflow', str, 1)
+                                                 .workflow[0])
+            self.m_app_info = self.m_app_setup.getApplicationsInfo()
+        except TypeError:
+            # catches error that is thrown when trying to iterate through a None type variable (if workflow argument does not exist)
+            self.m_app_setup = ApplicationsSetup(CommandLineParameters, sys.argv)
+            self.m_app_info = self.m_app_setup.getApplicationsInfo()
+        except SystemExit as aSysExit:
+            sys.exit(int(str(aSysExit)))
+        except Exception as ex:
+            print("[ERROR] - An Unhandled Error has Occurred during applications setup of " + str(sys.argv[0]))
+            traceback.print_exc(file=sys.stdout)
+            sys.exit(43)
 
     def load(self):
-
-        # Msg.dbg( "ForrestRun::load" )
-
         my_frun_path = self.option_def( CmdLine.Switches[ CmdLine.control_name], None )
         if my_frun_path is None:
             raise Exception( "F-Run Control File Not Found on the Forrest Run Command Line: Given Path: %s", str((my_frun_path  )))
 
-        # good to here
         self.locate_frun( my_frun_path )
 
         Msg.user( "File Path: %s" % ( my_frun_path ))
@@ -116,13 +100,13 @@ class ForrestRun( object ):
         my_ctrl_dict = self.fcontrol[0]
 
         my_ctrl_item = ControlItem()
-        my_ctrl_item.load( self._mAppsInfo, my_ctrl_dict )
+        my_ctrl_item.load(self.m_app_info, my_ctrl_dict)
 
         # Msg.lout( my_ctrl_dict, "user", "Forrest Parent Data ...." )
 
         self.check_simulator()
 
-        self.fctrl = ExecuteController(self._mAppsInfo)
+        self.fctrl = ExecuteController(self.m_app_info)
         self.fctrl.set_frun( self.frun_name )
         self.fctrl.load( my_ctrl_item )
 
@@ -131,7 +115,6 @@ class ForrestRun( object ):
         self.fctrl.process()
 
     def locate_frun(self, arg_frun_path ):
-
         Msg.user( "Directory set to %s" % ( PathUtils.current_dir()))
         # if the control file contains a path then split that into the directory and the file
         my_frun_dir, my_frun_name = PathUtils.split_path( arg_frun_path )
@@ -162,9 +145,7 @@ class ForrestRun( object ):
         # Msg.user( "FRun Dir: %s, FRun Name: %s, Cur Dir: %s" % ( str( self.frun_dir ), str( self.frun_name ),  PathUtils.current_dir() ), "FRUN-DIR")
 
     def check_simulator( self ):
-
         if SysUtils.check_host( "SAN" ):
-
             Msg.dbg( "System is in Green Zone ....." )
             my_gcc_path = "/project/software/public/gcc/5.1/centos6.6/lib64"
             my_lib_path = SysUtils.envar( "LD_LIBRARY_PATH", None )
@@ -182,8 +163,8 @@ class ForrestRun( object ):
 
         return True
 
-def handle_signal( arg_signal, arg_stackframe ) :
 
+def handle_signal( arg_signal, arg_stackframe ) :
     # it is necessary to write directly to stdout and not use print which is very unreliable
     if arg_signal == signal.SIGINT:
         sys.stdout.write( "Signal = {\'retcode\': %d, \'message\': \'Encountered interrupt, all processing halted\'}\n" % ( signal.SIGINT  ))
@@ -197,12 +178,11 @@ def handle_signal( arg_signal, arg_stackframe ) :
     # finally return the signal id as the return code
     sys.exit ( int( arg_signal ))
 
-if __name__ == "__main__":
 
+def main():
+    # set up signal handlers,
     signal.signal( signal.SIGINT, handle_signal )
     signal.signal( signal.SIGTERM, handle_signal )
-
-    # set up signal handlers,
 
     # initialize variables
     my_hlog = None
@@ -213,40 +193,22 @@ if __name__ == "__main__":
     # Step 1: Save the originating directory
     my_pwd = PathUtils.current_dir()
 
-    # Step 2: load initial application information.
-    try:
-        apps_info = ApplicationsSetup(CommandLineParameters, sys.argv, CmdLineUtils.basicCommandLineArgumentRetrieval(sys.argv[1:], '-w', '--workflow', str, 1).workflow[0]).getApplicationsInfo()
-    except TypeError: # catches error that is thrown when trying to iterate through a None type variable (if workflow argument does not exist)
-        apps_info = ApplicationsSetup(CommandLineParameters, sys.argv).getApplicationsInfo()
-    except SystemExit as aSysExit:
-        sys.exit(int(str(aSysExit)))
-    except:
-        print( "[ERROR] - An Unhandled Error has Occurred during applications setup of " + str( sys.argv[0] ))
-        traceback.print_exc( file=sys.stdout )
-        sys.exit( 43 )
-
-    # Step 3: Determine if stdout needs to be redirected to a file specified on the command line
-    #  with the switch -o <filepath> or --logfile <filepath>, check to see if log file name
-    #  If a value was passed then:
-    #   a. Save original file handle for stdout
-    #   b. Open Log file
-    #   c. Direct everything written to stdout to log file
-
-    my_logfile = apps_info.mCmdLineOpts.option_def( CmdLine.Switches[ CmdLine.logfile], None )
-
-    if my_logfile is not None:
-        # print( "Redirecting STDOUT to my_logfile" )
-        my_org_stdout = sys.stdout
-        my_hlog = open( my_logfile, "w" )
-        sys.stdout = my_hlog
-        Msg.user( "Log File: %s" % ( str( my_logfile )), "STDLOG" )
-
     # Step 3: Extract Pid Group
     os.setpgid( os.getpid(), os.getpid())
 
+    my_module = ForrestRun()
+
     try:
-        my_module = ForrestRun(apps_info)
-        my_module.force_path = the_force_root # TODO remove this very soon
+        my_module.force_path = the_force_root  # TODO remove this very soon
+
+        my_logfile = my_module.m_app_info.mCmdLineOpts.option_def(CmdLine.Switches[CmdLine.logfile], None)
+
+        if my_logfile is not None:
+            # print( "Redirecting STDOUT to my_logfile" )
+            my_org_stdout = sys.stdout
+            my_hlog = open(my_logfile, "w")
+            sys.stdout = my_hlog
+            Msg.user("Log File: %s" % (str(my_logfile)), "STDLOG")
 
         Msg.dbg( "\nForce Path: %s" % ( str( the_force_root  )))
         Msg.dbg( "Original Directory: " + my_pwd )
@@ -265,12 +227,12 @@ if __name__ == "__main__":
         Msg.blank()
         # sys.exit( 0 )
 
-    except Exception as arg_ex:
+    except Exception as ex:
         from force_init import force_usage
         Msg.err( "An Unhandled Error has Occurred during run of " + str( sys.argv[0] ))
         traceback.print_exc( file=sys.stdout )
-        Msg.error_trace( str( arg_ex ))
-        apps_info.mCmdLineOpts.print_help()
+        Msg.error_trace( str( ex ))
+        my_module.m_app_info.mCmdLineOpts.print_help()
         sys.exit( 41 )
 
     except:
@@ -290,4 +252,8 @@ if __name__ == "__main__":
             # Msg.dbg( "Restoring Original Directory: " + my_pwd )
             PathUtils.chdir( my_pwd )
             Msg.dbg( "Returned To: %s" % ( PathUtils.current_dir()   ) )
+
+
+if __name__ == "__main__":
+    main()
 
