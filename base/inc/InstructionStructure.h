@@ -245,9 +245,12 @@ namespace Force {
     ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperandStructure);
 
     uint32 GetRegisterCount() const { return mRegCount; } //!< Get the number of registers per vector register group.
+    uint32 GetElementWidth() const { return mElemWidth; } //!< Get the width of each element in the vector register group.
     void SetRegisterCount(cuint32 regCount) { mRegCount = regCount; } //!< Set the number of registers per vector register group.
+    void SetElementWidth(cuint32 elemWidth) { mElemWidth = elemWidth; } //!< Set the width of each element in the vector register group
   private:
     uint32 mRegCount; //!< The number of registers per vector register group.
+    uint32 mElemWidth; //!< Thewidth of each element in the vector register group.
   };
 
   /*!

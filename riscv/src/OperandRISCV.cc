@@ -248,6 +248,26 @@ namespace Force {
     instr_constr->SetVectorLayout(vec_layout);
   }
 
+  void CustomLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
+
+    const RegisterFile* reg_file = rGen.GetRegisterFile();
+    Register* vl_reg = reg_file->RegisterLookup("vl");
+    Register* vtype_reg = reg_file->RegisterLookup("vtype");
+    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
+    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
+
+    //TODO (Chris): Is this even remotely correct?
+    auto vec_layout_opr_struct = mpStructure->CastOperandStructure<VectorLayoutOperandStructure>();
+    vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount() / vsew_field->FieldValue() * vlmul_field->FieldValue();
+    vec_layout.mElemSize = vec_layout_opr_struct->GetElementWidth();
+    vec_layout.mElemCount = vec_layout.mRegCount * vl_reg->Value() / vec_layout.mElemSize;
+
+    instr_constr->SetVectorLayout(vec_layout);
+  }
+
   void WholeRegisterLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());

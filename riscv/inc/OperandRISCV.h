@@ -163,6 +163,24 @@ namespace Force {
   };
 
   /*!
+    \class CustomLayoutOperand
+    \brief Operand class for vector register layouts corresponding to vtype.
+  */
+  class CustomLayoutOperand : public VectorLayoutOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(CustomLayoutOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(CustomLayoutOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(CustomLayoutOperand);
+
+    Object* Clone() const override { return new CustomLayoutOperand(*this); } //!< Return a cloned VtypeLayoutOperand object of the same type and same contents of the object.
+    const char* Type() const override { return "CustomLayoutOperand"; } //!< Return the type of the VtypeLayoutOperand object in C string.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(CustomLayoutOperand);
+  private:
+    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
+  };
+
+  /*!
     \class WholeRegisterLayoutOperand
     \brief Operand class for fixed vector register layouts that read or write the whole vector register.
   */

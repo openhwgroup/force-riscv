@@ -375,6 +375,10 @@ namespace Force {
             auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
             cast_struct->SetRegisterCount(parse_uint32(attr.value()));
           }
+          else if (strcmp(attr_name, "elem-width") == 0) {
+            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
+            cast_struct->SetElementWidth(parse_uint32(attr.value()));
+          }
 
           // TODO(Noah): Devise and implement a better way of processing attributes generically when there is time to
           // do so. For now, keep the DataProcessing attribute processing at the end.

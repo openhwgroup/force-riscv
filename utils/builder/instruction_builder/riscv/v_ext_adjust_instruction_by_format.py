@@ -17,6 +17,8 @@ from shared.instruction import add_addressing_operand
 from vector_operand_adjustor import VectorOperandAdjustor
 from xml.sax.saxutils import escape
 
+import re
+
 format_map = {}
 
 def v_ext_adjust_instruction_by_format(aInstruction):
@@ -111,12 +113,23 @@ def add_layout_operand(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     load_store_whole_register = ['VL1R.V', 'VL2R.V', 'VL3R.V', 'VL4R.V', 'VL5R.V', 'VL6R.V', 'VL7R.V', 'VL8R.V', 'VS1R.V', 'VS2R.V', 'VS3R.V', 'VS4R.V', 'VS5R.V', 'VS6R.V', 'VS7R.V', 'VS8R.V']
     if aInstruction.name in load_store_whole_register:
-        operand_adjustor.add_whole_register_layout_operand()
+        reg_count = int(aInstruction.name[2])
+        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
     elif aInstruction.name in ('VMV1R.V', 'VMV2R.V', 'VMV4R.V', 'VMV8R.V'):
         reg_count = int(aInstruction.name[3])
         operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
     elif aInstruction.name in ('VSETVL', 'VSETVLI'):
         pass  # No vector layout operand required
+    elif aInstruction.iclass == 'VectorLoadStoreInstruction':
+        reg_count = 1
+        elem_width = None
+        ints = re.findall('\d+', aInstruction.name)
+        if len(ints) > 1:
+            reg_count = ints[0]
+            elem_width = ints[1]
+        else:
+            elem_width = ints[0]
+        operand_adjustor.add_custom_layout_operand(aRegCount=reg_count, aElemWidth=elem_width)
     else:
         operand_adjustor.add_vtype_layout_operand()
 
@@ -153,7 +166,7 @@ def convert_width_to_size(aWidth):
     elif aWidth == '110': #VxW
         return 4
     elif aWidth == '111': #VxE
-        return 1 #TODO: SEW/8 - search vtype?
+        return 1 #TODO (Chris): SEW/8 - search vtype? <------- look into rewriting this for 0.9
     return 1 #TODO: default to 1...
 
 def adjust_vd_rs1(aInstruction):

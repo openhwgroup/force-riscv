@@ -78,6 +78,7 @@ class Operand(object):
         self.slave = None
         self.layoutMultiple = None
         self.regCount = None
+        self.elemWidth = None
         self.uop_param_type = None
         self.width = 0
         self.sizeType = None
@@ -130,6 +131,8 @@ class Operand(object):
             ret_str += " layout-multiple=\"%s\"" % self.layoutMultiple
         if self.regCount:
             ret_str += " reg-count=\"%s\"" % self.regCount
+        if self.elemWidth:
+            ret_str += " elem-width=\"%s\"" % self.elemWidth
         if self.uop_param_type:
             ret_str += " uop-param-type=\"%s\"" % self.uop_param_type
         if self.exclude:
