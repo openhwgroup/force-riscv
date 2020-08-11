@@ -54,15 +54,14 @@ class ForrestRun(ModuleRun):
     def __init__(self):
         super().__init__(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
 
-        self.module_dir, self.module_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
-        self.load_message_levels(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
-
         self.frun_name = None
         self.frun_dir  = None
         self.fctrl = None
 
         self.item_data = {}
         self.options = {}
+
+        self.fcontrol = None
         
     def init_app_setup(self):
         try:
@@ -82,25 +81,6 @@ class ForrestRun(ModuleRun):
             print("[ERROR] - An Unhandled Error has Occurred during applications setup of " + str(sys.argv[0]))
             traceback.print_exc(file=sys.stdout)
             sys.exit(43)
-
-    def load_message_levels( self, arg_msg_lev, arg_def_lev ):
-        self.init_app_setup()
-
-        # load from the command line if specified or use the default
-        my_lev_str = self.option_def( arg_msg_lev, arg_def_lev )
-        # my_def = "crit+err+warn+info+noinfo"
-
-        # my_lev_str = self.option_def( "all", my_def, "-l"  )
-
-        # if a (+) or a (-) is found then the command line will be appended to or demoted by
-        if ( my_lev_str[0] == '+' ) or ( my_lev_str[0] == '-' ):
-            # use the default string to build a format string, then append the passed in value
-            my_fmt_str = "%s%s%s"%( arg_def_lev,"\%","s" )
-            my_lev_str =  my_fmt_str % ( my_lev_str )
-
-        my_level = Msg.translate_levelstr( my_lev_str )
-
-        Msg.set_level( my_level )
 
     def load(self):
         my_frun_path = self.option_def( CmdLine.Switches[ CmdLine.control_name], None )

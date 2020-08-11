@@ -20,7 +20,7 @@
 #
 import sys
 import os
-from abc import ABC
+from abc import ABC, abstractmethod
 from common.path_utils import PathUtils
 from common.msg_utils import Msg
 
@@ -33,21 +33,17 @@ class ModuleRun(ABC):
     def __init__(self, arg_msg_lev, arg_def_lev):
         self.m_app_setup = None
         self.m_app_info = None
-
-        # extract the module dir and name
         self.module_dir, self.module_name = PathUtils.split_path( PathUtils.real_path(sys.argv[0]) )
-        
-        # set the message level
+        self.init_app_setup()
         self.load_message_levels( arg_msg_lev, arg_def_lev )
 
+    @abstractmethod
     def init_app_setup(self):
-        raise(Exception("Should not instantiate abstract base class"))
+        pass
 
     ##
     # resolves the desired message types
     def load_message_levels( self, arg_msg_lev, arg_def_lev ):
-
-        self.init_app_setup()
 
         # load from the command line if specified or use the default
         my_lev_str = self.option_def( arg_msg_lev, arg_def_lev )

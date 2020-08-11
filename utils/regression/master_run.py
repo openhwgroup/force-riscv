@@ -86,8 +86,6 @@ class MasterRun( ModuleRun ):
 
         super().__init__(CmdLine.Switches[CmdLine.msg_lev], Defaults.msg_level)
 
-        self.module_dir, self.module_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
-
         self.fctrl_dir = None
         self.mode = None
         self.summary = None
