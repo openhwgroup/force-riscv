@@ -211,7 +211,7 @@ Add RISCV system registers starter information in this file.
   </register>
   <register description="Supervisor exception delegation register." index="0x102" name="sedeleg" privilege="SRW" size="0" type="SysReg"/>
   <register description="Supervisor interrupt delegation register." index="0x103" name="sideleg" privilege="SRW" size="0" type="SysReg"/>
-  <register description="Supervisor interrupt-enable register." index="0x104" name="sie" physical_register="sie" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor interrupt-enable register." index="0x104" name="sie" physical_register="mie" privilege="SRW" size="0" type="SysReg"/>
   <register description="Supervisor trap handler base address." index="0x105" name="stvec" physical_register="stvec" privilege="SRW" size="64" type="SysReg">
     <register_field name="BASE_VAR" size="62">
       <bit_field shift="2" size="62"/>
@@ -318,12 +318,17 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Scratch register for supervisor trap handlers." index="0x140" name="sscratch" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Scratch register for supervisor trap handlers." index="0x140" name="sscratch" physical_register="sscratch" privilege="SRW" size="64" type="SysReg">
+    <register_field name="SSCRATCH" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
   <register description="Supervisor exception program counter." index="0x141" name="sepc" physical_register="sepc" privilege="SRW" size="64" type="SysReg">
     <register_field name="SEPC" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
+  
   <register description="Supervisor trap cause." index="0x142" name="scause" physical_register="scause" privilege="SRW" size="64" type="SysReg">
     <register_field name="INTERRUPT" size="1">
       <bit_field shift="63" size="1"/>
@@ -332,8 +337,12 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="63"/>
     </register_field>
   </register>
-  <register description="Supervisor bad address or instruction." index="0x143" name="stval" physical_register="stval" privilege="SRW" size="0" type="SysReg"/>
-  <register description="Supervisor interrupt pending." index="0x144" name="sip" physical_register="sip" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor bad address or instruction." index="0x143" name="stval" physical_register="stval" privilege="SRW" size="0" type="SysReg">
+    <register_field name="STVAL" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Supervisor interrupt pending." index="0x144" name="sip" physical_register="mip" privilege="SRW" size="0" type="SysReg"/>
   <register boot="0x5001" description="Supervisor address translation and protection." index="0x180" name="satp" physical_register="satp" privilege="SRW" size="64" type="SysReg">
     <register_field name="MODE" size="4">
       <bit_field shift="60" size="4"/>
@@ -806,8 +815,11 @@ Add RISCV system registers starter information in this file.
       <choice description="Delegate to S-mode" value="0x1" weight="0"/>
     </register_field>
   </register>
-
-  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg">
+    <register_field name="MIDELEG" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
   <register description="Machine interrupt-enable register." index="0x304" name="mie" physical_register="mie" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine trap-handler base address." index="0x305" name="mtvec" physical_register="mtvec" privilege="MRW" size="64" type="SysReg">
     <register_field name="BASE_VAR" size="62">

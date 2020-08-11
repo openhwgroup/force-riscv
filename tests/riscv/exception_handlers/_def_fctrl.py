@@ -21,4 +21,7 @@ control_items = [
     {"fname": "instruction_misaligned_exception_force.py", "options":{"max-instr":5000}, "generator" : { "--max-instr" : 5000, "--options":"\"PrivilegeLevel=3, DelegateExceptions=0\""} },
     {"fname": "trap_vm_force.py", "options":{"max-instr":5000}, "generator" : { "--max-instr" : 5000, "--options":"\"PrivilegeLevel=1\""} },
     {"fname": "ecall_ebreak_force.py", "options":{"max-instr":5000}, "generator" : { "--max-instr" : 5000, "--options":"\"PrivilegeLevel=0, DelegateExceptions=1, PagingDisabled=1\""} },
+    {"fname": "access_csrs_force.py", "options":{"max-instr":5000}, "generator" : { "--max-instr" : 5000, "--options":"\"PrivilegeLevel=3\"" } },
+    {"fname": "access_csrs_force.py", "options":{"max-instr":5000}, "generator" : { "--max-instr" : 5000, "--options":"\"PrivilegeLevel=1\"" } },
+    {"fname": "access_csrs_force.py", "options":{"max-instr":5000}, "generator" : { "--max-instr" : 5000, "--options":"\"PrivilegeLevel=0\"" } }
 ]

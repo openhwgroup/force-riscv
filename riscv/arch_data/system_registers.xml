@@ -31,14 +31,12 @@
     <physical_register index="0x44" name="uip" size="64" type="SysReg"/>
     <physical_register index="0x102" name="sedeleg" size="64" type="SysReg"/>
     <physical_register index="0x103" name="sideleg" size="64" type="SysReg"/>
-    <physical_register index="0x104" name="sie" size="64" type="SysReg"/>
     <physical_register index="0x105" name="stvec" size="64" type="SysReg"/>
     <physical_register index="0x106" name="scounteren" size="32" type="SysReg"/>
     <physical_register index="0x140" name="sscratch" size="64" type="SysReg"/>
     <physical_register index="0x141" name="sepc" size="64" type="SysReg"/>
     <physical_register index="0x142" name="scause" size="64" type="SysReg"/>
     <physical_register index="0x143" name="stval" size="64" type="SysReg"/>
-    <physical_register index="0x144" name="sip" size="64" type="SysReg"/>
     <physical_register index="0x180" name="satp" size="64" type="SysReg"/>
     <physical_register index="0x200" name="vsstatus" size="64" type="SysReg"/>
     <physical_register index="0x205" name="vstvec" size="64" type="SysReg"/>
@@ -490,7 +488,11 @@
         <bit_field shift="0" size="1"/>
       </register_field>
     </register>
-    <register boot="0" index="0x140" name="sscratch" size="64" type="SysReg"/>
+    <register boot="1" index="0x140" name="sscratch" size="64" type="SysReg">
+      <register_field name="SSCRATCH" physical_register="sscratch" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
     <register boot="1" index="0x141" name="sepc" size="64" type="SysReg">
       <register_field name="SEPC" physical_register="sepc" size="64">
         <bit_field shift="0" size="64"/>
@@ -504,7 +506,11 @@
         <bit_field shift="0" size="63"/>
       </register_field>
     </register>
-    <register boot="0" index="0x143" name="stval" size="64" type="SysReg"/>
+    <register boot="0" index="0x143" name="stval" size="64" type="SysReg">
+      <register_field name="STVAL" physical_register="stval" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
     <register boot="0" index="0x144" name="sip" size="64" type="SysReg"/>
     <register boot="0x5001" index="0x180" name="satp" size="64" type="SysReg">
       <register_field name="MODE" physical_register="satp" size="4">
@@ -890,7 +896,11 @@
         <bit_field shift="15" size="1"/>
       </register_field>
     </register>
-    <register boot="0" index="0x303" name="mideleg" size="64" type="SysReg"/>
+    <register boot="0" index="0x303" name="mideleg" size="64" type="SysReg">
+      <register_field name="MIDELEG" physical_register="mideleg" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
     <register boot="0" index="0x304" name="mie" size="64" type="SysReg"/>
     <register boot="1" index="0x305" name="mtvec" size="64" type="SysReg">
       <register_field name="BASE_VAR" physical_register="mtvec" size="62">
