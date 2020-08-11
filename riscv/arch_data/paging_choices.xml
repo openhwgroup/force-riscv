@@ -136,6 +136,40 @@
     <choice description="invalid XWRV" name="true" value="0x1" weight="0"/>
   </choices>
 
+  <choices name="Invalid XWR#level 3#S#stage 1" type="Paging">
+    <choice description="XWR valid"   name="false" value="0x1" weight="100"/>
+    <choice description="XWR invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid XWR#level 2#S#stage 1" type="Paging">
+    <choice description="XWR valid"   name="false" value="0x1" weight="100"/>
+    <choice description="XWR invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid XWR#level 1#S#stage 1" type="Paging">
+    <choice description="XWR valid"   name="false" value="0x1" weight="100"/>
+    <choice description="XWR invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid XWR#level 0#S#stage 1" type="Paging">
+    <choice description="XWR valid"   name="false" value="0x1" weight="100"/>
+    <choice description="XWR invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+
+  <choices name="Invalid U#level 3#S#stage 1" type="Paging">
+    <choice description="U valid"   name="false" value="0x1" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid U#level 2#S#stage 1" type="Paging">
+    <choice description="U valid"   name="false" value="0x1" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid U#level 1#S#stage 1" type="Paging">
+    <choice description="U valid"   name="false" value="0x1" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+  <choices name="Invalid U#level 0#S#stage 1" type="Paging">
+    <choice description="U valid"   name="false" value="0x1" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x0" weight="0"/>
+  </choices>
+
   <choices name="Va Address Error#S#stage 1" type="Paging">
     <choice description="valid address"   name="false" value="0x0" weight="100"/>
     <choice description="invalid address" name="true"  value="0x1" weight="0"/>

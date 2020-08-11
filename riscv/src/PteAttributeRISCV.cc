@@ -138,14 +138,18 @@ namespace Force
   {
     uint32 level = rPte.ParentTableLevel();
     uint32 last_level_ptr_fault = 0;
+    uint32 xwr_fault = 0;
+
     if (level == 0)
     {
-      std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
-      last_level_ptr_fault = choices_tree->Choose()->Value();
+      std::unique_ptr<ChoiceTree> ll_choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
+      last_level_ptr_fault = ll_choices_tree->Choose()->Value();
     }
+  
+    std::unique_ptr<ChoiceTree> xwr_choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid XWR", level));
+    xwr_fault = xwr_choices_tree->Choose()->Value();
 
     auto mem_access = rPagingReq.MemoryAccessType();
-    //bool user_access = (rVmas.GetControlBlock()->PrivilegeLevel() == EPrivilegeLevelType::U);
     bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
     uint32 iap = 0;
 
@@ -175,6 +179,12 @@ namespace Force
         break;
     }
 
+    if (xwr_fault == 0)
+    {
+      mValue = mValue ? 0 : 1;
+      LOG(info) << "{XPteAttributeRISCV::Generate} inverting for fault, val=" << mValue << endl;
+    }
+
     if (last_level_ptr_fault != 0)
     {
       mValue = 0;
@@ -186,14 +196,18 @@ namespace Force
   {
     uint32 level = rPte.ParentTableLevel();
     uint32 last_level_ptr_fault = 0;
+    uint32 xwr_fault = 0;
+
     if (level == 0)
     {
       std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
       last_level_ptr_fault = choices_tree->Choose()->Value();
     }
 
+    std::unique_ptr<ChoiceTree> xwr_choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid XWR", level));
+    xwr_fault = xwr_choices_tree->Choose()->Value();
+
     auto mem_access = rPagingReq.MemoryAccessType();
-    //bool user_access = (rVmas.GetControlBlock()->PrivilegeLevel() == EPrivilegeLevelType::U);
     bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
     uint32 dap = 0;
 
@@ -224,6 +238,12 @@ namespace Force
         break;
     }
     
+    if (xwr_fault == 0)
+    {
+      mValue = mValue ? 0 : 1;
+      LOG(info) << "{WPteAttributeRISCV::Generate} inverting for fault, val=" << mValue << endl;
+    }
+
     if (last_level_ptr_fault != 0)
     {
       mValue = 0;
@@ -235,14 +255,18 @@ namespace Force
   {
     uint32 level = rPte.ParentTableLevel();
     uint32 last_level_ptr_fault = 0;
+    uint32 xwr_fault = 0;
+
     if (level == 0)
     {
       std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
       last_level_ptr_fault = choices_tree->Choose()->Value();
     }
 
+    std::unique_ptr<ChoiceTree> xwr_choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid XWR", level));
+    xwr_fault = xwr_choices_tree->Choose()->Value();
+
     auto mem_access = rPagingReq.MemoryAccessType();
-    //bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
     bool user_access = (rVmas.GetControlBlock()->PrivilegeLevel() == EPrivilegeLevelType::U);
     uint32 dap = 0;
 
@@ -273,6 +297,12 @@ namespace Force
         break;
     }
     
+    if (xwr_fault == 0)
+    {
+      mValue = mValue ? 0 : 1;
+      LOG(info) << "{RPteAttributeRISCV::Generate} inverting for fault, val=" << mValue << endl;
+    }
+
     if (last_level_ptr_fault != 0)
     {
       mValue = 0;
