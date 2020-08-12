@@ -27,6 +27,7 @@ class PageFaultModifier(ChoicesModifier):
                 #'Last Level Pointer',
                 'Invalid DA',
                 'Invalid XWR',
+                #'Invalid U',
                 #'Va Address Error',
                 ]
 
@@ -36,6 +37,7 @@ class PageFaultModifier(ChoicesModifier):
                 'Last Level Pointer':[0],
                 'Invalid DA':[0,1,2,3],
                 'Invalid XWR':[0,1,2,3],
+                'Invalid U':[0,1,2,3],
                 }
 
         self._mValidPrivilegeLevels = {
@@ -44,6 +46,7 @@ class PageFaultModifier(ChoicesModifier):
                 'Last Level Pointer':['S'],
                 'Invalid DA':['S'],
                 'Invalid XWR':['S'],
+                'Invalid U':['S'],
                 }
 
 
