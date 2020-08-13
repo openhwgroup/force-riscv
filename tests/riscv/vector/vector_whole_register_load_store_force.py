@@ -23,23 +23,11 @@ import RandomUtils
 class MainSequence(Sequence):
 
     def generate(self, **kargs):
+        # TODO(Noah): Add additional load/store whole register instructions when they are supported
+        # by Handcar.
         instructions = [
             'VL1R.V##RISCV',
-            'VL2R.V##RISCV',
-            'VL3R.V##RISCV',
-            'VL4R.V##RISCV',
-            'VL5R.V##RISCV',
-            'VL6R.V##RISCV',
-            'VL7R.V##RISCV',
-            'VL8R.V##RISCV',
             'VS1R.V##RISCV',
-            'VS2R.V##RISCV',
-            'VS3R.V##RISCV',
-            'VS4R.V##RISCV',
-            'VS5R.V##RISCV',
-            'VS6R.V##RISCV',
-            'VS7R.V##RISCV',
-            'VS8R.V##RISCV',
         ]
 
         for _ in range(RandomUtils.random32(50, 100)):

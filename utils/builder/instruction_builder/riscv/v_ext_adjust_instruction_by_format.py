@@ -117,8 +117,11 @@ def record_instruction_format(aInstructionFormat):
         format_map[aInstructionFormat] = 1
 
 def add_layout_operand(aInstruction):
+    # TODO(Noah): Add additional load/store whole register instructions when they are supported by
+    # Handcar.
+    load_store_whole_register = ['VL1R.V', 'VS1R.V']
+
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    load_store_whole_register = ['VL1R.V', 'VL2R.V', 'VL3R.V', 'VL4R.V', 'VL5R.V', 'VL6R.V', 'VL7R.V', 'VL8R.V', 'VS1R.V', 'VS2R.V', 'VS3R.V', 'VS4R.V', 'VS5R.V', 'VS6R.V', 'VS7R.V', 'VS8R.V']
     if aInstruction.name in load_store_whole_register:
         reg_count = int(aInstruction.name[2])
         operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
