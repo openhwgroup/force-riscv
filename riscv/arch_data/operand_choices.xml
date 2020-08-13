@@ -271,6 +271,39 @@
     <choice name="v30" value="30" weight="10"/>
     <choice name="v31" value="31" weight="10"/>
   </choices>
+  <choices name="Nonzero vector registers" type="RegisterOperand">
+    <choice name="v1" value="1" weight="10"/>
+    <choice name="v2" value="2" weight="10"/>
+    <choice name="v3" value="3" weight="10"/>
+    <choice name="v4" value="4" weight="10"/>
+    <choice name="v5" value="5" weight="10"/>
+    <choice name="v6" value="6" weight="10"/>
+    <choice name="v7" value="7" weight="10"/>
+    <choice name="v8" value="8" weight="10"/>
+    <choice name="v9" value="9" weight="10"/>
+    <choice name="v10" value="10" weight="10"/>
+    <choice name="v11" value="11" weight="10"/>
+    <choice name="v12" value="12" weight="10"/>
+    <choice name="v13" value="13" weight="10"/>
+    <choice name="v14" value="14" weight="10"/>
+    <choice name="v15" value="15" weight="10"/>
+    <choice name="v16" value="16" weight="10"/>
+    <choice name="v17" value="17" weight="10"/>
+    <choice name="v18" value="18" weight="10"/>
+    <choice name="v19" value="19" weight="10"/>
+    <choice name="v20" value="20" weight="10"/>
+    <choice name="v21" value="21" weight="10"/>
+    <choice name="v22" value="22" weight="10"/>
+    <choice name="v23" value="23" weight="10"/>
+    <choice name="v24" value="24" weight="10"/>
+    <choice name="v25" value="25" weight="10"/>
+    <choice name="v26" value="26" weight="10"/>
+    <choice name="v27" value="27" weight="10"/>
+    <choice name="v28" value="28" weight="10"/>
+    <choice name="v29" value="29" weight="10"/>
+    <choice name="v30" value="30" weight="10"/>
+    <choice name="v31" value="31" weight="10"/>
+  </choices>
   <choices name="Integer data pattern" type="ChoicesOperand">
     <choice name="All one" value="0x0" weight="10"/>
     <choice name="All zero" value="0x1" weight="10"/>

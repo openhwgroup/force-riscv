@@ -25,6 +25,7 @@ make
 cd ..
 mkdir src
 mkdir spike_mod
+mkdir spike_mod/insns
 mkdir so_build/cosim/src
 mkdir bin
 ./create_handcar_files.bash  

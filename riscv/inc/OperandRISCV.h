@@ -20,6 +20,26 @@
 
 namespace Force {
 
+  /*!
+    \class VectorMaskOperand
+    \brief Operand class for vector mask bits.
+  */
+  class VectorMaskOperand : public ChoicesOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorMaskOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorMaskOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorMaskOperand);
+
+    Object* Clone() const override { return new VectorMaskOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorMaskOperand"; } //!< Return a string describing the actual type of the Object.
+
+    void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorMaskOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+  };
+
   class BaseOffsetBranchOperandConstraint;
 
   /*!
@@ -124,36 +144,43 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for CompressedRegisterOperandRISCV.
   };
 
-  
-  class VectorDataTraits;
-
   /*!
-    \class VectorDataTypeOperand
-    \brief Base class of various vector operand data type operands.
+    \class VtypeLayoutOperand
+    \brief Operand class for vector register layouts corresponding to vtype.
   */
-  class VectorDataTypeOperand : public ChoicesOperand {
+  class VtypeLayoutOperand : public VectorLayoutOperand {
   public:
-    Object* Clone() const override  //!< Return a cloned VectorDataTypeOperand object of the same type and same contents of the object.
-    {
-      return new VectorDataTypeOperand(*this);
-    }
+    DEFAULT_CONSTRUCTOR_DEFAULT(VtypeLayoutOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VtypeLayoutOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VtypeLayoutOperand);
 
-    const char* Type() const override { return "VectorDataTypeOperand"; } //!< Return the type of the VectorDataTypeOperand object in C string.
-
-  VectorDataTypeOperand() : ChoicesOperand() { } //!< Constructor.
-    ~VectorDataTypeOperand() { } //!< Destructor
-
-    virtual void SetDataTraits(VectorDataTraits& dataTraits) const;
+    Object* Clone() const override { return new VtypeLayoutOperand(*this); } //!< Return a cloned VtypeLayoutOperand object of the same type and same contents of the object.
+    const char* Type() const override { return "VtypeLayoutOperand"; } //!< Return the type of the VtypeLayoutOperand object in C string.
   protected:
-    VectorDataTypeOperand(const VectorDataTypeOperand& rOther) //!< Copy constructor.
-      : ChoicesOperand(rOther)
-    {
-    }
-
-    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstaint object.
+    COPY_CONSTRUCTOR_DEFAULT(VtypeLayoutOperand);
+  private:
+    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
   };
 
-   /*!
+  /*!
+    \class WholeRegisterLayoutOperand
+    \brief Operand class for fixed vector register layouts that read or write the whole vector register.
+  */
+  class WholeRegisterLayoutOperand : public VectorLayoutOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(WholeRegisterLayoutOperand);
+
+    Object* Clone() const override { return new WholeRegisterLayoutOperand(*this); } //!< Return a cloned WholeRegisterLayoutOperand object of the same type and same contents of the object.
+    const char* Type() const override { return "WholeRegisterLayoutOperand"; } //!< Return the type of the WholeRegisterLayoutOperand object in C string.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
+  private:
+    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
+  };
+
+  /*!
     \class VectorLoadStoreOperand
     \brief Base class of vector load-store operands
   */
@@ -177,61 +204,37 @@ namespace Force {
   };
 
   /*!
-    \class ConstDataTypeOperand
-    \brief Base class of various constant vector operand data type operands.
-  */
-  class ConstDataTypeOperand : public VectorDataTypeOperand {
-  public:
-    Object* Clone() const override  //!< Return a cloned ConstDataTypeOperand object of the same type and same contents of the object.
-    {
-      return new ConstDataTypeOperand(*this);
-    }
-
-    const char* Type() const override { return "ConstDataTypeOperand"; } //!< Return the type of the ConstDataTypeOperand object in C string.
-
-    ConstDataTypeOperand() : VectorDataTypeOperand() { } //!< Constructor.
-    ~ConstDataTypeOperand() { } //!< Destructor
-
-    void Setup(Generator& gen, Instruction& instr) override { } //!< Especially overriden to do nothing here.
-    void Generate(Generator& gen, Instruction& instr) override { mChoiceText = Name(); } //!< Generate method overriden, simply copy Name() to mChoiceText
-  protected:
-     ConstDataTypeOperand(const ConstDataTypeOperand& rOther) //!< Copy constructor.
-      : VectorDataTypeOperand(rOther)
-    {
-    }
-  };
-
-  /*!
-    \class RISCMultiVectorRegisterOperand
+    \class MultiVectorRegisterOperandRISCV
     \brief Operand class handling number of registers
   */
-  class RISCMultiVectorRegisterOperand : public MultiVectorRegisterOperand {
+  class MultiVectorRegisterOperandRISCV : public MultiVectorRegisterOperand {
   public:
-    Object* Clone() const override //!< Return a cloned RISCMultiVectorRegisterOperand object of the same type and same contents of the object.
+    Object* Clone() const override //!< Return a cloned MultiVectorRegisterOperandRISCV object of the same type and same contents of the object.
     {
-      return new RISCMultiVectorRegisterOperand(*this);
+      return new MultiVectorRegisterOperandRISCV(*this);
     }
 
-    const char* Type() const override { return "RISCMultiVectorRegisterOperand"; } //!< Return the type as C string.
+    const char* Type() const override { return "MultiVectorRegisterOperandRISCV"; } //!< Return the type as C string.
 
-    RISCMultiVectorRegisterOperand() : MultiVectorRegisterOperand(), mDataType() { } //!< Constructor.
-    ~RISCMultiVectorRegisterOperand() { } //!< Destructor
+    MultiVectorRegisterOperandRISCV() : MultiVectorRegisterOperand(), mDataType(), mRegCount(0) { } //!< Constructor.
+    ~MultiVectorRegisterOperandRISCV() { } //!< Destructor
+    void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
     void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
     void GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const override; //!< Return the chosen register indices in a ConstraintSet.
     uint32 NumberRegisters() const override; //!< Return number of registers in the list.
   protected:
-    RISCMultiVectorRegisterOperand(const RISCMultiVectorRegisterOperand& rOther) //!< Copy constructor.
-      : MultiVectorRegisterOperand(rOther), mDataType(rOther.mDataType)
+    MultiVectorRegisterOperandRISCV(const MultiVectorRegisterOperandRISCV& rOther) //!< Copy constructor.
+      : MultiVectorRegisterOperand(rOther), mDataType(rOther.mDataType), mRegCount(rOther.mRegCount)
     {
     }
 
-    const std::string AssemblyText() const override; //!< Return assembly text output of the register list.
-    void SetupDataTraits(Generator& gen, Instruction& instr) override; //!< Setup RISCMultiVectorRegisterOperand data traits.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of the appropriate OperandConstraint object.
     const std::string GetNextRegisterName(uint32& indexVar) const; //!< Return the name of the next register in the list.
     ChoicesFilter* GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return the choices filter.
 
     std::string mDataType; //!< Data type of the multi vector list in string.
+  private:
+    uint32 mRegCount; //!< The number of registers per vector register group
   };
 
 }

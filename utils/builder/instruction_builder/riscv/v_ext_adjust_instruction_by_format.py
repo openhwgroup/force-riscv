@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from shared.instruction import add_addressing_operand
 from vector_operand_adjustor import VectorOperandAdjustor
 from xml.sax.saxutils import escape
 
@@ -23,7 +24,13 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     aInstruction.name = escape(aInstruction.name)
     aInstruction.asm.format = escape(aInstruction.asm.format)
 
-    instruction_format = clean_format(aInstruction.get_format())
+    # Get the format prior to adding the layout operand, so that it's not necessary to strip off the
+    # layout operand name.
+    instruction_format = aInstruction.get_format()
+
+    add_layout_operand(aInstruction)
+
+    adjust_register_layout(aInstruction)
 
     if instruction_format == 'vd/rd-vs2-vs1-vm':
         return adjust_vdrd_vs2_vs1_vm(aInstruction)
@@ -38,34 +45,51 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     # unary instruction formats
     elif instruction_format == 'vd/rd-vs2-vm':
         return adjust_vdrd_vs2_vm(aInstruction)
+    elif instruction_format == 'vd/rd-vs2':
+        return adjust_vdrd_vs2(aInstruction)
+    elif instruction_format == 'rd-vs2-vm':
+        return adjust_rd_vs2_vm(aInstruction)
+    elif instruction_format == 'rd-vs2':
+        return adjust_rd_vs2(aInstruction)
     elif instruction_format == 'vd-rs1-vm':
         return adjust_vd_rs1_vm(aInstruction)
     elif instruction_format == 'vd/rd-rs1-vm':
         return adjust_vdrd_rs1_vm(aInstruction)
+    elif instruction_format == 'vd-vm':
+        return adjust_vd_vm(aInstruction)
     # vsetvl/i instructions
-    elif instruction_format == 'rs2-rs1-rd':
-        return adjust_rs2_rs1_rd(aInstruction)
-    elif instruction_format == 'zimm[10:0]-rs1-rd':
-        return adjust_zimm_10_0_rs1_rd(aInstruction)
+    elif instruction_format == 'rd-rs1-rs2':
+        return adjust_rd_rs1_rs2(aInstruction)
+    elif instruction_format == 'rd-rs1-zimm[10:0]':
+        return adjust_rd_rs1_zimm_10_0(aInstruction)
+    # vmerge and vmv instructions
+    elif instruction_format == 'vd-vs2-simm5':
+        return adjust_vd_vs2_simm5(aInstruction)
+    elif instruction_format == 'vd$\\neq$0-vs2-simm5':
+        return adjust_vd_nonzero_vs2_simm5(aInstruction)
+    elif instruction_format == 'vd-vs2-vs1':
+        return adjust_vd_vs2_vs1(aInstruction)
+    elif instruction_format == 'vd$\\neq$0-vs2-vs1':
+        return adjust_vd_nonzero_vs2_vs1(aInstruction)
+    elif instruction_format == 'vd-vs2-rs1':
+        return adjust_vd_vs2_rs1(aInstruction)
+    elif instruction_format == 'vd$\\neq$0-vs2-rs1':
+        return adjust_vd_nonzero_vs2_rs1(aInstruction)
+    elif instruction_format == 'vd-simm5':
+        return adjust_vd_simm5(aInstruction)
+    elif instruction_format == 'vd-vs1':
+        return adjust_vd_vs1(aInstruction)
+    elif instruction_format == 'vd-vs2':
+        return adjust_vd_vs2(aInstruction)
+    # vl<nf>r/vs<nf>r instructions
+    elif instruction_format == 'vd-rs1':
+        return adjust_vd_rs1(aInstruction)
+    elif instruction_format == 'vs3-rs1':
+        return adjust_vs3_rs1(aInstruction)
     else:
         record_instruction_format(instruction_format)
 
     return False
-
-def clean_format(aInstructionFormat):
-    # removing unwanted operands via names
-    if 'vtype' in aInstructionFormat:
-        aInstructionFormat = aInstructionFormat.replace('vtype', '')
-
-    # cleaning double hypens and leading/trailing hyphens
-    if '--' in aInstructionFormat:
-        aInstructionFormat = aInstructionFormat.replace('--', '')
-    if aInstructionFormat.startswith('-'):
-        aInstructionFormat = aInstructionFormat[1:]
-    if aInstructionFormat.endswith('-'):
-        aInstructionFormat = aInstructionFormat[:-1]
-
-    return aInstructionFormat
 
 def record_instruction_format(aInstructionFormat):
     if aInstructionFormat in format_map:
@@ -73,18 +97,99 @@ def record_instruction_format(aInstructionFormat):
     else:
         format_map[aInstructionFormat] = 1
 
-def adjust_rs2_rs1_rd(aInstruction):
+def add_layout_operand(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_rs2_int()
-    operand_adjustor.set_rs1_int()
-    operand_adjustor.set_rd_int()
+    if aInstruction.name in ('VL1R.V', 'VS1R.V'):
+        operand_adjustor.add_whole_register_layout_operand()
+    elif aInstruction.name in ('VMV1R.V', 'VMV2R.V', 'VMV4R.V', 'VMV8R.V'):
+        reg_count = int(aInstruction.name[3])
+        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
+    elif aInstruction.name in ('VSETVL', 'VSETVLI'):
+        pass  # No vector layout operand required
+    else:
+        operand_adjustor.add_vtype_layout_operand()
+
+# Account for non-standard register layouts due to widening and narrowing instructions
+def adjust_register_layout(aInstruction):
+    wide_dest = False
+    dest_layout_multiple = 2
+    if aInstruction.name.startswith('VW') or aInstruction.name.startswith('VFW'):
+        wide_dest = True
+    elif aInstruction.name.startswith('VQMACC'):
+        wide_dest = True
+        dest_layout_multiple = 4
+
+    wide_source = False
+    if '.W' in aInstruction.name:
+        wide_source = True
+
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    if wide_dest:
+        operand_adjustor.set_wide_dest(aLayoutMultiple=dest_layout_multiple)
+        operand_adjustor.set_vs1_differ_vd()
+
+    if wide_source:
+        operand_adjustor.set_wide_source()
+
+    if wide_dest != wide_source:
+        operand_adjustor.set_vs2_differ_vd()
+
+def adjust_vd_rs1(aInstruction):
+    if aInstruction.iclass == 'VectorLoadStoreInstruction':
+        operand_adjustor = VectorOperandAdjustor(aInstruction)
+        operand_adjustor.set_vd_ls_dest()
+        operand_adjustor.set_rs1_int_ls_base()
+
+        attr_dict = dict()
+        subop_dict = dict()
+        subop_dict["base"] = "rs1"
+        attr_dict["alignment"] = 1
+        attr_dict["base"] = "rs1"
+        attr_dict["data-size"] = 1
+        attr_dict["element-size"] = 1
+        attr_dict["mem-access"] = "Read"
+
+        add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    else:
+        operand_adjustor = VectorOperandAdjustor(aInstruction)
+        operand_adjustor.set_vd()
+        if '.F' in aInstruction.name:
+            operand_adjustor.set_rs1_sp()
+        else:
+            operand_adjustor.set_rs1_int()
+
     return True
 
-def adjust_zimm_10_0_rs1_rd(aInstruction):
+def adjust_vs3_rs1(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_imm('zimm[10:0]', 'zimm10', True)
-    operand_adjustor.set_rs1_int()
+    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_rs1_int_ls_base()
+
+    attr_dict = dict()
+    subop_dict = dict()
+    subop_dict["base"] = "rs1"
+    attr_dict["alignment"] = 1
+    attr_dict["base"] = "rs1"
+    attr_dict["data-size"] = 1
+    attr_dict["element-size"] = 1
+    attr_dict["mem-access"] = "Read"
+
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+
+    return True
+
+def adjust_rd_rs1_rs2(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rd_int()
+    operand_adjustor.set_rs1_int()
+    operand_adjustor.set_rs2_int()
+    return True
+
+def adjust_rd_rs1_zimm_10_0(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_rd_int()
+    operand_adjustor.set_rs1_int()
+    operand_adjustor.set_imm('zimm[10:0]', 'zimm10', True)
     return True
 
 def adjust_vdrd_rs1_vm(aInstruction):
@@ -121,6 +226,34 @@ def adjust_vdrd_vs2_vm(aInstruction):
     operand_adjustor.set_vm()
     return True
 
+def adjust_vdrd_vs2(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    if '.F' in aInstruction.name:
+        operand_adjustor.set_vdrd_sp()
+    else:
+        operand_adjustor.set_vdrd_int()
+    operand_adjustor.set_vs2()
+    return True
+
+def adjust_vd_vm(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_vm()
+    return True
+
+def adjust_rd_vs2_vm(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_rd_int()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_vm()
+    return True
+
+def adjust_rd_vs2(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_rd_int()
+    operand_adjustor.set_vs2()
+    return True
+
 def adjust_vdrd_vs2_vs1_vm(aInstruction):
     funct3 = aInstruction.find_operand('const_bits').value[6:9]
     operand_adjustor = VectorOperandAdjustor(aInstruction)
@@ -133,6 +266,32 @@ def adjust_vdrd_vs2_vs1_vm(aInstruction):
     operand_adjustor.set_vm()
     return True
 
+def adjust_vd_vs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_vs1()
+    return True
+
+def adjust_vd_vs2(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_vs2()
+    return True
+
+def adjust_vd_vs2_vs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_vs1()
+    return True
+
+def adjust_vd_nonzero_vs2_vs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd_nonzero()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_vs1()
+    return True
+
 def adjust_vd_vs2_vs1_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vd()
@@ -141,12 +300,46 @@ def adjust_vd_vs2_vs1_vm(aInstruction):
     operand_adjustor.set_vm()
     return True
 
+def adjust_vd_simm5(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_imm('simm5', 'simm5', True)
+    return True
+
+def adjust_vd_vs2_simm5(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_imm('simm5', 'simm5', True)
+    return True
+
+def adjust_vd_nonzero_vs2_simm5(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd_nonzero()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_imm('simm5', 'simm5', True)
+    return True
+
 def adjust_vd_vs2_simm5_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vd()
     operand_adjustor.set_vs2()
     operand_adjustor.set_imm('simm5', 'simm5', True)
     operand_adjustor.set_vm()
+    return True
+
+def adjust_vd_vs2_rs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_rs1_int()
+    return True
+
+def adjust_vd_nonzero_vs2_rs1(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_vd_nonzero()
+    operand_adjustor.set_vs2()
+    operand_adjustor.set_rs1_int()
     return True
 
 def adjust_vd_vs2_rs1_vm(aInstruction):

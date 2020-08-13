@@ -442,6 +442,23 @@ namespace Force {
     std::vector<Operand* > mOperands; //!< Container holding pointer to all sub operands.
   };
 
+  /*!
+    \class VectorLayoutOperand
+    \brief Class for vector layout operands.
+  */
+  class VectorLayoutOperand : public Operand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorLayoutOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLayoutOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperand);
+
+    void Setup(Generator& gen, Instruction& instr) override; //!< Setup conditions, constraining mechanisms before generating operand.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorLayoutOperand);
+  private:
+    virtual void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) = 0; //!< Determine and set the vector layout attributes.
+  };
+
   class AddressSolver;
   class AddressingMode;
 

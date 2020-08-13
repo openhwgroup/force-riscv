@@ -1,0 +1,27 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+4c4
+<   P.VU.elt<uint16_t>(rd_num, i) = f16_to_ui16(vs2, softfloat_round_minMag, true);
+---
+>   P.VU.elt_ref<uint16_t>(rd_num, i) = f16_to_ui16(vs2, softfloat_round_minMag, true);
+7c7
+<   P.VU.elt<uint32_t>(rd_num, i) = f32_to_ui32(vs2, softfloat_round_minMag, true);
+---
+>   P.VU.elt_ref<uint32_t>(rd_num, i) = f32_to_ui32(vs2, softfloat_round_minMag, true);
+10c10
+<   P.VU.elt<uint64_t>(rd_num, i) = f64_to_ui64(vs2, softfloat_round_minMag, true);
+---
+>   P.VU.elt_ref<uint64_t>(rd_num, i) = f64_to_ui64(vs2, softfloat_round_minMag, true);

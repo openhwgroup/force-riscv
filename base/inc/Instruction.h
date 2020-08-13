@@ -63,7 +63,7 @@ namespace Force {
     void SetOperandDataValue(const std::string& oprName, std::vector<uint64> oprValues, uint32 valueSize) const; //!< Set operand data values for LargeRegiser(Z).
     ResourceAccessStage* GiveHotResource(); //!< give hot resource
     virtual void Initialize(const InstructionStructure* instrStructure); //!< Initialize instruction object.
-    virtual void Setup(const GenInstructionRequest& instrReq, Generator& gen); //!< Setup conditions, constrainting mechanisms before generation instruction.
+    virtual void Setup(const GenInstructionRequest& instrReq, Generator& gen); //!< Setup conditions, constraining mechanisms before generating instruction.
     virtual void Generate(Generator& gen); //!< Generate instruction details.
     virtual void Commit(Generator& gen); //!< Commit generated instruction.
     virtual void CleanUp(); //!< Clean up resources that can be released.
@@ -114,7 +114,7 @@ namespace Force {
   protected:
     Instruction(const Instruction& rOther); //!< Copy constructor.
     void Assemble(); //!< Assembly instruction opcode.
-    virtual InstructionConstraint* InstantiateInstructionConstraint() const; //!< Return an instance of appropriate InstructionConstaint object.
+    virtual InstructionConstraint* InstantiateInstructionConstraint() const; //!< Return an instance of appropriate InstructionConstraint object.
   protected:
     const InstructionStructure* mpStructure; //!< Pointer to InstructionStructure object that described the structure of the instruction.
     InstructionConstraint* mpInstructionConstraint; //!< Dynamic constraints for the instruction generation.
@@ -159,7 +159,7 @@ namespace Force {
   protected:
     BranchInstruction(const BranchInstruction& rOther) : Instruction(rOther) { } //!< Copy constructor.
 
-    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of BranchInstructionConstaint object.
+    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of BranchInstructionConstraint object.
   };
 
   /*!
@@ -178,7 +178,7 @@ namespace Force {
   protected:
     LoadStoreInstruction(const LoadStoreInstruction& rOther) : Instruction(rOther) { } //!< Copy constructor.
 
-    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of LoadStoreInstructionConstaint object.
+    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of LoadStoreInstructionConstraint object.
   };
 
   /*!
@@ -213,7 +213,43 @@ namespace Force {
   protected:
     SystemCallInstruction(const SystemCallInstruction& rOther) : Instruction(rOther) { } //!< Copy constructor.
 
-    //InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of SystemCallInstructionConstaint object.
+    //InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of SystemCallInstructionConstraint object.
+  };
+
+  /*!
+    \class VectorInstruction
+    \brief Class for vector instructions.
+  */
+  class VectorInstruction : public virtual Instruction {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorInstruction);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorInstruction);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorInstruction);
+
+    Object* Clone() const override { return new VectorInstruction(*this); } //!< Return a cloned VectorInstruction object of the same type and same contents of the object.
+    const char* Type() const override { return "VectorInstruction"; } //!< Return the type of the VectorInstruction object in C string.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorInstruction);
+
+    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstraint object.
+  };
+
+  /*!
+    \class VectorLoadStoreInstruction
+    \brief Class for vector load store instructions.
+  */
+  class VectorLoadStoreInstruction : public VectorInstruction, public LoadStoreInstruction {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorLoadStoreInstruction);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLoadStoreInstruction);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorLoadStoreInstruction);
+
+    Object* Clone() const override { return new VectorLoadStoreInstruction(*this); } //!< Return a cloned object of the same type and same contents of the object.
+    const char* Type() const override { return "VectorLoadStoreInstruction"; } //!< Return the type of the VectorLoadStoreInstruction object in C string.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorLoadStoreInstruction);
+
+    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstraint object.
   };
 
 }

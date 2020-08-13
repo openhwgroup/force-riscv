@@ -162,23 +162,22 @@ def output_register_field_choices(aTree, aOutputFile, aPrefixLicenseFile):
     output_root = ET.Element('choices_file')
 
     for register in registers:
-        if register.get('choice', 'true') == 'true':
-            fields = register.findall('.//register_field')
-            for field in fields:
-                choices = field.findall('.//choice')
-                if choices:
-                    choices_element = ET.Element('choices')
-                    choices_element.set('name', '%s.%s' % (register.get('name'), field.get('name')))
-                    choices_element.set('type', 'RegisterFieldValue')
+        fields = register.findall('.//register_field')
+        for field in fields:
+            choices = field.findall('.//choice')
+            if choices:
+                choices_element = ET.Element('choices')
+                choices_element.set('name', '%s.%s' % (register.get('name'), field.get('name')))
+                choices_element.set('type', 'RegisterFieldValue')
 
-                    for choice in choices:
-                        choice_element = ET.Element('choice')
-                        choice_element.set('description', choice.get('description'))
-                        choice_element.set('value', choice.get('value'))
-                        choice_element.set('weight', choice.get('weight', '10'))
-                        choices_element.append(choice_element)
+                for choice in choices:
+                    choice_element = ET.Element('choice')
+                    choice_element.set('description', choice.get('description'))
+                    choice_element.set('value', choice.get('value'))
+                    choice_element.set('weight', choice.get('weight', '10'))
+                    choices_element.append(choice_element)
 
-                    output_root.append(choices_element)
+                output_root.append(choices_element)
 
     # check system register fields before writing out xml file...
     reg_file = RISCV.RegisterFile( { 'system_tree' : output_root } )
@@ -207,6 +206,12 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
     else:
         register.set('boot', '0')
 
+    if aRegister.get('class') and (aRegister.get('class') != 'ConfigureRegister'):
+        register.set('class', aRegister.get('class'))
+
+    if aRegister.get('init_policy'):
+        register.set('init_policy', aRegister.get('init_policy'))
+
     fields = aRegister.findall('.//register_field')
     for field in fields:
         register_field = ET.Element('register_field')
@@ -231,8 +236,12 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
         physical_register.set('name', aRegister.get('physical_register', aRegister.get('name')))
         physical_register.set('size', '64' if str(aRegister.get('size')) == '0' else aRegister.get('size'))
         physical_register.set('type', aRegister.get('type'))
-        if aRegister.get('class'):
+        if aRegister.get('class') == 'ConfigureRegister':
             physical_register.set('class', aRegister.get('class'))
+
+        if aRegister.get('reset'):
+            physical_register.set('reset', aRegister.get('reset'))
+
         aPhysicalRegisters.append(physical_register)
 
     aRegisterFile.append(register)

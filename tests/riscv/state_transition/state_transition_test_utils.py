@@ -54,8 +54,8 @@ def addRandomVectorRegisterStateElements(aSequence, aState, aStateElemCount, aPr
         vec_reg_values = []
 
         # TODO(Noah): Retrieve the vector register length from an API when said API is created. For
-        # now, we assume vector registers are 128 bits.
-        for _ in range(2):
+        # now, we assume vector registers are 512 bits.
+        for _ in range(8):
             vec_reg_values.append(RandomUtils.random64())
 
         aState.addRegisterStateElement(vec_reg_name, vec_reg_values, aPriority=RandomUtils.random32(aPriorityMin, aPriorityMax))
@@ -176,6 +176,7 @@ def verifyState(aSequence, aExpectedStateData):
 
 ## Fail if the valid flag is false.
 #
+#  @param aSequence A Sequence object.
 #  @param aRegName The index of the register.
 #  @param aValid A flag indicating whether the specified register has a valid value.
 def assertValidRegisterValue(aSequence, aRegName, aValid):
