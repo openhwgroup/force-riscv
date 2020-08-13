@@ -111,3 +111,64 @@ class PageFaultModifier(ChoicesModifier):
         choice_name = 'Page size#4K granule#S#stage 1'
         choice_dict = {'4K':101-aWeight, '2M':aWeight, '1G':aWeight, '512G':aWeight}
         self.modifyPagingChoices(choice_name, choice_dict)
+
+
+class TrapsRedirectModifier(ChoicesModifier):
+    def __init__(self, aGenThread):
+        super().__init__(aGenThread, 'TrapsRedirectModifier')
+
+        self.mSupportedExceptions = {
+            "Instruction address misaligned" : 1,
+            "Instruction access fault"       : 1,
+            "Illegal instruction"            : 1,
+            "Breakpoint"                     : 1,
+            "Load address misaligned"        : 1,
+            "Load access fault"              : 1,
+            "Store/AMO address misaligned"   : 1,
+            "Store/AMO access fault"         : 1,
+            "Environment call from U-mode"   : 1,
+            "Environment call from S-mode"   : 1,
+            "Instruction page fault"         : 1,
+            "Load page fault"                : 1,
+            "Store/AMO page fault"           : 1
+        }
+
+        self.mHaveMods = False
+        
+    def update(self, **kwargs):
+        try:
+            if 'Weight' in kwargs:
+                self.updateChoices(kwargs['ExceptionCode'], kwargs['TrapChoice'], kwargs['Weight'])
+            else:
+                self.updateChoices(kwargs['ExceptionCode'], kwargs['TrapChoice'])
+        except KeyError:
+            Log.error("TrapDelegationRedirectionModifier: 'ExceptionCode' or 'TrapChoice' arguments missing.")
+
+    def updateChoices(self,aExceptionCode, aTrapChoice, aWeight):
+        try:
+            rcode = self.mSupportedExceptions[aExceptionCode]
+        except KeyError:
+            Log.error("TrapDelegationRedirectionModifier: ExceptionCode '%s' is not supported.", aExceptionCode)
+            
+        if aTrapChoice == "Delegate":
+            self.delegateException(aExceptionCode, aWeight)
+        elif aTrapChoice == "Redirect":
+            self.redirectException(aExceptionCode, aWeight)
+        else:
+            Log.error("TrapDelegationRedirectionModifier: TrapChoice '%s' not recognized" % aTrapChoice)
+
+    def delegateException(self, aExceptionCode, aWeight = 100):
+        my_choice = "medeleg.%s" % aExceptionCode
+        weightDict = { "0x0":100 - aWeight, "0x1":aWeight }
+        self.modifyRegisterFieldValueChoices(my_choice, weightDict)
+        self.mHaveMods = True
+
+    def redirectException(self, aExceptionCode, aWeight = 100):
+        my_choice = "Redirect Trap - %s" % aExceptionCode
+        weightDict = { "DoNotRedirect":100 - aWeight, "DoRedirect":aWeight }
+        self.modifyGeneralChoices(my_choice, weightDict)
+        self.mHaveMods = True
+
+    def commit(self):
+        if self.mHaveMods:
+            self.commitSet()

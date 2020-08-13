@@ -33,6 +33,8 @@ class ExceptionClassRISCV(Enum):
     UNUSED_14 = 0xE
     STORE_AMO_PAGE_FAULT = 0xF
 
+    TRAP_REDIRECTION = 0x99
+
     def __lt__(self, other):
         if self.__class__ is other.__class__:
             return self.value < other.value
