@@ -25,10 +25,13 @@ control_items = [ {"fname":"APIs/_def_fctrl.py",     "generator" : {"--cfg" : "c
                   {"fname":"instructions/riscv_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   #{"fname":"instructions/c_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"instructions/c_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"instructions/v_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"instructions/v_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"paging/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"paging/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"privilege_switch/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"privilege_switch/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"state_transition/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"vector/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"../../examples/riscv/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                 ]

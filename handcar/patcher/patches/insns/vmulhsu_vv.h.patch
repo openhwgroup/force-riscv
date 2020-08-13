@@ -1,0 +1,47 @@
+#
+# Copyright (C) [2020] Futurewei Technologies, Inc.
+#
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+6,8c6,8
+<   auto &vd = P.VU.elt<int8_t>(rd_num, i, true);
+<   auto vs2 = P.VU.elt<int8_t>(rs2_num, i);
+<   auto vs1 = P.VU.elt<uint8_t>(rs1_num, i);
+---
+>   auto &vd = P.VU.elt_ref<int8_t>(rd_num, i, true);
+>   auto vs2 = P.VU.elt_val<int8_t>(rs2_num, i);
+>   auto vs1 = P.VU.elt_val<uint8_t>(rs1_num, i);
+14,16c14,16
+<   auto &vd = P.VU.elt<int16_t>(rd_num, i, true);
+<   auto vs2 = P.VU.elt<int16_t>(rs2_num, i);
+<   auto vs1 = P.VU.elt<uint16_t>(rs1_num, i);
+---
+>   auto &vd = P.VU.elt_ref<int16_t>(rd_num, i, true);
+>   auto vs2 = P.VU.elt_val<int16_t>(rs2_num, i);
+>   auto vs1 = P.VU.elt_val<uint16_t>(rs1_num, i);
+22,24c22,24
+<   auto &vd = P.VU.elt<int32_t>(rd_num, i, true);
+<   auto vs2 = P.VU.elt<int32_t>(rs2_num, i);
+<   auto vs1 = P.VU.elt<uint32_t>(rs1_num, i);
+---
+>   auto &vd = P.VU.elt_ref<int32_t>(rd_num, i, true);
+>   auto vs2 = P.VU.elt_val<int32_t>(rs2_num, i);
+>   auto vs1 = P.VU.elt_val<uint32_t>(rs1_num, i);
+30,32c30,32
+<   auto &vd = P.VU.elt<int64_t>(rd_num, i, true);
+<   auto vs2 = P.VU.elt<int64_t>(rs2_num, i);
+<   auto vs1 = P.VU.elt<uint64_t>(rs1_num, i);
+---
+>   auto &vd = P.VU.elt_ref<int64_t>(rd_num, i, true);
+>   auto vs2 = P.VU.elt_val<int64_t>(rs2_num, i);
+>   auto vs1 = P.VU.elt_val<uint64_t>(rs1_num, i);

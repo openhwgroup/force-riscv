@@ -121,10 +121,10 @@ namespace Force {
 
   class ApiSimConfig {
   public:
-    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mpTraceFile(NULL), mUseTraceFile(false) { } //!< default constructor
+    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mpTraceFile(NULL), mUseTraceFile(false) { } //!< default constructor
 
-    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, const char* pTraceFile, bool outputTraceFile) //!< Constructor.
-      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile)
+    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, const char* pTraceFile, bool outputTraceFile) //!< Constructor.
+      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile)
     {
     }
 
@@ -137,6 +137,7 @@ namespace Force {
     uint32 mCoreNum; //!< Core number per chip.
     uint32 mThreadNum; //!< Thread number per core.
     uint32 mPhysicalAddressSize; //!< Supported physical address size.
+    uint32 mVectorRegLen; //!< Vector register length in bits.
     const char* mpTraceFile; //!< trace file. not output trace if it is NULL
     bool mUseTraceFile;
   };
@@ -203,6 +204,8 @@ namespace Force {
     void RecordVectorRegisterUpdate(uint32 CpuID, const char* pRegname, uint32 vecRegIndex, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pValue, uint32 byteLength, const char* pAccessType);
     void RecordTermination(uint32 CpuId, uint32 exitCode, const char* pMsg); //!< Return termination state of the CPU with the specified ID.
   protected:
+    void SetVectorRegisterWidth(cuint64 vecRegWidthBits); //!< Set the vector register width in bits.
+
     //!< used by Step:
     bool GetRegisterUpdates(std::vector<RegUpdate> &rRegUpdates);
     bool GetMemoryUpdates(std::vector<MemUpdate> &rMemUpdates);
@@ -238,9 +241,9 @@ namespace Force {
     mutable std::ofstream mOfsApiTrace;
     mutable std::ofstream mOfsSimTrace;   
 
-    cuint32 mVecRegWidth;
-    const std::vector<std::string> mVecPhysRegNames;
-    cuint32 mNumPhysRegs;
+    uint32 mVecRegWidth;
+    std::vector<std::string> mVecPhysRegNames;
+    uint32 mNumPhysRegs;
     cuint32 mPhysRegSize;
   };
 

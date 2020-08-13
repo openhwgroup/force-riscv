@@ -16,12 +16,13 @@
 #include <OperandConstraintRISCV.h>
 
 #include <Instruction.h>
+#include <InstructionConstraint.h>
 #include <InstructionStructure.h>
 #include <Constraint.h>
 #include <Random.h>
 #include <Log.h>
 #include <Operand.h>
-
+#include <VectorLayout.h>
 #include <Generator.h>
 #include <Register.h>
 #include <RegisterReserver.h>
@@ -36,6 +37,13 @@ using namespace std;
 */
 
 namespace Force {
+
+  void VectorMaskOperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    if (differVal == 0) {
+      rAdjDifferValues.AddValue(differVal);
+    }
+  }
 
   void BaseOffsetBranchOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
@@ -101,61 +109,6 @@ namespace Force {
       mpConstraintSet->SubConstraintSet(compressed_write_reserv_constr);
     }
     //LOG(notice) << " constraints (with reserved regs removed): " << mpConstraintSet->ToSimpleString() << endl;
-  }
-
-  
-  void VectorDataTraits::SetTraits(const std::string& choiceText)
-  {
-    mTypeName = choiceText;
-    if (choiceText == "8B") {
-      mLanes = 8;
-      mElementSize = 1;
-    }
-    else if (choiceText == "16B" || choiceText == "B") {
-      mLanes = 16;
-      mElementSize = 1;
-    }
-    else if (choiceText == "4H") {
-      mLanes = 4;
-      mElementSize = 2;
-    }
-    else if (choiceText == "8H" || choiceText == "H") {
-      mLanes = 8;
-      mElementSize = 2;
-    }
-    else if (choiceText == "2S") {
-      mLanes = 2;
-      mElementSize = 4;
-    }
-    else if (choiceText == "4S" || choiceText == "S") {
-      mLanes = 4;
-      mElementSize = 4;
-    }
-    else if (choiceText == "1D") {
-      mLanes = 1;
-      mElementSize = 8;
-    }
-    else if (choiceText == "2D" || choiceText == "D") {
-      mLanes = 2;
-      mElementSize = 8;
-    }
-    else if (choiceText == "1Q") {
-      mLanes = 1;
-      mElementSize = 16;
-    }
-    else if (choiceText == "4B") {
-      mLanes = 4;
-      mElementSize = 1;
-    }
-    else if (choiceText == "2H") {
-        mLanes = 2;
-        mElementSize = 2;
-    }
-    else {
-      LOG(error) << "Unhandled data type \"" << choiceText << "\"." << endl;
-    }
-
-    mVectorSize = mLanes * mElementSize;
   }
 
   void ConditionalBranchOperandRISCVConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
@@ -327,9 +280,55 @@ namespace Force {
     LOG(notice) << "{FullsizeConditionalBranchOperandConstraint::SetConditionalBranchTaken} condition branch is set to " << ((mTaken) ? "taken" : "not taken") << endl;
   }
 
-  void RISCVectorRegisterOperandConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
+  void VectorRegisterOperandConstraintRISCV::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
   {
-    RegisterOperandConstraint::Setup(gen, instr, operandStruct);
+    VectorRegisterOperandConstraint::Setup(gen, instr, operandStruct);
+
+    if (mConstraintForced) {
+      return;
+    }
+
+    if (mpConstraintSet == nullptr) {
+      mpConstraintSet = DefaultConstraintSet(operandStruct);
+    }
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&operandStruct);
+    uint32 reg_count = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
+
+    // Remove all register indices that are not multiples of the register count, as they are not
+    // legal choices
+    mpConstraintSet->FilterAlignedElements(get_align_mask(reg_count));
+  }
+
+  void VectorRegisterOperandConstraintRISCV::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rOperandStruct);
+    auto differ_vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rDifferOperandStruct);
+    uint32 layout_multiple = vec_reg_operand_struct->GetLayoutMultiple();
+    uint32 differ_layout_multiple = differ_vec_reg_operand_struct->GetLayoutMultiple();
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    uint32 reg_count = vec_layout->mRegCount;
+
+    // If the operands have the same layout type, they will only conflict if they have the same
+    // exact value. However, if the operands have different layouts, we need to ensure that the
+    // register ranges used by the operands don't overlap. For example, if this operand is wide, the
+    // differ operand has the value 7 and the register count is 2, this operand will conflict if it
+    // uses the value 4 because the register range will include registers 4, 5, 6 and 7.
+    if (layout_multiple == differ_layout_multiple) {
+      rAdjDifferValues.AddValue(differVal);
+    }
+    else if (layout_multiple > differ_layout_multiple) {
+      uint64 align_mask = get_align_mask(reg_count * layout_multiple);
+      rAdjDifferValues.AddValue(differVal & align_mask);
+    }
+    else {
+      uint32 range_max = differVal + (reg_count * differ_layout_multiple);
+      rAdjDifferValues.AddRange(differVal, range_max);
+    }
   }
 
   void VectorLoadStoreOperandConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
@@ -346,29 +345,6 @@ namespace Force {
       LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
       FAIL("expecting-register_operand");
     }
-    //TODO: properly address the MultiRegisterOperand
-    auto multi_ptr = instr.FindOperand("vd");
-    mpMultiRegisterOperand = dynamic_cast<const MultiRegisterOperand* >(multi_ptr);
-    if (nullptr == mpMultiRegisterOperand) {
-      LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << multi_ptr->Name() << " to be \"MultiRegisterOperand\" type." << endl;
-      FAIL("expecting-register_operand");
-    }
-
-    string vector_name[] = {"rs1", "vs3", "vd", "\0"};
-    for (unsigned i = 0; vector_name[i] != "\0"; i ++) {
-        auto vector_ptr = instr.FindOperand(vector_name[i]);
-        if (vector_ptr) {
-          mpVectorDataType = dynamic_cast<const ChoicesOperand* >(vector_ptr);
-          if (nullptr == mpVectorDataType) {
-            LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << vector_ptr->Name() << " to be \"ChoicesOperand\" type." << endl;
-            FAIL("expecting-choices_operand");
-          }
-          return;
-        }
-    }
-
-    LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand to be \"ChoicesOperand\" type." << endl;
-    FAIL("expecting-choices_operand");
   }
 
 }

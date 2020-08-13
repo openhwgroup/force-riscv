@@ -64,4 +64,56 @@ namespace Force {
     LOG(notice) << "{PpnInitPolicy::RegisterFieldReloadValue} reloading " << pRegField->Name() << " of " << pRegField->PhysicalRegisterName() << endl;
     return 0;
   }
+
+  void VlInitPolicy::InitializeRegister(Register* pRegister) const
+  {
+    SetRegisterInitialValue(pRegister, GetVlmax());
+  }
+
+  uint64 VlInitPolicy::RegisterReloadValue(Register* pRegister) const
+  {
+    LOG(notice) << "{VlInitPolicy::RegisterFieldReloadValue} reloading " << pRegister->Name() << endl;
+
+    return GetVlmax();
+  }
+
+  uint64 VlInitPolicy::GetVlmax() const
+  {
+    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
+    Register* vtype_reg = reg_file->RegisterLookup("vtype");
+    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
+    uint64 sew = (1 << vsew_field->FieldValue()) * 8;
+
+    // TODO(Noah): Update this to account for fractional LMUL values when there is time to do so.
+    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
+    uint64 lmul = (1 << vlmul_field->FieldValue());
+
+    uint64 vlmax = lmul * Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / sew;
+    return vlmax;
+  }
+
+  void VstartInitPolicy::InitializeRegister(Register* pRegister) const
+  {
+    SetRegisterInitialValue(pRegister, 0);
+  }
+
+  uint64 VstartInitPolicy::RegisterReloadValue(Register* pRegister) const
+  {
+    LOG(notice) << "{VstartInitPolicy::RegisterFieldReloadValue} reloading " << pRegister->Name() << endl;
+
+    return 0;
+  }
+
+  void VtypeInitPolicy::InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree) const
+  {
+    SetRegisterFieldInitialValue(pRegField, 0);
+  }
+
+  uint64 VtypeInitPolicy::RegisterFieldReloadValue(RegisterField* pRegField) const
+  {
+    LOG(notice) << "{VtypeInitPolicy::RegisterFieldReloadValue} reloading " << pRegField->Name() << " of " << pRegField->PhysicalRegisterName() << endl;
+
+    return 0;
+  }
+
 }

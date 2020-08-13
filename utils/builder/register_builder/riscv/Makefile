@@ -31,8 +31,13 @@ make_dir:
 	@mkdir -p output
 
 .PHONY: registers
-registers: system_registers system_register_choices register_field_choices csr_trees
+registers: app_registers system_registers system_register_choices register_field_choices csr_trees
 	@echo Done
+
+.PHONY: app_registers
+app_registers: app_registers_builder.py
+	@echo 'Building Registers: application registers'
+	@./app_registers_builder.py
 
 .PHONY: system_registers
 system_registers: $(REGISTER_BUILDER)
@@ -57,6 +62,7 @@ register_field_choices: $(REGISTER_BUILDER)
 .PHONY: install
 install:
 	@echo 'Building Registers: installing register files'
+	@cp -f output/app_registers.xml $(INSTALL_DIR)/app_registers.xml
 	@cp -f output/system_registers.xml $(INSTALL_DIR)/system_registers.xml
 	@cp -f output/system_register_choices.xml $(INSTALL_DIR)/system_register_choices.xml
 	@cp -f output/register_field_choices.xml $(INSTALL_DIR)/register_field_choices.xml
@@ -66,4 +72,3 @@ install:
 clean:
 	@echo 'Building Registers: clean'
 	@rm -f output/*.xml output/*.txt
-

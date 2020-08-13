@@ -20,6 +20,21 @@
 #include <OperandConstraint.h>
 
 namespace Force {
+
+   /*!
+    \class VectorMaskOperandConstraint
+    \brief The class carries dynamic constraint properties for VectorMaskOperand.
+  */
+  class VectorMaskOperandConstraint : public ChoicesOperandConstraint {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorMaskOperandConstraint);
+    COPY_CONSTRUCTOR_ABSENT(VectorMaskOperandConstraint);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorMaskOperandConstraint);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorMaskOperandConstraint);
+  private:
+    void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const override; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
+  };
+
   class ConstraintSet;
 
   /*!
@@ -82,48 +97,19 @@ namespace Force {
     }
   };
   
-  /*!
-    \struct VectorDataTraits
-    \brief Data traits of SIMD vector
-  */
-  struct VectorDataTraits {
-    std::string mTypeName; //!< Data type name.
-    uint32 mLanes; //!< Number of lanes.
-    uint32 mElementSize; //!< Element size in bytes.
-    uint32 mVectorSize; //!< Total vector size in bytes.
-    bool mIsFP; //!< Is data in floating point format.
-
-    VectorDataTraits() : mTypeName(), mLanes(0), mElementSize(0), mVectorSize(0), mIsFP(false) { } //!< Constructor.
-    void SetTraits(const std::string& choiceText); //!< Set vector data traits given the choice name.
-  };
-
-  class RISCVectorRegisterOperandConstraint : public VectorRegisterOperandConstraint {
+  class VectorRegisterOperandConstraintRISCV : public VectorRegisterOperandConstraint {
   public:
-    RISCVectorRegisterOperandConstraint() : VectorRegisterOperandConstraint(), mpDataTraits(nullptr) { } //!< Constructor.
-    ~RISCVectorRegisterOperandConstraint() { } //!< Destructor.
-    ASSIGNMENT_OPERATOR_ABSENT(RISCVectorRegisterOperandConstraint);
+    VectorRegisterOperandConstraintRISCV() : VectorRegisterOperandConstraint() { } //!< Constructor.
+    ~VectorRegisterOperandConstraintRISCV() { } //!< Destructor.
+    ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandConstraintRISCV);
     void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints.
-    void SetDataTraits(const VectorDataTraits* vecDataTraits) { mpDataTraits = vecDataTraits; } //!< Set pointer to data traits object.
-    const VectorDataTraits* DataTraits() const { return mpDataTraits; } //!< Return pointer to data traits object.
   protected:
-    RISCVectorRegisterOperandConstraint(const RISCVectorRegisterOperandConstraint& rOther) //!!< Copy constructor, not meant to be used.
-      : VectorRegisterOperandConstraint(rOther), mpDataTraits(nullptr)
+    VectorRegisterOperandConstraintRISCV(const VectorRegisterOperandConstraintRISCV& rOther) //!!< Copy constructor, not meant to be used.
+      : VectorRegisterOperandConstraint(rOther)
     {
     }
-
-    const VectorDataTraits* mpDataTraits; //!< Pointer to vector data traits object.
-  };
-
-  /*!
-    \class VectorDataTypeOperandConstraint
-    \brief The class carries dynamic constraint properties for VectorDataTypeOperand.
-  */
-  class VectorDataTypeOperandConstraint : public ChoicesOperandConstraint {
-  public:
-    VectorDataTypeOperandConstraint() : ChoicesOperandConstraint() { } //!< Constructor.
-    ~VectorDataTypeOperandConstraint() { } //!< Destructor.
-  protected:
-    VectorDataTypeOperandConstraint(const VectorDataTypeOperandConstraint& rOther) : ChoicesOperandConstraint(rOther) { } //!< Copy constructor, not meant to be used.
+  private:
+    void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const override; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
   };
 
   /**!
@@ -168,18 +154,16 @@ namespace Force {
   */
   class VectorLoadStoreOperandConstraint : public BaseOffsetLoadStoreOperandConstraint {
   public:
-    VectorLoadStoreOperandConstraint() : BaseOffsetLoadStoreOperandConstraint(), mpVectorDataType(nullptr), mpMultiRegisterOperand(nullptr) { } //!< Constructor.
-    ~VectorLoadStoreOperandConstraint() { mpVectorDataType = nullptr; mpMultiRegisterOperand = nullptr; } //!< Destructor.
+    VectorLoadStoreOperandConstraint() : BaseOffsetLoadStoreOperandConstraint(), mpMultiRegisterOperand(nullptr) { } //!< Constructor.
+    ~VectorLoadStoreOperandConstraint() { mpMultiRegisterOperand = nullptr; } //!< Destructor.
 
     ASSIGNMENT_OPERATOR_ABSENT(VectorLoadStoreOperandConstraint);
     void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints for BaseOffsetLoadStoreOperand
-    const ChoicesOperand* VectorDataTypeOperand() const { return mpVectorDataType; } //!< Return const pointer to vector data type operand.
     const MultiRegisterOperand* GetMultiRegisterOperand() const {return mpMultiRegisterOperand;}
   protected:
     VectorLoadStoreOperandConstraint(const VectorLoadStoreOperandConstraint& rOther) //!< Copy constructor, not meant to be used.
-      : BaseOffsetLoadStoreOperandConstraint(rOther), mpVectorDataType(nullptr), mpMultiRegisterOperand(nullptr) { }
+      : BaseOffsetLoadStoreOperandConstraint(rOther), mpMultiRegisterOperand(nullptr) { }
   protected:
-    const ChoicesOperand* mpVectorDataType; //!< Pointer to vector data type operand, if applicable.
     const MultiRegisterOperand* mpMultiRegisterOperand;
   };
 

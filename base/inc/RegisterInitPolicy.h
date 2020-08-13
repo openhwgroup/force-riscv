@@ -48,9 +48,9 @@ namespace Force {
     ASSIGNMENT_OPERATOR_ABSENT(RegisterInitPolicy);
 
     virtual void InitializeRegister(Register* pRegister) const; //!< Initialize register.
-    virtual void InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree = nullptr) const; //!< Initialize register.
-    virtual uint64 RegisterReloadValue(Register* pRegister) const; //!<  register.
-    virtual uint64 RegisterFieldReloadValue(RegisterField* pRegField) const; //!< Initialize register.
+    virtual void InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree = nullptr) const; //!< Initialize register field.
+    virtual uint64 RegisterReloadValue(Register* pRegister) const; //!< Reload register value.
+    virtual uint64 RegisterFieldReloadValue(RegisterField* pRegField) const; //!< Reload register field value.
   protected:
 
     RegisterInitPolicy(const RegisterInitPolicy& rOther) //!< Copy constructor.

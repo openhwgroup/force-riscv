@@ -277,11 +277,25 @@ namespace Force {
     return align_shift;
   }
 
-  uint64 get_aligned_value(cuint64 value, cuint64 align)
+  uint64 get_align_mask(cuint64 align)
   {
     verify_alignment(align);
 
-    return (value & ~(align - 1));
+    return (~(align - 1));
+  }
+
+  uint64 get_alignment(cuint64 alignMask)
+  {
+    uint64 align = ~alignMask + 1;
+
+    verify_alignment(align);
+
+    return align;
+  }
+
+  uint64 get_aligned_value(cuint64 value, cuint64 align)
+  {
+    return (value & get_align_mask(align));
   }
 
   uint32 sign_extend32(uint32 value, uint32 size)
