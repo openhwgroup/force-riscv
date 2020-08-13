@@ -176,7 +176,7 @@ namespace Force {
   }
 
   VectorLayoutOperandStructure::VectorLayoutOperandStructure()
-    : mRegCount(0), mElemWidth(8)
+    : mRegCount(0), mElemWidth(8), mRegIndexAlignment(0)
   {
   }
 

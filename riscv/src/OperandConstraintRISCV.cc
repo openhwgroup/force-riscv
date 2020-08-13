@@ -295,11 +295,14 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&operandStruct);
-    uint32 reg_count = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
+    uint32 reg_index_alignment = vec_layout->mRegIndexAlignment * vec_reg_operand_struct->GetLayoutMultiple();
+    if (reg_index_alignment == 0) {
+      LOG(fail) << "{VectorRegisterOperandConstraintRISCV::Setup} invalid register index alignment " << dec << reg_index_alignment << endl;
+      FAIL("invalid-register-index-alignment");
+    }
 
-    // Remove all register indices that are not multiples of the register count, as they are not
-    // legal choices
-    mpConstraintSet->FilterAlignedElements(get_align_mask(reg_count));
+    // Unaligned register indices are architecturally illegal choices
+    mpConstraintSet->FilterAlignedElements(get_align_mask(reg_index_alignment));
   }
 
   void VectorRegisterOperandConstraintRISCV::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
@@ -311,22 +314,23 @@ namespace Force {
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    uint32 reg_count = vec_layout->mRegCount;
+    uint32 reg_index_alignment = vec_layout->mRegIndexAlignment;
 
-    // If the operands have the same layout type, they will only conflict if they have the same
+    // If the operands have the same layout multiples, they will only conflict if they have the same
     // exact value. However, if the operands have different layouts, we need to ensure that the
-    // register ranges used by the operands don't overlap. For example, if this operand is wide, the
-    // differ operand has the value 7 and the register count is 2, this operand will conflict if it
-    // uses the value 4 because the register range will include registers 4, 5, 6 and 7.
+    // register ranges used by the operands don't overlap. For example, if this operand has a layout
+    // multiple of 2, the differ operand has the value 7 and the register index alignment is 2, this
+    // operand will conflict if it uses the value 4 because the register range will include
+    // registers 4, 5, 6 and 7.
     if (layout_multiple == differ_layout_multiple) {
       rAdjDifferValues.AddValue(differVal);
     }
     else if (layout_multiple > differ_layout_multiple) {
-      uint64 align_mask = get_align_mask(reg_count * layout_multiple);
+      uint64 align_mask = get_align_mask(reg_index_alignment * layout_multiple);
       rAdjDifferValues.AddValue(differVal & align_mask);
     }
     else {
-      uint32 range_max = differVal + (reg_count * differ_layout_multiple);
+      uint32 range_max = differVal + (reg_index_alignment * differ_layout_multiple);
       rAdjDifferValues.AddRange(differVal, range_max);
     }
   }

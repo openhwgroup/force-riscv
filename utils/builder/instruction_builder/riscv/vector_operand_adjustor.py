@@ -44,12 +44,13 @@ class VectorOperandAdjustor(OperandAdjustor):
         layout_opr.elemWidth = aElemWidth
         self.mInstr.insert_operand(0, layout_opr)
 
-    def add_whole_register_layout_operand(self, aRegCount=1):
+    def add_whole_register_layout_operand(self, aRegCount=1, aRegIndexAlignment=1):
         layout_opr = Operand()
         layout_opr.name = "B"
         layout_opr.type = "VectorLayout"
         layout_opr.oclass = "WholeRegisterLayoutOperand"
         layout_opr.regCount = aRegCount
+        layout_opr.regIndexAlignment = aRegIndexAlignment
         self.mInstr.insert_operand(0, layout_opr)
 
     def set_reg_vec(self, aOperand):

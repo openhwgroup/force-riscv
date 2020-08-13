@@ -124,7 +124,7 @@ def add_layout_operand(aInstruction):
         operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
     elif aInstruction.name in ('VMV1R.V', 'VMV2R.V', 'VMV4R.V', 'VMV8R.V'):
         reg_count = int(aInstruction.name[3])
-        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
+        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count, aRegIndexAlignment=reg_count)
     elif aInstruction.name in ('VSETVL', 'VSETVLI'):
         pass  # No vector layout operand required
     elif aInstruction.iclass == 'VectorLoadStoreInstruction':

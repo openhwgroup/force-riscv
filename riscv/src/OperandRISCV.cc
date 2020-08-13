@@ -244,6 +244,7 @@ namespace Force {
     vec_layout.mElemSize = (1 << vsew_field->FieldValue()) * 8;
     RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
     vec_layout.mRegCount = (1 << vlmul_field->FieldValue());
+    vec_layout.mRegIndexAlignment = vec_layout.mRegCount;
 
     instr_constr->SetVectorLayout(vec_layout);
   }
@@ -262,6 +263,7 @@ namespace Force {
     //TODO (Chris): Is this even remotely correct?
     auto vec_layout_opr_struct = mpStructure->CastOperandStructure<VectorLayoutOperandStructure>();
     vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount() / vsew_field->FieldValue() * vlmul_field->FieldValue();
+    vec_layout.mRegIndexAlignment = vec_layout.mRegCount;
     vec_layout.mElemSize = vec_layout_opr_struct->GetElementWidth();
     vec_layout.mElemCount = vec_layout.mRegCount * vl_reg->Value() / vec_layout.mElemSize;
 
@@ -282,6 +284,7 @@ namespace Force {
 
     auto vec_layout_opr_struct = mpStructure->CastOperandStructure<VectorLayoutOperandStructure>();
     vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount();
+    vec_layout.mRegIndexAlignment = vec_layout_opr_struct->GetRegisterIndexAlignment();
 
     instr_constr->SetVectorLayout(vec_layout);
   }

@@ -90,7 +90,7 @@ class InstructionFileHandler(xml.sax.handler.ContentHandler, object):
     def start_O(self, attrs):
         self.currentOperand = self.create_operand(attrs["type"])
         names = attrs.getNames()
-        my_attr_list = [ "name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "slave", "layout-multiple", "reg-count", "elem-width", "uop-param-type", "sizeType"]
+        my_attr_list = [ "name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "slave", "layout-multiple", "reg-count", "reg-index-alignment", "elem-width", "uop-param-type", "sizeType"]
         for name in names:
             if name in my_attr_list:
                 setattr(self.currentOperand, name, attrs[name])
