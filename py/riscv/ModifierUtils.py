@@ -27,7 +27,7 @@ class PageFaultModifier(ChoicesModifier):
                 #'Last Level Pointer',
                 'Invalid DA',
                 'Invalid XWR',
-                #'Invalid U',
+                'Invalid U',
                 #'Va Address Error',
                 ]
 
