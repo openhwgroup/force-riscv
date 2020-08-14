@@ -1610,7 +1610,7 @@ SPIKE_SOURCE_FILENAMES = ["fesvr/option_parser.cc", "riscv/cachesim.cc", "riscv/
 SPIKE_HEADER_FILENAMES = ["fesvr/option_parser.h", "fesvr/elf.h", "riscv/arith.h", "riscv/cachesim.h", "riscv/common.h", "riscv/encoding.h", "riscv/mmu.h", "riscv/opcodes.h", "riscv/simif.h", "riscv/trap.h", "riscv/tracer.h", "riscv/insn_template.h", "riscv/extension.h", "riscv/memtracer.h", "riscv/byteorder.h", "insn_list.h", "icache.h"] 
 
 #All these ones need to be turned into patch operations rather than file replacements to the extent possible
-REPLACEMENT_SOURCE_FILENAMES = ["mmu.cc", "simlib.cc", "processor.cc", "execute.cc", "extensions.cc", "regnames.cc", "disasm.cc"] 
+REPLACEMENT_SOURCE_FILENAMES = ["mmu.cc", "simlib.cc", "processor.cc", "execute.cc", "regnames.cc", "disasm.cc"] 
 REPLACEMENT_HEADER_FILENAMES = ["config.h", "mmu.h", "simif.h", "simlib.h", "specialize.h", "primitives.h", "processor.h", "devices.h", "decode.h", "disasm.h"] #TODO identify the original source counterparts for these 
 REPLACEMENT_INSTRUCTION_HEADER_FILENAMES = ["mret.h", "sret.h"]
 GLOB_REPLACEMENT_INSTRUCTION_HEADER_FILENAMES = ["insns/*.h"]
