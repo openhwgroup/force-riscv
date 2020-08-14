@@ -34,6 +34,7 @@ namespace Force {
     const char* Type() const override { return "VectorMaskOperand"; } //!< Return a string describing the actual type of the Object.
 
     void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
+    void Commit(Generator& gen, Instruction& instr) override; //!< Commit generated operand.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorMaskOperand);
 

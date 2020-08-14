@@ -54,6 +54,13 @@ namespace Force {
     ChoicesOperand::Generate(gen, instr);
   }
 
+  void VectorMaskOperand::Commit(Generator& gen, Instruction& instr)
+  {
+    if (mValue == 0) {
+      gen.RandomInitializeRegister("v0", "");
+    }
+  }
+
   OperandConstraint* VectorMaskOperand::InstantiateOperandConstraint() const
   {
     return new VectorMaskOperandConstraint();
