@@ -168,16 +168,27 @@ def adjust_register_layout(aInstruction):
     if wide_dest != wide_source:
         operand_adjustor.set_vs2_differ_vd()
 
-def convert_width_to_size(aWidth):
-    if aWidth == '000': #VxB
-        return 1
-    elif aWidth == '101': #VxH
-        return 2
-    elif aWidth == '110': #VxW
-        return 4
-    elif aWidth == '111': #VxE
-        return 1 #TODO (Chris): SEW/8 - search vtype? <------- look into rewriting this for 0.9
-    return 1 #TODO: default to 1...
+def get_element_size(aConstBitsOpr):
+    width = aConstBitsOpr.value[-10:-7]
+    mew = aConstBitsOpr.value[3]
+    if mew == '0':
+        if width == '000':
+            return 1
+        elif width == '101':
+            return 2
+        elif width == '110':
+            return 4
+        elif width == '111':
+            return 8
+    elif mew == '1':
+        if width == '000':
+            return 16
+        elif width == '101':
+            return 32
+        elif width == '110':
+            return 64
+        elif width == '111':
+            return 128
 
 def adjust_vd_rs1(aInstruction):
     if aInstruction.iclass == 'VectorLoadStoreInstruction':
@@ -185,7 +196,7 @@ def adjust_vd_rs1(aInstruction):
         operand_adjustor.set_vd_ls_dest()
         operand_adjustor.set_rs1_int_ls_base()
 
-        width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+        width = get_element_size(aInstruction.find_operand('const_bits'))
         attr_dict = dict()
         subop_dict = dict()
         subop_dict["base"] = "rs1"
@@ -211,7 +222,7 @@ def adjust_vs3_rs1(aInstruction):
     operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"
@@ -230,7 +241,7 @@ def adjust_vs3_rs1_vm(aInstruction):
     operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"
@@ -250,7 +261,7 @@ def adjust_vs3_rs1_vs2_vm(aInstruction):
     operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"
@@ -283,7 +294,7 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
     operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"
@@ -315,7 +326,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"
@@ -376,7 +387,7 @@ def adjust_vd_rs1_vm(aInstruction):
         operand_adjustor.set_vd_ls_dest()
         operand_adjustor.set_rs1_int_ls_base()
 
-        width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+        width = get_element_size(aInstruction.find_operand('const_bits'))
         attr_dict = dict()
         subop_dict = dict()
         subop_dict["base"] = "rs1"
@@ -402,7 +413,7 @@ def adjust_vd_rs1_vs2_vm(aInstruction):
     operand_adjustor.set_vd_ls_dest()
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"
@@ -435,7 +446,7 @@ def adjust_vd_rs1_rs2_vm(aInstruction):
     operand_adjustor.set_vd_ls_dest()
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"
@@ -467,7 +478,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
 
-    width = convert_width_to_size(aInstruction.find_operand('const_bits').value[-10:-7])
+    width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
     subop_dict["base"] = "rs1"

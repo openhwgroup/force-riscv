@@ -265,14 +265,26 @@ namespace Force {
     Register* vl_reg = reg_file->RegisterLookup("vl");
     Register* vtype_reg = reg_file->RegisterLookup("vtype");
     RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
+    uint64 sew = (1 << vsew_field->FieldValue()) * 8;
     RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
+    uint64 lmul = (1 << vlmul_field->FieldValue());
 
-    //TODO (Chris): Is this even remotely correct?
     auto vec_layout_opr_struct = mpStructure->CastOperandStructure<VectorLayoutOperandStructure>();
-    vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount() / vsew_field->FieldValue() * vlmul_field->FieldValue();
-    vec_layout.mRegIndexAlignment = vec_layout.mRegCount;
+
+    // EMUL = (EEW / SEW) * LMUL. EEW is the element width for the instruction. Register operands
+    // must be aligned to EMUL.
+    vec_layout.mRegIndexAlignment = vec_layout_opr_struct->GetElementWidth() * lmul / sew;
+    if (vec_layout.mRegIndexAlignment == 0) {
+      vec_layout.mRegIndexAlignment = 1;
+    }
+
+    // The total register count is EMUL * NFIELDS. NFIELDS is the register count for the instruction. For instructions other than load/store segment instructions, NFIELDS = 1.
+    vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount() * vec_layout.mRegIndexAlignment;
+
     vec_layout.mElemSize = vec_layout_opr_struct->GetElementWidth();
-    vec_layout.mElemCount = vec_layout.mRegCount * vl_reg->Value() / vec_layout.mElemSize;
+
+    // The total element count is NFIELDS * vl.
+    vec_layout.mElemCount = vec_layout_opr_struct->GetRegisterCount() * vl_reg->Value();
 
     instr_constr->SetVectorLayout(vec_layout);
   }
