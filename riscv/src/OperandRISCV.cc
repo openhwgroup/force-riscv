@@ -66,36 +66,6 @@ namespace Force {
     return new VectorMaskOperandConstraint();
   }
 
-  void BaseOffsetBranchOperand::Generate(Generator& gen, Instruction& instr)
-  {
-    if (instr.NoRestriction()) {
-      // Front end has set up the details; no need to generate through constraint solving
-      BaseGenerate(gen, instr, true);
-      return;
-    }
-
-    auto addr_opr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
-    if (not addr_opr_constr->UsePreamble()) {
-      if (GenerateNoPreamble(gen, instr)) {
-        LOG(info) << "{BaseOffsetBranchOperand::Generate} generated without preamble" << endl;
-        return;
-      }
-      else if (addr_opr_constr->NoPreamble()) {
-        stringstream err_stream;
-        err_stream << "Operand \"" << Name() << "\" failed to generate no-preamble";
-        throw OperandError(err_stream.str());
-      }
-      else {
-        LOG(info) << "{BaseOffsetBranchOperand::Generate} switch from no-preamble to preamble" << endl;
-      }
-    }
-
-    addr_opr_constr->SetUsePreamble(gen);
-    GenerateWithPreamble(gen, instr);
-
-    LOG(info) << "{BaseOffsetBranchOperand::Generate} generated with preamble" << endl;
-  }
-
   bool BaseOffsetBranchOperand::GetPrePostAmbleRequests(Generator& gen) const
   {
     auto branch_opr_constr = mpOperandConstraint->CastInstance<BaseOffsetBranchOperandConstraint>();
@@ -116,15 +86,6 @@ namespace Force {
   OperandConstraint* BaseOffsetBranchOperand::InstantiateOperandConstraint() const
   {
     return new BaseOffsetBranchOperandConstraint();
-  }
-
-  void BaseOffsetBranchOperand::UpdateNoRestrictionTarget(const Instruction& instr)
-  {
-    auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
-    const ConstraintSet* target_constr = addr_constr->TargetConstraint();
-    if ((target_constr != nullptr) and (target_constr->Size() == 1)) {
-      mTargetAddress = target_constr->OnlyValue();
-    }
   }
 
   void BaseOffsetBranchOperand::GenerateWithPreamble(Generator& gen, Instruction& instr)

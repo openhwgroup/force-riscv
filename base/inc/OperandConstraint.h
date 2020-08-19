@@ -501,6 +501,32 @@ namespace Force {
     ImmediateOperand* mpOffset; //!< Pointer to offset sub operand, if applicable.
   };
 
+   /*!
+    \class VectorStridedLoadStoreOperandConstraint
+    \brief The class carries dynamic constraint properties for VectorStridedLoadStoreOperand.
+  */
+  class VectorStridedLoadStoreOperandConstraint : public LoadStoreOperandConstraint {
+  public:
+    VectorStridedLoadStoreOperandConstraint();
+    COPY_CONSTRUCTOR_ABSENT(VectorStridedLoadStoreOperandConstraint);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorStridedLoadStoreOperandConstraint);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorStridedLoadStoreOperandConstraint);
+
+    void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
+    RegisterOperand* BaseOperand() const override { return mpBase; } //!< Return pointer to base operand if applicable.
+    void GetRegisterOperands(std::vector<const RegisterOperand* >& rRegOps) override; //!< Get pointers to sub RegisterOperands.
+    RegisterOperand* StrideOperand() const { return mpStride; } //!< Return pointer to stride operand.
+    uint64 BaseValue() const { return mBaseValue; } //!< Return base value.
+    uint64 StrideValue() const { return mStrideValue; } //!< Return stride value.
+    void SetBaseValue(cuint64 baseValue) { mBaseValue = baseValue; } //!< Set base value.
+    void SetStrideValue(cuint64 strideValue) { mStrideValue = strideValue; } //!< Set stride value.
+  private:
+    RegisterOperand* mpBase; //!< Base operand
+    RegisterOperand* mpStride; //!< Stride operand
+    uint64 mBaseValue; //!< Base value
+    uint64 mStrideValue; //!< Stride value
+  };
+
 }
 
 #endif

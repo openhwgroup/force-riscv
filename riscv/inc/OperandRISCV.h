@@ -56,14 +56,12 @@ namespace Force {
     Object* Clone() const override { return new BaseOffsetBranchOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
     const char* Type() const override { return "BaseOffsetBranchOperand"; } //!< Return a string describing the actual type of the Object.
 
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
     bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests, if any.
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
   protected:
     BaseOffsetBranchOperand(const BaseOffsetBranchOperand& rOther) : BranchOperand(rOther) { } //!< Copy constructor
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
-    void UpdateNoRestrictionTarget(const Instruction& instr) override; //!< Update target address when no-restriction is specified.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
     bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
   private:

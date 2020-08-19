@@ -671,7 +671,7 @@ namespace Force {
     mpBase = dynamic_cast<RegisterOperand* >(base_ptr);
     if (nullptr == mpBase) {
       LOG(fail) << "{BaseOffsetLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-      FAIL("expecting-register_operand");
+      FAIL("expecting-register-operand");
     }
 
     if (bols_struct->Offset().size() > 0) {
@@ -696,14 +696,14 @@ namespace Force {
     mpBase = dynamic_cast<RegisterOperand* >(base_ptr);
     if (nullptr == mpBase) {
       LOG(fail) << "{BaseIndexLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-      FAIL("expecting-register_operand");
+      FAIL("expecting-register-operand");
     }
     if (bils_struct->Index().size() > 0) {
       auto register_ptr = rInstr.FindOperandMutable(bils_struct->Index(), true);
       mpIndex =  dynamic_cast<RegisterOperand* >(register_ptr);
       if (nullptr == mpIndex) {
          LOG(fail) << "{BaseIndexLoadStoreOperandConstraint::Setup} expecting operand " << register_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-         FAIL("expecting-register_operand");
+         FAIL("expecting-register-operand");
       }
       mIndexUsePreamble = rGen.AddressProtection() or not rGen.HasISS();
       const std::vector<Operand* > operands = rInstr.GetOperands();
@@ -746,6 +746,42 @@ namespace Force {
   {
     LoadStoreOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
     mpOffset = GetSignedOffsetOperand(rInstr, rOperandStruct);
+  }
+
+  VectorStridedLoadStoreOperandConstraint::VectorStridedLoadStoreOperandConstraint()
+    : LoadStoreOperandConstraint(), mpBase(nullptr), mpStride(nullptr), mBaseValue(0), mStrideValue(0)
+  {
+  }
+
+  void VectorStridedLoadStoreOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    LoadStoreOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    auto lsop_struct = dynamic_cast<const LoadStoreOperandStructure*>(&rOperandStruct);
+    if (lsop_struct == nullptr) {
+      LOG(fail) << "{VectorStridedLoadStoreOperandConstraint::Setup} expecting operand " << rOperandStruct.mName << " to be \"LoadStoreOperandStructure\" type." << endl;
+      FAIL("expecting-load-store-operand-structure");
+    }
+
+    Operand* base_opr = rInstr.FindOperandMutable(lsop_struct->Base(), true);
+    mpBase = dynamic_cast<RegisterOperand*>(base_opr);
+    if (mpBase == nullptr) {
+      LOG(fail) << "{VectorStridedLoadStoreOperandConstraint::Setup} expecting operand " << base_opr->Name() << " to be \"RegisterOperand\" type." << endl;
+      FAIL("expecting-register-operand");
+    }
+
+    Operand* stride_opr = rInstr.FindOperandMutable(lsop_struct->Index(), true);
+    mpStride = dynamic_cast<RegisterOperand*>(stride_opr);
+    if (mpStride == nullptr) {
+      LOG(fail) << "{VectorStridedLoadStoreOperandConstraint::Setup} expecting operand " << stride_opr->Name() << " to be \"RegisterOperand\" type." << endl;
+      FAIL("expecting-register-operand");
+    }
+  }
+
+  void VectorStridedLoadStoreOperandConstraint::GetRegisterOperands(vector<const RegisterOperand*>& rRegOps)
+  {
+    rRegOps.push_back(mpBase);
+    rRegOps.push_back(mpStride);
   }
 
 }

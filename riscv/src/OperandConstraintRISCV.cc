@@ -347,7 +347,7 @@ namespace Force {
     mpBase = dynamic_cast<RegisterOperand* >(base_ptr);
     if (nullptr == mpBase) {
       LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-      FAIL("expecting-register_operand");
+      FAIL("expecting-register-operand");
     }
   }
 
