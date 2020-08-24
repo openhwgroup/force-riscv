@@ -28,7 +28,7 @@ namespace Force {
   */
   class BaseOffsetConstraint {
   public:
-    BaseOffsetConstraint(uint64 offsetBase, uint32 offsetSize,  uint32 offsetShift, uint64 maxAddress, bool IsOffsetShift = true); //!< Constructor with parameters.
+    BaseOffsetConstraint(uint64 offsetBase, uint32 offsetSize, uint32 offsetShift, uint64 maxAddress, bool IsOffsetShift = true); //!< Constructor with parameters.
     BaseOffsetConstraint(); //!< Default constructor.
     ~BaseOffsetConstraint() { } //!< Destructor.
     ASSIGNMENT_OPERATOR_ABSENT(BaseOffsetConstraint);

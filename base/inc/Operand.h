@@ -778,7 +778,35 @@ namespace Force {
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
     void DifferStrideOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the stride operand uses a different register from the base operand.
     uint64 CalculateStrideValue(const Instruction& rInstr, cuint32 alignment, cuint32 addrRangeSize) const; //!< Calculate the value of the stride operand.
-    uint64 CalculateBaseValue(cuint64 baseAddr, cuint32 alignment, cuint32 addrRangeSize, cuint64 strideVal); //!< Calculate the value of the base operand.
+    uint64 CalculateBaseValue(cuint64 baseAddr, cuint32 alignment, cuint32 addrRangeSize, cuint64 strideVal) const; //!< Calculate the value of the base operand.
+  };
+
+  /*!
+    \class VectorIndexedLoadStoreOperand
+    \brief Operand for vector indexed load/store operations.
+  */
+  class VectorIndexedLoadStoreOperand : public LoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedLoadStoreOperand);
+
+    Object* Clone() const override { return new VectorIndexedLoadStoreOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorIndexedLoadStoreOperand"; } //!< Return a string describing the actual type of the Object.
+    bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests, if any.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+    void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
+    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
+    AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
+  private:
+    void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
+    uint64 AllocateIndexOperandDataBlock(Generator& rGen) const; //!< Allocate and initialize a block of memory to use for preamble loading of the index operand.
+    void RecordIndexElementByteSize(const Instruction& rInstr); //!< Compute and capture the index vector element size in bytes.
+    uint64 CalculateBaseAndFirstIndexValues(const Instruction& rInstr, cuint32 alignment, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the base operand and first index operand element.
+    void CalculateIndexValues(const Instruction& rInstr, cuint32 alignment, cuint64 baseVal, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the index operand elements after the first one.
   };
 
   /*!
