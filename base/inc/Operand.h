@@ -494,7 +494,8 @@ namespace Force {
   protected:
     uint64 mTargetAddress; //!< Recording the target virtual address,
   private:
-    virtual bool MustGeneratePreamble(const Generator& rGen); //!< Return true if the operand is required to be generated using preamble.
+    virtual void AdjustMemoryElementLayout() { } //!< Finalize memory access dimensions based on runtime state.
+    virtual bool MustGeneratePreamble(const Generator& rGen) const; //!< Return true if the operand is required to be generated using preamble.
   };
 
   /*!
@@ -549,7 +550,7 @@ namespace Force {
     uint64 GetAddressingAlignment(uint64 alignment, uint64 dataSize = 0) const override; //!< Get register branch addressing alignment.
     AddressingMode* GetAddressingMode(uint64 alignment) const override; //!< Return suitable addressing mode object.
   private:
-    bool MustGeneratePreamble(const Generator& rGen) override; //!< Return true if the operand is required to be generated using preamble.
+    bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
   };
 
   /*!
@@ -727,7 +728,7 @@ namespace Force {
     bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate base index addressing mode with no preamble.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseIndexLoadStoreOperand.
   private:
-    bool MustGeneratePreamble(const Generator& rGen) override; //!< Return true if the operand is required to be generated using preamble.
+    bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
   };
 
   /*!

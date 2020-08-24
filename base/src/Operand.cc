@@ -664,6 +664,8 @@ namespace Force {
       return;
     }
 
+    AdjustMemoryElementLayout();
+
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     if (not MustGeneratePreamble(gen)) {
       if (GenerateNoPreamble(gen, instr)) {
@@ -725,7 +727,7 @@ namespace Force {
     return verif_okay;
   }
 
-  bool AddressingOperand::MustGeneratePreamble(const Generator& rGen)
+  bool AddressingOperand::MustGeneratePreamble(const Generator& rGen) const
   {
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     if (addr_constr->UsePreamble()) {
@@ -840,7 +842,7 @@ namespace Force {
     return false;
   }
 
-  bool RegisterBranchOperand::MustGeneratePreamble(const Generator& rGen)
+  bool RegisterBranchOperand::MustGeneratePreamble(const Generator& rGen) const
   {
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     if (not rGen.HasISS() /* TODO temporary */ or addr_constr->UsePreamble()) {
@@ -1404,7 +1406,7 @@ namespace Force {
     return new BaseIndexLoadStoreOperandConstraint();
   }
 
-  bool BaseIndexLoadStoreOperand::MustGeneratePreamble(const Generator& rGen)
+  bool BaseIndexLoadStoreOperand::MustGeneratePreamble(const Generator& rGen) const
   {
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     if (not rGen.HasISS() /* TODO temporary */ or addr_constr->UsePreamble()) {

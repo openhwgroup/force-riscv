@@ -18,7 +18,6 @@
 #include <AddressSolver.h>
 #include <BntNode.h>
 #include <ChoicesFilter.h>
-#include <Config.h>
 #include <Constraint.h>
 #include <GenException.h>
 #include <GenRequest.h>
@@ -27,13 +26,13 @@
 #include <InstructionStructure.h>
 #include <Log.h>
 #include <Random.h>
-#include <Register.h>
 #include <VaGenerator.h>
 #include <VectorLayout.h>
 #include <VmMapper.h>
 
 #include <InstructionConstraintRISCV.h>
 #include <OperandConstraintRISCV.h>
+#include <VectorLayoutSetupRISCV.h>
 
 #include <memory>
 #include <sstream>
@@ -203,16 +202,8 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
 
-    const RegisterFile* reg_file = rGen.GetRegisterFile();
-    Register* vl_reg = reg_file->RegisterLookup("vl");
-    vec_layout.mElemCount = vl_reg->Value();
-
-    Register* vtype_reg = reg_file->RegisterLookup("vtype");
-    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
-    vec_layout.mElemSize = (1 << vsew_field->FieldValue()) * 8;
-    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
-    vec_layout.mRegCount = (1 << vlmul_field->FieldValue());
-    vec_layout.mRegIndexAlignment = vec_layout.mRegCount;
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile(), mpStructure->CastOperandStructure<VectorLayoutOperandStructure>());
+    vec_layout_setup.SetUpVectorLayoutVtype(vec_layout);
 
     instr_constr->SetVectorLayout(vec_layout);
   }
@@ -222,30 +213,8 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
 
-    const RegisterFile* reg_file = rGen.GetRegisterFile();
-    Register* vl_reg = reg_file->RegisterLookup("vl");
-    Register* vtype_reg = reg_file->RegisterLookup("vtype");
-    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
-    uint64 sew = (1 << vsew_field->FieldValue()) * 8;
-    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
-    uint64 lmul = (1 << vlmul_field->FieldValue());
-
-    auto vec_layout_opr_struct = mpStructure->CastOperandStructure<VectorLayoutOperandStructure>();
-
-    // EMUL = (EEW / SEW) * LMUL. EEW is the element width for the instruction. Register operands
-    // must be aligned to EMUL.
-    vec_layout.mRegIndexAlignment = vec_layout_opr_struct->GetElementWidth() * lmul / sew;
-    if (vec_layout.mRegIndexAlignment == 0) {
-      vec_layout.mRegIndexAlignment = 1;
-    }
-
-    // The total register count is EMUL * NFIELDS. NFIELDS is the register count for the instruction. For instructions other than load/store segment instructions, NFIELDS = 1.
-    vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount() * vec_layout.mRegIndexAlignment;
-
-    vec_layout.mElemSize = vec_layout_opr_struct->GetElementWidth();
-
-    // The total element count is NFIELDS * vl.
-    vec_layout.mElemCount = vec_layout_opr_struct->GetRegisterCount() * vl_reg->Value();
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile(), mpStructure->CastOperandStructure<VectorLayoutOperandStructure>());
+    vec_layout_setup.SetUpVectorLayoutFixedElementSize(vec_layout);
 
     instr_constr->SetVectorLayout(vec_layout);
   }
@@ -255,16 +224,8 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
 
-    vec_layout.mElemSize = 8;
-
-    // TODO(Noah): Replace the vector length configuration value with the value of vlenb when it
-    // becomes possible to read vlenb from the simulator and if it is determined to be a better
-    // approach.
-    vec_layout.mElemCount = Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / vec_layout.mElemSize;
-
-    auto vec_layout_opr_struct = mpStructure->CastOperandStructure<VectorLayoutOperandStructure>();
-    vec_layout.mRegCount = vec_layout_opr_struct->GetRegisterCount();
-    vec_layout.mRegIndexAlignment = vec_layout_opr_struct->GetRegisterIndexAlignment();
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile(), mpStructure->CastOperandStructure<VectorLayoutOperandStructure>());
+    vec_layout_setup.SetUpVectorLayoutWholeRegister(vec_layout);
 
     instr_constr->SetVectorLayout(vec_layout);
   }
@@ -282,6 +243,10 @@ namespace Force {
   OperandConstraint* VectorLoadStoreOperand::InstantiateOperandConstraint() const
   {
     return new VectorLoadStoreOperandConstraint();
+  }
+
+  void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout()
+  {
   }
 
   void MultiVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)

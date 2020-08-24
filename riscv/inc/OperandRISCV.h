@@ -221,6 +221,24 @@ namespace Force {
   };
 
   /*!
+    \class VectorIndexedLoadStoreOperandRISCV
+    \brief Operand for RISCV vector indexed load/store operations.
+  */
+  class VectorIndexedLoadStoreOperandRISCV : public VectorIndexedLoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperandRISCV);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperandRISCV);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedLoadStoreOperandRISCV);
+
+    Object* Clone() const override { return new VectorIndexedLoadStoreOperandRISCV(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorIndexedLoadStoreOperandRISCV"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperandRISCV);
+  private:
+    void AdjustMemoryElementLayout() override; //!< Finalize memory access dimensions based on runtime state.
+  };
+
+  /*!
     \class MultiVectorRegisterOperandRISCV
     \brief Operand class handling number of registers
   */
