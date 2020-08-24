@@ -127,6 +127,6 @@
 >   eltIndex ^= elts_per_reg - 1;
 >   #endif
 > 
->   uint8_t *p_reg_start = (uint8_t*)((char*)reg_file + vecRegIndex * (VLEN >> 3));
+>   uint8_t *p_reg_start = (uint8_t*)((char*)reg_file + corrected_vreg_index * (VLEN >> 3));
 >   update_vector_element(p->get_state()->pid, vr_name[corrected_vreg_index], corrected_vreg_index, eltIndex, sizeof(T), p_reg_start, (VLEN >> 3), pAccessType);
 > }
