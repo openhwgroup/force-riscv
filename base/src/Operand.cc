@@ -1721,12 +1721,15 @@ namespace Force {
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
 
-    ConstraintSet target_addr_constr;
-    BaseOffsetConstraint base_offset_constr(0, vec_layout->mElemSize, 0, MAX_UINT64, true);
-    base_offset_constr.GetConstraint(baseVal, lsop_struct->DataSize(), nullptr, target_addr_constr);
+    unique_ptr<ConstraintSet> target_addr_constr;
+    if (vec_layout->mElemSize < 64) {
+      target_addr_constr.reset(new ConstraintSet());
+      BaseOffsetConstraint base_offset_constr(0, vec_layout->mElemSize, 0, MAX_UINT64, true);
+      base_offset_constr.GetConstraint(baseVal, lsop_struct->DataSize(), nullptr, *target_addr_constr);
+    }
 
     for (uint32 elem_index = 1; elem_index < vec_layout->mElemCount; elem_index++) {
-      uint64 target_addr = va_gen.GenerateAddress(alignment, lsop_struct->DataSize(), false, page_req->MemoryAccessType(), &target_addr_constr);
+      uint64 target_addr = va_gen.GenerateAddress(alignment, lsop_struct->DataSize(), false, page_req->MemoryAccessType(), target_addr_constr.get());
       rIndexElemValues.push_back(target_addr - baseVal);
     }
   }

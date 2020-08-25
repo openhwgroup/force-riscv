@@ -94,6 +94,8 @@ namespace Force {
 
   void BaseOffsetConstraint::GetConstraint(uint64 baseValue, uint32 accessSize, const ConstraintSet* pOffsetConstr, ConstraintSet& resultConstr) const
   {
+    ValidateOffsetSize();
+
     SetMutables(baseValue, accessSize, pOffsetConstr);
 
     uint64 min_value = 0ull - mOffsetBase; // produces 1's compliment value if the offset is signed.
@@ -126,6 +128,20 @@ namespace Force {
       resultConstr.ApplyConstraintSet(additional_constr);
     }
     // << "Base-offset constraint: " << resultConstr.ToSimpleString() << endl;
+  }
+
+  void BaseOffsetConstraint::ValidateOffsetSize() const
+  {
+    uint32 max_offset_size = 63;
+    if (mOffsetSize > max_offset_size) {
+      LOG(fail) << "{BaseOffsetConstraint::ValidateOffsetSize} offset size " << dec << mOffsetSize << " exceeds maximum value of " << max_offset_size << endl;
+      FAIL("invalid-parameter-value");
+    }
+
+    if (mIsOffsetShift and ((mOffsetSize + mOffsetScale) > max_offset_size)) {
+      LOG(fail) << "{BaseOffsetConstraint::ValidateOffsetSize} sum of offset size " << dec << mOffsetSize << " and shift offset scale " << mOffsetScale << " exceeds maximum value of " << max_offset_size << endl;
+      FAIL("invalid-parameter-value");
+    }
   }
 
 }

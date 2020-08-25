@@ -29,7 +29,7 @@ static const uint32 Imm26_Offset_Base = 0x2000000; // 26 bit immediate offset
 
 const lest::test specification[] = {
 
-  CASE( "BaseOfsetConstraint test case 1" ) {
+  CASE( "BaseOffsetConstraint test case 1" ) {
 
     SETUP( "setup test 1.1" )  {
     BaseOffsetConstraint bo_constr_builder(Imm26_Offset_Base, 26,  2, MAX_UINT64);
@@ -146,8 +146,24 @@ const lest::test specification[] = {
     EXPECT(base_offset_constr.Size() == target_size);
       }      
     }
-  }
+  },
 
+  CASE( "BaseOffsetConstraint test invalid parameter" ) {
+
+    SETUP( "setup" )  {
+      ConstraintSet base_offset_constr;
+
+      SECTION( "test offset too large" ) {
+        BaseOffsetConstraint bo_constr_builder(0, 64, 0, MAX_UINT64, true);
+        EXPECT_FAIL(bo_constr_builder.GetConstraint(0x33b982c3c836, 16, nullptr, base_offset_constr), "invalid-parameter-value");
+      }
+
+      SECTION( "test offset too larget after scaling" ) {
+        BaseOffsetConstraint bo_constr_builder(0, 32, 32, MAX_UINT64, true);
+        EXPECT_FAIL(bo_constr_builder.GetConstraint(0xa78fd4bec0a8, 32, nullptr, base_offset_constr), "invalid-parameter-value");
+      }
+    }
+  },
 };
 
 int main( int argc, char * argv[] )

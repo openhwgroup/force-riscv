@@ -63,12 +63,13 @@ namespace Force {
     void GetAdditionalConstraint(ConstraintSet& rAdditionalConstr) const; //!< Get additional constraint by processing the constraint on offset field.
     void AddOffsetValueConstraint(uint64 offsetValue, ConstraintSet& rAdditionalConstr) const; //!< Add constraints to cover the specified offset value.
     void AddOffsetRangeConstraint(uint64 offsetLower, uint64 offsetUpper, ConstraintSet& rAdditionalConstr) const; //!< Add constraints to cover the specified offset range.
+    void ValidateOffsetSize() const; //!< Fail if the offset size exceeds the useful limit.
   private:
     uint64 mOffsetBase; //!< Base value of the offset field.
     uint64 mMaxAddress; //!< Maximum address allowed.
     uint32 mOffsetSize; //!< Size of the offset field.
     uint32 mOffsetScale; //!< Shift value of the offset field.
-    bool   mIsOffsetShift;//!< indicat mOffsetScale is shift or multiply.
+    bool   mIsOffsetShift;//!< indicate mOffsetScale is shift or multiply.
     uint64 mSignTestBit; //!< Sign testing bit.
     uint64 mOffsetMask; //!< Offset mask.
     uint64 mSignExtendMask; //!< Sign extension mask.
