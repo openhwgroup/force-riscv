@@ -42,8 +42,11 @@ class MainSequence(Sequence):
             if instr_record is None:
                 self.error('Instruction %s did not generate correctly' % instr)
 
-            illegal_instr_count = self.queryExceptionRecordsCount(0x2)
-            if illegal_instr_count != 0:
+            except_count = 0
+            for except_code in (0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF):
+                except_count += self.queryExceptionRecordsCount(except_code)
+
+            if except_count != 0:
                 self.error('Instruction %s did not execute correctly' % instr)
 
 
