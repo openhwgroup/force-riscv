@@ -799,6 +799,7 @@ namespace Force {
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
     virtual void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const = 0; //!< Get the names of the index registers.
     uint64 AllocateIndexOperandDataBlock(Generator& rGen, cuint32 relativeRegIndex) const; //!< Allocate and initialize a block of memory to use for preamble loading of an index operand register.
+    void DifferIndexOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the index operand uses a different register from other vector register operands.
     void RecordIndexElementByteSize(const Instruction& rInstr); //!< Compute and capture the index vector element size in bytes.
     uint64 CalculateBaseAndFirstIndexValues(const Instruction& rInstr, cuint32 alignment, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the base operand and first index operand element.
     void CalculateIndexValues(const Instruction& rInstr, cuint32 alignment, cuint64 baseVal, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the index operand elements after the first one.
