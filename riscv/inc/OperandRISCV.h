@@ -235,7 +235,8 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperandRISCV);
   private:
-    void AdjustMemoryElementLayout() override; //!< Finalize memory access dimensions based on runtime state.
+    void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const override; //!< Get the names of the index registers.
+    void AdjustMemoryElementLayout(const Generator& rGen) override; //!< Finalize memory access dimensions based on runtime state.
   };
 
   /*!

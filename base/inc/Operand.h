@@ -287,26 +287,21 @@ namespace Force {
   */
   class MultiRegisterOperand : public virtual RegisterOperand {
   public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(MultiRegisterOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(MultiRegisterOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(MultiRegisterOperand);
+
     Object* Clone() const override = 0; //!< Return a cloned MultiRegisterOperand object of the same type and same contents of the object.
     const char* Type() const override { return "MultiRegisterOperand"; } //!< Return the type of the MultiRegisterOperand object in C string.
 
-    MultiRegisterOperand() : RegisterOperand(), mExtraRegisters() { } //!< Constructor.
-    ~MultiRegisterOperand() { } //!< Destructor
-
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate MultiRegisterOperand details.
     void Commit(Generator& gen, Instruction& instr) override; //!< Commit generated MultiRegisterOperand.
     virtual uint32 NumberRegisters() const = 0; //!< Return number of registers.
-  protected:
-    explicit MultiRegisterOperand(const RegisterOperand& rOther) //!< Copy constructor.
-      : RegisterOperand(rOther), mExtraRegisters()
-    {
-    }
-
     void GetExtraRegisterNames(uint32 regIndex, std::vector<std::string>& nameVec) const; //!< Return a list of the extra register names.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(MultiRegisterOperand);
+
     virtual const std::string GetNextRegisterName(uint32& indexVar) const = 0; //!< Return the name of the next register.
     ChoicesFilter * GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return choices filter for MultiRegisterOperand.
-  protected:
-    std::vector<std::string> mExtraRegisters; //!< Names of the extra few registers.
   };
 
   /*!
@@ -494,7 +489,7 @@ namespace Force {
   protected:
     uint64 mTargetAddress; //!< Recording the target virtual address,
   private:
-    virtual void AdjustMemoryElementLayout() { } //!< Finalize memory access dimensions based on runtime state.
+    virtual void AdjustMemoryElementLayout(const Generator& rGen) { } //!< Finalize memory access dimensions based on runtime state.
     virtual bool MustGeneratePreamble(const Generator& rGen) const; //!< Return true if the operand is required to be generated using preamble.
   };
 
@@ -591,7 +586,7 @@ namespace Force {
     void Generate(Generator& gen, Instruction& instr) override; //!< Generate MultiVectorRegisterOperand details.
 
   protected:
-    explicit MultiVectorRegisterOperand(const RegisterOperand& rOther) //!< Copy constructor.
+    explicit MultiVectorRegisterOperand(const MultiVectorRegisterOperand& rOther) //!< Copy constructor.
       : VectorRegisterOperand(rOther), MultiRegisterOperand(rOther)
     {
     }
@@ -792,8 +787,6 @@ namespace Force {
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
     ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedLoadStoreOperand);
 
-    Object* Clone() const override { return new VectorIndexedLoadStoreOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
-    const char* Type() const override { return "VectorIndexedLoadStoreOperand"; } //!< Return a string describing the actual type of the Object.
     bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests, if any.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
@@ -804,7 +797,8 @@ namespace Force {
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
   private:
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
-    uint64 AllocateIndexOperandDataBlock(Generator& rGen) const; //!< Allocate and initialize a block of memory to use for preamble loading of the index operand.
+    virtual void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const = 0; //!< Get the names of the index registers.
+    uint64 AllocateIndexOperandDataBlock(Generator& rGen, cuint32 relativeRegIndex) const; //!< Allocate and initialize a block of memory to use for preamble loading of an index operand register.
     void RecordIndexElementByteSize(const Instruction& rInstr); //!< Compute and capture the index vector element size in bytes.
     uint64 CalculateBaseAndFirstIndexValues(const Instruction& rInstr, cuint32 alignment, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the base operand and first index operand element.
     void CalculateIndexValues(const Instruction& rInstr, cuint32 alignment, cuint64 baseVal, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the index operand elements after the first one.

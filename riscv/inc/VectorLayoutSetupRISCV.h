@@ -29,21 +29,20 @@ namespace Force {
   */
   class VectorLayoutSetupRISCV {
   public:
-    VectorLayoutSetupRISCV(const RegisterFile* pRegFile, const VectorLayoutOperandStructure* pVecLayoutOprStruct);
+    explicit VectorLayoutSetupRISCV(const RegisterFile* pRegFile);
     COPY_CONSTRUCTOR_ABSENT(VectorLayoutSetupRISCV);
     DESTRUCTOR_DEFAULT(VectorLayoutSetupRISCV);
     ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutSetupRISCV);
 
     void SetUpVectorLayoutVtype(VectorLayout& rVecLayout); //!< Configure the VectorLayout object using current vtype register values.
-    void SetUpVectorLayoutFixedElementSize(VectorLayout& rVecLayout); //!< Configure the VectorLayout object using vtype register values, but with the element width specified by the layout operand structure.
-    void SetUpVectorLayoutWholeRegister(VectorLayout& rVecLayout); //!< Configure the VectorLayout object for a whole register instruction.
+    void SetUpVectorLayoutFixedElementSize(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout); //!< Configure the VectorLayout object using vtype register values, but with the element width specified by the layout operand structure.
+    void SetUpVectorLayoutWholeRegister(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout); //!< Configure the VectorLayout object for a whole register instruction.
   private:
     uint32 GetVl() const; //!< Get the current VL value.
     uint32 GetSew() const; //!< Get the current SEW value.
     uint32 GetLmul() const; //!< Get the current LMUL value.
   private:
     const RegisterFile* mpRegFile; //!< Register file
-    const VectorLayoutOperandStructure* mpVecLayoutOprStruct; //!< Layout operand structure
   };
 
 }

@@ -664,7 +664,7 @@ namespace Force {
       return;
     }
 
-    AdjustMemoryElementLayout();
+    AdjustMemoryElementLayout(gen);
 
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     if (not MustGeneratePreamble(gen)) {
@@ -925,15 +925,6 @@ namespace Force {
   void MultiVectorRegisterOperand::Generate(Generator& gen, Instruction& instr)
   {
     VectorRegisterOperand::Generate(gen, instr);
-    mExtraRegisters.clear();
-    GetExtraRegisterNames(mValue, mExtraRegisters);
-  }
-
-  void MultiRegisterOperand::Generate(Generator& gen, Instruction& instr)
-  {
-    RegisterOperand::Generate(gen, instr);
-    mExtraRegisters.clear();
-    GetExtraRegisterNames(mValue, mExtraRegisters);
   }
 
   void MultiRegisterOperand::Commit(Generator& gen, Instruction& instr)
@@ -947,7 +938,9 @@ namespace Force {
     const RegisterFile* reg_file = gen.GetRegisterFile();
     bool updating_reg = (not gen.HasISS()) and mpStructure->HasWriteAccess();
 
-    for (auto reg_name : mExtraRegisters) {
+    vector<string> extra_reg_names;
+    GetExtraRegisterNames(mValue, extra_reg_names);
+    for (auto reg_name : extra_reg_names) {
       Register* reg_ptr = reg_file->RegisterLookup(reg_name);
       if (updating_reg) {
         reg_ptr->ClearAttribute(ERegAttrType::HasValue);
@@ -1587,11 +1580,12 @@ namespace Force {
   {
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
     if (indexed_opr_constr->UsePreamble()) {
-      // TODO(Noah): Handle the case where multiple vector registers are used as the index operand
-      // when there is time to do so.
-      RegisterOperand* index_opr = indexed_opr_constr->IndexOperand();
-      uint64 index_opr_data_block_addr = AllocateIndexOperandDataBlock(gen);
-      gen.AddLoadRegisterAmbleRequests(index_opr->ChoiceText(), index_opr_data_block_addr);
+      vector<string> index_reg_names;
+      GetIndexRegisterNames(index_reg_names);
+      for (uint32 relative_reg_index = 0; relative_reg_index < index_reg_names.size(); relative_reg_index++) {
+        uint64 index_opr_data_block_addr = AllocateIndexOperandDataBlock(gen, relative_reg_index);
+        gen.AddLoadRegisterAmbleRequests(index_reg_names[relative_reg_index], index_opr_data_block_addr);
+      }
 
       RegisterOperand* base_opr = indexed_opr_constr->BaseOperand();
       gen.AddLoadRegisterAmbleRequests(base_opr->ChoiceText(), indexed_opr_constr->BaseValue());
@@ -1652,30 +1646,38 @@ namespace Force {
     }
   }
 
-  uint64 VectorIndexedLoadStoreOperand::AllocateIndexOperandDataBlock(Generator& rGen) const
+  uint64 VectorIndexedLoadStoreOperand::AllocateIndexOperandDataBlock(Generator& rGen, cuint32 relativeRegIndex) const
   {
     Config* config = Config::Instance();
-    uint64 reg_size = config->LimitValue(ELimitType::MaxPhysicalVectorLen) / 8;
+    uint32 reg_size = config->LimitValue(ELimitType::MaxPhysicalVectorLen) / 8;
+
     DataBlock data_block(reg_size);
 
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
+    uint64 reg_elem_count = reg_size / indexed_opr_constr->IndexElementSize();
+    uint32 reg_start_elem = reg_elem_count * relativeRegIndex;
+    uint32 reg_end_elem = reg_start_elem + reg_elem_count;
+    uint32 reg_end_calculated_elem = reg_end_elem;
+
     const vector<uint64>& index_elem_values = indexed_opr_constr->IndexValues();
-    if (rGen.IsDataBigEndian()) {
-      for (auto itr = index_elem_values.crbegin(); itr != index_elem_values.crend(); ++itr) {
-        data_block.AddUnit(*itr, indexed_opr_constr->IndexElementSize(), rGen.IsDataBigEndian());
-      }
+    if (reg_end_calculated_elem >= index_elem_values.size()) {
+      reg_end_calculated_elem = index_elem_values.size();
     }
-    else {
-      for (uint64 index_elem_val : index_elem_values) {
-        data_block.AddUnit(index_elem_val, indexed_opr_constr->IndexElementSize(), rGen.IsDataBigEndian());
+
+    for (uint32 elem_index = reg_start_elem; elem_index < reg_end_calculated_elem; elem_index++) {
+      if (rGen.IsDataBigEndian()) {
+        // Load elements in reverse order
+        data_block.AddUnit(index_elem_values[reg_end_calculated_elem - elem_index - 1], indexed_opr_constr->IndexElementSize(), rGen.IsDataBigEndian());
+      }
+      else {
+        data_block.AddUnit(index_elem_values[elem_index], indexed_opr_constr->IndexElementSize(), rGen.IsDataBigEndian());
       }
     }
 
     // The index operand format may only occupy part of the register. The preamble instruction loads
     // the entire register, so fill in the remaining elements with random values.
-    uint64 reg_elem_count = reg_size / indexed_opr_constr->IndexElementSize();
     ConstraintSet random_elem_constr(0, get_mask64(indexed_opr_constr->IndexElementSize() * 8));
-    for (uint64 elem_index = index_elem_values.size(); elem_index < reg_elem_count; elem_index++) {
+    for (uint64 elem_index = reg_end_calculated_elem; elem_index < reg_end_elem; elem_index++) {
       data_block.AddUnit(random_elem_constr.ChooseValue(), indexed_opr_constr->IndexElementSize(), rGen.IsDataBigEndian());
     }
 
@@ -1703,7 +1705,7 @@ namespace Force {
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
 
     ConstraintSet index_elem_constr(0, get_mask64(vec_layout->mElemSize));
-    uint64 index_elem_val = sign_extend64(index_elem_constr.ChooseValue(), vec_layout->mElemSize);
+    uint64 index_elem_val = index_elem_constr.ChooseValue();
 
     rIndexElemValues.push_back(index_elem_val);
     return (target_addr - index_elem_val);
@@ -1720,8 +1722,7 @@ namespace Force {
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
 
     ConstraintSet target_addr_constr;
-    uint32 offset_base = 1 << (vec_layout->mElemSize - 1);
-    BaseOffsetConstraint base_offset_constr(offset_base, vec_layout->mElemSize, 0, MAX_UINT64, true);
+    BaseOffsetConstraint base_offset_constr(0, vec_layout->mElemSize, 0, MAX_UINT64, true);
     base_offset_constr.GetConstraint(baseVal, lsop_struct->DataSize(), nullptr, target_addr_constr);
 
     for (uint32 elem_index = 1; elem_index < vec_layout->mElemCount; elem_index++) {

@@ -267,13 +267,10 @@ def adjust_vs3_rs1_vs2_vm(aInstruction):
     subop_dict = dict()
     subop_dict["base"] = "rs1"
     subop_dict["index"] = "vs2"
-    attr_dict["alignment"] = width
     attr_dict["base"] = "rs1"
-    attr_dict["data-size"] = width
-    attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorIndexedLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorIndexedLoadStoreOperandRISCV", subop_dict, attr_dict)
 
     operand_adjustor.set_vm()
     return True
@@ -397,13 +394,10 @@ def adjust_vd_rs1_vs2_vm(aInstruction):
     subop_dict = dict()
     subop_dict["base"] = "rs1"
     subop_dict["index"] = "vs2"
-    attr_dict["alignment"] = width
     attr_dict["base"] = "rs1"
-    attr_dict["data-size"] = width
-    attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorIndexedLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorIndexedLoadStoreOperandRISCV", subop_dict, attr_dict)
 
     operand_adjustor.set_vm()
     return True

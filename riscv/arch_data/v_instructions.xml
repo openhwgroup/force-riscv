@@ -3097,7 +3097,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3108,7 +3108,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3119,7 +3119,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3130,7 +3130,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3141,7 +3141,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3152,7 +3152,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3163,7 +3163,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3174,7 +3174,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3185,7 +3185,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3196,7 +3196,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3207,7 +3207,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3218,7 +3218,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3229,7 +3229,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3240,7 +3240,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3251,7 +3251,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3262,7 +3262,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3273,7 +3273,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3284,7 +3284,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3295,7 +3295,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3306,7 +3306,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3317,7 +3317,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3328,7 +3328,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3339,7 +3339,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3350,7 +3350,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3361,7 +3361,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3372,7 +3372,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3383,7 +3383,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3394,7 +3394,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3405,7 +3405,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3416,7 +3416,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3427,7 +3427,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3438,7 +3438,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3449,7 +3449,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3460,7 +3460,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3471,7 +3471,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -3482,7 +3482,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5735,7 +5735,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5746,7 +5746,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5757,7 +5757,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5768,7 +5768,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5779,7 +5779,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5790,7 +5790,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5801,7 +5801,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5812,7 +5812,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5823,7 +5823,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5834,7 +5834,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5845,7 +5845,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5856,7 +5856,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5867,7 +5867,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5878,7 +5878,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5889,7 +5889,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5900,7 +5900,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="2" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5911,7 +5911,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5922,7 +5922,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5933,7 +5933,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5944,7 +5944,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="3" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5955,7 +5955,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5966,7 +5966,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5977,7 +5977,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5988,7 +5988,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="4" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -5999,7 +5999,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6010,7 +6010,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6021,7 +6021,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6032,7 +6032,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="5" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6043,7 +6043,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6054,7 +6054,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6065,7 +6065,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6076,7 +6076,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="6" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6087,7 +6087,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6098,7 +6098,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6109,7 +6109,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6120,7 +6120,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="7" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6131,7 +6131,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="2" base="rs1" data-size="2" element-size="2" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6142,7 +6142,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="4" base="rs1" data-size="4" element-size="4" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6153,7 +6153,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="8" base="rs1" data-size="8" element-size="8" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
@@ -6164,7 +6164,7 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="8" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperand" alignment="1" base="rs1" data-size="1" element-size="1" index="vs2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>

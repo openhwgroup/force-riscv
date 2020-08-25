@@ -202,7 +202,7 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
 
-    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile(), mpStructure->CastOperandStructure<VectorLayoutOperandStructure>());
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
     vec_layout_setup.SetUpVectorLayoutVtype(vec_layout);
 
     instr_constr->SetVectorLayout(vec_layout);
@@ -213,8 +213,8 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
 
-    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile(), mpStructure->CastOperandStructure<VectorLayoutOperandStructure>());
-    vec_layout_setup.SetUpVectorLayoutFixedElementSize(vec_layout);
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
+    vec_layout_setup.SetUpVectorLayoutFixedElementSize(*(mpStructure->CastOperandStructure<VectorLayoutOperandStructure>()), vec_layout);
 
     instr_constr->SetVectorLayout(vec_layout);
   }
@@ -224,8 +224,8 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
 
-    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile(), mpStructure->CastOperandStructure<VectorLayoutOperandStructure>());
-    vec_layout_setup.SetUpVectorLayoutWholeRegister(vec_layout);
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
+    vec_layout_setup.SetUpVectorLayoutWholeRegister(*(mpStructure->CastOperandStructure<VectorLayoutOperandStructure>()), vec_layout);
 
     instr_constr->SetVectorLayout(vec_layout);
   }
@@ -245,8 +245,24 @@ namespace Force {
     return new VectorLoadStoreOperandConstraint();
   }
 
-  void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout()
+  void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen)
   {
+    VectorLayout vec_layout;
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
+    vec_layout_setup.SetUpVectorLayoutVtype(vec_layout);
+
+    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
+    lsop_struct->SetElementSize(vec_layout.mElemSize);
+    lsop_struct->SetDataSize(vec_layout.mElemSize);
+    lsop_struct->SetAlignment(vec_layout.mElemSize);
+  }
+
+  void VectorIndexedLoadStoreOperandRISCV::GetIndexRegisterNames(vector<string>& rIndexRegNames) const
+  {
+    auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
+    auto index_opr = dynamic_cast<MultiRegisterOperand*>(indexed_opr_constr->IndexOperand());
+    rIndexRegNames.push_back(index_opr->ChoiceText());
+    index_opr->GetExtraRegisterNames(index_opr->Value(), rIndexRegNames);
   }
 
   void MultiVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)

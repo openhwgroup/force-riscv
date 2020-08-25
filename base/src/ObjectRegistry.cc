@@ -145,7 +145,6 @@ namespace Force {
     RegisterObject(new BaseIndexLoadStoreOperand());
     RegisterObject(new PcOffsetLoadStoreOperand());
     RegisterObject(new VectorStridedLoadStoreOperand());
-    RegisterObject(new VectorIndexedLoadStoreOperand());
     RegisterObject(new SignedImmediateOperand());
     RegisterObject(new PcRelativeBranchOperand());
     RegisterObject(new ImpliedRegisterOperand());
