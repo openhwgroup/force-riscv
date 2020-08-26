@@ -300,31 +300,17 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
 def adjust_rs1_vs2_vs3_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
+    operand_adjustor.set_vs2()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
-    subop_dict["base"] = "rs1"
-    attr_dict["alignment"] = width
-    attr_dict["base"] = "rs1"
-    #attr_dict["data-size"] = 1 #TODO: depends on LMUL
-    attr_dict["element-size"] = width
-    attr_dict["mem-access"] = "Read"
+    subop_dict['base'] = 'rs1'
+    subop_dict['index'] = 'vs2'
+    attr_dict['base'] = 'rs1'
+    attr_dict['mem-access'] = 'Read'
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
-
-    operand_adjustor.set_vs2()
-
-    attr_dict = dict()
-    subop_dict = dict()
-    subop_dict["base"] = "vs2"
-    attr_dict["alignment"] = width
-    attr_dict["base"] = "vs2"
-    #attr_dict["data-size"] = 1 #TODO: depends on LMUL
-    attr_dict["element-size"] = width
-    attr_dict["mem-access"] = "Read"
-
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
     operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_vm()
@@ -427,31 +413,17 @@ def adjust_vd_rs1_rs2_vm(aInstruction):
 def adjust_rs1_vs2_vd_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
+    operand_adjustor.set_vs2()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
     subop_dict = dict()
-    subop_dict["base"] = "rs1"
-    attr_dict["alignment"] = width
-    attr_dict["base"] = "rs1"
-    #attr_dict["data-size"] = 1 #TODO: depends on LMUL
-    attr_dict["element-size"] = width
-    attr_dict["mem-access"] = "Read"
+    subop_dict['base'] = 'rs1'
+    subop_dict['index'] = 'vs2'
+    attr_dict['base'] = 'rs1'
+    attr_dict['mem-access'] = 'Read'
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
-
-    operand_adjustor.set_vs2()
-
-    attr_dict = dict()
-    subop_dict = dict()
-    subop_dict["base"] = "vs2"
-    attr_dict["alignment"] = width
-    attr_dict["base"] = "vs2"
-    #attr_dict["data-size"] = 1 #TODO: depends on LMUL
-    attr_dict["element-size"] = width
-    attr_dict["mem-access"] = "Read"
-
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
     operand_adjustor.set_vd_ls_dest()
     operand_adjustor.set_vm()

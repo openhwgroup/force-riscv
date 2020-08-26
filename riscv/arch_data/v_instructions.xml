@@ -107,10 +107,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -120,10 +118,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -133,10 +129,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -146,10 +140,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -159,10 +151,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -172,10 +162,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -185,10 +173,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -198,10 +184,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOADDEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -211,10 +195,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -224,10 +206,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -237,10 +217,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -250,10 +228,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -263,10 +239,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -276,10 +250,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -289,10 +261,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -302,10 +272,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOANDEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -315,10 +283,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -328,10 +294,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -341,10 +305,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -354,10 +316,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -367,10 +327,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -380,10 +338,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -393,10 +349,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -406,10 +360,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -419,10 +371,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -432,10 +382,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -445,10 +393,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -458,10 +404,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -471,10 +415,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -484,10 +426,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -497,10 +437,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -510,10 +448,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMAXUEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -523,10 +459,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -536,10 +470,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -549,10 +481,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -562,10 +492,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -575,10 +503,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -588,10 +514,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -601,10 +525,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -614,10 +536,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -627,10 +547,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -640,10 +558,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -653,10 +569,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -666,10 +580,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -679,10 +591,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -692,10 +602,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -705,10 +613,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -718,10 +624,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOMINUEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -731,10 +635,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -744,10 +646,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -757,10 +657,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -770,10 +668,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -783,10 +679,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -796,10 +690,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -809,10 +701,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -822,10 +712,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOOREI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -835,10 +723,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -848,10 +734,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -861,10 +745,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -874,10 +756,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -887,10 +767,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -900,10 +778,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -913,10 +789,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -926,10 +800,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOSWAPEI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -939,10 +811,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -952,10 +822,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="16"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="rs1" element-size="2" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="2" base="vs2" element-size="2" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI16.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -965,10 +833,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -978,10 +844,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="32"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="rs1" element-size="4" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="4" base="vs2" element-size="4" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI32.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -991,10 +855,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -1004,10 +866,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="64"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="rs1" element-size="8" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="8" base="vs2" element-size="8" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI64.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
@@ -1017,10 +877,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vs3" type="VECREG" bits="11-7" access="Read" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vs3" op4="vm"/>
@@ -1030,10 +888,8 @@
     <O name="B" type="VectorLayout" class="CustomLayoutOperand" reg-count="1" elem-width="8"/>
     <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers" class="MultiVectorRegisterOperandRISCV"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask" differ="vd" class="VectorMaskOperand"/>
-    <O name="LoadStore-rs1" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="rs1" element-size="1" mem-access="Read">
+    <O name="LoadStore-rs1-vs2" type="LoadStore" class="VectorIndexedLoadStoreOperandRISCV" base="rs1" index="vs2" mem-access="Read">
       <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
-    </O>
-    <O name="LoadStore-vs2" type="LoadStore" class="VectorLoadStoreOperand" alignment="1" base="vs2" element-size="1" mem-access="Read">
       <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     </O>
     <asm format="VAMOXOREI8.V %s, %s, %s, %s" op1="rs1" op2="vs2" op3="vd" op4="vm"/>
