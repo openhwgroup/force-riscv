@@ -15,7 +15,7 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
+from VectorTestSequence import VectorTestSequence
 from base.ChoicesModifier import ChoicesModifier
 import RandomUtils
 
@@ -23,35 +23,54 @@ import RandomUtils
 # that the initial values are correctly communicated to the simulator and that the resulting values
 # are successfully returned. The test assumes the use of 512-bit vector registers and 32-bit vector
 # register elements.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mInstrList = ('VADD.VV##RISCV',)
+        self._mRegIndex1 = None
+        self._mRegIndex2 = None
+        self._mElemVals1 = None
+        self._mElemVals2 = None
+
+    ## Set up the environment prior to generating the test instructions.
+    def _setUpTest(self):
         # Ensure vector element size is set to 32 bites
         choices_mod = ChoicesModifier(self.genThread)
         choice_weights = {'0x0': 0, '0x1': 0, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', choice_weights)
         choices_mod.commitSet()
 
-        (reg_index_1, reg_index_2) = self.getRandomRegisters(2, 'VECREG', exclude='0')
-        reg_name_1 = 'v%d' % reg_index_1
-        reg_name_2 = 'v%d' % reg_index_2
-        elem_vals_1 = self._initializeVectorRegister(reg_name_1)
-        elem_vals_2 = self._initializeVectorRegister(reg_name_2)
+        (self._mRegIndex1, self._mRegIndex2) = self.getRandomRegisters(2, 'VECREG', exclude='0')
+        self._mElemVals1 = self._initializeVectorRegister('v%d' % self._mRegIndex1)
+        self._mElemVals2 = self._initializeVectorRegister('v%d' % self._mRegIndex2)
 
-        for _ in range(RandomUtils.random32(25, 50)):
-            self.genInstruction('VADD.VV##RISCV', {'vd': reg_index_1, 'vs1': reg_index_1, 'vs2': reg_index_2, 'vm': 1})
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
-            for (elem_index, val) in enumerate(elem_vals_2):
-                elem_vals_1[elem_index] += val
+    ## Return parameters to be passed to Sequence.genInstruction().
+    def _getInstructionParameters(self):
+        return {'vd': self._mRegIndex1, 'vs1': self._mRegIndex1, 'vs2': self._mRegIndex2, 'vm': 1}
 
-            for sub_index in range(8):
-                field_name = '%s_%d' % (reg_name_1, sub_index)
-                (field_val, valid) = self.readRegister(reg_name_1, field=field_name)
-                self._assertValidRegisterValue(reg_name_1, valid)
-                expected_field_val = self._getFieldValue(sub_index, elem_vals_1)
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        for (elem_index, val) in enumerate(self._mElemVals2):
+            self._mElemVals1[elem_index] += val
 
-                if field_val != expected_field_val:
-                    self.error('Register field %s has unexpected value; Expected=0x%x, Actual=0x%x' % (field_name, expected_field_val, field_val))
+        reg_name_1 = 'v%d' % self._mRegIndex1
+        for sub_index in range(8):
+            field_name = '%s_%d' % (reg_name_1, sub_index)
+            (field_val, valid) = self.readRegister(reg_name_1, field=field_name)
+            self.assertValidRegisterValue(reg_name_1, valid)
+            expected_field_val = self._getFieldValue(sub_index, self._mElemVals1)
+
+            if field_val != expected_field_val:
+                self.error('Register field %s has unexpected value; Expected=0x%x, Actual=0x%x' % (field_name, expected_field_val, field_val))
 
     ## Initialize the specified vector register and return a list of 32-bit element values.
     def _initializeVectorRegister(self, aRegName):
@@ -75,14 +94,6 @@ class MainSequence(Sequence):
         field_value = aElemVals[2 * aSubIndex]
         field_value |= aElemVals[2 * aSubIndex + 1] << 32
         return field_value
-
-    ## Fail if the valid flag is false.
-    #
-    #  @param aRegName The index of the register.
-    #  @param aValid A flag indicating whether the specified register has a valid value.
-    def _assertValidRegisterValue(self, aRegName, aValid):
-        if not aValid:
-            self.error('Value for register %s is invalid' % aRegName)
 
 
 MainSequenceClass = MainSequence

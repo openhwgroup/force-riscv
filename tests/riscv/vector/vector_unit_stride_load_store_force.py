@@ -15,15 +15,17 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
+from VectorTestSequence import VectorTestSequence
 import RandomUtils
 
 ## This test verifies that unit-stride load and store instructions can be generated and executed
 # successfully.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
-        instructions = [
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mInstrList = (
             'VLE16.V##RISCV',
             'VLE32.V##RISCV',
             'VLE64.V##RISCV',
@@ -32,31 +34,31 @@ class MainSequence(Sequence):
             'VSE32.V##RISCV',
             'VSE64.V##RISCV',
             'VSE8.V##RISCV',
-        ]
+        )
 
-        for _ in range(RandomUtils.random32(50, 100)):
-            instr = self.choice(instructions)
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
-            instr_params = {}
-            if RandomUtils.random32(0, 1) == 1:
-                instr_params['NoPreamble'] = 1
+    ## Return parameters to be passed to Sequence.genInstruction().
+    def _getInstructionParameters(self):
+        instr_params = {}
+        if RandomUtils.random32(0, 1) == 1:
+            instr_params['NoPreamble'] = 1
 
-            instr_id = self.genInstruction(instr, instr_params)
+        return instr_params
 
-            # Instructions disallowing preamble may legitimately be skipped sometimes if no solution
-            # can be determined, but instructions that permit preamble should always generate
-            if 'NoPreamble' not in instr_params:
-                instr_record = self.queryInstructionRecord(instr_id)
+    ## Return true if it is permissible for the generation to skip this instruction.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrParams The paramters passed to Sequence.genInstruction().
+    def _isSkipAllowed(self, aInstr, aInstrParams):
+        # Instructions disallowing preamble may legitimately be skipped sometimes if no solution can
+        # be determined, but instructions that permit preamble should always generate
+        if 'NoPreamble' in aInstrParams:
+            return True
 
-                if instr_record is None:
-                    self.error('Instruction %s did not generate correctly' % instr)
-
-            except_count = 0
-            for except_code in (0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF):
-                except_count += self.queryExceptionRecordsCount(except_code)
-
-            if except_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
+        return False
 
 
 MainSequenceClass = MainSequence

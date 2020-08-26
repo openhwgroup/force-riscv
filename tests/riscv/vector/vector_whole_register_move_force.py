@@ -15,39 +15,37 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
-import RandomUtils
+from VectorTestSequence import VectorTestSequence
 import UtilityFunctions
 
 ## This test verifies that whole register move instructions are generated with the operands aligned
 # appropriately for the instruction.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
-        instructions = [
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mInstrList = (
             'VMV1R.V##RISCV',
             'VMV2R.V##RISCV',
             'VMV4R.V##RISCV',
             'VMV8R.V##RISCV',
-        ]
+        )
 
-        for _ in range(RandomUtils.random32(50, 100)):
-            instr = self.choice(instructions)
-            instr_id = self.genInstruction(instr)
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
-            instr_record = self.queryInstructionRecord(instr_id)
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
-
-            vd_val = instr_record['Dests']['vd']
-            vs2_val = instr_record['Srcs']['vs2']
-            align_mask = UtilityFunctions.getAlignMask(int(instr[3]))
-            if ((vd_val & align_mask) != vd_val) or ((vs2_val & align_mask) != vs2_val):
-                self.error('Instruction %s was generated with an improperly aligned operand' % instr)
-
-            illegal_instr_count = self.queryExceptionRecordsCount(0x2)
-            if illegal_instr_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        vd_val = aInstrRecord['Dests']['vd']
+        vs2_val = aInstrRecord['Srcs']['vs2']
+        align_mask = UtilityFunctions.getAlignMask(int(aInstr[3]))
+        if ((vd_val & align_mask) != vd_val) or ((vs2_val & align_mask) != vs2_val):
+            self.error('Instruction %s was generated with an improperly aligned operand' % aInstr)
 
 
 MainSequenceClass = MainSequence

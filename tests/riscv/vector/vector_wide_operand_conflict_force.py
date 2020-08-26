@@ -15,14 +15,15 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
-import RandomUtils
+from VectorTestSequence import VectorTestSequence
 
 ## This test verifies that vector register operands with different layouts don't overlap.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
-        instructions = [
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mInstrList = (
             'VNSRA.WI##RISCV',
             'VNSRA.WV##RISCV',
             'VNSRA.WX##RISCV',
@@ -58,34 +59,35 @@ class MainSequence(Sequence):
             'VWSUBU.VX##RISCV',
             'VWSUBU.WV##RISCV',
             'VWSUBU.WX##RISCV',
-        ]
+        )
 
-        for _ in range(RandomUtils.random32(500, 1000)):
-            instr = self.choice(instructions)
-            instr_id = self.genInstruction(instr)
+    ## Return the maximum number of test instructions to generate.
+    def _getMaxInstructionCount(self):
+        return 1000
 
-            instr_record = self.queryInstructionRecord(instr_id)
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
-            vd_val = instr_record['Dests']['vd']
-            vs1_val = instr_record['Srcs'].get('vs1')
-            vs2_val = instr_record['Srcs']['vs2']
-            if instr.startswith('VW'):
-                if vs1_val and (vd_val == (vs1_val & 0x1E)):
-                    self.error('Instruction %s used overlapping source and destination registers of different formats' % instr)
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        vd_val = aInstrRecord['Dests']['vd']
+        vs1_val = aInstrRecord['Srcs'].get('vs1')
+        vs2_val = aInstrRecord['Srcs']['vs2']
+        if aInstr.startswith('VW'):
+            if vs1_val and (vd_val == (vs1_val & 0x1E)):
+                self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
 
-                if ('.W' not in instr) and (vd_val == (vs2_val & 0x1E)):
-                    self.error('Instruction %s used overlapping source and destination registers of different formats' % instr)
-            elif instr.startswith('VN'):
-                if (vd_val & 0x1E) == vs2_val:
-                    self.error('Instruction %s used overlapping source and destination registers of different formats' % instr)
-            else:
-                self.error('Unexpected instruction %s' % instr)
-
-            illegal_instr_count = self.queryExceptionRecordsCount(0x2)
-            if illegal_instr_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
+            if ('.W' not in aInstr) and (vd_val == (vs2_val & 0x1E)):
+                self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+        elif aInstr.startswith('VN'):
+            if (vd_val & 0x1E) == vs2_val:
+                self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+        else:
+            self.error('Unexpected instruction %s' % aInstr)
 
 
 MainSequenceClass = MainSequence

@@ -15,15 +15,16 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
-import RandomUtils
+from VectorTestSequence import VectorTestSequence
 
 ## This test verifies that masked vector instructions trigger initialization of v0, the implicit
 # mask register.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
-        instructions = [
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mInstrList = (
             'VADD.VI##RISCV',
             'VADD.VV##RISCV',
             'VADD.VX##RISCV',
@@ -33,9 +34,6 @@ class MainSequence(Sequence):
             'VDOT.VV##RISCV',
             'VDOTU.VV##RISCV',
             'VID.V##RISCV',
-            'VMADC.VI##RISCV',
-            'VMADC.VV##RISCV',
-            'VMADC.VX##RISCV',
             'VMAX.VV##RISCV',
             'VMAX.VX##RISCV',
             'VMAXU.VV##RISCV',
@@ -44,8 +42,6 @@ class MainSequence(Sequence):
             'VMIN.VX##RISCV',
             'VMINU.VV##RISCV',
             'VMINU.VX##RISCV',
-            'VMSBC.VV##RISCV',
-            'VMSBC.VX##RISCV',
             'VMSEQ.VI##RISCV',
             'VMSEQ.VV##RISCV',
             'VMSEQ.VX##RISCV',
@@ -105,32 +101,25 @@ class MainSequence(Sequence):
             'VXOR.VI##RISCV',
             'VXOR.VV##RISCV',
             'VXOR.VX##RISCV',
-        ]
+        )
 
-        for _ in range(RandomUtils.random32(5, 10)):
-            instr = self.choice(instructions)
-            instr_id = self.genInstruction(instr, {'vd': '1-31', 'vm': 0})
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
-            instr_record = self.queryInstructionRecord(instr_id)
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
+    ## Return parameters to be passed to Sequence.genInstruction().
+    def _getInstructionParameters(self):
+        return {'vd': '1-31', 'vm': 0}
 
-            for sub_index in range(8):
-                v0_field_name = 'v0_%d' % sub_index
-                (v0_field_val, valid) = self.readRegister('v0', field=v0_field_name)
-                self._assertValidRegisterValue('v0', valid)
-
-            illegal_instr_count = self.queryExceptionRecordsCount(0x2)
-            if illegal_instr_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
-
-    ## Fail if the valid flag is false.
+    ## Verify additional aspects of the instruction generation and execution.
     #
-    #  @param aRegName The index of the register.
-    #  @param aValid A flag indicating whether the specified register has a valid value.
-    def _assertValidRegisterValue(self, aRegName, aValid):
-        if not aValid:
-            self.error('Value for register %s is invalid' % aRegName)
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        for sub_index in range(8):
+            v0_field_name = 'v0_%d' % sub_index
+            (v0_field_val, valid) = self.readRegister('v0', field=v0_field_name)
+            self.assertValidRegisterValue('v0', valid)
 
 
 MainSequenceClass = MainSequence
