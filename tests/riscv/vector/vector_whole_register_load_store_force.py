@@ -15,32 +15,25 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
-import RandomUtils
+from VectorTestSequence import VectorTestSequence
 
 ## This test verifies that whole register load and store instructions can be generated and executed
 # successfully.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
         # TODO(Noah): Add additional load/store whole register instructions when they are supported
         # by Handcar.
-        instructions = [
+        self._mInstrList = (
             'VL1R.V##RISCV',
             'VS1R.V##RISCV',
-        ]
+        )
 
-        for _ in range(RandomUtils.random32(50, 100)):
-            instr = self.choice(instructions)
-            instr_id = self.genInstruction(instr)
-
-            instr_record = self.queryInstructionRecord(instr_id)
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
-
-            illegal_instr_count = self.queryExceptionRecordsCount(0x2)
-            if illegal_instr_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
 
 MainSequenceClass = MainSequence

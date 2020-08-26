@@ -198,29 +198,6 @@ namespace Force {
   };
 
   /*!
-    \class VectorLoadStoreOperand
-    \brief Base class of vector load-store operands
-  */
-  class VectorLoadStoreOperand : public BaseOffsetLoadStoreOperand{
-  public:
-    Object* Clone() const override  //!< Return a cloned object of the same type and same contents of the object.
-    {
-      return new VectorLoadStoreOperand(*this);
-    }
-
-    const char* Type() const override { return "VectorLoadStoreOperand"; } //!< Return the type of the VectorLoadStoreOperand object in C string.
-
-    VectorLoadStoreOperand() : BaseOffsetLoadStoreOperand() { } //!< Constructor.
-    ~VectorLoadStoreOperand() { } //!< Destructor
-
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate BaseOffsetLoadStoreOperand details.
-  protected:
-    VectorLoadStoreOperand(const VectorLoadStoreOperand& rOther) : BaseOffsetLoadStoreOperand(rOther) { } //!< Copy constructor.
-    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstaint object for BaseOffsetLoadStoreOperand.
-
-  };
-
-  /*!
     \class VectorIndexedLoadStoreOperandRISCV
     \brief Operand for RISCV vector indexed load/store operations.
   */
@@ -236,7 +213,7 @@ namespace Force {
     COPY_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperandRISCV);
   private:
     void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const override; //!< Get the names of the index registers.
-    void AdjustMemoryElementLayout(const Generator& rGen) override; //!< Finalize memory access dimensions based on runtime state.
+    void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
   };
 
   /*!

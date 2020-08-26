@@ -335,20 +335,4 @@ namespace Force {
     }
   }
 
-  void VectorLoadStoreOperandConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
-  {
-    BaseOffsetLoadStoreOperandConstraint::Setup(gen, instr, operandStruct);
-    auto vls_struct = dynamic_cast<const LoadStoreOperandStructure* >(&operandStruct);
-    if (nullptr == vls_struct) {
-      LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << operandStruct.mName << " to be \"LoadStoreOperandStructure\" type." << endl;
-      FAIL("expecting-vector-load-store-operand-structure");
-    }
-    auto base_ptr = instr.FindOperandMutable(vls_struct->Base(), true);
-    mpBase = dynamic_cast<RegisterOperand* >(base_ptr);
-    if (nullptr == mpBase) {
-      LOG(fail) << "{VectorLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-      FAIL("expecting-register-operand");
-    }
-  }
-
 }

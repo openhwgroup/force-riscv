@@ -15,14 +15,15 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
-import RandomUtils
+from VectorTestSequence import VectorTestSequence
 
 ## This test verifies that masked vector instructions do not set v0 as the destination operand.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
-        instructions = [
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mInstrList = (
             'VADD.VI##RISCV',
             'VADD.VV##RISCV',
             'VADD.VX##RISCV',
@@ -99,24 +100,25 @@ class MainSequence(Sequence):
             'VXOR.VI##RISCV',
             'VXOR.VV##RISCV',
             'VXOR.VX##RISCV',
-        ]
+        )
 
-        for _ in range(RandomUtils.random32(500, 1000)):
-            instr = self.choice(instructions)
-            instr_id = self.genInstruction(instr)
+    ## Return the maximum number of test instructions to generate.
+    def _getMaxInstructionCount(self):
+        return 1000
 
-            instr_record = self.queryInstructionRecord(instr_id)
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
-            vm_val = instr_record['Imms']['vm']
-            vd_val = instr_record['Dests']['vd']
-            if (vm_val == 0) and (vd_val == 0):
-                self.error('Instruction %s is masked with v0 as the destination register' % instr)
-
-            illegal_instr_count = self.queryExceptionRecordsCount(0x2)
-            if illegal_instr_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        vm_val = aInstrRecord['Imms']['vm']
+        vd_val = aInstrRecord['Dests']['vd']
+        if (vm_val == 0) and (vd_val == 0):
+            self.error('Instruction %s is masked with v0 as the destination register' % aInstr)
 
 
 MainSequenceClass = MainSequence

@@ -148,25 +148,6 @@ namespace Force {
     void SetBranchTakenForBGEU(uint64 rs1Val, uint64 rs2Val); //!< Branch if rs1 is greater than or equal to rs2, interpreting them as unsigned values}
   };
 
-   /*!
-    \class VectorLoadStoreOperandConstraint
-    \brief The class carries dynamic constraint properties for VectorLoadStoreOperand.
-  */
-  class VectorLoadStoreOperandConstraint : public BaseOffsetLoadStoreOperandConstraint {
-  public:
-    VectorLoadStoreOperandConstraint() : BaseOffsetLoadStoreOperandConstraint(), mpMultiRegisterOperand(nullptr) { } //!< Constructor.
-    ~VectorLoadStoreOperandConstraint() { mpMultiRegisterOperand = nullptr; } //!< Destructor.
-
-    ASSIGNMENT_OPERATOR_ABSENT(VectorLoadStoreOperandConstraint);
-    void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints for BaseOffsetLoadStoreOperand
-    const MultiRegisterOperand* GetMultiRegisterOperand() const {return mpMultiRegisterOperand;}
-  protected:
-    VectorLoadStoreOperandConstraint(const VectorLoadStoreOperandConstraint& rOther) //!< Copy constructor, not meant to be used.
-      : BaseOffsetLoadStoreOperandConstraint(rOther), mpMultiRegisterOperand(nullptr) { }
-  protected:
-    const MultiRegisterOperand* mpMultiRegisterOperand;
-  };
-
 }
 
 #endif

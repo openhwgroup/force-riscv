@@ -15,37 +15,35 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
-import RandomUtils
+from VectorTestSequence import VectorTestSequence
 
 ## This test verifies that add-with-carry and subtract-with-borrow instructions don't use v0 as the
 # destination register.
-class MainSequence(Sequence):
+class MainSequence(VectorTestSequence):
 
-    def generate(self, **kargs):
-        instructions = [
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mInstrList = (
             'VADC.VIM##RISCV',
             'VADC.VVM##RISCV',
             'VADC.VXM##RISCV',
             'VSBC.VVM##RISCV',
             'VSBC.VXM##RISCV',
-        ]
+        )
 
-        for _ in range(RandomUtils.random32(50, 100)):
-            instr = self.choice(instructions)
-            instr_id = self.genInstruction(instr)
+    ## Return a list of test instructions to randomly choose from.
+    def _getInstructionList(self):
+        return self._mInstrList
 
-            instr_record = self.queryInstructionRecord(instr_id)
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
-
-            vd_val = instr_record['Dests']['vd']
-            if vd_val == 0:
-                self.error('Instruction %s was generated with v0 as the destination register' % instr)
-
-            illegal_instr_count = self.queryExceptionRecordsCount(0x2)
-            if illegal_instr_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        vd_val = aInstrRecord['Dests']['vd']
+        if vd_val == 0:
+            self.error('Instruction %s was generated with v0 as the destination register' % aInstr)
 
 
 MainSequenceClass = MainSequence
