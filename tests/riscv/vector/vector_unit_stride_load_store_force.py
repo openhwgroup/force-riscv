@@ -36,11 +36,20 @@ class MainSequence(Sequence):
 
         for _ in range(RandomUtils.random32(50, 100)):
             instr = self.choice(instructions)
-            instr_id = self.genInstruction(instr)
 
-            instr_record = self.queryInstructionRecord(instr_id)
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
+            instr_params = {}
+            if RandomUtils.random32(0, 1) == 1:
+                instr_params['NoPreamble'] = 1
+
+            instr_id = self.genInstruction(instr, instr_params)
+
+            # Instructions disallowing preamble may legitimately be skipped sometimes if no solution
+            # can be determined, but instructions that permit preamble should always generate
+            if 'NoPreamble' not in instr_params:
+                instr_record = self.queryInstructionRecord(instr_id)
+
+                if instr_record is None:
+                    self.error('Instruction %s did not generate correctly' % instr)
 
             except_count = 0
             for except_code in (0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF):
