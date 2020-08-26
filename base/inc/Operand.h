@@ -641,9 +641,11 @@ namespace Force {
     LoadStoreOperand(const LoadStoreOperand& rOther) : AddressingOperand(rOther) { } //!< Copy constructor.
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for LoadStoreOperand.
+    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
   private:
     virtual void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses the instruction will access.
     bool IsTargetSharedRead(const EMemAccessType memAccessType, cuint64 targetAddr, cuint64 dataSize) const; //!< Returns true if read access is specified and the target address range intersects shared memory.
+    virtual void RecordOperandValues(const AddressingMode& rAddrMode) { } //!< Capture the solved operand values.
   };
 
   /*!
@@ -667,8 +669,9 @@ namespace Force {
   protected:
     BaseOffsetLoadStoreOperand(const BaseOffsetLoadStoreOperand& rOther) : LoadStoreOperand(rOther) { } //!< Copy constructor.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate the BaseOffsetLoadStoreOperand using preamble approach.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the BaseOffsetLoadStoreOperand using no-preamble approach.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseOffsetLoadStoreOperand.
+  private:
+    void RecordOperandValues(const AddressingMode& rAddrMode); //!< Capture the solved operand values.
   };
 
   /*!
@@ -720,10 +723,10 @@ namespace Force {
   protected:
     BaseIndexLoadStoreOperand(const BaseIndexLoadStoreOperand& rOther) : LoadStoreOperand(rOther) { } //!< Copy constructor.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate base index addressing mode with preamble.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate base index addressing mode with no preamble.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseIndexLoadStoreOperand.
   private:
     bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
+    void RecordOperandValues(const AddressingMode& rAddrMode); //!< Capture the solved operand values.
   };
 
   /*!
@@ -746,6 +749,7 @@ namespace Force {
    protected:
     PcOffsetLoadStoreOperand(const PcOffsetLoadStoreOperand& rOther) : LoadStoreOperand(rOther) { } //!< Copy constructor.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for PcOffsetLoadStoreOperand.
+    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override { return false; } //!< Generate the AddressingOperand using no-preamble approach.
   };
 
   class LoadStoreOperandStructure;

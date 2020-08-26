@@ -1012,6 +1012,29 @@ namespace Force {
     }
   }
 
+  bool LoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
+  {
+    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
+    AddressingMode* template_ptr = GetAddressingMode();
+    auto data_size = lsop_struct->DataSize();
+    auto ls_alignment = GetAddressingAlignment(lsop_struct->Alignment(), data_size);
+
+    auto addr_solver = GetAddressSolver(template_ptr, ls_alignment);
+    std::unique_ptr<AddressSolver> addr_solver_storage(addr_solver);
+
+    auto addr_mode = addr_solver->Solve(gen, instr, data_size, false, lsop_struct->MemAccessType());
+
+    if (nullptr == addr_mode)
+      return false;
+
+    RecordOperandValues(*addr_mode);
+
+    mTargetAddress = addr_mode->TargetAddress();
+    LOG(notice) << "{LoadStoreOperand::GenerateNoPreamble} instruction: " << instr.FullName() << " addressing-mode: " << template_ptr->Type() << " target address: 0x" << hex << mTargetAddress << endl;
+    addr_solver->SetOperandResults();
+    return true;
+  }
+
   void LoadStoreOperand::GetDataTargetConstraint(ConstraintSet& dataConstr) const
   {
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
@@ -1194,29 +1217,6 @@ namespace Force {
     return addr_mode_ptr;
   }
 
-  bool BaseOffsetLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
-  {
-    auto bols_constr = mpOperandConstraint->CastInstance<BaseOffsetLoadStoreOperandConstraint>();
-    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    AddressingMode* template_ptr = GetAddressingMode();
-    auto data_size = lsop_struct->DataSize();
-    auto ls_alignment = GetAddressingAlignment(lsop_struct->Alignment(), data_size);
-
-    auto addr_solver = GetAddressSolver(template_ptr, ls_alignment);
-    std::unique_ptr<AddressSolver> addr_solver_storage(addr_solver);
-
-    auto addr_mode = addr_solver->Solve(gen, instr, data_size, false, lsop_struct->MemAccessType());
-
-    if (nullptr == addr_mode)
-      return false;
-
-    bols_constr->SetBaseValue(addr_mode->BaseValue());
-    mTargetAddress = addr_mode->TargetAddress();
-    LOG(notice) << "{BaseOffsetLoadStoreOperand::GenerateNoPreamble} instruction: " << instr.FullName() << " addressing-mode: " << template_ptr->Type() << " target address: 0x" << hex << mTargetAddress << endl;
-    addr_solver->SetOperandResults();
-    return true;
-  }
-
   bool BaseOffsetLoadStoreOperand::GetPrePostAmbleRequests(Generator& gen) const
   {
     auto bols_constr = mpOperandConstraint->CastInstance<BaseOffsetLoadStoreOperandConstraint>();
@@ -1227,6 +1227,12 @@ namespace Force {
     }
 
     return false;
+  }
+
+  void BaseOffsetLoadStoreOperand::RecordOperandValues(const AddressingMode& rAddrMode)
+  {
+    auto bols_constr = mpOperandConstraint->CastInstance<BaseOffsetLoadStoreOperandConstraint>();
+    bols_constr->SetBaseValue(rAddrMode.BaseValue());
   }
 
   static void trim_index_value(uint64 target_addr, const LoadStoreOperandStructure* lsop_struct, BaseIndexLoadStoreOperandConstraint * bils_constr,Generator& gen, Instruction& instr)
@@ -1346,27 +1352,12 @@ namespace Force {
     }
     return addr_mode_ptr;
   }
-  bool BaseIndexLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
+
+  void BaseIndexLoadStoreOperand::RecordOperandValues(const AddressingMode& rAddrMode)
   {
     auto bils_constr = mpOperandConstraint->CastInstance<BaseIndexLoadStoreOperandConstraint>();
-    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    AddressingMode* template_ptr = GetAddressingMode();
-    auto data_size = lsop_struct->DataSize();
-    auto ls_alignment = GetAddressingAlignment(lsop_struct->Alignment(), data_size);
-    auto addr_solver = GetAddressSolver(template_ptr, ls_alignment);
-    std::unique_ptr<AddressSolver> addr_solver_storage(addr_solver);
-
-    auto addr_mode = addr_solver->Solve(gen, instr, data_size, false, lsop_struct->MemAccessType());
-
-    if (nullptr == addr_mode)
-      return false;
-
-    bils_constr->SetBaseValue(addr_mode->BaseValue());
-    bils_constr->SetIndexValue(addr_mode->IndexValue());
-    mTargetAddress = addr_mode->TargetAddress();
-    LOG(notice) << "{BaseIndexLoadStoreOperand::GenerateNoPreamble} instruction: " << instr.FullName() << " addressing-mode: " << template_ptr->Type() << " target address: 0x" << hex << mTargetAddress << endl;
-    addr_solver->SetOperandResults();
-    return true;
+    bils_constr->SetBaseValue(rAddrMode.BaseValue());
+    bils_constr->SetIndexValue(rAddrMode.IndexValue());
   }
 
   bool BaseIndexLoadStoreOperand::GetPrePostAmbleRequests(Generator& gen) const
@@ -1505,7 +1496,7 @@ namespace Force {
     mTargetAddress = CalculateBaseValue(base_addr, alignment, addr_range_size, stride_value);
     strided_opr_constr->SetBaseValue(mTargetAddress);
 
-    LOG(notice) << "Vector-strided-load-store generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << strided_opr_constr->BaseValue() << " stride value 0x" << hex <<  strided_opr_constr->StrideValue() << endl;
+    LOG(notice) << "{VectorStridedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << strided_opr_constr->BaseValue() << " stride value 0x" << strided_opr_constr->StrideValue() << endl;
   }
 
   bool VectorStridedLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
@@ -1623,7 +1614,7 @@ namespace Force {
     CalculateIndexValues(instr, alignment, base_val, index_elem_values);
     indexed_opr_constr->SetIndexValues(index_elem_values);
 
-    LOG(notice) << "Vector-indexed-load-store generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << indexed_opr_constr->BaseValue() << endl;
+    LOG(notice) << "{VectorIndexedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << indexed_opr_constr->BaseValue() << endl;
   }
 
   bool VectorIndexedLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
