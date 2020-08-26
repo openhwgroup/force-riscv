@@ -489,7 +489,7 @@ namespace Force {
   protected:
     uint64 mTargetAddress; //!< Recording the target virtual address,
   private:
-    virtual void AdjustMemoryElementLayout(const Generator& rGen) { } //!< Finalize memory access dimensions based on runtime state.
+    virtual void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) { } //!< Finalize memory access dimensions based on runtime state.
     virtual bool MustGeneratePreamble(const Generator& rGen) const; //!< Return true if the operand is required to be generated using preamble.
   };
 
@@ -848,6 +848,24 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(DataProcessingOperand); //!< Copy constructor.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for DataProcessingOperand.
+  };
+
+  /*!
+    \class VectorBaseOffsetLoadStoreOperand
+    \brief Operand for vector base offset load/store operations.
+  */
+  class VectorBaseOffsetLoadStoreOperand : public BaseOffsetLoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorBaseOffsetLoadStoreOperand);
+
+    Object* Clone() const override { return new VectorBaseOffsetLoadStoreOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorBaseOffsetLoadStoreOperand"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
+  private:
+    void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
   };
 
 }

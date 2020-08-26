@@ -664,7 +664,7 @@ namespace Force {
       return;
     }
 
-    AdjustMemoryElementLayout(gen);
+    AdjustMemoryElementLayout(gen, instr);
 
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     if (not MustGeneratePreamble(gen)) {
@@ -1885,6 +1885,14 @@ namespace Force {
   OperandConstraint* DataProcessingOperand::InstantiateOperandConstraint() const
   {
     return new DataProcessingOperandConstraint();
+  }
+
+  void VectorBaseOffsetLoadStoreOperand::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
+  {
+    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    lsop_struct->SetDataSize(lsop_struct->ElementSize() * vec_layout->mElemCount);
   }
 
 }

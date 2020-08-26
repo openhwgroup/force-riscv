@@ -150,6 +150,7 @@ namespace Force {
     RegisterObject(new ImpliedRegisterOperand());
     RegisterObject(new AluImmediateOperand());
     RegisterObject(new DataProcessingOperand());
+    RegisterObject(new VectorBaseOffsetLoadStoreOperand());
 
     // OperandTextObject based objects
     RegisterObject(new AddressingOperandText());

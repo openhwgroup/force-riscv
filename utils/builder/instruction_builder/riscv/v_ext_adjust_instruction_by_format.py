@@ -206,7 +206,7 @@ def adjust_vd_rs1(aInstruction):
         attr_dict["element-size"] = width
         attr_dict["mem-access"] = "Read"
 
-        add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+        add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
     else:
         operand_adjustor = VectorOperandAdjustor(aInstruction)
         operand_adjustor.set_vd()
@@ -232,7 +232,7 @@ def adjust_vs3_rs1(aInstruction):
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
     return True
 
@@ -251,7 +251,7 @@ def adjust_vs3_rs1_vm(aInstruction):
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
     operand_adjustor.set_vm()
     return True
@@ -311,7 +311,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
     operand_adjustor.set_vs2()
 
@@ -324,7 +324,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
     operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_vm()
@@ -372,7 +372,7 @@ def adjust_vd_rs1_vm(aInstruction):
         attr_dict["element-size"] = width
         attr_dict["mem-access"] = "Read"
 
-        add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+        add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
     else:
         funct3 = aInstruction.find_operand('const_bits').value[11:14]
         operand_adjustor.set_vd()
@@ -438,7 +438,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
     operand_adjustor.set_vs2()
 
@@ -451,7 +451,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(aInstruction, None, "LoadStore", "VectorLoadStoreOperand", subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
     operand_adjustor.set_vd_ls_dest()
     operand_adjustor.set_vm()

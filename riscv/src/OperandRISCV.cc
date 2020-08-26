@@ -230,22 +230,7 @@ namespace Force {
     instr_constr->SetVectorLayout(vec_layout);
   }
 
-  void VectorLoadStoreOperand::Generate(Generator& gen, Instruction& instr)
-  {
-    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    lsop_struct->SetDataSize(lsop_struct->ElementSize() * vec_layout->mElemCount);
-
-    BaseOffsetLoadStoreOperand::Generate(gen, instr);
-  }
-
-  OperandConstraint* VectorLoadStoreOperand::InstantiateOperandConstraint() const
-  {
-    return new VectorLoadStoreOperandConstraint();
-  }
-
-  void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen)
+  void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
   {
     VectorLayout vec_layout;
     VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
