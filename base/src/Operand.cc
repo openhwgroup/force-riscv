@@ -1474,29 +1474,18 @@ namespace Force {
     // register when a solution for this case can be devised.
     DifferStrideOperand(gen, instr);
 
-    auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
-    const GenPageRequest* page_req = strided_opr_constr->GetPageRequest();
-    VaGenerator va_gen(strided_opr_constr->GetVmMapper(), page_req, strided_opr_constr->TargetConstraint());
-
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
     uint64 alignment = GetAddressingAlignment(lsop_struct->Alignment(), lsop_struct->DataSize());
+    uint64 base_val = 0;
+    uint64 stride_val = 0;
+    CalculateBaseAndStrideValues(instr, alignment, base_val, stride_val);
 
-    // TODO(Noah): Implement a more robust solution method when one can be devised. The difficulty
-    // is finding a pattern of equidistant compliant address ranges. We have the facility to find
-    // one compliant address range, but then we have to find a series of address ranges that are
-    // stride length apart that also comply with the relevant constraints. A brute force approach to
-    // this would likely be very costly. The suboptimal solution constrains all of the addressses to
-    // be in one large block. This is relatively fast and reliable, but severely limits the possible
-    // stride values that can be used.
-    uint32 addr_range_size = 0x4000;
-    uint64 stride_value = CalculateStrideValue(instr, alignment, addr_range_size);
-    strided_opr_constr->SetStrideValue(stride_value);
+    mTargetAddress = base_val;
+    auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
+    strided_opr_constr->SetStrideValue(stride_val);
+    strided_opr_constr->SetBaseValue(base_val);
 
-    uint64 base_addr = va_gen.GenerateAddress(alignment, addr_range_size, false, page_req->MemoryAccessType());
-    mTargetAddress = CalculateBaseValue(base_addr, alignment, addr_range_size, stride_value);
-    strided_opr_constr->SetBaseValue(mTargetAddress);
-
-    LOG(notice) << "{VectorStridedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << strided_opr_constr->BaseValue() << " stride value 0x" << strided_opr_constr->StrideValue() << endl;
+    LOG(notice) << "{VectorStridedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << base_val << " stride value 0x" << stride_val << endl;
   }
 
   bool VectorStridedLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
@@ -1529,6 +1518,43 @@ namespace Force {
     if (base_opr->Value() == stride_opr->Value()) {
       stride_opr->SubConstraintValue(base_opr->Value());
       stride_opr->Generate(rGen, rInstr);
+    }
+  }
+
+  void VectorStridedLoadStoreOperand::CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, uint64& rBaseVal, uint64& rStrideVal) const
+  {
+    auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
+    const GenPageRequest* page_req = strided_opr_constr->GetPageRequest();
+    const ConstraintSet* target_constr = strided_opr_constr->TargetConstraint();
+    VaGenerator va_gen(strided_opr_constr->GetVmMapper(), page_req, target_constr);
+
+    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
+
+    // TODO(Noah): Implement a more robust solution method when one can be devised. The difficulty
+    // is finding a pattern of equidistant compliant address ranges. We have the facility to find
+    // one compliant address range, but then we have to find a series of address ranges that are
+    // stride length apart that also comply with the relevant constraints. A brute force approach to
+    // this would likely be very costly. The suboptimal solution constrains all of the addressses to
+    // be in one large block. This is relatively reliable, but limits the possible stride values
+    // that can be used.
+    bool solved = false;
+    uint32 addr_range_size = 0x4000;
+    while ((not solved) and (addr_range_size >= lsop_struct->DataSize())) {
+      uint64 base_addr = va_gen.GenerateAddress(alignment, addr_range_size, false, page_req->MemoryAccessType());
+      rStrideVal = CalculateStrideValue(rInstr, alignment, addr_range_size);
+
+      rBaseVal = CalculateBaseValue(base_addr, alignment, addr_range_size, rStrideVal);
+      if ((target_constr == nullptr) or (target_constr->ContainsValue(rBaseVal))) {
+        solved = true;
+      }
+      else {
+        addr_range_size /= 2;
+      }
+    }
+
+    if (not solved) {
+      LOG(fail) << "{VectorStridedLoadStoreOperand::CalculateBaseAndStrideValues} failed to find a solution with target constraint " << target_constr->ToSimpleString() << endl;
+      FAIL("failed-to-generate");
     }
   }
 
@@ -1573,6 +1599,7 @@ namespace Force {
     if (indexed_opr_constr->UsePreamble()) {
       vector<string> index_reg_names;
       GetIndexRegisterNames(index_reg_names);
+
       for (uint32 relative_reg_index = 0; relative_reg_index < index_reg_names.size(); relative_reg_index++) {
         uint64 index_opr_data_block_addr = AllocateIndexOperandDataBlock(gen, relative_reg_index);
         gen.AddLoadRegisterAmbleRequests(index_reg_names[relative_reg_index], index_opr_data_block_addr);
@@ -1614,7 +1641,7 @@ namespace Force {
     CalculateIndexValues(instr, alignment, base_val, index_elem_values);
     indexed_opr_constr->SetIndexValues(index_elem_values);
 
-    LOG(notice) << "{VectorIndexedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << indexed_opr_constr->BaseValue() << endl;
+    LOG(notice) << "{VectorIndexedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << base_val << endl;
   }
 
   bool VectorIndexedLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
@@ -1729,7 +1756,10 @@ namespace Force {
   {
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
     const GenPageRequest* page_req = indexed_opr_constr->GetPageRequest();
-    VaGenerator va_gen(indexed_opr_constr->GetVmMapper(), page_req, indexed_opr_constr->TargetConstraint());
+
+    // I think the target constraint should only apply to the base target address, so it is not
+    // applied here.
+    VaGenerator va_gen(indexed_opr_constr->GetVmMapper(), page_req);
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
