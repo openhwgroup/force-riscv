@@ -159,7 +159,7 @@
     <suppress>
         <id>oppositeExpression</id>
         <fileName>base/src/UtilityFunctions.cc</fileName>
-        <lineNumber>590</lineNumber>
+        <lineNumber>604</lineNumber>
     </suppress>
 
 <!-- VmControlBlock module -->
