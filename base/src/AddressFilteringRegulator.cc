@@ -74,7 +74,7 @@ namespace Force {
     rSolutionFilters.push_back(mAddressSolutionFilters[uint32(EAddressSolutionFilterType::SpAlignment)]);
     rSolutionFilters.push_back(mAddressSolutionFilters[uint32(EAddressSolutionFilterType::BaseDependency)]);
 
-    if (rAddrMode.HasIndex()) {
+    if (dynamic_cast<const BaseIndexExtendMode*>(&rAddrMode) != nullptr) {
       rSolutionFilters.push_back(mAddressSolutionFilters[uint32(EAddressSolutionFilterType::IndexDependency)]);
     }
   }

@@ -1488,16 +1488,9 @@ namespace Force {
     LOG(notice) << "{VectorStridedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << base_val << " stride value 0x" << stride_val << endl;
   }
 
-  bool VectorStridedLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
-  {
-    // TODO(Noah): Implement this method before finishing the vector extension project.
-    return false;
-  }
-
   AddressingMode* VectorStridedLoadStoreOperand::GetAddressingMode(uint64 alignment) const
   {
-    // TODO(Noah): Implement this method before finishing the vector extension project.
-    return nullptr;
+    return new VectorStridedMode();
   }
 
   void VectorStridedLoadStoreOperand::GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, vector<uint64>& rTargetAddresses) const
@@ -1509,6 +1502,13 @@ namespace Force {
       uint64 elem_target_addr = baseTargetAddr + strided_opr_constr->StrideValue() * elem_index;
       rTargetAddresses.push_back(elem_target_addr);
     }
+  }
+
+  void VectorStridedLoadStoreOperand::RecordOperandValues(const AddressingMode& rAddrMode)
+  {
+    auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
+    strided_opr_constr->SetBaseValue(rAddrMode.BaseValue());
+    strided_opr_constr->SetStrideValue(rAddrMode.IndexValue());
   }
 
   void VectorStridedLoadStoreOperand::DifferStrideOperand(Generator& rGen, Instruction& rInstr) {

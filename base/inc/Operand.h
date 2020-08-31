@@ -671,7 +671,7 @@ namespace Force {
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate the BaseOffsetLoadStoreOperand using preamble approach.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseOffsetLoadStoreOperand.
   private:
-    void RecordOperandValues(const AddressingMode& rAddrMode); //!< Capture the solved operand values.
+    void RecordOperandValues(const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
@@ -726,7 +726,7 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseIndexLoadStoreOperand.
   private:
     bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
-    void RecordOperandValues(const AddressingMode& rAddrMode); //!< Capture the solved operand values.
+    void RecordOperandValues(const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
@@ -772,10 +772,10 @@ namespace Force {
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
   private:
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
+    void RecordOperandValues(const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
     void DifferStrideOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the stride operand uses a different register from the base operand.
     void CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, uint64& rBaseVal, uint64& rStrideVal) const; //!< Calculate the values of the base and stride operands.
     uint64 CalculateStrideValue(const Instruction& rInstr, cuint32 alignment, cuint32 addrRangeSize) const; //!< Calculate the value of the stride operand.
