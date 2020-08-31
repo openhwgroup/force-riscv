@@ -19,6 +19,7 @@
 #include <Defines.h>
 #include <vector>
 #include <string>
+#include <type_traits>
 #include <Enums.h>
 #include ARCH_ENUM_HEADER
 
@@ -57,7 +58,17 @@ namespace Force {
     template<typename T>
       T* CastInstance()
       {
-        T* cast_instance = dynamic_cast<T* >(this);
+        T* cast_instance = dynamic_cast<T*>(this);
+        return cast_instance;
+      }
+
+    /*!
+      This is a const variant of CastInstance().
+     */
+    template<typename T>
+      typename std::enable_if<std::is_const<T>::value, T*>::type CastInstance() const
+      {
+        T* cast_instance = dynamic_cast<T*>(this);
         return cast_instance;
       }
 

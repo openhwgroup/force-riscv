@@ -191,6 +191,29 @@ namespace Force {
     EExtendType mExtendType; //!< Extension type.
     uint32 mExtendAmount; //!< Extend amount.
   };
+
+  /*!
+    \class VectorStridedSolvingShared
+    \brief Class holding necessary shared vector strided address solving data structures.
+  */
+  class VectorStridedSolvingShared : public AddressSolvingShared {
+  public:
+    VectorStridedSolvingShared();
+    COPY_CONSTRUCTOR_ABSENT(VectorStridedSolvingShared);
+    ~VectorStridedSolvingShared() override;
+    ASSIGNMENT_OPERATOR_ABSENT(VectorStridedSolvingShared);
+
+    bool Setup() override; //!< Setup shared data structures.
+    const std::vector<AddressingRegister*>& GetStrideChoices() const { return mStrideChoices; } //!< Return available stride register choices.
+    uint32 GetElementCount() const { return mElemCount; } //!< Return the number of vector elements.
+  private:
+    void SetupStrideChoices(); //!< Record the available stride choices.
+  private:
+    const RegisterOperand* mpStrideOpr; //!< Stride operand
+    std::vector<AddressingRegister*> mStrideChoices; //!< Available stride register choices
+    uint32 mElemCount; //!< The number of vector elements
+  };
+
   /*!
     \class BaseIndexAmountBitSolvingShared
     \brief Class holding necessary shared base-index address solving data structures.

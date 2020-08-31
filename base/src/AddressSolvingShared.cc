@@ -25,6 +25,7 @@
 #include <Constraint.h>
 #include <Register.h>
 #include <Instruction.h>
+#include <InstructionConstraint.h>
 #include <PcSpacing.h>
 #include <Random.h>
 #include <Choices.h>
@@ -33,6 +34,7 @@
 #include <GenException.h>
 #include <AddressFilteringRegulator.h>
 #include <AddressReuseMode.h>
+#include <VectorLayout.h>
 #include <Log.h>
 
 #include <memory>
@@ -372,6 +374,70 @@ namespace Force {
 
     return (mIndexChoices.size() > 0);
   }
+
+  VectorStridedSolvingShared::VectorStridedSolvingShared()
+    : AddressSolvingShared(), mpStrideOpr(nullptr), mStrideChoices(), mElemCount(0)
+  {
+  }
+
+  VectorStridedSolvingShared::~VectorStridedSolvingShared()
+  {
+    for (AddressingRegister* stride_choice : mStrideChoices) {
+      delete stride_choice;
+    }
+  }
+
+  bool VectorStridedSolvingShared::Setup()
+  {
+    if (not AddressSolvingShared::Setup())
+    {
+      return false;
+    }
+
+    auto strided_opr_constr = mpAddressingOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
+    mpStrideOpr = strided_opr_constr->StrideOperand();
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    mElemCount = vec_layout->mElemCount;
+
+    SetupStrideChoices();
+    if (mStrideChoices.empty()) {
+      LOG(notice) << "{VectorStridedSolvingShared::Setup} no stride choice available." << endl;
+      return false;
+    }
+
+    return true;
+  }
+
+  void VectorStridedSolvingShared::SetupStrideChoices()
+  {
+    vector<const Choice*> choices_list;
+    mpStrideOpr->GetAvailableChoices(choices_list);
+
+    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
+    for (const Choice* choice_item : choices_list) {
+      Register* reg = reg_file->RegisterLookup(choice_item->Name());
+
+      if (reg->IsInitialized()) {
+        if (reg->HasAttribute(ERegAttrType::HasValue)) {
+          auto addr_reg = new AddressingRegister();
+          addr_reg->SetRegister(reg);
+          addr_reg->SetWeight(choice_item->Weight());
+          addr_reg->SetRegisterValue(reg->Value());
+          mStrideChoices.push_back(addr_reg);
+        }
+      }
+      else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
+        auto addr_reg = new AddressingRegister();
+        addr_reg->SetRegister(reg);
+        addr_reg->SetWeight(choice_item->Weight());
+        addr_reg->SetFree(true);
+        mStrideChoices.push_back(addr_reg);
+      }
+    }
+  }
+
   bool BaseIndexAmountBitSolvingShared::Setup()
   {
     if (not BaseIndexSolvingShared::Setup())
