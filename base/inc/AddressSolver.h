@@ -95,7 +95,7 @@ namespace Force {
     virtual bool SolveFree(const AddressSolvingShared& rShared) { return false; } //!< Solve for address.
     virtual bool HasOffset() const { return false; } //!< Return false for has-offset query by default.
     virtual uint32 OffsetScale() const { return 0; } //!< Return offset scale if applicable.
-    virtual bool HasIndex() const { return false; } //!< Return false for has-index query by default.
+    virtual bool ShouldApplyIndexFilters() const { return false; } //!< Return whether filters applying to index registers should be applied.
     virtual AddressSolvingShared* AddressSolvingSharedInstance() const; //!< Return correct AddressSolvingShared object for the addressing mode.
     virtual bool ChooseSolution(const AddressSolvingShared& rAddrSolShared) { return true; } //!< Choose sub solution choice if necessary.
     virtual void NonSystemRegisterOperands(std::vector<const RegisterOperand*>& rRegOperands) const { } //!< Return list of non-system register operands.
@@ -270,42 +270,62 @@ namespace Force {
   };
 
   /*!
-    \class BaseIndexExtendMode
-    \brief Address solving class for addressing mode: base with extendedd index.
+    \class BaseIndexMode
+    \brief Address solving class for addressing mode: base with index.
   */
-  class BaseIndexExtendMode : public AddressingMode {
+  class BaseIndexMode : public AddressingMode {
   public:
-    const std::string ToString() const override; //!< Return a string describing the current state of the Operand object.
-    const char* Type() const override { return "BaseIndexExtendMode"; } //!< Return BaseIndexExtendMode object type.
-    Object* Clone() const override; //!< Clone BaseIndexExtendMode object.
+    BaseIndexMode();
+    ~BaseIndexMode() override;
+    ASSIGNMENT_OPERATOR_ABSENT(BaseIndexMode);
 
-    BaseIndexExtendMode() : AddressingMode(), mpChosenIndexSolution(nullptr), mIndexSolutionChoices(), mFilteredChoices() { } //!< Default constructor.
-    virtual ~BaseIndexExtendMode(); //!< Destructor.
+    const std::string ToString() const override; //!< Return a string describing the current state of the Object.
+    bool ShouldApplyIndexFilters() const override { return true; } //!< Return whether filters applying to index registers should be applied.
+    bool ChooseSolution(const AddressSolvingShared& rAddrSolShared) override; //!< Choose sub solution choice if necessary.
+    void SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const override; //!< Update operands to reflect chosen solution.
+    uint64 IndexValue() const override {return mpChosenIndexSolution->RegisterValue(); } //!< Return index value.
+    const Register* Index() const { return mpChosenIndexSolution->GetRegister(); } //!< Return pointer to index register.
+    std::vector<IndexSolution*>& GetSolutionChoicesForFiltering() { return mIndexSolutionChoices; } //!< Return reference to solution choices, only meant to be used by solution filtering.
+    std::vector<IndexSolution*>& GetFilteredChoicesForFiltering() { return mFilteredChoices; } //!< Return reference to filtered choices, only meant to be used by solution filtering.
+  protected:
+    BaseIndexMode(const BaseIndexMode& rOther);
 
+    bool HasIndexSolutions() const { return (not mIndexSolutionChoices.empty()); } //!< Return true if there is at least one index solution available.
+    void AddIndexSolution(IndexSolution* pIndexSolution) { mIndexSolutionChoices.push_back(pIndexSolution); } //!< Add an index solution.
+    const IndexSolution* GetChosenIndexSolution() const { return mpChosenIndexSolution; } //!< Return the chosen index solution.
+  private:
+    void RemoveUnusableSolutionChoices(); //!< Remove unusable solution choices.
+    virtual RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const = 0; //!< Return index operand.
+  private:
+    IndexSolution* mpChosenIndexSolution; //!< Pointer to the chosen index solution
+    std::vector<IndexSolution*> mIndexSolutionChoices; //!< Available index register solution choices
+    std::vector<IndexSolution*> mFilteredChoices; //!< Filtered index register choices
+  };
+
+  /*!
+    \class BaseIndexExtendMode
+    \brief Address solving class for addressing mode: base with extended index.
+  */
+  class BaseIndexExtendMode : public BaseIndexMode {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(BaseIndexExtendMode);
+    SUBCLASS_DESTRUCTOR_DEFAULT(BaseIndexExtendMode);
     ASSIGNMENT_OPERATOR_ABSENT(BaseIndexExtendMode);
+
+    Object* Clone() const override { return new BaseIndexExtendMode(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "BaseIndexExtendMode"; } //!< Return a string describing the actual type of the Object.
     bool Solve(const AddressSolvingShared& rShared) override; //!< Solve for address.
     bool SolveFree(const AddressSolvingShared& rShared) override; //!< Solve for address.
-    bool HasIndex() const override { return true; } //!< Return true for has-index query.
-
-    const Register* Index() const; //!< Return pointer to index register.
-    uint64 IndexValue() const override; //!< Return index value.
     AddressSolvingShared* AddressSolvingSharedInstance() const override; //!< Return correct AddressSolvingShared object for the base-index addressing mode.
-    bool ChooseSolution(const AddressSolvingShared& rAddrSolShared) override; //!< Choose base-index-extend addressing mode sub solution choice.
-    void SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const override; //!< Update operands to reflect chosen solution.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(BaseIndexExtendMode);
 
-    std::vector<IndexSolution* >& GetSolutionChoicesForFiltering() { return mIndexSolutionChoices; } //!< Return reference to solution choices, only meant to be used by solution filtering.
-    std::vector<IndexSolution* >& GetFilteredChoicesForFiltering() { return mFilteredChoices; } //!< Return reference to filtered choices, only meant to be used by solution filtering.
-  protected:
-    BaseIndexExtendMode(const BaseIndexExtendMode& rOther); //!< Copy constructor.
     void SolveWithAmountBit(const BaseIndexSolvingShared& rSharedBI, uint32 amountBit); //!< Solve with amount bit specified.
-    virtual void CreateFreeBaseIndexSolution(const BaseIndexSolvingShared& rBaseIndexShared, const AddressingRegister& rIndexChoice, const uint64 index_value); //!< Create solution for a specified index choice when base register is free.
     void CreateFreeBaseIndexSolutionWithAmount(const BaseIndexSolvingShared& rBaseIndexShared, const AddressingRegister& rIndexChoice, const uint64 index_value, uint32 amountBit) ; //!< Create solution for a specified index choice when base register is free.
-    void RemoveUnusableSolutionChoices(); //!< Remove unusable solution choices.
     void SolveTargetHasConstraint(const BaseIndexSolvingShared& rSharedBI, uint32 amountBit);
-  protected:
-    mutable const IndexSolution* mpChosenIndexSolution; //!< Pointer to the chosen index solution.
-    std::vector<IndexSolution* > mIndexSolutionChoices; //!< Available index register solution choices.
-    std::vector<IndexSolution* > mFilteredChoices; //!< Filtered index register choices.
+  private:
+    RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const override; //!< Return index operand.
+    virtual void CreateFreeBaseIndexSolution(const BaseIndexSolvingShared& rBaseIndexShared, const AddressingRegister& rIndexChoice, const uint64 index_value); //!< Create solution for a specified index choice when base register is free.
   };
 
   class VectorStridedSolvingShared;
@@ -314,55 +334,48 @@ namespace Force {
     \class VectorStridedMode
     \brief Address solving class for vector strided addressing mode.
   */
-  class VectorStridedMode : public AddressingMode {
+  class VectorStridedMode : public BaseIndexMode {
   public:
-    VectorStridedMode();
-    ~VectorStridedMode() override;
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorStridedMode);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorStridedMode);
     ASSIGNMENT_OPERATOR_ABSENT(VectorStridedMode);
 
     Object* Clone() const override { return new VectorStridedMode(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
-    const std::string ToString() const override; //!< Return a string describing the current state of the Object.
     const char* Type() const override { return "VectorStridedMode"; } //!< Return a string describing the actual type of the Object.
     bool Solve(const AddressSolvingShared& rShared) override; //!< Solve for address.
     bool SolveFree(const AddressSolvingShared& rShared) override; //!< Solve for address.
-    bool HasIndex() const override { return true; } //!< Return true for has-index query.
     AddressSolvingShared* AddressSolvingSharedInstance() const override; //!< Return correct AddressSolvingShared object for the addressing mode.
-    bool ChooseSolution(const AddressSolvingShared& rAddrSolShared) override; //!< Choose sub solution choice if necessary.
-    void SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const override; //!< Update operands to reflect chosen solution.
-    uint64 IndexValue() const override { return mpChosenStrideSolution->RegisterValue(); } //!< Return index value.
-    const Register* Stride() const { return mpChosenStrideSolution->GetRegister(); } //!< Return pointer to stride register.
   protected:
-    VectorStridedMode(const VectorStridedMode& rOther);
+    COPY_CONSTRUCTOR_DEFAULT(VectorStridedMode);
   private:
+    RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const override; //!< Return index operand.
     void SolveFixedTargetConstraintForced(const VectorStridedSolvingShared& rStridedShared); //!< Create solutions when base register is fixed and target address is forced.
     void SolveFixed(const VectorStridedSolvingShared& rStridedShared); //!< Create solutions when base register is fixed.
     void SolveFreeStrideFree(const VectorStridedSolvingShared& rBaseStrideShared, const AddressingRegister& rStrideChoice); //!< Create solution for a specified stride choice when base and stride registers are free.
     void SolveFreeStrideFixed(const VectorStridedSolvingShared& rBaseStrideShared, const AddressingRegister& rStrideChoice); //!< Create solution for a specified stride choice when base register is free and stride register is fixed.
-    void RemoveUnusableSolutionChoices(); //!< Remove unusable solution choices.
     bool AreTargetAddressesUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 baseVal, cuint64 strideVal); //!< Return true if the target address generated by the base and stride values satisfy all constraints.
     bool IsTargetAddressUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 targetAddr); //!< Return true if the specified target address satisfies all constraints.
-  private:
-    const IndexSolution* mpChosenStrideSolution; //!< Pointer to the chosen stride solution.
-    std::vector<IndexSolution*> mStrideSolutionChoices; //!< Available stride register solution choices.
   };
 
   /*!
     \class BaseIndexAmountBitExtendMode
     \brief Address solving class for addressing mode: base with extendedd index.
   */
-  class BaseIndexAmountBitExtendMode : public BaseIndexExtendMode{
+  class BaseIndexAmountBitExtendMode : public BaseIndexExtendMode {
   public:
-    const char* Type() const override { return "BaseIndexAmountBitExtendMode"; } //!< Return BaseIndexAmountBitExtendMode object type.
-    Object* Clone() const override; //!< Clone BaseIndexAmountBitExtendMode object.
-
-    BaseIndexAmountBitExtendMode() : BaseIndexExtendMode() { } //!< Default constructor.
+    DEFAULT_CONSTRUCTOR_DEFAULT(BaseIndexAmountBitExtendMode);
+    SUBCLASS_DESTRUCTOR_DEFAULT(BaseIndexAmountBitExtendMode);
     ASSIGNMENT_OPERATOR_ABSENT(BaseIndexAmountBitExtendMode);
-    uint32 AmountBit() const override; //!< Return amount bit value.
-    AddressSolvingShared* AddressSolvingSharedInstance() const override; //!< Return correct AddressSolvingShared object for the base-index addressing mode.
+
+    Object* Clone() const override { return new BaseIndexAmountBitExtendMode(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "BaseIndexAmountBitExtendMode"; } //!< Return a string describing the actual type of the Object.
     bool Solve(const AddressSolvingShared& rShared) override; //!< Solve for address.
+    AddressSolvingShared* AddressSolvingSharedInstance() const override; //!< Return correct AddressSolvingShared object for the addressing mode.
     void SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const override; //!< Update operands to reflect chosen solution.
+    uint32 AmountBit() const override; //!< Return amount bit value.
   protected:
-    BaseIndexAmountBitExtendMode(const BaseIndexAmountBitExtendMode& rOther): BaseIndexExtendMode(rOther) { } //!< Copy constructor.
+    COPY_CONSTRUCTOR_DEFAULT(BaseIndexAmountBitExtendMode);
+  private:
     void CreateFreeBaseIndexSolution(const BaseIndexSolvingShared& rBaseIndexShared, const AddressingRegister& rIndexChoice, const uint64 index_value) override; //!< Create solution for a specified index choice when base register is free.
   };
 
