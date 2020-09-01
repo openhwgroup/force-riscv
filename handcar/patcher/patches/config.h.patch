@@ -16,4 +16,4 @@
 8c8
 < #define DEFAULT_ISA "RV64IMAFDC"
 ---
-> #define DEFAULT_ISA "RV64IMAFDCV_zfh_zvamo" //"RV64IMAFDQC"
+> #define DEFAULT_ISA "RV64IMAFDCV_zfh_zvamo_zvlsseg" //"RV64IMAFDQC"
