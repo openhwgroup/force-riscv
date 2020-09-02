@@ -37,6 +37,13 @@ namespace Force {
   PageRequestRegulatorRISCV::PageRequestRegulatorRISCV()
     : PageRequestRegulator()
   {
+    //mInstrExceptionTypes.push_back(EPagingExceptionType::InstructionAccessFault);
+    mInstrExceptionTypes.push_back(EPagingExceptionType::InstructionPageFault);
+
+    //mDataExceptionTypes.push_back(EPagingExceptionType::LoadAccessFault);
+    //mDataExceptionTypes.push_back(EPagingExceptionType::StoreAmoAccessFault);
+    mDataExceptionTypes.push_back(EPagingExceptionType::LoadPageFault);
+    mDataExceptionTypes.push_back(EPagingExceptionType::StoreAmoPageFault);
   }
 
   PageRequestRegulatorRISCV::PageRequestRegulatorRISCV(const PageRequestRegulatorRISCV& rOther)
@@ -135,7 +142,24 @@ namespace Force {
 
   const char* PageRequestRegulatorRISCV::GetExceptionString(EPagingExceptionType exceptType) const
   {
-    return EPagingExceptionType_to_string(exceptType).c_str();
+    switch (exceptType)
+    {
+      case EPagingExceptionType::InstructionPageFault:
+      case EPagingExceptionType::LoadPageFault:
+      case EPagingExceptionType::StoreAmoPageFault:
+        return "PageFault";
+        break;
+      case EPagingExceptionType::InstructionAccessFault:
+      case EPagingExceptionType::LoadAccessFault:
+      case EPagingExceptionType::StoreAmoAccessFault:
+        return "AccessFault";
+        break;
+      default:
+        LOG(fail) << "{PageRequestRegulatorRISCV::GetExceptionString} unsupported paging exception type" << endl;
+        FAIL("unsupported-paging-exception-type");
+    }
+
+    return nullptr;
   }
 
   void PageRequestRegulatorRISCV::PreventDataAbort(GenPageRequest* pPageReq) const
@@ -144,6 +168,9 @@ namespace Force {
     pPageReq->SetExceptionConstraint(EPagingExceptionType::LoadPageFault, EExceptionConstraintType::PreventHard);
     pPageReq->SetGenAttributeValue(EPageGenAttributeType::Invalid, 0); // ensure Invalid attribute is set to 0.
     pPageReq->SetGenAttributeValue(EPageGenAttributeType::AddrSizeFault, 0); // Don't generate address size fault for system pages
+    pPageReq->SetPteAttribute(EPteAttributeType::W, 1); // set wrv to all 1 for full access
+    pPageReq->SetPteAttribute(EPteAttributeType::R, 1);
+    pPageReq->SetPteAttribute(EPteAttributeType::V, 1);
   }
 
   void PageRequestRegulatorRISCV::PreventInstrAbort(GenPageRequest* pPageReq) const
@@ -152,6 +179,9 @@ namespace Force {
     pPageReq->SetExceptionConstraint(EPagingExceptionType::InstructionPageFault, EExceptionConstraintType::PreventHard);
     pPageReq->SetGenAttributeValue(EPageGenAttributeType::Invalid, 0); // ensure Invalid attribute is set to 0.
     pPageReq->SetGenAttributeValue(EPageGenAttributeType::AddrSizeFault, 0); // Don't generate address size fault for system pages
+    pPageReq->SetPteAttribute(EPteAttributeType::X, 1); // set xrv to avoid faults
+    pPageReq->SetPteAttribute(EPteAttributeType::R, 1);
+    pPageReq->SetPteAttribute(EPteAttributeType::V, 1);
   }
 
 }
