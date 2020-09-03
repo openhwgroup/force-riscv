@@ -1652,8 +1652,7 @@ namespace Force {
 
   AddressingMode* VectorIndexedLoadStoreOperand::GetAddressingMode(uint64 alignment) const
   {
-    // TODO(Noah): Implement this method before finishing the vector extension project.
-    return nullptr;
+    return new VectorIndexedMode();
   }
 
   void VectorIndexedLoadStoreOperand::GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, vector<uint64>& rTargetAddresses) const

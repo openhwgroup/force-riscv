@@ -51,7 +51,7 @@ class MainSequence(VectorTestSequence):
     ## Return true if it is permissible for the generation to skip this instruction.
     #
     #  @param aInstr The name of the instruction.
-    #  @param aInstrParams The paramters passed to Sequence.genInstruction().
+    #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     def _isSkipAllowed(self, aInstr, aInstrParams):
         # Instructions disallowing preamble may legitimately be skipped sometimes if no solution can
         # be determined, but instructions that permit preamble should always generate

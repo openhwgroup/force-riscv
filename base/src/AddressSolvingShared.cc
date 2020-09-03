@@ -438,6 +438,101 @@ namespace Force {
     }
   }
 
+  VectorIndexedSolvingShared::VectorIndexedSolvingShared()
+    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices(), mElemSize(0), mElemCount(0)
+  {
+  }
+
+  VectorIndexedSolvingShared::~VectorIndexedSolvingShared()
+  {
+    for (AddressingRegister* index_choice : mIndexChoices) {
+      delete index_choice;
+    }
+  }
+
+  bool VectorIndexedSolvingShared::Setup()
+  {
+    if (not AddressSolvingShared::Setup())
+    {
+      return false;
+    }
+
+    auto indexed_opr_constr = mpAddressingOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
+    mpIndexOpr = indexed_opr_constr->IndexOperand();
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    mElemSize = vec_layout->mElemSize;
+    mElemCount = vec_layout->mElemCount;
+
+    SetupIndexChoices();
+    if (mIndexChoices.empty()) {
+      LOG(notice) << "{VectorIndexedSolvingShared::Setup} no index choice available." << endl;
+      return false;
+    }
+
+    return true;
+  }
+
+  uint64 VectorIndexedSolvingShared::GetVectorElementValue(const std::vector<uint64>& rVecRegValues, cuint32 elemIndex) const
+  {
+    uint32 reg_val_index = (mElemSize * elemIndex) / 64;
+    uint32 reg_val_shift = ((mElemSize * elemIndex) % 64) * mElemSize;
+    uint64 reg_val_mask = get_mask64(mElemSize, reg_val_shift);
+    uint64 elem_val = (rVecRegValues[reg_val_index] & reg_val_mask) >> reg_val_shift;
+
+    return elem_val;
+  }
+
+  void VectorIndexedSolvingShared::GetVectorRegisterValues(const std::vector<uint64>& rVecElemValues, std::vector<uint64>& rVecRegValues) const
+  {
+    uint32 elem_values_per_reg_val = 64 / mElemSize;
+    uint32 reg_val_count = mElemCount / elem_values_per_reg_val;
+    for (uint32 reg_val_index = 0; reg_val_index < reg_val_count; reg_val_index++) {
+      uint32 elem_start_index = reg_val_index * elem_values_per_reg_val;
+      uint32 elem_end_index = elem_start_index + elem_values_per_reg_val;
+
+      uint64 reg_val = 0;
+      for (uint32 elem_index = elem_start_index; elem_index < elem_end_index; elem_index++) {
+        reg_val <<= mElemSize;
+        reg_val |= rVecElemValues[elem_index];
+      }
+
+      rVecRegValues.push_back(reg_val);
+    }
+  }
+
+  void VectorIndexedSolvingShared::SetupIndexChoices()
+  {
+    vector<const Choice*> choices_list;
+    mpIndexOpr->GetAvailableChoices(choices_list);
+
+    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
+    for (const Choice* choice_item : choices_list) {
+      Register* reg = reg_file->RegisterLookup(choice_item->Name());
+
+      if (reg->IsInitialized()) {
+        if (reg->HasAttribute(ERegAttrType::HasValue)) {
+          auto addr_reg = new AddressingRegister();
+          addr_reg->SetRegister(reg);
+          addr_reg->SetWeight(choice_item->Weight());
+
+          auto large_reg = dynamic_cast<LargeRegister*>(reg);
+          addr_reg->SetRegisterValue(large_reg->Values());
+
+          mIndexChoices.push_back(addr_reg);
+        }
+      }
+      else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
+        auto addr_reg = new AddressingRegister();
+        addr_reg->SetRegister(reg);
+        addr_reg->SetWeight(choice_item->Weight());
+        addr_reg->SetFree(true);
+        mIndexChoices.push_back(addr_reg);
+      }
+    }
+  }
+
   bool BaseIndexAmountBitSolvingShared::Setup()
   {
     if (not BaseIndexSolvingShared::Setup())

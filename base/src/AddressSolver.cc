@@ -110,7 +110,7 @@ namespace Force {
     }
   }
 
-  bool AddressingMode::SolveWithValue(uint64 value, const AddressSolvingShared& rShared, uint64& rTargetValue) const
+  bool AddressingMode::SolveWithValue(uint64 value, const AddressSolvingShared& rShared, const ConstraintSet* pTargetConstr, uint64& rTargetAddr) const
   {
     auto addr_opr_constr = rShared.GetAddressingOperandConstraint();
 
@@ -125,16 +125,48 @@ namespace Force {
     value_constr.AlignWithSize(rShared.AlignMask(), rShared.Size());
     if (value_constr.IsEmpty()) return false;
 
-    auto target_constr = rShared.TargetConstraint();
-    if (nullptr != target_constr) {
-      value_constr.ApplyConstraintSet(*target_constr);
+    if (pTargetConstr != nullptr) {
+      value_constr.ApplyConstraintSet(*pTargetConstr);
     }
     if (value_constr.IsEmpty()) return false;
 
     uint32 align_shift = rShared.AlignShift();
     value_constr.ShiftRight(align_shift);
-    rTargetValue = value_constr.ChooseValue() << align_shift;
+    rTargetAddr = value_constr.ChooseValue() << align_shift;
     return true;
+  }
+
+  bool AddressingMode::SolveWithBase(cuint64 baseValue, const AddressSolvingShared& rShared, const BaseOffsetConstraint& rBaseOffsetConstr, const ConstraintSet* pTargetConstr, uint64& rTargetAddr) const
+  {
+    const AddressTagging* addr_tagging = rShared.GetAddressTagging();
+    uint64 untagged_base_value = addr_tagging->UntagAddress(baseValue, rShared.IsInstruction());
+
+    ConstraintSet target_addr_constr;
+    rBaseOffsetConstr.GetConstraint(untagged_base_value, rShared.Size(), nullptr, target_addr_constr);
+
+    rShared.ApplyVirtualUsableConstraint(&target_addr_constr, mVmTimeStamp);
+    if (target_addr_constr.IsEmpty()) return false;
+
+    target_addr_constr.SubConstraintSet(*(rShared.PcConstraint()));
+    if (target_addr_constr.IsEmpty()) return false;
+
+    //apply target constraint. Hard constraint also need to be checked.
+    if (pTargetConstr != nullptr) {
+      target_addr_constr.ApplyConstraintSet(*pTargetConstr);
+      if (target_addr_constr.IsEmpty()) return false;
+    }
+
+    bool solve_result = ChooseTargetAddress(rShared, target_addr_constr, rTargetAddr);
+
+    uint64 base_value_tag_value = addr_tagging->GetTagValue(baseValue);
+    rTargetAddr = addr_tagging->TagAddress(rTargetAddr, base_value_tag_value, rShared.IsInstruction());
+    // If the the base register value can be tagged and the target address cannot (or vice versa), this solution won't
+    // work, so reject it.
+    if (!addr_tagging->AreTaggingCapacitiesEqual(rTargetAddr, baseValue, rShared.IsInstruction())) {
+      solve_result = false;
+    }
+    LOG(info) << "{AddressingMode::SolveWithBase} target=0x" << hex << rTargetAddr << " base=0x" << baseValue << endl;
+    return solve_result;
   }
 
   const string AddressingMode::ToString() const
@@ -142,6 +174,19 @@ namespace Force {
     stringstream out_str;
     out_str << Type() << ": target-address: 0x" << hex << mTargetAddress << " base " << AddressingRegister::ToString();
     return out_str.str();
+  }
+
+  bool AddressingMode::ChooseTargetAddress(const AddressSolvingShared& rShared, ConstraintSet& rBaseOffsetConstr, uint64& rTargetAddr) const
+  {
+    rBaseOffsetConstr.AlignWithSize(rShared.AlignMask(), rShared.Size());
+    if (rBaseOffsetConstr.IsEmpty()) return false;
+
+    uint32 align_shift = rShared.AlignShift();
+    rBaseOffsetConstr.ShiftRight(align_shift);
+
+    rTargetAddr = rBaseOffsetConstr.ChooseValue() << align_shift;
+
+    return true;
   }
 
   Object* BaseOnlyMode::Clone() const
@@ -175,7 +220,7 @@ namespace Force {
       }
     }
 
-    bool solve_result = SolveWithValue(untagged_base_value, rShared, mTargetAddress);
+    bool solve_result = SolveWithValue(untagged_base_value, rShared, target_constr, mTargetAddress);
 
     uint64 base_value_tag_value = addr_tagging->GetTagValue(base_value);
     mTargetAddress = addr_tagging->TagAddress(mTargetAddress, base_value_tag_value, rShared.IsInstruction());
@@ -214,7 +259,7 @@ namespace Force {
       }
     }
 
-    bool solve_result = SolveWithValue(untagged_base_value & rShared.AlignMask(), rShared, mTargetAddress);
+    bool solve_result = SolveWithValue(untagged_base_value & rShared.AlignMask(), rShared, target_constr, mTargetAddress);
 
     uint64 base_value_tag_value = addr_tagging->GetTagValue(base_value);
     mTargetAddress = addr_tagging->TagAddress(mTargetAddress, base_value_tag_value, rShared.IsInstruction());
@@ -281,43 +326,15 @@ namespace Force {
     if (offset_constr->HasConstraint()) {
       return SolveOffsetHasConstraint(&rShared);
     }
-    //normal flow
-    const AddressTagging* addr_tagging = rShared.GetAddressTagging();
-    uint64 untagged_base_value = addr_tagging->UntagAddress(BaseValue(), rShared.IsInstruction());
 
     bool isOffsetShift = true;
     if (dynamic_cast<BaseOffsetMulMode*> (this)) {isOffsetShift = false;}
-    ConstraintSet base_offset_constr;
     BaseOffsetConstraint bo_constr_builder(offset_opr->BaseValue(), offset_opr->Size(), OffsetScale(), MAX_UINT64, isOffsetShift);
-    bo_constr_builder.GetConstraint(untagged_base_value, rShared.Size(), nullptr, base_offset_constr);
 
-    rShared.ApplyVirtualUsableConstraint(&base_offset_constr, mVmTimeStamp);
-    if (base_offset_constr.IsEmpty()) return false;
-
-    base_offset_constr.SubConstraintSet(*(rShared.PcConstraint()));
-    if (base_offset_constr.IsEmpty()) return false;
-
-    //apply target constraint. Hard constraint also need to be checked.
-    auto target_constr = rShared.TargetConstraint();
-    if ( nullptr != target_constr) {
-      base_offset_constr.ApplyConstraintSet(*target_constr);
-      if (base_offset_constr.IsEmpty()) return false;
-    }
-
-    bool solve_result = ChooseTargetAddress(rShared, base_offset_constr);
-
-    uint64 base_value_tag_value = addr_tagging->GetTagValue(BaseValue());
-    mTargetAddress = addr_tagging->TagAddress(mTargetAddress, base_value_tag_value, rShared.IsInstruction());
-    // If the the base register value can be tagged and the target address cannot (or vice versa), this solution won't
-    // work, so reject it.
-    if (!addr_tagging->AreTaggingCapacitiesEqual(mTargetAddress, BaseValue(), rShared.IsInstruction())) {
-      solve_result = false;
-    }
-    LOG(info)<<"{BaseOffsetMode::Solve} target=0x"<<hex<<mTargetAddress<<" base=0x"<<BaseValue()<<endl;
-    return solve_result;
+    return SolveWithBase(BaseValue(), rShared, bo_constr_builder, rShared.TargetConstraint(), mTargetAddress);
   }
 
-  bool BaseOffsetMode::SolveOffsetHasConstraint(const AddressSolvingShared* rShared){
+  bool BaseOffsetMode::SolveOffsetHasConstraint(const AddressSolvingShared* rShared) {
     auto offset_value = rShared->FreeOffset(this);
     uint64 target = BaseValue() + offset_value;
     const AddressTagging* addr_tagging = rShared->GetAddressTagging();
@@ -326,7 +343,7 @@ namespace Force {
       LOG(trace) << "{BaseOffsetMode::SolveOffsetHasConstraint} target=0x"<<hex<<target<<" is unalign!"<<" base=0x"<<BaseValue() << endl;
       return false;
     }
-    bool solve_result = SolveWithValue(untagged_target, *rShared, mTargetAddress);
+    bool solve_result = SolveWithValue(untagged_target, *rShared, rShared->TargetConstraint(), mTargetAddress);
     uint64 target_tag_value = addr_tagging->GetTagValue(target);
     mTargetAddress = addr_tagging->TagAddress(mTargetAddress, target_tag_value, rShared->IsInstruction());
     if ((!solve_result) || (!addr_tagging->AreTaggingCapacitiesEqual(mTargetAddress, target, rShared->IsInstruction()))) {
@@ -340,7 +357,7 @@ namespace Force {
   bool BaseOffsetMode::SolveFree(const AddressSolvingShared& rShared)
   {
     //Target constraint has been included to flow of rShared.SolveFree()
-    if (not rShared.SolveFree()){
+    if (not rShared.SolveFree()) {
       return false;
     }
     mTargetAddress = rShared.FreeTarget();
@@ -371,19 +388,6 @@ namespace Force {
     }
   }
 
-  bool BaseOffsetMode::ChooseTargetAddress(const AddressSolvingShared& rShared, ConstraintSet& rBaseOffsetConstr)
-  {
-    rBaseOffsetConstr.AlignWithSize(rShared.AlignMask(), rShared.Size());
-    if (rBaseOffsetConstr.IsEmpty()) return false;
-
-    uint32 align_shift = rShared.AlignShift();
-    rBaseOffsetConstr.ShiftRight(align_shift);
-
-    mTargetAddress = rBaseOffsetConstr.ChooseValue() << align_shift;
-
-    return true;
-  }
-
   BaseOffsetShiftMode::BaseOffsetShiftMode(uint32 offsetScale)
     : BaseOffsetMode(), mOffsetScale(offsetScale)
   {
@@ -404,7 +408,7 @@ namespace Force {
     return new BaseOffsetShiftSolvingShared(mOffsetScale);
   }
 
-  bool BaseOffsetShiftMode::ChooseTargetAddress(const AddressSolvingShared& rShared, ConstraintSet& rBaseOffsetConstr)
+  bool BaseOffsetShiftMode::ChooseTargetAddress(const AddressSolvingShared& rShared, ConstraintSet& rBaseOffsetConstr, uint64& rTargetAddr) const
   {
     const auto& base_offset_scale_shared = dynamic_cast<const BaseOffsetShiftSolvingShared&>(rShared);
 
@@ -413,7 +417,7 @@ namespace Force {
     if (rBaseOffsetConstr.IsEmpty()) return false;
 
     rBaseOffsetConstr.ShiftRight(base_offset_scale_shared.ScaleAlignShift());
-    mTargetAddress = (rBaseOffsetConstr.ChooseValue() << base_offset_scale_shared.ScaleAlignShift()) + align_offset;
+    rTargetAddr = (rBaseOffsetConstr.ChooseValue() << base_offset_scale_shared.ScaleAlignShift()) + align_offset;
 
     return true;
   }
@@ -453,7 +457,8 @@ namespace Force {
 
     return (offset_dev & mask);
   }
-  bool BaseOffsetMulMode::ChooseTargetAddress(const AddressSolvingShared& rShared, ConstraintSet& rBaseOffsetConstr)
+
+  bool BaseOffsetMulMode::ChooseTargetAddress(const AddressSolvingShared& rShared, ConstraintSet& rBaseOffsetConstr, uint64& rTargetAddr) const
   {
     const auto& base_offset_scale_shared = dynamic_cast<const BaseOffsetMulSolvingShared&>(rShared);
 
@@ -469,8 +474,8 @@ namespace Force {
     if (rBaseOffsetConstr.IsEmpty()) return false;
 
     uint64 choosevalue = rBaseOffsetConstr.ChooseValue();
-    mTargetAddress = (choosevalue * base_offset_scale_shared.OffsetMulData()) + remainder_base;
-    LOG(trace)<<"{BaseOffsetMulMode::ChooseTargetAddress} remainder_base="<<remainder_base<<" choosevalue="<<choosevalue<<" TargetAddress="<<mTargetAddress<<endl;
+    rTargetAddr = (choosevalue * base_offset_scale_shared.OffsetMulData()) + remainder_base;
+    LOG(trace)<<"{BaseOffsetMulMode::ChooseTargetAddress} remainder_base="<<remainder_base<<" choosevalue="<<choosevalue<<" TargetAddress="<<rTargetAddr<<endl;
     return true;
   }
 
@@ -602,7 +607,7 @@ namespace Force {
     if (not rShared.SolveFree()) {
       return false;
     }
-    const auto& rSharedBI =  dynamic_cast<const BaseIndexSolvingShared&>(rShared);
+    const auto& rSharedBI = dynamic_cast<const BaseIndexSolvingShared&>(rShared);
     const vector<AddressingRegister* >& index_choices = rSharedBI.GetIndexChoices();
     for (AddressingRegister* index_choice : index_choices) {
       uint64 index_value = 0;
@@ -645,7 +650,7 @@ namespace Force {
       }
       // << "alignment okay address 0x" << hex << untagged_temp_target << endl;
       uint64 solved_target = 0;
-      bool solve_result = SolveWithValue(untagged_temp_target, rSharedBI, solved_target);
+      bool solve_result = SolveWithValue(untagged_temp_target, rSharedBI, rSharedBI.TargetConstraint(), solved_target);
       uint64 temp_target_tag_value = addr_tagging->GetTagValue(temp_target);
       solved_target = addr_tagging->TagAddress(solved_target, temp_target_tag_value, rSharedBI.IsInstruction());
 
@@ -675,7 +680,7 @@ namespace Force {
     CreateFreeBaseIndexSolutionWithAmount(rBaseIndexShared, rIndexChoice, index_value, 1);
   }
 
-  void BaseIndexExtendMode::SolveTargetHasConstraint(const BaseIndexSolvingShared& rSharedBI, uint32 amountBit){
+  void BaseIndexExtendMode::SolveTargetHasConstraint(const BaseIndexSolvingShared& rSharedBI, uint32 amountBit) {
     uint32 extend_amount = rSharedBI.ExtendAmount() * amountBit;
     uint64 target_force = rSharedBI.TargetConstraint()->OnlyValue();
 
@@ -687,7 +692,7 @@ namespace Force {
       uint64 temp_target = BaseValue() + index_value;
       uint64 untagged_target = addr_tagging->UntagAddress(temp_target, rSharedBI.IsInstruction());
 
-      if (target_force == untagged_target){
+      if (target_force == untagged_target) {
         auto index_solution = new IndexSolution(*index_choice, index_choice->RegisterValue(), BaseValue(), temp_target, amountBit);
         AddIndexSolution(index_solution);
       }
@@ -720,7 +725,7 @@ namespace Force {
       return false;
     }
 
-    auto& strided_shared =  dynamic_cast<const VectorStridedSolvingShared&>(rShared);
+    auto& strided_shared = dynamic_cast<const VectorStridedSolvingShared&>(rShared);
     for (AddressingRegister* stride_choice : strided_shared.GetStrideChoices()) {
       const Register* stride_reg = stride_choice->GetRegister();
 
@@ -760,7 +765,7 @@ namespace Force {
       uint64 target_addr = BaseValue() + stride_choice->RegisterValue();
       uint64 untagged_target_addr = addr_tagging->UntagAddress(target_addr, rStridedShared.IsInstruction());
 
-      if (untagged_target_addr == forced_target_addr){
+      if (untagged_target_addr == forced_target_addr) {
         auto stride_solution = new IndexSolution(*stride_choice, stride_choice->RegisterValue(), BaseValue(), target_addr, 0);
         AddIndexSolution(stride_solution);
       }
@@ -799,7 +804,8 @@ namespace Force {
         solved = true;
       }
       else {
-        stride_val = static_cast<uint64>(static_cast<int64>(stride_val) >> 6);
+        uint32 reduction_factor = 6;
+        stride_val = static_cast<uint64>(static_cast<int64>(stride_val) >> reduction_factor);
       }
     }
 
@@ -819,22 +825,20 @@ namespace Force {
 
   bool VectorStridedMode::AreTargetAddressesUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 baseVal, cuint64 strideVal)
   {
-    bool target_addresses_usable = true;
-    for (uint32 elem_index = 0; elem_index < rStridedShared.GetElementCount(); elem_index++) {
-      uint64 elem_target_addr = baseVal + strideVal * elem_index;
-
-      // TODO(Noah): Determine how to avoid applying the target constraint to any address except the
-      // first when there is time to do so.
-      if (not IsTargetAddressUsable(rStridedShared, elem_target_addr)) {
-        target_addresses_usable = false;
+    bool target_addresses_usable = IsTargetAddressUsable(rStridedShared, baseVal, rStridedShared.TargetConstraint());
+    for (uint32 elem_index = 1; elem_index < rStridedShared.GetElementCount(); elem_index++) {
+      if (not target_addresses_usable) {
         break;
       }
+
+      uint64 elem_target_addr = baseVal + strideVal * elem_index;
+      target_addresses_usable = IsTargetAddressUsable(rStridedShared, elem_target_addr, nullptr);
     }
 
     return target_addresses_usable;
   }
 
-  bool VectorStridedMode::IsTargetAddressUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 targetAddr)
+  bool VectorStridedMode::IsTargetAddressUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 targetAddr, const ConstraintSet* pTargetConstr)
   {
     bool target_addr_usable = false;
     const AddressTagging* addr_tagging = rStridedShared.GetAddressTagging();
@@ -842,7 +846,167 @@ namespace Force {
 
     if (rStridedShared.AlignmentOkay(untagged_target_addr)) {
       uint64 solved_target_addr = 0;
-      bool solved = SolveWithValue(untagged_target_addr, rStridedShared, solved_target_addr);
+      bool solved = SolveWithValue(untagged_target_addr, rStridedShared, pTargetConstr, solved_target_addr);
+
+      if (solved and (solved_target_addr == untagged_target_addr)) {
+        target_addr_usable = true;
+      }
+    }
+
+    return target_addr_usable;
+  }
+
+  bool VectorIndexedMode::Solve(const AddressSolvingShared& rShared)
+  {
+    auto& indexed_shared = dynamic_cast<const VectorIndexedSolvingShared&>(rShared);
+    if ((indexed_shared.TargetConstraint() != nullptr) and (indexed_shared.TargetConstraint()->Size() == 1)) {
+      SolveFixedTargetConstraintForced(indexed_shared);
+    }
+    else {
+      SolveFixed(indexed_shared);
+    }
+
+    return HasIndexSolutions();
+  }
+
+  bool VectorIndexedMode::SolveFree(const AddressSolvingShared& rShared)
+  {
+    // Target constraint is accounted for in rShared.SolveFree()
+    if (not rShared.SolveFree()) {
+      return false;
+    }
+
+    auto& indexed_shared = dynamic_cast<const VectorIndexedSolvingShared&>(rShared);
+    for (AddressingRegister* index_choice : indexed_shared.GetIndexChoices()) {
+      if (index_choice->IsFree()) {
+        SolveFreeIndexFree(indexed_shared, *index_choice);
+      } else {
+        SolveFreeIndexFixed(indexed_shared, *index_choice);
+      }
+    }
+
+    return HasIndexSolutions();
+  }
+
+  AddressSolvingShared* VectorIndexedMode::AddressSolvingSharedInstance() const
+  {
+    return new VectorIndexedSolvingShared();
+  }
+
+  void VectorIndexedMode::SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const
+  {
+    AddressingMode::SetOperandResults(rShared, rBaseOperand);
+
+    RegisterOperand* index_opr = GetIndexOperand(rShared);
+    Instruction* instr = rShared.GetInstruction();
+    const Register* index_reg = Index();
+    index_opr->SetChoiceResultDirect(*(rShared.GetGenerator()), *instr, index_reg->Name());
+
+    const IndexSolution* chosen_index_solution = GetChosenIndexSolution();
+    if (chosen_index_solution->IsFree()) {
+      instr->SetOperandDataValue(index_opr->Name(), chosen_index_solution->RegisterValues(), index_reg->Size());
+    }
+  }
+
+  RegisterOperand* VectorIndexedMode::GetIndexOperand(const AddressSolvingShared& rShared) const
+  {
+    const AddressingOperandConstraint* addr_opr_constr = rShared.GetAddressingOperandConstraint();
+    auto indexed_opr_constr = addr_opr_constr->CastInstance<const VectorIndexedLoadStoreOperandConstraint>();
+    return indexed_opr_constr->IndexOperand();
+  }
+
+  void VectorIndexedMode::SolveFixedTargetConstraintForced(const VectorIndexedSolvingShared& rIndexedShared) {
+    const ConstraintSet* target_constr = rIndexedShared.TargetConstraint();
+    uint64 forced_target_addr = target_constr->OnlyValue();
+
+    const AddressTagging* addr_tagging = rIndexedShared.GetAddressTagging();
+    for (AddressingRegister* index_choice : rIndexedShared.GetIndexChoices()) {
+      uint64 target_addr = BaseValue() + rIndexedShared.GetVectorElementValue(index_choice->RegisterValues(), 0);
+      uint64 untagged_target_addr = addr_tagging->UntagAddress(target_addr, rIndexedShared.IsInstruction());
+
+      if (untagged_target_addr == forced_target_addr) {
+        auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
+        AddIndexSolution(index_solution);
+      }
+    }
+  }
+
+  void VectorIndexedMode::SolveFixed(const VectorIndexedSolvingShared& rIndexedShared)
+  {
+    for (auto index_choice : rIndexedShared.GetIndexChoices()) {
+      if (AreTargetAddressesUsable(rIndexedShared, BaseValue(), index_choice->RegisterValues())) {
+        uint64 target_addr = BaseValue() + rIndexedShared.GetVectorElementValue(index_choice->RegisterValues(), 0);
+        auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
+        AddIndexSolution(index_solution);
+      }
+    }
+  }
+
+  void VectorIndexedMode::SolveFreeIndexFree(const VectorIndexedSolvingShared& rIndexedShared, const AddressingRegister& rIndexChoice)
+  {
+    vector<uint64> index_elem_values;
+
+    ConstraintSet index_elem_constr(0, get_mask64(rIndexedShared.GetElementSize()));
+    uint64 index_elem_val = index_elem_constr.ChooseValue();
+    index_elem_values.push_back(index_elem_val);
+    uint64 base_val = rIndexedShared.FreeTarget() - index_elem_val;
+
+    bool solved = true;
+    uint64 elem_target_addr = 0;
+    BaseOffsetConstraint base_offset_constr(0, rIndexedShared.GetElementSize(), 0, MAX_UINT64, true);
+    for (uint32 elem_index = 1; elem_index < rIndexedShared.GetElementCount(); elem_index++) {
+      solved = SolveWithBase(base_val, rIndexedShared, base_offset_constr, nullptr, elem_target_addr);
+      index_elem_values.push_back(elem_target_addr - base_val);
+
+      if (not solved) {
+        break;
+      }
+    }
+
+    if (solved) {
+      vector<uint64> reg_values;
+      rIndexedShared.GetVectorRegisterValues(index_elem_values, reg_values);
+
+      auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
+      index_solution->SetRegisterValue(reg_values);
+      AddIndexSolution(index_solution);
+    }
+  }
+
+  void VectorIndexedMode::SolveFreeIndexFixed(const VectorIndexedSolvingShared& rIndexedShared, const AddressingRegister& rIndexChoice)
+  {
+    uint64 base_val = rIndexedShared.FreeTarget() - rIndexedShared.GetVectorElementValue(rIndexChoice.RegisterValues(), 0);
+    if (AreTargetAddressesUsable(rIndexedShared, base_val, rIndexChoice.RegisterValues())) {
+      auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
+      AddIndexSolution(index_solution);
+    }
+  }
+
+  bool VectorIndexedMode::AreTargetAddressesUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, const vector<uint64>& rIndexRegValues)
+  {
+    uint64 index_elem_val = rIndexedShared.GetVectorElementValue(rIndexRegValues, 0);
+    bool target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_val), rIndexedShared.TargetConstraint());
+    for (uint32 elem_index = 1; elem_index < rIndexedShared.GetElementCount(); elem_index++) {
+      if (not target_addresses_usable) {
+        break;
+      }
+
+      index_elem_val = rIndexedShared.GetVectorElementValue(rIndexRegValues, elem_index);
+      target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_val), nullptr);
+    }
+
+    return target_addresses_usable;
+  }
+
+  bool VectorIndexedMode::IsTargetAddressUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 targetAddr, const ConstraintSet* pTargetConstr)
+  {
+    bool target_addr_usable = false;
+    const AddressTagging* addr_tagging = rIndexedShared.GetAddressTagging();
+    uint64 untagged_target_addr = addr_tagging->UntagAddress(targetAddr, rIndexedShared.IsInstruction());
+
+    if (rIndexedShared.AlignmentOkay(untagged_target_addr)) {
+      uint64 solved_target_addr = 0;
+      bool solved = SolveWithValue(untagged_target_addr, rIndexedShared, pTargetConstr, solved_target_addr);
 
       if (solved and (solved_target_addr == untagged_target_addr)) {
         target_addr_usable = true;
@@ -1300,16 +1464,16 @@ namespace Force {
     pRegOperand->GetAvailableChoices(choices_list);
     const RegisterFile* reg_file = gen.GetRegisterFile();
 
-    for (const auto *choice : choices_list){
+    for (const auto *choice : choices_list) {
       const Choice* reg_choice = choice;
       Register* temp_reg_ptr = reg_file->RegisterLookup(reg_choice->Name());
 
-      if (IsRegisterUsable(temp_reg_ptr, gen.HasISS())){
+      if (IsRegisterUsable(temp_reg_ptr, gen.HasISS())) {
         rUsableRegisters.push_back(temp_reg_ptr);
       }
     }
 
-    if (rUsableRegisters.size() < 1){
+    if (rUsableRegisters.size() < 1) {
         return false;
     }
 
@@ -1340,16 +1504,16 @@ namespace Force {
       vector<Register*> usable_registers;
 
       // If a given operand has no usable register choices, we can't create any valid register choice combinations.
-      if ( not GetUsableRegisters(gen, reg_operand, usable_registers)){
+      if ( not GetUsableRegisters(gen, reg_operand, usable_registers)) {
         return false;
       }
 
       // Randomization here prevents an arbitrary prioritizing of registers for the thrid and above operands
-      auto my_random = [](int i){return Random::Instance()->Random64(0, MAX_UINT64) % i;};
+      auto my_random = [](int i) {return Random::Instance()->Random64(0, MAX_UINT64) % i;};
       random_shuffle(usable_registers.begin(), usable_registers.end(), my_random);
 
       //With a random starting location, walk through the usable registers vector until an uninitialized one is found
-      for (size_t trial = 0; trial < usable_registers.size(); trial++){
+      for (size_t trial = 0; trial < usable_registers.size(); trial++) {
         reg_ptr = usable_registers[ trial ];
 
         if (not reg_ptr->IsInitialized())

@@ -58,7 +58,7 @@ class VectorTestSequence(Sequence):
     ## Verify the instruction generated and executed as expected without triggering an exception.
     #
     #  @param aInstr The name of the instruction.
-    #  @param aInstrParams The paramters passed to Sequence.genInstruction().
+    #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     #  @param aInstrId The record ID of the generated instruction.
     def _verifyInstruction(self, aInstr, aInstrParams, aInstrId):
         if not self._isSkipAllowed(aInstr, aInstrParams):
@@ -79,7 +79,7 @@ class VectorTestSequence(Sequence):
     ## Return true if it is permissible for the generation to skip this instruction.
     #
     #  @param aInstr The name of the instruction.
-    #  @param aInstrParams The paramters passed to Sequence.genInstruction().
+    #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     def _isSkipAllowed(self, aInstr, aInstrParams):
         return False
 

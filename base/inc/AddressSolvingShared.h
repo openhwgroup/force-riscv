@@ -215,6 +215,32 @@ namespace Force {
   };
 
   /*!
+    \class VectorIndexedSolvingShared
+    \brief Class holding necessary shared vector indexed address solving data structures.
+  */
+  class VectorIndexedSolvingShared : public AddressSolvingShared {
+  public:
+    VectorIndexedSolvingShared();
+    COPY_CONSTRUCTOR_ABSENT(VectorIndexedSolvingShared);
+    ~VectorIndexedSolvingShared() override;
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedSolvingShared);
+
+    bool Setup() override; //!< Setup shared data structures.
+    const std::vector<AddressingRegister*>& GetIndexChoices() const { return mIndexChoices; } //!< Return available index register choices.
+    uint32 GetElementSize() const { return mElemSize; } //!< Return the size in bits of each vector register element.
+    uint32 GetElementCount() const { return mElemCount; } //!< Return the number of vector elements.
+    uint64 GetVectorElementValue(const std::vector<uint64>& rVecRegValues, cuint32 elemIndex) const; //!< Return the value of the element at the specified index given the register values in 64-bit segments.
+    void GetVectorRegisterValues(const std::vector<uint64>& rVecElemValues, std::vector<uint64>& rVecRegValues) const; //!< Return the register values in 64-bit segments given the element values.
+  private:
+    void SetupIndexChoices(); //!< Record the available index choices.
+  private:
+    const RegisterOperand* mpIndexOpr; //!< Index operand
+    std::vector<AddressingRegister*> mIndexChoices; //!< Available index register choices
+    uint32 mElemSize; //!< The size in bits of each vector register element
+    uint32 mElemCount; //!< The number of vector elements
+  };
+
+  /*!
     \class BaseIndexAmountBitSolvingShared
     \brief Class holding necessary shared base-index address solving data structures.
   */
