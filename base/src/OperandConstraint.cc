@@ -785,7 +785,7 @@ namespace Force {
   }
 
   VectorIndexedLoadStoreOperandConstraint::VectorIndexedLoadStoreOperandConstraint()
-    : LoadStoreOperandConstraint(), mpBase(nullptr), mpIndex(nullptr), mBaseValue(0), mIndexValues(0), mIndexElemSize(0)
+    : LoadStoreOperandConstraint(), mpBase(nullptr), mpIndex(nullptr), mBaseValue(0), mIndexElemValues(0), mIndexElemSize(0)
   {
   }
 

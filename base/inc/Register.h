@@ -528,6 +528,7 @@ namespace Force {
 
     std::vector<uint64> Values() const; //!< return vector of values for entire large register
     std::vector<uint64> InitialValues() const; //!< return vector of initial values for entire large register
+    std::vector<uint64> ReloadValues() const; //!< return vector of reload values for entire large register
 
     bool IsLargeRegister() const override { return true; } //!< Return true for being a LargeRegister
 

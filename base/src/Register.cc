@@ -1606,6 +1606,19 @@ namespace Force
     return values;
   }
 
+  std::vector<uint64> LargeRegister::ReloadValues() const
+  {
+    std::vector<uint64> values;
+    Random* random = Random::Instance();
+    uint64 max_value = get_mask64(mSize);
+    for (uint64 reg_field_index = 0; reg_field_index < mRegisterFields.size(); reg_field_index++)
+    {
+      values.push_back(random->Random64(0, max_value));
+    }
+
+    return values;
+  }
+
   /*! \class ReadOnlyRegister
       \brief Logical Register which is specified as Read Only
    */

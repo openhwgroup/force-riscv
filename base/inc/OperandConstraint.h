@@ -554,16 +554,16 @@ namespace Force {
     void GetRegisterOperands(std::vector<const RegisterOperand* >& rRegOps) override; //!< Get pointers to sub RegisterOperands.
     RegisterOperand* IndexOperand() const { return mpIndex; } //!< Return pointer to index operand.
     uint64 BaseValue() const { return mBaseValue; } //!< Return base value.
-    const std::vector<uint64>& IndexValues() const { return mIndexValues; } //!< Return index element values.
+    const std::vector<uint64>& IndexElementValues() const { return mIndexElemValues; } //!< Return index element values.
     uint32 IndexElementSize() const { return mIndexElemSize; } //!< Return index element size in bytes.
     void SetBaseValue(cuint64 baseValue) { mBaseValue = baseValue; } //!< Set base value.
-    void SetIndexValues(const std::vector<uint64>& rIndexValues) { mIndexValues = rIndexValues; } //!< Set index element values.
+    void SetIndexElementValues(const std::vector<uint64>& rIndexElemValues) { mIndexElemValues = rIndexElemValues; } //!< Set index element values.
     void SetIndexElementSize(cuint32 indexElemSize) { mIndexElemSize = indexElemSize; } //!< Set the index element size in bytes.
   private:
     RegisterOperand* mpBase; //!< Base operand
     RegisterOperand* mpIndex; //!< Index operand
     uint64 mBaseValue; //!< Base value
-    std::vector<uint64> mIndexValues; //!< Index element values
+    std::vector<uint64> mIndexElemValues; //!< Index element values
     uint32 mIndexElemSize; //!< Index element size in bytes
   };
 

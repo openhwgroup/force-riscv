@@ -432,6 +432,7 @@ namespace Force {
         auto addr_reg = new AddressingRegister();
         addr_reg->SetRegister(reg);
         addr_reg->SetWeight(choice_item->Weight());
+        addr_reg->SetRegisterValue(reg->ReloadValue());
         addr_reg->SetFree(true);
         mStrideChoices.push_back(addr_reg);
       }
@@ -476,8 +477,8 @@ namespace Force {
 
   uint64 VectorIndexedSolvingShared::GetVectorElementValue(const std::vector<uint64>& rVecRegValues, cuint32 elemIndex) const
   {
-    uint32 reg_val_index = (mElemSize * elemIndex) / 64;
-    uint32 reg_val_shift = ((mElemSize * elemIndex) % 64) * mElemSize;
+    uint32 reg_val_index = (mElemSize * elemIndex) / sizeof_bits<uint64>();
+    uint32 reg_val_shift = ((mElemSize * elemIndex) % sizeof_bits<uint64>()) * mElemSize;
     uint64 reg_val_mask = get_mask64(mElemSize, reg_val_shift);
     uint64 elem_val = (rVecRegValues[reg_val_index] & reg_val_mask) >> reg_val_shift;
 
@@ -486,7 +487,7 @@ namespace Force {
 
   void VectorIndexedSolvingShared::GetVectorRegisterValues(const std::vector<uint64>& rVecElemValues, std::vector<uint64>& rVecRegValues) const
   {
-    uint32 elem_values_per_reg_val = 64 / mElemSize;
+    uint32 elem_values_per_reg_val = sizeof_bits<uint64>() / mElemSize;
     uint32 reg_val_count = mElemCount / elem_values_per_reg_val;
     for (uint32 reg_val_index = 0; reg_val_index < reg_val_count; reg_val_index++) {
       uint32 elem_start_index = reg_val_index * elem_values_per_reg_val;
@@ -495,7 +496,7 @@ namespace Force {
       uint64 reg_val = 0;
       for (uint32 elem_index = elem_start_index; elem_index < elem_end_index; elem_index++) {
         reg_val <<= mElemSize;
-        reg_val |= rVecElemValues[elem_index];
+        reg_val |= rVecElemValues[elem_end_index - elem_index - 1];
       }
 
       rVecRegValues.push_back(reg_val);
@@ -528,6 +529,10 @@ namespace Force {
         addr_reg->SetRegister(reg);
         addr_reg->SetWeight(choice_item->Weight());
         addr_reg->SetFree(true);
+
+        auto large_reg = dynamic_cast<LargeRegister*>(reg);
+        addr_reg->SetRegisterValue(large_reg->ReloadValues());
+
         mIndexChoices.push_back(addr_reg);
       }
     }

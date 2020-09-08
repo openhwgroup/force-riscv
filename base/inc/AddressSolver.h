@@ -382,6 +382,7 @@ namespace Force {
     bool SolveFree(const AddressSolvingShared& rShared) override; //!< Solve for address.
     AddressSolvingShared* AddressSolvingSharedInstance() const override; //!< Return correct AddressSolvingShared object for the addressing mode.
     void SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const override; //!< Update operands to reflect chosen solution.
+    std::vector<uint64> IndexValues() const; //!< Return index values.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorIndexedMode);
   private:

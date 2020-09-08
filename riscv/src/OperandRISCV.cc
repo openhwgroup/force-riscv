@@ -252,14 +252,18 @@ namespace Force {
 
   void MultiVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)
   {
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(mpStructure);
-    mRegCount = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
+    AdjustRegisterCount(instr);
 
     mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
 
     MultiVectorRegisterOperand::Generate(gen, instr);
+  }
+
+  void MultiVectorRegisterOperandRISCV::SetChoiceResultDirect(Generator& gen, Instruction& instr, const std::string& choiceText)
+  {
+    MultiVectorRegisterOperand::SetChoiceResultDirect(gen, instr, choiceText);
+
+    AdjustRegisterCount(instr);
   }
 
   void MultiVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
@@ -302,6 +306,14 @@ namespace Force {
   ChoicesFilter* MultiVectorRegisterOperandRISCV::GetChoicesFilter(const ConstraintSet* pConstrSet) const
   {
     return new ConstraintChoicesFilter(pConstrSet);
+  }
+
+  void MultiVectorRegisterOperandRISCV::AdjustRegisterCount(const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(mpStructure);
+    mRegCount = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
   }
 
 }

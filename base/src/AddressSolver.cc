@@ -904,8 +904,14 @@ namespace Force {
 
     const IndexSolution* chosen_index_solution = GetChosenIndexSolution();
     if (chosen_index_solution->IsFree()) {
-      instr->SetOperandDataValue(index_opr->Name(), chosen_index_solution->RegisterValues(), index_reg->Size());
+      instr->SetOperandDataValue(index_opr->Name(), chosen_index_solution->RegisterValues(), sizeof_bits<uint64>());
     }
+  }
+
+  vector<uint64> VectorIndexedMode::IndexValues() const
+  {
+    const IndexSolution* chosen_index_solution = GetChosenIndexSolution();
+    return chosen_index_solution->RegisterValues();
   }
 
   RegisterOperand* VectorIndexedMode::GetIndexOperand(const AddressSolvingShared& rShared) const
