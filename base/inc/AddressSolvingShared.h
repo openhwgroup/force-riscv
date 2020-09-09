@@ -229,8 +229,6 @@ namespace Force {
     const std::vector<AddressingRegister*>& GetIndexChoices() const { return mIndexChoices; } //!< Return available index register choices.
     uint32 GetElementSize() const { return mElemSize; } //!< Return the size in bits of each vector register element.
     uint32 GetElementCount() const { return mElemCount; } //!< Return the number of vector elements.
-    uint64 GetVectorElementValue(const std::vector<uint64>& rVecRegValues, cuint32 elemIndex) const; //!< Return the value of the element at the specified index given the register values in 64-bit segments.
-    void GetVectorRegisterValues(const std::vector<uint64>& rVecElemValues, std::vector<uint64>& rVecRegValues) const; //!< Return the register values in 64-bit segments given the element values.
   private:
     void SetupIndexChoices(); //!< Record the available index choices.
   private:

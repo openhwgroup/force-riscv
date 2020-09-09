@@ -269,7 +269,7 @@ namespace Force {
   void MultiVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
   {
     uint32 end_index = regIndex + mRegCount - 1;
-    if (end_index < 31) {
+    if (end_index < 32) {
       rRegIndices.AddRange(regIndex, end_index);
     }
     else {

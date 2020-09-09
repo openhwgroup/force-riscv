@@ -927,7 +927,7 @@ namespace Force {
 
     const AddressTagging* addr_tagging = rIndexedShared.GetAddressTagging();
     for (AddressingRegister* index_choice : rIndexedShared.GetIndexChoices()) {
-      uint64 target_addr = BaseValue() + rIndexedShared.GetVectorElementValue(index_choice->RegisterValues(), 0);
+      uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_choice->RegisterValues(), 0);
       uint64 untagged_target_addr = addr_tagging->UntagAddress(target_addr, rIndexedShared.IsInstruction());
 
       if (untagged_target_addr == forced_target_addr) {
@@ -941,7 +941,7 @@ namespace Force {
   {
     for (auto index_choice : rIndexedShared.GetIndexChoices()) {
       if (AreTargetAddressesUsable(rIndexedShared, BaseValue(), index_choice->RegisterValues())) {
-        uint64 target_addr = BaseValue() + rIndexedShared.GetVectorElementValue(index_choice->RegisterValues(), 0);
+        uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_choice->RegisterValues(), 0);
         auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
         AddIndexSolution(index_solution);
       }
@@ -971,7 +971,7 @@ namespace Force {
 
     if (solved) {
       vector<uint64> reg_values;
-      rIndexedShared.GetVectorRegisterValues(index_elem_values, reg_values);
+      change_elementform_to_uint64(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_elem_values, reg_values);
 
       auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
       index_solution->SetRegisterValue(reg_values);
@@ -981,7 +981,7 @@ namespace Force {
 
   void VectorIndexedMode::SolveFreeIndexFixed(const VectorIndexedSolvingShared& rIndexedShared, const AddressingRegister& rIndexChoice)
   {
-    uint64 base_val = rIndexedShared.FreeTarget() - rIndexedShared.GetVectorElementValue(rIndexChoice.RegisterValues(), 0);
+    uint64 base_val = rIndexedShared.FreeTarget() - change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), rIndexChoice.RegisterValues(), 0);
     if (AreTargetAddressesUsable(rIndexedShared, base_val, rIndexChoice.RegisterValues())) {
       auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
       AddIndexSolution(index_solution);
@@ -990,15 +990,17 @@ namespace Force {
 
   bool VectorIndexedMode::AreTargetAddressesUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, const vector<uint64>& rIndexRegValues)
   {
-    uint64 index_elem_val = rIndexedShared.GetVectorElementValue(rIndexRegValues, 0);
-    bool target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_val), rIndexedShared.TargetConstraint());
+    vector<uint64> index_elem_values;
+    change_uint64_to_elementform(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), rIndexRegValues, index_elem_values);
+
+    bool target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_values[0]), rIndexedShared.TargetConstraint());
+
     for (uint32 elem_index = 1; elem_index < rIndexedShared.GetElementCount(); elem_index++) {
       if (not target_addresses_usable) {
         break;
       }
 
-      index_elem_val = rIndexedShared.GetVectorElementValue(rIndexRegValues, elem_index);
-      target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_val), nullptr);
+      target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_values[elem_index]), nullptr);
     }
 
     return target_addresses_usable;

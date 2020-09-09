@@ -221,11 +221,12 @@ namespace Force {
     snprintf(print_buffer, 256, "INT%d(%s)", size, valueStr.c_str());
     AddOperandDataRequest(oprName, print_buffer);
   }
+
   void GenInstructionRequest::SetOperandDataRequest(const std::string& oprName, std::vector<uint64> values, uint32 size) const
   {
     stringstream ss;
     for (uint32 i = 0; i < values.size(); ++i){
-      ss << "["<<i<<"]INT"<<dec<<size<<"(0x"<<hex<<values[i]<<")";
+      ss << dec << "[" << i << "]INT" << size << "(0x" << hex << values[i] << ")";
     }
     AddOperandDataRequest(oprName,ss.str());
   }

@@ -1027,7 +1027,7 @@ namespace Force {
     if (nullptr == addr_mode)
       return false;
 
-    RecordOperandValues(*addr_mode);
+    RecordOperandValues(instr, *addr_mode);
 
     mTargetAddress = addr_mode->TargetAddress();
     LOG(notice) << "{LoadStoreOperand::GenerateNoPreamble} instruction: " << instr.FullName() << " addressing-mode: " << template_ptr->Type() << " target address: 0x" << hex << mTargetAddress << endl;
@@ -1229,7 +1229,7 @@ namespace Force {
     return false;
   }
 
-  void BaseOffsetLoadStoreOperand::RecordOperandValues(const AddressingMode& rAddrMode)
+  void BaseOffsetLoadStoreOperand::RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode)
   {
     auto bols_constr = mpOperandConstraint->CastInstance<BaseOffsetLoadStoreOperandConstraint>();
     bols_constr->SetBaseValue(rAddrMode.BaseValue());
@@ -1353,7 +1353,7 @@ namespace Force {
     return addr_mode_ptr;
   }
 
-  void BaseIndexLoadStoreOperand::RecordOperandValues(const AddressingMode& rAddrMode)
+  void BaseIndexLoadStoreOperand::RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode)
   {
     auto bils_constr = mpOperandConstraint->CastInstance<BaseIndexLoadStoreOperandConstraint>();
     bils_constr->SetBaseValue(rAddrMode.BaseValue());
@@ -1504,7 +1504,7 @@ namespace Force {
     }
   }
 
-  void VectorStridedLoadStoreOperand::RecordOperandValues(const AddressingMode& rAddrMode)
+  void VectorStridedLoadStoreOperand::RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode)
   {
     auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
     strided_opr_constr->SetBaseValue(rAddrMode.BaseValue());
@@ -1667,12 +1667,17 @@ namespace Force {
     }
   }
 
-  void VectorIndexedLoadStoreOperand::RecordOperandValues(const AddressingMode& rAddrMode)
+  void VectorIndexedLoadStoreOperand::RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode)
   {
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
     auto& indexed_addr_mode = dynamic_cast<const VectorIndexedMode&>(rAddrMode);
     indexed_opr_constr->SetBaseValue(indexed_addr_mode.BaseValue());
-    indexed_opr_constr->SetIndexElementValues(indexed_addr_mode.IndexValues());
+
+    vector<uint64> index_elem_values;
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    change_uint64_to_elementform(vec_layout->mElemSize, vec_layout->mElemSize, indexed_addr_mode.IndexValues(), index_elem_values);
+    indexed_opr_constr->SetIndexElementValues(index_elem_values);
   }
 
   uint64 VectorIndexedLoadStoreOperand::AllocateIndexOperandDataBlock(Generator& rGen, cuint32 relativeRegIndex) const
