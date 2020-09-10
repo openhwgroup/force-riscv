@@ -60,7 +60,7 @@ enum_classes_details = [
       [("General", 0), ("Float", 1), ("System", 2), ("Vector", 3)]
       ],
      ["InstructionExtensionType", "unsigned char", "RISCV Extensions types for instructions.",
-      [("Default", 0), ("RV32I", 1), ("RV64I", 2), ("RV32A", 3), ("RV64A", 4), ("RV32M", 5), ("RV64M", 6), ("RV32F", 7), ("RV64F", 8), ("RV32D", 9), ("RV64D", 10), ("RV32Q", 11), ("RV64Q", 12), ("Zicsr", 13), ("Zifencei", 14), ("RV32C", 15), ("RV64C", 16), ("RV128C", 17), ("RV64Priv", 18)]
+      [("Default", 0), ("RV32I", 1), ("RV64I", 2), ("RV32A", 3), ("RV64A", 4), ("RV32M", 5), ("RV64M", 6), ("RV32F", 7), ("RV64F", 8), ("RV32D", 9), ("RV64D", 10), ("RV32Q", 11), ("RV64Q", 12), ("Zicsr", 13), ("Zifencei", 14), ("RV32C", 15), ("RV64C", 16), ("RV128C", 17), ("RV64Priv", 18), ("RV32H", 19), ("RV64H", 20) ]
       ],
      ["MemOrderingType", "unsigned char", "Types of memory access ordering",
       [("Init", 0), ("Atomic", 1), ("AtomicRW", 2), ("Ordered", 3), ("LimitedOrdered", 4), ("OrderedRW", 5)]

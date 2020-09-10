@@ -1325,7 +1325,7 @@ namespace Force {
   }
 
 
-  unsigned char EInstructionExtensionTypeSize = 19;
+  unsigned char EInstructionExtensionTypeSize = 21;
 
   const string EInstructionExtensionType_to_string(EInstructionExtensionType in_enum)
   {
@@ -1349,6 +1349,8 @@ namespace Force {
     case EInstructionExtensionType::RV64C: return "RV64C";
     case EInstructionExtensionType::RV128C: return "RV128C";
     case EInstructionExtensionType::RV64Priv: return "RV64Priv";
+    case EInstructionExtensionType::RV32H: return "RV32H";
+    case EInstructionExtensionType::RV64H: return "RV64H";
     default:
       unknown_enum_value("EInstructionExtensionType", (unsigned char)(in_enum));
     }
@@ -1410,9 +1412,15 @@ namespace Force {
     case 121:
       validate(in_str, "RV64M", enum_type_name);
       return EInstructionExtensionType::RV64M;
+    case 122:
+      validate(in_str, "RV32H", enum_type_name);
+      return EInstructionExtensionType::RV32H;
     case 123:
       validate(in_str, "RV32I", enum_type_name);
       return EInstructionExtensionType::RV32I;
+    case 124:
+      validate(in_str, "RV64H", enum_type_name);
+      return EInstructionExtensionType::RV64H;
     case 125:
       validate(in_str, "RV64I", enum_type_name);
       return EInstructionExtensionType::RV64I;
@@ -1480,9 +1488,15 @@ namespace Force {
     case 121:
       okay = (in_str == "RV64M");
       return EInstructionExtensionType::RV64M;
+    case 122:
+      okay = (in_str == "RV32H");
+      return EInstructionExtensionType::RV32H;
     case 123:
       okay = (in_str == "RV32I");
       return EInstructionExtensionType::RV32I;
+    case 124:
+      okay = (in_str == "RV64H");
+      return EInstructionExtensionType::RV64H;
     case 125:
       okay = (in_str == "RV64I");
       return EInstructionExtensionType::RV64I;

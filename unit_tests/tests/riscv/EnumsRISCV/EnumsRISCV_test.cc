@@ -856,6 +856,8 @@ CASE( "tests for EInstructionExtensionType" ) {
       EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV64C) == "RV64C");
       EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV128C) == "RV128C");
       EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV64Priv) == "RV64Priv");
+      EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV32H) == "RV32H");
+      EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV64H) == "RV64H");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -878,6 +880,8 @@ CASE( "tests for EInstructionExtensionType" ) {
       EXPECT(string_to_EInstructionExtensionType("RV64C") == EInstructionExtensionType::RV64C);
       EXPECT(string_to_EInstructionExtensionType("RV128C") == EInstructionExtensionType::RV128C);
       EXPECT(string_to_EInstructionExtensionType("RV64Priv") == EInstructionExtensionType::RV64Priv);
+      EXPECT(string_to_EInstructionExtensionType("RV32H") == EInstructionExtensionType::RV32H);
+      EXPECT(string_to_EInstructionExtensionType("RV64H") == EInstructionExtensionType::RV64H);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -923,6 +927,10 @@ CASE( "tests for EInstructionExtensionType" ) {
       EXPECT(try_string_to_EInstructionExtensionType("RV128C", okay) == EInstructionExtensionType::RV128C);
       EXPECT(okay);
       EXPECT(try_string_to_EInstructionExtensionType("RV64Priv", okay) == EInstructionExtensionType::RV64Priv);
+      EXPECT(okay);
+      EXPECT(try_string_to_EInstructionExtensionType("RV32H", okay) == EInstructionExtensionType::RV32H);
+      EXPECT(okay);
+      EXPECT(try_string_to_EInstructionExtensionType("RV64H", okay) == EInstructionExtensionType::RV64H);
       EXPECT(okay);
     }
 

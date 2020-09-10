@@ -73,15 +73,20 @@ def build_app_registers():
     app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("PC", 64, 32, "PC"))
     app_register_doc.addRegister(create_app_register("PC", 64, 32, "PC", None, 0))
 
-    # Add f0-f31 and S0-S31
+    # Add f0-f31, S0-S31
     for i in range(0, 32):
         app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("f%d_0" % i, 64, i, "FPR", aSubIndex=0))
         app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("f%d_1" % i, 64, i, "FPR", aSubIndex=1))
         app_register_doc.addRegister(create_app_register("S%d" % i, 32, i, "FPR", None, 0, "f%d_0" % i))
 
+    # Add H0-H31
+    for i in range(0, 32):
+        app_register_doc.addRegister(create_app_register("H%d" % i, 16, i, "FPR", None, 0, "f%d_0" % i))
+        
     # Add D0-D31
     for i in range(0, 32):
         app_register_doc.addRegister(create_app_register("D%d" % i, 64, i, "FPR", None, 0x3000, "f%d_0" % i))
+
     # Add Q0-Q31
     for i in range(0, 32):
         app_register_doc.addRegister(create_quad_precision_app_register(i))

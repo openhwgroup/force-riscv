@@ -696,6 +696,166 @@
         <bit_field shift="0" size="32"/>
       </register_field>
     </register>
+    <register name="H0" index="0" size="16" type="FPR" boot="0x0">
+      <register_field name="H0" physical_register="f0_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H1" index="1" size="16" type="FPR" boot="0x0">
+      <register_field name="H1" physical_register="f1_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H2" index="2" size="16" type="FPR" boot="0x0">
+      <register_field name="H2" physical_register="f2_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H3" index="3" size="16" type="FPR" boot="0x0">
+      <register_field name="H3" physical_register="f3_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H4" index="4" size="16" type="FPR" boot="0x0">
+      <register_field name="H4" physical_register="f4_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H5" index="5" size="16" type="FPR" boot="0x0">
+      <register_field name="H5" physical_register="f5_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H6" index="6" size="16" type="FPR" boot="0x0">
+      <register_field name="H6" physical_register="f6_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H7" index="7" size="16" type="FPR" boot="0x0">
+      <register_field name="H7" physical_register="f7_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H8" index="8" size="16" type="FPR" boot="0x0">
+      <register_field name="H8" physical_register="f8_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H9" index="9" size="16" type="FPR" boot="0x0">
+      <register_field name="H9" physical_register="f9_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H10" index="10" size="16" type="FPR" boot="0x0">
+      <register_field name="H10" physical_register="f10_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H11" index="11" size="16" type="FPR" boot="0x0">
+      <register_field name="H11" physical_register="f11_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H12" index="12" size="16" type="FPR" boot="0x0">
+      <register_field name="H12" physical_register="f12_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H13" index="13" size="16" type="FPR" boot="0x0">
+      <register_field name="H13" physical_register="f13_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H14" index="14" size="16" type="FPR" boot="0x0">
+      <register_field name="H14" physical_register="f14_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H15" index="15" size="16" type="FPR" boot="0x0">
+      <register_field name="H15" physical_register="f15_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H16" index="16" size="16" type="FPR" boot="0x0">
+      <register_field name="H16" physical_register="f16_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H17" index="17" size="16" type="FPR" boot="0x0">
+      <register_field name="H17" physical_register="f17_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H18" index="18" size="16" type="FPR" boot="0x0">
+      <register_field name="H18" physical_register="f18_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H19" index="19" size="16" type="FPR" boot="0x0">
+      <register_field name="H19" physical_register="f19_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H20" index="20" size="16" type="FPR" boot="0x0">
+      <register_field name="H20" physical_register="f20_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H21" index="21" size="16" type="FPR" boot="0x0">
+      <register_field name="H21" physical_register="f21_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H22" index="22" size="16" type="FPR" boot="0x0">
+      <register_field name="H22" physical_register="f22_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H23" index="23" size="16" type="FPR" boot="0x0">
+      <register_field name="H23" physical_register="f23_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H24" index="24" size="16" type="FPR" boot="0x0">
+      <register_field name="H24" physical_register="f24_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H25" index="25" size="16" type="FPR" boot="0x0">
+      <register_field name="H25" physical_register="f25_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H26" index="26" size="16" type="FPR" boot="0x0">
+      <register_field name="H26" physical_register="f26_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H27" index="27" size="16" type="FPR" boot="0x0">
+      <register_field name="H27" physical_register="f27_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H28" index="28" size="16" type="FPR" boot="0x0">
+      <register_field name="H28" physical_register="f28_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H29" index="29" size="16" type="FPR" boot="0x0">
+      <register_field name="H29" physical_register="f29_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H30" index="30" size="16" type="FPR" boot="0x0">
+      <register_field name="H30" physical_register="f30_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H31" index="31" size="16" type="FPR" boot="0x0">
+      <register_field name="H31" physical_register="f31_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
     <register name="D0" index="0" size="64" type="FPR" boot="0x3000">
       <register_field name="D0" physical_register="f0_0" size="64">
         <bit_field shift="0" size="64"/>
