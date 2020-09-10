@@ -1778,7 +1778,7 @@ namespace Force {
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
 
     ConstraintSet target_addr_constr;
-    BaseOffsetConstraint base_offset_constr(0, vec_layout->mElemSize, 0, MAX_UINT64, true);
+    BaseOffsetConstraint base_offset_constr(0, vec_layout->mElemSize, 0, MAX_UINT64);
     base_offset_constr.GetConstraint(baseVal, lsop_struct->DataSize(), nullptr, target_addr_constr);
 
     for (uint32 elem_index = 1; elem_index < vec_layout->mElemCount; elem_index++) {

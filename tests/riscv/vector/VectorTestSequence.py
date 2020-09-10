@@ -65,7 +65,7 @@ class VectorTestSequence(Sequence):
             instr_record = self.queryInstructionRecord(aInstrId)
 
             if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % instr)
+                self.error('Instruction %s did not generate correctly' % aInstr)
 
             self._performAdditionalVerification(aInstr, instr_record)
 
@@ -74,7 +74,7 @@ class VectorTestSequence(Sequence):
             except_count += self.queryExceptionRecordsCount(except_code)
 
         if except_count != 0:
-            self.error('Instruction %s did not execute correctly' % instr)
+            self.error('Instruction %s did not execute correctly' % aInstr)
 
     ## Return true if it is permissible for the generation to skip this instruction.
     #

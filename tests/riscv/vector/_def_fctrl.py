@@ -15,4 +15,5 @@
 #
 control_items = [
     {"fname": "*_force.py"},
+    {"fname": "*_force.py", "generator": {"--options": "\"PrivilegeLevel=1\""}},
 ]

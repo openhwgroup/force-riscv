@@ -532,10 +532,17 @@ namespace Force {
         break;
       }
 
-      if (rAddrSolShared.MapTargetAddressRange(index_solution->TargetAddress(), index_solution->VmTimeStampReference())) {
-        choice_usable = true;
+      choice_usable = true;
+      vector<uint64> target_addresses;
+      GetTargetAddresses(rAddrSolShared, *index_solution, target_addresses);
+      for (uint64 target_addr : target_addresses) {
+        if (not rAddrSolShared.MapTargetAddressRange(target_addr, index_solution->VmTimeStampReference())) {
+          choice_usable = false;
+          break;
+        }
       }
-      else {
+
+      if (not choice_usable) {
         index_solution->SetWeight(0);
         remaining_choices_count--;
       }
@@ -564,6 +571,11 @@ namespace Force {
     if (mpChosenIndexSolution->IsFree()) {
       instr->SetOperandDataValue(index_opr->Name(), IndexValue(), index_reg->Size());
     }
+  }
+
+  void BaseIndexMode::GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
+  {
+    rTargetAddresses.push_back(rIndexSolution.TargetAddress());
   }
 
   void BaseIndexMode::RemoveUnusableSolutionChoices()
@@ -747,6 +759,14 @@ namespace Force {
   AddressSolvingShared* VectorStridedMode::AddressSolvingSharedInstance() const
   {
     return new VectorStridedSolvingShared();
+  }
+
+  void VectorStridedMode::GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
+  {
+    auto& strided_shared = dynamic_cast<const VectorStridedSolvingShared&>(rShared);
+    for (uint32 elem_index = 0; elem_index < strided_shared.GetElementCount(); elem_index++) {
+      rTargetAddresses.push_back(rIndexSolution.BaseValue() + rIndexSolution.RegisterValue() * elem_index);
+    }
   }
 
   RegisterOperand* VectorStridedMode::GetIndexOperand(const AddressSolvingShared& rShared) const
@@ -959,7 +979,7 @@ namespace Force {
 
     bool solved = true;
     uint64 elem_target_addr = 0;
-    BaseOffsetConstraint base_offset_constr(0, rIndexedShared.GetElementSize(), 0, MAX_UINT64, true);
+    BaseOffsetConstraint base_offset_constr(0, rIndexedShared.GetElementSize(), 0, MAX_UINT64);
     for (uint32 elem_index = 1; elem_index < rIndexedShared.GetElementCount(); elem_index++) {
       solved = SolveWithBase(base_val, rIndexedShared, base_offset_constr, nullptr, elem_target_addr);
       index_elem_values.push_back(elem_target_addr - base_val);

@@ -301,6 +301,7 @@ namespace Force {
     void AddIndexSolution(IndexSolution* pIndexSolution) { mIndexSolutionChoices.push_back(pIndexSolution); } //!< Add an index solution.
     const IndexSolution* GetChosenIndexSolution() const { return mpChosenIndexSolution; } //!< Return the chosen index solution.
   private:
+    virtual void GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses for the specified index solution.
     void RemoveUnusableSolutionChoices(); //!< Remove unusable solution choices.
     virtual RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const = 0; //!< Return index operand.
   private:
@@ -355,6 +356,7 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorStridedMode);
   private:
+    void GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses for the specified index solution.
     RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const override; //!< Return index operand.
     void SolveFixedTargetConstraintForced(const VectorStridedSolvingShared& rStridedShared); //!< Create solutions when base register is fixed and target address is forced.
     void SolveFixed(const VectorStridedSolvingShared& rStridedShared); //!< Create solutions when base register is fixed.

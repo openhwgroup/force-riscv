@@ -230,7 +230,7 @@ def adjust_vs3_rs1(aInstruction):
     attr_dict["base"] = "rs1"
     #attr_dict["data-size"] = 1 #TODO: depends on LMUL
     attr_dict["element-size"] = width
-    attr_dict["mem-access"] = "Read"
+    attr_dict["mem-access"] = "Write"
 
     add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
@@ -249,7 +249,7 @@ def adjust_vs3_rs1_vm(aInstruction):
     attr_dict["base"] = "rs1"
     #attr_dict["data-size"] = 1 #TODO: depends on LMUL
     attr_dict["element-size"] = width
-    attr_dict["mem-access"] = "Read"
+    attr_dict["mem-access"] = "Write"
 
     add_addressing_operand(aInstruction, None, "LoadStore", "VectorBaseOffsetLoadStoreOperand", subop_dict, attr_dict)
 
@@ -268,7 +268,7 @@ def adjust_vs3_rs1_vs2_vm(aInstruction):
     subop_dict["base"] = "rs1"
     subop_dict["index"] = "vs2"
     attr_dict["base"] = "rs1"
-    attr_dict["mem-access"] = "Read"
+    attr_dict["mem-access"] = "Write"
 
     add_addressing_operand(aInstruction, None, "LoadStore", "VectorIndexedLoadStoreOperandRISCV", subop_dict, attr_dict)
 
@@ -290,7 +290,7 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
     attr_dict["base"] = "rs1"
     attr_dict["data-size"] = width
     attr_dict["element-size"] = width
-    attr_dict["mem-access"] = "Read"
+    attr_dict["mem-access"] = "Write"
 
     add_addressing_operand(aInstruction, None, "LoadStore", "VectorStridedLoadStoreOperand", subop_dict, attr_dict)
 
@@ -308,7 +308,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
     subop_dict['base'] = 'rs1'
     subop_dict['index'] = 'vs2'
     attr_dict['base'] = 'rs1'
-    attr_dict['mem-access'] = 'Read'
+    attr_dict['mem-access'] = 'ReadWrite'
 
     add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
@@ -421,7 +421,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
     subop_dict['base'] = 'rs1'
     subop_dict['index'] = 'vs2'
     attr_dict['base'] = 'rs1'
-    attr_dict['mem-access'] = 'Read'
+    attr_dict['mem-access'] = 'ReadWrite'
 
     add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
