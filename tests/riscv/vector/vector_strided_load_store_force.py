@@ -16,6 +16,8 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from VectorTestSequence import VectorTestSequence
+from base.UtilityFunctions import mask_to_size
+from Constraint import ConstraintSet
 import RandomUtils
 
 ## This test verifies that strided load and store instructions can be generated and executed
@@ -36,15 +38,31 @@ class MainSequence(VectorTestSequence):
             'VSSE8.V##RISCV',
         )
 
+        self._mTargetAddrConstr = None
+
     ## Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
         return self._mInstrList
 
     ## Return parameters to be passed to Sequence.genInstruction().
     def _getInstructionParameters(self):
+        self._mTargetAddrConstr = None
         instr_params = {}
         if RandomUtils.random32(0, 1) == 1:
-            instr_params['NoPreamble'] = 1
+            if RandomUtils.random32(0, 1) == 1:
+                instr_params['NoPreamble'] = 1
+
+            target_choice = RandomUtils.random32(0, 2)
+            if target_choice == 1:
+                target_addr = self.genVA(Size=512, Align=8, Type='D')
+                self._mTargetAddrConstr = ConstraintSet(target_addr)
+                instr_params['LSTarget'] = str(self._mTargetAddrConstr)
+            elif target_choice == 2:
+                va_range_size = RandomUtils.random32()
+                min_target_addr = self.genVA(Size=512, Align=8, Type='D')
+                max_target_addr = mask_to_size((min_target_addr + RandomUtils.random32()), 64)
+                self._mTargetAddrConstr = ConstraintSet(min_target_addr, max_target_addr)
+                instr_params['LSTarget'] = str(self._mTargetAddrConstr)
 
         return instr_params
 
@@ -53,12 +71,21 @@ class MainSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     def _isSkipAllowed(self, aInstr, aInstrParams):
-        # Instructions disallowing preamble may legitimately be skipped sometimes if no solution can
-        # be determined, but instructions that permit preamble should always generate
-        if 'NoPreamble' in aInstrParams:
+        # Instructions with constraint parameters may legitimately be skipped sometimes if no
+        # solution can be determined, but instructions without constrained parameters should always
+        # generate
+        if aInstrParams:
             return True
 
         return False
+
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        if (self._mTargetAddrConstr is not None) and (not self._mTargetAddrConstr.containsValue(aInstrRecord['LSTarget'])):
+            self.error('Target address 0x%x was outside of the specified constraint %s' % (aInstrRecord['LSTarget'], self._mTargetAddrConstr))
 
 
 MainSequenceClass = MainSequence

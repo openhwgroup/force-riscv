@@ -645,6 +645,7 @@ namespace Force {
   private:
     virtual void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses the instruction will access.
     bool IsTargetSharedRead(const EMemAccessType memAccessType, cuint64 targetAddr, cuint64 dataSize) const; //!< Returns true if read access is specified and the target address range intersects shared memory.
+    uint64 GetTargetConstraintForcedAlignment(cuint64 alignment) const; //!< Get the alignment when the target address is forced.
     virtual void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) { } //!< Capture the solved operand values.
   };
 

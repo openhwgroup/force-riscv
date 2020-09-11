@@ -1074,9 +1074,7 @@ namespace Force {
   {
     auto ls_constr =  mpOperandConstraint->CastInstance<LoadStoreOperandConstraint>();
     if (ls_constr->TargetConstraintForced()) {
-      alignment = 1;
-      // << "{LoadStoreOperand::GetAddressingAlignment} Target constraint forced unaligned." << endl;
-      return alignment;
+      return GetTargetConstraintForcedAlignment(alignment);
     }
     if (ls_constr->BaseOperandSpAligned()) {
       return (nullptr == ls_constr->OffsetOperand()) ? ls_constr->SpAlignment() : alignment;
@@ -1123,6 +1121,24 @@ namespace Force {
     }
 
     return false;
+  }
+
+  // The goal of GetTargetConstraintForcedAlignment is to keep the current alignment if it is
+  // compatible with the forced target address, but change it to a value that is compatible if it
+  // isn't.
+  uint64 LoadStoreOperand::GetTargetConstraintForcedAlignment(cuint64 alignment) const
+  {
+    uint64 adjusted_alignment = alignment;
+    auto ls_constr =  mpOperandConstraint->CastInstance<LoadStoreOperandConstraint>();
+    const ConstraintSet* target_constr = ls_constr->TargetConstraint();
+    uint64 target_addr = target_constr->OnlyValue();
+    if (get_aligned_value(target_addr, alignment) != target_addr) {
+      adjusted_alignment = 1;
+
+      LOG(debug) << "{LoadStoreOperand::GetTargetConstraintForcedAlignment} Target constraint forced unaligned." << endl;
+    }
+
+    return adjusted_alignment;
   }
 
   OperandConstraint* BaseOffsetLoadStoreOperand::InstantiateOperandConstraint() const
@@ -1538,23 +1554,29 @@ namespace Force {
     // be in one large block. This is relatively reliable, but limits the possible stride values
     // that can be used.
     bool solved = false;
-    uint32 addr_range_size = 0x4000;
-    while ((not solved) and (addr_range_size >= lsop_struct->DataSize())) {
-      uint64 base_addr = va_gen.GenerateAddress(alignment, addr_range_size, false, page_req->MemoryAccessType());
-      rStrideVal = CalculateStrideValue(rInstr, alignment, addr_range_size);
+    try {
+      uint32 addr_range_size = 0x4000;
 
-      rBaseVal = CalculateBaseValue(base_addr, alignment, addr_range_size, rStrideVal);
-      if ((target_constr == nullptr) or (target_constr->ContainsValue(rBaseVal))) {
-        solved = true;
+      while ((not solved) and (addr_range_size >= lsop_struct->DataSize())) {
+        uint64 base_addr = va_gen.GenerateAddress(alignment, addr_range_size, false, page_req->MemoryAccessType());
+        rStrideVal = CalculateStrideValue(rInstr, alignment, addr_range_size);
+
+        rBaseVal = CalculateBaseValue(base_addr, alignment, addr_range_size, rStrideVal);
+        if ((target_constr == nullptr) or (target_constr->ContainsValue(rBaseVal))) {
+          solved = true;
+        }
+        else {
+          addr_range_size /= 2;
+        }
       }
-      else {
-        addr_range_size /= 2;
-      }
+    }
+    catch (const ConstraintError& constraint_error) {
     }
 
     if (not solved) {
-      LOG(fail) << "{VectorStridedLoadStoreOperand::CalculateBaseAndStrideValues} failed to find a solution with target constraint " << target_constr->ToSimpleString() << endl;
-      FAIL("failed-to-generate");
+      stringstream err_stream;
+      err_stream << "Operand \"" << Name() << "\" failed to generate with target constraint " << target_constr->ToSimpleString() << endl;
+      throw OperandError(err_stream.str());
     }
   }
 

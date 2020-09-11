@@ -61,13 +61,11 @@ class VectorTestSequence(Sequence):
     #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     #  @param aInstrId The record ID of the generated instruction.
     def _verifyInstruction(self, aInstr, aInstrParams, aInstrId):
-        if not self._isSkipAllowed(aInstr, aInstrParams):
+        if aInstrId:
             instr_record = self.queryInstructionRecord(aInstrId)
-
-            if instr_record is None:
-                self.error('Instruction %s did not generate correctly' % aInstr)
-
             self._performAdditionalVerification(aInstr, instr_record)
+        elif not self._isSkipAllowed(aInstr, aInstrParams):
+            self.error('Instruction %s did not generate correctly' % aInstr)
 
         except_count = 0
         for except_code in (0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF):
