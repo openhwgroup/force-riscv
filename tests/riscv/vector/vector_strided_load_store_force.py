@@ -16,6 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from VectorTestSequence import VectorTestSequence
+from base.ChoicesModifier import ChoicesModifier
 from base.UtilityFunctions import mask_to_size
 from Constraint import ConstraintSet
 import RandomUtils
@@ -38,7 +39,17 @@ class MainSequence(VectorTestSequence):
             'VSSE8.V##RISCV',
         )
 
+        self._mUnalignedAllowed = False
         self._mTargetAddrConstr = None
+
+    ## Set up the environment prior to generating the test instructions.
+    def _setUpTest(self):
+        if RandomUtils.random32(0, 1) == 1:
+            choices_mod = ChoicesModifier(self.genThread)
+            choice_weights = {'Aligned': 80, 'Unaligned': 20}
+            choices_mod.modifyOperandChoices('Data alignment', choice_weights)
+            choices_mod.commitSet()
+            self._mUnalignedAllowed = True
 
     ## Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
@@ -86,6 +97,15 @@ class MainSequence(VectorTestSequence):
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
         if (self._mTargetAddrConstr is not None) and (not self._mTargetAddrConstr.containsValue(aInstrRecord['LSTarget'])):
             self.error('Target address 0x%x was outside of the specified constraint %s' % (aInstrRecord['LSTarget'], self._mTargetAddrConstr))
+
+    ## Get allowed exception codes.
+    def _getAllowedExceptionCodes(self):
+        allowed_except_codes = set()
+        if self._mUnalignedAllowed:
+            allowed_except_codes.add(0x4)
+            allowed_except_codes.add(0x6)
+
+        return allowed_except_codes
 
 
 MainSequenceClass = MainSequence

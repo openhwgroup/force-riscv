@@ -68,7 +68,8 @@ class VectorTestSequence(Sequence):
             self.error('Instruction %s did not generate correctly' % aInstr)
 
         except_count = 0
-        for except_code in (0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF):
+        disallowed_except_codes = set((0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF)) - self._getAllowedExceptionCodes()
+        for except_code in disallowed_except_codes:
             except_count += self.queryExceptionRecordsCount(except_code)
 
         if except_count != 0:
@@ -87,3 +88,7 @@ class VectorTestSequence(Sequence):
     #  @param aInstrRecord A record of the generated instruction.
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
         pass
+
+    ## Get allowed exception codes.
+    def _getAllowedExceptionCodes(self):
+        return set()
