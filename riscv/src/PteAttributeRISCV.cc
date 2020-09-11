@@ -73,9 +73,17 @@ namespace Force
 
     if (level >= 1 && level <= 3 && descr_type == EPteCategoryType::Page)
     {
-      std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Misaligned Superpage", level));
-      addr_fault_value = choices_tree->Choose()->Value();
-      rPte.SetPageGenAttribute(EPageGenAttributeType::AddrSizeFault, addr_fault_value); //TODO update pagegenattr type to 'AddrFault' instead of address size fault
+      auto req_constr = rPagingReq.GenAttributeConstraint(EPageGenAttributeType::Invalid);
+      uint32 req_invalid = 1;
+      if (nullptr != req_constr)
+      {
+        req_invalid = req_constr->ChooseValue();
+      }
+      if (req_invalid != 0)
+      {
+        std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Misaligned Superpage", level));
+        addr_fault_value = choices_tree->Choose()->Value();
+      }
     }
 
     if (addr_fault_value != 0)

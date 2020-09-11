@@ -712,6 +712,7 @@ namespace Force {
     void InitializeRegisterRandomly(const std::string& rRegName, const ChoicesModerator* pChoicesModerator = nullptr) const;              //!< Initialize register randomly.
     void InitializeRegisterRandomly(Register* pRegister, const ChoicesModerator* pChoicesModerator = nullptr) const;              //!< Initialize register randomly.
     virtual Register* GetContainingRegister(const Register* pReg) const { return nullptr; } //!< Return a register that contains the passed register object, if applicable.
+    virtual bool InitContainingRegister(Register* rContainingReg, const Register* pReg) const { return false; }; //!< initialize container reg from the reg it contains
     const RegisterField* InitializeRegisterFieldRandomly(Register* pRegister, const std::string& fieldName, const ChoicesModerator* pChoicesModerator) const; //!< Initialze a register field if not yet initialized.
     const RegisterField* InitializeRegisterField(Register* pRegister, const std::string& rFieldName, const uint64 value, const ChoicesModerator* pChoicesModerator = nullptr) const; //!< Initialize register field with value meant for the field.
     const RegisterField* InitializeRegisterFieldFullValue(Register* pRegister, const std::string& rFieldName, const uint64 value, const ChoicesModerator* pChoicesModerator = nullptr) const;  //!< Initialization register field from full logical register value .

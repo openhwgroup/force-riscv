@@ -159,6 +159,40 @@
     <choice name="S30" value="30" weight="10"/>
     <choice name="S31" value="31" weight="10"/>
   </choices>
+  <choices name="16-bit SIMD/FP registers" type="RegisterOperand">
+    <choice name="H0" value="0" weight="10"/>
+    <choice name="H1" value="1" weight="10"/>
+    <choice name="H2" value="2" weight="10"/>
+    <choice name="H3" value="3" weight="10"/>
+    <choice name="H4" value="4" weight="10"/>
+    <choice name="H5" value="5" weight="10"/>
+    <choice name="H6" value="6" weight="10"/>
+    <choice name="H7" value="7" weight="10"/>
+    <choice name="H8" value="8" weight="10"/>
+    <choice name="H9" value="9" weight="10"/>
+    <choice name="H10" value="10" weight="10"/>
+    <choice name="H11" value="11" weight="10"/>
+    <choice name="H12" value="12" weight="10"/>
+    <choice name="H13" value="13" weight="10"/>
+    <choice name="H14" value="14" weight="10"/>
+    <choice name="H15" value="15" weight="10"/>
+    <choice name="H16" value="16" weight="10"/>
+    <choice name="H17" value="17" weight="10"/>
+    <choice name="H18" value="18" weight="10"/>
+    <choice name="H19" value="19" weight="10"/>
+    <choice name="H20" value="20" weight="10"/>
+    <choice name="H21" value="21" weight="10"/>
+    <choice name="H22" value="22" weight="10"/>
+    <choice name="H23" value="23" weight="10"/>
+    <choice name="H24" value="24" weight="10"/>
+    <choice name="H25" value="25" weight="10"/>
+    <choice name="H26" value="26" weight="10"/>
+    <choice name="H27" value="27" weight="10"/>
+    <choice name="H28" value="28" weight="10"/>
+    <choice name="H29" value="29" weight="10"/>
+    <choice name="H30" value="30" weight="10"/>
+    <choice name="H31" value="31" weight="10"/>
+  </choices>
   <choices name="64-bit SIMD/FP registers" type="RegisterOperand">
     <choice name="D0" value="0" weight="10"/>
     <choice name="D1" value="1" weight="10"/>

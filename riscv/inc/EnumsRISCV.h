@@ -329,6 +329,8 @@ namespace Force {
     RV64C = 16,
     RV128C = 17,
     RV64Priv = 18,
+    RV32H = 19,
+    RV64H = 20,
   };
   extern unsigned char EInstructionExtensionTypeSize;
   extern const std::string EInstructionExtensionType_to_string(EInstructionExtensionType in_enum); //!< Get string name for enum.

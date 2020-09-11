@@ -277,7 +277,41 @@ RV64D_instructions = {
 
 RV64D_map = InstructionMap('RV64D_instructions', RV64D_instructions)
 
+ZFH_instructions = {
+    'FMIN.H##RISCV':10,
+    'FMUL.H#Half-precision#RISCV':10,
+    'FMV.H.X##RISCV':10,
+    'FMV.X.H##RISCV':10,
+    'FSGNJ.H##RISCV':10,
+    'FSGNJN.H##RISCV':10,
+    'FSGNJX.H##RISCV':10,
+    'FSQRT.H##RISCV':10,
+    'FSUB.H#Half-precision#RISCV':10,
+    'FADD.H#Half-precision#RISCV':10,
+    'FCLASS.H##RISCV':10,
+    'FCVT.D.H##RISCV':10,
+    'FCVT.H.L##RISCV':10,
+    'FCVT.H.LU##RISCV':10,
+    'FCVT.H.S##RISCV':10,
+    'FCVT.H.W##RISCV':10,
+    'FCVT.H.WU##RISCV':10,
+    'FCVT.L.H##RISCV':10,
+    'FCVT.LU.H##RISCV':10,
+    'FCVT.S.H##RISCV':10,
+    'FCVT.W.H##RISCV':10,
+    'FCVT.WU.H##RISCV':10,
+    'FDIV.H#Half-precision#RISCV':10,
+    'FEQ.H##RISCV':10,
+    'FLE.H##RISCV':10,
+    'FLT.H##RISCV':10,
+    'FMAX.H##RISCV':10,
+    'FLH##RISCV':10,
+    'FSH##RISCV':10,
+    'FCVT.H.Q##RISCV':0,
+    'FCVT.Q.H##RISCV':0
+}
 
+ZFH_map = InstructionMap('ZFH_instructions', ZFH_instructions)
 
 RV32M_instructions = {
     'DIV##RISCV':10,

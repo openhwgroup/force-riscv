@@ -41,10 +41,10 @@
 
   <!-- Page size choices -->
   <choices name="Page size#4K granule#S#stage 1" type="Paging">
-    <choice description="4K page size" name="4K" value="0x0" weight="84"/>
-    <choice description="2M page size" name="2M" value="0x1" weight="10"/>
-    <choice description="1G page size" name="1G" value="0x2" weight="5"/>
-    <choice description="512G page size" name="512G" value="0x3" weight="1"/>
+    <choice description="4K page size" name="4K" value="0x0" weight="97"/>
+    <choice description="2M page size" name="2M" value="0x1" weight="2"/>
+    <choice description="1G page size" name="1G" value="0x2" weight="1"/>
+    <choice description="512G page size" name="512G" value="0x3" weight="0"/>
   </choices>
   <choices name="System Page size#4K granule#S#stage 1" type="Paging">
     <choice description="4K page size" name="4K" value="0x0" weight="100"/>

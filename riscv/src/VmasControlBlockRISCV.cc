@@ -255,26 +255,28 @@ namespace Force {
     auto set_system_pagereq_lambda = [=] (GenPageRequest* pPageReq, const PhysicalRegion* pPhysRegion) {
       pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::FlatMap, true); // use flat-map.
       pPageReq->SetPteAttribute(EPteAttributeType::SystemPage, 1); // Set the sw-configurable system page indicator to a 1 for system pages
+      pPageReq->SetGenAttributeValue(EPageGenAttributeType::Invalid, 0);
+      pPageReq->SetGenAttributeValue(EPageGenAttributeType::AddrSizeFault, 0);
       pPageReq->SetPrivilegeLevel(mPrivilegeLevel);
       pPageReq->SetBankType(pPhysRegion->MemoryBank());
     };
 
     bool is_instr = false;
     bool can_alias = false;
-    EMemAccessType mem_access = EMemAccessType::Unknown;
-    switch (phys_region_type) 
+    EMemAccessType mem_access = EMemAccessType::Read;
+    switch (phys_region_type)
     {
       case EPhysicalRegionType::HandlerMemory:
       case EPhysicalRegionType::ResetRegion:
         is_instr = true;
         break;
+      case EPhysicalRegionType::AddressTable:
       case EPhysicalRegionType::BootRegion:
         is_instr = true;
         can_alias = true;
         break;
       case EPhysicalRegionType::PageTable:
       case EPhysicalRegionType::ExceptionStack:
-      case EPhysicalRegionType::AddressTable:
         mem_access = EMemAccessType::ReadWrite;
         break;
       default:
@@ -285,13 +287,17 @@ namespace Force {
     GenPageRequest* page_req = mpGenerator->GenPageRequestInstance(is_instr, mem_access);
     set_system_pagereq_lambda(page_req, pPhysRegion);
     page_req->SetGenBoolAttribute(EPageGenBoolAttrType::CanAlias, can_alias); // Set a flag to allow aliasing to system page
-    if (is_instr) 
+    page_req->SetPteAttribute(EPteAttributeType::R, 1); //ensure readable/valid page
+    page_req->SetPteAttribute(EPteAttributeType::V, 1);
+    if (is_instr)
     {
       page_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoInstrAbort, true);
+      page_req->SetPteAttribute(EPteAttributeType::X, 1); // make sure instr page is executable
     }
     else
     {
       page_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataAbort, true);
+      page_req->SetPteAttribute(EPteAttributeType::W, 1); // make sure data page is writable
     }
 
     return page_req;

@@ -163,13 +163,15 @@ class TrapsRedirectModifier(ChoicesModifier):
             Log.error("TrapDelegationRedirectionModifier: TrapChoice '%s' not recognized" % aTrapChoice)
 
     def delegateException(self, aExceptionCode, aWeight = 100):
-        my_choice = "medeleg.%s" % aExceptionCode
+        my_choice = "medeleg.{}".format(aExceptionCode)
+        Log.notice("delegation choice:{}".format(my_choice))
         weightDict = { "0x0":100 - aWeight, "0x1":aWeight }
         self.modifyRegisterFieldValueChoices(my_choice, weightDict)
         self.mHaveMods = True
 
     def redirectException(self, aExceptionCode, aWeight = 100):
-        my_choice = "Redirect Trap - %s" % aExceptionCode
+        my_choice = "Redirect Trap - {}".format(aExceptionCode)
+        Log.notice("redirect choice:{}".format(my_choice))
         weightDict = { "DoNotRedirect":100 - aWeight, "DoRedirect":aWeight }
         self.modifyGeneralChoices(my_choice, weightDict)
         self.mHaveMods = True

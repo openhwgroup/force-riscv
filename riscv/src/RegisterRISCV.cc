@@ -78,9 +78,33 @@ namespace Force
       string reg_name_copy = reg_name;
       reg_name_copy[0] = 'D';
       containing_reg = RegisterLookup(reg_name_copy);
+    } else if (reg_name[0] == 'H') {
+      // half-precision...
+      string reg_name_copy = reg_name;
+      reg_name_copy[0] = 'D';
+      containing_reg = RegisterLookup(reg_name_copy);
     }
 
     return containing_reg;
+  }
+
+  /*!
+   *  If a register contains another register AND is otherwise uninitialized then it may be
+   *  initialized (depending upon the registers in question) from the contained register.
+   *
+   *  The only case thusfar where this could be applicable is in the case of a RISCV
+   *  half-precision register...
+   */
+
+  bool RegisterFileRISCV::InitContainingRegister(Register* rContainingReg, const Register* pReg) const 
+  {
+    if ( (rContainingReg->Name()[0] == 'D') && (pReg->Name()[0] == 'H') ) {
+        LOG(debug) << "{RegisterFileRISCV::InitContainingRegister} initializing containing reg " << rContainingReg->Name()
+	           << std::endl;
+	InitializeRegister(rContainingReg->Name(), -1ull, NULL); // NaN boxing half-precision value
+	return true;
+    }
+    return false;
   }
 
   bool RegisterFileRISCV::AllowReExecutionInit(const std::string& rRegName) const
