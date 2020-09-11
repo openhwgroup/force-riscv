@@ -671,7 +671,7 @@ namespace Force {
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate the BaseOffsetLoadStoreOperand using preamble approach.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseOffsetLoadStoreOperand.
   private:
-    void RecordOperandValues(const AddressingMode& rAddrMode); //!< Capture the solved operand values.
+    void RecordOperandValues(const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
@@ -726,7 +726,7 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseIndexLoadStoreOperand.
   private:
     bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
-    void RecordOperandValues(const AddressingMode& rAddrMode); //!< Capture the solved operand values.
+    void RecordOperandValues(const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
