@@ -51,6 +51,78 @@ using namespace std;
 
 namespace Force {
 
+namespace {
+
+  template<typename U>
+  void RemoveUnusableSolutionChoices(const U* pChosenSolution, vector<U*>& rSolutionChoices)
+  {
+    auto delete_if_zero_weight = [pChosenSolution](U* pSolutionChoice) {
+      if (pSolutionChoice->Weight() == 0) {
+        if (pSolutionChoice != pChosenSolution) {
+          delete pSolutionChoice;
+        }
+        else {
+          LOG(fail) << "{RemoveUnusableSolutionChoices} about to delete last known good chosen solution: " << pSolutionChoice->ToString() << ". This shouldn't happen." << " pointer 0x" << hex << uint64(pSolutionChoice) << endl;
+          FAIL("deleting-will-cause-dangling-pointer");
+        }
+
+        return true;
+      }
+
+      return false;
+    };
+
+    // remove_if will shift the valid elements to the beginning of the vector while erase will
+    // remove the invalid elements, which have been shifted to the end of the vector
+    rSolutionChoices.erase(remove_if(rSolutionChoices.begin(), rSolutionChoices.end(), delete_if_zero_weight), rSolutionChoices.end());
+  }
+
+  template<typename T, typename U>
+  U* ChooseValidSolution(const T& rSolutionContainer, const AddressSolvingShared& rAddrSolShared, const U* pOrigChosenSolution, vector<U*>& rSolutionChoices)
+  {
+    U* solution_choice = nullptr;
+    bool choice_usable = false;
+    uint64 remaining_choices_count = rSolutionChoices.size();
+    while ((not choice_usable) and (remaining_choices_count > 0)) {
+      solution_choice = choose_weighted_item(rSolutionChoices);
+
+      if (solution_choice == nullptr) {
+        break;
+      }
+
+      if (not solution_choice->ChooseSolution(rAddrSolShared)) {
+        break;
+      }
+
+      choice_usable = true;
+      vector<uint64> target_addresses;
+      rSolutionContainer.GetTargetAddresses(rAddrSolShared, *solution_choice, target_addresses);
+      for (uint64 target_addr : target_addresses) {
+        if (not rAddrSolShared.MapTargetAddressRange(target_addr, solution_choice->VmTimeStampReference())) {
+          choice_usable = false;
+          break;
+        }
+      }
+
+      if (not choice_usable) {
+        solution_choice->SetWeight(0);
+        remaining_choices_count--;
+      }
+    }
+
+
+    if (choice_usable) {
+      RemoveUnusableSolutionChoices(solution_choice, rSolutionChoices);
+      return solution_choice;
+    }
+    else {
+      RemoveUnusableSolutionChoices(pOrigChosenSolution, rSolutionChoices);
+      return nullptr;
+    }
+  }
+
+}
+
   AddressingRegister::AddressingRegister()
     : Object(), mpRegister(nullptr), mRegisterValue(0), mRegisterValues(), mWeight(0), mVmTimeStamp(0), mFree(false)
   {
@@ -561,41 +633,15 @@ namespace Force {
 
   bool BaseIndexMode::ChooseSolution(const AddressSolvingShared& rAddrSolShared)
   {
-    IndexSolution* index_solution = nullptr;
-    bool choice_usable = false;
-    uint64 remaining_choices_count = mIndexSolutionChoices.size();
-    while ((not choice_usable) and (remaining_choices_count > 0)) {
-      index_solution = choose_weighted_item(mIndexSolutionChoices);
-
-      if (index_solution == nullptr) {
-        break;
-      }
-
-      choice_usable = true;
-      vector<uint64> target_addresses;
-      GetTargetAddresses(rAddrSolShared, *index_solution, target_addresses);
-      for (uint64 target_addr : target_addresses) {
-        if (not rAddrSolShared.MapTargetAddressRange(target_addr, index_solution->VmTimeStampReference())) {
-          choice_usable = false;
-          break;
-        }
-      }
-
-      if (not choice_usable) {
-        index_solution->SetWeight(0);
-        remaining_choices_count--;
-      }
-    }
-
-    if (choice_usable) {
-      mpChosenIndexSolution = index_solution;
+    IndexSolution* solution_choice = ChooseValidSolution(*this, rAddrSolShared, mpChosenIndexSolution, mIndexSolutionChoices);
+    if (solution_choice != nullptr) {
+      mpChosenIndexSolution = solution_choice;
       mRegisterValue = mpChosenIndexSolution->BaseValue();
       mTargetAddress = mpChosenIndexSolution->TargetAddress();
+      return true;
     }
 
-    RemoveUnusableSolutionChoices();
-
-    return choice_usable;
+    return false;
   }
 
   void BaseIndexMode::SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const
@@ -612,32 +658,9 @@ namespace Force {
     }
   }
 
-  void BaseIndexMode::GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
+  void BaseIndexMode::CalculateTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
   {
     rTargetAddresses.push_back(rIndexSolution.TargetAddress());
-  }
-
-  void BaseIndexMode::RemoveUnusableSolutionChoices()
-  {
-    auto delete_if_zero_weight = [this](IndexSolution* index_solution) {
-      if (index_solution->Weight() == 0) {
-        if (index_solution != mpChosenIndexSolution) {
-          delete index_solution;
-        }
-        else {
-          LOG(fail) << "{BaseIndexMode::RemoveUnusableSolutionChoices} about to delete last known good chosen solution: " << index_solution->ToString() << ". This shouldn't happen." << endl;
-          FAIL("deleting-will-cause-dangling-pointer");
-        }
-
-        return true;
-      }
-
-      return false;
-    };
-
-    // remove_if will shift the valid elements to the beginning of the vector while erase will
-    // remove the invalid elements, which have been shifted to the end of the vector
-    mIndexSolutionChoices.erase(remove_if(mIndexSolutionChoices.begin(), mIndexSolutionChoices.end(), delete_if_zero_weight), mIndexSolutionChoices.end());
   }
 
   bool BaseIndexExtendMode::Solve(const AddressSolvingShared& rShared)
@@ -800,7 +823,7 @@ namespace Force {
     return new VectorStridedSolvingShared();
   }
 
-  void VectorStridedMode::GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
+  void VectorStridedMode::CalculateTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
   {
     auto& strided_shared = dynamic_cast<const VectorStridedSolvingShared&>(rShared);
     for (uint32 elem_index = 0; elem_index < strided_shared.GetElementCount(); elem_index++) {
@@ -915,6 +938,38 @@ namespace Force {
     return target_addr_usable;
   }
 
+  VectorIndexedMode::VectorIndexedMode()
+    : AddressingMode(), mpChosenSolution(nullptr), mSolutionChoices()
+  {
+  }
+
+  VectorIndexedMode::VectorIndexedMode(const VectorIndexedMode& rOther)
+    : AddressingMode(rOther), mpChosenSolution(nullptr), mSolutionChoices()
+  {
+    for (AddressingMultiRegister* solution_choice : rOther.mSolutionChoices) {
+      auto solution_choice_clone = dynamic_cast<AddressingMultiRegister*>(solution_choice->Clone());
+      mSolutionChoices.push_back(solution_choice_clone);
+
+      if (solution_choice == rOther.mpChosenSolution) {
+        mpChosenSolution = solution_choice_clone;
+      }
+    }
+  }
+
+  VectorIndexedMode::~VectorIndexedMode()
+  {
+    for (AddressingMultiRegister* solution_choice : mSolutionChoices) {
+      delete solution_choice;
+    }
+  }
+
+  const string VectorIndexedMode::ToString() const
+  {
+    stringstream out_str;
+    out_str << Type() << ": SolutionChoices size 0x" << hex << mSolutionChoices.size();
+    return out_str.str();
+  }
+
   bool VectorIndexedMode::Solve(const AddressSolvingShared& rShared)
   {
     auto& indexed_shared = dynamic_cast<const VectorIndexedSolvingShared&>(rShared);
@@ -952,6 +1007,12 @@ namespace Force {
     return new VectorIndexedSolvingShared();
   }
 
+  const Register* VectorIndexedMode::Index() const
+  {
+    const vector<AddressingRegister*>& addressing_registers = mpChosenSolution->GetAddressingRegisters();
+    return addressing_registers[0]->GetRegister();
+  }
+
   void VectorIndexedMode::SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const
   {
     AddressingMode::SetOperandResults(rShared, rBaseOperand);
@@ -961,16 +1022,21 @@ namespace Force {
     const Register* index_reg = Index();
     index_opr->SetChoiceResultDirect(*(rShared.GetGenerator()), *instr, index_reg->Name());
 
-    const IndexSolution* chosen_index_solution = GetChosenIndexSolution();
+    // TODO(Noah): Remove this temporarily
+    /*
+    const IndexSolution* chosen_index_solution = mpChosenSolution;
     if (chosen_index_solution->IsFree()) {
       instr->SetOperandDataValue(index_opr->Name(), chosen_index_solution->RegisterValues(), sizeof_bits<uint64>());
     }
+    */
   }
 
   vector<uint64> VectorIndexedMode::IndexValues() const
   {
-    const IndexSolution* chosen_index_solution = GetChosenIndexSolution();
-    return chosen_index_solution->RegisterValues();
+    // TODO(Noah): Fix this
+    //const IndexSolution* chosen_index_solution = mpChosenSolution;
+    //return chosen_index_solution->RegisterValues();
+    return vector<uint64>();
   }
 
   RegisterOperand* VectorIndexedMode::GetIndexOperand(const AddressSolvingShared& rShared) const
@@ -990,8 +1056,9 @@ namespace Force {
       uint64 untagged_target_addr = addr_tagging->UntagAddress(target_addr, rIndexedShared.IsInstruction());
 
       if (untagged_target_addr == forced_target_addr) {
-        auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
-        AddIndexSolution(index_solution);
+        // TODO(Noah): Fix this
+        //auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
+        //AddIndexSolution(index_solution);
       }
     }
   }
@@ -1000,9 +1067,10 @@ namespace Force {
   {
     for (auto index_choice : rIndexedShared.GetIndexChoices()) {
       if (AreTargetAddressesUsable(rIndexedShared, BaseValue(), index_choice->RegisterValues())) {
-        uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_choice->RegisterValues(), 0);
-        auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
-        AddIndexSolution(index_solution);
+        // TODO(Noah): Fix this
+        //uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_choice->RegisterValues(), 0);
+        //auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
+        //AddIndexSolution(index_solution);
       }
     }
   }
@@ -1032,9 +1100,10 @@ namespace Force {
       vector<uint64> reg_values;
       change_elementform_to_uint64(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_elem_values, reg_values);
 
-      auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
-      index_solution->SetRegisterValue(reg_values);
-      AddIndexSolution(index_solution);
+      // TODO(Noah): Fix this
+      //auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
+      //index_solution->SetRegisterValue(reg_values);
+      //AddIndexSolution(index_solution);
     }
   }
 
@@ -1042,8 +1111,9 @@ namespace Force {
   {
     uint64 base_val = rIndexedShared.FreeTarget() - change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), rIndexChoice.RegisterValues(), 0);
     if (AreTargetAddressesUsable(rIndexedShared, base_val, rIndexChoice.RegisterValues())) {
-      auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
-      AddIndexSolution(index_solution);
+      // TODO(Noah): Fix this
+      //auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
+      //AddIndexSolution(index_solution);
     }
   }
 
@@ -1679,60 +1749,13 @@ namespace Force {
 
   bool AddressSolver::UpdateSolution()
   {
-    AddressingMode* addr_mode = nullptr;
-    bool choice_usable = false;
-    size_t remaining_choices_count = mSolutionChoices.size();
-    while ((not choice_usable) and (remaining_choices_count > 0)) {
-      addr_mode = choose_weighted_item(mSolutionChoices);
-
-      if (nullptr == addr_mode) {
-        break;
-      }
-
-      if (not addr_mode->ChooseSolution(*mpAddressSolvingShared)) {
-        break;
-      }
-
-      choice_usable = mpAddressSolvingShared->MapTargetAddressRange(addr_mode->TargetAddress(), addr_mode->VmTimeStampReference());
-
-      if (not choice_usable) {
-        addr_mode->SetWeight(0);
-        remaining_choices_count--;
-      }
-    }
-
-    if (choice_usable) {
+    AddressingMode* addr_mode = ChooseValidSolution(*this, *mpAddressSolvingShared, mpChosenSolution, mSolutionChoices);
+    if (addr_mode != nullptr) {
       mpChosenSolution = addr_mode;
+      return true;
     }
 
-    RemoveUnusableSolutionChoices();
-
-    return choice_usable;
-  }
-
-  void AddressSolver::RemoveUnusableSolutionChoices()
-  {
-    auto delete_if_zero_weight = [this](AddressingMode* addr_mode) {
-      if (addr_mode->Weight() == 0) {
-        if (addr_mode == mpChosenSolution) {
-          mFilteredChoices.push_back(addr_mode);
-          //LOG(warn) << "{AddressSolver::RemoveUnusableSolutionChoices} about to delete current chosen solution.  This shouldn't happen, temporarily move to filtered solution." << endl;
-          LOG(fail) << "{AddressSolver::RemoveUnusableSolutionChoices} about to delete last known good chosen solution: " << addr_mode->ToString() << ".  This shouldn't happen." << " pointer 0x" << hex << uint64(addr_mode) << endl;
-          FAIL("deleting-will-cause-dangling-pointer");
-        }
-        else {
-          delete addr_mode;
-        }
-        return true;
-      }
-      else {
-        return false;
-      }
-    };
-
-    // remove_if will shift the valid elements to the beginning of the vector while erase will remove the invalid
-    // elements, which have been shifted to the end of the vector.
-    mSolutionChoices.erase(remove_if(mSolutionChoices.begin(), mSolutionChoices.end(), delete_if_zero_weight), mSolutionChoices.end());
+    return false;
   }
 
   bool AddressSolver::IsRegisterUsable(const Register* regPtr, cbool hasIss) const
@@ -1756,6 +1779,11 @@ namespace Force {
   void AddressSolver::SetOperandResults()
   {
     mpChosenSolution->SetOperandResults(*mpAddressSolvingShared, *mpBaseOperand);
+  }
+
+  void AddressSolver::GetTargetAddresses(const AddressSolvingShared& rShared, const AddressingMode& rAddrMode, vector<uint64>& rTargetAddresses) const
+  {
+    rTargetAddresses.push_back(rAddrMode.TargetAddress());
   }
 
   // We want to enable address shortage mode if we only have one solution for a load or store

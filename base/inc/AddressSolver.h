@@ -83,6 +83,7 @@ namespace Force {
     const std::string ToString() const override; //!< Return a string describing the current state of the Object.
     const char* Type() const { return "AddressingMultiRegister"; } //!< Return a string describing the actual type of the Object.
     void AddAddressingRegister(AddressingRegister* pAddrReg) { mAddressingRegisters.push_back(pAddrReg); } //!< Add an addressing register.
+    bool ChooseSolution(const AddressSolvingShared& rAddrSolShared) { return true; } //!< Choose sub solution choice if necessary.
     const std::vector<AddressingRegister*>& GetAddressingRegisters() const { return mAddressingRegisters; } //!< Return addressing registers representing a single operand choice.
     void SetZeroWeight(); //!< Set solution weight to 0.
     uint32& VmTimeStampReference() { return mVmTimeStamp; } //!< Return reference to the time stamp variable.
@@ -293,6 +294,7 @@ namespace Force {
     uint64 BaseValue() const { return mBaseRegisterValue; } //!< Return base register value.
     uint64 TargetAddress() const { return mTargetAddress; } //!< Return target address.
     uint32 AmountBit() const { return mAmountBit; } //!< Return amount bit value.
+    bool ChooseSolution(const AddressSolvingShared& rAddrSolShared) { return true; } //!< Choose sub solution choice if necessary.
   protected:
     IndexSolution() : AddressingRegister(), mBaseRegisterValue(0), mTargetAddress(0), mAmountBit(0) { } //!< Default constructor.
   protected:
@@ -317,6 +319,7 @@ namespace Force {
     void SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const override; //!< Update operands to reflect chosen solution.
     uint64 IndexValue() const override {return mpChosenIndexSolution->RegisterValue(); } //!< Return index value.
     const Register* Index() const { return mpChosenIndexSolution->GetRegister(); } //!< Return pointer to index register.
+    void GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, std::vector<uint64>& rTargetAddresses) const { CalculateTargetAddresses(rShared, rIndexSolution, rTargetAddresses); } //!< Return a list of target addresses for the specified index solution.
     std::vector<IndexSolution*>& GetSolutionChoicesForFiltering() { return mIndexSolutionChoices; } //!< Return reference to solution choices, only meant to be used by solution filtering.
     std::vector<IndexSolution*>& GetFilteredChoicesForFiltering() { return mFilteredChoices; } //!< Return reference to filtered choices, only meant to be used by solution filtering.
   protected:
@@ -326,8 +329,7 @@ namespace Force {
     void AddIndexSolution(IndexSolution* pIndexSolution) { mIndexSolutionChoices.push_back(pIndexSolution); } //!< Add an index solution.
     const IndexSolution* GetChosenIndexSolution() const { return mpChosenIndexSolution; } //!< Return the chosen index solution.
   private:
-    virtual void GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses for the specified index solution.
-    void RemoveUnusableSolutionChoices(); //!< Remove unusable solution choices.
+    virtual void CalculateTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, std::vector<uint64>& rTargetAddresses) const; //!< Calculate the target addresses for the specified index solution.
     virtual RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const = 0; //!< Return index operand.
   private:
     IndexSolution* mpChosenIndexSolution; //!< Pointer to the chosen index solution
@@ -381,7 +383,7 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorStridedMode);
   private:
-    void GetTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses for the specified index solution.
+    void CalculateTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, std::vector<uint64>& rTargetAddresses) const override; //!< Calculate the target addresses for the specified index solution.
     RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const override; //!< Return index operand.
     void SolveFixedTargetConstraintForced(const VectorStridedSolvingShared& rStridedShared); //!< Create solutions when base register is fixed and target address is forced.
     void SolveFixed(const VectorStridedSolvingShared& rStridedShared); //!< Create solutions when base register is fixed.
@@ -397,16 +399,14 @@ namespace Force {
     \class VectorIndexedMode
     \brief Address solving class for vector indexed addressing mode.
   */
-  class VectorIndexedMode : public BaseIndexMode {
+  class VectorIndexedMode : public AddressingMode {
   public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedMode);
-    //VectorIndexedMode();
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedMode);
-    //~VectorIndexedMode() override;
+    VectorIndexedMode();
+    ~VectorIndexedMode() override;
     ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedMode);
 
     Object* Clone() const override { return new VectorIndexedMode(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
-    //const std::string ToString() const override; //!< Return a string describing the current state of the Object.
+    const std::string ToString() const override; //!< Return a string describing the current state of the Object.
     const char* Type() const override { return "VectorIndexedMode"; } //!< Return a string describing the actual type of the Object.
     bool Solve(const AddressSolvingShared& rShared) override; //!< Solve for address.
     bool SolveFree(const AddressSolvingShared& rShared) override; //!< Solve for address.
@@ -415,21 +415,21 @@ namespace Force {
     void SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const override; //!< Update operands to reflect chosen solution.
     std::vector<uint64> IndexValues() const; //!< Return index values.
   protected:
-    COPY_CONSTRUCTOR_DEFAULT(VectorIndexedMode);
-    //VectorIndexedMode(const VectorIndexedMode& rOther);
+    VectorIndexedMode(const VectorIndexedMode& rOther);
   private:
-    RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const override; //!< Return index operand.
+    RegisterOperand* GetIndexOperand(const AddressSolvingShared& rShared) const; //!< Return index operand.
     void SolveFixedTargetConstraintForced(const VectorIndexedSolvingShared& rIndexedShared); //!< Create solutions when base register is fixed and target address is forced.
     void SolveFixed(const VectorIndexedSolvingShared& rIndexedShared); //!< Create solutions when base register is fixed.
     void SolveFreeIndexFree(const VectorIndexedSolvingShared& rIndexedShared, const AddressingRegister& rIndexChoice); //!< Create solution for a specified index choice when base and index registers are free.
     void SolveFreeIndexFixed(const VectorIndexedSolvingShared& rIndexedShared, const AddressingRegister& rIndexChoice); //!< Create solution for a specified index choice when base register is free and index register is fixed.
+    bool HasIndexSolutions() const { return (not mSolutionChoices.empty()); } //!< Return true if there is at least one index solution available.
+    const Register* Index() const; //!< Return pointer to index register.
     //void GetTargetAddresses(const AddressSolvingShared& rShared, const AddressingMultiRegister& rSolutionChoice, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses for the specified solution choice.
-    //void RemoveUnusableSolutionChoices(); //!< Remove unusable solution choices.
     bool AreTargetAddressesUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, const std::vector<uint64>& rIndexRegValues); //!< Return true if the target address generated by the base and index values satisfy all constraints.
     bool IsTargetAddressUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 targetAddr, const ConstraintSet* pTargetConstr); //!< Return true if the specified target address satisfies all constraints.
   private:
-    //AddressingMultiRegister* mpChosenSolution; //!< Pointer to the chosen solution
-    //std::vector<AddressingMultiRegister*> mSolutionChoices; //!< Available solution choices
+    AddressingMultiRegister* mpChosenSolution; //!< Pointer to the chosen solution
+    std::vector<AddressingMultiRegister*> mSolutionChoices; //!< Available solution choices
   };
 
   /*!
@@ -541,6 +541,7 @@ namespace Force {
     const RegisterOperand* GetBaseOperand() const { return mpBaseOperand; } //!< Return pointer to base operand.
     const AddressSolvingShared* GetAddressSolvingShared() const { return mpAddressSolvingShared; } //!< Return address solving shared.
     void SetOperandResults(); //!< Update operands to reflect chosen solution.
+    void GetTargetAddresses(const AddressSolvingShared& rShared, const AddressingMode& rAddrMode, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses for the specified addressing mode.
   protected:
     AddressSolver(); //!< Default constructor.
     virtual bool GetAvailableBaseChoices(Generator& gen, Instruction& instr, std::vector<AddressingMode* >& rBaseChoices) const; //!< Get available choices.
@@ -549,7 +550,6 @@ namespace Force {
     const AddressingMode* SolveWithModes(const Generator& gen, const Instruction& instr, const std::vector<AddressingMode* >& rModes); //!< Solve for each of the specified modes and then choose one of the solutions.
     void ChooseSolution(const Generator& rGen, const Instruction& rInstr); //!< Choose from viable solutions.
     bool UpdateSolution(); //!< Update current solution.
-    void RemoveUnusableSolutionChoices(); //!< Removes all solution choices with zero weight.
     bool IsRegisterUsable(const Register* regPtr, cbool hasIss) const; //!< Return true if register can be used.
   protected:
     RegisterOperand* mpBaseOperand; //!< Pointer to the base operand.
