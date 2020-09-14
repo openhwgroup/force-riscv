@@ -78,6 +78,45 @@ namespace Force {
     return (rOpr.IsRegisterOperand() && (rOpr.OperandType() != EOperandType::SysReg));
   }
 
+  AddressingMultiRegister::AddressingMultiRegister()
+    : Object(), mAddressingRegisters(), mVmTimeStamp(0)
+  {
+  }
+
+  AddressingMultiRegister::AddressingMultiRegister(const AddressingMultiRegister& rOther)
+    : Object(rOther), mAddressingRegisters(), mVmTimeStamp(rOther.mVmTimeStamp)
+  {
+    for (AddressingRegister* addr_reg : rOther.mAddressingRegisters) {
+      mAddressingRegisters.push_back(dynamic_cast<AddressingRegister*>(addr_reg->Clone()));
+    }
+  }
+
+  const std::string AddressingMultiRegister::ToString() const
+  {
+    stringstream out_str;
+    for (AddressingRegister* addr_reg : mAddressingRegisters) {
+      const Register* reg = addr_reg->GetRegister();
+      out_str << "register: " << reg->Name() << " free? " << addr_reg->IsFree();
+    }
+
+    out_str << "weight: " << dec << Weight() << " time-stamp: " << mVmTimeStamp;
+
+    return out_str.str();
+  }
+
+  void AddressingMultiRegister::SetZeroWeight()
+  {
+    for (AddressingRegister* addr_reg : mAddressingRegisters) {
+      addr_reg->SetWeight(0);
+    }
+  }
+
+  uint32 AddressingMultiRegister::Weight() const
+  {
+    return accumulate(mAddressingRegisters.cbegin(), mAddressingRegisters.cend(), uint32(0),
+      [](cuint32 partialSum, const AddressingRegister* pAddrReg) { return (partialSum + pAddrReg->Weight()); });
+  }
+
   AddressingMode::AddressingMode()
     : AddressingRegister(), mTargetAddress(0)
   {
