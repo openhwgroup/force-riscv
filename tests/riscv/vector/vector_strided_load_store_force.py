@@ -105,6 +105,11 @@ class MainSequence(VectorTestSequence):
             allowed_except_codes.add(0x4)
             allowed_except_codes.add(0x6)
 
+        # TODO(Noah): Remove the line below permitting store page fault exceptions when the page
+        # descriptor generation is improved. Currently, we are generating read-only pages for load
+        # instructions, which is causing subsequent store instructions to the same page to fault.
+        allowed_except_codes.add(0xF)
+
         return allowed_except_codes
 
 
