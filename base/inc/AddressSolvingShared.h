@@ -214,6 +214,8 @@ namespace Force {
     uint32 mElemCount; //!< The number of vector elements
   };
 
+  class AddressingMultiRegister;
+
   /*!
     \class VectorIndexedSolvingShared
     \brief Class holding necessary shared vector indexed address solving data structures.
@@ -226,16 +228,14 @@ namespace Force {
     ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedSolvingShared);
 
     bool Setup() override; //!< Setup shared data structures.
-    const std::vector<AddressingRegister*>& GetIndexChoices() const { return mIndexChoices; } //!< Return available index register choices.
+    const std::vector<AddressingMultiRegister*>& GetIndexChoices() const { return mIndexChoices; } //!< Return available index operand choices.
     uint32 GetElementSize() const { return mElemSize; } //!< Return the size in bits of each vector register element.
-    uint32 GetElementCount() const { return mElemCount; } //!< Return the number of vector elements.
   private:
     void SetupIndexChoices(); //!< Record the available index choices.
   private:
     const RegisterOperand* mpIndexOpr; //!< Index operand
-    std::vector<AddressingRegister*> mIndexChoices; //!< Available index register choices
+    std::vector<AddressingMultiRegister*> mIndexChoices; //!< Available index operand choices
     uint32 mElemSize; //!< The size in bits of each vector register element
-    uint32 mElemCount; //!< The number of vector elements
   };
 
   /*!

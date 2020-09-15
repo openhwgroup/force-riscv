@@ -105,7 +105,7 @@ namespace {
       }
 
       if (not choice_usable) {
-        solution_choice->SetWeight(0);
+        solution_choice->SetZeroWeight();
         remaining_choices_count--;
       }
     }
@@ -590,6 +590,16 @@ namespace {
     return true;
   }
 
+  MultiRegisterIndexSolution::MultiRegisterIndexSolution(const AddressingMultiRegister& rAddressingMultiReg, cuint64 baseRegVal, cuint64 targetAddr)
+    : AddressingMultiRegister(rAddressingMultiReg), mBaseRegVal(baseRegVal), mTargetAddr(targetAddr)
+  {
+  }
+
+  MultiRegisterIndexSolution::MultiRegisterIndexSolution(const MultiRegisterIndexSolution& rOther)
+    : AddressingMultiRegister(rOther), mBaseRegVal(rOther.mBaseRegVal), mTargetAddr(rOther.mTargetAddr)
+  {
+  }
+
   BaseIndexMode::BaseIndexMode()
     : AddressingMode(), mpChosenIndexSolution(nullptr), mIndexSolutionChoices(), mFilteredChoices()
   {
@@ -907,6 +917,9 @@ namespace {
 
   bool VectorStridedMode::AreTargetAddressesUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 baseVal, cuint64 strideVal)
   {
+    // TODO(Noah): Make this logic more robust by accounting for element masking when there is time
+    // to do so.
+
     bool target_addresses_usable = IsTargetAddressUsable(rStridedShared, baseVal, rStridedShared.TargetConstraint());
     for (uint32 elem_index = 1; elem_index < rStridedShared.GetElementCount(); elem_index++) {
       if (not target_addresses_usable) {
@@ -939,34 +952,34 @@ namespace {
   }
 
   VectorIndexedMode::VectorIndexedMode()
-    : AddressingMode(), mpChosenSolution(nullptr), mSolutionChoices()
+    : AddressingMode(), mpChosenIndexSolution(nullptr), mIndexSolutionChoices()
   {
   }
 
   VectorIndexedMode::VectorIndexedMode(const VectorIndexedMode& rOther)
-    : AddressingMode(rOther), mpChosenSolution(nullptr), mSolutionChoices()
+    : AddressingMode(rOther), mpChosenIndexSolution(nullptr), mIndexSolutionChoices()
   {
-    for (AddressingMultiRegister* solution_choice : rOther.mSolutionChoices) {
-      auto solution_choice_clone = dynamic_cast<AddressingMultiRegister*>(solution_choice->Clone());
-      mSolutionChoices.push_back(solution_choice_clone);
+    for (MultiRegisterIndexSolution* index_solution : rOther.mIndexSolutionChoices) {
+      auto index_solution_clone = dynamic_cast<MultiRegisterIndexSolution*>(index_solution->Clone());
+      mIndexSolutionChoices.push_back(index_solution_clone);
 
-      if (solution_choice == rOther.mpChosenSolution) {
-        mpChosenSolution = solution_choice_clone;
+      if (index_solution == rOther.mpChosenIndexSolution) {
+        mpChosenIndexSolution = index_solution_clone;
       }
     }
   }
 
   VectorIndexedMode::~VectorIndexedMode()
   {
-    for (AddressingMultiRegister* solution_choice : mSolutionChoices) {
-      delete solution_choice;
+    for (MultiRegisterIndexSolution* index_solution : mIndexSolutionChoices) {
+      delete index_solution;
     }
   }
 
   const string VectorIndexedMode::ToString() const
   {
     stringstream out_str;
-    out_str << Type() << ": SolutionChoices size 0x" << hex << mSolutionChoices.size();
+    out_str << Type() << ": IndexSolutionChoices size 0x" << hex << mIndexSolutionChoices.size();
     return out_str.str();
   }
 
@@ -991,11 +1004,32 @@ namespace {
     }
 
     auto& indexed_shared = dynamic_cast<const VectorIndexedSolvingShared&>(rShared);
-    for (AddressingRegister* index_choice : indexed_shared.GetIndexChoices()) {
-      if (index_choice->IsFree()) {
-        SolveFreeIndexFree(indexed_shared, *index_choice);
-      } else {
-        SolveFreeIndexFixed(indexed_shared, *index_choice);
+
+    for (AddressingMultiRegister* index_choice : indexed_shared.GetIndexChoices()) {
+      const vector<AddressingRegister*>& addressing_registers = index_choice->GetAddressingRegisters();
+      AddressingRegister* addressing_reg = addressing_registers[0];
+      uint64 base_val = indexed_shared.FreeTarget() - change_uint64_to_elementform_at_index(indexed_shared.GetElementSize(), addressing_reg->RegisterValues(), 0);
+
+      // Copy the register values into a new index solution, so we can compute and capture the
+      // values of free index registers. The unique_ptr ensures the index solution is deleted if we
+      // can't solve for all of the register values.
+      unique_ptr<MultiRegisterIndexSolution> index_solution(new MultiRegisterIndexSolution(*index_choice, base_val, indexed_shared.FreeTarget()));
+
+      bool solved = true;
+      for (AddressingRegister* addressing_reg : index_solution->GetAddressingRegisters()) {
+        if (addressing_reg->IsFree()) {
+          solved = SolveFreeIndexRegisterFree(indexed_shared, base_val, *addressing_reg);
+        } else {
+          solved = AreTargetAddressesUsable(indexed_shared, base_val, addressing_reg->RegisterValues(), nullptr);
+        }
+
+        if (not solved) {
+          break;
+        }
+      }
+
+      if (solved) {
+        mIndexSolutionChoices.push_back(index_solution.release());
       }
     }
 
@@ -1007,10 +1041,17 @@ namespace {
     return new VectorIndexedSolvingShared();
   }
 
-  const Register* VectorIndexedMode::Index() const
+  bool VectorIndexedMode::ChooseSolution(const AddressSolvingShared& rAddrSolShared)
   {
-    const vector<AddressingRegister*>& addressing_registers = mpChosenSolution->GetAddressingRegisters();
-    return addressing_registers[0]->GetRegister();
+    MultiRegisterIndexSolution* solution_choice = ChooseValidSolution(*this, rAddrSolShared, mpChosenIndexSolution, mIndexSolutionChoices);
+    if (solution_choice != nullptr) {
+      mpChosenIndexSolution = solution_choice;
+      mRegisterValue = mpChosenIndexSolution->BaseValue();
+      mTargetAddress = mpChosenIndexSolution->TargetAddress();
+      return true;
+    }
+
+    return false;
   }
 
   void VectorIndexedMode::SetOperandResults(const AddressSolvingShared& rShared, RegisterOperand& rBaseOperand) const
@@ -1018,32 +1059,32 @@ namespace {
     AddressingMode::SetOperandResults(rShared, rBaseOperand);
 
     RegisterOperand* index_opr = GetIndexOperand(rShared);
-    Instruction* instr = rShared.GetInstruction();
     const Register* index_reg = Index();
-    index_opr->SetChoiceResultDirect(*(rShared.GetGenerator()), *instr, index_reg->Name());
+    index_opr->SetChoiceResultDirect(*(rShared.GetGenerator()), *(rShared.GetInstruction()), index_reg->Name());
 
-    // TODO(Noah): Remove this temporarily
-    /*
-    const IndexSolution* chosen_index_solution = mpChosenSolution;
-    if (chosen_index_solution->IsFree()) {
-      instr->SetOperandDataValue(index_opr->Name(), chosen_index_solution->RegisterValues(), sizeof_bits<uint64>());
+    // TODO(Noah): Implement setting the operand data for free index registers when there is time to
+    // do so. The primary issue is that the existing OperandDataRequest class is designed to handle
+    // only one register's values, whereas the vector index operand may consist of several
+    // registers.
+  }
+
+  void VectorIndexedMode::GetTargetAddresses(const AddressSolvingShared& rShared, const MultiRegisterIndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
+  {
+    vector<uint64> reg_values;
+    IndexValuesForChoice(rIndexSolution, reg_values);
+
+    vector<uint64> index_elem_values;
+    auto& indexed_shared = dynamic_cast<const VectorIndexedSolvingShared&>(rShared);
+    change_uint64_to_elementform(indexed_shared.GetElementSize(), indexed_shared.GetElementSize(), reg_values, index_elem_values);
+
+    for (uint64 index_elem_val : index_elem_values) {
+      rTargetAddresses.push_back(rIndexSolution.BaseValue() + index_elem_val);
     }
-    */
   }
 
-  vector<uint64> VectorIndexedMode::IndexValues() const
+  void VectorIndexedMode::IndexValues(vector<uint64>& rIndexRegValues) const
   {
-    // TODO(Noah): Fix this
-    //const IndexSolution* chosen_index_solution = mpChosenSolution;
-    //return chosen_index_solution->RegisterValues();
-    return vector<uint64>();
-  }
-
-  RegisterOperand* VectorIndexedMode::GetIndexOperand(const AddressSolvingShared& rShared) const
-  {
-    const AddressingOperandConstraint* addr_opr_constr = rShared.GetAddressingOperandConstraint();
-    auto indexed_opr_constr = addr_opr_constr->CastInstance<const VectorIndexedLoadStoreOperandConstraint>();
-    return indexed_opr_constr->IndexOperand();
+    IndexValuesForChoice(*mpChosenIndexSolution, rIndexRegValues);
   }
 
   void VectorIndexedMode::SolveFixedTargetConstraintForced(const VectorIndexedSolvingShared& rIndexedShared) {
@@ -1051,45 +1092,49 @@ namespace {
     uint64 forced_target_addr = target_constr->OnlyValue();
 
     const AddressTagging* addr_tagging = rIndexedShared.GetAddressTagging();
-    for (AddressingRegister* index_choice : rIndexedShared.GetIndexChoices()) {
-      uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_choice->RegisterValues(), 0);
+    for (AddressingMultiRegister* index_choice : rIndexedShared.GetIndexChoices()) {
+      const vector<AddressingRegister*>& addressing_registers = index_choice->GetAddressingRegisters();
+      AddressingRegister* addressing_reg = addressing_registers[0];
+
+      uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), addressing_reg->RegisterValues(), 0);
       uint64 untagged_target_addr = addr_tagging->UntagAddress(target_addr, rIndexedShared.IsInstruction());
 
       if (untagged_target_addr == forced_target_addr) {
-        // TODO(Noah): Fix this
-        //auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
-        //AddIndexSolution(index_solution);
+        auto index_solution = new MultiRegisterIndexSolution(*index_choice, BaseValue(), target_addr);
+        mIndexSolutionChoices.push_back(index_solution);
       }
     }
   }
 
   void VectorIndexedMode::SolveFixed(const VectorIndexedSolvingShared& rIndexedShared)
   {
-    for (auto index_choice : rIndexedShared.GetIndexChoices()) {
-      if (AreTargetAddressesUsable(rIndexedShared, BaseValue(), index_choice->RegisterValues())) {
-        // TODO(Noah): Fix this
-        //uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_choice->RegisterValues(), 0);
-        //auto index_solution = new IndexSolution(*index_choice, BaseValue(), target_addr);
-        //AddIndexSolution(index_solution);
+    for (AddressingMultiRegister* index_choice : rIndexedShared.GetIndexChoices()) {
+      vector<uint64> reg_values;
+      IndexValuesForChoice(*index_choice, reg_values);
+
+      if (AreTargetAddressesUsable(rIndexedShared, BaseValue(), reg_values, rIndexedShared.TargetConstraint())) {
+        const vector<AddressingRegister*>& addressing_registers = index_choice->GetAddressingRegisters();
+        AddressingRegister* addressing_reg = addressing_registers[0];
+
+        uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), addressing_reg->RegisterValues(), 0);
+        auto index_solution = new MultiRegisterIndexSolution(*index_choice, BaseValue(), target_addr);
+        mIndexSolutionChoices.push_back(index_solution);
       }
     }
   }
 
-  void VectorIndexedMode::SolveFreeIndexFree(const VectorIndexedSolvingShared& rIndexedShared, const AddressingRegister& rIndexChoice)
+  bool VectorIndexedMode::SolveFreeIndexRegisterFree(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, AddressingRegister& rAddressingReg)
   {
+    bool solved = true;
+
     vector<uint64> index_elem_values;
 
-    ConstraintSet index_elem_constr(0, get_mask64(rIndexedShared.GetElementSize()));
-    uint64 index_elem_val = index_elem_constr.ChooseValue();
-    index_elem_values.push_back(index_elem_val);
-    uint64 base_val = rIndexedShared.FreeTarget() - index_elem_val;
-
-    bool solved = true;
+    uint64 elem_count = GetElementCountForRegister(rAddressingReg.RegisterValues(), rIndexedShared.GetElementSize());
     uint64 elem_target_addr = 0;
     BaseOffsetConstraint base_offset_constr(0, rIndexedShared.GetElementSize(), 0, MAX_UINT64);
-    for (uint32 elem_index = 1; elem_index < rIndexedShared.GetElementCount(); elem_index++) {
-      solved = SolveWithBase(base_val, rIndexedShared, base_offset_constr, nullptr, elem_target_addr);
-      index_elem_values.push_back(elem_target_addr - base_val);
+    for (uint32 elem_index = 0; elem_index < elem_count; elem_index++) {
+      solved = SolveWithBase(baseVal, rIndexedShared, base_offset_constr, nullptr, elem_target_addr);
+      index_elem_values.push_back(elem_target_addr - baseVal);
 
       if (not solved) {
         break;
@@ -1099,32 +1144,44 @@ namespace {
     if (solved) {
       vector<uint64> reg_values;
       change_elementform_to_uint64(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_elem_values, reg_values);
+      rAddressingReg.SetRegisterValue(reg_values);
+    }
 
-      // TODO(Noah): Fix this
-      //auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
-      //index_solution->SetRegisterValue(reg_values);
-      //AddIndexSolution(index_solution);
+    return solved;
+  }
+
+  RegisterOperand* VectorIndexedMode::GetIndexOperand(const AddressSolvingShared& rShared) const
+  {
+    const AddressingOperandConstraint* addr_opr_constr = rShared.GetAddressingOperandConstraint();
+    auto indexed_opr_constr = addr_opr_constr->CastInstance<const VectorIndexedLoadStoreOperandConstraint>();
+    return indexed_opr_constr->IndexOperand();
+  }
+
+  const Register* VectorIndexedMode::Index() const
+  {
+    const vector<AddressingRegister*>& addressing_registers = mpChosenIndexSolution->GetAddressingRegisters();
+    return addressing_registers[0]->GetRegister();
+  }
+
+  void VectorIndexedMode::IndexValuesForChoice(const AddressingMultiRegister& rAddressingReg, vector<uint64>& rIndexRegValues) const
+  {
+    for (AddressingRegister* addressing_reg : rAddressingReg.GetAddressingRegisters()) {
+      vector<uint64> reg_values = addressing_reg->RegisterValues();
+      copy(reg_values.cbegin(), reg_values.cend(), back_inserter(rIndexRegValues));
     }
   }
 
-  void VectorIndexedMode::SolveFreeIndexFixed(const VectorIndexedSolvingShared& rIndexedShared, const AddressingRegister& rIndexChoice)
+  bool VectorIndexedMode::AreTargetAddressesUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, const vector<uint64>& rIndexRegValues, const ConstraintSet* pTargetConstr)
   {
-    uint64 base_val = rIndexedShared.FreeTarget() - change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), rIndexChoice.RegisterValues(), 0);
-    if (AreTargetAddressesUsable(rIndexedShared, base_val, rIndexChoice.RegisterValues())) {
-      // TODO(Noah): Fix this
-      //auto index_solution = new IndexSolution(rIndexChoice, base_val, rIndexedShared.FreeTarget());
-      //AddIndexSolution(index_solution);
-    }
-  }
+    // TODO(Noah): Make this logic more robust by accounting for element masking when there is time
+    // to do so.
 
-  bool VectorIndexedMode::AreTargetAddressesUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, const vector<uint64>& rIndexRegValues)
-  {
     vector<uint64> index_elem_values;
     change_uint64_to_elementform(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), rIndexRegValues, index_elem_values);
 
-    bool target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_values[0]), rIndexedShared.TargetConstraint());
+    bool target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_values[0]), pTargetConstr);
 
-    for (uint32 elem_index = 1; elem_index < rIndexedShared.GetElementCount(); elem_index++) {
+    for (uint32 elem_index = 1; elem_index < index_elem_values.size(); elem_index++) {
       if (not target_addresses_usable) {
         break;
       }
@@ -1151,6 +1208,11 @@ namespace {
     }
 
     return target_addr_usable;
+  }
+
+  uint64 VectorIndexedMode::GetElementCountForRegister(const vector<uint64>& rRegValues, cuint64 elemSize) const
+  {
+    return (rRegValues.size() * sizeof_bits<uint64>() / elemSize);
   }
 
   bool BaseIndexAmountBitExtendMode::Solve(const AddressSolvingShared& rShared)

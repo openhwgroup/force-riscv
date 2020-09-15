@@ -440,13 +440,13 @@ namespace Force {
   }
 
   VectorIndexedSolvingShared::VectorIndexedSolvingShared()
-    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices(), mElemSize(0), mElemCount(0)
+    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices(), mElemSize(0)
   {
   }
 
   VectorIndexedSolvingShared::~VectorIndexedSolvingShared()
   {
-    for (AddressingRegister* index_choice : mIndexChoices) {
+    for (AddressingMultiRegister* index_choice : mIndexChoices) {
       delete index_choice;
     }
   }
@@ -464,7 +464,6 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     mElemSize = vec_layout->mElemSize;
-    mElemCount = vec_layout->mElemCount;
 
     SetupIndexChoices();
     if (mIndexChoices.empty()) {
@@ -486,6 +485,8 @@ namespace Force {
 
       if (reg->IsInitialized()) {
         if (reg->HasAttribute(ERegAttrType::HasValue)) {
+          // TODO(Noah): Fix this
+          /*
           auto addr_reg = new AddressingRegister();
           addr_reg->SetRegister(reg);
           addr_reg->SetWeight(choice_item->Weight());
@@ -494,9 +495,12 @@ namespace Force {
           addr_reg->SetRegisterValue(large_reg->Values());
 
           mIndexChoices.push_back(addr_reg);
+          */
         }
       }
       else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
+        // TODO(Noah): Fix this
+        /*
         auto addr_reg = new AddressingRegister();
         addr_reg->SetRegister(reg);
         addr_reg->SetWeight(choice_item->Weight());
@@ -506,6 +510,7 @@ namespace Force {
         addr_reg->SetRegisterValue(large_reg->ReloadValues());
 
         mIndexChoices.push_back(addr_reg);
+        */
       }
     }
   }

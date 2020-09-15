@@ -715,7 +715,7 @@ namespace Force {
     }
   }
 
-  uint64 change_uint64_to_elementform_at_index(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& uint64_value_list, cuint32 element_index)
+  uint64 change_uint64_to_elementform_at_index(cuint32 element_size, const std::vector<uint64>& uint64_value_list, cuint32 element_index)
   {
     uint32 uint64_val_index = (element_size * element_index) / sizeof_bits<uint64>();
     uint32 uint64_val_shift = ((element_size * element_index) % sizeof_bits<uint64>()) * element_size;

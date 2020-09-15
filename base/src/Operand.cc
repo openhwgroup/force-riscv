@@ -1695,10 +1695,14 @@ namespace Force {
     auto& indexed_addr_mode = dynamic_cast<const VectorIndexedMode&>(rAddrMode);
     indexed_opr_constr->SetBaseValue(indexed_addr_mode.BaseValue());
 
-    vector<uint64> index_elem_values;
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    change_uint64_to_elementform(vec_layout->mElemSize, vec_layout->mElemSize, indexed_addr_mode.IndexValues(), index_elem_values);
+
+    vector<uint64> reg_values;
+    indexed_addr_mode.IndexValues(reg_values);
+
+    vector<uint64> index_elem_values;
+    change_uint64_to_elementform(vec_layout->mElemSize, vec_layout->mElemSize, reg_values, index_elem_values);
     indexed_opr_constr->SetIndexElementValues(index_elem_values);
   }
 
