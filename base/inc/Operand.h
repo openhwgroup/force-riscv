@@ -799,7 +799,6 @@ namespace Force {
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
   private:
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.

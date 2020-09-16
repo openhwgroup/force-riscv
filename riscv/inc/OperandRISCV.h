@@ -231,8 +231,8 @@ namespace Force {
 
     MultiVectorRegisterOperandRISCV() : MultiVectorRegisterOperand(), mDataType(), mRegCount(0) { } //!< Constructor.
     ~MultiVectorRegisterOperandRISCV() { } //!< Destructor
+    void Setup(Generator& gen, Instruction& instr) override; //!< Setup conditions, constraining mechanisms before generating operand.
     void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
-    void SetChoiceResultDirect(Generator& gen, Instruction& instr, const std::string& choiceText) override; //!< Set choice result.
     void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
     void GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const override; //!< Return the chosen register indices in a ConstraintSet.
     uint32 NumberRegisters() const override; //!< Return number of registers in the list.

@@ -250,20 +250,18 @@ namespace Force {
     index_opr->GetExtraRegisterNames(index_opr->Value(), rIndexRegNames);
   }
 
+  void MultiVectorRegisterOperandRISCV::Setup(Generator& gen, Instruction& instr)
+  {
+    MultiVectorRegisterOperand::Setup(gen, instr);
+
+    AdjustRegisterCount(instr);
+  }
+
   void MultiVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)
   {
-    AdjustRegisterCount(instr);
-
     mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
 
     MultiVectorRegisterOperand::Generate(gen, instr);
-  }
-
-  void MultiVectorRegisterOperandRISCV::SetChoiceResultDirect(Generator& gen, Instruction& instr, const std::string& choiceText)
-  {
-    MultiVectorRegisterOperand::SetChoiceResultDirect(gen, instr, choiceText);
-
-    AdjustRegisterCount(instr);
   }
 
   void MultiVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
@@ -288,6 +286,11 @@ namespace Force {
 
   uint32 MultiVectorRegisterOperandRISCV::NumberRegisters() const
   {
+    if (mRegCount == 0) {
+      LOG(fail) << "{MultiVectorRegisterOperandRISCV::NumberRegisters} invalid register count " << dec << mRegCount << endl;
+      FAIL("invalid-register-count");
+    }
+
     return mRegCount;
   }
 

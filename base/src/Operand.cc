@@ -1666,12 +1666,6 @@ namespace Force {
     LOG(notice) << "{VectorIndexedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << base_val << endl;
   }
 
-  bool VectorIndexedLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
-  {
-    // TODO(Noah): Implement this method before finishing the vector extension project.
-    return false;
-  }
-
   AddressingMode* VectorIndexedLoadStoreOperand::GetAddressingMode(uint64 alignment) const
   {
     return new VectorIndexedMode();
