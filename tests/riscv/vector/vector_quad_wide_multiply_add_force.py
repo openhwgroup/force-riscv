@@ -37,12 +37,19 @@ class MainSequence(VectorTestSequence):
 
     ## Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
+        choices_mod = ChoicesModifier(self.genThread)
+
         # TODO(Noah): Remove the restriction on SEW when a mechanism to skip instructions with
         # illegal vector layouts is implemented. For now, ensure vector element width is set to no
         # more than 16 bits.
-        choices_mod = ChoicesModifier(self.genThread)
         choice_weights = {'0x0': 10, '0x1': 10, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', choice_weights)
+
+        # Ensure vector register group size is no more than 2, as larger values are not legal for
+        # quad-widening instructions
+        vlmul_choice_weights = {'0x0': 10, '0x1': 10, '0x2': 0, '0x3': 0}
+        choices_mod.modifyRegisterFieldValueChoices('vtype.VLMUL', vlmul_choice_weights)
+
         choices_mod.commitSet()
 
     ## Return a list of test instructions to randomly choose from.
