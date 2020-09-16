@@ -22,6 +22,7 @@
     <choice description="URW; Floating-point control and status register." name="fcsr" value="0x3" weight="0"/>
     <choice description="URW; User interrupt-enable register." name="uie" value="0x4" weight="0"/>
     <choice description="URW; User trap handler base address." name="utvec" value="0x5" weight="0"/>
+    <choice description="URW; Vector start position." name="vstart" value="0x8" weight="0"/>
     <choice description="URW; Scratch register for user trap handlers." name="uscratch" value="0x40" weight="0"/>
     <choice description="URW; User exception program counter." name="uepc" value="0x41" weight="0"/>
     <choice description="URW; User trap cause." name="ucause" value="0x42" weight="0"/>
@@ -201,6 +202,7 @@
     <choice description="URW; Floating-point control and status register." name="fcsr" value="0x3" weight="0"/>
     <choice description="URW; User interrupt-enable register." name="uie" value="0x4" weight="0"/>
     <choice description="URW; User trap handler base address." name="utvec" value="0x5" weight="0"/>
+    <choice description="URW; Vector start position." name="vstart" value="0x8" weight="0"/>
     <choice description="URW; Scratch register for user trap handlers." name="uscratch" value="0x40" weight="0"/>
     <choice description="URW; User exception program counter." name="uepc" value="0x41" weight="0"/>
     <choice description="URW; User trap cause." name="ucause" value="0x42" weight="0"/>

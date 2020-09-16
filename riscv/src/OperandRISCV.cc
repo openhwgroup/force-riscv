@@ -237,9 +237,10 @@ namespace Force {
     vec_layout_setup.SetUpVectorLayoutVtype(vec_layout);
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    lsop_struct->SetElementSize(vec_layout.mElemSize);
-    lsop_struct->SetDataSize(vec_layout.mElemSize);
-    lsop_struct->SetAlignment(vec_layout.mElemSize);
+    uint32 elem_byte_size = vec_layout.mElemSize / 8;
+    lsop_struct->SetElementSize(elem_byte_size);
+    lsop_struct->SetDataSize(elem_byte_size);
+    lsop_struct->SetAlignment(elem_byte_size);
   }
 
   void VectorIndexedLoadStoreOperandRISCV::GetIndexRegisterNames(vector<string>& rIndexRegNames) const
