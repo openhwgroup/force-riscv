@@ -185,7 +185,10 @@ namespace Force {
     auto peState = new PeStateUpdate();
     if (mpGenerator->HasISS() == false) {
       peState->UpdateState("PrivilegeLevel", "Set", targetPrivLevel);
-      peState->UpdateState("PC", "Set", targetAddr);
+
+      if(not mpGenerator->InSpeculative()){
+        peState->UpdateState("PC", "Set", targetAddr);
+      }
     }
 
     return DataStation::Instance()->Add(peState);
