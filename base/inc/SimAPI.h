@@ -121,10 +121,10 @@ namespace Force {
 
   class ApiSimConfig {
   public:
-    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mpTraceFile(NULL), mUseTraceFile(false) { } //!< default constructor
+    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mMaxVectorElemWidth(32), mpTraceFile(NULL), mUseTraceFile(false) { } //!< default constructor
 
-    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, const char* pTraceFile, bool outputTraceFile) //!< Constructor.
-      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile)
+    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, uint32 maxVectorElemWidth, const char* pTraceFile, bool outputTraceFile) //!< Constructor.
+      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mMaxVectorElemWidth(maxVectorElemWidth), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile)
     {
     }
 
@@ -138,6 +138,7 @@ namespace Force {
     uint32 mThreadNum; //!< Thread number per core.
     uint32 mPhysicalAddressSize; //!< Supported physical address size.
     uint32 mVectorRegLen; //!< Vector register length in bits.
+    uint32 mMaxVectorElemWidth; //!< Maximum vector element width in bits.
     const char* mpTraceFile; //!< trace file. not output trace if it is NULL
     bool mUseTraceFile;
   };

@@ -36,7 +36,7 @@ class MainSequence(VectorTestSequence):
 
     ## Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
-        # Ensure vector element size is set to 32 bites
+        # Ensure vector element width is set to 32 bits
         choices_mod = ChoicesModifier(self.genThread)
         choice_weights = {'0x0': 0, '0x1': 0, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', choice_weights)

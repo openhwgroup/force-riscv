@@ -58,6 +58,7 @@ namespace Force {
 			     sim_cfg->ThreadsPerCpu(), /* # threads */
 			     sim_cfg->PhysicalAddressSize(), /* physical address size */
 			     sim_cfg->VectorRegisterLength(), /* vector register length */
+			     sim_cfg->MaxVectorElementWidth(), /* maximum vector element width */
 			     "./fpix_sim.log", /* simulator debug trace file */
             false
 			     );

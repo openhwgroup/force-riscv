@@ -154,7 +154,7 @@ namespace Force {
     SetVectorRegisterWidth(rConfig.mVectorRegLen);
 
     stringstream varch;
-    varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mVectorRegLen;
+    varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mMaxVectorElemWidth;
     string varch_str = varch.str();
 
     mpSimDllAPI->initialize_simulator(varch_str.c_str());
