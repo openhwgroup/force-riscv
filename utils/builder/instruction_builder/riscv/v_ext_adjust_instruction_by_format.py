@@ -202,7 +202,7 @@ def adjust_vd_rs1(aInstruction):
         subop_dict["base"] = "rs1"
         attr_dict["alignment"] = width
         attr_dict["base"] = "rs1"
-        #attr_dict["data-size"] = 1 #TODO: depends on LMUL
+        attr_dict["data-size"] = width
         attr_dict["element-size"] = width
         attr_dict["mem-access"] = "Read"
 
@@ -228,7 +228,7 @@ def adjust_vs3_rs1(aInstruction):
     subop_dict["base"] = "rs1"
     attr_dict["alignment"] = width
     attr_dict["base"] = "rs1"
-    #attr_dict["data-size"] = 1 #TODO: depends on LMUL
+    attr_dict["data-size"] = width
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Write"
 
@@ -238,7 +238,10 @@ def adjust_vs3_rs1(aInstruction):
 
 def adjust_vs3_rs1_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_source()
+    if 'SEG' in aInstruction.name:
+        operand_adjustor.set_vs3_segment_ls_source()
+    else:
+        operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_rs1_int_ls_base()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
@@ -247,7 +250,7 @@ def adjust_vs3_rs1_vm(aInstruction):
     subop_dict["base"] = "rs1"
     attr_dict["alignment"] = width
     attr_dict["base"] = "rs1"
-    #attr_dict["data-size"] = 1 #TODO: depends on LMUL
+    attr_dict["data-size"] = width
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Write"
 
@@ -258,7 +261,10 @@ def adjust_vs3_rs1_vm(aInstruction):
 
 def adjust_vs3_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_source()
+    if 'SEG' in aInstruction.name:
+        operand_adjustor.set_vs3_segment_ls_source()
+    else:
+        operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
 
@@ -277,7 +283,10 @@ def adjust_vs3_rs1_vs2_vm(aInstruction):
 
 def adjust_vs3_rs1_rs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_source()
+    if 'SEG' in aInstruction.name:
+        operand_adjustor.set_vs3_segment_ls_source()
+    else:
+        operand_adjustor.set_vs3_ls_source()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_rs2_int_ls_base()
 
@@ -345,7 +354,10 @@ def adjust_vdrd_rs1_vm(aInstruction):
 def adjust_vd_rs1_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     if aInstruction.iclass == 'VectorLoadStoreInstruction':
-        operand_adjustor.set_vd_ls_dest()
+        if 'SEG' in aInstruction.name:
+            operand_adjustor.set_vd_segment_ls_dest()
+        else:
+            operand_adjustor.set_vd_ls_dest()
         operand_adjustor.set_rs1_int_ls_base()
 
         width = get_element_size(aInstruction.find_operand('const_bits'))
@@ -354,7 +366,7 @@ def adjust_vd_rs1_vm(aInstruction):
         subop_dict["base"] = "rs1"
         attr_dict["alignment"] = width
         attr_dict["base"] = "rs1"
-        #attr_dict["data-size"] = 1 #TODO: depends on LMUL
+        attr_dict["data-size"] = width
         attr_dict["element-size"] = width
         attr_dict["mem-access"] = "Read"
 
@@ -371,7 +383,10 @@ def adjust_vd_rs1_vm(aInstruction):
 
 def adjust_vd_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd_ls_dest()
+    if 'SEG' in aInstruction.name:
+        operand_adjustor.set_vd_segment_ls_dest()
+    else:
+        operand_adjustor.set_vd_ls_dest()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
 
@@ -390,7 +405,10 @@ def adjust_vd_rs1_vs2_vm(aInstruction):
 
 def adjust_vd_rs1_rs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd_ls_dest()
+    if 'SEG' in aInstruction.name:
+        operand_adjustor.set_vd_segment_ls_dest()
+    else:
+        operand_adjustor.set_vd_ls_dest()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_rs2_int_ls_base()
 

@@ -37,7 +37,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def add_custom_layout_operand(self, aRegCount, aElemWidth):
         layout_opr = Operand()
-        layout_opr.name = "B" #TODO (Chris): change name?
+        layout_opr.name = "B"
         layout_opr.type = "VectorLayout"
         layout_opr.oclass = "CustomLayoutOperand"
         layout_opr.regCount = aRegCount
@@ -54,7 +54,7 @@ class VectorOperandAdjustor(OperandAdjustor):
         self.mInstr.insert_operand(0, layout_opr)
 
     def set_reg_vec(self, aOperand):
-        aOperand.type = "VECREG" #TODO: some might possibly be SIMDVR or FPR
+        aOperand.type = "VECREG"
         aOperand.choices = "Vector registers"
         self.add_asm_op(aOperand)
 
@@ -102,6 +102,11 @@ class VectorOperandAdjustor(OperandAdjustor):
         vs3_opr.oclass = 'MultiVectorRegisterOperandRISCV'
         self.set_vs3()
 
+    def set_vs3_segment_ls_source(self):
+        vs3_opr = self.mInstr.find_operand('vs3')
+        vs3_opr.oclass = 'SegmentVectorRegisterOperandRISCV'
+        self.set_vs3()
+
     def set_vdrd_int(self):
         vdrd_opr = self.mInstr.find_operand('vd/rd')
         if self.mInstr.name in self.rd_dictionary:
@@ -126,6 +131,11 @@ class VectorOperandAdjustor(OperandAdjustor):
     def set_vd_ls_dest(self):
         vd_opr = self.mInstr.find_operand('vd')
         vd_opr.oclass = 'MultiVectorRegisterOperandRISCV'
+        self.set_vd()
+
+    def set_vd_segment_ls_dest(self):
+        vd_opr = self.mInstr.find_operand('vd')
+        vd_opr.oclass = 'SegmentVectorRegisterOperandRISCV'
         self.set_vd()
 
     def set_vdrd_sp(self):
