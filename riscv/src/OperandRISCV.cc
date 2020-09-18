@@ -318,9 +318,16 @@ namespace Force {
 
   void SegmentVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)
   {
+    // Notification for illegal instruction when EMUL * NFIELDS > 8 (Section 7.8)
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    if (vec_layout->mRegCount > 8) {
+        LOG(notice) << "{SegmentVectorRegisterOperandRISCV::Generate} EMUL * NFIELDS = " << vec_layout->mRegCount << " > 8" << endl;
+    }
+
     AdjustRegisterCount(instr);
 
-    // Removing invalid vector register choices (7.8)
+    // Removing invalid vector register choices (Section 7.8)
     auto vd_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
     for (uint32 i = 1; i < mRegCount; ++i) {
       vd_opr_constr->SubConstraintValue(32 - i, *mpStructure);
