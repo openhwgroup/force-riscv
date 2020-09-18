@@ -232,15 +232,20 @@ namespace Force {
 
   void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
   {
-    VectorLayout vec_layout;
+    VectorLayout data_vec_layout;
     VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
-    vec_layout_setup.SetUpVectorLayoutVtype(vec_layout);
+    vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    uint32 elem_byte_size = vec_layout.mElemSize / 8;
+    uint32 elem_byte_size = data_vec_layout.mElemSize / 8;
     lsop_struct->SetElementSize(elem_byte_size);
-    lsop_struct->SetDataSize(elem_byte_size);
     lsop_struct->SetAlignment(elem_byte_size);
+
+    // The index register index alignment value should equal EMUL rounded up to a whole number
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* index_vec_layout = instr_constr->GetVectorLayout();
+    uint32 nfields = index_vec_layout->mRegCount / index_vec_layout->mRegIndexAlignment;
+    lsop_struct->SetDataSize(elem_byte_size * nfields);
   }
 
   void VectorIndexedLoadStoreOperandRISCV::GetIndexRegisterNames(vector<string>& rIndexRegNames) const
