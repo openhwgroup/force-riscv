@@ -322,7 +322,7 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     if (vec_layout->mRegCount > 8) {
-        LOG(notice) << "{SegmentVectorRegisterOperandRISCV::Generate} EMUL * NFIELDS = " << vec_layout->mRegCount << " > 8" << endl;
+        LOG(notice) << "{SegmentVectorRegisterOperandRISCV::Generate} EMUL * NFIELDS = " << dec << vec_layout->mRegCount << " > 8" << endl;
     }
 
     AdjustRegisterCount(instr);
