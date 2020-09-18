@@ -440,13 +440,13 @@ namespace Force {
   }
 
   VectorIndexedSolvingShared::VectorIndexedSolvingShared()
-    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices(), mElemSize(0), mElemCount(0)
+    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices(), mElemSize(0)
   {
   }
 
   VectorIndexedSolvingShared::~VectorIndexedSolvingShared()
   {
-    for (AddressingRegister* index_choice : mIndexChoices) {
+    for (AddressingMultiRegister* index_choice : mIndexChoices) {
       delete index_choice;
     }
   }
@@ -464,7 +464,6 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     mElemSize = vec_layout->mElemSize;
-    mElemCount = vec_layout->mElemCount;
 
     SetupIndexChoices();
     if (mIndexChoices.empty()) {
@@ -482,30 +481,54 @@ namespace Force {
 
     const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
     for (const Choice* choice_item : choices_list) {
-      Register* reg = reg_file->RegisterLookup(choice_item->Name());
+      // The unique_ptr ensures the addressing register is deleted if we can't use all of the
+      // registers for a given operand choice.
+      unique_ptr<AddressingMultiRegister> addr_multi_reg(new AddressingMultiRegister());
 
-      if (reg->IsInitialized()) {
-        if (reg->HasAttribute(ERegAttrType::HasValue)) {
+      uint32 addr_reg_count = 0;
+
+      auto multi_reg_index_opr = dynamic_cast<const MultiRegisterOperand*>(mpIndexOpr);
+      vector<string> index_reg_names({choice_item->Name()});
+      multi_reg_index_opr->GetExtraRegisterNames(choice_item->Value(), index_reg_names);
+      for (const string& index_reg_name : index_reg_names) {
+        Register* reg = reg_file->RegisterLookup(index_reg_name);
+
+        // TODO(Noah): Relax the use of the OperandConflict() check for initialized registers to
+        // allow legal cases where the source/destination register and the index register are the
+        // same when a good way to do so can be determined.
+        if (reg->IsInitialized() and (not OperandConflict(reg))) {
+          if (reg->HasAttribute(ERegAttrType::HasValue)) {
+            auto addr_reg = new AddressingRegister();
+            addr_reg->SetRegister(reg);
+            addr_reg->SetWeight(choice_item->Weight());
+
+            auto large_reg = dynamic_cast<LargeRegister*>(reg);
+            addr_reg->SetRegisterValue(large_reg->Values());
+
+            addr_multi_reg->AddAddressingRegister(addr_reg);
+            addr_reg_count++;
+          }
+        }
+        else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
+          // TODO(Noah): Uncomment the logic below to enable free index registers when the
+          // OperandDataRequest can be modified to initialize register groups.
+          /*
           auto addr_reg = new AddressingRegister();
           addr_reg->SetRegister(reg);
           addr_reg->SetWeight(choice_item->Weight());
+          addr_reg->SetFree(true);
 
           auto large_reg = dynamic_cast<LargeRegister*>(reg);
-          addr_reg->SetRegisterValue(large_reg->Values());
+          addr_reg->SetRegisterValue(large_reg->ReloadValues());
 
-          mIndexChoices.push_back(addr_reg);
+          addr_multi_reg->AddAddressingRegister(addr_reg);
+          addr_reg_count++;
+          */
         }
       }
-      else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
-        auto addr_reg = new AddressingRegister();
-        addr_reg->SetRegister(reg);
-        addr_reg->SetWeight(choice_item->Weight());
-        addr_reg->SetFree(true);
 
-        auto large_reg = dynamic_cast<LargeRegister*>(reg);
-        addr_reg->SetRegisterValue(large_reg->ReloadValues());
-
-        mIndexChoices.push_back(addr_reg);
+      if (addr_reg_count == index_reg_names.size()) {
+        mIndexChoices.push_back(addr_multi_reg.release());
       }
     }
   }

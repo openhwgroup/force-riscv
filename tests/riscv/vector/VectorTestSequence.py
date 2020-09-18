@@ -14,6 +14,10 @@
 # limitations under the License.
 #
 from base.Sequence import Sequence
+from base.ChoicesModifier import ChoicesModifier
+from base.UtilityFunctions import mask_to_size
+from riscv.AssemblyHelperRISCV import AssemblyHelperRISCV
+from Constraint import ConstraintSet
 import RandomUtils
 
 ## This class provides a common execution flow for testing vector instructions.
@@ -92,3 +96,97 @@ class VectorTestSequence(Sequence):
     ## Get allowed exception codes.
     def _getAllowedExceptionCodes(self):
         return set()
+
+
+## This class provides some common parameters for testing vector load/store instructions.
+class VectorLoadStoreTestSequence(VectorTestSequence):
+
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mUnalignedAllowed = False
+        self._mTargetAddrConstr = None
+        self._mExceptCount = 0
+
+    ## Set up the environment prior to generating the test instructions.
+    def _setUpTest(self):
+        if RandomUtils.random32(0, 1) == 1:
+            choices_mod = ChoicesModifier(self.genThread)
+            choice_weights = {'Aligned': 80, 'Unaligned': 20}
+            choices_mod.modifyOperandChoices('Data alignment', choice_weights)
+            choices_mod.commitSet()
+            self._mUnalignedAllowed = True
+
+    ## Return parameters to be passed to Sequence.genInstruction().
+    def _getInstructionParameters(self):
+        self._mTargetAddrConstr = None
+        instr_params = {}
+        if RandomUtils.random32(0, 1) == 1:
+            if RandomUtils.random32(0, 1) == 1:
+                instr_params['NoPreamble'] = 1
+
+            target_choice = RandomUtils.random32(0, 2)
+            if target_choice == 1:
+                target_addr = self.genVA(Size=512, Align=8, Type='D')
+                self._mTargetAddrConstr = ConstraintSet(target_addr)
+                instr_params['LSTarget'] = str(self._mTargetAddrConstr)
+            elif target_choice == 2:
+                va_range_size = RandomUtils.random32()
+                min_target_addr = self.genVA(Size=512, Align=8, Type='D')
+                max_target_addr = mask_to_size((min_target_addr + RandomUtils.random32()), 64)
+                self._mTargetAddrConstr = ConstraintSet(min_target_addr, max_target_addr)
+                instr_params['LSTarget'] = str(self._mTargetAddrConstr)
+
+        return instr_params
+
+    ## Return true if it is permissible for the generation to skip this instruction.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrParams The parameters passed to Sequence.genInstruction().
+    def _isSkipAllowed(self, aInstr, aInstrParams):
+        # Instructions with constrained parameters may legitimately be skipped sometimes if no
+        # solution can be determined, but instructions without constrained parameters should always
+        # generate
+        if aInstrParams:
+            return True
+
+        return False
+
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        if (self._mTargetAddrConstr is not None) and (not self._mTargetAddrConstr.containsValue(aInstrRecord['LSTarget'])):
+            self.error('Target address 0x%x was outside of the specified constraint %s' % (aInstrRecord['LSTarget'], self._mTargetAddrConstr))
+
+        # TODO(Noah): Remove the call to _resetVstart() when the issue with vstart after an
+        # exception handler skips a vector instruction is resolved.
+        self._genResetVstart()
+
+    ## Get allowed exception codes.
+    def _getAllowedExceptionCodes(self):
+        allowed_except_codes = set()
+        if self._mUnalignedAllowed:
+            allowed_except_codes.add(0x4)
+            allowed_except_codes.add(0x6)
+
+        # TODO(Noah): Remove the line below permitting store page fault exceptions when the page
+        # descriptor generation is improved. Currently, we are generating read-only pages for load
+        # instructions, which is causing subsequent store instructions to the same page to fault.
+        allowed_except_codes.add(0xF)
+
+        return allowed_except_codes
+
+    ## Generate an instruction to reset vstart to 0 if it is not currently 0. This is necessary when
+    # an exception handler handling a fault triggered by a vector instruction decides to skip the
+    # instruction.
+    def _genResetVstart(self):
+        except_count = 0
+        for except_code in self._getAllowedExceptionCodes():
+            except_count += self.queryExceptionRecordsCount(except_code)
+
+        if except_count > self._mExceptCount:
+            assembly_helper = AssemblyHelperRISCV(self)
+            assembly_helper.genWriteSystemRegister('vstart', 0)
+            self._mExceptCount = except_count

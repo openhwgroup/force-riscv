@@ -1666,12 +1666,6 @@ namespace Force {
     LOG(notice) << "{VectorIndexedLoadStoreOperand::GenerateWithPreamble} generated target address 0x" << hex << mTargetAddress << " alignment " << dec << alignment << " data size " << lsop_struct->DataSize() << " base value 0x" << hex << base_val << endl;
   }
 
-  bool VectorIndexedLoadStoreOperand::GenerateNoPreamble(Generator& gen, Instruction& instr)
-  {
-    // TODO(Noah): Implement this method before finishing the vector extension project.
-    return false;
-  }
-
   AddressingMode* VectorIndexedLoadStoreOperand::GetAddressingMode(uint64 alignment) const
   {
     return new VectorIndexedMode();
@@ -1695,10 +1689,14 @@ namespace Force {
     auto& indexed_addr_mode = dynamic_cast<const VectorIndexedMode&>(rAddrMode);
     indexed_opr_constr->SetBaseValue(indexed_addr_mode.BaseValue());
 
-    vector<uint64> index_elem_values;
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    change_uint64_to_elementform(vec_layout->mElemSize, vec_layout->mElemSize, indexed_addr_mode.IndexValues(), index_elem_values);
+
+    vector<uint64> reg_values;
+    indexed_addr_mode.IndexValues(reg_values);
+
+    vector<uint64> index_elem_values;
+    change_uint64_to_elementform(vec_layout->mElemSize, vec_layout->mElemSize, reg_values, index_elem_values);
     indexed_opr_constr->SetIndexElementValues(index_elem_values);
   }
 

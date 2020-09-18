@@ -327,7 +327,7 @@ CASE( "Test set 3 for Utility Functions" ) {
 
     SECTION( "Test extracting an element value from uint64 values" ) {
       vector<uint64> uint64_values = {0x43C750973891C84D, 0x2920376CFE08B999};
-      uint64 elem_val = change_uint64_to_elementform_at_index(32, 32, uint64_values, 2);
+      uint64 elem_val = change_uint64_to_elementform_at_index(32, uint64_values, 2);
       EXPECT(elem_val == 0xFE08B999);
     }
   }
