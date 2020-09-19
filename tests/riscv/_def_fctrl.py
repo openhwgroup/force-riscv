@@ -34,4 +34,5 @@ control_items = [ {"fname":"APIs/_def_fctrl.py",     "generator" : {"--cfg" : "c
                   {"fname":"state_transition/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"vector/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"../../examples/riscv/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"bnt/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                 ]

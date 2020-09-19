@@ -507,12 +507,12 @@ namespace Force {
 
   void SimApiHANDCAR::EnterSpeculativeMode(uint32 cpuId)
   {
-    // TODO
+    mInSpeculativeMode[cpuId] = true;  
   }
 
   void SimApiHANDCAR::LeaveSpeculativeMode(uint32 cpuId)
   {
-    // TODO
+    mInSpeculativeMode[cpuId] = false;
   }
   
 }

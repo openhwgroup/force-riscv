@@ -34,7 +34,8 @@ namespace Force {
     mVecRegWidth(0),
     mVecPhysRegNames(),
     mNumPhysRegs(0),
-    mPhysRegSize(8u)
+    mPhysRegSize(8u),
+    mInSpeculativeMode()
   {
   }
 
@@ -167,8 +168,18 @@ namespace Force {
     if(not mOfsSimTrace.is_open()) return;
 
     size_t idx = 0;
-    mOfsSimTrace << dec << "Cpu " << CpuID << " " << currentICount << " ----" << endl;
-    mOfsSimTrace << dec << "Cpu " << CpuID << " PC(VA) 0x" << hex << setfill('0') << setw(16) << pc << " op: 0x" << hex << setfill('0') << setw(16) << stoull(rOpcode, &idx, 16) << " : " << rDisassembly << endl;
+    std::string _speculative_mode = std::string(" ");
+    auto _spec_mode_lookup = mInSpeculativeMode.find(CpuID);
+    if(_spec_mode_lookup != mInSpeculativeMode.end())
+    {
+	if(_spec_mode_lookup->second == true)
+	{
+		_speculative_mode = std::string(" (Spec) ");
+	}
+    }	    
+
+    mOfsSimTrace << dec << "Cpu " << CpuID  << _speculative_mode << currentICount << " ----" << endl;
+    mOfsSimTrace << dec << "Cpu " << CpuID << _speculative_mode << "PC(VA) 0x" << hex << setfill('0') << setw(16) << pc << " op: 0x" << hex << setfill('0') << setw(16) << stoull(rOpcode, &idx, 16) << " : " << rDisassembly << endl;
   }
 
   void SimAPI::PrintSummary() const

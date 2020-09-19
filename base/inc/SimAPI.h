@@ -245,6 +245,9 @@ namespace Force {
     std::vector<std::string> mVecPhysRegNames;
     uint32 mNumPhysRegs;
     cuint32 mPhysRegSize;
+
+    //!< output modification
+    std::map<uint32, bool> mInSpeculativeMode;
   };
 
 }
