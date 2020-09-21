@@ -241,13 +241,16 @@ namespace Force {
     mutable std::ofstream mOfsApiTrace;
     mutable std::ofstream mOfsSimTrace;   
 
+    //!< Implementation specific characteristics of vector registers
     uint32 mVecRegWidth;
     std::vector<std::string> mVecPhysRegNames;
     uint32 mNumPhysRegs;
     cuint32 mPhysRegSize;
 
-    //!< output modification
+    //!< Speculative mode output modification
     std::map<uint32, bool> mInSpeculativeMode;
+    const std::string mSpecModeOn;
+    const std::string mSpecModeOff;
   };
 
 }

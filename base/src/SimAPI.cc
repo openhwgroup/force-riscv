@@ -35,7 +35,9 @@ namespace Force {
     mVecPhysRegNames(),
     mNumPhysRegs(0),
     mPhysRegSize(8u),
-    mInSpeculativeMode()
+    mInSpeculativeMode(),
+    mSpecModeOn(std::string(" (spcltv) ")),
+    mSpecModeOff(std::string(" "))
   {
   }
 
@@ -89,17 +91,29 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
+    std::string _speculative_mode = mSpecModeOff;
+
     for(const RegUpdate& rRegUp : mRegisterUpdates)
     {
-      mOfsSimTrace << "Cpu " << dec << rRegUp.CpuID;
+      _speculative_mode = mSpecModeOff;
+      auto _spec_mode_lookup = mInSpeculativeMode.find(rRegUp.CpuID);
+      if(_spec_mode_lookup != mInSpeculativeMode.end()) // MB: it is wasteful to do this for every update, but it is not clear that we are only getting one proc's updates only.
+      {
+        if(_spec_mode_lookup->second == true)
+        {
+          _speculative_mode = mSpecModeOn;
+        }
+      } 
+
+      mOfsSimTrace << "Cpu " << dec << rRegUp.CpuID << _speculative_mode;
 
       if(rRegUp.access_type == std::string("write"))
       {
-        mOfsSimTrace << " Reg W ";
+        mOfsSimTrace << "Reg W ";
       } 
       else 
       {
-        mOfsSimTrace << " Reg R ";
+        mOfsSimTrace << "Reg R ";
       }
 
       mOfsSimTrace << rRegUp.regname << " val 0x" << hex << setfill('0') << setw(16) << rRegUp.rval << " mask 0x" << setfill('0') << setw(16) << rRegUp.mask << "\n";
@@ -168,15 +182,15 @@ namespace Force {
     if(not mOfsSimTrace.is_open()) return;
 
     size_t idx = 0;
-    std::string _speculative_mode = std::string(" ");
+    std::string _speculative_mode = mSpecModeOff;
     auto _spec_mode_lookup = mInSpeculativeMode.find(CpuID);
     if(_spec_mode_lookup != mInSpeculativeMode.end())
     {
-	if(_spec_mode_lookup->second == true)
-	{
-		_speculative_mode = std::string(" (Spec) ");
-	}
-    }	    
+      if(_spec_mode_lookup->second == true)
+      {
+        _speculative_mode = mSpecModeOn;
+      }
+    } 
 
     mOfsSimTrace << dec << "Cpu " << CpuID  << _speculative_mode << currentICount << " ----" << endl;
     mOfsSimTrace << dec << "Cpu " << CpuID << _speculative_mode << "PC(VA) 0x" << hex << setfill('0') << setw(16) << pc << " op: 0x" << hex << setfill('0') << setw(16) << stoull(rOpcode, &idx, 16) << " : " << rDisassembly << endl;
