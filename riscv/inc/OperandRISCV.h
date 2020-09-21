@@ -247,34 +247,10 @@ namespace Force {
     ChoicesFilter* GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return the choices filter.
 
     std::string mDataType; //!< Data type of the multi vector list in string.
-  //private:
+  private:
     void AdjustRegisterCount(const Instruction& rInstr); //!< Finalize register count based on runtime state.
-  //private:
+
     uint32 mRegCount; //!< The number of registers per vector register group
-  };
-
-  /*!
-    \class SegmentVectorRegisterOperandRISCV
-    \brief Operand class handling number of registers
-  */
-  class SegmentVectorRegisterOperandRISCV : public MultiVectorRegisterOperandRISCV {
-  public:
-    Object* Clone() const override //!< Return a cloned SegmentVectorRegisterOperandRISCV object of the same type and same contents of the object.
-    {
-      return new SegmentVectorRegisterOperandRISCV(*this);
-    }
-
-    const char* Type() const override { return "SegmentVectorRegisterOperandRISCV"; } //!< Return the type as C string.
-
-    SegmentVectorRegisterOperandRISCV() : MultiVectorRegisterOperandRISCV() { } //!< Constructor.
-    ~SegmentVectorRegisterOperandRISCV() { } //!< Destructor
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
-    void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
-  protected:
-    SegmentVectorRegisterOperandRISCV(const SegmentVectorRegisterOperandRISCV& rOther) //!< Copy constructor.
-      : MultiVectorRegisterOperandRISCV(rOther)
-    {
-    }
   };
 
 }

@@ -325,38 +325,4 @@ namespace Force {
     mRegCount = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
   }
 
-  void SegmentVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)
-  {
-    // Notification for illegal instruction when EMUL * NFIELDS > 8 (Section 7.8)
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    if (vec_layout->mRegCount > 8) {
-        LOG(notice) << "{SegmentVectorRegisterOperandRISCV::Generate} EMUL * NFIELDS = " << dec << vec_layout->mRegCount << " > 8" << endl;
-    }
-
-    AdjustRegisterCount(instr);
-
-    // Removing invalid vector register choices (Section 7.8)
-    auto vd_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
-    for (uint32 i = 1; i < mRegCount; ++i) {
-      vd_opr_constr->SubConstraintValue(32 - i, *mpStructure);
-    }
-
-    mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
-
-    MultiVectorRegisterOperand::Generate(gen, instr);
-  }
-
-  void SegmentVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
-  {
-    uint32 end_index = regIndex + mRegCount - 1;
-    if (end_index < 32 - mRegCount + 1) {
-      rRegIndices.AddRange(regIndex, end_index);
-    }
-    else {
-      LOG(fail) << "{SegmentVectorRegisterOperandRISCV::GetRegisterIndices} ending register index " << dec << end_index << " is not valid" << endl;
-      FAIL("invalid-register-index");
-    }
-  }
-
 }

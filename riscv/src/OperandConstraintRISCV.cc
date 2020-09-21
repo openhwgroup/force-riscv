@@ -301,6 +301,15 @@ namespace Force {
       FAIL("invalid-register-index-alignment");
     }
 
+    // Notification for illegal instruction when EMUL * NFIELDS > 8 (Section 7.8)
+    if (vec_layout->mRegCount > 8) {
+      LOG(notice) << "{VectorRegisterOperandConstraintRISCV::Setup} EMUL * NFIELDS = " << dec << vec_layout->mRegCount << " > 8" << endl;
+    }
+    // Removing invalid vector register choices for vd/vs3 (Section 7.8)
+    for (uint32 i = 1; i < vec_layout->mRegCount; ++i) {
+      SubConstraintValue(32 - i, operandStruct);
+    }
+
     // Unaligned register indices are architecturally illegal choices
     mpConstraintSet->FilterAlignedElements(get_align_mask(reg_index_alignment));
   }
