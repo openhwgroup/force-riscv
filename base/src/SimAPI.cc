@@ -124,8 +124,22 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
+    std::string _speculative_mode = mSpecModeOff;
+
     for(const MemUpdate& rMemUp : mMemoryUpdates)
     {
+      _speculative_mode = mSpecModeOff;
+      auto _spec_mode_lookup = mInSpeculativeMode.find(rMemUp.CpuID);
+      if(_spec_mode_lookup != mInSpeculativeMode.end()) // MB: it is wasteful to do this for every update, but it is not clear that we are only getting one proc's updates only.
+      {
+        if(_spec_mode_lookup->second == true)
+        {
+          _speculative_mode = mSpecModeOn;
+        }
+      }
+
+      mOfsSimTrace << "Cpu " << dec << rMemUp.CpuID << _speculative_mode;
+
       if(rMemUp.access_type == std::string("write"))
       {
         mOfsSimTrace << "Mem W";
@@ -236,9 +250,9 @@ namespace Force {
     mRegisterUpdates.push_back(RegUpdate(CpuID, pRegName, rval, mask, pAccessType));
   }
 
-  void SimAPI::RecordMemoryUpdate(uint64 virtualAddress, uint32 memBank, uint64 physicalAddress, uint32 size, const char *pBytes, const char *pAccessType)
+  void SimAPI::RecordMemoryUpdate(uint32 CpuID, uint64 virtualAddress, uint32 memBank, uint64 physicalAddress, uint32 size, const char *pBytes, const char *pAccessType)
   {
-    mMemoryUpdates.push_back(MemUpdate(virtualAddress, memBank, physicalAddress, size, pBytes, pAccessType));
+    mMemoryUpdates.push_back(MemUpdate(CpuID, virtualAddress, memBank, physicalAddress, size, pBytes, pAccessType));
   }
 
   void SimAPI::RecordMmuEvent(MmuEvent *pEvent)
