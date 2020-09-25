@@ -13,6 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+export FORCE_CC ?= g++
+PYVER != python3 --version | sed -n -e 's/Python \(3\.[[:digit:]]\+\)\..*/\1/p'
+export FORCE_PYTHON_VER ?= $(PYVER)
+
+# this really ought to use pkg-config - there could be more than one include
+# directory.
+export FORCE_PYTHON_INC ?= /usr/include/python$(FORCE_PYTHON_VER)
+export FORCE_PYTHON_LIB ?= /usr/lib/x86_64-linux-gnu/
+
 all:
 	@$(MAKE) riscv
 	@$(MAKE) fpix

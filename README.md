@@ -52,7 +52,7 @@ The user manual is located in the 'force-riscv/doc' directory.  The user manual 
 * Clone the FORCE-RISCV repository:
   * The \[base directory\] in the description that follows is the directory from which you execute git clone.
   * git clone http://path-to-the-repository/force-riscv.git
-* Set the following environment variables.  FORCE-RISCV development requires gcc 5.1 or higher and Python 3.4.1 or higher version.
+* Set the following environment variables.  FORCE-RISCV development requires gcc 5.1 or higher and Python 3.4.1 or higher version.  The Makefile will make a guess if you don't set them, which should be suitable for modern 64-bit GNU/Linux distributions.
   * export FORCE_CC=/usr/bin/g++
   * export FORCE_PYTHON_VER=3.6
   * export FORCE_PYTHON_LIB=/usr/lib/x86_64-linux-gnu/
