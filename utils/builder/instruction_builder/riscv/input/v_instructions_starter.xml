@@ -4471,7 +4471,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VS1R.V"/>
   </I>
-  <I name="VAMOSWAPEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOSWAPEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000100000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4479,7 +4479,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI8.V"/>
   </I>
-  <I name="VAMOSWAPEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOSWAPEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4487,7 +4487,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI8.V"/>
   </I>
-  <I name="VAMOSWAPEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOSWAPEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4495,7 +4495,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI16.V"/>
   </I>
-  <I name="VAMOSWAPEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOSWAPEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4503,7 +4503,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI16.V"/>
   </I>
-  <I name="VAMOSWAPEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOSWAPEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4511,7 +4511,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI32.V"/>
   </I>
-  <I name="VAMOSWAPEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOSWAPEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4519,7 +4519,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI32.V"/>
   </I>
-  <I name="VAMOSWAPEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOSWAPEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4527,7 +4527,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI64.V"/>
   </I>
-  <I name="VAMOSWAPEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOSWAPEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4535,7 +4535,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOSWAPEI64.V"/>
   </I>
-  <I name="VAMOADDEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOADDEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4543,7 +4543,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI8.V"/>
   </I>
-  <I name="VAMOADDEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOADDEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4551,7 +4551,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI8.V"/>
   </I>
-  <I name="VAMOADDEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOADDEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4559,7 +4559,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI16.V"/>
   </I>
-  <I name="VAMOADDEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOADDEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4567,7 +4567,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI16.V"/>
   </I>
-  <I name="VAMOADDEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOADDEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4575,7 +4575,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI32.V"/>
   </I>
-  <I name="VAMOADDEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOADDEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4583,7 +4583,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI32.V"/>
   </I>
-  <I name="VAMOADDEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOADDEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4591,7 +4591,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI64.V"/>
   </I>
-  <I name="VAMOADDEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOADDEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4599,7 +4599,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOADDEI64.V"/>
   </I>
-  <I name="VAMOXOREI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOXOREI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4607,7 +4607,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI8.V"/>
   </I>
-  <I name="VAMOXOREI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOXOREI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4615,7 +4615,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI8.V"/>
   </I>
-  <I name="VAMOXOREI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOXOREI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4623,7 +4623,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI16.V"/>
   </I>
-  <I name="VAMOXOREI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOXOREI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4631,7 +4631,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI16.V"/>
   </I>
-  <I name="VAMOXOREI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOXOREI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4639,7 +4639,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI32.V"/>
   </I>
-  <I name="VAMOXOREI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOXOREI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4647,7 +4647,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI32.V"/>
   </I>
-  <I name="VAMOXOREI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOXOREI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4655,7 +4655,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI64.V"/>
   </I>
-  <I name="VAMOXOREI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOXOREI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4663,7 +4663,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOXOREI64.V"/>
   </I>
-  <I name="VAMOANDEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOANDEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4671,7 +4671,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI8.V"/>
   </I>
-  <I name="VAMOANDEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOANDEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4679,7 +4679,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI8.V"/>
   </I>
-  <I name="VAMOANDEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOANDEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4687,7 +4687,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI16.V"/>
   </I>
-  <I name="VAMOANDEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOANDEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4695,7 +4695,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI16.V"/>
   </I>
-  <I name="VAMOANDEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOANDEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4703,7 +4703,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI32.V"/>
   </I>
-  <I name="VAMOANDEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOANDEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4711,7 +4711,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI32.V"/>
   </I>
-  <I name="VAMOANDEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOANDEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4719,7 +4719,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI64.V"/>
   </I>
-  <I name="VAMOANDEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOANDEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4727,7 +4727,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOANDEI64.V"/>
   </I>
-  <I name="VAMOOREI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOOREI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4735,7 +4735,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI8.V"/>
   </I>
-  <I name="VAMOOREI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOOREI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4743,7 +4743,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI8.V"/>
   </I>
-  <I name="VAMOOREI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOOREI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4751,7 +4751,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI16.V"/>
   </I>
-  <I name="VAMOOREI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOOREI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4759,7 +4759,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI16.V"/>
   </I>
-  <I name="VAMOOREI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOOREI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4767,7 +4767,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI32.V"/>
   </I>
-  <I name="VAMOOREI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOOREI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4775,7 +4775,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI32.V"/>
   </I>
-  <I name="VAMOOREI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOOREI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4783,7 +4783,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI64.V"/>
   </I>
-  <I name="VAMOOREI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOOREI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4791,7 +4791,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOOREI64.V"/>
   </I>
-  <I name="VAMOMINEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4799,7 +4799,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI8.V"/>
   </I>
-  <I name="VAMOMINEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4807,7 +4807,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI8.V"/>
   </I>
-  <I name="VAMOMINEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4815,7 +4815,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI16.V"/>
   </I>
-  <I name="VAMOMINEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4823,7 +4823,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI16.V"/>
   </I>
-  <I name="VAMOMINEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4831,7 +4831,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI32.V"/>
   </I>
-  <I name="VAMOMINEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4839,7 +4839,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI32.V"/>
   </I>
-  <I name="VAMOMINEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4847,7 +4847,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI64.V"/>
   </I>
-  <I name="VAMOMINEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4855,7 +4855,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINEI64.V"/>
   </I>
-  <I name="VAMOMAXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4863,7 +4863,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI8.V"/>
   </I>
-  <I name="VAMOMAXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4871,7 +4871,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI8.V"/>
   </I>
-  <I name="VAMOMAXEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4879,7 +4879,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI16.V"/>
   </I>
-  <I name="VAMOMAXEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4887,7 +4887,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI16.V"/>
   </I>
-  <I name="VAMOMAXEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4895,7 +4895,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI32.V"/>
   </I>
-  <I name="VAMOMAXEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4903,7 +4903,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI32.V"/>
   </I>
-  <I name="VAMOMAXEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4911,7 +4911,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI64.V"/>
   </I>
-  <I name="VAMOMAXEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4919,7 +4919,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXEI64.V"/>
   </I>
-  <I name="VAMOMINUEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINUEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4927,7 +4927,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI8.V"/>
   </I>
-  <I name="VAMOMINUEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINUEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4935,7 +4935,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI8.V"/>
   </I>
-  <I name="VAMOMINUEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINUEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4943,7 +4943,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI16.V"/>
   </I>
-  <I name="VAMOMINUEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINUEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4951,7 +4951,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI16.V"/>
   </I>
-  <I name="VAMOMINUEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINUEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4959,7 +4959,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI32.V"/>
   </I>
-  <I name="VAMOMINUEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINUEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4967,7 +4967,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI32.V"/>
   </I>
-  <I name="VAMOMINUEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMINUEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4975,7 +4975,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI64.V"/>
   </I>
-  <I name="VAMOMINUEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMINUEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4983,7 +4983,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMINUEI64.V"/>
   </I>
-  <I name="VAMOMAXUEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXUEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110000000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4991,7 +4991,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXUEI8.V"/>
   </I>
-  <I name="VAMOMAXUEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXUEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110010000101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -4999,7 +4999,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXUEI8.V"/>
   </I>
-  <I name="VAMOMAXUEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXUEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110001010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -5007,7 +5007,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXUEI16.V"/>
   </I>
-  <I name="VAMOMAXUEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXUEI16.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011010101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -5015,7 +5015,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXUEI16.V"/>
   </I>
-  <I name="VAMOMAXUEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXUEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110001100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -5023,7 +5023,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXUEI32.V"/>
   </I>
-  <I name="VAMOMAXUEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXUEI32.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011100101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -5031,7 +5031,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXUEI32.V"/>
   </I>
-  <I name="VAMOMAXUEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="No register write">
+  <I name="VAMOMAXUEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110001110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
@@ -5039,7 +5039,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VAMOMAXUEI64.V"/>
   </I>
-  <I name="VAMOMAXUEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector" form="Register write">
+  <I name="VAMOMAXUEI64.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="Register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011110101111"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>

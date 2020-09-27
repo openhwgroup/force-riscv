@@ -130,7 +130,7 @@ def add_layout_operand(aInstruction):
         operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count, aRegIndexAlignment=reg_count)
     elif aInstruction.name in ('VSETVL', 'VSETVLI'):
         pass  # No vector layout operand required
-    elif aInstruction.iclass == 'VectorLoadStoreInstruction':
+    elif aInstruction.iclass == 'VectorLoadStoreInstruction' or aInstruction.iclass == 'VectorAMOInstructionRISCV':
         reg_count = 1
         elem_width = None
         ints = re.findall('\d+', aInstruction.name)
