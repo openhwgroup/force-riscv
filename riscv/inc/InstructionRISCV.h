@@ -39,6 +39,23 @@ namespace Force {
     InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstaint object.
   };
 
+  /*!
+    \class VectorAMOInstructionRISCV
+    \brief Class for RISCV vector AMO instructions.
+  */
+  class VectorAMOInstructionRISCV : public VectorLoadStoreInstruction {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorAMOInstructionRISCV);
+
+    Object* Clone() const override { return new VectorAMOInstructionRISCV(*this); } //!< Return a cloned VectorAMOInstructionRISCV object of the same type and same contents of the object.
+    const char* Type() const override { return "VectorAMOInstructionRISCV"; } //!< Return the type of the VectorAMOInstructionRISCV object in C string.
+    bool Validate(Generator& gen, std::string& error) const override; //!< Validates generation control for RISCV VAMO instructions.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
+  };
+
 }
 
 #endif //Force_InstructionRISCV_H

@@ -19,7 +19,10 @@
 #include <RetOperandRISCV.h>
 #include <Generator.h>
 #include <GenRequest.h>
+#include <Register.h>
 #include <Log.h>
+
+#include <sstream>
 
 /*!
   \file InstructionRISCV.cc
@@ -59,6 +62,22 @@ namespace Force {
   InstructionConstraint* RetInstruction::InstantiateInstructionConstraint() const
   {
     return new RetInstructionConstraint();
+  }
+
+  bool VectorAMOInstructionRISCV::Validate(Generator& gen, string& error) const
+  {
+    auto reg_file = gen.GetRegisterFile();
+    auto vsew_field = reg_file->RegisterLookup("vtype")->RegisterFieldLookup("VSEW");
+    uint32 sew = (1 << vsew_field->FieldValue()) * 8;
+    if (sew >= 32) {
+      return true;
+    }
+    
+    // TODO (Chris): where does the control go in the xml files?
+    stringstream err_stream;
+    err_stream << "Instruction \"" << Name() << "\" failed because Handcar does not currently support VSEW < 32 (VSEW = " << sew << ")";
+    error = err_stream.str();
+    return false;
   }
 
 }

@@ -72,6 +72,7 @@ namespace Force {
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());
     obj_registry->RegisterObject(new VectorLoadStoreInstruction());
+    obj_registry->RegisterObject(new VectorAMOInstructionRISCV());
   }
 
   void destroy_top_level_resources_RISCV()
