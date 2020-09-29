@@ -64,11 +64,11 @@ namespace Force {
     auto regulator = mpGenerator->GetPageRequestRegulator();
 
     if (isInstr) {
-      if (noFault) ret_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoInstrAbort, true);
+      if (noFault) ret_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoInstrPageFault, true);
       regulator->RegulateBranchPageRequest(this, nullptr, ret_req);
     }
     else {
-      if (noFault) ret_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataAbort, true);
+      if (noFault) ret_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataPageFault, true);
       regulator->RegulateLoadStorePageRequest(this, nullptr, ret_req);
     }
 

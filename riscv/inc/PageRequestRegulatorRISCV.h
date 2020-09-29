@@ -42,11 +42,9 @@ namespace Force {
   protected:
     PageRequestRegulatorRISCV(const PageRequestRegulatorRISCV& rOther); //!< Copy constructor.
     ASSIGNMENT_OPERATOR_ABSENT(PageRequestRegulatorRISCV);
-    const char* GetExceptionString(EPagingExceptionType exceptType) const override; //!< Return exception string for the specified attribute type in RISC-V layer.
-    void PreventDataAbort(GenPageRequest* pPageReq) const override; //!< Setup the page request object to prevent RISC-V data aborts.
-    void PreventInstrAbort(GenPageRequest* pPageReq) const override; //!< Setup the page request object to prevent RISC-V instruction aborts.
-  protected:
-   };
+    void PreventDataPageFault(GenPageRequest* pPageReq) const override; //!< Setup the page request object to prevent RISC-V data aborts.
+    void PreventInstrPageFault(GenPageRequest* pPageReq) const override; //!< Setup the page request object to prevent RISC-V instruction aborts.
+  };
 
 }
 

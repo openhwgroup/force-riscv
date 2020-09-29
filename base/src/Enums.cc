@@ -3330,11 +3330,12 @@ namespace Force {
   }
 
 
-  unsigned char EDataAccessPermissionTypeSize = 6;
+  unsigned char EDataAccessPermissionTypeSize = 7;
 
   const string EDataAccessPermissionType_to_string(EDataAccessPermissionType in_enum)
   {
     switch (in_enum) {
+    case EDataAccessPermissionType::NoAccess: return "NoAccess";
     case EDataAccessPermissionType::ReadWrite: return "ReadWrite";
     case EDataAccessPermissionType::ReadOnly: return "ReadOnly";
     case EDataAccessPermissionType::ReadWriteNoUser: return "ReadWriteNoUser";
@@ -3351,63 +3352,69 @@ namespace Force {
   {
     string enum_type_name = "EDataAccessPermissionType";
     size_t size = in_str.size();
-    char hash_value = in_str.at(9 < size ? 9 : 9 % size);
+    char hash_value = in_str.at(11 < size ? 11 : 11 % size);
 
     switch (hash_value) {
-    case 78:
+    case 85:
       validate(in_str, "ReadWriteNoUser", enum_type_name);
       return EDataAccessPermissionType::ReadWriteNoUser;
-    case 82:
+    case 97:
       validate(in_str, "ReadWrite", enum_type_name);
       return EDataAccessPermissionType::ReadWrite;
-    case 85:
-      validate(in_str, "ReadWriteUserOnly", enum_type_name);
-      return EDataAccessPermissionType::ReadWriteUserOnly;
-    case 101:
+    case 99:
+      validate(in_str, "NoAccess", enum_type_name);
+      return EDataAccessPermissionType::NoAccess;
+    case 100:
       validate(in_str, "ReadOnly", enum_type_name);
       return EDataAccessPermissionType::ReadOnly;
-    case 111:
-      validate(in_str, "ReadOnlyNoUser", enum_type_name);
-      return EDataAccessPermissionType::ReadOnlyNoUser;
-    case 115:
+    case 101:
+      validate(in_str, "ReadWriteUserOnly", enum_type_name);
+      return EDataAccessPermissionType::ReadWriteUserOnly;
+    case 114:
       validate(in_str, "ReadOnlyUserOnly", enum_type_name);
       return EDataAccessPermissionType::ReadOnlyUserOnly;
+    case 115:
+      validate(in_str, "ReadOnlyNoUser", enum_type_name);
+      return EDataAccessPermissionType::ReadOnlyNoUser;
     default:
       unknown_enum_name(enum_type_name, in_str);
     }
-    return EDataAccessPermissionType::ReadWrite;
+    return EDataAccessPermissionType::NoAccess;
   }
 
   EDataAccessPermissionType try_string_to_EDataAccessPermissionType(const string& in_str, bool& okay)
   {
     okay = true;
     size_t size = in_str.size();
-    char hash_value = in_str.at(9 < size ? 9 : 9 % size);
+    char hash_value = in_str.at(11 < size ? 11 : 11 % size);
 
     switch (hash_value) {
-    case 78:
+    case 85:
       okay = (in_str == "ReadWriteNoUser");
       return EDataAccessPermissionType::ReadWriteNoUser;
-    case 82:
+    case 97:
       okay = (in_str == "ReadWrite");
       return EDataAccessPermissionType::ReadWrite;
-    case 85:
-      okay = (in_str == "ReadWriteUserOnly");
-      return EDataAccessPermissionType::ReadWriteUserOnly;
-    case 101:
+    case 99:
+      okay = (in_str == "NoAccess");
+      return EDataAccessPermissionType::NoAccess;
+    case 100:
       okay = (in_str == "ReadOnly");
       return EDataAccessPermissionType::ReadOnly;
-    case 111:
-      okay = (in_str == "ReadOnlyNoUser");
-      return EDataAccessPermissionType::ReadOnlyNoUser;
-    case 115:
+    case 101:
+      okay = (in_str == "ReadWriteUserOnly");
+      return EDataAccessPermissionType::ReadWriteUserOnly;
+    case 114:
       okay = (in_str == "ReadOnlyUserOnly");
       return EDataAccessPermissionType::ReadOnlyUserOnly;
+    case 115:
+      okay = (in_str == "ReadOnlyNoUser");
+      return EDataAccessPermissionType::ReadOnlyNoUser;
     default:
       okay = false;
-      return EDataAccessPermissionType::ReadWrite;
+      return EDataAccessPermissionType::NoAccess;
     }
-    return EDataAccessPermissionType::ReadWrite;
+    return EDataAccessPermissionType::NoAccess;
   }
 
 

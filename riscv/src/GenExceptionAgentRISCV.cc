@@ -247,7 +247,7 @@ namespace Force {
 
     unique_ptr<GenPageRequest> page_req(mpGenerator->GenPageRequestInstance(false, EMemAccessType::Read));
     page_req->SetPrivilegeLevel(EPrivilegeLevelType(result.mDataBlockPrivLevel));
-    page_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataAbort, true);
+    page_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataPageFault, true);
     if (result.mInstrSeqCode != 2) {
       // Transitioning to data block privilege level via ECALL exception
       page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ViaException, true);

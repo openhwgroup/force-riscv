@@ -1066,16 +1066,11 @@ namespace Force {
 
   EExceptionConstraintType VmAddressSpace::GetExceptionConstraintType(const std::string& rExceptName) const
   {
-    //LOG(trace) << "[VmAddressSpace::GetExceptionConstraintType] rExceptName=" << rExceptName << endl;
-    //TODO temporary workaround to allow page regulation to avoid instr/loadstore page faults
-    return EExceptionConstraintType::PreventHard;
-
-    /*auto choices_tree = mpControlBlock->GetChoicesAdapter()->GetPagingChoiceTree(rExceptName);
-    std::unique_ptr<ChoiceTree> choices_tree_storage(choices_tree);
-
+    // << "[VmAddressSpace::GetExceptionConstraintType] rExceptName=" << rExceptName << endl;
+    std::unique_ptr<ChoiceTree> choices_tree(mpControlBlock->GetChoicesAdapter()->GetPagingChoiceTree(rExceptName));
     auto choice_ptr = choices_tree->Choose();
     uint32 available_choices = choices_tree->AvailableChoices();
-    // << "found choice tree: " << choices_tree->Name() << " chosen value: " << choice_ptr->Value() << " available choices: " << available_choices << endl;
+    // << "[VmAddressSpace::GetExceptionConstraintType] found choice tree: " << choices_tree->Name() << " chosen value: " << choice_ptr->Value() << " available choices: " << available_choices << endl;
 
     EExceptionConstraintType except_constr_type = EExceptionConstraintType::Invalid;
     switch (choice_ptr->Value()) {
@@ -1093,7 +1088,7 @@ namespace Force {
       FAIL("unexpected-exception-constraint-value");
     }
 
-    return except_constr_type;*/
+    return except_constr_type;
   }
 
   bool VmAddressSpace::VerifyStreamingPageCrossing(uint64 start, uint64 end) const

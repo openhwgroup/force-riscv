@@ -250,7 +250,7 @@ namespace Force {
     mValue = choices_tree->ChooseValueWithConstraint(value_constr, has_choice, fall_back_value);
     if (not has_choice) {
       if (hard_constr) {
-        LOG(fail) << "{ApPteAttributeARM::Generate} no choice available with hard value constraint: " << value_constr.ToSimpleString() << endl;
+        LOG(fail) << "{ConstraintPteAttribute::Generate} no choice available with hard value constraint: " << value_constr.ToSimpleString() << endl;
         FAIL("no-choice-with-hard-constraint");
       }
       else {
@@ -288,8 +288,8 @@ namespace Force {
   bool ExceptionConstraintPteAttribute::GetValueConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rExceptConstr) const
   {
     bool hard_constr = false;
-    EExceptionConstraintType except_constr_type = rPagingReq.GetExceptionConstraint(GetExceptionType());
-    LOG(info) << "{ExceptionConstraintPteAttribute::GetValueConstraint} exception type: " << EPagingExceptionType_to_string(GetExceptionType()) << " constraint type: " << EExceptionConstraintType_to_string(except_constr_type) << endl;
+    EExceptionConstraintType except_constr_type = rPagingReq.GetExceptionConstraint(GetExceptionType(rPagingReq));
+    LOG(info) << "{ExceptionConstraintPteAttribute::GetValueConstraint} exception type: " << EPagingExceptionType_to_string(GetExceptionType(rPagingReq)) << " constraint type: " << EExceptionConstraintType_to_string(except_constr_type) << endl;
     switch (except_constr_type) {
     case EExceptionConstraintType::TriggerHard:
       hard_constr = true; // fall through

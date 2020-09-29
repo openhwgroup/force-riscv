@@ -384,7 +384,7 @@ namespace Force {
     auto addr_op_struct = rOperandStruct.CastOperandStructure<AddressingOperandStructure>();
     mpPageRequest = rGen.GenPageRequestInstance(IsInstruction(), addr_op_struct->MemAccessType());
     if (rInstr.NoDataAbort()){
-      mpPageRequest->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataAbort, true);
+      mpPageRequest->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataPageFault, true);
     }
     SetupVmMapper(rGen);
     // << "instruction " << rInstr.Name() << " use preamble? " << mUsePreamble << " no preamble? " << mNoPreamble << endl;

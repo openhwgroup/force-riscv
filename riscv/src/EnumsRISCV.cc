@@ -439,7 +439,7 @@ namespace Force {
   }
 
 
-  unsigned char EPteAttributeTypeSize = 12;
+  unsigned char EPteAttributeTypeSize = 11;
 
   const string EPteAttributeType_to_string(EPteAttributeType in_enum)
   {
@@ -453,8 +453,7 @@ namespace Force {
     case EPteAttributeType::G: return "G";
     case EPteAttributeType::U: return "U";
     case EPteAttributeType::X: return "X";
-    case EPteAttributeType::W: return "W";
-    case EPteAttributeType::R: return "R";
+    case EPteAttributeType::WR: return "WR";
     case EPteAttributeType::V: return "V";
     default:
       unknown_enum_value("EPteAttributeType", (unsigned char)(in_enum));
@@ -466,24 +465,27 @@ namespace Force {
   {
     string enum_type_name = "EPteAttributeType";
     size_t size = in_str.size();
-    char hash_value = in_str.at(0) ^ in_str.at(6 < size ? 6 : 6 % size) ^ in_str.at(7 < size ? 7 : 7 % size);
+    char hash_value = in_str.at(0) ^ in_str.at(1 < size ? 1 : 1 % size) ^ in_str.at(9 < size ? 9 : 9 % size);
 
     switch (hash_value) {
-    case 49:
-      validate(in_str, "RES0", enum_type_name);
-      return EPteAttributeType::RES0;
-    case 65:
-      validate(in_str, "DA", enum_type_name);
-      return EPteAttributeType::DA;
-    case 68:
+    case 64:
       validate(in_str, "IGNORED", enum_type_name);
       return EPteAttributeType::IGNORED;
+    case 65:
+      validate(in_str, "Address", enum_type_name);
+      return EPteAttributeType::Address;
+    case 68:
+      validate(in_str, "DA", enum_type_name);
+      return EPteAttributeType::DA;
     case 71:
       validate(in_str, "G", enum_type_name);
       return EPteAttributeType::G;
+    case 79:
+      validate(in_str, "SystemPage", enum_type_name);
+      return EPteAttributeType::SystemPage;
     case 82:
-      validate(in_str, "R", enum_type_name);
-      return EPteAttributeType::R;
+      validate(in_str, "RES0", enum_type_name);
+      return EPteAttributeType::RES0;
     case 83:
       validate(in_str, "RSW", enum_type_name);
       return EPteAttributeType::RSW;
@@ -494,17 +496,11 @@ namespace Force {
       validate(in_str, "V", enum_type_name);
       return EPteAttributeType::V;
     case 87:
-      validate(in_str, "W", enum_type_name);
-      return EPteAttributeType::W;
+      validate(in_str, "WR", enum_type_name);
+      return EPteAttributeType::WR;
     case 88:
       validate(in_str, "X", enum_type_name);
       return EPteAttributeType::X;
-    case 98:
-      validate(in_str, "SystemPage", enum_type_name);
-      return EPteAttributeType::SystemPage;
-    case 115:
-      validate(in_str, "Address", enum_type_name);
-      return EPteAttributeType::Address;
     default:
       unknown_enum_name(enum_type_name, in_str);
     }
@@ -515,24 +511,27 @@ namespace Force {
   {
     okay = true;
     size_t size = in_str.size();
-    char hash_value = in_str.at(0) ^ in_str.at(6 < size ? 6 : 6 % size) ^ in_str.at(7 < size ? 7 : 7 % size);
+    char hash_value = in_str.at(0) ^ in_str.at(1 < size ? 1 : 1 % size) ^ in_str.at(9 < size ? 9 : 9 % size);
 
     switch (hash_value) {
-    case 49:
-      okay = (in_str == "RES0");
-      return EPteAttributeType::RES0;
-    case 65:
-      okay = (in_str == "DA");
-      return EPteAttributeType::DA;
-    case 68:
+    case 64:
       okay = (in_str == "IGNORED");
       return EPteAttributeType::IGNORED;
+    case 65:
+      okay = (in_str == "Address");
+      return EPteAttributeType::Address;
+    case 68:
+      okay = (in_str == "DA");
+      return EPteAttributeType::DA;
     case 71:
       okay = (in_str == "G");
       return EPteAttributeType::G;
+    case 79:
+      okay = (in_str == "SystemPage");
+      return EPteAttributeType::SystemPage;
     case 82:
-      okay = (in_str == "R");
-      return EPteAttributeType::R;
+      okay = (in_str == "RES0");
+      return EPteAttributeType::RES0;
     case 83:
       okay = (in_str == "RSW");
       return EPteAttributeType::RSW;
@@ -543,17 +542,11 @@ namespace Force {
       okay = (in_str == "V");
       return EPteAttributeType::V;
     case 87:
-      okay = (in_str == "W");
-      return EPteAttributeType::W;
+      okay = (in_str == "WR");
+      return EPteAttributeType::WR;
     case 88:
       okay = (in_str == "X");
       return EPteAttributeType::X;
-    case 98:
-      okay = (in_str == "SystemPage");
-      return EPteAttributeType::SystemPage;
-    case 115:
-      okay = (in_str == "Address");
-      return EPteAttributeType::Address;
     default:
       okay = false;
       return EPteAttributeType::Address;
@@ -621,8 +614,8 @@ namespace Force {
     case EPageGenBoolAttrType::ForceAlias: return "ForceAlias";
     case EPageGenBoolAttrType::ForceMemAttrs: return "ForceMemAttrs";
     case EPageGenBoolAttrType::ForceNewAddr: return "ForceNewAddr";
-    case EPageGenBoolAttrType::NoDataAbort: return "NoDataAbort";
-    case EPageGenBoolAttrType::NoInstrAbort: return "NoInstrAbort";
+    case EPageGenBoolAttrType::NoDataPageFault: return "NoDataPageFault";
+    case EPageGenBoolAttrType::NoInstrPageFault: return "NoInstrPageFault";
     default:
       unknown_enum_value("EPageGenBoolAttrType", (unsigned char)(in_enum));
     }
@@ -636,15 +629,15 @@ namespace Force {
     char hash_value = in_str.at(7 < size ? 7 : 7 % size);
 
     switch (hash_value) {
-    case 65:
-      validate(in_str, "NoInstrAbort", enum_type_name);
-      return EPageGenBoolAttrType::NoInstrAbort;
     case 70:
       validate(in_str, "FlatMap", enum_type_name);
       return EPageGenBoolAttrType::FlatMap;
-    case 98:
-      validate(in_str, "NoDataAbort", enum_type_name);
-      return EPageGenBoolAttrType::NoDataAbort;
+    case 80:
+      validate(in_str, "NoInstrPageFault", enum_type_name);
+      return EPageGenBoolAttrType::NoInstrPageFault;
+    case 97:
+      validate(in_str, "NoDataPageFault", enum_type_name);
+      return EPageGenBoolAttrType::NoDataPageFault;
     case 100:
       validate(in_str, "InstrAddr", enum_type_name);
       return EPageGenBoolAttrType::InstrAddr;
@@ -685,15 +678,15 @@ namespace Force {
     char hash_value = in_str.at(7 < size ? 7 : 7 % size);
 
     switch (hash_value) {
-    case 65:
-      okay = (in_str == "NoInstrAbort");
-      return EPageGenBoolAttrType::NoInstrAbort;
     case 70:
       okay = (in_str == "FlatMap");
       return EPageGenBoolAttrType::FlatMap;
-    case 98:
-      okay = (in_str == "NoDataAbort");
-      return EPageGenBoolAttrType::NoDataAbort;
+    case 80:
+      okay = (in_str == "NoInstrPageFault");
+      return EPageGenBoolAttrType::NoInstrPageFault;
+    case 97:
+      okay = (in_str == "NoDataPageFault");
+      return EPageGenBoolAttrType::NoDataPageFault;
     case 100:
       okay = (in_str == "InstrAddr");
       return EPageGenBoolAttrType::InstrAddr;
@@ -810,7 +803,7 @@ namespace Force {
   }
 
 
-  unsigned char EVmConstraintTypeSize = 11;
+  unsigned char EVmConstraintTypeSize = 12;
 
   const string EVmConstraintType_to_string(EVmConstraintType in_enum)
   {
@@ -826,6 +819,7 @@ namespace Force {
     case EVmConstraintType::UserAccess: return "UserAccess";
     case EVmConstraintType::PageFault: return "PageFault";
     case EVmConstraintType::FlatMap: return "FlatMap";
+    case EVmConstraintType::AccessFault: return "AccessFault";
     default:
       unknown_enum_value("EVmConstraintType", (unsigned char)(in_enum));
     }
@@ -848,6 +842,9 @@ namespace Force {
     case 33:
       validate(in_str, "NoUserAccess", enum_type_name);
       return EVmConstraintType::NoUserAccess;
+    case 34:
+      validate(in_str, "AccessFault", enum_type_name);
+      return EVmConstraintType::AccessFault;
     case 37:
       validate(in_str, "AddressError", enum_type_name);
       return EVmConstraintType::AddressError;
@@ -894,6 +891,9 @@ namespace Force {
     case 33:
       okay = (in_str == "NoUserAccess");
       return EVmConstraintType::NoUserAccess;
+    case 34:
+      okay = (in_str == "AccessFault");
+      return EVmConstraintType::AccessFault;
     case 37:
       okay = (in_str == "AddressError");
       return EVmConstraintType::AddressError;

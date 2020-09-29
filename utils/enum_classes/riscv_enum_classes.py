@@ -30,19 +30,19 @@ enum_classes_details = [
       [("BEQ", 0), ("BNE", 1), ("BLT", 2), ("BLTU", 3), ("BGE", 4), ("BGEU", 5), ("CBEQZ", 6), ("CBNEZ", 7)]
       ],
      ["PteAttributeType", "unsigned char", "Page table entry attribute types",
-      [("Address", 0), ("IGNORED", 1), ("RES0", 2), ("SystemPage", 3), ("RSW", 4), ("DA", 5), ("G", 6), ("U", 7), ("X", 8), ("W", 9), ("R", 10), ("V", 11)]
+      [("Address", 0), ("IGNORED", 1), ("RES0", 2), ("SystemPage", 3), ("RSW", 4), ("DA", 5), ("G", 6), ("U", 7), ("X", 8), ("WR", 9), ("V", 10)]
       ],
      ["PageGranuleType", "unsigned char", "Page granule types",
       [("G4K", 0)]
       ],
      ["PageGenBoolAttrType", "unsigned char", "Boolean type GenPageRequest attributes for configuring page generation",
-      [("FlatMap", 0), ("InstrAddr", 1), ("Regulated", 2), ("ViaException", 3), ("Privileged", 4), ("Atomic", 5), ("CanAlias", 6), ("ForceAlias", 7), ("ForceMemAttrs", 8), ("ForceNewAddr", 9), ("NoDataAbort", 10), ("NoInstrAbort", 11)]
+      [("FlatMap", 0), ("InstrAddr", 1), ("Regulated", 2), ("ViaException", 3), ("Privileged", 4), ("Atomic", 5), ("CanAlias", 6), ("ForceAlias", 7), ("ForceMemAttrs", 8), ("ForceNewAddr", 9), ("NoDataPageFault", 10), ("NoInstrPageFault", 11)]
       ],
      ["PagingExceptionType", "unsigned char", "Paging exception types.",
       [("InstructionAccessFault", 0), ("LoadAccessFault", 1), ("StoreAmoAccessFault", 2), ("InstructionPageFault", 3), ("LoadPageFault", 4), ("StoreAmoPageFault", 5)]
       ],
      ["VmConstraintType", "unsigned char", "Virtual memory constraint types.",
-      [("Existing", 0), ("AddressError", 1), ("ReadOnly", 2), ("NoExecute", 3), ("PrivilegedNoExecute", 4), ("UnpriviligedNoExecute", 5), ("NoUserAccess", 6), ("PageTable", 7), ("UserAccess", 8), ("PageFault", 9), ("FlatMap", 10)]
+      [("Existing", 0), ("AddressError", 1), ("ReadOnly", 2), ("NoExecute", 3), ("PrivilegedNoExecute", 4), ("UnpriviligedNoExecute", 5), ("NoUserAccess", 6), ("PageTable", 7), ("UserAccess", 8), ("PageFault", 9), ("FlatMap", 10), ("AccessFault", 11)]
       ],
      ["PrivilegeLevelType", "unsigned char", "Exception level types",
       [("U", 0), ("S", 1), ("H", 2), ("M", 3)]

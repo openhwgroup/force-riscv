@@ -1819,6 +1819,7 @@ CASE( "tests for EDataAccessPermissionType" ) {
   SETUP ( "setup EDataAccessPermissionType" )  {
 
     SECTION( "test enum to string conversion" ) {
+      EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::NoAccess) == "NoAccess");
       EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::ReadWrite) == "ReadWrite");
       EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::ReadOnly) == "ReadOnly");
       EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::ReadWriteNoUser) == "ReadWriteNoUser");
@@ -1828,6 +1829,7 @@ CASE( "tests for EDataAccessPermissionType" ) {
     }
 
     SECTION( "test string to enum conversion" ) {
+      EXPECT(string_to_EDataAccessPermissionType("NoAccess") == EDataAccessPermissionType::NoAccess);
       EXPECT(string_to_EDataAccessPermissionType("ReadWrite") == EDataAccessPermissionType::ReadWrite);
       EXPECT(string_to_EDataAccessPermissionType("ReadOnly") == EDataAccessPermissionType::ReadOnly);
       EXPECT(string_to_EDataAccessPermissionType("ReadWriteNoUser") == EDataAccessPermissionType::ReadWriteNoUser);
@@ -1837,11 +1839,13 @@ CASE( "tests for EDataAccessPermissionType" ) {
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
-      EXPECT_THROWS_AS(string_to_EDataAccessPermissionType("R_adWrite"), EnumTypeError);
+      EXPECT_THROWS_AS(string_to_EDataAccessPermissionType("N_Access"), EnumTypeError);
     }
 
     SECTION( "test non-throwing string to enum conversion" ) {
       bool okay = false;
+      EXPECT(try_string_to_EDataAccessPermissionType("NoAccess", okay) == EDataAccessPermissionType::NoAccess);
+      EXPECT(okay);
       EXPECT(try_string_to_EDataAccessPermissionType("ReadWrite", okay) == EDataAccessPermissionType::ReadWrite);
       EXPECT(okay);
       EXPECT(try_string_to_EDataAccessPermissionType("ReadOnly", okay) == EDataAccessPermissionType::ReadOnly);
@@ -1858,7 +1862,7 @@ CASE( "tests for EDataAccessPermissionType" ) {
 
     SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
       bool okay = false;
-      try_string_to_EDataAccessPermissionType("R_adWrite", okay);
+      try_string_to_EDataAccessPermissionType("N_Access", okay);
       EXPECT(!okay);
     }
   }
