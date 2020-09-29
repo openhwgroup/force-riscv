@@ -17,9 +17,11 @@
 #include <InstructionConstraintRISCV.h>
 #include <OperandRISCV.h>
 #include <RetOperandRISCV.h>
+#include <VectorLayoutSetupRISCV.h>
 #include <Generator.h>
 #include <GenRequest.h>
 #include <Register.h>
+#include <VectorLayout.h>
 #include <Log.h>
 
 #include <sstream>
@@ -66,16 +68,16 @@ namespace Force {
 
   bool VectorAMOInstructionRISCV::Validate(const Generator& gen, string& error) const
   {
-    auto reg_file = gen.GetRegisterFile();
-    auto vsew_field = reg_file->RegisterLookup("vtype")->RegisterFieldLookup("VSEW");
-    uint32 sew = (1 << vsew_field->FieldValue()) * 8;
-    if (sew >= 32) {
+    VectorLayoutSetupRISCV vec_layout_setup(gen.GetRegisterFile());
+    VectorLayout data_vec_layout;
+    vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
+    if (data_vec_layout.mElemSize >= 32) {
       return true;
     }
     
     // TODO (Chris): where does the control go in the xml files?
     stringstream err_stream;
-    err_stream << "Instruction \"" << Name() << "\" failed because Handcar does not currently support VSEW < 32 (VSEW = " << sew << ")";
+    err_stream << "Instruction \"" << Name() << "\" failed because Handcar does not currently support VSEW < 32 (VSEW = " << data_vec_layout.mElemSize << ")";
     error = err_stream.str();
     return false;
   }
