@@ -100,6 +100,11 @@ namespace Force {
 
   }
 
+  void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    rAdjDifferValues.AddValue(differVal);
+  }
+
   void ImmediatePartialOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
     ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);

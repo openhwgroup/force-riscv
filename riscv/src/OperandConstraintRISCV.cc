@@ -38,6 +38,18 @@ using namespace std;
 
 namespace Force {
 
+  void VsetvlVtypeImmediateOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    if (not HasConstraint()) {
+      // We want to maintain the same vtype value by default
+      const RegisterFile* reg_file = rGen.GetRegisterFile();
+      Register* vtype_reg = reg_file->RegisterLookup("vtype");
+      mpConstraintSet = new ConstraintSet(vtype_reg->Value() & rOperandStruct.mMask);
+    }
+  }
+
   void VectorMaskOperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
   {
     if (differVal == 0) {
@@ -109,6 +121,16 @@ namespace Force {
       mpConstraintSet->SubConstraintSet(compressed_write_reserv_constr);
     }
     //LOG(notice) << " constraints (with reserved regs removed): " << mpConstraintSet->ToSimpleString() << endl;
+  }
+
+  void VsetvlRegisterOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    RegisterOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    if (not mConstraintForced) {
+      // Avoid x0 because it cannot be pre-loaded with a value
+      SubConstraintValue(0, rOperandStruct);
+    }
   }
 
   void ConditionalBranchOperandRISCVConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)

@@ -56,6 +56,23 @@ namespace Force {
     COPY_CONSTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
   };
 
+  /*!
+    \class VsetvlInstruction
+    \brief Class for VSETVL and VSETVLI instructions.
+  */
+  class VsetvlInstruction : public Instruction {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlInstruction);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlInstruction);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlInstruction);
+
+    Object* Clone() const override { return new VsetvlInstruction(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VsetvlInstruction"; } //!< Return a string describing the actual type of the Object.
+    bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return preamble requests if there is any.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VsetvlInstruction);
+  };
+
 }
 
 #endif //Force_InstructionRISCV_H

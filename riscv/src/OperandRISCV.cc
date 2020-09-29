@@ -26,6 +26,7 @@
 #include <InstructionStructure.h>
 #include <Log.h>
 #include <Random.h>
+#include <Register.h>
 #include <VaGenerator.h>
 #include <VectorLayout.h>
 #include <VmMapper.h>
@@ -45,6 +46,11 @@ using namespace std;
 */
 
 namespace Force {
+
+  OperandConstraint* VsetvlVtypeImmediateOperand::InstantiateOperandConstraint() const
+  {
+    return new VsetvlVtypeImmediateOperandConstraint();
+  }
 
   void VectorMaskOperand::Generate(Generator& gen, Instruction& instr)
   {
@@ -195,6 +201,78 @@ namespace Force {
   OperandConstraint* CompressedRegisterOperandRISCV::InstantiateOperandConstraint() const
   {
     return new CompressedRegisterOperandRISCVConstraint();
+  }
+
+  VsetvlAvlRegisterOperand::VsetvlAvlRegisterOperand()
+    : RegisterOperand(), mAvlRegVal(0)
+  {
+  }
+
+  VsetvlAvlRegisterOperand::VsetvlAvlRegisterOperand(const VsetvlAvlRegisterOperand& rOther)
+    : RegisterOperand(rOther), mAvlRegVal(rOther.mAvlRegVal)
+  {
+  }
+
+  void VsetvlAvlRegisterOperand::Generate(Generator& gen, Instruction& instr)
+  {
+    RegisterOperand::Generate(gen, instr);
+
+    // We want to maintain the same vl value by default
+    const RegisterFile* reg_file = gen.GetRegisterFile();
+    Register* vl_reg = reg_file->RegisterLookup("vl");
+    mAvlRegVal = vl_reg->Value();
+  }
+
+  bool VsetvlAvlRegisterOperand::GetPrePostAmbleRequests(Generator& gen) const
+  {
+    if (not mpOperandConstraint->ConstraintForced()) {
+      gen.AddLoadRegisterAmbleRequests(mChoiceText, mAvlRegVal);
+      return true;
+    }
+
+    return false;
+  }
+
+  OperandConstraint* VsetvlAvlRegisterOperand::InstantiateOperandConstraint() const
+  {
+    return new VsetvlRegisterOperandConstraint();
+  }
+
+  VsetvlVtypeRegisterOperand::VsetvlVtypeRegisterOperand()
+    : RegisterOperand(), mVtypeRegVal(0)
+  {
+  }
+
+  VsetvlVtypeRegisterOperand::VsetvlVtypeRegisterOperand(const VsetvlVtypeRegisterOperand& rOther)
+    : RegisterOperand(rOther), mVtypeRegVal(rOther.mVtypeRegVal)
+  {
+  }
+
+  void VsetvlVtypeRegisterOperand::Generate(Generator& gen, Instruction& instr)
+  {
+    mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
+
+    RegisterOperand::Generate(gen, instr);
+
+    // We want to maintain the same vtype value by default
+    const RegisterFile* reg_file = gen.GetRegisterFile();
+    Register* vtype_reg = reg_file->RegisterLookup("vtype");
+    mVtypeRegVal = vtype_reg->Value();
+  }
+
+  bool VsetvlVtypeRegisterOperand::GetPrePostAmbleRequests(Generator& gen) const
+  {
+    if (not mpOperandConstraint->ConstraintForced()) {
+      gen.AddLoadRegisterAmbleRequests(mChoiceText, mVtypeRegVal);
+      return true;
+    }
+
+    return false;
+  }
+
+  OperandConstraint* VsetvlVtypeRegisterOperand::InstantiateOperandConstraint() const
+  {
+    return new VsetvlRegisterOperandConstraint();
   }
 
   void VtypeLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
