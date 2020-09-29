@@ -51,7 +51,7 @@ namespace Force {
 
     Object* Clone() const override { return new VectorAMOInstructionRISCV(*this); } //!< Return a cloned VectorAMOInstructionRISCV object of the same type and same contents of the object.
     const char* Type() const override { return "VectorAMOInstructionRISCV"; } //!< Return the type of the VectorAMOInstructionRISCV object in C string.
-    bool Validate(Generator& gen, std::string& error) const override; //!< Validates generation control for RISCV VAMO instructions.
+    bool Validate(const Generator& gen, std::string& error) const override; //!< Validates generation control for RISCV VAMO instructions.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
   };

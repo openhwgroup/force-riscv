@@ -64,7 +64,7 @@ namespace Force {
     return new RetInstructionConstraint();
   }
 
-  bool VectorAMOInstructionRISCV::Validate(Generator& gen, string& error) const
+  bool VectorAMOInstructionRISCV::Validate(const Generator& gen, string& error) const
   {
     auto reg_file = gen.GetRegisterFile();
     auto vsew_field = reg_file->RegisterLookup("vtype")->RegisterFieldLookup("VSEW");

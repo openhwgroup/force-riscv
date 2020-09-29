@@ -68,7 +68,7 @@ namespace Force {
     virtual void Commit(Generator& gen); //!< Commit generated instruction.
     virtual void CleanUp(); //!< Clean up resources that can be released.
     virtual bool GetPrePostAmbleRequests(Generator& gen) const { return false; } //!< Return preamble requests if there is any.
-    virtual bool Validate(Generator& gen, std::string& error) const { return true; } //!< Validate generation control.
+    virtual bool Validate(const Generator& gen, std::string& error) const { return true; } //!< Validate generation control.
     /*!
       Templated function to find Operand by its class type.
       For example, const VectorRegisterOperand* vec_opr = instr.FindOperand<VectorRegisterOperand>();
