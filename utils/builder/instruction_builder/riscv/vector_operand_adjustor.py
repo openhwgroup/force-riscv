@@ -63,6 +63,23 @@ class VectorOperandAdjustor(OperandAdjustor):
         aOperand.choices = "Nonzero vector registers"
         self.add_asm_op(aOperand)
 
+    def set_rs1_vsetvl(self):
+        rs1_opr = self.mInstr.find_operand('rs1')
+        rs1_opr.oclass = 'VsetvlAvlRegisterOperand'
+        self.set_rs1_int()
+
+    def set_rs2_vsetvl(self):
+        rs2_opr = self.mInstr.find_operand('rs2')
+        rs2_opr.oclass = 'VsetvlVtypeRegisterOperand'
+        rs2_opr.differ = 'rs1'
+        self.set_rs2_int()
+
+    def set_imm_vsetvl(self):
+        imm_opr = self.mInstr.find_operand('zimm[10:0]')
+        imm_opr.oclass = 'VsetvlVtypeImmediateOperand'
+        imm_opr.name = 'zimm10'
+        self.add_asm_op(imm_opr)
+
     def set_vm(self):
         vm_opr = self.mInstr.find_operand('vm')
         vm_opr.type = 'Choices'

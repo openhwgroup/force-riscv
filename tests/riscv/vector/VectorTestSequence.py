@@ -217,9 +217,15 @@ class VectorVsetvlTestSequence(VectorTestSequence):
 
     ## Return parameters to be passed to Sequence.genInstruction().
     def _getInstructionParameters(self):
-        self._generateRegisterFieldValues()
+        instr_params = {}
 
-        return self._generateInstructionParameters()
+        # Randomly choose between generating with specified parameters and generating without; need
+        # to generate with parameters initially to generate field values at least once
+        if (self.mVtype is None) or (RandomUtils.random32(0, 1) == 1):
+            self._generateRegisterFieldValues()
+            instr_params = self._generateInstructionParameters()
+
+        return instr_params
 
     ## Verify additional aspects of the instruction generation and execution.
     #
