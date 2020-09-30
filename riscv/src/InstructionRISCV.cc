@@ -18,12 +18,15 @@
 #include <OperandRISCV.h>
 #include <RetOperandRISCV.h>
 #include <VectorLayoutSetupRISCV.h>
+#include <Choices.h>
+#include <ChoicesModerator.h>
 #include <Generator.h>
 #include <GenRequest.h>
 #include <Register.h>
 #include <VectorLayout.h>
 #include <Log.h>
 
+#include <memory>
 #include <sstream>
 
 /*!
@@ -71,15 +74,18 @@ namespace Force {
     VectorLayoutSetupRISCV vec_layout_setup(gen.GetRegisterFile());
     VectorLayout data_vec_layout;
     vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
-    if (data_vec_layout.mElemSize >= 32) {
-      return true;
+    if (data_vec_layout.mElemSize < 32) {
+      ChoicesModerator* choices_moderator = gen.GetChoicesModerator(EChoicesType::GeneralChoices);
+      unique_ptr<Choice> choices_tree(choices_moderator->CloneChoiceTree("Skip Generation - Vector AMO"));
+      auto chosen = choices_tree->Choose();
+      if (chosen->Name() == "DoSkip") {
+        stringstream err_stream;
+        err_stream << "Instruction \"" << Name() << "\" failed because Handcar does not currently support VSEW < 32 (VSEW = " << data_vec_layout.mElemSize << ")";
+        error = err_stream.str();
+        return false;
+      }
     }
-    
-    // TODO (Chris): where does the control go in the xml files?
-    stringstream err_stream;
-    err_stream << "Instruction \"" << Name() << "\" failed because Handcar does not currently support VSEW < 32 (VSEW = " << data_vec_layout.mElemSize << ")";
-    error = err_stream.str();
-    return false;
+    return true;
   }
 
 }
