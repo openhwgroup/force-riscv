@@ -22,6 +22,7 @@ from Constraint import ConstraintSet
 from Enums import ELimitType
 import RandomUtils
 import math
+import re
 
 ## This class provides a common execution flow for testing vector instructions.
 class VectorTestSequence(Sequence):
@@ -37,6 +38,23 @@ class VectorTestSequence(Sequence):
             instr_id = self.genInstruction(instr, instr_params)
 
             self._verifyInstruction(instr, instr_params, instr_id)
+
+    ## Calculate the value of LMUL given VLMUL.
+    #
+    #  @param aVlmul The value of the vtype.VLMUL field.
+    def calculateLmul(self, aVlmul):
+        lmul = 2 ** (aVlmul & 0x3)
+        if (aVlmul & 0x4) == 0x4:
+            lmul /= 16
+
+        return lmul
+
+    ## Calculate the value of SEW given VSEW.
+    #
+    #  @param aVsew The value of the vtype.VSEW field.
+    def calculateSew(self, aVsew):
+        sew = 8 * (2 ** aVsew)
+        return sew
 
     ## Fail if the valid flag is false.
     #
@@ -75,7 +93,7 @@ class VectorTestSequence(Sequence):
             self.error('Instruction %s did not generate correctly' % aInstr)
 
         except_count = 0
-        disallowed_except_codes = set((0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF)) - self._getAllowedExceptionCodes()
+        disallowed_except_codes = set((0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF)) - self._getAllowedExceptionCodes(aInstr)
         for except_code in disallowed_except_codes:
             except_count += self.queryExceptionRecordsCount(except_code)
 
@@ -97,7 +115,9 @@ class VectorTestSequence(Sequence):
         pass
 
     ## Get allowed exception codes.
-    def _getAllowedExceptionCodes(self):
+    #
+    #  @param aInstr The name of the instruction.
+    def _getAllowedExceptionCodes(self, aInstr):
         return set()
 
 
@@ -165,14 +185,19 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
 
         # TODO(Noah): Remove the call to _resetVstart() when the issue with vstart after an
         # exception handler skips a vector instruction is resolved.
-        self._genResetVstart()
+        self._genResetVstart(aInstr)
 
     ## Get allowed exception codes.
-    def _getAllowedExceptionCodes(self):
+    #
+    #  @param aInstr The name of the instruction.
+    def _getAllowedExceptionCodes(self, aInstr):
         allowed_except_codes = set()
         if self._mUnalignedAllowed:
             allowed_except_codes.add(0x4)
             allowed_except_codes.add(0x6)
+
+        if self._calculateEmul(aInstr) > 8:
+            allowed_except_codes.add(0x2)
 
         # TODO(Noah): Remove the line below permitting store page fault exceptions when the page
         # descriptor generation is improved. Currently, we are generating read-only pages for load
@@ -184,15 +209,40 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     ## Generate an instruction to reset vstart to 0 if it is not currently 0. This is necessary when
     # an exception handler handling a fault triggered by a vector instruction decides to skip the
     # instruction.
-    def _genResetVstart(self):
+    #
+    #  @param aInstr The name of the instruction.
+    def _genResetVstart(self, aInstr):
         except_count = 0
-        for except_code in self._getAllowedExceptionCodes():
+        for except_code in self._getAllowedExceptionCodes(aInstr):
             except_count += self.queryExceptionRecordsCount(except_code)
 
         if except_count > self._mExceptCount:
             assembly_helper = AssemblyHelperRISCV(self)
             assembly_helper.genWriteSystemRegister('vstart', 0)
             self._mExceptCount = except_count
+
+    ## Calculate EMUL for the given instruction.
+    #
+    #  @param aInstr The name of the instruction.
+    def _calculateEmul(self, aInstr):
+        eew = self._getEew(aInstr)
+
+        (vlmul_val, valid) = self.readRegister('vtype', field='VLMUL')
+        self.assertValidRegisterValue('vtype', valid)
+        lmul = self.calculateLmul(vlmul_val)
+
+        (vsew_val, valid) = self.readRegister('vtype', field='VSEW')
+        self.assertValidRegisterValue('vtype', valid)
+        sew = self.calculateLmul(vsew_val)
+
+        return round((eew / sew) * lmul)
+
+    ## Determine EEW for the given instruction.
+    #
+    #  @param aInstr The name of the instruction.
+    def _getEew(self, aInstr):
+        match = re.fullmatch(r'V[A-Z]+(\d+)\.V\#\#RISCV', aInstr)
+        return int(match.group(1))
 
 
 ## This class provides some common parameters for testing VSETVL and VSETVLI instructions.
@@ -264,7 +314,7 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         self._mVlmul = self.choice(self._getVlmulChoices())
         self.mVtype = ((self._mVlmul & 0x4) << 3) | (self._mVsew << 2) | (self._mVlmul & 0x3)
 
-        vlmax = self._computeVlmax()
+        vlmax = self._calculateVlmax()
         if RandomUtils.random32(0, 1) == 1:
             self.mAvl = RandomUtils.random32(0, vlmax)
             self._mVl = self.mAvl
@@ -281,19 +331,15 @@ class VectorVsetvlTestSequence(VectorTestSequence):
     # by the architecture specification.
     def _getVlmulChoices(self):
         vlmul_choices = [0, 1, 2, 3]
-        sew = 8 * (2 ** self._mVsew)
+        sew = self.calculateSew(self._mVsew)
         elen_sew_log_ratio = round(math.log2(self._mElen // sew))
         for i in range(min(elen_sew_log_ratio, 3)):
             vlmul_choices.append(7 - i)
 
         return vlmul_choices
 
-    ## Compute the value of VLMAX.
-    def _computeVlmax(self):
-        lmul = 2 ** (self._mVlmul & 0x3)
-        if (self._mVlmul & 0x4) == 0x4:
-            lmul /= 16
-
-        sew = 8 * (2 ** self._mVsew)
-        vlmax = round(lmul * self._mVlen // sew)
-        return vlmax
+    ## Calculate the value of VLMAX.
+    def _calculateVlmax(self):
+        lmul = self.calculateLmul(self._mVlmul)
+        sew = self.calculateSew(self._mVsew)
+        return round((lmul * self._mVlen) / sew)

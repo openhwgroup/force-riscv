@@ -36,7 +36,9 @@ class MainSequence(VectorTestSequence):
         return self._mInstrList
 
     ## Get allowed exception codes.
-    def _getAllowedExceptionCodes(self):
+    #
+    #  @param aInstr The name of the instruction.
+    def _getAllowedExceptionCodes(self, aInstr):
         allowed_except_codes = set()
 
         # TODO(Noah): Remove the line below permitting store page fault exceptions when the page
