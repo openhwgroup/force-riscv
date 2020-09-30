@@ -88,4 +88,14 @@ namespace Force {
     return true;
   }
 
+  bool VsetvlInstruction::GetPrePostAmbleRequests(Generator& gen) const
+  {
+    bool has_requests = false;
+    for (Operand* opr : mOperands) {
+      has_requests |= opr->GetPrePostAmbleRequests(gen);
+    }
+
+    return has_requests;
+  }
+
 }

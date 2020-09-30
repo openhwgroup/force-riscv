@@ -325,15 +325,15 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
 def adjust_rd_rs1_rs2(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rd_int()
-    operand_adjustor.set_rs1_int()
-    operand_adjustor.set_rs2_int()
+    operand_adjustor.set_rs1_vsetvl()
+    operand_adjustor.set_rs2_vsetvl()
     return True
 
 def adjust_rd_rs1_zimm_10_0(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rd_int()
-    operand_adjustor.set_rs1_int()
-    operand_adjustor.set_imm('zimm[10:0]', 'zimm10', True)
+    operand_adjustor.set_rs1_vsetvl()
+    operand_adjustor.set_imm_vsetvl()
     return True
 
 def adjust_vdrd_rs1_vm(aInstruction):

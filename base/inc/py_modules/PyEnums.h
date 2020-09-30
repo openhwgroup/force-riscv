@@ -47,6 +47,7 @@ namespace Force {
       .value("MaxPhysicalVectorLen", ELimitType::MaxPhysicalVectorLen)
       .value("ErrRegisterNumber", ELimitType::ErrRegisterNumber)
       .value("SpeculativeBntInstructionLimit", ELimitType::SpeculativeBntInstructionLimit)
+      .value("MaxVectorElementWidth", ELimitType::MaxVectorElementWidth)
       ;
 
     py::enum_<ERestoreExclusionGroup>(mod, "ERestoreExclusionGroup")

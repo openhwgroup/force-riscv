@@ -17,8 +17,11 @@ from base.Sequence import Sequence
 from base.ChoicesModifier import ChoicesModifier
 from base.UtilityFunctions import mask_to_size
 from riscv.AssemblyHelperRISCV import AssemblyHelperRISCV
+from Config import Config
 from Constraint import ConstraintSet
+from Enums import ELimitType
 import RandomUtils
+import math
 
 ## This class provides a common execution flow for testing vector instructions.
 class VectorTestSequence(Sequence):
@@ -190,3 +193,111 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
             assembly_helper = AssemblyHelperRISCV(self)
             assembly_helper.genWriteSystemRegister('vstart', 0)
             self._mExceptCount = except_count
+
+
+## This class provides some common parameters for testing VSETVL and VSETVLI instructions.
+class VectorVsetvlTestSequence(VectorTestSequence):
+
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self.mVtype = None
+        self.mAvl = None
+        self._mVlen = None
+        self._mElen = None
+        self._mVlmul = None
+        self._mVsew = None
+        self._mVl = None
+
+    ## Set up the environment prior to generating the test instructions.
+    def _setUpTest(self):
+        config = Config.getInstance()
+        self._mVlen = config.getLimitValue(ELimitType.MaxPhysicalVectorLen)
+        self._mElen = config.getLimitValue(ELimitType.MaxVectorElementWidth)
+
+    ## Return parameters to be passed to Sequence.genInstruction().
+    def _getInstructionParameters(self):
+        instr_params = {}
+
+        # Randomly choose between generating with specified parameters and generating without; need
+        # to generate with parameters initially to generate field values at least once
+        if (self.mVtype is None) or (RandomUtils.random32(0, 1) == 1):
+            self._generateRegisterFieldValues()
+            instr_params = self._generateInstructionParameters()
+
+        return instr_params
+
+    ## Verify additional aspects of the instruction generation and execution.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        dest_reg_index = aInstrRecord['Dests']['rd']
+        if dest_reg_index != 0:
+            dest_reg_name = 'x%d' % dest_reg_index
+            (dest_reg_val, valid) = self.readRegister(dest_reg_name)
+            self.assertValidRegisterValue(dest_reg_name, valid)
+
+            if dest_reg_val != self._mVl:
+                self.error('Unexpected destination register value; Expected=0x%x, Actual=0x%x' % (self._mVl, dest_reg_val))
+
+        (vlmul_val, valid) = self.readRegister('vtype', field='VLMUL')
+        self.assertValidRegisterValue('vtype', valid)
+        if vlmul_val != self._mVlmul:
+            self.error('Unexpected vtype.VLMUL value; Expected=0x%x, Actual=0x%x' % (self._mVlmul, vlmul_val))
+
+        (vsew_val, valid) = self.readRegister('vtype', field='VSEW')
+        self.assertValidRegisterValue('vtype', valid)
+        if vsew_val != self._mVsew:
+            self.error('Unexpected vtype.VSEW value; Expected=0x%x, Actual=0x%x' % (self._mVsew, vsew_val))
+
+        (vl_val, valid) = self.readRegister('vl')
+        self.assertValidRegisterValue('vl', valid)
+        if vl_val != self._mVl:
+            self.error('Unexpected vl value; Expected=0x%x, Actual=0x%x' % (self._mVl, vl_val))
+
+    ## Generate randomized values for vtype and vl fields.
+    def _generateRegisterFieldValues(self):
+        max_vsew_val = round(math.log2(self._mElen // 8))
+        self._mVsew = RandomUtils.random32(0, max_vsew_val)
+
+        vlmul_choice = self.choice(self._getVlmulChoices())
+
+        # Adjust vlmul to separate the bit fields to match the format returned by readRegister()
+        self._mVlmul = ((vlmul_choice & 0x4) << 3) | (vlmul_choice & 0x3)
+
+        self.mVtype = (self._mVsew << 2) | self._mVlmul
+
+        vlmax = self._computeVlmax()
+        if RandomUtils.random32(0, 1) == 1:
+            self.mAvl = RandomUtils.random32(0, vlmax)
+            self._mVl = self.mAvl
+        else:
+            self.mAvl = RandomUtils.random32(aMin=(2 * vlmax))
+            self._mVl = vlmax
+
+    ## Generate parameters to be passed to Sequence.genInstruction() and load register operands.
+    def _generateInstructionParameters(self):
+        raise NotImplementedError
+
+    ## Get legal choices for the vtype.VLMUL field. This method only adds fractional LMUL choices
+    # that satisfy the constraint LMUL >= SEW / ELEN because those are the configurations required
+    # by the architecture specification.
+    def _getVlmulChoices(self):
+        vlmul_choices = [0, 1, 2, 3]
+        sew = 8 * (2 ** self._mVsew)
+        elen_sew_log_ratio = round(math.log2(self._mElen // sew))
+        for i in range(min(elen_sew_log_ratio, 3)):
+            vlmul_choices.append(7 - i)
+
+        return vlmul_choices
+
+    ## Compute the value of VLMAX.
+    def _computeVlmax(self):
+        lmul = 2 ** (self._mVlmul & 0x3)
+        if (self._mVlmul & 0x20) == 0x20:
+            lmul /= 16
+
+        sew = 8 * (2 ** self._mVsew)
+        vlmax = round(lmul * self._mVlen // sew)
+        return vlmax
