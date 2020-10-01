@@ -80,7 +80,7 @@ namespace Force {
       auto chosen = choices_tree->Choose();
       if (chosen->Name() == "DoSkip") {
         stringstream err_stream;
-        err_stream << "Instruction \"" << Name() << "\" failed because Handcar does not currently support VSEW < 32 (VSEW = " << data_vec_layout.mElemSize << ")";
+        err_stream << "Instruction \"" << Name() << "\" skipped because Handcar does not currently support SEW < 32 (SEW = " << data_vec_layout.mElemSize << "). To enable generation, adjust the \"Skip Generation - Vector AMO\" general choice tree.";
         error = err_stream.str();
         return false;
       }
