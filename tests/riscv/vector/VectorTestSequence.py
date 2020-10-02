@@ -261,12 +261,8 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         max_vsew_val = round(math.log2(self._mElen // 8))
         self._mVsew = RandomUtils.random32(0, max_vsew_val)
 
-        vlmul_choice = self.choice(self._getVlmulChoices())
-
-        # Adjust vlmul to separate the bit fields to match the format returned by readRegister()
-        self._mVlmul = ((vlmul_choice & 0x4) << 3) | (vlmul_choice & 0x3)
-
-        self.mVtype = (self._mVsew << 2) | self._mVlmul
+        self._mVlmul = self.choice(self._getVlmulChoices())
+        self.mVtype = ((self._mVlmul & 0x4) << 3) | (self._mVsew << 2) | (self._mVlmul & 0x3)
 
         vlmax = self._computeVlmax()
         if RandomUtils.random32(0, 1) == 1:
@@ -295,7 +291,7 @@ class VectorVsetvlTestSequence(VectorTestSequence):
     ## Compute the value of VLMAX.
     def _computeVlmax(self):
         lmul = 2 ** (self._mVlmul & 0x3)
-        if (self._mVlmul & 0x20) == 0x20:
+        if (self._mVlmul & 0x4) == 0x4:
             lmul /= 16
 
         sew = 8 * (2 ** self._mVsew)

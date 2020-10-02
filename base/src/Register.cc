@@ -735,26 +735,27 @@ namespace Force
   uint64 RegisterField::FieldValue() const
   {
     uint64 result = 0;
-    for (auto bit_it = mBitFields.begin(); bit_it != mBitFields.end(); ++bit_it)
-    {
-      uint64 bit_mLsb = (*bit_it)->mShift;
-      uint64 value = (*bit_it)->BitFieldValue() << bit_mLsb;
+    uint32 shift = 0;
+    for (auto bit_it = mBitFields.crbegin(); bit_it != mBitFields.crend(); ++bit_it) {
+      uint64 value = (*bit_it)->BitFieldValue() << shift;
       result |= value;
+      shift += (*bit_it)->Size();
     }
 
-    return (result >> mLsb) << mLsbBlock;
+    return result << mLsbBlock;
   }
 
   uint64 RegisterField::InitialFieldValue() const
   {
     uint64 result = 0;
-    for (auto bit_it = mBitFields.begin(); bit_it != mBitFields.end(); ++bit_it)
-    {
-      uint64 bit_mLsb = (*bit_it)->mShift;
-      uint64 value = (*bit_it)->InitialBitFieldValue() << bit_mLsb;
+    uint32 shift = 0;
+    for (auto bit_it = mBitFields.crbegin(); bit_it != mBitFields.crend(); ++bit_it) {
+      uint64 value = (*bit_it)->InitialBitFieldValue() << shift;
       result |= value;
+      shift += (*bit_it)->Size();
     }
-    return (result >> mLsb) << mLsbBlock;
+
+    return result << mLsbBlock;
   }
 
   uint64 RegisterField::FieldMask() const
@@ -820,21 +821,20 @@ namespace Force
 
   void RegisterField::SetFieldValue(uint64 value)
   {
-    for (auto bit_it = mBitFields.begin(); bit_it != mBitFields.end(); ++bit_it)
-    {
-      uint64 bit_mLsb = (*bit_it)->mShift;
-      (*bit_it)->SetBitFieldValue(value >> ( bit_mLsb - mLsb));
+    uint32 shift = 0;
+    for (auto bit_it = mBitFields.crbegin(); bit_it != mBitFields.crend(); ++bit_it) {
+      (*bit_it)->SetBitFieldValue(value >> shift);
+      shift += (*bit_it)->Size();
     }
   }
 
   void RegisterField::SetFieldResetValue(uint64 value) const
   {
-    uint64 blockValue = value << mLsb ;
-    std::vector<BitField *>::const_iterator it;
-    for (it=mBitFields.begin(); it!=mBitFields.end(); ++it) {
-      (*it)->SetBitResetValue(blockValue >> (*it)->mShift);
+    uint32 shift = 0;
+    for (auto bit_it = mBitFields.crbegin(); bit_it != mBitFields.crend(); ++bit_it) {
+      (*bit_it)->SetBitResetValue(value >> shift);
+      shift += (*bit_it)->mSize;
     }
-
   }
 
   bool RegisterField::HasAttribute(ERegAttrType attr) const
@@ -896,10 +896,10 @@ namespace Force
 
   void RegisterField::InitializeField(uint64 value)
   {
-    for (auto bit_it = mBitFields.begin(); bit_it != mBitFields.end(); ++bit_it)
-    {
-      uint64 bit_mLsb = (*bit_it)->mShift;
-      (*bit_it)->InitializeBitField(value >> (bit_mLsb - mLsb));
+    uint32 shift = 0;
+    for (auto bit_it = mBitFields.crbegin(); bit_it != mBitFields.crend(); ++bit_it) {
+      (*bit_it)->InitializeBitField(value >> shift);
+      shift += (*bit_it)->Size();
     }
   }
 
