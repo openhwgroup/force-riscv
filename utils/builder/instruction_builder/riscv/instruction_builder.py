@@ -111,10 +111,18 @@ def build_instructions():
     from priv_adjust_instruction_by_format import priv_adjust_instruction_by_format
 
     if output_all or main_only:
-        process_instruction_file("input/riscv_instructions_starter.xml", "output/riscv_instructions.xml", "output/supported_riscv_instructions.xml", adjust_instruction_by_format)
+        #process_instruction_file("input/riscv_instructions_starter.xml", "output/riscv_instructions.xml", "output/supported_riscv_instructions.xml", adjust_instruction_by_format)
+        process_instruction_file("input/new/riscv_instructions_int32_starter.xml", "output/riscv_instructions_int32.xml", "output/supported_riscv_instructions_int32.xml", adjust_instruction_by_format)
+        process_instruction_file("input/new/riscv_instructions_int64_starter.xml", "output/riscv_instructions_int64.xml", "output/supported_riscv_instructions_int64.xml", adjust_instruction_by_format)
+        process_instruction_file("input/new/riscv_instructions_float_starter.xml", "output/riscv_instructions_float.xml", "output/supported_riscv_instructions_float.xml", adjust_instruction_by_format)
+        process_instruction_file("input/new/riscv_instructions_double_starter.xml", "output/riscv_instructions_double.xml", "output/supported_riscv_instructions_double.xml", adjust_instruction_by_format)
+        process_instruction_file("input/new/riscv_instructions_quad_starter.xml", "output/riscv_instructions_quad.xml", "output/supported_riscv_instructions_quad.xml", adjust_instruction_by_format)
+        
 
     if output_all or c_ext_only:
-        process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", c_ext_adjust_instruction_by_format)
+        #process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", c_ext_adjust_instruction_by_format)
+        process_instruction_file("input/new/riscv_instructions_compressed_rv32_starter.xml", "output/riscv_instructions_compressed_rv32.xml", "output/supported_riscv_instructions_compressed_rv32_starter.xml", c_ext_adjust_instruction_by_format)
+        process_instruction_file("input/new/riscv_instructions_compressed_rv64_starter.xml", "output/riscv_instructions_compressed_rv64.xml", "output/supported_riscv_instructions_compressed_rv64_starter.xml", c_ext_adjust_instruction_by_format)
 
     if output_all or v_ext_only:
         process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
