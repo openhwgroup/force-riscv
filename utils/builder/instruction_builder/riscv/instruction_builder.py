@@ -125,7 +125,7 @@ def build_instructions():
         process_instruction_file("input/new/riscv_instructions_compressed_rv64_starter.xml", "output/riscv_instructions_compressed_rv64.xml", "output/supported_riscv_instructions_compressed_rv64_starter.xml", c_ext_adjust_instruction_by_format)
 
     if output_all or v_ext_only:
-        process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
+        process_instruction_file("input/v_instructions_starter.xml", "output/riscv_instructions_vector.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
 
     if output_all or priv_only:
         process_instruction_file("input/priv_instructions_starter.xml", "output/priv_instructions.xml", "output/supported_priv_instructions.xml", priv_adjust_instruction_by_format)
