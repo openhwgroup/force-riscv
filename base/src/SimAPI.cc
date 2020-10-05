@@ -36,8 +36,7 @@ namespace Force {
     mNumPhysRegs(0),
     mPhysRegSize(8u),
     mInSpeculativeMode(),
-    mSpecModeOn(std::string(" (spcltv) ")),
-    mSpecModeOff(std::string(" "))
+    mSpecModeStrings{" ", " (spcltv) "}
   {
   }
 
@@ -91,18 +90,15 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
-    std::string _speculative_mode = mSpecModeOff;
+    std::string _speculative_mode = mSpecModeStrings[0];
 
     for(const RegUpdate& rRegUp : mRegisterUpdates)
     {
-      _speculative_mode = mSpecModeOff;
+      _speculative_mode = mSpecModeStrings[0];
       auto _spec_mode_lookup = mInSpeculativeMode.find(rRegUp.CpuID);
-      if(_spec_mode_lookup != mInSpeculativeMode.end()) // MB: it is wasteful to do this for every update, but it is not clear that we are only getting one proc's updates only.
+      if(_spec_mode_lookup != mInSpeculativeMode.end())
       {
-        if(_spec_mode_lookup->second == true)
-        {
-          _speculative_mode = mSpecModeOn;
-        }
+	_speculative_mode = mSpecModeStrings[_spec_mode_lookup->second];
       } 
 
       mOfsSimTrace << "Cpu " << dec << rRegUp.CpuID << _speculative_mode;
@@ -124,21 +120,20 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
-    std::string _speculative_mode = mSpecModeOff;
+    std::string _speculative_mode = mSpecModeStrings[0];
 
     for(const MemUpdate& rMemUp : mMemoryUpdates)
     {
-      _speculative_mode = mSpecModeOff;
-      auto _spec_mode_lookup = mInSpeculativeMode.find(rMemUp.CpuID);
-      if(_spec_mode_lookup != mInSpeculativeMode.end()) // MB: it is wasteful to do this for every update, but it is not clear that we are only getting one proc's updates only.
+      if((rMemUp.CpuID & (1u << (8u * sizeof(rMemUp.CpuID) - 1u))) == 0u) // For negative number cpu ID's dont print status for speculative BNT. Negative CPUid indicates simulator non-isa backend is using MMU to configure test.
       {
-        if(_spec_mode_lookup->second == true)
-        {
-          _speculative_mode = mSpecModeOn;
-        }
+	_speculative_mode = mSpecModeStrings[0];
+	auto _spec_mode_lookup = mInSpeculativeMode.find(rMemUp.CpuID);
+	if(_spec_mode_lookup != mInSpeculativeMode.end())
+	{
+	  _speculative_mode = mSpecModeStrings[_spec_mode_lookup->second];
+	}
+	mOfsSimTrace << "Cpu " << dec << rMemUp.CpuID << _speculative_mode;
       }
-
-      mOfsSimTrace << "Cpu " << dec << rMemUp.CpuID << _speculative_mode;
 
       if(rMemUp.access_type == std::string("write"))
       {
@@ -196,14 +191,11 @@ namespace Force {
     if(not mOfsSimTrace.is_open()) return;
 
     size_t idx = 0;
-    std::string _speculative_mode = mSpecModeOff;
+    std::string _speculative_mode = mSpecModeStrings[0];
     auto _spec_mode_lookup = mInSpeculativeMode.find(CpuID);
     if(_spec_mode_lookup != mInSpeculativeMode.end())
     {
-      if(_spec_mode_lookup->second == true)
-      {
-        _speculative_mode = mSpecModeOn;
-      }
+      _speculative_mode = mSpecModeStrings[_spec_mode_lookup->second];
     } 
 
     mOfsSimTrace << dec << "Cpu " << CpuID  << _speculative_mode << currentICount << " ----" << endl;

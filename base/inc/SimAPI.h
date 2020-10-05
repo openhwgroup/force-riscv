@@ -249,9 +249,10 @@ namespace Force {
     cuint32 mPhysRegSize;
 
     //!< Speculative mode output modification
-    std::map<uint32, bool> mInSpeculativeMode;
-    const std::string mSpecModeOn;
-    const std::string mSpecModeOff;
+    std::map<uint32, uint32> mInSpeculativeMode;
+    const std::vector<std::string> mSpecModeStrings;
+    //const std::string mSpecModeOn;
+    //const std::string mSpecModeOff;
   };
 
 }
