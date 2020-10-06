@@ -275,6 +275,7 @@ namespace Force {
   private:
     void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const override; //!< Get the names of the index registers.
     void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
+    Operand* GetDataOperand(const Instruction& rInstr) const; //!< Return data operand.
   };
 
   /*!
@@ -312,6 +313,24 @@ namespace Force {
     void AdjustRegisterCount(const Instruction& rInstr); //!< Finalize register count based on runtime state.
 
     uint32 mRegCount; //!< The number of registers per vector register group
+  };
+
+  /*!
+    \class VectorIndexedDataRegisterOperand
+    \brief Operand for RISCV vector indexed load/store data register operands.
+  */
+  class VectorIndexedDataRegisterOperand : public MultiVectorRegisterOperandRISCV {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedDataRegisterOperand);
+
+    Object* Clone() const override { return new VectorIndexedDataRegisterOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorIndexedDataRegisterOperand"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
   };
 
 }

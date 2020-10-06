@@ -1645,10 +1645,6 @@ namespace Force {
   {
     GroupOperand::Generate(gen, instr);
 
-    // TODO(Noah): Relax this constraint to allow legal cases where the source/destination register
-    // and the index register are the same when a good way to do so can be determined.
-    DifferIndexOperand(gen, instr);
-
     RecordIndexElementByteSize(instr);
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
@@ -1736,25 +1732,6 @@ namespace Force {
     }
 
     return data_block.Allocate(&rGen, indexed_opr_constr->GetVmMapper());
-  }
-
-  void VectorIndexedLoadStoreOperand::DifferIndexOperand(Generator& rGen, Instruction& rInstr) {
-    bool regenerate = false;
-
-    auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
-    RegisterOperand* index_opr = indexed_opr_constr->IndexOperand();
-    for (Operand* opr : rInstr.GetOperands()) {
-      if ((opr->OperandType() == EOperandType::VECREG) and (opr != index_opr)) {
-        if (opr->Value() == index_opr->Value()) {
-          index_opr->SubConstraintValue(opr->Value());
-          regenerate = true;
-        }
-      }
-    }
-
-    if (regenerate) {
-      index_opr->Generate(rGen, rInstr);
-    }
   }
 
   void VectorIndexedLoadStoreOperand::RecordIndexElementByteSize(const Instruction& rInstr)

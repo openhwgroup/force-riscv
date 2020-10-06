@@ -89,7 +89,7 @@ void  OperandConstraint::SubConstraintValue(unsigned long long Val, Force::Opera
 {
 }
 
-void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
 {
 }
 

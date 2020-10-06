@@ -258,9 +258,10 @@ def adjust_vs3_rs1_vm(aInstruction):
 
 def adjust_vs3_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_vs3_ls_indexed_source()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -307,6 +308,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -318,7 +320,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
 
     add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
-    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_vs3_ls_indexed_source()
     operand_adjustor.set_vm()
     return True
 
@@ -377,9 +379,10 @@ def adjust_vd_rs1_vm(aInstruction):
 
 def adjust_vd_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd_ls_dest()
+    operand_adjustor.set_vd_ls_indexed_dest()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -426,6 +429,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -437,7 +441,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
 
     add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
-    operand_adjustor.set_vd_ls_dest()
+    operand_adjustor.set_vd_ls_indexed_dest()
     operand_adjustor.set_vm()
     return True
 

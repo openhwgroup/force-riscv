@@ -84,7 +84,7 @@ namespace Force {
 
         const Operand* opr = rInstr.FindOperand(differ, true);
         ConstraintSet adj_differ_values;
-        GetAdjustedDifferValues(rInstr, rOperandStruct, *(opr->GetOperandStructure()), opr->Value(), adj_differ_values);
+        GetAdjustedDifferValues(rInstr, *(opr->GetOperandConstraint()), opr->Value(), adj_differ_values);
         mpConstraintSet->SubConstraintSet(adj_differ_values);
       }
     }
@@ -100,7 +100,7 @@ namespace Force {
 
   }
 
-  void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
   {
     rAdjDifferValues.AddValue(differVal);
   }

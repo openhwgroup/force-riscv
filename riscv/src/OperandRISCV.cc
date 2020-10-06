@@ -35,6 +35,7 @@
 #include <OperandConstraintRISCV.h>
 #include <VectorLayoutSetupRISCV.h>
 
+#include <cmath>
 #include <memory>
 #include <sstream>
 
@@ -310,20 +311,19 @@ namespace Force {
 
   void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
   {
-    VectorLayout data_vec_layout;
-    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
-    vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
+    Operand* data_opr = GetDataOperand(rInstr);
+    OperandConstraint* data_opr_constr = data_opr->GetOperandConstraint();
+    auto vec_reg_opr_constr = data_opr_constr->CastInstance<VectorRegisterOperandConstraintRISCV>();
+    float data_layout_multiple = vec_reg_opr_constr->GetLayoutMultiple();
 
-    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    uint32 elem_byte_size = data_vec_layout.mElemSize / 8;
-    lsop_struct->SetElementSize(elem_byte_size);
-    lsop_struct->SetAlignment(elem_byte_size);
-
-    // The index register index alignment value should equal EMUL rounded up to a whole number
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* index_vec_layout = instr_constr->GetVectorLayout();
-    uint32 nfields = index_vec_layout->mRegCount / index_vec_layout->mRegIndexAlignment;
-    lsop_struct->SetDataSize(elem_byte_size * nfields);
+
+    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
+    uint32 data_elem_byte_size = lround(index_vec_layout->mElemSize * data_layout_multiple) / 8;
+    lsop_struct->SetElementSize(data_elem_byte_size);
+    lsop_struct->SetAlignment(data_elem_byte_size);
+    lsop_struct->SetDataSize(data_elem_byte_size * index_vec_layout->mFieldCount);
   }
 
   void VectorIndexedLoadStoreOperandRISCV::GetIndexRegisterNames(vector<string>& rIndexRegNames) const
@@ -332,6 +332,22 @@ namespace Force {
     auto index_opr = dynamic_cast<MultiRegisterOperand*>(indexed_opr_constr->IndexOperand());
     rIndexRegNames.push_back(index_opr->ChoiceText());
     index_opr->GetExtraRegisterNames(index_opr->Value(), rIndexRegNames);
+  }
+
+  Operand* VectorIndexedLoadStoreOperandRISCV::GetDataOperand(const Instruction& rInstr) const
+  {
+    Operand* data_opr = nullptr;
+
+    auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
+    RegisterOperand* index_opr = indexed_opr_constr->IndexOperand();
+    for (Operand* opr : rInstr.GetOperands()) {
+      if ((opr->OperandType() == EOperandType::VECREG) and (opr != index_opr)) {
+        data_opr = opr;
+        break;
+      }
+    }
+
+    return data_opr;
   }
 
   void MultiVectorRegisterOperandRISCV::Setup(Generator& gen, Instruction& instr)
@@ -399,8 +415,13 @@ namespace Force {
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(mpStructure);
-    mRegCount = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
+    auto vec_reg_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
+    mRegCount = lround(vec_layout->mRegCount * vec_reg_opr_constr->GetLayoutMultiple());
+  }
+
+  OperandConstraint* VectorIndexedDataRegisterOperand::InstantiateOperandConstraint() const
+  {
+    return new VectorIndexedDataRegisterOperandConstraint();
   }
 
 }

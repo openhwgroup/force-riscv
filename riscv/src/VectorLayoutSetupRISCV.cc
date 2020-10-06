@@ -35,6 +35,7 @@ namespace Force {
   {
     rVecLayout.mElemCount = GetVl();
     rVecLayout.mElemSize = GetSew();
+    rVecLayout.mFieldCount = 1;
     rVecLayout.mRegCount = GetLmul();
     rVecLayout.mRegIndexAlignment = rVecLayout.mRegCount;
   }
@@ -53,12 +54,13 @@ namespace Force {
 
     // The total register count is EMUL * NFIELDS. NFIELDS is the register count for the
     // instruction. For instructions other than load/store segment instructions, NFIELDS = 1.
-    rVecLayout.mRegCount = rVecLayoutOprStruct.GetRegisterCount() * rVecLayout.mRegIndexAlignment;
+    rVecLayout.mFieldCount = rVecLayoutOprStruct.GetRegisterCount();
+    rVecLayout.mRegCount = rVecLayout.mFieldCount * rVecLayout.mRegIndexAlignment;
 
     rVecLayout.mElemSize = rVecLayoutOprStruct.GetElementWidth();
 
     // The total element count is NFIELDS * vl.
-    rVecLayout.mElemCount = rVecLayoutOprStruct.GetRegisterCount() * GetVl();
+    rVecLayout.mElemCount = rVecLayout.mFieldCount * GetVl();
   }
 
   void VectorLayoutSetupRISCV::SetUpVectorLayoutWholeRegister(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
@@ -67,6 +69,7 @@ namespace Force {
     Config* config = Config::Instance();
     rVecLayout.mElemCount = config->LimitValue(ELimitType::MaxPhysicalVectorLen) / rVecLayout.mElemSize;
 
+    rVecLayout.mFieldCount = 1;
     rVecLayout.mRegCount = rVecLayoutOprStruct.GetRegisterCount();
     rVecLayout.mRegIndexAlignment = rVecLayoutOprStruct.GetRegisterIndexAlignment();
   }

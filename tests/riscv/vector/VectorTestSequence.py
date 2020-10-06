@@ -27,6 +27,11 @@ import re
 ## This class provides a common execution flow for testing vector instructions.
 class VectorTestSequence(Sequence):
 
+    def __init__(self, aGenThread, aName=None):
+        super().__init__(aGenThread, aName)
+
+        self._mExceptCounts = {0x2: 0, 0x4: 0, 0x5: 0, 0x6: 0, 0x7: 0, 0xD: 0, 0xF: 0}
+
     def generate(self, **kargs):
         self._setUpTest()
 
@@ -92,13 +97,14 @@ class VectorTestSequence(Sequence):
         elif not self._isSkipAllowed(aInstr, aInstrParams):
             self.error('Instruction %s did not generate correctly' % aInstr)
 
-        except_count = 0
-        disallowed_except_codes = set((0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF)) - self._getAllowedExceptionCodes(aInstr)
-        for except_code in disallowed_except_codes:
-            except_count += self.queryExceptionRecordsCount(except_code)
+        for (except_code, except_count) in self._mExceptCounts.items():
+            new_except_count = self.queryExceptionRecordsCount(except_code)
 
-        if except_count != 0:
-            self.error('Instruction %s did not execute correctly' % aInstr)
+            if new_except_count > except_count:
+                if except_code in self._getAllowedExceptionCodes(aInstr):
+                    self._mExceptCounts[except_code] = new_except_count
+                else:
+                    self.error('Instruction %s did not execute correctly' % aInstr)
 
     ## Return true if it is permissible for the generation to skip this instruction.
     #
@@ -167,10 +173,7 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     def _isSkipAllowed(self, aInstr, aInstrParams):
-        # Instructions with constrained parameters may legitimately be skipped sometimes if no
-        # solution can be determined, but instructions without constrained parameters should always
-        # generate
-        if aInstrParams:
+        if aInstrParams or (self._calculateEmul(aInstr) > 8):
             return True
 
         return False
