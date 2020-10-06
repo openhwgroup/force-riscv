@@ -1555,7 +1555,7 @@ namespace Force {
     // that can be used.
     bool solved = false;
     try {
-      uint32 addr_range_size = 0x4000;
+      uint32 addr_range_size = 0x8000;
 
       while ((not solved) and (addr_range_size >= lsop_struct->DataSize())) {
         uint64 base_addr = va_gen.GenerateAddress(alignment, addr_range_size, false, page_req->MemoryAccessType());
@@ -1575,7 +1575,16 @@ namespace Force {
 
     if (not solved) {
       stringstream err_stream;
-      err_stream << "Operand \"" << Name() << "\" failed to generate with target constraint " << target_constr->ToSimpleString() << endl;
+      err_stream << "Operand \"" << Name() << "\" failed to generate with target constraint: ";
+
+      if (target_constr != nullptr) {
+        err_stream << target_constr->ToSimpleString();
+      } else {
+        err_stream << "None";
+      }
+
+      err_stream << endl;
+
       throw OperandError(err_stream.str());
     }
   }
@@ -1596,6 +1605,10 @@ namespace Force {
     uint32 align_shift = get_align_shift(alignment);
     stride_constr.AlignWithSize(get_align_mask(alignment), lsop_struct->DataSize());
     stride_constr.ShiftRight(align_shift);
+
+    // 0 is always a valid choice, so add it back in in case it was removed
+    stride_constr.AddValue(0);
+
     uint64 stride_val = stride_constr.ChooseValue() << align_shift;
 
     return stride_val;
