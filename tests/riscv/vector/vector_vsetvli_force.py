@@ -32,9 +32,6 @@ class MainSequence(VectorVsetvlTestSequence):
 
     ## Generate parameters to be passed to Sequence.genInstruction() and load register operands.
     def _generateInstructionParameters(self):
-        # TODO(Noah): Test generating VSETVLI without specifying operand values before merging this
-        # test into the develop branch.
-
         instr_params = {}
 
         load_gpr64_seq = LoadGPR64(self.genThread)
