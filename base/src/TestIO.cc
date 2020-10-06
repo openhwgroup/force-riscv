@@ -212,8 +212,14 @@ namespace Force {
       const ThreadInstructionResults* inst_results = generator->GetInstructionResults();
       const std::map<uint64, Instruction* >& instructions = inst_results->GetInstructions(memBank);
 
+      /*!
+	TODO: hex dump of instruction assumes 8 hex digits (32-bit
+	      instructions).  If the architecture permits variable length
+	      instructions, then the opcode length should be obtained form the
+	      architecture as part of the instruction information.
+      */
       for (auto inst : instructions)
-          asmFile << fmtx0(inst.first, 16) << ":" << fmtx0(inst.second->Opcode()) << " " << inst.second->AssemblyText() << endl;
+	  asmFile << fmtx0(inst.first, 16) << ":" << fmtx0(inst.second->Opcode(), 8) << " " << inst.second->AssemblyText() << endl;
     }
 #endif
     /*!
