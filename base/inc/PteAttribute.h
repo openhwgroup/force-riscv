@@ -143,7 +143,7 @@ namespace Force {
   protected:
     ExceptionConstraintPteAttribute(const ExceptionConstraintPteAttribute& rOther); //!< Copy constructor.
     bool GetValueConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rExceptConstr) const override; //!< Get value constraint.  Need to be implemented by sub class.
-    virtual EPagingExceptionType GetExceptionType() const = 0; //!< Get exception type.
+    virtual EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const = 0; //!< Get exception type.
     virtual void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rTriggerConstr) const = 0; //!< Return constraint that will trigger the exception.
     virtual void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rPreventConstr) const = 0; //!< Return constraint that will prevent the exception.
   };

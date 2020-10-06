@@ -98,7 +98,7 @@ namespace Force
 
   bool RegisterFileRISCV::InitContainingRegister(Register* rContainingReg, const Register* pReg) const 
   {
-    if ( (rContainingReg->Name()[0] == 'D') && (pReg->Name()[0] == 'H') ) {
+    if ((rContainingReg->Name()[0] == 'D') && ((pReg->Name()[0] == 'H') || (pReg->Name()[0] == 'S'))) {
         LOG(debug) << "{RegisterFileRISCV::InitContainingRegister} initializing containing reg " << rContainingReg->Name()
 	           << std::endl;
 	InitializeRegister(rContainingReg->Name(), -1ull, NULL); // NaN boxing half-precision value

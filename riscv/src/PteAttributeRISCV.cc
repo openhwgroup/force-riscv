@@ -200,8 +200,115 @@ namespace Force
     }
   }
 
-  void WPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
+  EPagingExceptionType WRPteAttributeRISCV::GetExceptionType(const GenPageRequest& rPagingReq) const
   {
+    bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
+    if (is_instr)
+    {
+      return EPagingExceptionType::InstructionPageFault;
+    }
+    else
+    {
+      auto mem_access = rPagingReq.MemoryAccessType();
+      switch (mem_access)
+      {
+        case EMemAccessType::Write:
+        case EMemAccessType::ReadWrite:
+          return EPagingExceptionType::LoadPageFault;
+          break;
+        default:
+          return EPagingExceptionType::StoreAmoPageFault;
+          break;
+      }
+    }
+
+    return EPagingExceptionType::LoadPageFault; //TODO need to handle fallthrough
+  }
+
+  void WRPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rTriggerConstr) const
+  {
+    //TODO - may not be necessary since W=1 R=0 can cause instruction page fault currently
+    /*bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
+    if (is_instr)
+    {
+      GetDefaultConstraint(rTriggerConstr);
+    }*/
+
+    auto mem_access = rPagingReq.MemoryAccessType();
+    rTriggerConstr.AddValue(0x2); // W=1 R=0 always invalid (reserved by specification)
+    switch (mem_access)
+    {
+      case EMemAccessType::Read:
+      case EMemAccessType::ReadWrite:
+        rTriggerConstr.AddValue(0x0); // W=0 R=0 no data access
+        break;
+      case EMemAccessType::Write:
+        rTriggerConstr.AddRange(0x0, 0x1); // W=0 R=1 no write access, W=0 R=0 no data access
+        break;
+      case EMemAccessType::Unknown:
+        LOG(info) << "{WRPteAttributeRISCV::ExceptionTriggeringConstraint} unknown mem access type, can't guarantee fault generation." << endl;
+        break;
+      default:
+        LOG(fail) << "{WRPteAttributeRISCV::ExceptionTriggeringConstraint} invalid or unsupported mem access type=" << EMemAccessType_to_string(mem_access) << endl;
+        FAIL("wr_pte_invalid_mem_access");
+        break;
+    }
+  }
+
+  void WRPteAttributeRISCV::ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rPreventConstr) const
+  {
+    bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
+    if (is_instr)
+    {
+      GetDefaultConstraint(rPreventConstr); //TODO might need to sub val of 2 (write set w/o read)
+    }
+    else
+    {
+      auto mem_access = rPagingReq.MemoryAccessType();
+      rPreventConstr.AddValue(0x3); // W=1 R=1 read/write access
+      switch (mem_access)
+      {
+        case EMemAccessType::Read:
+          rPreventConstr.AddValue(0x1); // W=0 R=1 read access
+        case EMemAccessType::ReadWrite:
+        case EMemAccessType::Write:
+          break;
+        case EMemAccessType::Unknown:
+          LOG(info) << "{WRPteAttributeRISCV::ExceptionPreventingConstraint} unknown mem access type, can't guarantee fault prevention." << endl;
+          break;
+        default:
+          LOG(fail) << "{WRPteAttributeRISCV::ExceptionPreventingConstraint} invalid or unsupported mem access type=" << EMemAccessType_to_string(mem_access) << endl;
+          FAIL("wr_pte_invalid_mem_access");
+          break;
+      }
+    }
+  }
+
+  void WRPteAttributeRISCV::SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const
+  {
+    uint32 dap = uint32(EDataAccessPermissionType::NoAccess);
+    bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
+    switch (mValue)
+    {
+      case 0:
+        LOG(warn) << "{WRPteAttributeRISCV::SetPteGenAttribute} no data access, leaving default NoAccess value" << endl;
+        break;
+      case 1:
+        dap = user_access ? uint32(EDataAccessPermissionType::ReadOnlyUserOnly) : uint32(EDataAccessPermissionType::ReadOnlyNoUser);
+        break;
+      case 2:
+      case 3:
+        dap = user_access ? uint32(EDataAccessPermissionType::ReadWriteUserOnly) : uint32(EDataAccessPermissionType::ReadWriteNoUser);
+        break;
+      default:
+        LOG(fail) << "{WRPteAttributeRISCV::SetPteGenAttribute} invalid generated value, can't set pte attribute" << endl;
+        FAIL("wr_pte_invalid_mem_access");
+        break;
+    }
+    rPte.SetPageGenAttribute(EPageGenAttributeType::DataAccessPermission, dap);
+  }
+
+  /*TODO - integrate individual page fault type choices into ExceptionConstraintClass
     uint32 level = rPte.ParentTableLevel();
     uint32 last_level_ptr_fault = 0;
     uint32 xwr_fault = 0;
@@ -215,108 +322,9 @@ namespace Force
     std::unique_ptr<ChoiceTree> xwr_choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid XWR", level));
     xwr_fault = xwr_choices_tree->Choose()->Value();
 
-    auto mem_access = rPagingReq.MemoryAccessType();
-    bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
-    uint32 dap = 0;
-
-    LOG(trace) << "{WPteAttributeRISCV::Generate} user_access=" << user_access << endl;
-
-    switch (mem_access)
-    {
-      case EMemAccessType::ReadWrite:
-      case EMemAccessType::Write:
-        mValue = 1;
-        dap = user_access ? uint32(EDataAccessPermissionType::ReadWriteUserOnly) : uint32(EDataAccessPermissionType::ReadWriteNoUser);
-        rPte.SetPageGenAttribute(EPageGenAttributeType::DataAccessPermission, dap);
-        break;
-      case EMemAccessType::Read:
-        mValue = 0;
-        dap = user_access ? uint32(EDataAccessPermissionType::ReadOnlyUserOnly) : uint32(EDataAccessPermissionType::ReadOnlyNoUser);
-        rPte.SetPageGenAttribute(EPageGenAttributeType::DataAccessPermission, dap);
-        break;
-      case EMemAccessType::Unknown:
-        mValue = 1;
-        dap = user_access ? uint32(EDataAccessPermissionType::ReadWriteUserOnly) : uint32(EDataAccessPermissionType::ReadWriteNoUser);
-        rPte.SetPageGenAttribute(EPageGenAttributeType::DataAccessPermission, dap);
-        LOG(info) << "{WPteAttributeRISCV::Generate} unknown mem access type, using default val of 1" << endl;
-        break;
-      default:
-        LOG(fail) << "{WPteAttributeRISCV::Generate} invalid or unsupported mem access type=" << EMemAccessType_to_string(mem_access) << endl;
-        FAIL("w_pte_gen_invalid_mem_access");
-        break;
-    }
-
-    if (xwr_fault == 0)
-    {
-      mValue = mValue ? 0 : 1;
-      LOG(info) << "{WPteAttributeRISCV::Generate} inverting for fault, val=" << mValue << endl;
-    }
-
-    if (last_level_ptr_fault != 0)
-    {
-      mValue = 0;
-      LOG(info) << "{WPteAttributeRISCV::Generate} overriding w to 0 for last level ptr fault" << endl;
-    }
-  }
-
-  void RPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
-  {
-    uint32 level = rPte.ParentTableLevel();
-    uint32 last_level_ptr_fault = 0;
-    uint32 xwr_fault = 0;
-
-    if (level == 0)
-    {
-      std::unique_ptr<ChoiceTree> ll_choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Last Level Pointer", level));
-      last_level_ptr_fault = ll_choices_tree->Choose()->Value();
-    }
-
-    std::unique_ptr<ChoiceTree> xwr_choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTreeWithLevel("Invalid XWR", level));
-    xwr_fault = xwr_choices_tree->Choose()->Value();
-
-    auto mem_access = rPagingReq.MemoryAccessType();
-    bool user_access = rPagingReq.PrivilegeLevelSpecified() and (rPagingReq.PrivilegeLevel() == EPrivilegeLevelType::U);
-    uint32 dap = 0;
-
-    LOG(trace) << "{RPteAttributeRISCV::Generate} user_access=" << user_access << endl;
-
-    switch (mem_access)
-    {
-      case EMemAccessType::ReadWrite:
-      case EMemAccessType::Write:
-        mValue = 1;
-        dap = user_access ? uint32(EDataAccessPermissionType::ReadWriteUserOnly) : uint32(EDataAccessPermissionType::ReadWriteNoUser);
-        rPte.SetPageGenAttribute(EPageGenAttributeType::DataAccessPermission, dap);
-        break;
-      case EMemAccessType::Read:
-        mValue = 1;
-        dap = user_access ? uint32(EDataAccessPermissionType::ReadOnlyUserOnly) : uint32(EDataAccessPermissionType::ReadOnlyNoUser);
-        rPte.SetPageGenAttribute(EPageGenAttributeType::DataAccessPermission, dap);
-        break;
-      case EMemAccessType::Unknown:
-        mValue = 1;
-        dap = user_access ? uint32(EDataAccessPermissionType::ReadWriteUserOnly) : uint32(EDataAccessPermissionType::ReadWriteNoUser);
-        rPte.SetPageGenAttribute(EPageGenAttributeType::DataAccessPermission, dap);
-        LOG(info) << "{RPteAttributeRISCV::Generate} unknown mem access type, using default val of 1" << endl;
-        break;
-      default:
-        LOG(fail) << "{RPteAttributeRISCV::Generate} invalid or unsupported mem access type=" << EMemAccessType_to_string(mem_access) << endl;
-        FAIL("r_pte_gen_invalid_mem_access");
-        break;
-    }
-
-    if (xwr_fault == 0)
-    {
-      mValue = mValue ? 0 : 1;
-      LOG(info) << "{RPteAttributeRISCV::Generate} inverting for fault, val=" << mValue << endl;
-    }
-
-    if (last_level_ptr_fault != 0)
-    {
-      mValue = 0;
-      LOG(info) << "{RPteAttributeRISCV::Generate} overriding r to 0 for last level ptr fault" << endl;
-    }
-  }
+    if (xwr_fault == 0) mValue = mValue ? 0 : 1;
+    if (last_level_ptr_fault != 0) mValue = 0;
+    */
 
   void UPteAttributeRISCV::Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte)
   {

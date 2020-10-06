@@ -453,7 +453,7 @@ Add RISCV main instruction starter information in this file.
     <asm format="FCVT.D.WU"/>
   </I>
   <I name="FCVT.D.H" isa="RISCV" group="General" extension="RV64D">
-    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0100010000001010011"/>
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0100001000101010011"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="rm" type="Register" bits="14-12"/>
     <O name="rd" type="Register" bits="11-7"/>
@@ -479,6 +479,13 @@ Add RISCV main instruction starter information in this file.
     <O name="rm" type="Register" bits="14-12"/>
     <O name="rd" type="Register" bits="11-7"/>
     <asm format="FCVT.H.Q"/>
+  </I>
+  <I name="FCVT.H.D" isa="RISCV" group="General" extension="RV32D">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0100010000011010011"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FCVT.H.D"/>
   </I>
   <I name="FCVT.H.S" isa="RISCV" group="General" extension="RV32F">
     <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0100010000001010011"/>
@@ -600,7 +607,7 @@ Add RISCV main instruction starter information in this file.
     <asm format="FCVT.Q.WU"/>
   </I>
   <I name="FCVT.Q.H" isa="RISCV" group="General" extension="RV32Q">
-    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101011000011010011"/>
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0100011000101010011"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="rm" type="Register" bits="14-12"/>
     <O name="rd" type="Register" bits="11-7"/>
@@ -649,7 +656,7 @@ Add RISCV main instruction starter information in this file.
     <asm format="FCVT.S.WU"/>
   </I>
   <I name="FCVT.S.H" isa="RISCV" group="General" extension="RV32F">
-    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0100010000011010011"/>
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0100000000101010011"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="rm" type="Register" bits="14-12"/>
     <O name="rd" type="Register" bits="11-7"/>
@@ -898,6 +905,15 @@ Add RISCV main instruction starter information in this file.
     <O name="rd" type="Register" bits="11-7"/>
     <asm format="FMADD.S"/>
   </I>
+  <I name="FMADD.H" isa="RISCV" group="General" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="101000011"/>
+    <O name="rs3" type="Register" bits="31-27"/>
+    <O name="rs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FMADD.H"/>
+  </I>
   <I name="FMAX.D" isa="RISCV" group="General" extension="RV32D">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00101010011010011"/>
     <O name="rs2" type="Register" bits="24-20"/>
@@ -980,6 +996,15 @@ Add RISCV main instruction starter information in this file.
     <O name="rm" type="Register" bits="14-12"/>
     <O name="rd" type="Register" bits="11-7"/>
     <asm format="FMSUB.S"/>
+  </I>
+  <I name="FMSUB.H" isa="RISCV" group="General" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="101000111"/>
+    <O name="rs3" type="Register" bits="31-27"/>
+    <O name="rs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FMSUB.H"/>
   </I>
   <I name="FMUL.D" isa="RISCV" group="General" extension="RV32D">
     <O name="const_bits" type="Constant" bits="31-25,6-0" value="00010011010011"/>
@@ -1076,6 +1101,15 @@ Add RISCV main instruction starter information in this file.
     <O name="rd" type="Register" bits="11-7"/>
     <asm format="FNMADD.S"/>
   </I>
+  <I name="FNMADD.H" isa="RISCV" group="General" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="101001111"/>
+    <O name="rs3" type="Register" bits="31-27"/>
+    <O name="rs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FNMADD.H"/>
+  </I>
   <I name="FNMSUB.D" isa="RISCV" group="General" extension="RV32D">
     <O name="const_bits" type="Constant" bits="26-25,6-0" value="011001011"/>
     <O name="rs3" type="Register" bits="31-27"/>
@@ -1102,6 +1136,15 @@ Add RISCV main instruction starter information in this file.
     <O name="rm" type="Register" bits="14-12"/>
     <O name="rd" type="Register" bits="11-7"/>
     <asm format="FNMSUB.S"/>
+  </I>
+  <I name="FNMSUB.H" isa="RISCV" group="General" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="101001011"/>
+    <O name="rs3" type="Register" bits="31-27"/>
+    <O name="rs2" type="Register" bits="24-20"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FNMSUB.H"/>
   </I>
   <I name="FSD" isa="RISCV" group="General" extension="RV32D">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="0110100111"/>

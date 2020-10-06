@@ -630,12 +630,13 @@ namespace Force {
     Data access permission types.
   */
   enum class EDataAccessPermissionType : unsigned char {
-    ReadWrite = 0,
-    ReadOnly = 1,
-    ReadWriteNoUser = 2,
-    ReadOnlyNoUser = 3,
-    ReadWriteUserOnly = 4,
-    ReadOnlyUserOnly = 5,
+    NoAccess = 0,
+    ReadWrite = 1,
+    ReadOnly = 2,
+    ReadWriteNoUser = 3,
+    ReadOnlyNoUser = 4,
+    ReadWriteUserOnly = 5,
+    ReadOnlyUserOnly = 6,
   };
   extern unsigned char EDataAccessPermissionTypeSize;
   extern const std::string EDataAccessPermissionType_to_string(EDataAccessPermissionType in_enum); //!< Get string name for enum.

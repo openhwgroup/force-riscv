@@ -115,7 +115,7 @@ enum_classes_details = [
       [("MemAttrImpl", 0), ("Invalid", 1), ("AddrSizeFault", 2), ("DataAccessPermission", 3), ("InstrAccessPermission", 4)]
       ],
      ["DataAccessPermissionType", "unsigned char", "Data access permission types.",
-      [("ReadWrite", 0), ("ReadOnly", 1), ("ReadWriteNoUser", 2), ("ReadOnlyNoUser", 3), ("ReadWriteUserOnly", 4), ("ReadOnlyUserOnly", 5)]
+      [("NoAccess", 0), ("ReadWrite", 1), ("ReadOnly", 2), ("ReadWriteNoUser", 3), ("ReadOnlyNoUser", 4), ("ReadWriteUserOnly", 5), ("ReadOnlyUserOnly", 6)]
       ],
      ["InstrAccessPermissionType", "unsigned char", "Instruction access permission types.",
       [("Execute", 0), ("NoExecute", 1), ("PrivilegedNoExecute", 2)]

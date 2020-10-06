@@ -127,9 +127,8 @@ namespace Force {
     G = 6,
     U = 7,
     X = 8,
-    W = 9,
-    R = 10,
-    V = 11,
+    WR = 9,
+    V = 10,
   };
   extern unsigned char EPteAttributeTypeSize;
   extern const std::string EPteAttributeType_to_string(EPteAttributeType in_enum); //!< Get string name for enum.
@@ -165,8 +164,8 @@ namespace Force {
     ForceAlias = 7,
     ForceMemAttrs = 8,
     ForceNewAddr = 9,
-    NoDataAbort = 10,
-    NoInstrAbort = 11,
+    NoDataPageFault = 10,
+    NoInstrPageFault = 11,
   };
   extern unsigned char EPageGenBoolAttrTypeSize;
   extern const std::string EPageGenBoolAttrType_to_string(EPageGenBoolAttrType in_enum); //!< Get string name for enum.
@@ -208,6 +207,7 @@ namespace Force {
     UserAccess = 8,
     PageFault = 9,
     FlatMap = 10,
+    AccessFault = 11,
   };
   extern unsigned char EVmConstraintTypeSize;
   extern const std::string EVmConstraintType_to_string(EVmConstraintType in_enum); //!< Get string name for enum.

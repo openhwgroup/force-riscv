@@ -158,6 +158,7 @@ namespace Force {
 
   void GenInstructionRequest::AddOperandDataRequest(const std::string& oprName, const std::string& valueStr) const
   {
+    //<< "{GenInstructionRequest::AddOperandDataRequest oprName=" << oprName << " valstr=" << valueStr << endl;
     auto find_iter = mOperandDataRequests.find(oprName);
     if (find_iter == mOperandDataRequests.end()) {
       mOperandDataRequests[oprName] = new OperandDataRequest(oprName, valueStr);
@@ -286,17 +287,21 @@ namespace Force {
       if (convert_okay) {
         SetConstraintAttribute(constr_attr, new ConstraintSet(valueStr));
       }
-      else if (size_t data_pos = attrName.find(".Data") != string::npos) {
-        AddOperandDataRequest(attrName.substr(0, data_pos), valueStr);
-      }
-      else if (attrName.find("LSData") != string::npos) {
-        AddLSDataRequest(valueStr);
-      }
-      else if (attrName.find("LSTargetList") != string::npos) {
-        AddLSTargetListRequest(valueStr);
-      }
       else {
-        AddOperandRequest(attrName, valueStr);
+        size_t data_pos = attrName.find(".Data");
+        //<< "{GenInstructionRequest::AddDetail} data_pos=" << data_pos << endl;
+        if (data_pos != string::npos) {
+          AddOperandDataRequest(attrName.substr(0, data_pos), valueStr);
+        }
+        else if (attrName.find("LSData") != string::npos) {
+          AddLSDataRequest(valueStr);
+        }
+        else if (attrName.find("LSTargetList") != string::npos) {
+          AddLSTargetListRequest(valueStr);
+        }
+        else {
+          AddOperandRequest(attrName, valueStr);
+        }
       }
     }
   }

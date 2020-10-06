@@ -94,39 +94,23 @@ namespace Force {
   };
 
   /*!
-    \class WPteAttributeRISCV
-    \brief pte attribute to manage the 'W' (Writeable) bit and corresponding fault behavior
+    \class WRPteAttributeRISCV
+    \brief pte attribute to manage the 'WR' (Writeable/Readable) bits and corresponding fault behavior
   */
-  class WPteAttributeRISCV : public PteAttribute
+  class WRPteAttributeRISCV : public ExceptionConstraintPteAttribute
   {
   public:
-    Object* Clone() const override { return new WPteAttributeRISCV(*this); } //!< overridden method to clone WPteAttribute object
-    const char* Type() const override { return "WPteAttributeRISCV"; } //!< overridden method to return WPteAttribute as object type
+    Object* Clone() const override { return new WRPteAttributeRISCV(*this); } //!< overridden method to clone WPteAttribute object
+    const char* Type() const override { return "WRPteAttributeRISCV"; } //!< overridden method to return WPteAttribute as object type
+    WRPteAttributeRISCV() : ExceptionConstraintPteAttribute() { } //!< Constructor
+    ~WRPteAttributeRISCV() { } //!< Destructor
 
-    WPteAttributeRISCV() : PteAttribute() { } //!< Constructor
-    ~WPteAttributeRISCV() { } //!< Destructor
-
-    void Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte) override; //!< Generate Writeable PTE attribute
   protected:
-    WPteAttributeRISCV(const WPteAttributeRISCV& rOther) : PteAttribute(rOther) { } //!< Copy Constructor
-  };
-
-  /*!
-    \class RPteAttributeRISCV
-    \brief pte attribute to manage the 'R' (Readable) bit and corresponding fault behavior
-  */
-  class RPteAttributeRISCV : public PteAttribute
-  {
-  public:
-    Object* Clone() const override { return new RPteAttributeRISCV(*this); } //!< overridden method to clone RPteAttribute object
-    const char* Type() const override { return "RPteAttributeRISCV"; } //!< overridden method to return RPteAttribute as object type
-
-    RPteAttributeRISCV() : PteAttribute() { } //!< Constructor
-    ~RPteAttributeRISCV() { } //!< Destructor
-
-    void Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte) override; //!< Generate Readable PTE attribute
-  protected:
-    RPteAttributeRISCV(const RPteAttributeRISCV& rOther) : PteAttribute(rOther) { } //!< Copy Constructor
+    WRPteAttributeRISCV(const WRPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
+    EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
+    void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
   };
 
   /*!

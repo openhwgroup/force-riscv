@@ -58,9 +58,9 @@ extern "C" {
     Force::spSimApiHandle->RecordRegisterUpdate(cpuid, reg_name_copy.c_str(), rval, mask, pAccessType);
   }
 
-  void update_generator_memory(uint64_t virtualAddress, uint32_t memBank, uint64_t physicalAddress, uint32_t size, const char *pBytes, const char *pAccessType)
+  void update_generator_memory(uint32_t cpuid, uint64_t virtualAddress, uint32_t memBank, uint64_t physicalAddress, uint32_t size, const char *pBytes, const char *pAccessType)
   {
-    Force::spSimApiHandle->RecordMemoryUpdate(virtualAddress, memBank, physicalAddress, size, pBytes, pAccessType);
+    Force::spSimApiHandle->RecordMemoryUpdate(cpuid, virtualAddress, memBank, physicalAddress, size, pBytes, pAccessType);
   }
 
   void update_mmu_event(Force::MmuEvent *event)
@@ -507,12 +507,12 @@ namespace Force {
 
   void SimApiHANDCAR::EnterSpeculativeMode(uint32 cpuId)
   {
-    // TODO
+    mInSpeculativeMode[cpuId] = uint32(1);
   }
 
   void SimApiHANDCAR::LeaveSpeculativeMode(uint32 cpuId)
   {
-    // TODO
+    mInSpeculativeMode[cpuId] = uint32(0);
   }
   
 }

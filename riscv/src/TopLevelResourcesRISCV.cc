@@ -69,8 +69,7 @@ namespace Force {
     obj_registry->RegisterObject(new DAPteAttributeRISCV());
     obj_registry->RegisterObject(new UPteAttributeRISCV());
     obj_registry->RegisterObject(new XPteAttributeRISCV());
-    obj_registry->RegisterObject(new WPteAttributeRISCV());
-    obj_registry->RegisterObject(new RPteAttributeRISCV());
+    obj_registry->RegisterObject(new WRPteAttributeRISCV());
 
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());

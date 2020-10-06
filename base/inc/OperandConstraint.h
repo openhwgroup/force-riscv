@@ -552,7 +552,7 @@ namespace Force {
     void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
     RegisterOperand* BaseOperand() const override { return mpBase; } //!< Return pointer to base operand if applicable.
     void GetRegisterOperands(std::vector<const RegisterOperand* >& rRegOps) override; //!< Get pointers to sub RegisterOperands.
-    RegisterOperand* IndexOperand() const { return mpIndex; } //!< Return pointer to index operand.
+    RegisterOperand* IndexOperand() const override { return mpIndex; } //!< Return pointer to index operand.
     uint64 BaseValue() const { return mBaseValue; } //!< Return base value.
     const std::vector<uint64>& IndexElementValues() const { return mIndexElemValues; } //!< Return index element values.
     uint32 IndexElementSize() const { return mIndexElemSize; } //!< Return index element size in bytes.

@@ -47,8 +47,8 @@ namespace Force {
   //!< MemUpdate - struct used to record memory updates from simulator...
 
   struct MemUpdate {
-    MemUpdate(uint64 _virtual_address, unsigned int _mem_bank, uint64 _physical_address, unsigned int _size, const char *_bytes, const char *_access_type)
-      : mem_bank(_mem_bank), virtual_address(_virtual_address), physical_address(_physical_address), size(_size), bytes(), access_type()
+    MemUpdate(uint32 _CpuID, uint64 _virtual_address, unsigned int _mem_bank, uint64 _physical_address, unsigned int _size, const char *_bytes, const char *_access_type)
+      : mem_bank(_mem_bank), virtual_address(_virtual_address), physical_address(_physical_address), size(_size), bytes(), access_type(), CpuID(_CpuID)
     {
       for (unsigned int i = 0; i < _size; i++) {
         bytes.push_back(_bytes[i]);
@@ -63,6 +63,7 @@ namespace Force {
     uint32 size;
     std::vector<unsigned char> bytes;
     std::string access_type;
+    uint32 CpuID;
   };
 
   //!< RegUpdate - struct used to record register updates from simulator...
@@ -198,7 +199,7 @@ namespace Force {
     //!< 'record' methods used by extern C 'update' methods; not protected or private since the extern C functions need
     //!< to be able to access...
     void RecordRegisterUpdate(uint32 CpuID,const char *regname,uint64 rval,uint64 mask, const char *pAccessType);
-    void RecordMemoryUpdate(uint64 virtualAddress, unsigned int memBank,
+    void RecordMemoryUpdate(uint32 CpuID, uint64 virtualAddress, unsigned int memBank,
                             uint64 physicalAddress, unsigned int size,
                             const char* pBytes, const char* pAccessType);
     void RecordMmuEvent(MmuEvent *event);
@@ -242,10 +243,17 @@ namespace Force {
     mutable std::ofstream mOfsApiTrace;
     mutable std::ofstream mOfsSimTrace;   
 
+    //!< Implementation specific characteristics of vector registers
     uint32 mVecRegWidth;
     std::vector<std::string> mVecPhysRegNames;
     uint32 mNumPhysRegs;
     cuint32 mPhysRegSize;
+
+    //!< Speculative mode output modification
+    std::map<uint32, uint32> mInSpeculativeMode;
+    const std::vector<std::string> mSpecModeStrings;
+    //const std::string mSpecModeOn;
+    //const std::string mSpecModeOff;
   };
 
 }

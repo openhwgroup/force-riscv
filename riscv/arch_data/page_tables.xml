@@ -24,8 +24,7 @@
     <pte_attribute type="G" bits="5" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="U" bits="4" value="0" class="ValuePteAttribute"/> <!-- U bit res0 for non-leaf entries -->
     <pte_attribute type="X" bits="3" value="0" class="ValuePteAttribute"/> <!-- XWR==0x0 indicates table pte -->
-    <pte_attribute type="W" bits="2" value="0" class="ValuePteAttribute"/>
-    <pte_attribute type="R" bits="1" value="0" class="ValuePteAttribute"/>
+    <pte_attribute type="WR" bits="2-1" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="4K" category="Page" granule="4K" level="0" stage="1">
@@ -37,8 +36,7 @@
     <pte_attribute type="G" bits="5" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="U" bits="4" class="UPteAttributeRISCV"/>
     <pte_attribute type="X" bits="3" class="XPteAttributeRISCV"/>
-    <pte_attribute type="W" bits="2" class="WPteAttributeRISCV"/>
-    <pte_attribute type="R" bits="1" class="RPteAttributeRISCV"/>
+    <pte_attribute type="WR" bits="2-1" class="WRPteAttributeRISCV"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="2M" category="Page" granule="4K" level="1" stage="1">
@@ -50,8 +48,7 @@
     <pte_attribute type="G" bits="5" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="U" bits="4" class="UPteAttributeRISCV"/>
     <pte_attribute type="X" bits="3" class="XPteAttributeRISCV"/>
-    <pte_attribute type="W" bits="2" class="WPteAttributeRISCV"/>
-    <pte_attribute type="R" bits="1" class="RPteAttributeRISCV"/>
+    <pte_attribute type="WR" bits="2-1" class="WRPteAttributeRISCV"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="1G" category="Page" granule="4K" level="2" stage="1">
@@ -63,8 +60,7 @@
     <pte_attribute type="G" bits="5" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="U" bits="4" class="UPteAttributeRISCV"/>
     <pte_attribute type="X" bits="3" class="XPteAttributeRISCV"/>
-    <pte_attribute type="W" bits="2" class="WPteAttributeRISCV"/>
-    <pte_attribute type="R" bits="1" class="RPteAttributeRISCV"/>
+    <pte_attribute type="WR" bits="2-1" class="WRPteAttributeRISCV"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="512G" category="Page" granule="4K" level="3" stage="1">
@@ -76,23 +72,7 @@
     <pte_attribute type="G" bits="5" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="U" bits="4" class="UPteAttributeRISCV"/>
     <pte_attribute type="X" bits="3" class="XPteAttributeRISCV"/>
-    <pte_attribute type="W" bits="2" class="WPteAttributeRISCV"/>
-    <pte_attribute type="R" bits="1" class="RPteAttributeRISCV"/>
+    <pte_attribute type="WR" bits="2-1" class="WRPteAttributeRISCV"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
 </page_tables>
-
-  <!-- Sv32 choices - need to relocate to RV32 paging choices file
-  <pte type="4K" category="Page" granule="4K" stage="1">
-    <pte_attribute type="Address" bits="31-10" class="AddressPteAttribute"/>
-    <pte_attribute type="SystemPage" bits="9" value="0"/>
-    <pte_attribute type="RSW" bits="8" class="RandomPteAttribute"/>
-    <pte_attribute type="D" bits="7"/>
-    <pte_attribute type="A" bits="6"/>
-    <pte_attribute type="G" bits="5"/>
-    <pte_attribute type="U" bits="4"/>
-    <pte_attribute type="X" bits="3"/>
-    <pte_attribute type="W" bits="2"/>
-    <pte_attribute type="R" bits="1"/>
-    <pte_attribute type="V" bits="0"/>
-  </pte> -->

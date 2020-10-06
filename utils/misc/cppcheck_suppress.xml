@@ -98,7 +98,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/Operand.cc</fileName>
-        <lineNumber>420</lineNumber>
+        <lineNumber>423</lineNumber>
     </suppress>
 
 <!-- OperandConstraintRISCV module -->

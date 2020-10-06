@@ -34,7 +34,9 @@ namespace Force {
     mVecRegWidth(0),
     mVecPhysRegNames(),
     mNumPhysRegs(0),
-    mPhysRegSize(8u)
+    mPhysRegSize(8u),
+    mInSpeculativeMode(),
+    mSpecModeStrings{" ", " (spcltv) "}
   {
   }
 
@@ -88,17 +90,26 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
+    std::string _speculative_mode = mSpecModeStrings[0];
+
     for(const RegUpdate& rRegUp : mRegisterUpdates)
     {
-      mOfsSimTrace << "Cpu " << dec << rRegUp.CpuID;
+      _speculative_mode = mSpecModeStrings[0];
+      auto _spec_mode_lookup = mInSpeculativeMode.find(rRegUp.CpuID);
+      if(_spec_mode_lookup != mInSpeculativeMode.end())
+      {
+	_speculative_mode = mSpecModeStrings[_spec_mode_lookup->second];
+      } 
+
+      mOfsSimTrace << "Cpu " << dec << rRegUp.CpuID << _speculative_mode;
 
       if(rRegUp.access_type == std::string("write"))
       {
-        mOfsSimTrace << " Reg W ";
+        mOfsSimTrace << "Reg W ";
       } 
       else 
       {
-        mOfsSimTrace << " Reg R ";
+        mOfsSimTrace << "Reg R ";
       }
 
       mOfsSimTrace << rRegUp.regname << " val 0x" << hex << setfill('0') << setw(16) << rRegUp.rval << " mask 0x" << setfill('0') << setw(16) << rRegUp.mask << "\n";
@@ -109,8 +120,21 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
+    std::string _speculative_mode = mSpecModeStrings[0];
+
     for(const MemUpdate& rMemUp : mMemoryUpdates)
     {
+      if((rMemUp.CpuID & (1u << (8u * sizeof(rMemUp.CpuID) - 1u))) == 0u) // For negative number cpu ID's dont print status for speculative BNT. Negative CPUid indicates simulator non-isa backend is using MMU to configure test.
+      {
+	_speculative_mode = mSpecModeStrings[0];
+	auto _spec_mode_lookup = mInSpeculativeMode.find(rMemUp.CpuID);
+	if(_spec_mode_lookup != mInSpeculativeMode.end())
+	{
+	  _speculative_mode = mSpecModeStrings[_spec_mode_lookup->second];
+	}
+	mOfsSimTrace << "Cpu " << dec << rMemUp.CpuID << _speculative_mode;
+      }
+
       if(rMemUp.access_type == std::string("write"))
       {
         mOfsSimTrace << "Mem W";
@@ -167,8 +191,15 @@ namespace Force {
     if(not mOfsSimTrace.is_open()) return;
 
     size_t idx = 0;
-    mOfsSimTrace << dec << "Cpu " << CpuID << " " << currentICount << " ----" << endl;
-    mOfsSimTrace << dec << "Cpu " << CpuID << " PC(VA) 0x" << hex << setfill('0') << setw(16) << pc << " op: 0x" << hex << setfill('0') << setw(16) << stoull(rOpcode, &idx, 16) << " : " << rDisassembly << endl;
+    std::string _speculative_mode = mSpecModeStrings[0];
+    auto _spec_mode_lookup = mInSpeculativeMode.find(CpuID);
+    if(_spec_mode_lookup != mInSpeculativeMode.end())
+    {
+      _speculative_mode = mSpecModeStrings[_spec_mode_lookup->second];
+    } 
+
+    mOfsSimTrace << dec << "Cpu " << CpuID  << _speculative_mode << currentICount << " ----" << endl;
+    mOfsSimTrace << dec << "Cpu " << CpuID << _speculative_mode << "PC(VA) 0x" << hex << setfill('0') << setw(16) << pc << " op: 0x" << hex << setfill('0') << setw(16) << stoull(rOpcode, &idx, 16) << " : " << rDisassembly << endl;
   }
 
   void SimAPI::PrintSummary() const
@@ -211,9 +242,9 @@ namespace Force {
     mRegisterUpdates.push_back(RegUpdate(CpuID, pRegName, rval, mask, pAccessType));
   }
 
-  void SimAPI::RecordMemoryUpdate(uint64 virtualAddress, uint32 memBank, uint64 physicalAddress, uint32 size, const char *pBytes, const char *pAccessType)
+  void SimAPI::RecordMemoryUpdate(uint32 CpuID, uint64 virtualAddress, uint32 memBank, uint64 physicalAddress, uint32 size, const char *pBytes, const char *pAccessType)
   {
-    mMemoryUpdates.push_back(MemUpdate(virtualAddress, memBank, physicalAddress, size, pBytes, pAccessType));
+    mMemoryUpdates.push_back(MemUpdate(CpuID, virtualAddress, memBank, physicalAddress, size, pBytes, pAccessType));
   }
 
   void SimAPI::RecordMmuEvent(MmuEvent *pEvent)
