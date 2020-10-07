@@ -60,6 +60,7 @@ namespace Force {
         mConfigFile("uninitialized"), //!< Path to config file                                                               
         mRailhouseFile("uninitialized"), //!< Command line option is railhouse
         mSimulatorSharedObjectFile("uninitialized"), //!< Simulator shared object file
+	mSimulatorConfigString("uninitialized"), //!< Simulator (ISA) config string
         mMaxInsts(-1),  //!< Command line option is max_insts
         mEnableDecoding(-1),  //!< Command line option is decoding
         mNumberOfCores(-1),  //!< Command line option is core_num
@@ -78,7 +79,8 @@ namespace Force {
     const std::string LookUpFile(const std::string& filePath) const;
     const std::string &SimulatorSharedObjectFile() const { return mSimulatorSharedObjectFile; };
     void SetSimulatorSharedObjectFile(std::string &SimulatorSharedObjectFile) { mSimulatorSharedObjectFile = SimulatorSharedObjectFile; };
-
+    const std::string SimulatorConfigString() const { return mSimulatorConfigString ; };
+    void SetSimulatorConfigString(std::string &SimulatorCfgStr) { mSimulatorConfigString = SimulatorCfgStr; };
     bool TreatLowPowerAsNOP() const { return true; } //!< Treat low power as nop by default.
     // these methods should be common to all simulators:
 
@@ -158,7 +160,7 @@ namespace Force {
 
     std::string mRailhouseFile;  //!< Command line option is railhouse
     std::string mSimulatorSharedObjectFile; //!< Simulator shared object file
-
+    std::string mSimulatorConfigString; //!< Simulator ISA config string
     int mMaxInsts;  //!< Command line option is max_insts
     int mEnableDecoding;  //!< Command line option is decoding
     int mNumberOfCores;  //!< Command line option is core_num

@@ -669,6 +669,7 @@ namespace Force {
     PageTableRegionStart = 3,
     MemoryFillPattern = 4,
     ElfMachine = 5,
+    RV32 = 6,
   };
   extern unsigned char EGlobalStateTypeSize;
   extern const std::string EGlobalStateType_to_string(EGlobalStateType in_enum); //!< Get string name for enum.
