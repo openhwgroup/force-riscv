@@ -267,10 +267,11 @@ namespace Force {
                                config_ptr->LimitValue(ELimitType::MaxPhysicalVectorLen), /* vector register length */
                                config_ptr->LimitValue(ELimitType::MaxVectorElementWidth), /* maximum vector element width */
                                "./sim.log", /* ignore for now */
-                               true
+                               true,
+			       SimulatorConfigString()
                                );
 
-      mpSimAPI->InitializeIss(sim_dll_cfg, sim_so_file, config_ptr->IssApiTraceFile());
+      mpSimAPI->InitializeIss(sim_dll_cfg, sim_so_file, config_ptr->IssApiTraceFile() );
     }
 
     LOG(notice) << "Simulator Standalone: '" << config_ptr->LookUpFile(SimulatorStandalone()) << "'." << endl;

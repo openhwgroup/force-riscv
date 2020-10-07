@@ -60,10 +60,11 @@ namespace Force {
 			     sim_cfg->VectorRegisterLength(), /* vector register length */
 			     sim_cfg->MaxVectorElementWidth(), /* maximum vector element width */
 			     "./fpix_sim.log", /* simulator debug trace file */
-            false
+                             false,
+			     sim_cfg->SimulatorConfigString()
 			     );
 
-    mspSimAPI->InitializeIss(sim_dll_cfg, sim_cfg->SimulatorSharedObjectFile(),"" /* no api trace file */);
+    mspSimAPI->InitializeIss(sim_dll_cfg, sim_cfg->SimulatorSharedObjectFile(),"" /* no api trace file */ );
 
     LOG(debug) << "done." << endl;
     LOG(debug) << "      Simulator DLL: '" << sim_cfg->SimulatorSharedObjectFile() << "'." << endl;

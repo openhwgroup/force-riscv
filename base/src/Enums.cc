@@ -3483,7 +3483,7 @@ namespace Force {
   }
 
 
-  unsigned char EGlobalStateTypeSize = 6;
+  unsigned char EGlobalStateTypeSize = 7;
 
   const string EGlobalStateType_to_string(EGlobalStateType in_enum)
   {
@@ -3494,6 +3494,7 @@ namespace Force {
     case EGlobalStateType::PageTableRegionStart: return "PageTableRegionStart";
     case EGlobalStateType::MemoryFillPattern: return "MemoryFillPattern";
     case EGlobalStateType::ElfMachine: return "ElfMachine";
+    case EGlobalStateType::RV32: return "RV32";
     default:
       unknown_enum_value("EGlobalStateType", (unsigned char)(in_enum));
     }
@@ -3507,6 +3508,9 @@ namespace Force {
     char hash_value = in_str.at(16 < size ? 16 : 16 % size);
 
     switch (hash_value) {
+    case 82:
+      validate(in_str, "RV32", enum_type_name);
+      return EGlobalStateType::RV32;
     case 104:
       validate(in_str, "ElfMachine", enum_type_name);
       return EGlobalStateType::ElfMachine;
@@ -3538,6 +3542,9 @@ namespace Force {
     char hash_value = in_str.at(16 < size ? 16 : 16 % size);
 
     switch (hash_value) {
+    case 82:
+      okay = (in_str == "RV32");
+      return EGlobalStateType::RV32;
     case 104:
       okay = (in_str == "ElfMachine");
       return EGlobalStateType::ElfMachine;
