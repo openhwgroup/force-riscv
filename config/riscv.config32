@@ -26,6 +26,7 @@
     <limit name="SpeculativeBntLevelLimit" value = "3"/>
     <limit name="SpeculativeBntInstructionLimit" value = "128"/>
     <limit name="MaxPhysicalVectorLen" value = "512"/>
+    <limit name="MaxVectorElementWidth" value = "64"/>
   </limits>
   <instruction_files>
     <instruction_file file="riscv/arch_data/riscv_instructions.xml"/>
