@@ -191,6 +191,53 @@ namespace Force {
     EExtendType mExtendType; //!< Extension type.
     uint32 mExtendAmount; //!< Extend amount.
   };
+
+  /*!
+    \class VectorStridedSolvingShared
+    \brief Class holding necessary shared vector strided address solving data structures.
+  */
+  class VectorStridedSolvingShared : public AddressSolvingShared {
+  public:
+    VectorStridedSolvingShared();
+    COPY_CONSTRUCTOR_ABSENT(VectorStridedSolvingShared);
+    ~VectorStridedSolvingShared() override;
+    ASSIGNMENT_OPERATOR_ABSENT(VectorStridedSolvingShared);
+
+    bool Setup() override; //!< Setup shared data structures.
+    const std::vector<AddressingRegister*>& GetStrideChoices() const { return mStrideChoices; } //!< Return available stride register choices.
+    uint32 GetElementCount() const { return mElemCount; } //!< Return the number of vector elements.
+  private:
+    void SetupStrideChoices(); //!< Record the available stride choices.
+  private:
+    const RegisterOperand* mpStrideOpr; //!< Stride operand
+    std::vector<AddressingRegister*> mStrideChoices; //!< Available stride register choices
+    uint32 mElemCount; //!< The number of vector elements
+  };
+
+  class AddressingMultiRegister;
+
+  /*!
+    \class VectorIndexedSolvingShared
+    \brief Class holding necessary shared vector indexed address solving data structures.
+  */
+  class VectorIndexedSolvingShared : public AddressSolvingShared {
+  public:
+    VectorIndexedSolvingShared();
+    COPY_CONSTRUCTOR_ABSENT(VectorIndexedSolvingShared);
+    ~VectorIndexedSolvingShared() override;
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedSolvingShared);
+
+    bool Setup() override; //!< Setup shared data structures.
+    const std::vector<AddressingMultiRegister*>& GetIndexChoices() const { return mIndexChoices; } //!< Return available index operand choices.
+    uint32 GetElementSize() const { return mElemSize; } //!< Return the size in bits of each vector register element.
+  private:
+    void SetupIndexChoices(); //!< Record the available index choices.
+  private:
+    const RegisterOperand* mpIndexOpr; //!< Index operand
+    std::vector<AddressingMultiRegister*> mIndexChoices; //!< Available index operand choices
+    uint32 mElemSize; //!< The size in bits of each vector register element
+  };
+
   /*!
     \class BaseIndexAmountBitSolvingShared
     \brief Class holding necessary shared base-index address solving data structures.

@@ -25,6 +25,7 @@
 #include <Constraint.h>
 #include <Register.h>
 #include <Instruction.h>
+#include <InstructionConstraint.h>
 #include <PcSpacing.h>
 #include <Random.h>
 #include <Choices.h>
@@ -33,6 +34,7 @@
 #include <GenException.h>
 #include <AddressFilteringRegulator.h>
 #include <AddressReuseMode.h>
+#include <VectorLayout.h>
 #include <Log.h>
 
 #include <memory>
@@ -372,6 +374,165 @@ namespace Force {
 
     return (mIndexChoices.size() > 0);
   }
+
+  VectorStridedSolvingShared::VectorStridedSolvingShared()
+    : AddressSolvingShared(), mpStrideOpr(nullptr), mStrideChoices(), mElemCount(0)
+  {
+  }
+
+  VectorStridedSolvingShared::~VectorStridedSolvingShared()
+  {
+    for (AddressingRegister* stride_choice : mStrideChoices) {
+      delete stride_choice;
+    }
+  }
+
+  bool VectorStridedSolvingShared::Setup()
+  {
+    if (not AddressSolvingShared::Setup())
+    {
+      return false;
+    }
+
+    auto strided_opr_constr = mpAddressingOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
+    mpStrideOpr = strided_opr_constr->StrideOperand();
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    mElemCount = vec_layout->mElemCount;
+
+    SetupStrideChoices();
+    if (mStrideChoices.empty()) {
+      LOG(notice) << "{VectorStridedSolvingShared::Setup} no stride choice available." << endl;
+      return false;
+    }
+
+    return true;
+  }
+
+  void VectorStridedSolvingShared::SetupStrideChoices()
+  {
+    vector<const Choice*> choices_list;
+    mpStrideOpr->GetAvailableChoices(choices_list);
+
+    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
+    for (const Choice* choice_item : choices_list) {
+      Register* reg = reg_file->RegisterLookup(choice_item->Name());
+
+      if (reg->IsInitialized()) {
+        if (reg->HasAttribute(ERegAttrType::HasValue)) {
+          auto addr_reg = new AddressingRegister();
+          addr_reg->SetRegister(reg);
+          addr_reg->SetWeight(choice_item->Weight());
+          addr_reg->SetRegisterValue(reg->Value());
+          mStrideChoices.push_back(addr_reg);
+        }
+      }
+      else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
+        auto addr_reg = new AddressingRegister();
+        addr_reg->SetRegister(reg);
+        addr_reg->SetWeight(choice_item->Weight());
+        addr_reg->SetRegisterValue(reg->ReloadValue());
+        addr_reg->SetFree(true);
+        mStrideChoices.push_back(addr_reg);
+      }
+    }
+  }
+
+  VectorIndexedSolvingShared::VectorIndexedSolvingShared()
+    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices(), mElemSize(0)
+  {
+  }
+
+  VectorIndexedSolvingShared::~VectorIndexedSolvingShared()
+  {
+    for (AddressingMultiRegister* index_choice : mIndexChoices) {
+      delete index_choice;
+    }
+  }
+
+  bool VectorIndexedSolvingShared::Setup()
+  {
+    if (not AddressSolvingShared::Setup())
+    {
+      return false;
+    }
+
+    auto indexed_opr_constr = mpAddressingOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
+    mpIndexOpr = indexed_opr_constr->IndexOperand();
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    mElemSize = vec_layout->mElemSize;
+
+    SetupIndexChoices();
+    if (mIndexChoices.empty()) {
+      LOG(notice) << "{VectorIndexedSolvingShared::Setup} no index choice available." << endl;
+      return false;
+    }
+
+    return true;
+  }
+
+  void VectorIndexedSolvingShared::SetupIndexChoices()
+  {
+    vector<const Choice*> choices_list;
+    mpIndexOpr->GetAvailableChoices(choices_list);
+
+    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
+    for (const Choice* choice_item : choices_list) {
+      // The unique_ptr ensures the addressing register is deleted if we can't use all of the
+      // registers for a given operand choice.
+      unique_ptr<AddressingMultiRegister> addr_multi_reg(new AddressingMultiRegister());
+
+      uint32 addr_reg_count = 0;
+
+      auto multi_reg_index_opr = dynamic_cast<const MultiRegisterOperand*>(mpIndexOpr);
+      vector<string> index_reg_names({choice_item->Name()});
+      multi_reg_index_opr->GetExtraRegisterNames(choice_item->Value(), index_reg_names);
+      for (const string& index_reg_name : index_reg_names) {
+        Register* reg = reg_file->RegisterLookup(index_reg_name);
+
+        // TODO(Noah): Relax the use of the OperandConflict() check for initialized registers to
+        // allow legal cases where the source/destination register and the index register are the
+        // same when a good way to do so can be determined.
+        if (reg->IsInitialized() and (not OperandConflict(reg))) {
+          if (reg->HasAttribute(ERegAttrType::HasValue)) {
+            auto addr_reg = new AddressingRegister();
+            addr_reg->SetRegister(reg);
+            addr_reg->SetWeight(choice_item->Weight());
+
+            auto large_reg = dynamic_cast<LargeRegister*>(reg);
+            addr_reg->SetRegisterValue(large_reg->Values());
+
+            addr_multi_reg->AddAddressingRegister(addr_reg);
+            addr_reg_count++;
+          }
+        }
+        else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
+          // TODO(Noah): Uncomment the logic below to enable free index registers when the
+          // OperandDataRequest can be modified to initialize register groups.
+          /*
+          auto addr_reg = new AddressingRegister();
+          addr_reg->SetRegister(reg);
+          addr_reg->SetWeight(choice_item->Weight());
+          addr_reg->SetFree(true);
+
+          auto large_reg = dynamic_cast<LargeRegister*>(reg);
+          addr_reg->SetRegisterValue(large_reg->ReloadValues());
+
+          addr_multi_reg->AddAddressingRegister(addr_reg);
+          addr_reg_count++;
+          */
+        }
+      }
+
+      if (addr_reg_count == index_reg_names.size()) {
+        mIndexChoices.push_back(addr_multi_reg.release());
+      }
+    }
+  }
+
   bool BaseIndexAmountBitSolvingShared::Setup()
   {
     if (not BaseIndexSolvingShared::Setup())

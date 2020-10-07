@@ -19,6 +19,7 @@
 #include <Defines.h>
 #include <vector>
 #include <string>
+#include <type_traits>
 #include <Enums.h>
 #include ARCH_ENUM_HEADER
 
@@ -57,7 +58,17 @@ namespace Force {
     template<typename T>
       T* CastInstance()
       {
-        T* cast_instance = dynamic_cast<T* >(this);
+        T* cast_instance = dynamic_cast<T*>(this);
+        return cast_instance;
+      }
+
+    /*!
+      This is a const variant of CastInstance().
+     */
+    template<typename T>
+      typename std::enable_if<std::is_const<T>::value, T*>::type CastInstance() const
+      {
+        T* cast_instance = dynamic_cast<T*>(this);
         return cast_instance;
       }
 
@@ -71,7 +82,7 @@ namespace Force {
     mutable ConstraintSet* mpConstraintSet; //!< Pointer to constraint set for the operand.
     bool mConstraintForced; //!< Return true if constraint is forced from the front end with single value.
   private:
-    virtual void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const { } //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
+    virtual void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
   };
 
   /*!
@@ -543,16 +554,16 @@ namespace Force {
     void GetRegisterOperands(std::vector<const RegisterOperand* >& rRegOps) override; //!< Get pointers to sub RegisterOperands.
     RegisterOperand* IndexOperand() const override { return mpIndex; } //!< Return pointer to index operand.
     uint64 BaseValue() const { return mBaseValue; } //!< Return base value.
-    const std::vector<uint64>& IndexValues() const { return mIndexValues; } //!< Return index element values.
+    const std::vector<uint64>& IndexElementValues() const { return mIndexElemValues; } //!< Return index element values.
     uint32 IndexElementSize() const { return mIndexElemSize; } //!< Return index element size in bytes.
     void SetBaseValue(cuint64 baseValue) { mBaseValue = baseValue; } //!< Set base value.
-    void SetIndexValues(const std::vector<uint64>& rIndexValues) { mIndexValues = rIndexValues; } //!< Set index element values.
+    void SetIndexElementValues(const std::vector<uint64>& rIndexElemValues) { mIndexElemValues = rIndexElemValues; } //!< Set index element values.
     void SetIndexElementSize(cuint32 indexElemSize) { mIndexElemSize = indexElemSize; } //!< Set the index element size in bytes.
   private:
     RegisterOperand* mpBase; //!< Base operand
     RegisterOperand* mpIndex; //!< Index operand
     uint64 mBaseValue; //!< Base value
-    std::vector<uint64> mIndexValues; //!< Index element values
+    std::vector<uint64> mIndexElemValues; //!< Index element values
     uint32 mIndexElemSize; //!< Index element size in bytes
   };
 

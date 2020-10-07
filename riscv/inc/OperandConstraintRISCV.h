@@ -21,9 +21,23 @@
 
 namespace Force {
 
+  /*!
+    \class VsetvlVtypeImmediateOperandConstraint
+    \brief This class carries dynamic constraint properties for VsetvlVtypeImmediateOperand.
+  */
+  class VsetvlVtypeImmediateOperandConstraint : public ImmediateOperandConstraint {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlVtypeImmediateOperandConstraint);
+    COPY_CONSTRUCTOR_ABSENT(VsetvlVtypeImmediateOperandConstraint);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlVtypeImmediateOperandConstraint);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlVtypeImmediateOperandConstraint);
+
+    void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
+  };
+
    /*!
     \class VectorMaskOperandConstraint
-    \brief The class carries dynamic constraint properties for VectorMaskOperand.
+    \brief This class carries dynamic constraint properties for VectorMaskOperand.
   */
   class VectorMaskOperandConstraint : public ChoicesOperandConstraint {
   public:
@@ -62,7 +76,7 @@ namespace Force {
 
   /*!
     \class ConditionalBranchOperandRISCVConstraint
-    \brief The class carries dynamic constraint properties for ConditionalBranchOperandRISCV.
+    \brief This class carries dynamic constraint properties for ConditionalBranchOperandRISCV.
   */
   class ConditionalBranchOperandRISCVConstraint : public PcRelativeBranchOperandConstraint {
   public:
@@ -96,7 +110,21 @@ namespace Force {
     {
     }
   };
-  
+
+  /*!
+    \class VsetvlRegisterOperandConstraint
+    \brief This class carries dynamic constraint properties for register operands for VSETVL and VSETVLI instructions.
+  */
+  class VsetvlRegisterOperandConstraint : public RegisterOperandConstraint {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlRegisterOperandConstraint);
+    COPY_CONSTRUCTOR_ABSENT(VsetvlRegisterOperandConstraint);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlRegisterOperandConstraint);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlRegisterOperandConstraint);
+
+    void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
+  };
+
   class VectorRegisterOperandConstraintRISCV : public VectorRegisterOperandConstraint {
   public:
     VectorRegisterOperandConstraintRISCV() : VectorRegisterOperandConstraint() { } //!< Constructor.

@@ -48,12 +48,15 @@ namespace Force {
     ObjectRegistry* obj_registry = ObjectRegistry::Instance();
 
     // Register Operand based objects.
+    obj_registry->RegisterObject(new VsetvlVtypeImmediateOperand());
     obj_registry->RegisterObject(new VectorMaskOperand());
     obj_registry->RegisterObject(new BaseOffsetBranchOperand());
     obj_registry->RegisterObject(new RetOperand());
     obj_registry->RegisterObject(new ConditionalBranchOperandRISCV());
     obj_registry->RegisterObject(new CompressedConditionalBranchOperandRISCV());
     obj_registry->RegisterObject(new CompressedRegisterOperandRISCV());
+    obj_registry->RegisterObject(new VsetvlAvlRegisterOperand());
+    obj_registry->RegisterObject(new VsetvlVtypeRegisterOperand());
     obj_registry->RegisterObject(new VtypeLayoutOperand());
     obj_registry->RegisterObject(new WholeRegisterLayoutOperand());
     obj_registry->RegisterObject(new CustomLayoutOperand());
@@ -71,6 +74,8 @@ namespace Force {
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());
     obj_registry->RegisterObject(new VectorLoadStoreInstruction());
+    obj_registry->RegisterObject(new VectorAMOInstructionRISCV());
+    obj_registry->RegisterObject(new VsetvlInstruction());
   }
 
   void destroy_top_level_resources_RISCV()

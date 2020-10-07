@@ -68,6 +68,7 @@ namespace Force {
         mThreadsPerCpu(-1),  //!< Command line option is threads_per_cpu
         mPhysicalAddressSize(-1),  //!< Command line option is pa_size
         mVectorRegLen(-1),  //!< Command line option is vlen
+        mMaxVectorElemWidth(-1),  //!< Command line option is elen
         mExitOnBranchToSelf(-1)  //!< Command line option is exit_loop
     {};
     virtual ~ConfigFPIX() {};
@@ -98,6 +99,9 @@ namespace Force {
 
     int VectorRegisterLength() const { return mVectorRegLen; };
     void SetVectorRegisterLength(int VectorRegLen) { mVectorRegLen = VectorRegLen; };
+
+    int MaxVectorElementWidth() const { return mMaxVectorElemWidth; };
+    void SetMaxVectorElementWidth(int MaxVectorElemWidth) { mMaxVectorElemWidth = MaxVectorElemWidth; };
 
     int MaxInsts() const { return mMaxInsts; };
     void SetMaxInsts(int MaxInsts) { mMaxInsts = MaxInsts; };
@@ -168,6 +172,7 @@ namespace Force {
     int mThreadsPerCpu;  //!< Command line option is threads_per_cpu
     int mPhysicalAddressSize;  //!< Command line option is pa_size
     int mVectorRegLen;  //!< Command line option is vlen
+    int mMaxVectorElemWidth;  //!< Command line option is elen
     int mExitOnBranchToSelf; //!< Command line option is exit_loop
     
     friend class ConfigParserFPIX;

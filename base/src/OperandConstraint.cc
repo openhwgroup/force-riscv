@@ -100,6 +100,11 @@ namespace Force {
 
   }
 
+  void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    rAdjDifferValues.AddValue(differVal);
+  }
+
   void ImmediatePartialOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
     ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
@@ -785,7 +790,7 @@ namespace Force {
   }
 
   VectorIndexedLoadStoreOperandConstraint::VectorIndexedLoadStoreOperandConstraint()
-    : LoadStoreOperandConstraint(), mpBase(nullptr), mpIndex(nullptr), mBaseValue(0), mIndexValues(0), mIndexElemSize(0)
+    : LoadStoreOperandConstraint(), mpBase(nullptr), mpIndex(nullptr), mBaseValue(0), mIndexElemValues(0), mIndexElemSize(0)
   {
   }
 

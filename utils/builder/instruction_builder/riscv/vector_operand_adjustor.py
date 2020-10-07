@@ -37,7 +37,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def add_custom_layout_operand(self, aRegCount, aElemWidth):
         layout_opr = Operand()
-        layout_opr.name = "B" #TODO (Chris): change name?
+        layout_opr.name = "custom"
         layout_opr.type = "VectorLayout"
         layout_opr.oclass = "CustomLayoutOperand"
         layout_opr.regCount = aRegCount
@@ -46,7 +46,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def add_whole_register_layout_operand(self, aRegCount=1, aRegIndexAlignment=1):
         layout_opr = Operand()
-        layout_opr.name = "B"
+        layout_opr.name = "whole"
         layout_opr.type = "VectorLayout"
         layout_opr.oclass = "WholeRegisterLayoutOperand"
         layout_opr.regCount = aRegCount
@@ -54,7 +54,7 @@ class VectorOperandAdjustor(OperandAdjustor):
         self.mInstr.insert_operand(0, layout_opr)
 
     def set_reg_vec(self, aOperand):
-        aOperand.type = "VECREG" #TODO: some might possibly be SIMDVR or FPR
+        aOperand.type = "VECREG"
         aOperand.choices = "Vector registers"
         self.add_asm_op(aOperand)
 
@@ -62,6 +62,23 @@ class VectorOperandAdjustor(OperandAdjustor):
         aOperand.type = "VECREG"
         aOperand.choices = "Nonzero vector registers"
         self.add_asm_op(aOperand)
+
+    def set_rs1_vsetvl(self):
+        rs1_opr = self.mInstr.find_operand('rs1')
+        rs1_opr.oclass = 'VsetvlAvlRegisterOperand'
+        self.set_rs1_int()
+
+    def set_rs2_vsetvl(self):
+        rs2_opr = self.mInstr.find_operand('rs2')
+        rs2_opr.oclass = 'VsetvlVtypeRegisterOperand'
+        rs2_opr.differ = 'rs1'
+        self.set_rs2_int()
+
+    def set_imm_vsetvl(self):
+        imm_opr = self.mInstr.find_operand('zimm[10:0]')
+        imm_opr.oclass = 'VsetvlVtypeImmediateOperand'
+        imm_opr.name = 'zimm10'
+        self.add_asm_op(imm_opr)
 
     def set_vm(self):
         vm_opr = self.mInstr.find_operand('vm')

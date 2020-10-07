@@ -149,6 +149,11 @@ namespace Force {
       }
     }
 
+    string error;
+    if (!Validate(gen, error)) {
+      throw InstructionError(error);
+    }
+
     for (auto opr_ptr : mOperands) {
       LOG(info)<<" opname="<<opr_ptr->Name()<<endl;
       opr_ptr->Generate(gen, *this);

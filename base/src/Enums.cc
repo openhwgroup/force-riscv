@@ -61,7 +61,7 @@ namespace Force {
   }
 
 
-  unsigned char ELimitTypeSize = 12;
+  unsigned char ELimitTypeSize = 13;
 
   const string ELimitType_to_string(ELimitType in_enum)
   {
@@ -78,6 +78,7 @@ namespace Force {
     case ELimitType::MaxPhysicalVectorLen: return "MaxPhysicalVectorLen";
     case ELimitType::ErrRegisterNumber: return "ErrRegisterNumber";
     case ELimitType::SpeculativeBntInstructionLimit: return "SpeculativeBntInstructionLimit";
+    case ELimitType::MaxVectorElementWidth: return "MaxVectorElementWidth";
     default:
       unknown_enum_value("ELimitType", (unsigned char)(in_enum));
     }
@@ -94,6 +95,9 @@ namespace Force {
     case 1:
       validate(in_str, "ChipsLimit", enum_type_name);
       return ELimitType::ChipsLimit;
+    case 2:
+      validate(in_str, "MaxVectorElementWidth", enum_type_name);
+      return ELimitType::MaxVectorElementWidth;
     case 6:
       validate(in_str, "CoresLimit", enum_type_name);
       return ELimitType::CoresLimit;
@@ -143,6 +147,9 @@ namespace Force {
     case 1:
       okay = (in_str == "ChipsLimit");
       return ELimitType::ChipsLimit;
+    case 2:
+      okay = (in_str == "MaxVectorElementWidth");
+      return ELimitType::MaxVectorElementWidth;
     case 6:
       okay = (in_str == "CoresLimit");
       return ELimitType::CoresLimit;

@@ -16,6 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from VectorTestSequence import VectorTestSequence
+from base.ChoicesModifier import ChoicesModifier
 
 ## This test verifies that vector register operands with different layouts don't overlap.
 class MainSequence(VectorTestSequence):
@@ -60,6 +61,16 @@ class MainSequence(VectorTestSequence):
             'VWSUBU.WV##RISCV',
             'VWSUBU.WX##RISCV',
         )
+
+    ## Set up the environment prior to generating the test instructions.
+    def _setUpTest(self):
+        # TODO(Noah): Remove the restriction on SEW when a mechanism to skip instructions with
+        # illegal vector layouts is implemented. For now, ensure vector element width is set to no
+        # more than 16 bits.
+        choices_mod = ChoicesModifier(self.genThread)
+        choice_weights = {'0x0': 10, '0x1': 10, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', choice_weights)
+        choices_mod.commitSet()
 
     ## Return the maximum number of test instructions to generate.
     def _getMaxInstructionCount(self):

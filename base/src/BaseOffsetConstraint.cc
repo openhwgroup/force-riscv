@@ -16,6 +16,7 @@
 #include <BaseOffsetConstraint.h>
 #include <Constraint.h>
 #include <Log.h>
+#include <UtilityFunctions.h>
 
 /*!
   \file BaseOffsetConstraint.cc
@@ -30,7 +31,7 @@ namespace Force {
     : mOffsetBase(offsetBase), mMaxAddress(maxAddress), mOffsetSize(offsetSize), mOffsetScale(offsetScale), mIsOffsetShift(IsOffsetShift),mSignTestBit(0), mOffsetMask(0), mSignExtendMask(0), mBaseValue(0), mAccessSize(0), mpOffsetConstraint(nullptr)
   {
     mSignTestBit = 1ull << (mOffsetSize - 1);
-    mOffsetMask = (1ull << mOffsetSize) - 1;
+    mOffsetMask = get_mask64(mOffsetSize);
     mSignExtendMask = ~mOffsetMask;
   }
 
@@ -52,17 +53,26 @@ namespace Force {
     }
   }
 
+  // TODO(Noah): Treat an offset range constraint as a range of permissible offset operand values
+  // without regard to sign interpretation when there is time to do so. AddOffsetRangeConstraint()
+  // currently uses the complement of the range constraint when one of the bounds is negative and
+  // the other is positive. For example, if we have a 4-bit signed offset with a range constraint of
+  // {0x6-0xC}, the current behavior treats the constraint as if the operand can take on any of the
+  // values in {0x0-0x6, 0xC-0xF}, i.e. the 11 values from -4 (0xC) to 6 (0x6). The interpretation
+  // that is consistent with the way constraints are treated elsewhere is that the operand can take
+  // on any of the values in {0x6-0xC}, i.e. the 7 values from -4 (0xC) to 0 (0x0) and from 6 (0x6)
+  // to 7 (0x7). This interpretation makes the size of the result constraint equal to the size of
+  // the offset constraint (neglecting the allowance for the access size), which is what we would
+  // expect.
   void BaseOffsetConstraint::AddOffsetRangeConstraint(uint64 offsetLower, uint64 offsetUpper, ConstraintSet& rAdditionalConstr) const
   {
     int64 lower_normalized = (int64)SignExtendShiftOffset(offsetLower);
     int64 upper_normalized = (int64)SignExtendShiftOffset(offsetUpper);
     uint64 addr_lower,addr_upper;
 
-    if (upper_normalized < lower_normalized){
-        int64 temp = lower_normalized;
-        lower_normalized = upper_normalized;
-        upper_normalized = temp;
-    }
+     if (upper_normalized < lower_normalized){
+        swap(lower_normalized, upper_normalized);
+     }
 
     addr_upper = mBaseValue + upper_normalized + mAccessSize - 1;
     addr_lower = mBaseValue + lower_normalized;
@@ -99,7 +109,7 @@ namespace Force {
     SetMutables(baseValue, accessSize, pOffsetConstr);
 
     uint64 min_value = 0ull - mOffsetBase; // produces 1's compliment value if the offset is signed.
-    uint64 max_value = (1ull << mOffsetSize) - 1 - mOffsetBase; // this should be positive
+    uint64 max_value = get_mask64(mOffsetSize) - mOffsetBase; // this should be positive
     min_value = AdjustOffset(min_value);
     max_value = AdjustOffset(max_value);
 
@@ -113,7 +123,7 @@ namespace Force {
     }
 
     uint64 range_upper = mBaseValue + max_value + (mAccessSize - 1);
-    if (range_upper < mBaseValue) {
+    if ((range_upper < mBaseValue) or ((range_upper - mAccessSize + 1) < mBaseValue)) {
       // overflowed
       resultConstr.AddRange(mBaseValue, mMaxAddress);
       resultConstr.AddRange(0, range_upper);
@@ -132,7 +142,7 @@ namespace Force {
 
   void BaseOffsetConstraint::ValidateOffsetSize() const
   {
-    uint32 max_offset_size = 63;
+    uint32 max_offset_size = 64;
     if (mOffsetSize > max_offset_size) {
       LOG(fail) << "{BaseOffsetConstraint::ValidateOffsetSize} offset size " << dec << mOffsetSize << " exceeds maximum value of " << max_offset_size << endl;
       FAIL("invalid-parameter-value");

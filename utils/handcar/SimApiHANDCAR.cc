@@ -163,7 +163,7 @@ namespace Force {
     SetVectorRegisterWidth(rConfig.mVectorRegLen);
 
     stringstream varch;
-    varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mVectorRegLen;
+    varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mMaxVectorElemWidth;
     string varch_str = varch.str();
 
     std::cout << "XXX varch_str: '" << varch_str << "' mSimConfigString: '" << rConfig.mSimConfigString << "'" << std::endl;
@@ -531,12 +531,12 @@ namespace Force {
 
   void SimApiHANDCAR::EnterSpeculativeMode(uint32 cpuId)
   {
-    mInSpeculativeMode[cpuId] = true;  
+    mInSpeculativeMode[cpuId] = uint32(1);
   }
 
   void SimApiHANDCAR::LeaveSpeculativeMode(uint32 cpuId)
   {
-    mInSpeculativeMode[cpuId] = false;
+    mInSpeculativeMode[cpuId] = uint32(0);
   }
   
 }

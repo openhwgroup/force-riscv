@@ -132,7 +132,7 @@ namespace Force {
   }
 
   /*!
-    Currently only used in address solving related code, therefore only taking care of GPR, SP.
+    Currently only used in address solving related code, therefore only taking care of GPR, SP, VECREG.
   */
   bool GeneratorRISCV::OperandTypeCompatible(ERegisterType regType, EOperandType oprType) const
   {
@@ -140,6 +140,9 @@ namespace Force {
     switch (regType) {
     case ERegisterType::GPR:
       compatible = (oprType == EOperandType::GPR);
+      break;
+    case ERegisterType::VECREG:
+      compatible = (oprType == EOperandType::VECREG);
       break;
     default:
       LOG(fail) << "{GeneratorRISCV::OperandTypeCompatible} not handled register type: " << ERegisterType_to_string(regType) << endl;

@@ -15,11 +15,11 @@
 #
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from VectorTestSequence import VectorTestSequence
+from VectorTestSequence import VectorLoadStoreTestSequence
 
 ## This test verifies that strided load and store instructions can be generated and executed
 # successfully.
-class MainSequence(VectorTestSequence):
+class MainSequence(VectorLoadStoreTestSequence):
 
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
