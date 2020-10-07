@@ -45,7 +45,9 @@ extern "C" {
     return new Force::SimApiHANDCAR();
   }
 
-  void update_generator_register(uint32_t cpuid, const char *pRegName, uint64_t rval, uint64_t mask, const char *pAccessType)
+  int isa_rv32 = 0;
+  
+  void update_generator_register(uint32_t cpuid, const char *pRegName, uint64_t rval_in, uint64_t mask, const char *pAccessType)
   {
     //Force demands that fp register names contain implementation specific physical register suffixes. So, just tack on '_0' to fp register names
     //if we can assume that the current design is limited to a max precision of double precision floating point instructions.
@@ -54,7 +56,14 @@ extern "C" {
     {
       reg_name_copy += std::string("_0");
     }
-    
+
+    uint64_t rval = rval_in;
+
+    if ( (reg_name_copy == "PC") && isa_rv32 )             // restrict PC to 32-bits
+      rval &= 0xffffffff;  //  in Rv32 config
+
+    std::cout << "[update_generator_register] isa_rv32: " << isa_rv32 << " " << reg_name_copy << ": 0x" << std::hex << rval << std::dec << std::endl;
+
     Force::spSimApiHandle->RecordRegisterUpdate(cpuid, reg_name_copy.c_str(), rval, mask, pAccessType);
   }
 
@@ -156,6 +165,19 @@ namespace Force {
     stringstream varch;
     varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mVectorRegLen;
     string varch_str = varch.str();
+
+    std::cout << "XXX varch_str: '" << varch_str << "' mSimConfigString: '" << rConfig.mSimConfigString << "'" << std::endl;
+
+    if (rConfig.mSimConfigString.size() > 0) {
+      varch_str += " " + rConfig.mSimConfigString;
+
+      if (rConfig.mSimConfigString.find("RV32") != std::string::npos) {
+	isa_rv32 = 1;
+	std::cout << "XXX RV32!" << std::endl;
+      }
+    }
+
+    std::cout << "XXX '" << varch_str << "'" << std::endl;
 
     mpSimDllAPI->initialize_simulator(varch_str.c_str());
   }
@@ -387,6 +409,8 @@ namespace Force {
 
   void SimApiHANDCAR::WriteRegister(uint32 CpuID, const char *regname, uint64 rval, uint64 rmask)
   {
+    std::cout << "[SimApiHANDCAR::WriteRegister] " << regname << std::hex << " 0x" << rval << "/0x" << rmask << std::dec << std::endl;
+
     if (mOfsApiTrace.is_open()) {
       char tbuf[1024];
       sprintf(tbuf,"  sim_api.write_simulator_register(0x%x,\"%s\", 0x%llx, 0x%llx);\n",
