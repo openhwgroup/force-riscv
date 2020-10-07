@@ -15,6 +15,7 @@
 #
 from base.Sequence import Sequence
 from base.Utils import LoopControlBase
+from Config import Config
 
 ## This class generates sequences to load 64-bit immediate values into general purpose registers.
 class LoadGPR64(Sequence):
@@ -77,6 +78,9 @@ class LoadGPR64(Sequence):
 
         self._load32BitValue(value)
 
+        if self.getGlobalState('RV32') == 1:
+            return
+
         for (shift_amount, imm_value) in reversed(imm_params):
             self.genInstruction('SLLI#RV64I#RISCV', {'rd': self._mRegisterIndex, 'rs1': self._mRegisterIndex, 'shamt': shift_amount})
 
@@ -117,7 +121,10 @@ class LoadGPR64(Sequence):
 
         bottom_12_bits = aValue & 0xFFF
         if bottom_12_bits != 0:
-            self.genInstruction('ADDIW##RISCV', {'rd': self._mRegisterIndex, 'rs1': self._mRegisterIndex, 'simm12': bottom_12_bits})
+            if self.getGlobalState('RV32') == 1:
+                self.genInstruction('ADDI##RISCV', {'rd': self._mRegisterIndex, 'rs1': self._mRegisterIndex, 'simm12': bottom_12_bits})
+            else:
+                self.genInstruction('ADDIW##RISCV', {'rd': self._mRegisterIndex, 'rs1': self._mRegisterIndex, 'simm12': bottom_12_bits})
 
 
 ## A simple register-based loop control class for RISCV.

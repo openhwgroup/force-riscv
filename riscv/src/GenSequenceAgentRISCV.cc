@@ -62,6 +62,11 @@ namespace Force {
   {
     // << "Loading register " << regPtr->Name() << " with 0x" << hex << loadValue << " size=" << dec << regPtr->Size() << " index=" << regPtr->IndexValue() << endl;
 
+    if (regPtr->Size() == 32) {
+      GetLoadGPR32BitSequence(regPtr, loadValue, reqSeq);
+      return;
+    }
+    
     if ((loadValue & 0xFFFFFFFFFFFFF800) == 0xFFFFFFFFFFFFF800) {
         return GetLoadGPRTop53BitsSetSequence(regPtr, loadValue, reqSeq);
     }
@@ -623,7 +628,7 @@ namespace Force {
 
     uint32 imm12_to_load = loadValue & 0xFFF;
     if (imm12_to_load) {
-      const char* addiw_name = "ADDIW##RISCV";
+      const char* addiw_name = (regPtr->Size() == 32) ? "ADDI##RISCV" : "ADDIW##RISCV";
       auto addiw_req = new GenInstructionRequest(addiw_name);
       addiw_req->AddOperandRequest(dest_opr, regPtr->IndexValue());
       addiw_req->AddOperandRequest("rs1", regPtr->IndexValue());
