@@ -1,0 +1,10 @@
+#!/bin/sh -f
+
+SCRIPTPATH=$(readlink -f "$0")
+
+FPIX_BIN=$(dirname "$SCRIPTPATH")
+FPIX_HOME=$(dirname $FPIX_BIN)
+
+$FPIX_BIN/fpix_riscv --cfg $FPIX_HOME/config/riscv.config32 $*
+
+
