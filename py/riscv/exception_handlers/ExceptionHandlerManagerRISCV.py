@@ -67,7 +67,6 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
             # make the choice...
             choices = self.mGenThread.getChoicesTreeInfo(exc_choice_trees[exception_name], "GeneralChoices" )
             use_trap_handler = self.pickWeighted(choices) == 'DoRedirect'
-            print("XXX: use trap handler? ",exceptionClassName, use_trap_handler)
         except KeyError:
             # not all exceptions can be redirected...
             pass
@@ -76,8 +75,6 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
 
 
     def registerDefaultExceptionHandlers(self):
-        print("XXX: registerDefaultExceptionHandlers")
-        
         assignment_file_path = self.getDefaultAssignmentFilePath(self.default_set_name)
         assignment_parser = ExceptionHandlerAssignmentParser()
         handler_assignments = assignment_parser.parseHandlerAssignments(assignment_file_path)
@@ -90,7 +87,6 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
             if "TRAP_REDIRECTION" in exception_class_name:
                 trap_handler_module_name = handler_module_name
                 trap_handler_class_name = handler_class_name
-                print("XXX: trap-handler module/class: ",trap_handler_module_name,trap_handler_class_name)
                 have_trap_handler = True
                 continue
             
@@ -105,7 +101,6 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
                     handler_module_name = trap_handler_module_name
                     handler_class_name = trap_handler_class_name
                     
-                print("XXX handler privilege level: %s, module/class/sub-class: %s/%s/%s" % ( priv_level, handler_module_name, handler_class_name, subexception_class_name) )
                 handler_assignment_request = ExceptionHandlerAssignmentRequest(exception_class, (priv_level,), (security_state,), handler_module_name, handler_class_name, aMemBank=None, aSubexcClass=subexception_class)
                 
                 self.thread_handler_set.assignSynchronousExceptionHandler(handler_assignment_request)
