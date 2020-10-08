@@ -417,6 +417,9 @@ namespace Force {
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto vec_reg_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
     mRegCount = lround(vec_layout->mRegCount * vec_reg_opr_constr->GetLayoutMultiple());
+    if (mRegCount == 0) {
+      mRegCount = 1;
+    }
   }
 
   OperandConstraint* VectorIndexedDataRegisterOperand::InstantiateOperandConstraint() const

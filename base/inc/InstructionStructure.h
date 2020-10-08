@@ -191,10 +191,10 @@ namespace Force {
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorRegisterOperandStructure);
     ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandStructure);
 
-    void SetLayoutMultiple(const cuint32 layoutMultiple) { mLayoutMultiple = layoutMultiple; } //!< Set the multiple used to adjust the register operand layout for widening and narrowing instructions.
-    uint32 GetLayoutMultiple() const { return mLayoutMultiple; } //!< Return the multiple used to adjust the register operand layout for widening and narrowing instructions.
+    void SetLayoutMultiple(const float layoutMultiple) { mLayoutMultiple = layoutMultiple; } //!< Set the multiple used to adjust the register operand layout for widening and narrowing instructions.
+    float GetLayoutMultiple() const { return mLayoutMultiple; } //!< Return the multiple used to adjust the register operand layout for widening and narrowing instructions.
   private:
-    uint32 mLayoutMultiple; //!< Multiple used to adjust the register operand layout for widening and narrowing instructions
+    float mLayoutMultiple; //!< Multiple used to adjust the register operand layout for widening and narrowing instructions
   };
 
   class ConstraintSet;
