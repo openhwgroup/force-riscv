@@ -142,7 +142,7 @@ namespace Force {
     //satp init
     field_map.clear();
     if (rv32) {
-      field_map["MODE"] = 0;     // satp.mode is single-bit field. set to 1 to enable Sv32 paging
+      field_map["MODE"] = 0x1;  // satp.mode is single-bit field. set to 1 to enable Sv32 paging
     } else {
       field_map["MODE"] = 0x9;  // paging mode value is 0x9 for Sv48
     }

@@ -47,7 +47,6 @@ namespace Force {
     uint32 LowestLookUpBit()  const { return mLowestLookUpBit; } //!< Return value of the lowest look up bit.
     uint32 TableLevel()       const { return mTableLevel; } //!< Return table level.
     uint64 TableBase()        const { return mTableBase; } //!< Return table base address.
-    uint32 PteShift()         const { return 3ul; } //!< Return pte shift
 
     bool UnconstructedTableLevel(const Page* pageObj, uint64& rLevel); //!< Get level of first unconstructed table in page table walk, returns page level if tablewalk is already present
     void ConstructPageTableWalk(uint64 VA, Page* pageObj, VmAddressSpace* pVmas, const GenPageRequest& pPageReq); //!< Construct page table walk details.
@@ -77,14 +76,15 @@ namespace Force {
   public:
     RootPageTable(); //!< Constructor.
     ~RootPageTable(); //!< Destructor.
-    void Setup(uint32 tableStep, uint32 highBit, const std::string& rPteSuffix); //!< Setup Page Table parameters
+    void Setup(uint32 tableStep, uint32 highBit, uint32 tableLowBit, const std::string& rPteSuffix, uint32 rPteShift, uint32 rMaxTableLevel); //!< Setup Page Table parameters
     void SignUp(VmAddressSpace* addressSpace); //!< Sign up with the RootPageTable.
     void SetLookUpBitRangeRoot(uint32 lowBit,uint32 highBit); //!< Set the lookup bit range for Root
     uint32 HighestLookUpBit()     const { return mHighestLookUpBit; } //!< Return value of the lowest look up bit.
     uint32 RootTableSize()        const { return 1ul << (mHighestLookUpBit - mLowestLookUpBit + 1 + PteShift()); } //!< return size of root table
+    uint32 PteShift()             const { return mPteShift; } //!< Return pte shift
     uint32 TableSize()            const { return 1ul << (mTableStep + PteShift()); } //!< Return size of table
     uint64 TableStep()            const { return mTableStep; } //!< Return table base address.
-    uint32 MaxTableLevel()        const { return 3ul; } //!< Return max supported table level
+    uint32 MaxTableLevel()        const { return mMaxTableLevel; } //!< Return max supported table level
     const VmAddressSpace* GetBaseVmas() const { return mpBaseAddressSpace; } //!< Return pointer to first registered address space, used to determine compatible context for aliasing
     std::string TableIdentifier() const { return mTableIdentifier; } //!< Return table identifier
     std::vector<VmAddressSpace* > & GetAddressSpaces() { return mAddressSpaces; } //!< Return reference to the vector of VmAddressSpace objects.
@@ -94,7 +94,9 @@ namespace Force {
     //COPY_CONSTRUCTOR_ABSENT(RootPageTable);
   protected:
     uint32 mHighestLookUpBit; //!< MSb of the look up bit range.
-    uint32 mTableStep; //!< Number of bits resovled by this table.
+    uint32 mTableStep; //!< Number of bits resolved by this table.
+    uint32 mPteShift;  //!< 2 * pte-shift = size of pte
+    uint32 mMaxTableLevel; //!< max # of tables in table-walk
     VmAddressSpace* mpBaseAddressSpace; //!< Initial address space is used to identify the context compatibility when aliasing root page tables.
     std::string mTableIdentifier; //!< String to identify this table size's choices
     std::vector<VmAddressSpace* > mAddressSpaces; //!< Pointer to all address spaces using this RootPageTable and its down stream PTEs.

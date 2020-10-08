@@ -96,7 +96,7 @@ namespace Force {
   {
     string key = ShortName();
     if (key.empty()) {
-      LOG(debug) << "No short key for the operand \"" << Name() << "\", use long key:" << Name() << endl;
+      //LOG(debug) << "No short key for the operand \"" << Name() << "\", use long key:" << Name() << endl;
       key = Name();
     }
 

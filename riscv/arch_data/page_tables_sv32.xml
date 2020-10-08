@@ -34,7 +34,7 @@
     <pte_attribute type="G" bits="5" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="U" bits="4" class="UPteAttributeRISCV"/>
     <pte_attribute type="X" bits="3" class="XPteAttributeRISCV"/>
-    <pte_attribute type="WR" bits="2-1" class="WPteAttributeRISCV"/>
+    <pte_attribute type="WR" bits="2-1" class="WRPteAttributeRISCV"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
   <pte type="2M" category="Page" granule="4K" level="1" stage="1">
@@ -45,7 +45,7 @@
     <pte_attribute type="G" bits="5" value="0" class="ValuePteAttribute"/>
     <pte_attribute type="U" bits="4" class="UPteAttributeRISCV"/>
     <pte_attribute type="X" bits="3" class="XPteAttributeRISCV"/>
-    <pte_attribute type="WR" bits="2-1" class="WPteAttributeRISCV"/>
+    <pte_attribute type="WR" bits="2-1" class="WRPteAttributeRISCV"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
 </page_tables>

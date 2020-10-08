@@ -33,13 +33,7 @@
     <choice description="Attempt aliasing first" name="Alias" value="0x1" weight="0"/>
   </choices>
 
-  <!-- Page type choices -->
-  <choices name="SystemPage#S#stage 1" type="Paging">
-    <choice description="SystemPage=0" name="NotSystemPage" value="0x0" weight="100"/>
-    <choice description="SystemPage=1" name="IsSystemPage" value="0x1" weight="0"/>
-  </choices>
-
-  <!-- Page size choices -->
+  <!-- Page Size Choices -->
   <choices name="Page size#4K granule#S#stage 1" type="Paging">
     <choice description="4K page size" name="4K" value="0x0" weight="97"/>
     <choice description="2M page size" name="2M" value="0x1" weight="2"/>
@@ -49,7 +43,11 @@
     <choice description="2M page size" name="2M" value="0x1" weight="0"/>
   </choices>
 
-  <!-- Descriptor Attributes -->
+  <!-- Descriptor Attribute Generation Choices -->
+  <choices name="SystemPage#S#stage 1" type="Paging">
+    <choice description="SystemPage=0" name="notsyspage" value="0x0" weight="100"/>
+    <choice description="SystemPage=1" name="syspage" value="0x1" weight="0"/>
+  </choices>
   <choices name="D#S#stage 1" type="Paging">
     <choice description="D=0" name="0" value="0x0" weight="100"/>
     <choice description="D=1" name="1" value="0x1" weight="0"/>
@@ -70,16 +68,50 @@
     <choice description="X=0" name="0" value="0x0" weight="0"/>
     <choice description="X=1" name="1" value="0x1" weight="100"/>
   </choices>
-  <choices name="W#S#stage 1" type="Paging">
-    <choice description="W=0" name="0" value="0x0" weight="0"/>
-    <choice description="W=1" name="1" value="0x1" weight="100"/>
+  <choices name="WR#S#stage 1" type="Paging">
+    <choice description="no access" name="0" value="0x0" weight="0"/>
+    <choice description="read access" name="1" value="0x1" weight="0"/>
+    <choice description="invalid WR" name="2" value="0x2" weight="0"/>
+    <choice description="readwrite access" name="3" value="0x3" weight="100"/>
   </choices>
-  <choices name="R#S#stage 1" type="Paging">
-    <choice description="R=0" name="0" value="0x0" weight="0"/>
-    <choice description="R=1" name="1" value="0x1" weight="100"/>
+  <choices name="V#S#stage 1" type="Paging">
+    <choice description="V=0" name="0" value="0x0" weight="0"/>
+    <choice description="V=1" name="1" value="0x1" weight="100"/>
   </choices>
 
-  <!-- Paging Exception Choices -->
+  <!-- Exception Regulation Choices --> 
+  <choices name="InstructionPageFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="LoadPageFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="StoreAmoPageFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="InstructionAccessFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="LoadAccessFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="StoreAmoAccessFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+
+  <!-- Page Fault Generation Choices -->
   <choices name="Invalid Descriptor#level 1#S#stage 1" type="Paging">
     <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
     <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
