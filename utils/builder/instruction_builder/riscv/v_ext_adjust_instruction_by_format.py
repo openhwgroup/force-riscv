@@ -461,6 +461,10 @@ def adjust_vd_vs2_vm(aInstruction):
     operand_adjustor.set_vd()
     operand_adjustor.set_vs2()
     operand_adjustor.set_vm()
+
+    if aInstruction.name in ('VMSBF.M', 'VMSIF.M', 'VMSOF.M', 'VIOTA.M'):
+        operand_adjustor.set_vs2_differ_vd()
+
     return True
 
 def adjust_vdrd_vs2(aInstruction):
@@ -520,6 +524,11 @@ def adjust_vd_vs2_vs1(aInstruction):
     operand_adjustor.set_vd()
     operand_adjustor.set_vs2()
     operand_adjustor.set_vs1()
+
+    if aInstruction.name == 'VCOMPRESS.VM':
+        operand_adjustor.set_vs2_differ_vd()
+        operand_adjustor.set_vs1_differ_vd()
+
     return True
 
 def adjust_vd_nonzero_vs2_vs1(aInstruction):
@@ -535,6 +544,11 @@ def adjust_vd_vs2_vs1_vm(aInstruction):
     operand_adjustor.set_vs2()
     operand_adjustor.set_vs1()
     operand_adjustor.set_vm()
+
+    if aInstruction.name == 'VRGATHER.VV':
+        operand_adjustor.set_vs2_differ_vd()
+        operand_adjustor.set_vs1_differ_vd()
+
     return True
 
 def adjust_vd_simm5(aInstruction):
@@ -563,6 +577,10 @@ def adjust_vd_vs2_simm5_vm(aInstruction):
     operand_adjustor.set_vs2()
     operand_adjustor.set_imm('simm5', 'simm5', True)
     operand_adjustor.set_vm()
+
+    if aInstruction.name in ('VRGATHER.VI', 'VSLIDEUP.VI'):
+        operand_adjustor.set_vs2_differ_vd()
+
     return True
 
 def adjust_vd_vs2_rs1(aInstruction):
@@ -588,7 +606,12 @@ def adjust_vd_vs2_rs1_vm(aInstruction):
         operand_adjustor.set_rs1_sp()
     else:
         operand_adjustor.set_rs1_int()
+
     operand_adjustor.set_vm()
+
+    if aInstruction.name in ('VFSLIDE1UP.VF', 'VRGATHER.VX', 'VSLIDE1UP.VX', 'VSLIDEUP.VX'):
+        operand_adjustor.set_vs2_differ_vd()
+
     return True
 
 def adjust_vdrd_vs2_rs1_vm(aInstruction):
