@@ -47,8 +47,6 @@ def create_double_precision_app_register(aIndex, aRegSize):
     
     return d_reg
 
-    
-
 def create_quad_precision_app_register(aIndex, aRegSize):
     q_reg = Register(**{'name':"Q%d" % aIndex, 'length':128, 'index':aIndex, 'type':"FPR", 'class':"LargeRegister", 'boot':0})
     numberOfReg = 128 // aRegSize
