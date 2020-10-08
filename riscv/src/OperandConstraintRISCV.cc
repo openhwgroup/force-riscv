@@ -325,21 +325,13 @@ namespace Force {
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    uint32 reg_index_alignment = vec_layout->mRegIndexAlignment * mLayoutMultiple;
-    if (reg_index_alignment == 0) {
-      LOG(fail) << "{VectorRegisterOperandConstraintRISCV::Setup} invalid register index alignment " << dec << reg_index_alignment << endl;
-      FAIL("invalid-register-index-alignment");
-    }
-    else if (reg_index_alignment > 8) {
-      // 8 is the maximum legal register count and register index alignment; we adjust any larger
-      // values to the maximum here to avoid unnecessarily failing to generate an illegal
-      // instruction
-      reg_index_alignment = 8;
+    uint32 reg_count = lround(vec_layout->mRegCount * mLayoutMultiple);
+    if (reg_count == 0) {
+      reg_count = 1;
     }
 
     // Notification for illegal instruction when EMUL * NFIELDS > 8 (Section 7.8)
     // TODO (Chris): Handle this case when implementing generic generation control option later
-    uint32 reg_count = lround(vec_layout->mRegCount * mLayoutMultiple);
     uint32 illegal_reg_limit = reg_count;
     if (reg_count > 8) {
       LOG(notice) << "{VectorRegisterOperandConstraintRISCV::Setup} EMUL * NFIELDS = " << dec << vec_layout->mRegCount << " > 8" << endl;
@@ -349,6 +341,17 @@ namespace Force {
     // Removing invalid vector register choices for vd/vs3 (Section 7.8)
     for (uint32 i = 1; i < illegal_reg_limit; ++i) {
       SubConstraintValue(32 - i, operandStruct);
+    }
+
+    uint32 reg_index_alignment = lround(vec_layout->mRegIndexAlignment * mLayoutMultiple);
+    if (reg_index_alignment == 0) {
+      reg_index_alignment = 1;
+    }
+    else if (reg_index_alignment > 8) {
+      // 8 is the maximum legal register count and register index alignment; we adjust any larger
+      // values to the maximum here to avoid unnecessarily failing to generate an illegal
+      // instruction
+      reg_index_alignment = 8;
     }
 
     // Unaligned register indices are architecturally illegal choices
@@ -361,7 +364,10 @@ namespace Force {
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
 
     uint32 reg_count = lround(vec_layout->mRegCount * mLayoutMultiple);
-    if (reg_count > 8) {
+    if (reg_count == 0) {
+      reg_count = 1;
+    }
+    else if (reg_count > 8) {
       // 8 is the maximum legal register count; we adjust any larger values to the maximum here to
       // avoid unnecessarily failing to generate an illegal instruction
       reg_count = 8;
@@ -369,7 +375,10 @@ namespace Force {
 
     auto vec_reg_opr_constr = rDifferOprConstr.CastInstance<const VectorRegisterOperandConstraintRISCV>();
     uint32 differ_reg_count = lround(vec_layout->mRegCount * vec_reg_opr_constr->mLayoutMultiple);
-    if (differ_reg_count > 8) {
+    if (differ_reg_count == 0) {
+      differ_reg_count = 1;
+    }
+    else if (differ_reg_count > 8) {
       differ_reg_count = 8;
     }
 
@@ -377,7 +386,7 @@ namespace Force {
     // first register and that the differ operand's last register doesn't overlap this operand's
     // first register
     uint64 min_differ_val = 0;
-    if (differVal >= (reg_count + 1)) {
+    if (differVal >= reg_count) {
       min_differ_val = differVal - reg_count + 1;
     }
 
@@ -388,7 +397,7 @@ namespace Force {
   float VectorRegisterOperandConstraintRISCV::CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const
   {
     auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rOperandStruct);
-    return static_cast<float>(vec_reg_operand_struct->GetLayoutMultiple());
+    return vec_reg_operand_struct->GetLayoutMultiple();
   }
 
   float VectorIndexedDataRegisterOperandConstraint::CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const

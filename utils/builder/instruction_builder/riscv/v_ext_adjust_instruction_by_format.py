@@ -143,29 +143,34 @@ def add_layout_operand(aInstruction):
     else:
         operand_adjustor.add_vtype_layout_operand()
 
-# Account for non-standard register layouts due to widening and narrowing instructions
+# Account for non-standard register layouts due to wide and narrow operands
 def adjust_register_layout(aInstruction):
-    wide_dest = False
+    adjust_dest = False
     dest_layout_multiple = 2
     if aInstruction.name.startswith('VW') or aInstruction.name.startswith('VFW'):
-        wide_dest = True
+        adjust_dest = True
     elif aInstruction.name.startswith('VQMACC'):
-        wide_dest = True
+        adjust_dest = True
         dest_layout_multiple = 4
 
-    wide_source = False
+    adjust_source = False
+    source_layout_multiple = 2
     if '.W' in aInstruction.name:
-        wide_source = True
+        adjust_source = True
+    elif aInstruction.name.startswith('VSEXT.VF') or aInstruction.name.startswith('VZEXT.VF'):
+        adjust_source = True
+        layout_divisor = int(aInstruction.name[-1])
+        source_layout_multiple = 1 / layout_divisor
 
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    if wide_dest:
-        operand_adjustor.set_wide_dest(aLayoutMultiple=dest_layout_multiple)
+    if adjust_dest:
+        operand_adjustor.adjust_dest_layout(dest_layout_multiple)
         operand_adjustor.set_vs1_differ_vd()
 
-    if wide_source:
-        operand_adjustor.set_wide_source()
+    if adjust_source:
+        operand_adjustor.adjust_source_layout(source_layout_multiple)
 
-    if wide_dest != wide_source:
+    if adjust_dest != adjust_source:
         operand_adjustor.set_vs2_differ_vd()
 
 def get_element_size(aConstBitsOpr):

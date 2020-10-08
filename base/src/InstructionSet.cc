@@ -369,7 +369,7 @@ namespace Force {
           }
           else if (strcmp(attr_name, "layout-multiple") == 0) {
             auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
-            cast_struct->SetLayoutMultiple(parse_uint32(attr.value()));
+            cast_struct->SetLayoutMultiple(parse_float(attr.value()));
           }
           else if (strcmp(attr_name, "reg-count") == 0) {
             auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
