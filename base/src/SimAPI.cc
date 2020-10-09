@@ -124,7 +124,7 @@ namespace Force {
 
     for(const MemUpdate& rMemUp : mMemoryUpdates)
     {
-      if((rMemUp.CpuID & (1u << (8u * sizeof(rMemUp.CpuID) - 1u))) == 0u) // For negative number cpu ID's dont print status for speculative BNT. Negative CPUid indicates simulator non-isa backend is using MMU to configure test.
+      if(rMemUp.CpuID != uint32(-1)) // For negative number cpu ID's dont print status for speculative BNT. Negative CPUid indicates simulator non-isa backend is using MMU to configure test.
       {
 	_speculative_mode = mSpecModeStrings[0];
 	auto _spec_mode_lookup = mInSpeculativeMode.find(rMemUp.CpuID);
