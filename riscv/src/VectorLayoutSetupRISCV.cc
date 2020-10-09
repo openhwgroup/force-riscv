@@ -88,11 +88,43 @@ namespace Force {
     return sew;
   }
 
-  uint32 VectorLayoutSetupRISCV::GetLmul() const
+  float VectorLayoutSetupRISCV::GetLmul() const
   {
     Register* vtype_reg = mpRegFile->RegisterLookup("vtype");
     RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
-    uint32 lmul = (1 << vlmul_field->FieldValue());
+    float lmul = 0;
+    switch (vlmul_field->FieldValue()) {
+      case 0:
+        lmul = 1;
+        break;
+      case 1:
+        lmul = 2;
+        break;
+      case 2:
+        lmul = 4;
+        break;
+      case 3:
+        lmul = 8;
+        break;
+      case 4:
+        // VLMUL = 4 is reserved (Section 3.3.2)
+        LOG(fail) << "{VectorLayoutSetupRISCV::GetLmul} VLMUL = 4 is reserved" << std::endl;
+        FAIL("reserved-vlmul");
+        break;
+      case 5:
+        lmul = 0.125;
+        break;
+      case 6:
+        lmul = 0.25;
+        break;
+      case 7:
+        lmul = 0.5;
+        break;
+      default:
+        // VLMUL > 7 is undefined (Section 3.3.2)
+        LOG(fail) << "{VectorLayoutSetupRISCV::GetLmul} VLMUL = " << vlmul_field->FieldValue() << " is not defined" << std::endl;
+        FAIL("undefined-vlmul");
+    }
     return lmul;
   }
 

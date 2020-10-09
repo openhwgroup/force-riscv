@@ -37,7 +37,7 @@ class MainSequence(VectorTestSequence):
         choices_mod = ChoicesModifier(self.genThread)
         vsew_choice_weights = {'0x0': 0, '0x1': 10, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', vsew_choice_weights)
-        vlmul_choice_weights = {'0x0': 10, '0x1': 0, '0x2': 0, '0x3': 0}
+        vlmul_choice_weights = {'0x0': 10, '0x1': 0, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VLMUL', vlmul_choice_weights)
         choices_mod.commitSet()
 

@@ -312,7 +312,7 @@ namespace Force {
   private:
     void AdjustRegisterCount(const Instruction& rInstr); //!< Finalize register count based on runtime state.
 
-    uint32 mRegCount; //!< The number of registers per vector register group
+    float mRegCount; //!< The number of registers per vector register group
   };
 
   /*!
