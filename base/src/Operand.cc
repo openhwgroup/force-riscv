@@ -790,7 +790,7 @@ namespace Force {
     }
     auto br_target_constr = rb_constr->TargetConstraint();
     auto page_req = rb_constr->GetPageRequest();
-    VaGenerator va_gen(vm_mapper, page_req, br_target_constr);
+    VaGenerator va_gen(vm_mapper, page_req, br_target_constr, true, rb_constr->GetAddressReuseMode());
     mTargetAddress = va_gen.GenerateAddress(gen.InstructionAlignment(), gen.InstructionSpace(), true, page_req->MemoryAccessType());
     LOG(notice) << "Register-branch generated target address 0x" << hex << mTargetAddress << endl;
   }
@@ -885,7 +885,7 @@ namespace Force {
 
     auto branch_target_constr = addr_constr->TargetConstraint();
     auto page_req = addr_constr->GetPageRequest();
-    VaGenerator va_gen(addr_constr->GetVmMapper(), page_req, branch_target_constr);
+    VaGenerator va_gen(addr_constr->GetVmMapper(), page_req, branch_target_constr, true, addr_constr->GetAddressReuseMode());
     if (gen.HasISS() or (not IsConditional())) {
       va_gen.SetAccurateBranch(instr.ByteSize());
     }
@@ -1201,7 +1201,7 @@ namespace Force {
     auto target_constr = bols_constr->TargetConstraint();
     auto ls_alignment = GetAddressingAlignment(lsop_struct->Alignment(), data_size);
     auto page_req = bols_constr->GetPageRequest();
-    VaGenerator va_gen(vm_mapper, page_req, target_constr);
+    VaGenerator va_gen(vm_mapper, page_req, target_constr, true, bols_constr->GetAddressReuseMode());
     mTargetAddress = va_gen.GenerateAddress(ls_alignment, data_size, false, page_req->MemoryAccessType());
 
     if (bols_constr->BaseOperandSpAligned()) {
@@ -1318,7 +1318,7 @@ namespace Force {
     auto bils_constr = mpOperandConstraint->CastInstance<BaseIndexLoadStoreOperandConstraint>();
     auto ls_target_constr = bils_constr->TargetConstraint();
     auto page_req = bils_constr->GetPageRequest();
-    VaGenerator va_gen(bils_constr->GetVmMapper(), page_req, ls_target_constr);
+    VaGenerator va_gen(bils_constr->GetVmMapper(), page_req, ls_target_constr, true, bils_constr->GetAddressReuseMode());
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
     const RegisterFile* reg_file = gen.GetRegisterFile();
     auto data_size = lsop_struct->DataSize();
@@ -1442,7 +1442,7 @@ namespace Force {
 
     // << "PC-relative-load-store load-store target constraint: " << ls_target_constr->ToSimpleString() << endl;
     auto page_req = pols_constr->GetPageRequest();
-    VaGenerator va_gen(pols_constr->GetVmMapper(), page_req, ls_target_constr);
+    VaGenerator va_gen(pols_constr->GetVmMapper(), page_req, ls_target_constr, true, pols_constr->GetAddressReuseMode());
     if (nullptr != ls_target_constr) {
       ConstraintSet * reach_constr = new ConstraintSet();
       base_offset_constr.GetConstraint(pc_value, 1, nullptr, *reach_constr); // reach constraint, access size is 1.
@@ -1542,7 +1542,7 @@ namespace Force {
     auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
     const GenPageRequest* page_req = strided_opr_constr->GetPageRequest();
     const ConstraintSet* target_constr = strided_opr_constr->TargetConstraint();
-    VaGenerator va_gen(strided_opr_constr->GetVmMapper(), page_req, target_constr);
+    VaGenerator va_gen(strided_opr_constr->GetVmMapper(), page_req, target_constr, true, strided_opr_constr->GetAddressReuseMode());
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
 
@@ -1759,7 +1759,7 @@ namespace Force {
   {
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
     const GenPageRequest* page_req = indexed_opr_constr->GetPageRequest();
-    VaGenerator va_gen(indexed_opr_constr->GetVmMapper(), page_req, indexed_opr_constr->TargetConstraint());
+    VaGenerator va_gen(indexed_opr_constr->GetVmMapper(), page_req, indexed_opr_constr->TargetConstraint(), true, indexed_opr_constr->GetAddressReuseMode());
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
     uint64 target_addr = va_gen.GenerateAddress(alignment, lsop_struct->DataSize(), false, page_req->MemoryAccessType());
@@ -1781,7 +1781,7 @@ namespace Force {
 
     // I think the target constraint should only apply to the base target address, so it is not
     // applied here.
-    VaGenerator va_gen(indexed_opr_constr->GetVmMapper(), page_req);
+    VaGenerator va_gen(indexed_opr_constr->GetVmMapper(), page_req, nullptr, true, indexed_opr_constr->GetAddressReuseMode());
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();

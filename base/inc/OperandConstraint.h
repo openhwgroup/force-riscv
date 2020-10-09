@@ -241,6 +241,8 @@ namespace Force {
     GroupOperandConstraint(const GroupOperandConstraint& rOther) : OperandConstraint(rOther) { } //!< Copy constructor, not meant to be used.
   };
 
+  class AddressReuseMode;
+  class ChoicesModerator;
   class ImmediateOperand;
   class SignedImmediateOperand;
   class VmMapper;
@@ -273,6 +275,7 @@ namespace Force {
     bool HasDataConstraints() const { return mDataConstraints.size(); } //!< Return true if has any data constraint.
     bool TargetConstraintForced() const; //!< Return true if target constraint is forced.
     inline VmMapper* GetVmMapper() const { return mpVmMapper; } //!< Return VM mapper object.
+    const AddressReuseMode* GetAddressReuseMode() const { return mpAddrReuseMode; } //!< Return address reuse configuration.
   protected:
     AddressingOperandConstraint(const AddressingOperandConstraint& rOther); //!< Copy constructor, not meant to be used.
     SignedImmediateOperand* GetSignedOffsetOperand(const Instruction& rInstr, const OperandStructure& rOperandStruct) const; //!< Return a pointer to a signed-immediate sub operand of the AddressingOperand object.
@@ -285,6 +288,11 @@ namespace Force {
     ConstraintSet* mpTargetConstraint; //!< Addressing target constraint.
     VmMapper* mpVmMapper; //!< Pointer to VM mapper object/
     std::vector<ConstraintSet* > mDataConstraints; //!< Data of addressing constraint.
+  private:
+    void SetupAddressReuseMode(const Generator& rGen); //!< Configure address reuse.
+    bool ChooseAddressReuseEnabled(const ChoicesModerator& rChoicesMod, const std::string& rChoiceTreeName); //!< Choose whether the address reuse type indicated by the choice tree should be enabled.
+  private:
+    AddressReuseMode* mpAddrReuseMode; //!< Address reuse configuration.
   };
 
   /*!

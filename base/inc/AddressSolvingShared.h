@@ -37,7 +37,6 @@ namespace Force {
   class AddressTagging;
   class Register;
   class AddressingMode;
-  class AddressReuseMode;
 
   /*!
     \class AddressSolvingShared
@@ -79,7 +78,6 @@ namespace Force {
   protected:
     const ConstraintSet* GetAllocatedConstraint(ERegisterType regType) const; //!< Get allocated constraint of register indices.
     virtual const ConstraintSet* GetPcSpaceConstraint() const; //!< Get proper PC space constraint.
-    void ChooseDataReuse(); //!< Choose data reuse.
     bool ReVerifyTargetAddressRange(uint64 targetAddress) const; //!< Verify target address range again when necessary.
   protected:
     Generator* mpGenerator; //!< Pointer to the generator object.
@@ -99,7 +97,6 @@ namespace Force {
     bool mIsInstruction; //!< Indicate if the access is for instruction.
     EMemDataType mMemDataType; //!< Memory data type.
     EMemAccessType mMemAccessType; //!< Memory accessing mode.
-    AddressReuseMode* mpAddrReuseMode; //!< Address reuse configuration.
     mutable bool mFreeTried; //!< Tried free target solving.
     mutable bool mFreeValid; //!< Indicate if mFreeTarget is valid.
     std::vector <VmConstraint* > mHardVmConstraints; //!< Hard VM constraints if any.

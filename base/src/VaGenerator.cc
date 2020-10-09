@@ -38,15 +38,19 @@ using namespace std;
 */
 namespace Force {
 
-  VaGenerator::VaGenerator(VmMapper* vmMapper, const GenPageRequest* pPageReq, const ConstraintSet* pTargetConstr, bool isOperand)
-    : mpVmMapper(vmMapper), mCallerName(), mpPageRequest(pPageReq), mpTargetConstraint(pTargetConstr), mpRangeConstraint(nullptr), mpLocalPageRequest(nullptr), mpOperandConstraint(nullptr), mAlignMask(0), mSize(0), mAlignShift(0), mBranchSize(0), mIsInstruction(false),
-      mIsOperand(isOperand), mAccurateBranch(false), mNewPagesAdded(false), mHardVmConstraints()
+  VaGenerator::VaGenerator(VmMapper* vmMapper, const GenPageRequest* pPageReq, const ConstraintSet* pTargetConstr, bool isOperand, const AddressReuseMode* pAddrReuseMode)
+    : mpVmMapper(vmMapper), mCallerName(), mpPageRequest(pPageReq), mpTargetConstraint(pTargetConstr), mpRangeConstraint(nullptr), mpLocalPageRequest(nullptr), mpOperandConstraint(nullptr), mAlignMask(0), mSize(0), mAlignShift(0), mBranchSize(0), mIsInstruction(false), mIsOperand(isOperand), mAccurateBranch(false), mNewPagesAdded(false), mHardVmConstraints(), mpAddrReuseMode(nullptr)
   {
+    if (pAddrReuseMode != nullptr) {
+      mpAddrReuseMode = new AddressReuseMode(*pAddrReuseMode);
+    }
+    else {
+      mpAddrReuseMode = new AddressReuseMode();
+    }
   }
 
   VaGenerator::VaGenerator()
-    : mpVmMapper(nullptr), mCallerName(), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpRangeConstraint(nullptr), mpLocalPageRequest(nullptr), mpOperandConstraint(nullptr), mAlignMask(0), mSize(0), mAlignShift(0), mBranchSize(0), mIsInstruction(false),
-      mIsOperand(true), mAccurateBranch(false), mNewPagesAdded(false), mHardVmConstraints()
+    : mpVmMapper(nullptr), mCallerName(), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpRangeConstraint(nullptr), mpLocalPageRequest(nullptr), mpOperandConstraint(nullptr), mAlignMask(0), mSize(0), mAlignShift(0), mBranchSize(0), mIsInstruction(false), mIsOperand(true), mAccurateBranch(false), mNewPagesAdded(false), mHardVmConstraints(), mpAddrReuseMode(new AddressReuseMode())
   {
   }
 
@@ -59,6 +63,7 @@ namespace Force {
     mpRangeConstraint = nullptr;
     delete mpOperandConstraint;
     delete mpLocalPageRequest;
+    delete mpAddrReuseMode;
 
     for (auto vm_constr : mHardVmConstraints) {
       delete vm_constr;
@@ -196,7 +201,7 @@ namespace Force {
       EMemDataType memDataType = mIsInstruction ? EMemDataType::Instruction : EMemDataType::Data;
       ConstraintSet generated_addr_constr(addr, addr + mSize - 1);
 
-      mpVmMapper->ApplyVirtualUsableConstraint(memDataType, EMemAccessType::Unknown, AddressReuseMode(), &generated_addr_constr);
+      mpVmMapper->ApplyVirtualUsableConstraint(memDataType, mpPageRequest->MemoryAccessType(), *mpAddrReuseMode, &generated_addr_constr);
       ApplyHardConstraints(&generated_addr_constr);
 
       if (generated_addr_constr.Size() == mSize) {
@@ -224,7 +229,7 @@ namespace Force {
     }
 
     EMemDataType memDataType = mIsInstruction ? EMemDataType::Instruction : EMemDataType::Data;
-    mpVmMapper->ApplyVirtualUsableConstraint(memDataType, EMemAccessType::Unknown, AddressReuseMode(), va_constr.get());
+    mpVmMapper->ApplyVirtualUsableConstraint(memDataType, mpPageRequest->MemoryAccessType(), *mpAddrReuseMode, va_constr.get());
 
     MergeAddressErrorConstraint(va_constr.get()); // TBD: generate some address error space
     ApplyHardConstraints(va_constr.get());
@@ -339,7 +344,7 @@ namespace Force {
     }
 
     EMemDataType memDataType = mIsInstruction ? EMemDataType::Instruction : EMemDataType::Data;
-    mpVmMapper->ApplyVirtualUsableConstraint(memDataType, EMemAccessType::Unknown, AddressReuseMode(), va_constr.get());
+    mpVmMapper->ApplyVirtualUsableConstraint(memDataType, mpPageRequest->MemoryAccessType(), *mpAddrReuseMode, va_constr.get());
 
     MergeAddressErrorConstraint(va_constr.get()); // TBD: generate some address error space
     ApplyHardConstraints(va_constr.get());
