@@ -90,7 +90,7 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
-    std::string _speculative_mode = mSpecModeStrings[0];
+    std::string _speculative_mode;
 
     for(const RegUpdate& rRegUp : mRegisterUpdates)
     {
@@ -120,7 +120,7 @@ namespace Force {
   {
     if(not mOfsSimTrace.is_open()) return;
 
-    std::string _speculative_mode = mSpecModeStrings[0];
+    std::string _speculative_mode;
 
     for(const MemUpdate& rMemUp : mMemoryUpdates)
     {

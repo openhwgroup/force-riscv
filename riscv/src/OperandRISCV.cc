@@ -340,11 +340,17 @@ namespace Force {
 
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
     RegisterOperand* index_opr = indexed_opr_constr->IndexOperand();
-    for (Operand* opr : rInstr.GetOperands()) {
-      if ((opr->OperandType() == EOperandType::VECREG) and (opr != index_opr)) {
-        data_opr = opr;
-        break;
-      }
+    vector<Operand*> operands = rInstr.GetOperands();
+
+    auto itr = find_if(operands.cbegin(), operands.cend(),
+      [index_opr](const Operand* pOpr) { return ((pOpr->OperandType() == EOperandType::VECREG) and (pOpr != index_opr)); });
+
+    if (itr != operands.end()) {
+      data_opr = *itr;
+    }
+    else {
+      LOG(fail) << "{VectorIndexedLoadStoreOperandRISCV::GetDataOperand} data operand not found" << endl;
+      FAIL("no-data-operand");
     }
 
     return data_opr;
