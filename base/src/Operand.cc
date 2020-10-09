@@ -47,6 +47,7 @@
 #include <VirtualMemoryInitializer.h>
 #include <VectorLayout.h>
 #include <DataBlock.h>
+#include <StringUtils.h>
 #include <Config.h>
 
 #include <memory>
@@ -1494,7 +1495,7 @@ namespace Force {
     uint64 alignment = GetAddressingAlignment(lsop_struct->Alignment(), lsop_struct->DataSize());
     uint64 base_val = 0;
     uint64 stride_val = 0;
-    CalculateBaseAndStrideValues(instr, alignment, base_val, stride_val);
+    CalculateBaseAndStrideValues(instr, alignment, GetInitialAddressBlockSize(gen), base_val, stride_val);
 
     mTargetAddress = base_val;
     auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
@@ -1537,7 +1538,7 @@ namespace Force {
     }
   }
 
-  void VectorStridedLoadStoreOperand::CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, uint64& rBaseVal, uint64& rStrideVal) const
+  void VectorStridedLoadStoreOperand::CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, cuint64 initAddrBlockSize, uint64& rBaseVal, uint64& rStrideVal) const
   {
     auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
     const GenPageRequest* page_req = strided_opr_constr->GetPageRequest();
@@ -1555,18 +1556,18 @@ namespace Force {
     // that can be used.
     bool solved = false;
     try {
-      uint32 addr_range_size = 0x8000;
+      uint64 addr_block_size = initAddrBlockSize;
 
-      while ((not solved) and (addr_range_size >= lsop_struct->DataSize())) {
-        uint64 base_addr = va_gen.GenerateAddress(alignment, addr_range_size, false, page_req->MemoryAccessType());
-        rStrideVal = CalculateStrideValue(rInstr, alignment, addr_range_size);
+      while ((not solved) and (addr_block_size >= lsop_struct->DataSize())) {
+        uint64 base_addr = va_gen.GenerateAddress(alignment, addr_block_size, false, page_req->MemoryAccessType());
+        rStrideVal = CalculateStrideValue(rInstr, alignment, addr_block_size);
 
-        rBaseVal = CalculateBaseValue(base_addr, alignment, addr_range_size, rStrideVal);
+        rBaseVal = CalculateBaseValue(base_addr, alignment, addr_block_size, rStrideVal);
         if ((target_constr == nullptr) or (target_constr->ContainsValue(rBaseVal))) {
           solved = true;
         }
         else {
-          addr_range_size /= 2;
+          addr_block_size /= 2;
         }
       }
     }
@@ -1626,6 +1627,12 @@ namespace Force {
     }
 
     return base_val;
+  }
+
+  uint64 VectorStridedLoadStoreOperand::GetInitialAddressBlockSize(const Generator& rGen)
+  {
+    string init_addr_block_size = rGen.GetVariable("Initial Vector Strided Preamble Address Block Size", EVariableType::Value);
+    return parse_uint64(init_addr_block_size);
   }
 
   bool VectorIndexedLoadStoreOperand::GetPrePostAmbleRequests(Generator& gen) const

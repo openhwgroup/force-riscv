@@ -778,9 +778,10 @@ namespace Force {
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
     void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
     void DifferStrideOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the stride operand uses a different register from the base operand.
-    void CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, uint64& rBaseVal, uint64& rStrideVal) const; //!< Calculate the values of the base and stride operands.
+    void CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, cuint64 initAddrBlockSize, uint64& rBaseVal, uint64& rStrideVal) const; //!< Calculate the values of the base and stride operands.
     uint64 CalculateStrideValue(const Instruction& rInstr, cuint32 alignment, cuint32 addrRangeSize) const; //!< Calculate the value of the stride operand.
     uint64 CalculateBaseValue(cuint64 baseAddr, cuint32 alignment, cuint32 addrRangeSize, cuint64 strideVal) const; //!< Calculate the value of the base operand.
+    uint64 GetInitialAddressBlockSize(const Generator& rGen); //!< Get the initial address block size for preamble stride calculations.
   };
 
   /*!
