@@ -17,6 +17,10 @@
 <!--
 Add RISCV system registers starter information in this file.
 -->
+<!--
+This file is for implementing register fields of unimplemented registers (e.g. uepc & miedeleg)
+Still in progress
+-->
 <registers>
   <register boot="0" description="User status register." index="0x0" name="ustatus" physical_register="mstatus" privilege="URW" size="32" type="SysReg">
     <register_field name="WPRI_VAR" size="27">

@@ -51,11 +51,11 @@ def split_files():
     dst_dict['riscv_instructions_float_starter.xml'] = ['RV32F', 'RV64F']
     dst_dict['riscv_instructions_double_starter.xml'] = ['RV32D', 'RV64D']
     dst_dict['riscv_instructions_quad_starter.xml'] = ['RV32Q', 'RV64Q'] 
-    split_file('../riscv_instructions_starter.xml', dst_dict)
+    split_file('riscv_instructions_starter.xml', dst_dict)
 
     dst_dict = dict()
     dst_dict['riscv_instructions_compressed_rv32_starter.xml'] = ['RV32C']
     dst_dict['riscv_instructions_compressed_rv64_starter.xml'] = ['RV64C']
-    split_file('../c_instructions_starter.xml', dst_dict)
+    split_file('c_instructions_starter.xml', dst_dict)
 
 split_files()
