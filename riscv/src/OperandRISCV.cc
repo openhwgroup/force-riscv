@@ -416,7 +416,7 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto vec_reg_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
-    mRegCount = lround(vec_layout->mRegCount * vec_reg_opr_constr->GetLayoutMultiple());
+    mRegCount = lround(vec_layout->GetRegisterCount() * vec_reg_opr_constr->GetLayoutMultiple());
     if (mRegCount == 0) {
       mRegCount = 1;
     }

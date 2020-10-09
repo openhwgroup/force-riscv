@@ -246,14 +246,14 @@ namespace Force {
 
     float GetRegisterCount() const { return mRegCount; } //!< Get the number of registers per vector register group.
     uint32 GetElementWidth() const { return mElemWidth; } //!< Get the width of each element in the vector register group.
-    uint32 GetRegisterIndexAlignment() const { return mRegIndexAlignment; } //!< Get a power of 2 to which vector register indices must be aligned.
+    float GetRegisterIndexAlignment() const { return mRegIndexAlignment; } //!< Get a power of 2 to which vector register indices must be aligned.
     void SetRegisterCount(const float regCount) { mRegCount = regCount; } //!< Set the number of registers per vector register group.
     void SetElementWidth(cuint32 elemWidth) { mElemWidth = elemWidth; } //!< Set the width of each element in the vector register group
-    void SetRegisterIndexAlignment(cuint32 regIndexAlignment) { mRegIndexAlignment = regIndexAlignment; } //!< Set a power of 2 to which vector register indices must be aligned.
+    void SetRegisterIndexAlignment(const float regIndexAlignment) { mRegIndexAlignment = regIndexAlignment; } //!< Set a power of 2 to which vector register indices must be aligned.
   private:
     float mRegCount; //!< The number of registers per vector register group.
     uint32 mElemWidth; //!< The width of each element in the vector register group.
-    uint32 mRegIndexAlignment; //!< A power of 2 to which vector register indices must be aligned
+    float mRegIndexAlignment; //!< A power of 2 to which vector register indices must be aligned
   };
 
   /*!
