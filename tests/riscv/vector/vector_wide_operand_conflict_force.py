@@ -74,7 +74,7 @@ class MainSequence(VectorTestSequence):
 
         # Ensure vector register group size is no more than 4, as larger values are not legal for
         # widening and narrowing instructions
-        vlmul_choice_weights = {'0x0': 10, '0x1': 10, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        vlmul_choice_weights = {'0x0': 10, '0x1': 10, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 10, '0x6': 10, '0x7': 10}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VLMUL', vlmul_choice_weights)
 
         choices_mod.commitSet()

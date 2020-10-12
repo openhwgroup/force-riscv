@@ -18,7 +18,7 @@
 
 #include <Defines.h>
 
-#include <math.h>
+#include <cmath>
 
 namespace Force {
 
@@ -33,9 +33,9 @@ namespace Force {
     float mRegCount; //!< The number of registers per vector register group
     float mRegIndexAlignment; //!< A power of 2 to which vector register indices must be aligned
 
-    uint32 GetRegisterCount() const { return lround(mRegCount) < 1 ? 1 : lround(mRegCount); }
+    uint32 GetRegisterCount(const float layoutMultiple) const { return mRegCount * layoutMultiple <= 1 ? 1 : lround(mRegCount * layoutMultiple); }
 
-    uint32 GetRegisterIndexAlignment() const { return lround(mRegIndexAlignment) < 1 ? 1 : lround(mRegIndexAlignment); }
+    uint32 GetRegisterIndexAlignment(const float layoutMultiple) const { return mRegIndexAlignment * layoutMultiple <= 1 ? 1 : lround(mRegIndexAlignment * layoutMultiple); }
   };
 
 }
