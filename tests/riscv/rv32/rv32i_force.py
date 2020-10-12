@@ -46,7 +46,7 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         # generate sequences of random instructions...
-        self.genRandomInstrs(my_RV32I_instructions, 1, 5)
+        self.genRandomInstrs(RV32I_instructions, 10, 50)
         
     ## generate some random instructions...
 
