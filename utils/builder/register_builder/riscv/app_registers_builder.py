@@ -56,22 +56,22 @@ def create_vector_app_register(aIndex):
 
     return v_reg
 
-def build_app_registers():
+def build_app_registers(app_registers_file, xlen):
 
     app_register_doc = RegistersDocument("RISC-V Registers")
 
     # Add x1-x31 registers
     for i in range(1, 32):
-        app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("x%d" % i, 64, i, "GPR"))
-        app_register_doc.addRegister(create_app_register("x%d" % i, 64, i, "GPR", None, 0x1000))
+        app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("x%d" % i, xlen, i, "GPR"))
+        app_register_doc.addRegister(create_app_register("x%d" % i, xlen, i, "GPR", None, 0x1000))
 
     # Add zero register
-    app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("x0", 64, 0, "GPR", "PhysicalRegisterRazwi", 0))
-    app_register_doc.addRegister(create_app_register("x0", 64, 0, "ZR", "ReadOnlyZeroRegister", 0, "x0"))
+    app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("x0", xlen, 0, "GPR", "PhysicalRegisterRazwi", 0))
+    app_register_doc.addRegister(create_app_register("x0", xlen, 0, "ZR", "ReadOnlyZeroRegister", 0, "x0"))
 
     # Add PC register
-    app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("PC", 64, 32, "PC"))
-    app_register_doc.addRegister(create_app_register("PC", 64, 32, "PC", None, 0))
+    app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("PC", xlen, 32, "PC"))
+    app_register_doc.addRegister(create_app_register("PC", xlen, 32, "PC", None, 0))
 
     # Add f0-f31, S0-S31
     for i in range(0, 32):
@@ -98,7 +98,29 @@ def build_app_registers():
 
         app_register_doc.addRegister(create_vector_app_register(i))
 
-    app_register_doc.writeXmlFile('output/app_registers.xml')
+    app_register_doc.writeXmlFile(app_registers_file)
 
 if __name__ == "__main__":
-    build_app_registers()
+    app_registers_file = 'output/app_registers.xml'
+    xlen = 64
+    
+    if len(sys.argv) > 1:
+        if (sys.argv[1] == '--xlen'):
+            try:
+                xlen = int(sys.argv[2])
+            except:
+                print("ERROR: 'xlen' option value should be integer")
+                sys.exit(1)
+            if xlen == 32:
+                app_registers_file = 'output/app_registers_rv32.xml'
+            elif xlen == 64:
+                pass
+            else:
+                print("ERROR: Only valid 'xlen' values are 32 or 64")
+                sys.exit(1)
+        else:
+            print("Only valid option is '--xlen N', where N is either 32 or 64")
+            sys.exit(1)
+
+    print("\tApp registers file: %s, xlen: %d" % (app_registers_file,xlen))
+    build_app_registers(app_registers_file, xlen)

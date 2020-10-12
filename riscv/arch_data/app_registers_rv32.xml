@@ -1,3 +1,18 @@
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
 <?xml version="1.0" encoding="utf-8"?>
 <registers>
   <physical_registers>
@@ -32,8 +47,8 @@
     <physical_register name="x29" index="29" size="32" type="GPR"/>
     <physical_register name="x30" index="30" size="32" type="GPR"/>
     <physical_register name="x31" index="31" size="32" type="GPR"/>
-    <physical_register name="x0"  index="0" size="32" type="GPR" class="PhysicalRegisterRazwi" reset="0"/>
-    <physical_register name="PC"  index="32" size="32" type="PC"/>
+    <physical_register name="x0" index="0" size="32" type="GPR" class="PhysicalRegisterRazwi" reset="0"/>
+    <physical_register name="PC" index="32" size="32" type="PC"/>
     <physical_register name="f0_0" index="0" size="64" type="FPR" sub_index="0"/>
     <physical_register name="f0_1" index="0" size="64" type="FPR" sub_index="1"/>
     <physical_register name="f1_0" index="1" size="64" type="FPR" sub_index="0"/>
@@ -100,68 +115,260 @@
     <physical_register name="f31_1" index="31" size="64" type="FPR" sub_index="1"/>
     <physical_register name="v0_0" index="0" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v0_1" index="0" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v0_2" index="0" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v0_3" index="0" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v0_4" index="0" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v0_5" index="0" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v0_6" index="0" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v0_7" index="0" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v1_0" index="1" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v1_1" index="1" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v1_2" index="1" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v1_3" index="1" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v1_4" index="1" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v1_5" index="1" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v1_6" index="1" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v1_7" index="1" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v2_0" index="2" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v2_1" index="2" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v2_2" index="2" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v2_3" index="2" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v2_4" index="2" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v2_5" index="2" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v2_6" index="2" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v2_7" index="2" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v3_0" index="3" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v3_1" index="3" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v3_2" index="3" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v3_3" index="3" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v3_4" index="3" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v3_5" index="3" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v3_6" index="3" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v3_7" index="3" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v4_0" index="4" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v4_1" index="4" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v4_2" index="4" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v4_3" index="4" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v4_4" index="4" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v4_5" index="4" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v4_6" index="4" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v4_7" index="4" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v5_0" index="5" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v5_1" index="5" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v5_2" index="5" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v5_3" index="5" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v5_4" index="5" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v5_5" index="5" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v5_6" index="5" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v5_7" index="5" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v6_0" index="6" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v6_1" index="6" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v6_2" index="6" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v6_3" index="6" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v6_4" index="6" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v6_5" index="6" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v6_6" index="6" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v6_7" index="6" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v7_0" index="7" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v7_1" index="7" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v7_2" index="7" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v7_3" index="7" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v7_4" index="7" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v7_5" index="7" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v7_6" index="7" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v7_7" index="7" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v8_0" index="8" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v8_1" index="8" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v8_2" index="8" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v8_3" index="8" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v8_4" index="8" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v8_5" index="8" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v8_6" index="8" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v8_7" index="8" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v9_0" index="9" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v9_1" index="9" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v9_2" index="9" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v9_3" index="9" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v9_4" index="9" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v9_5" index="9" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v9_6" index="9" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v9_7" index="9" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v10_0" index="10" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v10_1" index="10" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v10_2" index="10" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v10_3" index="10" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v10_4" index="10" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v10_5" index="10" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v10_6" index="10" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v10_7" index="10" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v11_0" index="11" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v11_1" index="11" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v11_2" index="11" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v11_3" index="11" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v11_4" index="11" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v11_5" index="11" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v11_6" index="11" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v11_7" index="11" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v12_0" index="12" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v12_1" index="12" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v12_2" index="12" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v12_3" index="12" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v12_4" index="12" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v12_5" index="12" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v12_6" index="12" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v12_7" index="12" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v13_0" index="13" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v13_1" index="13" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v13_2" index="13" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v13_3" index="13" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v13_4" index="13" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v13_5" index="13" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v13_6" index="13" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v13_7" index="13" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v14_0" index="14" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v14_1" index="14" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v14_2" index="14" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v14_3" index="14" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v14_4" index="14" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v14_5" index="14" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v14_6" index="14" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v14_7" index="14" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v15_0" index="15" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v15_1" index="15" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v15_2" index="15" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v15_3" index="15" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v15_4" index="15" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v15_5" index="15" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v15_6" index="15" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v15_7" index="15" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v16_0" index="16" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v16_1" index="16" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v16_2" index="16" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v16_3" index="16" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v16_4" index="16" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v16_5" index="16" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v16_6" index="16" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v16_7" index="16" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v17_0" index="17" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v17_1" index="17" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v17_2" index="17" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v17_3" index="17" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v17_4" index="17" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v17_5" index="17" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v17_6" index="17" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v17_7" index="17" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v18_0" index="18" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v18_1" index="18" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v18_2" index="18" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v18_3" index="18" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v18_4" index="18" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v18_5" index="18" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v18_6" index="18" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v18_7" index="18" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v19_0" index="19" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v19_1" index="19" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v19_2" index="19" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v19_3" index="19" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v19_4" index="19" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v19_5" index="19" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v19_6" index="19" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v19_7" index="19" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v20_0" index="20" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v20_1" index="20" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v20_2" index="20" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v20_3" index="20" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v20_4" index="20" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v20_5" index="20" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v20_6" index="20" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v20_7" index="20" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v21_0" index="21" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v21_1" index="21" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v21_2" index="21" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v21_3" index="21" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v21_4" index="21" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v21_5" index="21" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v21_6" index="21" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v21_7" index="21" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v22_0" index="22" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v22_1" index="22" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v22_2" index="22" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v22_3" index="22" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v22_4" index="22" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v22_5" index="22" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v22_6" index="22" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v22_7" index="22" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v23_0" index="23" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v23_1" index="23" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v23_2" index="23" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v23_3" index="23" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v23_4" index="23" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v23_5" index="23" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v23_6" index="23" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v23_7" index="23" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v24_0" index="24" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v24_1" index="24" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v24_2" index="24" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v24_3" index="24" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v24_4" index="24" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v24_5" index="24" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v24_6" index="24" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v24_7" index="24" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v25_0" index="25" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v25_1" index="25" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v25_2" index="25" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v25_3" index="25" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v25_4" index="25" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v25_5" index="25" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v25_6" index="25" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v25_7" index="25" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v26_0" index="26" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v26_1" index="26" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v26_2" index="26" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v26_3" index="26" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v26_4" index="26" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v26_5" index="26" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v26_6" index="26" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v26_7" index="26" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v27_0" index="27" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v27_1" index="27" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v27_2" index="27" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v27_3" index="27" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v27_4" index="27" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v27_5" index="27" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v27_6" index="27" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v27_7" index="27" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v28_0" index="28" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v28_1" index="28" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v28_2" index="28" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v28_3" index="28" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v28_4" index="28" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v28_5" index="28" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v28_6" index="28" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v28_7" index="28" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v29_0" index="29" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v29_1" index="29" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v29_2" index="29" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v29_3" index="29" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v29_4" index="29" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v29_5" index="29" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v29_6" index="29" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v29_7" index="29" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v30_0" index="30" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v30_1" index="30" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v30_2" index="30" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v30_3" index="30" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v30_4" index="30" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v30_5" index="30" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v30_6" index="30" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v30_7" index="30" size="64" type="VECREG" sub_index="7"/>
     <physical_register name="v31_0" index="31" size="64" type="VECREG" sub_index="0"/>
     <physical_register name="v31_1" index="31" size="64" type="VECREG" sub_index="1"/>
+    <physical_register name="v31_2" index="31" size="64" type="VECREG" sub_index="2"/>
+    <physical_register name="v31_3" index="31" size="64" type="VECREG" sub_index="3"/>
+    <physical_register name="v31_4" index="31" size="64" type="VECREG" sub_index="4"/>
+    <physical_register name="v31_5" index="31" size="64" type="VECREG" sub_index="5"/>
+    <physical_register name="v31_6" index="31" size="64" type="VECREG" sub_index="6"/>
+    <physical_register name="v31_7" index="31" size="64" type="VECREG" sub_index="7"/>
   </physical_registers>
   <register_file name="RISC-V Registers">
     <register name="x1" index="1" size="32" type="GPR" boot="0x1000">
@@ -487,6 +694,166 @@
     <register name="S31" index="31" size="32" type="FPR" boot="0x0">
       <register_field name="S31" physical_register="f31_0" size="32">
         <bit_field shift="0" size="32"/>
+      </register_field>
+    </register>
+    <register name="H0" index="0" size="16" type="FPR" boot="0x0">
+      <register_field name="H0" physical_register="f0_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H1" index="1" size="16" type="FPR" boot="0x0">
+      <register_field name="H1" physical_register="f1_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H2" index="2" size="16" type="FPR" boot="0x0">
+      <register_field name="H2" physical_register="f2_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H3" index="3" size="16" type="FPR" boot="0x0">
+      <register_field name="H3" physical_register="f3_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H4" index="4" size="16" type="FPR" boot="0x0">
+      <register_field name="H4" physical_register="f4_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H5" index="5" size="16" type="FPR" boot="0x0">
+      <register_field name="H5" physical_register="f5_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H6" index="6" size="16" type="FPR" boot="0x0">
+      <register_field name="H6" physical_register="f6_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H7" index="7" size="16" type="FPR" boot="0x0">
+      <register_field name="H7" physical_register="f7_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H8" index="8" size="16" type="FPR" boot="0x0">
+      <register_field name="H8" physical_register="f8_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H9" index="9" size="16" type="FPR" boot="0x0">
+      <register_field name="H9" physical_register="f9_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H10" index="10" size="16" type="FPR" boot="0x0">
+      <register_field name="H10" physical_register="f10_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H11" index="11" size="16" type="FPR" boot="0x0">
+      <register_field name="H11" physical_register="f11_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H12" index="12" size="16" type="FPR" boot="0x0">
+      <register_field name="H12" physical_register="f12_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H13" index="13" size="16" type="FPR" boot="0x0">
+      <register_field name="H13" physical_register="f13_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H14" index="14" size="16" type="FPR" boot="0x0">
+      <register_field name="H14" physical_register="f14_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H15" index="15" size="16" type="FPR" boot="0x0">
+      <register_field name="H15" physical_register="f15_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H16" index="16" size="16" type="FPR" boot="0x0">
+      <register_field name="H16" physical_register="f16_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H17" index="17" size="16" type="FPR" boot="0x0">
+      <register_field name="H17" physical_register="f17_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H18" index="18" size="16" type="FPR" boot="0x0">
+      <register_field name="H18" physical_register="f18_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H19" index="19" size="16" type="FPR" boot="0x0">
+      <register_field name="H19" physical_register="f19_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H20" index="20" size="16" type="FPR" boot="0x0">
+      <register_field name="H20" physical_register="f20_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H21" index="21" size="16" type="FPR" boot="0x0">
+      <register_field name="H21" physical_register="f21_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H22" index="22" size="16" type="FPR" boot="0x0">
+      <register_field name="H22" physical_register="f22_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H23" index="23" size="16" type="FPR" boot="0x0">
+      <register_field name="H23" physical_register="f23_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H24" index="24" size="16" type="FPR" boot="0x0">
+      <register_field name="H24" physical_register="f24_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H25" index="25" size="16" type="FPR" boot="0x0">
+      <register_field name="H25" physical_register="f25_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H26" index="26" size="16" type="FPR" boot="0x0">
+      <register_field name="H26" physical_register="f26_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H27" index="27" size="16" type="FPR" boot="0x0">
+      <register_field name="H27" physical_register="f27_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H28" index="28" size="16" type="FPR" boot="0x0">
+      <register_field name="H28" physical_register="f28_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H29" index="29" size="16" type="FPR" boot="0x0">
+      <register_field name="H29" physical_register="f29_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H30" index="30" size="16" type="FPR" boot="0x0">
+      <register_field name="H30" physical_register="f30_0" size="16">
+        <bit_field shift="0" size="16"/>
+      </register_field>
+    </register>
+    <register name="H31" index="31" size="16" type="FPR" boot="0x0">
+      <register_field name="H31" physical_register="f31_0" size="16">
+        <bit_field shift="0" size="16"/>
       </register_field>
     </register>
     <register name="D0" index="0" size="64" type="FPR" boot="0x3000">
@@ -905,259 +1272,835 @@
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V0" index="0" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V0_0" physical_register="v0_0" size="64">
+    <register name="v0" index="0" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v0_0" physical_register="v0_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V0_1" physical_register="v0_1" size="64">
+      <register_field name="v0_1" physical_register="v0_1" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V1" index="1" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V1_0" physical_register="v1_0" size="64">
+      <register_field name="v0_2" physical_register="v0_2" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V1_1" physical_register="v1_1" size="64">
+      <register_field name="v0_3" physical_register="v0_3" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V2" index="2" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V2_0" physical_register="v2_0" size="64">
+      <register_field name="v0_4" physical_register="v0_4" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V2_1" physical_register="v2_1" size="64">
+      <register_field name="v0_5" physical_register="v0_5" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V3" index="3" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V3_0" physical_register="v3_0" size="64">
+      <register_field name="v0_6" physical_register="v0_6" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V3_1" physical_register="v3_1" size="64">
+      <register_field name="v0_7" physical_register="v0_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V4" index="4" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V4_0" physical_register="v4_0" size="64">
+    <register name="v1" index="1" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v1_0" physical_register="v1_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V4_1" physical_register="v4_1" size="64">
+      <register_field name="v1_1" physical_register="v1_1" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V5" index="5" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V5_0" physical_register="v5_0" size="64">
+      <register_field name="v1_2" physical_register="v1_2" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V5_1" physical_register="v5_1" size="64">
+      <register_field name="v1_3" physical_register="v1_3" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V6" index="6" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V6_0" physical_register="v6_0" size="64">
+      <register_field name="v1_4" physical_register="v1_4" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V6_1" physical_register="v6_1" size="64">
+      <register_field name="v1_5" physical_register="v1_5" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V7" index="7" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V7_0" physical_register="v7_0" size="64">
+      <register_field name="v1_6" physical_register="v1_6" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V7_1" physical_register="v7_1" size="64">
+      <register_field name="v1_7" physical_register="v1_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V8" index="8" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V8_0" physical_register="v8_0" size="64">
+    <register name="v2" index="2" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v2_0" physical_register="v2_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V8_1" physical_register="v8_1" size="64">
+      <register_field name="v2_1" physical_register="v2_1" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V9" index="9" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V9_0" physical_register="v9_0" size="64">
+      <register_field name="v2_2" physical_register="v2_2" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V9_1" physical_register="v9_1" size="64">
+      <register_field name="v2_3" physical_register="v2_3" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V10" index="10" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V10_0" physical_register="v10_0" size="64">
+      <register_field name="v2_4" physical_register="v2_4" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V10_1" physical_register="v10_1" size="64">
+      <register_field name="v2_5" physical_register="v2_5" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V11" index="11" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V11_0" physical_register="v11_0" size="64">
+      <register_field name="v2_6" physical_register="v2_6" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V11_1" physical_register="v11_1" size="64">
+      <register_field name="v2_7" physical_register="v2_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V12" index="12" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V12_0" physical_register="v12_0" size="64">
+    <register name="v3" index="3" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v3_0" physical_register="v3_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V12_1" physical_register="v12_1" size="64">
+      <register_field name="v3_1" physical_register="v3_1" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V13" index="13" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V13_0" physical_register="v13_0" size="64">
+      <register_field name="v3_2" physical_register="v3_2" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V13_1" physical_register="v13_1" size="64">
+      <register_field name="v3_3" physical_register="v3_3" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V14" index="14" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V14_0" physical_register="v14_0" size="64">
+      <register_field name="v3_4" physical_register="v3_4" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V14_1" physical_register="v14_1" size="64">
+      <register_field name="v3_5" physical_register="v3_5" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V15" index="15" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V15_0" physical_register="v15_0" size="64">
+      <register_field name="v3_6" physical_register="v3_6" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V15_1" physical_register="v15_1" size="64">
+      <register_field name="v3_7" physical_register="v3_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V16" index="16" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V16_0" physical_register="v16_0" size="64">
+    <register name="v4" index="4" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v4_0" physical_register="v4_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V16_1" physical_register="v16_1" size="64">
+      <register_field name="v4_1" physical_register="v4_1" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V17" index="17" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V17_0" physical_register="v17_0" size="64">
+      <register_field name="v4_2" physical_register="v4_2" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V17_1" physical_register="v17_1" size="64">
+      <register_field name="v4_3" physical_register="v4_3" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V18" index="18" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V18_0" physical_register="v18_0" size="64">
+      <register_field name="v4_4" physical_register="v4_4" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V18_1" physical_register="v18_1" size="64">
+      <register_field name="v4_5" physical_register="v4_5" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V19" index="19" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V19_0" physical_register="v19_0" size="64">
+      <register_field name="v4_6" physical_register="v4_6" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V19_1" physical_register="v19_1" size="64">
+      <register_field name="v4_7" physical_register="v4_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V20" index="20" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V20_0" physical_register="v20_0" size="64">
+    <register name="v5" index="5" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v5_0" physical_register="v5_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V20_1" physical_register="v20_1" size="64">
+      <register_field name="v5_1" physical_register="v5_1" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V21" index="21" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V21_0" physical_register="v21_0" size="64">
+      <register_field name="v5_2" physical_register="v5_2" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V21_1" physical_register="v21_1" size="64">
+      <register_field name="v5_3" physical_register="v5_3" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V22" index="22" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V22_0" physical_register="v22_0" size="64">
+      <register_field name="v5_4" physical_register="v5_4" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V22_1" physical_register="v22_1" size="64">
+      <register_field name="v5_5" physical_register="v5_5" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V23" index="23" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V23_0" physical_register="v23_0" size="64">
+      <register_field name="v5_6" physical_register="v5_6" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V23_1" physical_register="v23_1" size="64">
+      <register_field name="v5_7" physical_register="v5_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V24" index="24" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V24_0" physical_register="v24_0" size="64">
+    <register name="v6" index="6" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v6_0" physical_register="v6_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V24_1" physical_register="v24_1" size="64">
+      <register_field name="v6_1" physical_register="v6_1" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V25" index="25" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V25_0" physical_register="v25_0" size="64">
+      <register_field name="v6_2" physical_register="v6_2" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V25_1" physical_register="v25_1" size="64">
+      <register_field name="v6_3" physical_register="v6_3" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V26" index="26" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V26_0" physical_register="v26_0" size="64">
+      <register_field name="v6_4" physical_register="v6_4" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V26_1" physical_register="v26_1" size="64">
+      <register_field name="v6_5" physical_register="v6_5" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-    </register>
-    <register name="V27" index="27" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V27_0" physical_register="v27_0" size="64">
+      <register_field name="v6_6" physical_register="v6_6" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V27_1" physical_register="v27_1" size="64">
+      <register_field name="v6_7" physical_register="v6_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V28" index="28" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V28_0" physical_register="v28_0" size="64">
+    <register name="v7" index="7" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v7_0" physical_register="v7_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V28_1" physical_register="v28_1" size="64">
+      <register_field name="v7_1" physical_register="v7_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v7_2" physical_register="v7_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v7_3" physical_register="v7_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v7_4" physical_register="v7_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v7_5" physical_register="v7_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v7_6" physical_register="v7_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v7_7" physical_register="v7_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V29" index="29" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V29_0" physical_register="v29_0" size="64">
+    <register name="v8" index="8" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v8_0" physical_register="v8_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V29_1" physical_register="v29_1" size="64">
+      <register_field name="v8_1" physical_register="v8_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v8_2" physical_register="v8_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v8_3" physical_register="v8_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v8_4" physical_register="v8_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v8_5" physical_register="v8_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v8_6" physical_register="v8_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v8_7" physical_register="v8_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V30" index="30" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V30_0" physical_register="v30_0" size="64">
+    <register name="v9" index="9" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v9_0" physical_register="v9_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V30_1" physical_register="v30_1" size="64">
+      <register_field name="v9_1" physical_register="v9_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v9_2" physical_register="v9_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v9_3" physical_register="v9_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v9_4" physical_register="v9_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v9_5" physical_register="v9_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v9_6" physical_register="v9_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v9_7" physical_register="v9_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register name="V31" index="31" size="128" type="VECREG" boot="0x3000" class="LargeRegister">
-      <register_field name="V31_0" physical_register="v31_0" size="64">
+    <register name="v10" index="10" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v10_0" physical_register="v10_0" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
-      <register_field name="V31_1" physical_register="v31_1" size="64">
+      <register_field name="v10_1" physical_register="v10_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v10_2" physical_register="v10_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v10_3" physical_register="v10_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v10_4" physical_register="v10_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v10_5" physical_register="v10_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v10_6" physical_register="v10_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v10_7" physical_register="v10_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v11" index="11" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v11_0" physical_register="v11_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v11_1" physical_register="v11_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v11_2" physical_register="v11_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v11_3" physical_register="v11_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v11_4" physical_register="v11_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v11_5" physical_register="v11_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v11_6" physical_register="v11_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v11_7" physical_register="v11_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v12" index="12" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v12_0" physical_register="v12_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v12_1" physical_register="v12_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v12_2" physical_register="v12_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v12_3" physical_register="v12_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v12_4" physical_register="v12_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v12_5" physical_register="v12_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v12_6" physical_register="v12_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v12_7" physical_register="v12_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v13" index="13" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v13_0" physical_register="v13_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v13_1" physical_register="v13_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v13_2" physical_register="v13_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v13_3" physical_register="v13_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v13_4" physical_register="v13_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v13_5" physical_register="v13_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v13_6" physical_register="v13_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v13_7" physical_register="v13_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v14" index="14" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v14_0" physical_register="v14_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v14_1" physical_register="v14_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v14_2" physical_register="v14_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v14_3" physical_register="v14_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v14_4" physical_register="v14_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v14_5" physical_register="v14_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v14_6" physical_register="v14_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v14_7" physical_register="v14_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v15" index="15" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v15_0" physical_register="v15_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v15_1" physical_register="v15_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v15_2" physical_register="v15_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v15_3" physical_register="v15_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v15_4" physical_register="v15_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v15_5" physical_register="v15_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v15_6" physical_register="v15_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v15_7" physical_register="v15_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v16" index="16" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v16_0" physical_register="v16_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v16_1" physical_register="v16_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v16_2" physical_register="v16_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v16_3" physical_register="v16_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v16_4" physical_register="v16_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v16_5" physical_register="v16_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v16_6" physical_register="v16_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v16_7" physical_register="v16_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v17" index="17" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v17_0" physical_register="v17_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v17_1" physical_register="v17_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v17_2" physical_register="v17_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v17_3" physical_register="v17_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v17_4" physical_register="v17_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v17_5" physical_register="v17_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v17_6" physical_register="v17_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v17_7" physical_register="v17_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v18" index="18" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v18_0" physical_register="v18_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v18_1" physical_register="v18_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v18_2" physical_register="v18_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v18_3" physical_register="v18_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v18_4" physical_register="v18_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v18_5" physical_register="v18_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v18_6" physical_register="v18_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v18_7" physical_register="v18_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v19" index="19" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v19_0" physical_register="v19_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v19_1" physical_register="v19_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v19_2" physical_register="v19_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v19_3" physical_register="v19_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v19_4" physical_register="v19_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v19_5" physical_register="v19_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v19_6" physical_register="v19_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v19_7" physical_register="v19_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v20" index="20" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v20_0" physical_register="v20_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v20_1" physical_register="v20_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v20_2" physical_register="v20_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v20_3" physical_register="v20_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v20_4" physical_register="v20_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v20_5" physical_register="v20_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v20_6" physical_register="v20_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v20_7" physical_register="v20_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v21" index="21" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v21_0" physical_register="v21_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v21_1" physical_register="v21_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v21_2" physical_register="v21_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v21_3" physical_register="v21_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v21_4" physical_register="v21_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v21_5" physical_register="v21_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v21_6" physical_register="v21_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v21_7" physical_register="v21_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v22" index="22" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v22_0" physical_register="v22_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v22_1" physical_register="v22_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v22_2" physical_register="v22_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v22_3" physical_register="v22_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v22_4" physical_register="v22_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v22_5" physical_register="v22_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v22_6" physical_register="v22_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v22_7" physical_register="v22_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v23" index="23" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v23_0" physical_register="v23_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v23_1" physical_register="v23_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v23_2" physical_register="v23_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v23_3" physical_register="v23_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v23_4" physical_register="v23_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v23_5" physical_register="v23_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v23_6" physical_register="v23_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v23_7" physical_register="v23_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v24" index="24" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v24_0" physical_register="v24_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v24_1" physical_register="v24_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v24_2" physical_register="v24_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v24_3" physical_register="v24_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v24_4" physical_register="v24_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v24_5" physical_register="v24_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v24_6" physical_register="v24_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v24_7" physical_register="v24_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v25" index="25" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v25_0" physical_register="v25_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v25_1" physical_register="v25_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v25_2" physical_register="v25_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v25_3" physical_register="v25_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v25_4" physical_register="v25_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v25_5" physical_register="v25_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v25_6" physical_register="v25_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v25_7" physical_register="v25_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v26" index="26" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v26_0" physical_register="v26_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v26_1" physical_register="v26_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v26_2" physical_register="v26_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v26_3" physical_register="v26_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v26_4" physical_register="v26_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v26_5" physical_register="v26_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v26_6" physical_register="v26_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v26_7" physical_register="v26_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v27" index="27" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v27_0" physical_register="v27_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v27_1" physical_register="v27_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v27_2" physical_register="v27_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v27_3" physical_register="v27_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v27_4" physical_register="v27_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v27_5" physical_register="v27_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v27_6" physical_register="v27_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v27_7" physical_register="v27_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v28" index="28" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v28_0" physical_register="v28_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v28_1" physical_register="v28_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v28_2" physical_register="v28_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v28_3" physical_register="v28_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v28_4" physical_register="v28_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v28_5" physical_register="v28_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v28_6" physical_register="v28_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v28_7" physical_register="v28_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v29" index="29" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v29_0" physical_register="v29_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v29_1" physical_register="v29_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v29_2" physical_register="v29_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v29_3" physical_register="v29_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v29_4" physical_register="v29_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v29_5" physical_register="v29_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v29_6" physical_register="v29_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v29_7" physical_register="v29_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v30" index="30" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v30_0" physical_register="v30_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v30_1" physical_register="v30_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v30_2" physical_register="v30_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v30_3" physical_register="v30_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v30_4" physical_register="v30_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v30_5" physical_register="v30_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v30_6" physical_register="v30_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v30_7" physical_register="v30_7" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+    </register>
+    <register name="v31" index="31" size="512" type="VECREG" boot="0x3000" class="LargeRegister">
+      <register_field name="v31_0" physical_register="v31_0" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v31_1" physical_register="v31_1" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v31_2" physical_register="v31_2" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v31_3" physical_register="v31_3" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v31_4" physical_register="v31_4" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v31_5" physical_register="v31_5" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v31_6" physical_register="v31_6" size="64">
+        <bit_field shift="0" size="64"/>
+      </register_field>
+      <register_field name="v31_7" physical_register="v31_7" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>

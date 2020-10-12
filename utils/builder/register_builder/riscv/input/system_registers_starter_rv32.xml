@@ -164,14 +164,8 @@ Add RISCV system registers starter information in this file.
     <register_field name="SD" size="1">
       <bit_field shift="31" size="1"/>
     </register_field>
-    <register_field name="WPRI_VAR" size="29">
-      <bit_field shift="34" size="29"/>
-    </register_field>
-    <register_field name="UXL" size="2">
-      <bit_field shift="32" size="2"/>
-    </register_field>
-    <register_field name="WPRI" size="21">
-      <bit_field shift="20" size="12"/>
+    <register_field name="WPRI" size="20">
+      <bit_field shift="20" size="11"/>
       <bit_field shift="17" size="1"/>
       <bit_field shift="9" size="4"/>
       <bit_field shift="7" size="1"/>
@@ -209,6 +203,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
+
   <register description="Supervisor exception delegation register." index="0x102" name="sedeleg" privilege="SRW" size="0" type="SysReg"/>
   <register description="Supervisor interrupt delegation register." index="0x103" name="sideleg" privilege="SRW" size="0" type="SysReg"/>
   <register description="Supervisor interrupt-enable register." index="0x104" name="sie" physical_register="sie" privilege="SRW" size="0" type="SysReg"/>
@@ -318,8 +313,12 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="1"/>
     </register_field>
   </register>
-  <register description="Scratch register for supervisor trap handlers." index="0x140" name="sscratch" privilege="SRW" size="0" type="SysReg"/>
-  <register description="Supervisor exception program counter." index="0x141" name="sepc" physical_register="sepc" privilege="SRW" size="32" type="SysReg">
+  <register description="Scratch register for supervisor trap handlers." index="0x140" name="sscratch" physical_register="sscratch" privilege="SRW" size="32" type="SysReg">
+    <register_field name="SSCRATCH" size="32">
+      <bit_field shift="0" size="32"/>
+    </register_field>
+  </register>
+    <register description="Supervisor exception program counter." index="0x141" name="sepc" physical_register="sepc" privilege="SRW" size="32" type="SysReg">
     <register_field name="SEPC" size="32">
       <bit_field shift="0" size="32"/>
     </register_field>
@@ -566,14 +565,14 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="1" size="1"/>
     </register_field>
     </register>
-    -->
+  -->
   <register boot="0x5003" description="ISA and extensions" index="0x301" name="misa" physical_register="misa" privilege="MRW" size="32" type="SysReg">
     <register_field name="MXL" size="2">
       <bit_field shift="30" size="2"/>
       <choice description="Undefined" value="0x0" weight="0"/>
-      <choice description="ISA width is 32" value="0x1" weight="0"/>     
-      <choice description="ISA width is 32" value="0x2" weight="10"/>     
-      <choice description="ISA width is 128" value="0x3" weight="0"/>     
+      <choice description="ISA width is 32" value="0x1" weight="10"/>
+      <choice description="ISA width is 64" value="0x2" weight="0"/>
+      <choice description="ISA width is 128" value="0x3" weight="0"/>
     </register_field>
     <register_field name="WLRL_VAR" size="4">
       <bit_field shift="26" size="4"/>
@@ -708,9 +707,100 @@ Add RISCV system registers starter information in this file.
       <choice description="Reserved 0" value="0x0" weight="10"/>
       <choice description="Reserved 1" value="0x1" weight="0"/>     
     </register_field>
-  </register>  
-  <register description="Machine exception delegation register." index="0x302" name="medeleg" physical_register="medeleg" privilege="MRW" size="0" type="SysReg"/>
-  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg"/>
+  </register>
+  <register description="Machine exception delegation register." index="0x302" name="medeleg" physical_register="medeleg" privilege="MRW" size="32" type="SysReg">
+     <register_field name="RESERVED 1" size="8">
+      <bit_field shift="16" size="8"/>
+    </register_field>
+    <register_field name="CUSTOM USE 1" size="8">
+      <bit_field shift="24" size="8"/>
+    </register_field>
+    <register_field name="Instruction address misaligned" size="1">
+      <bit_field shift="0" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Instruction access fault" size="1">
+      <bit_field shift="1" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Illegal instruction" size="1">
+      <bit_field shift="2" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Breakpoint" size="1">
+      <bit_field shift="3" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Load address misaligned" size="1">
+      <bit_field shift="4" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Load access fault" size="1">
+      <bit_field shift="5" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+   <register_field name="Store/AMO address misaligned" size="1">
+      <bit_field shift="6" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Store/AMO access fault" size="1">
+      <bit_field shift="7" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Environment call from U-mode" size="1">
+      <bit_field shift="8" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Environment call from S-mode" size="1">
+      <bit_field shift="9" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="RESERVED 3" size="1">
+      <bit_field shift="10" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="RESERVED - Environment call from M-mode" size="1">
+      <bit_field shift="11" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>
+    </register_field>
+   <register_field name="Instruction page fault" size="1">
+      <bit_field shift="12" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Load page fault" size="1">
+      <bit_field shift="13" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="RESERVED 4" size="1">
+      <bit_field shift="14" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Store/AMO page fault" size="1">
+      <bit_field shift="15" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+  </register>
+  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg">
+    <register_field name="MIDELEG" size="32">
+      <bit_field shift="0" size="32"/>
+    </register_field>
+  </register>
   <register description="Machine interrupt-enable register." index="0x304" name="mie" physical_register="mie" privilege="MRW" size="0" type="SysReg"/>
   <register description="Machine trap-handler base address." index="0x305" name="mtvec" physical_register="mtvec" privilege="MRW" size="32" type="SysReg">
     <register_field name="BASE_VAR" size="30">
