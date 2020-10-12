@@ -34,6 +34,8 @@
 #include <PageRequestRegulator.h>
 #include <AddressTable.h>
 #include <AddressTableManager.h>
+#include <Choices.h>
+#include <ChoicesModerator.h>
 //#include <ExceptionContextRISCV.h> TODO implement
 #include <Log.h>
 
@@ -426,6 +428,21 @@ namespace Force {
   EExceptionVectorType GenExceptionAgentRISCV::GetExceptionVectorType(const string& vecStr) const
   {
     return string_to_EExceptionVectorType(vecStr);
+  }
+
+  void GenExceptionAgentRISCV::AddPostExceptionRequests()
+  {
+    ChoicesModerator* choices_mod = mpGenerator->GetChoicesModerator(EChoicesType::GeneralChoices);
+    unique_ptr<ChoiceTree> choice_tree(choices_mod->CloneChoiceTree("Reset vstart"));
+    const Choice* choice = choice_tree->Choose();
+    if (choice->Value() == 1) {
+      const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
+      Register* vstart_reg = reg_file->RegisterLookup("vstart");
+
+      if (vstart_reg->Value() != 0) {
+        mpGenerator->AddPostInstructionStepRequest(new GenLoadRegister("vstart", 0));
+      }
+    }
   }
 
 }
