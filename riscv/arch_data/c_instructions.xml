@@ -104,6 +104,20 @@
     </O>
     <asm format="C.FLDSP %s" op1="rd"/>
   </I>
+  <I name="C.FLW" isa="RISCV" group="General" extension="RV32C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="01100"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="imm5" type="Immediate" bits="5,12-10,6"/>
+    <O name="rd'" type="Register" bits="4-2"/>
+    <asm format="C.FLW"/>
+  </I>
+  <I name="C.FLWSP" isa="RISCV" group="General" extension="RV32C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="01110"/>
+    <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <O name="imm6" type="Immediate" bits="3-2,12,6-4"/>
+    <asm format="C.FLWSP"/>
+  </I>
   <I name="C.FSD" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10100"/>
     <O name="rs2'" type="FPR" bits="4-2" access="Read" choices="Prime 64-bit SIMD/FP registers"/>
@@ -122,12 +136,34 @@
     </O>
     <asm format="C.FSDSP %s" op1="rs2"/>
   </I>
+  <I name="C.FSW" isa="RISCV" group="General" extension="RV32C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="11100"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="imm5" type="Immediate" bits="5,12-10,6"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
+    <asm format="C.FSW"/>
+  </I>
+  <I name="C.FSWSP" isa="RISCV" group="General" extension="RV32C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="11110"/>
+    <O name="imm6" type="Immediate" bits="8-7,12-9"/>
+    <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
+    <O name="rs2" type="Register" bits="6-2"/>
+    <asm format="C.FSWSP"/>
+  </I>
   <I name="C.J" isa="RISCV" class="BranchInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10101"/>
     <O name="Branch-simm11" type="Branch" class="PcRelativeBranchOperand" offset="simm11" offset-scale="1">
       <O name="simm11" type="Immediate" bits="12,8,10-9,6,7,2,11,5-3" class="SignedImmediateOperand"/>
     </O>
     <asm format="C.J %s" op1="simm11"/>
+  </I>
+  <I name="C.JAL" isa="RISCV" class="BranchInstruction" group="General" extension="RV32C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
+    <O name="Branch-simm11" type="Branch" class="PcRelativeBranchOperand" offset="simm11" offset-scale="1">
+      <O name="simm11" type="Immediate" bits="12,8,10-9,6,7,2,11,5-3" class="SignedImmediateOperand"/>
+    </O>
+    <O name="x1" type="GPR" access="Write" class="ImpliedRegisterOperand"/>
+    <asm format="C.JAL %s" op1="simm11"/>
   </I>
   <I name="C.JALR" isa="RISCV" class="BranchInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,6-2,1-0" value="10010000010"/>
@@ -167,6 +203,20 @@
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="Nonzero GPRs"/>
     <O name="imm6" type="Immediate" bits="12,6-2"/>
     <asm format="C.LI %s, %s" op1="rd" op2="imm6"/>
+  </I>
+  <I name="C.LQ" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00100"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="imm5" type="Immediate" bits="10,6-5,12-11"/>
+    <O name="rd'" type="Register" bits="4-2"/>
+    <asm format="C.LQ"/>
+  </I>
+  <I name="C.LQSP" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00110"/>
+    <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
+    <O name="rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="imm6" type="Immediate" bits="5-2,12,6"/>
+    <asm format="C.LQSP"/>
   </I>
   <I name="C.LUI" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01101"/>
@@ -236,6 +286,20 @@
     <O name="const_bits" type="Constant" bits="15-13,12-12,6-2,1-0" value="00000000010"/>
     <O name="rd" type="GPR" bits="11-7" access="ReadWrite" choices="Nonzero GPRs"/>
     <asm format="C.SLLI64 %s" op1="rd"/>
+  </I>
+  <I name="C.SQ" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="10100"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="imm5" type="Immediate" bits="10,6-5,12-11"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
+    <asm format="C.SQ"/>
+  </I>
+  <I name="C.SQSP" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="10110"/>
+    <O name="imm6" type="Immediate" bits="10-7,12-11"/>
+    <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
+    <O name="rs2" type="Register" bits="6-2"/>
+    <asm format="C.SQSP"/>
   </I>
   <I name="C.SRAI" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,11-10,1-0" value="1000101"/>

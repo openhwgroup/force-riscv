@@ -46,16 +46,16 @@ def split_file(src_instr_file, dst_dict):
 def split_files():
 
     dst_dict = dict()
-    dst_dict['riscv_instructions_int32_starter.xml'] = ['RV32I', 'RV32M']
-    dst_dict['riscv_instructions_int64_starter.xml'] = ['RV64I', 'RV64M']
-    dst_dict['riscv_instructions_float_starter.xml'] = ['RV32F', 'RV64F']
-    dst_dict['riscv_instructions_double_starter.xml'] = ['RV32D', 'RV64D']
-    dst_dict['riscv_instructions_quad_starter.xml'] = ['RV32Q', 'RV64Q'] 
+    dst_dict['rv32i_instructions_starter.xml'] = ['RV32I', 'RV32M']
+    dst_dict['rv64i_instructions_starter.xml'] = ['RV64I', 'RV64M']
+    dst_dict['f_instructions_starter.xml'] = ['RV32F', 'RV64F']
+    dst_dict['d_instructions_starter.xml'] = ['RV32D', 'RV64D']
+    dst_dict['q_instructions_starter.xml'] = ['RV32Q', 'RV64Q'] 
     split_file('riscv_instructions_starter.xml', dst_dict)
 
     dst_dict = dict()
-    dst_dict['riscv_instructions_compressed_rv32_starter.xml'] = ['RV32C']
-    dst_dict['riscv_instructions_compressed_rv64_starter.xml'] = ['RV64C']
+    dst_dict['rv32c_instructions_starter.xml'] = ['RV32C']
+    dst_dict['rv64c_instructions_starter.xml'] = ['RV64C']
     split_file('c_instructions_starter.xml', dst_dict)
 
 split_files()
