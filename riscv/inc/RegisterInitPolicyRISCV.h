@@ -102,6 +102,27 @@ namespace Force {
     COPY_CONSTRUCTOR_DEFAULT(VtypeInitPolicy);
   };
 
+  /*!
+    \class VlmulInitPolicy
+    \brief A class to help initialize the vtype.VLMUL field.
+  */
+  class VlmulInitPolicy : public RegisterInitPolicy {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VlmulInitPolicy);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VlmulInitPolicy);
+    ASSIGNMENT_OPERATOR_ABSENT(VlmulInitPolicy);
+
+    Object* Clone() const override { return new VlmulInitPolicy(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VlmulInitPolicy"; } //!< Return a string describing the actual type of the Object.
+
+    void InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree = nullptr) const override; //!< Initialize register field.
+    uint64 RegisterFieldReloadValue(RegisterField* pRegField) const override; //!< Reload register field value.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VlmulInitPolicy);
+  private:
+    uint64 ChooseVlmulValue() const; //!< Choose a legal value for VLMUL.
+  };
+
 }
 
 #endif

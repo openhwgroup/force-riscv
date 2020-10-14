@@ -1362,7 +1362,7 @@ Add RISCV system registers starter information in this file.
     <register_field name="VTA" size="1" init_policy="VtypeInitPolicy">
       <bit_field shift="6" size="1"/>
     </register_field>
-    <register_field name="VLMUL" size="3">
+    <register_field name="VLMUL" size="3" init_policy="VlmulInitPolicy">
       <bit_field shift="5" size="1"/>
       <bit_field shift="0" size="2"/>
       <choice description="32 register groups" value="0x0" weight="10"/>
