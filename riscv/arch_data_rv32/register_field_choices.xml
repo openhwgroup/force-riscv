@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
@@ -13,7 +14,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<?xml version="1.0" ?>
 <choices_file>
   <choices name="sstatus.MXR" type="RegisterFieldValue">
     <choice description="No make executable readable" value="0x0" weight="10"/>

@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
@@ -13,7 +14,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-<?xml version="1.0" ?>
 <registers>
   <physical_registers>
     <physical_register index="0x1" name="fflags" size="32" type="SysReg"/>

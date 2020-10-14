@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
@@ -14,6 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+<?xml version="1.0" ?>
 <choices_file>
   <choices description="RISC-V Read system registers" name="Read system registers" type="RegisterOperand">
     <choice description="URW; User status register." name="ustatus" value="0x0" weight="0"/>
@@ -55,8 +55,6 @@
     <choice description="MRW; Machine interrupt-enable register." name="mie" value="0x304" weight="0"/>
     <choice description="MRW; Machine trap-handler base address." name="mtvec" value="0x305" weight="0"/>
     <choice description="MRW; Machine counter enable." name="mcounteren" value="0x306" weight="0"/>
-    <choice description="MRW; Additional machine status register, RV32 only." name="mstatush" value="0x310" weight="0"/>
-    <choice description="MRW; Additional machine status register, RV32 only." name="mstatush_hyp" value="0x310" weight="0"/>
     <choice description="MRW; Machine counter-inhibit register." name="mcountinhibit" value="0x320" weight="0"/>
     <choice description="MRW; Machine performance-monitoring event selector." name="mhpmevent3" value="0x323" weight="0"/>
     <choice description="MRW; Machine performance-monitoring event selector." name="mhpmevent4" value="0x324" weight="0"/>
@@ -95,15 +93,7 @@
     <choice description="MRW; Machine trap instruction (transformed)." name="mtinst" value="0x34a" weight="0"/>
     <choice description="MRW; Machine bad guest physical address." name="mtval2" value="0x34b" weight="0"/>
     <choice description="MRW; Physical memory protection configuration." name="pmpcfg0" value="0x3a0" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg1" value="0x3a1" weight="0"/>
     <choice description="MRW; Physical memory protection configuration." name="pmpcfg2" value="0x3a2" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg3" value="0x3a3" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg5" value="0x3a5" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg7" value="0x3a7" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg9" value="0x3a9" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg11" value="0x3ab" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg13" value="0x3ad" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg15" value="0x3af" weight="0"/>
     <choice description="MRW; Physical memory protection address register." name="pmpaddr0" value="0x3b0" weight="0"/>
     <choice description="MRW; Physical memory protection address register." name="pmpaddr1" value="0x3b1" weight="0"/>
     <choice description="MRW; Physical memory protection address register." name="pmpaddr2" value="0x3b2" weight="0"/>
@@ -126,7 +116,6 @@
     <choice description="HRW; Hypervisor interrupt-enable register." name="hie" value="0x604" weight="0"/>
     <choice description="HRW; Hypervisor counter enable." name="hcounteren" value="0x606" weight="0"/>
     <choice description="HRW; Hypervisor guest external interrupt-enable register." name="hgeie" value="0x607" weight="0"/>
-    <choice description="HRW; Upper 32 bits of htimedelta, RV32 only." name="htimedeltah" value="0x615" weight="0"/>
     <choice description="HRW; Hypervisor bad guest physical address." name="htval" value="0x643" weight="0"/>
     <choice description="HRW; Hypervisor interrupt pending." name="hip" value="0x644" weight="0"/>
     <choice description="HRW; Hypervisor trap instruction (transformed)." name="htinst" value="0x64a" weight="0"/>
@@ -166,37 +155,6 @@
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter29" value="0xb1d" weight="0"/>
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter30" value="0xb1e" weight="0"/>
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter31" value="0xb1f" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mcycle, RV32 only." name="mcycleh" value="0xb80" weight="0"/>
-    <choice description="MRW; Upper 32 bits of minstret, RV32 only." name="minstreth" value="0xb82" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter3, RV32 only." name="mhpmcounter3h" value="0xb83" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter4, RV32 only." name="mhpmcounter4h" value="0xb84" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter5, RV32 only." name="mhpmcounter5h" value="0xb85" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter6, RV32 only." name="mhpmcounter6h" value="0xb86" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter7, RV32 only." name="mhpmcounter7h" value="0xb87" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter8, RV32 only." name="mhpmcounter8h" value="0xb88" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter9, RV32 only." name="mhpmcounter9h" value="0xb89" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter10, RV32 only." name="mhpmcounter10h" value="0xb8a" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter11, RV32 only." name="mhpmcounter11h" value="0xb8b" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter12, RV32 only." name="mhpmcounter12h" value="0xb8c" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter13, RV32 only." name="mhpmcounter13h" value="0xb8d" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter14, RV32 only." name="mhpmcounter14h" value="0xb8e" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter15, RV32 only." name="mhpmcounter15h" value="0xb8f" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter16, RV32 only." name="mhpmcounter16h" value="0xb90" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter17, RV32 only." name="mhpmcounter17h" value="0xb91" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter18, RV32 only." name="mhpmcounter18h" value="0xb92" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter19, RV32 only." name="mhpmcounter19h" value="0xb93" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter20, RV32 only." name="mhpmcounter20h" value="0xb94" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter21, RV32 only." name="mhpmcounter21h" value="0xb95" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter22, RV32 only." name="mhpmcounter22h" value="0xb96" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter23, RV32 only." name="mhpmcounter23h" value="0xb97" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter24, RV32 only." name="mhpmcounter24h" value="0xb98" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter25, RV32 only." name="mhpmcounter25h" value="0xb99" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter26, RV32 only." name="mhpmcounter26h" value="0xb9a" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter27, RV32 only." name="mhpmcounter27h" value="0xb9b" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter28, RV32 only." name="mhpmcounter28h" value="0xb9c" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter29, RV32 only." name="mhpmcounter29h" value="0xb9d" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter30, RV32 only." name="mhpmcounter30h" value="0xb9e" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter31, RV32 only." name="mhpmcounter31h" value="0xb9f" weight="0"/>
     <choice description="URO; Cycle counter for RDCYCLE instruction." name="cycle" value="0xc00" weight="0"/>
     <choice description="URO; Timer for RDTIME instruction." name="time" value="0xc01" weight="0"/>
     <choice description="URO; Instructions-retired counter for RDINSTRET instruction." name="instret" value="0xc02" weight="0"/>
@@ -229,38 +187,6 @@
     <choice description="URO; Performance-monitoring counter." name="hpmcounter29" value="0xc1d" weight="0"/>
     <choice description="URO; Performance-monitoring counter." name="hpmcounter30" value="0xc1e" weight="0"/>
     <choice description="URO; Performance-monitoring counter." name="hpmcounter31" value="0xc1f" weight="0"/>
-    <choice description="URO; Upper 32 bits of cycle, RV32 only." name="cycleh" value="0xc80" weight="0"/>
-    <choice description="URO; Upper 32 bits of time, RV32 only." name="timeh" value="0xc81" weight="0"/>
-    <choice description="URO; Upper 32 bits of instret, RV32 only." name="instreth" value="0xc82" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter3, RV32 only." name="hpmcounter3h" value="0xc83" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter4, RV32 only." name="hpmcounter4h" value="0xc84" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter5, RV32 only." name="hpmcounter5h" value="0xc85" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter6, RV32 only." name="hpmcounter6h" value="0xc86" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter7, RV32 only." name="hpmcounter7h" value="0xc87" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter8, RV32 only." name="hpmcounter8h" value="0xc88" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter9, RV32 only." name="hpmcounter9h" value="0xc89" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter10, RV32 only." name="hpmcounter10h" value="0xc8a" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter11, RV32 only." name="hpmcounter11h" value="0xc8b" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter12, RV32 only." name="hpmcounter12h" value="0xc8c" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter13, RV32 only." name="hpmcounter13h" value="0xc8d" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter14, RV32 only." name="hpmcounter14h" value="0xc8e" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter15, RV32 only." name="hpmcounter15h" value="0xc8f" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter16, RV32 only." name="hpmcounter16h" value="0xc90" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter17, RV32 only." name="hpmcounter17h" value="0xc91" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter18, RV32 only." name="hpmcounter18h" value="0xc92" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter19, RV32 only." name="hpmcounter19h" value="0xc93" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter20, RV32 only." name="hpmcounter20h" value="0xc94" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter21, RV32 only." name="hpmcounter21h" value="0xc95" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter22, RV32 only." name="hpmcounter22h" value="0xc96" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter23, RV32 only." name="hpmcounter23h" value="0xc97" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter24, RV32 only." name="hpmcounter24h" value="0xc98" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter25, RV32 only." name="hpmcounter25h" value="0xc99" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter26, RV32 only." name="hpmcounter26h" value="0xc9a" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter27, RV32 only." name="hpmcounter27h" value="0xc9b" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter28, RV32 only." name="hpmcounter28h" value="0xc9c" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter29, RV32 only." name="hpmcounter29h" value="0xc9d" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter30, RV32 only." name="hpmcounter30h" value="0xc9e" weight="0"/>
-    <choice description="URO; Upper 32 bits of hpmcounter31, RV32 only." name="hpmcounter31h" value="0xc9f" weight="0"/>
     <choice description="HRO; Hypervisor guest external interrupt pending." name="hgeip" value="0xe07" weight="0"/>
     <choice description="MRO; Vendor ID." name="mvendorid" value="0xf11" weight="0"/>
     <choice description="MRO; Architecture ID." name="marchid" value="0xf12" weight="0"/>
@@ -307,8 +233,6 @@
     <choice description="MRW; Machine interrupt-enable register." name="mie" value="0x304" weight="0"/>
     <choice description="MRW; Machine trap-handler base address." name="mtvec" value="0x305" weight="0"/>
     <choice description="MRW; Machine counter enable." name="mcounteren" value="0x306" weight="0"/>
-    <choice description="MRW; Additional machine status register, RV32 only." name="mstatush" value="0x310" weight="0"/>
-    <choice description="MRW; Additional machine status register, RV32 only." name="mstatush_hyp" value="0x310" weight="0"/>
     <choice description="MRW; Machine counter-inhibit register." name="mcountinhibit" value="0x320" weight="0"/>
     <choice description="MRW; Machine performance-monitoring event selector." name="mhpmevent3" value="0x323" weight="0"/>
     <choice description="MRW; Machine performance-monitoring event selector." name="mhpmevent4" value="0x324" weight="0"/>
@@ -347,15 +271,7 @@
     <choice description="MRW; Machine trap instruction (transformed)." name="mtinst" value="0x34a" weight="0"/>
     <choice description="MRW; Machine bad guest physical address." name="mtval2" value="0x34b" weight="0"/>
     <choice description="MRW; Physical memory protection configuration." name="pmpcfg0" value="0x3a0" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg1" value="0x3a1" weight="0"/>
     <choice description="MRW; Physical memory protection configuration." name="pmpcfg2" value="0x3a2" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg3" value="0x3a3" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg5" value="0x3a5" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg7" value="0x3a7" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg9" value="0x3a9" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg11" value="0x3ab" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg13" value="0x3ad" weight="0"/>
-    <choice description="MRW; Physical memory protection configuration, RV32 only." name="pmpcfg15" value="0x3af" weight="0"/>
     <choice description="MRW; Physical memory protection address register." name="pmpaddr0" value="0x3b0" weight="0"/>
     <choice description="MRW; Physical memory protection address register." name="pmpaddr1" value="0x3b1" weight="0"/>
     <choice description="MRW; Physical memory protection address register." name="pmpaddr2" value="0x3b2" weight="0"/>
@@ -378,7 +294,6 @@
     <choice description="HRW; Hypervisor interrupt-enable register." name="hie" value="0x604" weight="0"/>
     <choice description="HRW; Hypervisor counter enable." name="hcounteren" value="0x606" weight="0"/>
     <choice description="HRW; Hypervisor guest external interrupt-enable register." name="hgeie" value="0x607" weight="0"/>
-    <choice description="HRW; Upper 32 bits of htimedelta, RV32 only." name="htimedeltah" value="0x615" weight="0"/>
     <choice description="HRW; Hypervisor bad guest physical address." name="htval" value="0x643" weight="0"/>
     <choice description="HRW; Hypervisor interrupt pending." name="hip" value="0x644" weight="0"/>
     <choice description="HRW; Hypervisor trap instruction (transformed)." name="htinst" value="0x64a" weight="0"/>
@@ -418,36 +333,5 @@
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter29" value="0xb1d" weight="0"/>
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter30" value="0xb1e" weight="0"/>
     <choice description="MRW; Machine performance-monitoring counter." name="mhpmcounter31" value="0xb1f" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mcycle, RV32 only." name="mcycleh" value="0xb80" weight="0"/>
-    <choice description="MRW; Upper 32 bits of minstret, RV32 only." name="minstreth" value="0xb82" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter3, RV32 only." name="mhpmcounter3h" value="0xb83" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter4, RV32 only." name="mhpmcounter4h" value="0xb84" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter5, RV32 only." name="mhpmcounter5h" value="0xb85" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter6, RV32 only." name="mhpmcounter6h" value="0xb86" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter7, RV32 only." name="mhpmcounter7h" value="0xb87" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter8, RV32 only." name="mhpmcounter8h" value="0xb88" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter9, RV32 only." name="mhpmcounter9h" value="0xb89" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter10, RV32 only." name="mhpmcounter10h" value="0xb8a" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter11, RV32 only." name="mhpmcounter11h" value="0xb8b" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter12, RV32 only." name="mhpmcounter12h" value="0xb8c" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter13, RV32 only." name="mhpmcounter13h" value="0xb8d" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter14, RV32 only." name="mhpmcounter14h" value="0xb8e" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter15, RV32 only." name="mhpmcounter15h" value="0xb8f" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter16, RV32 only." name="mhpmcounter16h" value="0xb90" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter17, RV32 only." name="mhpmcounter17h" value="0xb91" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter18, RV32 only." name="mhpmcounter18h" value="0xb92" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter19, RV32 only." name="mhpmcounter19h" value="0xb93" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter20, RV32 only." name="mhpmcounter20h" value="0xb94" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter21, RV32 only." name="mhpmcounter21h" value="0xb95" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter22, RV32 only." name="mhpmcounter22h" value="0xb96" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter23, RV32 only." name="mhpmcounter23h" value="0xb97" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter24, RV32 only." name="mhpmcounter24h" value="0xb98" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter25, RV32 only." name="mhpmcounter25h" value="0xb99" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter26, RV32 only." name="mhpmcounter26h" value="0xb9a" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter27, RV32 only." name="mhpmcounter27h" value="0xb9b" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter28, RV32 only." name="mhpmcounter28h" value="0xb9c" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter29, RV32 only." name="mhpmcounter29h" value="0xb9d" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter30, RV32 only." name="mhpmcounter30h" value="0xb9e" weight="0"/>
-    <choice description="MRW; Upper 32 bits of mhpmcounter31, RV32 only." name="mhpmcounter31h" value="0xb9f" weight="0"/>
   </choices>
 </choices_file>
