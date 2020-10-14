@@ -20,4 +20,4 @@ class DefaultBntSequence(BntSequence):
 
     def defaultFunction(self):
         self.notice("Generate default Bnt Instruction Sequence")
-        self.genInstruction("ADDW##RISCV")
+        self.genInstruction("ADD##RISCV")

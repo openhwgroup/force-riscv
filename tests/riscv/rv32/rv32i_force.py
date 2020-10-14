@@ -45,7 +45,17 @@ my_RV32I_instructions = {
 class MainSequence(Sequence):
 
     def generate(self, **kargs):
+        # pick up a couple of scratch registers...
+
+        (gpr1, gpr2) = self.getRandomRegisters( 2, "GPR" )
+
+        # read misa, mstatus...
+
+        self.genInstruction('CSRRS#register#RISCV', {'rd': gpr1, 'rs1': 0, 'csr': self.getRegisterIndex('misa') } )
+        self.genInstruction('CSRRS#register#RISCV', {'rd': gpr2, 'rs1': 0, 'csr': self.getRegisterIndex('mstatus') } )
+
         # generate sequences of random instructions...
+
         self.genRandomInstrs(RV32I_instructions, 10, 50)
         
     ## generate some random instructions...

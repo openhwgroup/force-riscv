@@ -73,10 +73,10 @@
   <choices_files>
     <choices_file file="riscv/arch_data/operand_choices.xml"/>
     <choices_file file="riscv/arch_data/general_choices.xml"/>
-    <choices_file file="riscv/arch_data/register_field_choices.xml"/>
+    <choices_file file="riscv/arch_data/register_field_choices_rv32.xml"/>
     <choices_file file="riscv/arch_data/paging_choices_sv32.xml"/>
     <choices_file file="riscv/arch_data/dependence_choices.xml"/>
-    <choices_file file="riscv/arch_data/system_register_choices.xml"/>
+    <choices_file file="riscv/arch_data/system_register_choices_rv32.xml"/>
   </choices_files>
   <paging_files>
     <paging_file file="riscv/arch_data/page_tables_sv32.xml"/>
