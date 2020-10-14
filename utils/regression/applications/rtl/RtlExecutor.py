@@ -246,7 +246,7 @@ class RtlExecutor( IssExecutor ):
     def copyWavesFsdbDoFile(self):
         dofile_path = self.rtl.get("fsdb_do")
         
-        if dofile_path is not None and type(dofile_path) is str:
+        if isinstance(dofile_path, str):
             SysUtils.exec_cmd("cp %s %s/%s_waves_fsdb.do" % (dofile_path, PathUtils.current_dir(), self.task_name))
         
     ##
@@ -380,7 +380,6 @@ class RtlExecutor( IssExecutor ):
         fail_keywords = ["FAILED", "failed", "corruption problem", "Error", "ERROR", "Segmentation fault", "TC_FAILED"]
         tool_fail_keywords = ["SLI error", "core dumped", "SIGHUP"]
 
-        #for line in arg_hfile:
         for line in arg_hfile:
             if line.find("Total cycles : ") == 0:
                 cycle_count = int(line [15:])

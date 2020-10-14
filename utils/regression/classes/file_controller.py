@@ -33,7 +33,7 @@ class FileController(Controller):
         # Msg.dbg( "FileController::__init__( )" )
         self.mProcessQueue = aProcessQueue
         self.mControlFileLocals = {}
-        if type(aParentLocals) is dict:
+        if isinstance(aParentLocals, dict):
             import copy
             self.mControlFileLocals = copy.deepcopy(aParentLocals)
 
@@ -55,7 +55,7 @@ class FileController(Controller):
             my_err_queue_item = SummaryErrorQueueItem( { "error"  : arg_ex
                                                        , "message": "Control File Not Found ..."
                                                        , "path"   : self.ctrl_item.file_path()
-                                                       , "type"   : str( type( arg_ex ))
+                                                       , "type"   : str(type( arg_ex ))
                                                        } )
 
             ## Msg.user( "FileController::load(5)" )
@@ -83,7 +83,7 @@ class FileController(Controller):
             my_err_queue_item = SummaryErrorQueueItem( { "error"  : arg_ex
                                                        , "message": "Control File not processed..."
                                                        , "path"   : self.ctrl_item.file_path()
-                                                       , "type"   : str( my_exc_type )
+                                                       , "type"   : str( type(my_exc_type) )
                                                        } )
 
             if self.mProcessQueue.summary is not None:
@@ -164,7 +164,7 @@ class FileController(Controller):
                             my_err_queue_item = SummaryErrorQueueItem( { "error"  : "Item #%s Contains an Invalid Type" % ( str( my_item_ndx ))
                                                                        , "message": arg_ex
                                                                        , "path"   : self.ctrl_item.file_path()
-                                                                       , "type"   : str( type( arg_ex ))
+                                                                       , "type"   : str(type( arg_ex ))
                                                                        } )
 
                             if self.mProcessQueue.summary is not None:
@@ -177,7 +177,7 @@ class FileController(Controller):
                             my_err_queue_item = SummaryErrorQueueItem( { "error"  : arg_ex
                                                                        , "message": "Control File Not Found ..."
                                                                        , "path"   : self.ctrl_item.file_path()
-                                                                       , "type"   : str( type( arg_ex ))
+                                                                       , "type"   : str(type( arg_ex ))
                                                                        } )
 
                             if self.mProcessQueue.summary is not None:

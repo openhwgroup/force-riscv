@@ -45,22 +45,22 @@ class EventWrapper( object ):
 
     def on_before_signal( self, arg_sender ):
 
-        if type( arg_sender ) is not HiEvent:
+        if not isinstance( arg_sender, HiEvent ):
             raise EIncompatableTypeError( "Event Notification Contained Incompatable Type" )
         Msg.info( "Event[%s] is about to be signaled ... " % ( arg_sender.name ))
 
     def on_after_signal( self, arg_sender ):
-        if type( arg_sender ) is not HiEvent:
+        if not isinstance( arg_sender, HiEvent ):
             raise EIncompatableTypeError( "Event Notification Contained Incompatable Type" )
         Msg.info( "Event[%s] has been signaled ... " % ( arg_sender.name ))
 
     def on_before_unsignal( self, arg_sender ):
-        if type( arg_sender ) is not HiEvent:
+        if not isinstance( arg_sender, HiEvent ):
             raise EIncompatableTypeError( "Event Notification Contained Incompatable Type" )
         Msg.info( "Event[%s] is about to be unsignaled ... " % ( arg_sender.name ))
 
     def on_after_unsignal( self, arg_sender ):
-        if  type( arg_sender ) is not HiEvent:
+        if not isinstance( arg_sender, HiEvent ):
             raise EIncompatableTypeError( "Event Notification Contained Incompatable Type" )
         Msg.info( "Event[%s] has been unsignaled ... " % ( arg_sender.name ))
 

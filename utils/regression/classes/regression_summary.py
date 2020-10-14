@@ -196,8 +196,8 @@ class RegressionSummary( Summary ):
 
         # Msg.user( "def commit( self, arg_item ):" );
         self.task_total += 1
-        if (not arg_item.task_id in self.tasks):
-            self.tasks[arg_item.task_id] = list()
+
+        # replaced tasks dict with defaultdict(list) in parent
         self.tasks[ arg_item.task_id ].append( arg_item )
         self.groups.add_item( arg_item  )
 

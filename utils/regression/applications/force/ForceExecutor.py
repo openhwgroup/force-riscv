@@ -41,7 +41,7 @@ class ForceExecutor(GenerateExecutor):
         my_cmd += SysUtils.ifthen(self.ctrl_item.seed is None , "", (" -s %s" % (self.ctrl_item.seed)))
         # Msg.dbg("my_cmd: %s" %  (str(my_cmd)))
 
-        if not self.ctrl_item.generator is None and type(self.ctrl_item.generator) is dict:
+        if isinstance(self.ctrl_item.generator, dict):
             for my_key in self.ctrl_item.generator.keys():
                 if my_key not in ['path']:
                     my_cmd += " %s %s " % (str(my_key), SysUtils.ifthen(self.ctrl_item.generator[ my_key ] is None, "", str(self.ctrl_item.generator[ my_key ])))
@@ -78,37 +78,34 @@ class ForceExecutor(GenerateExecutor):
 
         my_results = []
 
+        def get_colon_value(arg_line):
+            """Get value from colon to EOL and return as int"""
+            idx = arg_line.find(':')
+            return int(arg_line[idx + 1:])
+
         for my_line in arg_hfile:
             Msg.dbg("Process Line: %s" % my_line)
 
-            if SysUtils.found(my_line.find("]Secondary Instructions Generated")):
-                # get the count for the secondary instruction type
-                my_lpos = my_line.find(':')
-                my_count = int(my_line[my_lpos+2:].strip())
-                my_secondary = my_count
-                Msg.user("Secondary Instructions: %d" % (my_secondary))
+            if "]Secondary Instructions Generated" in my_line:
+                my_secondary = get_colon_value(my_line)
+                Msg.user("Secondary Instructions: %d" % my_secondary)
 
-            elif SysUtils.found(my_line.find("]Default Instructions Generated")):
-                # get the count for the default instruction type
-                my_lpos = my_line.find(':')
-                my_count = int(my_line[my_lpos+2:].strip())
-                my_default = my_count
-                Msg.user("Default Instructions: %d" % (my_default))
+            elif "]Default Instructions Generated" in my_line:
+                my_default = get_colon_value(my_line)
+                Msg.user("Default Instructions: %d" % my_default)
 
-            if SysUtils.found(my_line.find("]Total Instructions Generated")):
-                # get the total count any instruction type
-                my_lpos = my_line.find(':')
-                my_count = int(my_line[my_lpos+2:].strip())
-                my_total = my_count
-                Msg.user("Total Instructions: %d" % (my_count))
+            if "]Total Instructions Generated" in my_line:
+                my_total = get_colon_value(my_line)
+                Msg.user("Total Instructions: %d" % my_total)
 
-            if SysUtils.found(my_line.find("Initial seed")):
+            if "Initial seed" in my_line:
                 my_seed = my_line.replace("[notice]", "").replace("Initial seed = ", "").strip()
 
-            if(my_seed is None or my_total == 0 or my_secondary == 0 or my_default == 0):
-                continue;
+            if (my_seed is None or my_total == 0 or
+                    my_secondary == 0 or my_default == 0):
+                continue
 
-        return (my_seed, my_total, my_secondary, my_default)
+        return my_seed, my_total, my_secondary, my_default
 
     def query_errors(self, arg_hfile):
         my_error = None

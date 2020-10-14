@@ -45,7 +45,7 @@ class ProcessAction():
     NoWrite=3     # execute without write to control file
 
     @classmethod
-    def translate( arg_class, arg_str ):
+    def translate( cls, arg_str ):
         if arg_str == "write-only": return ProcessAction.WriteOnly
         if arg_str == "immediate" : return ProcessAction.Immediate
         if arg_str == "delay"     : return ProcessAction.Delay
@@ -53,7 +53,7 @@ class ProcessAction():
         raise Execption( "Unable to translate string value: %s, to ProcessAction" % ( arg_str ))
 
     @classmethod
-    def asstr( arg_class, arg_val ):
+    def asstr( cls, arg_val ):
         if arg_val == ProcessAction.WriteOnly : return "write-only"
         if arg_val == ProcessAction.Immediate : return "immediate"
         if arg_val == ProcessAction.Delay     : return "delay"
@@ -66,7 +66,7 @@ class ProcessWorkerThread( HiOldThread ):
         #acquire the semaphore here
         done_semaphore.acquire(True)
         #once acquired, increment the active peer thread count
-        peer_count.delta(1)
+        peer_count.add(1)
 
         self.done_semaphore = done_semaphore
         self.queue_item     = arg_queue_item
@@ -124,7 +124,7 @@ class ProcessWorkerThread( HiOldThread ):
             my_sum_qitem = SummaryErrorQueueItem( { "error"  : arg_ex
                                                   , "message": "Error Processing Task ..."
                                                   , "path"   : self.queue_item.ctrl_item.file_path()
-                                                  , "type"   : str( type( arg_ex ))
+                                                  , "type"   : str(type( arg_ex ))
                                                   } )
         finally:
 
@@ -137,7 +137,7 @@ class ProcessWorkerThread( HiOldThread ):
                 if ( my_attempt % 10 ) == 0:
                     Msg.dbg( "Attempt %d to insert into summary queue" % ( my_attempt ))
 
-            self.thread_count.delta(-1)
+            self.thread_count.add(-1)
             Msg.user( "Thread Count Decremented", "WORK-THREAD")
 
             self.done_semaphore.release()

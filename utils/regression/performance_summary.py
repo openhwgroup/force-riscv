@@ -30,7 +30,7 @@ class PerformanceInstructionType():
     performance_instruction_type_strs = [ "Total","Secondary","Default"]
 
     @classmethod
-    def instruction_type( arg_class, arg_str ):
+    def instruction_type( cls, arg_str ):
         if arg_str == "Total":
             return PerformanceInstructionType.Total
 
@@ -159,9 +159,7 @@ class PerformanceSummary( Summary ):
 
         self.task_total += 1
 
-        if (not arg_item.task_id in self.tasks):
-            self.tasks[arg_item.task_id] = list()
-
+        # replaced tasks dict with defaultdict(list) in parent
         self.tasks[ arg_item.task_id ].append( arg_item )
         self.groups.add_item( arg_item  )
         my_results = arg_item.commit()

@@ -72,7 +72,7 @@ class ExecuteController( Controller ):
 
         # Msg.dbg( "my_cmd: %s" %  ( str( my_cmd )) )
 
-        if not self.ctrl_item.generator is None and type( self.ctrl_item.generator) is dict:
+        if isinstance( self.ctrl_item.generator, dict):
             for my_key in self.ctrl_item.generator.keys():
                 my_cmd += " %s %s " % ( str( my_key ), SysUtils.ifthen( self.ctrl_item.generator[ my_key ] is None, "", str( self.ctrl_item.generator[ my_key ] )))
 
@@ -95,7 +95,7 @@ class ExecuteController( Controller ):
                                                                    , self.ctrl_item.max_instr
                                                                    , self.ctrl_item.exit_loop )
 
-            if not self.ctrl_item.iss is None and type( self.ctrl_item.iss) is dict:
+            if isinstance( self.ctrl_item.iss, dict ):
                 for my_key in self.ctrl_item.iss.keys():
                     if not my_key == CtrlItmKeys.iss_path:
                         Msg.user( "sim_cmd: %s, key: %s " % ( str( self.sim_cmd ), str( my_key )))
