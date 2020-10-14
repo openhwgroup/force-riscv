@@ -26,7 +26,9 @@
 #include <Random.h>
 #include <Register.h>
 #include <UtilityFunctions.h>
+#include <VectorLayoutSetupRISCV.h>
 
+#include <cmath>
 #include <memory>
 
 using namespace std;
@@ -79,16 +81,10 @@ namespace Force {
 
   uint64 VlInitPolicy::GetVlmax() const
   {
-    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
-    Register* vtype_reg = reg_file->RegisterLookup("vtype");
-    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
-    uint64 sew = (1 << vsew_field->FieldValue()) * 8;
-
-    // TODO(Noah): Update this to account for fractional LMUL values when there is time to do so.
-    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
-    uint64 lmul = (1 << vlmul_field->FieldValue());
-
-    uint64 vlmax = lmul * Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / sew;
+    VectorLayoutSetupRISCV vec_layout_setup(mpGenerator->GetRegisterFile());
+    uint64 sew = vec_layout_setup.GetSew();
+    float lmul = vec_layout_setup.GetLmul();
+    uint64 vlmax = lround(lmul * Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / sew);
     return vlmax;
   }
 
