@@ -16,7 +16,6 @@
 from base.Sequence import Sequence
 from base.ChoicesModifier import ChoicesModifier
 from base.UtilityFunctions import mask_to_size
-from riscv.AssemblyHelperRISCV import AssemblyHelperRISCV
 from Config import Config
 from Constraint import ConstraintSet
 from Enums import ELimitType
@@ -135,7 +134,6 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
 
         self._mUnalignedAllowed = False
         self._mTargetAddrConstr = None
-        self._mExceptCount = 0
 
     ## Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
@@ -186,10 +184,6 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         if (self._mTargetAddrConstr is not None) and (not self._mTargetAddrConstr.containsValue(aInstrRecord['LSTarget'])):
             self.error('Target address 0x%x was outside of the specified constraint %s' % (aInstrRecord['LSTarget'], self._mTargetAddrConstr))
 
-        # TODO(Noah): Remove the call to _resetVstart() when the issue with vstart after an
-        # exception handler skips a vector instruction is resolved.
-        self._genResetVstart(aInstr)
-
     ## Get allowed exception codes.
     #
     #  @param aInstr The name of the instruction.
@@ -208,21 +202,6 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         allowed_except_codes.add(0xF)
 
         return allowed_except_codes
-
-    ## Generate an instruction to reset vstart to 0 if it is not currently 0. This is necessary when
-    # an exception handler handling a fault triggered by a vector instruction decides to skip the
-    # instruction.
-    #
-    #  @param aInstr The name of the instruction.
-    def _genResetVstart(self, aInstr):
-        except_count = 0
-        for except_code in self._getAllowedExceptionCodes(aInstr):
-            except_count += self.queryExceptionRecordsCount(except_code)
-
-        if except_count > self._mExceptCount:
-            assembly_helper = AssemblyHelperRISCV(self)
-            assembly_helper.genWriteSystemRegister('vstart', 0)
-            self._mExceptCount = except_count
 
     ## Calculate EMUL for the given instruction.
     #
