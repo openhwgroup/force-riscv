@@ -64,10 +64,10 @@ class MainSequence(VectorTestSequence):
         vd_val = aInstrRecord['Dests']['vd']
         vs1_val = aInstrRecord['Srcs'].get('vs1')
         vs2_val = aInstrRecord['Srcs']['vs2']
-        if vs1_val and (vd_val == (vs1_val & 0x1C)):
+        if vs1_val and (vd_val == (vs1_val & 0x1F)):
             self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
 
-        if vd_val == (vs2_val & 0x1C):
+        if vd_val == (vs2_val & 0x1F):
             self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
 
 
