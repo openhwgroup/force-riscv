@@ -63,12 +63,11 @@ class MainSequence(VectorTestSequence):
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
         vd_val = aInstrRecord['Dests']['vd']
         vs1_val = aInstrRecord['Srcs'].get('vs1')
-        vs2_val = aInstrRecord['Srcs']['vs2']
-        if vs1_val and (vd_val == (vs1_val & 0x1F)):
-            self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+        if vs1_val:
+            self.assertNoRegisterOverlap(aInstr, vd_val, vs1_val, aRegCountMultipleA=4)
 
-        if vd_val == (vs2_val & 0x1F):
-            self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+        vs2_val = aInstrRecord['Srcs']['vs2']
+        self.assertNoRegisterOverlap(aInstr, vd_val, vs2_val, aRegCountMultipleA=4)
 
 
 MainSequenceClass = MainSequence

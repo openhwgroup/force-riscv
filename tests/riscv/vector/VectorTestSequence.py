@@ -43,6 +43,38 @@ class VectorTestSequence(Sequence):
 
             self._verifyInstruction(instr, instr_params, instr_id)
 
+    ## Fail if the specified register groups overlap.
+    #
+    #  @param aRegIndexA The starting register index of one of the register groups.
+    #  @param aRegIndexB The starting register index of one of the register groups.
+    #  @param aRegCountMultipleA The register count multiple for one of the register groups. For
+    #       example, the destination register group in a widening instruction has a multiple of 2.
+    #  @param aRegCountMultipleB The register count multiple for one of the register groups. For
+    #       example, the destination register group in a widening instruction has a multiple of 2.
+    def assertNoRegisterOverlap(self, aInstr, aRegIndexA, aRegIndexB, aRegCountMultipleA=1, aRegCountMultipleB=1):
+        reg_count_a = self.getRegisterCount(aRegCountMultipleA)
+        reg_count_b = self.getRegisterCount(aRegCountMultipleB)
+        if aRegIndexB <= aRegIndexA < (aRegIndexB + reg_count_b):
+            self.error('Instruction %s used overlapping registers of different formats' % aInstr)
+
+        if aRegIndexA <= aRegIndexB < (aRegIndexA + reg_count_a):
+            self.error('Instruction %s used overlapping registers of different formats' % aInstr)
+
+    ## Get the register count for a register group with the specified multiple.
+    #
+    #  @param aRegCountMultiple The register count multiple for the register group. For example, the
+    #       destination register group in a widening instruction has a multiple of 2.
+    def getRegisterCount(self, aRegCountMultiple):
+        (vlmul_val, valid) = self.readRegister('vtype', field='VLMUL')
+        self.assertValidRegisterValue('vtype', valid)
+        lmul = self.calculateLmul(vlmul_val)
+
+        reg_count = round(lmul * aRegCountMultiple)
+        if reg_count == 0:
+            reg_count = 1
+
+        return reg_count
+
     ## Calculate the value of LMUL given VLMUL.
     #
     #  @param aVlmul The value of the vtype.VLMUL field.

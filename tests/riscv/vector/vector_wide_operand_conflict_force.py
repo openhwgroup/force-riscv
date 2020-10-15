@@ -96,14 +96,13 @@ class MainSequence(VectorTestSequence):
         vs1_val = aInstrRecord['Srcs'].get('vs1')
         vs2_val = aInstrRecord['Srcs']['vs2']
         if aInstr.startswith('VW'):
-            if vs1_val and (vd_val == (vs1_val & 0x1F)):
-                self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+            if vs1_val:
+                self.assertNoRegisterOverlap(aInstr, vd_val, vs1_val, aRegCountMultipleA=2)
 
-            if ('.W' not in aInstr) and (vd_val == (vs2_val & 0x1F)):
-                self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+            if ('.W' not in aInstr):
+                self.assertNoRegisterOverlap(aInstr, vd_val, vs2_val, aRegCountMultipleA=2)
         elif aInstr.startswith('VN'):
-            if (vd_val & 0x1F) == vs2_val:
-                self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+            self.assertNoRegisterOverlap(aInstr, vd_val, vs2_val, aRegCountMultipleB=2)
         else:
             self.error('Unexpected instruction %s' % aInstr)
 
