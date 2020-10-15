@@ -35,7 +35,9 @@ using namespace ELFIO;
 
 namespace Force {
 
-#define MAX_SEGMENTS_NUM   ((1u << 16) - 1)  //<! maximal segments number
+// ELFIO uses a 16-bit integer to store the number of segments; a larger number of segments than can
+// be represented by 16 bits causes memory corruption
+#define MAX_SEGMENTS_NUM   ((1u << 16) - 1)
 
  /*!
     \class TestSection
@@ -356,7 +358,7 @@ namespace Force {
     TestSegment* CreateTestSegment(const TestSection* section)
     {
       if (mTotalSegments++ >= MAX_SEGMENTS_NUM) {
-        LOG(fail) << "segments number " << mTotalSegments << "is overflow";
+        LOG(fail) << "The number of ELF file segments " << mTotalSegments << " has exceeded the maximum allowed " << MAX_SEGMENTS_NUM << endl;
         FAIL("overflow-segments-number");
         return nullptr;
       }
