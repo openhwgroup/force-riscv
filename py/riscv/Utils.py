@@ -54,6 +54,10 @@ class LoadGPR64(Sequence):
     #
     #  @param aValue A 64-bit value.
     def _loadValue(self, aValue):
+        if self.getGlobalState('RV32') == 1:
+            self._load32BitValue(aValue)
+            return
+
         if (aValue & 0xFFFFFFFFFFFFF800) == 0xFFFFFFFFFFFFF800:
             self._loadValueTop53BitsSet(aValue)
             self.writeRegister('x%d' % self._mRegisterIndex, aValue, '', True)
@@ -77,9 +81,6 @@ class LoadGPR64(Sequence):
             value = top_52_bits >> lsb
 
         self._load32BitValue(value)
-
-        if self.getGlobalState('RV32') == 1:
-            return
 
         for (shift_amount, imm_value) in reversed(imm_params):
             self.genInstruction('SLLI#RV64I#RISCV', {'rd': self._mRegisterIndex, 'rs1': self._mRegisterIndex, 'shamt': shift_amount})
