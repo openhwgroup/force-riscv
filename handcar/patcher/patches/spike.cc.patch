@@ -264,7 +264,7 @@
 >     const char arg2[] = "no_elf\0";
 >     memcpy(_stored_argv[0], arg1, strlen(arg1)+1);
 >     memcpy(_stored_argv[_stored_argc-1], arg2, strlen(arg2)+1);
-178,180c95,477
+178,180c95,483
 <   merge_overlapping_memory_regions(res);
 <   return res;
 < }
@@ -652,15 +652,15 @@
 >   // These can't be methods of OptionsStorage, but they need access to OptionsStorage private that ought not be more widely exposed.
 >   friend void initialize_simulator(const char* options);
 >   friend int set_simulator_parameter(const char* name, const uint64_t* pValue, const char* path);
-182c479,485
-< int main(int argc, char** argv)
----
+> 
 > };
 > OptionsStorage* _pOptionsStorage;
 > 
 > bool isa_rv32;  // true if simulator configured (via isa cmdline option) as 32-bits (RV32)
 > bool isa_D;     // true if double-precision floating pt extension configured in
-> 
+182c485
+< int main(int argc, char** argv)
+---
 > void initialize_simulator(const char* options)
 183a487,538
 >   // Hopefully the user has called set_simulator_parameter a number of times before calling initialize_simulator, but handle the contingency if they didn't.
@@ -891,23 +891,20 @@
 ---
 >   if (ic) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*ic);
 >   if (dc) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*dc);
-378a613,615
+378a613,619
 >  
 >   _pSimulatorTopLevel->set_log(log);
 >   _pSimulatorTopLevel->set_histogram(histogram);
-380,382c617,619
-<   s.set_debug(debug);
-<   s.configure_log(log, log_commits);
-<   s.set_histogram(histogram);
----
+> 
 >   argc=0;
 >   argv=nullptr;
 > }
-384d620
+380,382d620
+<   s.set_debug(debug);
+<   s.configure_log(log, log_commits);
+<   s.set_histogram(histogram);
+384c622,629
 <   auto return_code = s.run();
-386,387c622,642
-<   for (auto& mem : mems)
-<     delete mem.second;
 ---
 > void terminate_simulator()
 > {
@@ -917,37 +914,40 @@
 >     delete _pSimulatorTopLevel;
 >     _pSimulatorTopLevel = nullptr;
 >   }
-> 
+386,387c631,635
+<   for (auto& mem : mems)
+<     delete mem.second;
+---
 >   if(_pOptionsStorage != nullptr)
 >   { 
 >     delete _pOptionsStorage;
 >     _pOptionsStorage = nullptr;
 >   }
-> 
+389,390c637,642
+<   for (auto& plugin_device : plugin_devices)
+<     delete plugin_device.second;
+---
 >   // originally handled by smart pointers, but we have to delete these manually now.
 >   if(ic != nullptr)
 >   {
 >     delete ic;
 >     ic = nullptr;
 >   }
-389,390c644,648
-<   for (auto& plugin_device : plugin_devices)
-<     delete plugin_device.second;
+392c644,654
+<   return return_code;
 ---
 >   if(dc != nullptr)
 >   {
 >     delete dc;
 >     dc = nullptr;
 >   }
-392c650,654
-<   return return_code;
----
+> 
 >   if(l2 != nullptr)
 >   {
 >     delete l2;
 >     l2 = nullptr;
 >   }
-393a656,1277
+393a656,1296
 > 
 > 
 > void clearSimulatorLeaveOptions()
@@ -1448,6 +1448,13 @@
 >   return _pSimulatorTopLevel->translate_virtual_address_api(target_id, vaddr, intent, paddr, memattrs);
 > }
 > 
+> bool is_gpr(std::string &rname) {
+>   uint64_t index = _pSimulatorTopLevel->get_xpr_number(rname);
+>   std::string temp_name = _pSimulatorTopLevel->get_xpr_name(index);
+> 
+>   return (temp_name.find("unknown") == std::string::npos);
+> }
+> 
 > int register_size(std::string &rname) {
 >   int length = isa_rv32 ? 4 : 8;  // set the 'default' register length based on the ISA (RV32 vs RV64)
 > 
@@ -1559,12 +1566,24 @@
 >     return 1;
 >   }
 > 
->   const uint64_t buffer = (value & mask); // Are we masked on or masked off? Need to check what the convention of the bitmask is here.
->   
->   //int length = 8;
 >   std::string nameForReference(registerName);
 > 
+>   //int length = 8;
 >   int length = register_size(nameForReference);
+> 
+> 
+>   uint64_t rval = value;
+> 
+>   if ( is_gpr(nameForReference) && (length == 4) ) {
+>     if ( (rval & 0x80000000) != 0)
+>       rval |= 0xffffffff00000000ull;
+>   }
+>       
+>   const uint64_t buffer = rval;     // Are we masked on or masked off?
+>                                     // Need to check what the convention of the bitmask is here.
+>   
+> 
+>   //std::cout << "[write_simulator_register_fpix] " << nameForReference << " = !!!" << std::hex << rval << std::dec << "!!!" << std::endl;
 > 
 >   return write_simulator_register(static_cast<int>(target_id), registerName, reinterpret_cast<const uint8_t*>(&buffer), length);
 > }

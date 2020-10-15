@@ -1108,8 +1108,8 @@
 >     return 3;
 > 
 >   //Is the indended write length matching the xlen value?
->   if(length != (get_core(procid)->get_xlen() / 8))
->     return 4;
+>   //if(length != (get_core(procid)->get_xlen() / 8))
+>   //  return 4;
 > 
 >   //All checks pass, so go ahead and load the value buffer and set the length to indicate the used bytes in the value buffer
 >   get_core(procid)->get_state()->XPR.writeNoCallback(index, *value);
@@ -1132,8 +1132,8 @@
 >     return 3;
 > 
 >   //Is the indended write length matching the xlen value?
->   if(length != (get_core(procid)->get_xlen() / 8))
->     return 4;
+>   //if(length != (get_core(procid)->get_xlen() / 8))
+>   //  return 4;
 > 
 >   //All checks pass so we're go to write
 >   get_core(procid)->get_state()->XPR.writeNoCallback(index, *value);
