@@ -1433,10 +1433,10 @@
       <register_field init_policy="VtypeInitPolicy" name="RESERVED (WRITE 0)" physical_register="vtype" size="55">
         <bit_field shift="8" size="55"/>
       </register_field>
-      <register_field init_policy="VtypeInitPolicy" name="VMA" physical_register="vtype" size="1">
+      <register_field name="VMA" physical_register="vtype" size="1">
         <bit_field shift="7" size="1"/>
       </register_field>
-      <register_field init_policy="VtypeInitPolicy" name="VTA" physical_register="vtype" size="1">
+      <register_field name="VTA" physical_register="vtype" size="1">
         <bit_field shift="6" size="1"/>
       </register_field>
       <register_field init_policy="VlmulInitPolicy" name="VLMUL" physical_register="vtype" size="3">

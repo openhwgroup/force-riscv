@@ -1356,11 +1356,15 @@ Add RISCV system registers starter information in this file.
     <register_field name="RESERVED (WRITE 0)" size="55" init_policy="VtypeInitPolicy">
       <bit_field shift="8" size="55"/>
     </register_field>
-    <register_field name="VMA" size="1" init_policy="VtypeInitPolicy">
+    <register_field name="VMA" size="1">
       <bit_field shift="7" size="1"/>
+      <choice description="Inactive elements remain undisturbed" value="0x0" weight="10"/>
+      <choice description="Inactive elements may be overwritten" value="0x1" weight="10"/>
     </register_field>
-    <register_field name="VTA" size="1" init_policy="VtypeInitPolicy">
+    <register_field name="VTA" size="1">
       <bit_field shift="6" size="1"/>
+      <choice description="Tail elements remain undisturbed" value="0x0" weight="10"/>
+      <choice description="Tail elements may be overwritten" value="0x1" weight="10"/>
     </register_field>
     <register_field name="VLMUL" size="3" init_policy="VlmulInitPolicy">
       <bit_field shift="5" size="1"/>
