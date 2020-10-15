@@ -51,8 +51,9 @@ class MainSequence(Sequence):
 
         # read misa, mstatus...
 
-        self.genInstruction('CSRRS#register#RISCV', {'rd': gpr1, 'rs1': 0, 'csr': self.getRegisterIndex('misa') } )
-        self.genInstruction('CSRRS#register#RISCV', {'rd': gpr2, 'rs1': 0, 'csr': self.getRegisterIndex('mstatus') } )
+        if self.getPEstate('PrivilegeLevel') == 3:
+            self.genInstruction('CSRRS#register#RISCV', {'rd': gpr1, 'rs1': 0, 'csr': self.getRegisterIndex('misa') } )
+            self.genInstruction('CSRRS#register#RISCV', {'rd': gpr2, 'rs1': 0, 'csr': self.getRegisterIndex('mstatus') } )
 
         # generate sequences of random instructions...
 
