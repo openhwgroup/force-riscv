@@ -898,12 +898,21 @@ namespace Force
   {
     uint32 shift = 0;
     for (auto bit_it = mBitFields.crbegin(); bit_it != mBitFields.crend(); ++bit_it) {
-      (*bit_it)->InitializeBitField(value >> shift);
+      bool bit_partial = false;
+
+      if ((*bit_it)->IsInitialized(&bit_partial)) {
+        continue;
+      } else if (bit_partial) {
+        (*bit_it)->InitializePartial(value >> shift);
+      } else {
+        (*bit_it)->InitializeBitField(value >> shift);
+      }
+
       shift += (*bit_it)->Size();
     }
   }
 
-  void RegisterField::InitializeRandomly(const ChoiceTree* pChoiceTree)
+  void RegisterField::InitializeFieldRandomly(const ChoiceTree* pChoiceTree)
   {
 
     if (IsInitialized())
@@ -919,31 +928,14 @@ namespace Force
 
     if (pChoiceTree != nullptr) {
       value = pChoiceTree->Choose()->ValueAs64(); // 32-bit value chosen
-      value <<= mLsb;
     } else {
       uint64 max_value = get_mask64(mSize);
-      value = Random::Instance()->Random64(0, max_value) << mLsb;
+      value = Random::Instance()->Random64(0, max_value);
     }
 
-    // << "{RegisterField::InitializeRandomly} field " << Name() << " value 0x" << hex << value << " size " << dec << mSize << " lsb " << mLsb << endl;
+    // << "{RegisterField::InitializeFieldRandomly} field " << Name() << " value 0x" << hex << value << " size " << dec << mSize << " lsb " << mLsb << endl;
 
-    std::vector<BitField *>::iterator it;
-    for (it=mBitFields.begin(); it!=mBitFields.end(); ++it) {
-      if (pChoiceTree) {
-        // if having choice, no need to use InitializePartial
-        if ((*it)->IsInitialized()) continue;
-        (*it)->Initialize(value);
-      } else {
-        bool bit_partial = false;
-        if ((*it)->IsInitialized(&bit_partial)) {
-          continue;
-        } else if (true == bit_partial) {
-          (*it)->InitializePartial(value);
-        } else {
-          (*it)->Initialize(value);
-        }
-      }
-    }
+    InitializeField(value);
   }
 
   void RegisterField::Setup(const RegisterFile* pRegisterFile)
@@ -1000,7 +992,7 @@ namespace Force
   {
   }
 
-  void RegisterFieldRes0::InitializeRandomly(const ChoiceTree* pChoiceTree )
+  void RegisterFieldRes0::InitializeFieldRandomly(const ChoiceTree* pChoiceTree )
   {
     if (IsInitialized()) return;      // don't need to initialize if already initialized.
 
@@ -1053,7 +1045,7 @@ namespace Force
   {
   }
 
-  void RegisterFieldRes1::InitializeRandomly(const ChoiceTree* pChoiceTree)
+  void RegisterFieldRes1::InitializeFieldRandomly(const ChoiceTree* pChoiceTree)
   {
     if (IsInitialized()) return;      // don't need to initialize if already initialized.
 
@@ -1104,10 +1096,10 @@ namespace Force
     return new RegisterFieldRazwi(*this);
   }
 
-  void RegisterFieldRazwi::InitializeRandomly(const ChoiceTree* pChoiceTree)
+  void RegisterFieldRazwi::InitializeFieldRandomly(const ChoiceTree* pChoiceTree)
   {
     if (IsInitialized()) return;      // don't need to initialize if already initialized.
-    Initialize(0);
+    InitializeField(0);
   }
 
   RegisterFieldRaowi::RegisterFieldRaowi(const RegisterFieldRaowi& rOther)
@@ -1124,10 +1116,10 @@ namespace Force
     return new RegisterFieldRaowi(*this);
   }
 
-  void RegisterFieldRaowi::InitializeRandomly(const ChoiceTree* pChoiceTree)
+  void RegisterFieldRaowi::InitializeFieldRandomly(const ChoiceTree* pChoiceTree)
   {
     if (IsInitialized()) return;      // don't need to initialize if already initialized.
-    Initialize(MAX_UINT64);
+    InitializeField(MAX_UINT64);
   }
 
   uint64 ReadOnlyRegisterField::ReloadValue(uint64& reloadValue, const ChoiceTree* pChoiceTree)  const
@@ -1162,9 +1154,9 @@ namespace Force
     RegisterField::InitializeField(field_val);
   }
 
-  void ReadOnlyRegisterField::InitializeRandomly(const ChoiceTree* pChoiceTree )
+  void ReadOnlyRegisterField::InitializeFieldRandomly(const ChoiceTree* pChoiceTree )
   {
-    Initialize(0); // initialize by reset value
+    InitializeField(0); // initialize by reset value
   }
 
   void ReadOnlyRegisterField::Setup(const RegisterFile* pRegisterFile)
@@ -1489,7 +1481,7 @@ namespace Force
         pChoiceTree = GetChoiceTree( reg_fld->Name(), pChoicesModerator);
         std::unique_ptr<ChoiceTree> storage_ptr(pChoiceTree);
 
-        reg_fld->InitializeRandomly(pChoiceTree);
+        reg_fld->InitializeFieldRandomly(pChoiceTree);
       }
     }
 
@@ -2179,7 +2171,7 @@ namespace Force
       ChoiceTree* choice_tree = pRegister->GetChoiceTree(rFieldName, pChoicesModerator);
       std::unique_ptr<ChoiceTree> storage_ptr(choice_tree);
 
-      reg_field->InitializeRandomly(choice_tree);
+      reg_field->InitializeFieldRandomly(choice_tree);
       Sender::SendNotification(ENotificationType::RegisterInitiation, pRegister);
       CheckLinkRegisterInit(pRegister->Name());
     }

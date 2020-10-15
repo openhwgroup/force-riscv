@@ -1439,7 +1439,7 @@
       <register_field init_policy="VtypeInitPolicy" name="VTA" physical_register="vtype" size="1">
         <bit_field shift="6" size="1"/>
       </register_field>
-      <register_field name="VLMUL" physical_register="vtype" size="3">
+      <register_field init_policy="VlmulInitPolicy" name="VLMUL" physical_register="vtype" size="3">
         <bit_field shift="5" size="1"/>
         <bit_field shift="0" size="2"/>
       </register_field>

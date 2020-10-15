@@ -15,8 +15,9 @@
 //
 #include <RegisterInitPolicyRISCV.h>
 #include <VmasControlBlockRISCV.h>
-#include <ChoicesFilter.h>
 #include <Choices.h>
+#include <ChoicesFilter.h>
+#include <ChoicesModerator.h>
 #include <Config.h>
 #include <Constraint.h>
 #include <Generator.h>
@@ -26,7 +27,9 @@
 #include <Random.h>
 #include <Register.h>
 #include <UtilityFunctions.h>
+#include <VectorLayoutSetupRISCV.h>
 
+#include <cmath>
 #include <memory>
 
 using namespace std;
@@ -72,23 +75,17 @@ namespace Force {
 
   uint64 VlInitPolicy::RegisterReloadValue(Register* pRegister) const
   {
-    LOG(notice) << "{VlInitPolicy::RegisterFieldReloadValue} reloading " << pRegister->Name() << endl;
+    LOG(notice) << "{VlInitPolicy::RegisterReloadValue} reloading " << pRegister->Name() << endl;
 
     return GetVlmax();
   }
 
   uint64 VlInitPolicy::GetVlmax() const
   {
-    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
-    Register* vtype_reg = reg_file->RegisterLookup("vtype");
-    RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
-    uint64 sew = (1 << vsew_field->FieldValue()) * 8;
-
-    // TODO(Noah): Update this to account for fractional LMUL values when there is time to do so.
-    RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
-    uint64 lmul = (1 << vlmul_field->FieldValue());
-
-    uint64 vlmax = lmul * Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / sew;
+    VectorLayoutSetupRISCV vec_layout_setup(mpGenerator->GetRegisterFile());
+    uint64 sew = vec_layout_setup.GetSew();
+    float lmul = vec_layout_setup.GetLmul();
+    uint64 vlmax = lround(lmul * Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / sew);
     return vlmax;
   }
 
@@ -99,7 +96,7 @@ namespace Force {
 
   uint64 VstartInitPolicy::RegisterReloadValue(Register* pRegister) const
   {
-    LOG(notice) << "{VstartInitPolicy::RegisterFieldReloadValue} reloading " << pRegister->Name() << endl;
+    LOG(notice) << "{VstartInitPolicy::RegisterReloadValue} reloading " << pRegister->Name() << endl;
 
     return 0;
   }
@@ -114,6 +111,52 @@ namespace Force {
     LOG(notice) << "{VtypeInitPolicy::RegisterFieldReloadValue} reloading " << pRegField->Name() << " of " << pRegField->PhysicalRegisterName() << endl;
 
     return 0;
+  }
+
+  void VlmulInitPolicy::InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree) const
+  {
+    SetRegisterFieldInitialValue(pRegField, ChooseVlmulValue());
+  }
+
+  uint64 VlmulInitPolicy::RegisterFieldReloadValue(RegisterField* pRegField) const
+  {
+    LOG(notice) << "{VlmulInitPolicy::RegisterFieldReloadValue} reloading " << pRegField->Name() << " of " << pRegField->PhysicalRegisterName() << endl;
+
+    return ChooseVlmulValue();
+  }
+
+  uint64 VlmulInitPolicy::ChooseVlmulValue() const
+  {
+    const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
+    Register* vtype_reg = reg_file->RegisterLookup("vtype");
+    ChoicesModerator* choices_mod = mpGenerator->GetChoicesModerator(EChoicesType::RegisterFieldValueChoices);
+    const RegisterField* vsew_field = reg_file->InitializeRegisterFieldRandomly(vtype_reg, "VSEW", choices_mod);
+
+    // Enforce LMUL >= SEW / ELEN
+    auto vlmul_filter_constr = new ConstraintSet(0, 3);
+    Config* config = Config::Instance();
+    uint32 sew = (1 << vsew_field->FieldValue()) * 8;
+    uint32 elen_sew_ratio = config->LimitValue(ELimitType::MaxVectorElementWidth) / sew;
+    switch (elen_sew_ratio) {
+    case 1:
+      break;
+    case 2:
+      vlmul_filter_constr->AddValue(7);
+      break;
+    case 4:
+      vlmul_filter_constr->AddRange(6, 7);
+      break;
+    default:
+      vlmul_filter_constr->AddRange(5, 7);
+      break;
+    }
+
+    unique_ptr<ChoiceTree> vlmul_choice_tree(choices_mod->CloneChoiceTree("vtype.VLMUL"));
+    unique_ptr<ConstraintChoicesFilter> vlmul_choices_filter(new ConstraintChoicesFilter(vlmul_filter_constr));
+    vlmul_choice_tree->ApplyFilter(*vlmul_choices_filter);
+    const Choice* vlmul_choice = vlmul_choice_tree->Choose();
+
+    return vlmul_choice->Value();
   }
 
 }
