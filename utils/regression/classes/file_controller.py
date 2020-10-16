@@ -83,7 +83,7 @@ class FileController(Controller):
             my_err_queue_item = SummaryErrorQueueItem( { "error"  : arg_ex
                                                        , "message": "Control File not processed..."
                                                        , "path"   : self.ctrl_item.file_path()
-                                                       , "type"   : str( type(my_exc_type) )
+                                                       , "type"   : str( my_exc_type )
                                                        } )
 
             if self.mProcessQueue.summary is not None:
