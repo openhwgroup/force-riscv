@@ -50,7 +50,7 @@ namespace Force {
     delete mpConstraintSet;
   }
 
-  void OperandConstraint::ApplyUserRequest(const OperandRequest& rOprReq)
+  void OperandConstraint::ApplyUserRequest(const OperandRequest& rOprReq, const OperandStructure& rOperandStruct)
   {
     auto value_constr = rOprReq.GetValueConstraint();
     if (nullptr != value_constr) {
@@ -58,11 +58,23 @@ namespace Force {
         LOG(fail) << "{OperandConstraint::ApplyUserRequest} expect mpConstraintSet to be nullptr at this point." << endl;
         FAIL("dangling-constraint-set-pointer");
       }
+
+      ValidateUserRequestConstraint(*value_constr, rOperandStruct);
+
       mpConstraintSet = value_constr->Clone();
       if (mpConstraintSet->Size() == 1) {
         mConstraintForced = true;
       }
       rOprReq.SetApplied();
+    }
+  }
+
+  void OperandConstraint::ValidateUserRequestConstraint(const ConstraintSet& rUserReqConstr, const OperandStructure& rOperandStruct)
+  {
+    unique_ptr<ConstraintSet> default_constr(DefaultConstraintSet(rOperandStruct));
+    if (not default_constr->ContainsConstraintSet(rUserReqConstr)) {
+      LOG(fail) << "{OperandConstraint::ValidateUserRequestConstraint} requested operand value range (" << rUserReqConstr.ToSimpleString() << ") for operand " << rOperandStruct.Name() << " contains values outside of the physical range for the operand (" << default_constr->ToSimpleString() << ")" << endl;
+      FAIL("illegal-operand-request");
     }
   }
 
