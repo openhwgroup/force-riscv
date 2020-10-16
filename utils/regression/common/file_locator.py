@@ -28,7 +28,7 @@ class FileLocator(object):
     @classmethod
     def checkNestedPath(aClass, aPathList):
         #validate the input
-        if type(aPathList) != list:
+        if not isinstance(aPathList, list):
             raise Exception("Input to FileLocator.checkNestedPath must be a list")
         if len(aPathList) < 2:
             raise Exception("Input to FileLocator.checkNesterPath needs to be a list more than 1 item long")
@@ -53,7 +53,7 @@ class FileLocator(object):
     @classmethod
     def resolveFileLocation(aClass, aInputString, aPrefixDirectoryList):
         ## validate the input
-        if type(aPrefixDirectoryList) != list:
+        if not isinstance(aPrefixDirectoryList, list):
             raise Exception("Parameter aPrefixDirectoryList needs to be a list of strings")
         
         ## is the input string itself a usable absolute path?

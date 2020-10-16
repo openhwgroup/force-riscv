@@ -27,7 +27,7 @@ class MsgLevel:
     noinfo  = 0x0080    #1000 0000 = 128
 
     @classmethod
-    def translate( arg_class, arg_str ):
+    def translate( cls, arg_str ):
         my_lev = MsgLevel.nomsg
         if arg_str[0] != '+' and arg_str[0] != '-':
             arg_str = "+" + arg_str
@@ -86,7 +86,7 @@ class MsgLevel:
         return my_lev
 
     @classmethod
-    def lev_as_str( arg_class, arg_lev ):
+    def lev_as_str( cls, arg_lev ):
 
         if arg_lev & ( MsgLevel.trace & MsgLevel.user & MsgLevel.dbg & MsgLevel.info & MsgLevel.warn & MsgLevel.err & MsgLevel.crit ):
             return "all"
@@ -113,9 +113,9 @@ class MsgLabel:
 
     # set custom label returns old value
     @classmethod
-    def set_label( arg_class, arg_lev, arg_label ):
+    def set_label( cls, arg_lev, arg_label ):
         # print( "MsgLabel::set_label( arg_lev(%s: %s), arg_label(%s)" % ( str( arg_lev), type( arg_lev ), str(arg_label)))
-        if type(arg_lev) is str:
+        if isinstance(arg_lev, str):
             # little recursion solves a couple of problems
             return MsgLabel.set_label( MsgLevel.translate( arg_lev ), arg_label )
 
@@ -147,7 +147,7 @@ class MsgLabel:
 
     # get Msg Level Label
     @classmethod
-    def get_label( arg_class, arg_lev ):
+    def get_label( cls, arg_lev ):
         if arg_lev is str:
             # little recursion solves a couple of problems
             return MsgLabel.get_label( MsgLevel.translate( arg_lev ))
@@ -172,44 +172,44 @@ class Msg:
 
     # set the default message level
     @classmethod
-    def set_level( arg_class, arg_lev = MsgLevel.info ):
+    def set_level( cls, arg_lev = MsgLevel.info ):
         Msg.lev = int( arg_lev )
         # print( "Message Level: %x" % (  arg_lev))
 
     # gets the current default level
     @classmethod
-    def get_level( arg_class ):
+    def get_level( cls ):
         return Msg.lev
 
     # gets the current default level
     @classmethod
-    def get_level_as_str( arg_class ):
+    def get_level_as_str( cls ):
         return MsgLevel.lev_as_str( Msg.lev )
 
     # translate the message level
     @classmethod
-    def translate_levelstr( arg_class, arg_str ):
+    def translate_levelstr( cls, arg_str ):
         # print( "Level Str: %s" % ( str( arg_str )))
         return MsgLevel.translate( arg_str )
 
     # customize the message labels. It is recommended that only the user, info and dbg label be changed
     # however there is no prohibition against doing this
     @classmethod
-    def set_label( arg_class, arg_lev, arg_label ):
+    def set_label( cls, arg_lev, arg_label ):
         # print( "Msg::set_label( arg_lev(%s), arg_label(%s)" % ( str( arg_lev), str(arg_label)))
         return MsgLabel.set_label( arg_lev, arg_label )
 
     # returns the current label for the specified level, if no level is passed then the
     # current log level is used
     @classmethod
-    def get_label( arg_class, arg_lev = None ):
+    def get_label( cls, arg_lev = None ):
         if arg_lev is None:
             arg_lev = Msg.lev
         return MsgLabel.get_label( arg_lev )
 
     # returns the current labels for the current msg level.
     @classmethod
-    def get_names( arg_class, arg_lev = None ):
+    def get_names( cls, arg_lev = None ):
         if arg_lev is None:
             arg_lev = Msg.lev
         my_str = ""
@@ -230,7 +230,7 @@ class Msg:
 
     # write posts the message. Expand as needed to log to specific file
     @classmethod
-    def write( arg_class, arg_msg, arg_level ):
+    def write( cls, arg_msg, arg_level ):
         if Msg.lev != MsgLevel.nomsg:
             if ( arg_level & MsgLevel.info ) and ( Msg.lev & MsgLevel.noinfo ):
                 print( str( arg_msg ).strip() )
@@ -238,7 +238,7 @@ class Msg:
                 print( "[%s] - %s" % ( MsgLabel.get_label( arg_level ), str( arg_msg ).strip() ))
 
     @classmethod
-    def write( arg_class, arg_msg, arg_level ):
+    def write( cls, arg_msg, arg_level ):
         if Msg.lev != MsgLevel.nomsg:
             if ( arg_level & MsgLevel.info ) and ( Msg.lev & MsgLevel.noinfo ):
                 print( str( arg_msg ).strip() )
@@ -246,7 +246,7 @@ class Msg:
                 print( "[%s] - %s" % ( MsgLabel.get_label( arg_level ), str( arg_msg ).strip() ))
 
     @classmethod
-    def write_nostrip( arg_class, arg_msg, arg_level, arg_notag = False ):
+    def write_nostrip( cls, arg_msg, arg_level, arg_notag = False ):
         if Msg.lev != MsgLevel.nomsg:
             if arg_notag or ( ( arg_level & MsgLevel.info ) and ( Msg.lev & MsgLevel.noinfo )):
                 print( str( arg_msg ).strip() )
@@ -255,7 +255,7 @@ class Msg:
 
     # outputs
     # @classmethod
-    # def user( arg_class, arg_msg = None ):
+    # def user( cls, arg_msg = None ):
     #     if Msg.lev & MsgLevel.user:
     #         if arg_msg is None:
     #             # add an empty line
@@ -264,7 +264,7 @@ class Msg:
     #             Msg.write( arg_msg, MsgLevel.user )
 
     @classmethod
-    def user( arg_class, arg_msg, arg_label = None ):
+    def user( cls, arg_msg, arg_label = None ):
         if Msg.lev & MsgLevel.user:
             if arg_label is not None:
                 my_usr_lbl = Msg.set_label( "user", str( arg_label ))
@@ -276,7 +276,7 @@ class Msg:
                 Msg.write( arg_msg, MsgLevel.user )
 
     @classmethod
-    def dbg( arg_class, arg_msg = None, arg_label = None ):
+    def dbg( cls, arg_msg = None, arg_label = None ):
         if Msg.lev & MsgLevel.dbg:
             if arg_msg is None:
                 # add an empty line
@@ -291,7 +291,7 @@ class Msg:
                 Msg.write( arg_msg, MsgLevel.dbg )
 
     @classmethod
-    def info( arg_class, arg_msg = None, arg_flush = False ):
+    def info( cls, arg_msg = None, arg_flush = False ):
 
         # print( Msg.lev )
         if Msg.lev & MsgLevel.info:
@@ -306,31 +306,31 @@ class Msg:
             sys.stderr.flush()
 
     @classmethod
-    def warn( arg_class, arg_msg ):
+    def warn( cls, arg_msg ):
         # Msg.trace()
         if Msg.lev & MsgLevel.warn:
             Msg.write( arg_msg, MsgLevel.warn )
 
     @classmethod
-    def err( arg_class, arg_msg ):
+    def err( cls, arg_msg ):
         if Msg.lev & MsgLevel.err:
             Msg.write( arg_msg, MsgLevel.err )
 
     @classmethod
-    def crit( arg_class, arg_msg ):
+    def crit( cls, arg_msg ):
         if Msg.lev & MsgLevel.crit:
             Msg.write( arg_msg, MsgLevel.crit )
 
     @classmethod
-    def blank( arg_class, arg_lev = MsgLevel.info ):
-        if type( arg_lev ) is str:
+    def blank( cls, arg_lev = MsgLevel.info ):
+        if isinstance( arg_lev, str ):
             arg_lev = Msg.blank( MsgLevel.translate( arg_lev ))
 
         elif Msg.lev & arg_lev:
             print()
 
     @classmethod
-    def trace( arg_class, arg_msg = "Call Stack " ):
+    def trace( cls, arg_msg = "Call Stack " ):
         print()
         Msg.write( arg_msg, MsgLevel.trace )
         if Msg.lev & MsgLevel.trace:
@@ -339,15 +339,16 @@ class Msg:
             sys.stderr.flush()
 
     @classmethod
-    def error_trace( arg_class, arg_msg = "Call Stack " ):
+    def error_trace( cls, arg_msg = "Call Stack " ):
         if Msg.lev & MsgLevel.trace:
             print()
             Msg.write( arg_msg, MsgLevel.trace )
             traceback.print_exc( file=sys.stdout )
 
     @classmethod
-    def fout( arg_class, arg_fpath, arg_lev ):
-        if type( arg_lev ) is str: my_lev = MsgLevel.translate( arg_lev )
+    def fout( cls, arg_fpath, arg_lev ):
+        if isinstance( arg_lev, str ):
+            my_lev = MsgLevel.translate( arg_lev )
         if my_lev & Msg.lev:
             with open( arg_fpath , "r" ) as my_file:
                 my_lines = my_file.readlines()
@@ -355,19 +356,19 @@ class Msg:
                     Msg.write( my_line, my_lev )
 
     @classmethod
-    def lout( arg_class, arg_obj, arg_lev, arg_lbl = None, arg_indent = "" ):
+    def lout( cls, arg_obj, arg_lev, arg_lbl = None, arg_indent = "" ):
 
         # Msg.user( "Msg::lout( arg_obj(%s), arg_lev(%s), arg_lbl(%s)" % ( str( arg_obj ), str( arg_lev), str( arg_lbl ) ))
         if not arg_obj:
             return
-        if type(arg_obj )in [list,dict]:
-            if not len( arg_obj ) > 0  or not( arg_obj ):
+        if isinstance(arg_obj, (list, dict)):
+            if not len( arg_obj ) > 0 or not arg_obj:
                 return
 
         elif not hasattr( arg_obj, '__class__' ):
             return
 
-        if type( arg_lev ) is str:
+        if isinstance( arg_lev, str):
             Msg.lout( arg_obj, MsgLevel.translate( arg_lev ), arg_lbl )
             return
 
@@ -379,20 +380,19 @@ class Msg:
         if not arg_lbl is None:
             Msg.write_nostrip( arg_indent + str( arg_lbl ), arg_lev )
 
-        if type( arg_obj ) is list:
+        if isinstance( arg_obj, list ):
             my_ndx = 0
             for my_item in arg_obj:
                 my_ndx += 1
-                if type( my_item ) in [list,dict]:
+                if isinstance( my_item, (list,dict)):
                     Msg.lout( my_item, arg_lev, str( my_ndx ), "%s" % (arg_indent ))
                 else:
                     Msg.write_nostrip( "%s[%02d] = %s" % ( arg_indent, my_ndx, str( my_item )), arg_lev, True )
 
-        # Msg.user( str( type( arg_obj )))
-        elif type( arg_obj ) is dict:
+        elif isinstance( arg_obj, dict ):
 
             for my_key in arg_obj:
-                if type( arg_obj[ my_key ] ) in [list,dict]:
+                if isinstance( arg_obj[ my_key ], (list, dict)):
                     Msg.lout( arg_obj[ my_key ], arg_lev, my_key, "%s" % (arg_indent ))
                 else:
                     Msg.write_nostrip( "%s[%s] = %s" % ( arg_indent, my_key, str( arg_obj[ my_key ]  )), arg_lev, True )
@@ -405,7 +405,7 @@ class Msg:
             raise Exception( "Argument 1 needs to be of list or dictionary type" )
 
     @classmethod
-    def flush( arg_class ):
+    def flush( cls ):
         sys.stdout.flush()
         sys.stderr.flush()
 

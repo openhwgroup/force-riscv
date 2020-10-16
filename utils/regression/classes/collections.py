@@ -56,7 +56,7 @@ class HiAtomicInteger ( HiCollection ):
         self.val = initial_value
         self.mutex = threading.Lock()
 
-    def delta( self, amount ):
+    def add( self, amount ):
         try:
             self.mutex.acquire()
             self.val += amount

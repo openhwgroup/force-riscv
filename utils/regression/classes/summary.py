@@ -15,6 +15,7 @@
 #
 # Threading Base
 import re
+from collections import defaultdict
 
 from common.path_utils import PathUtils
 from common.sys_utils import SysUtils
@@ -38,37 +39,35 @@ class SummaryNdx( object ):
 
 class SummaryLevel:
     Silent = 0      # only show summary info, log all results to summary log
-    Fail = 1        # show only the fails,
-    Any  = 2
+    Fail   = 1      # show only the fails,
+    Any    = 2
+
 
 class SummaryDetail:
-    Nothing     = 0x0000
-    GenCmd      = 0x0001
-    GenResult   = 0x0002
-    IssCmd      = 0x0004
-    IssResult   = 0x0008
-    RtlCmd      = 0x0010
-    RtlResult   = 0x0020
+    Nothing        = 0x0000
+    GenCmd         = 0x0001
+    GenResult      = 0x0002
+    IssCmd         = 0x0004
+    IssResult      = 0x0008
+    RtlCmd         = 0x0010
+    RtlResult      = 0x0020
     TraceCmpCmd    = 0x0040
     TraceCmpResult = 0x0080
-    Signaled    = 0x0100
-    AnyDetail   = 0x01FF
-
-
-
-# class SummaryThread( HiThread ): pass
+    Signaled       = 0x0100
+    AnyDetail      = 0x01FF
 
 
 class SummaryQueueItem( object ):
-
     def __init__( self, arg_process_info ): # arg_frun_path, arg_parent_fctrl, arg_fctrl_item, arg_group ):
         Msg.user( "Results Info: %s" % (str(arg_process_info )), "SUM-QITEM" )
         # Msg.lout( arg_process_info, "user", "SUM-QITEM" )
         self.process_info = arg_process_info
 
-class SummaryErrorQueueItem( SummaryQueueItem ):
+
+class SummaryErrorQueueItem( object ):
     def __init__( self, arg_error_info ):
         self.error_info = arg_error_info
+
 
 class SummaryErrorItem( object ):
     def load( self, arg_error_qitem ):
@@ -97,7 +96,6 @@ class SummaryQueue( HiThreadedProducerConsumerQueue ):
 
 
 class SummaryItem( object ):
-
     def __init__( self, arg_summary ):
         self.summary = arg_summary
 
@@ -130,13 +128,17 @@ class SummaryItem( object ):
         self.trace_cmp_log       = None
         self.trace_cmp_retcode   = None
 
-        self.signal_id = None
+        self.signal_id      = None
         self.signal_message = None
 
         self.max_instr     = None
         self.min_instr     = None
 
         self.detail_flags = 0
+
+        self.default      = None
+        self.secondary    = None
+        self.total        = None
 
         self.sum_tups = [ ( "GenCmd"     , self.load_gen_info        , SummaryDetail.GenCmd         ),    # Contains a Gen Command Line
                           ( "GenResult"  , self.load_gen_result      , SummaryDetail.GenResult      ),    # Contains a Gen Result Line
@@ -147,8 +149,7 @@ class SummaryItem( object ):
                           ( "CMPCommand" , self.load_trace_cmp_info  , SummaryDetail.TraceCmpCmd    ),
                           ( "CMPResult"  , self.load_trace_cmp_result, SummaryDetail.TraceCmpResult ),
                           ( "Signal"     , self.load_signaled        , SummaryDetail.Signaled       ),
-                        ]
-
+                          ]
 
     def load( self, arg_queue_item ):
 
@@ -164,7 +165,6 @@ class SummaryItem( object ):
 
         except:
             Msg.error_trace()
-
 
     def report( self ):
 
@@ -276,7 +276,6 @@ class SummaryItem( object ):
     def has_trace_cmp( self ):
         return self.trace_cmp_cmd is not None
 
-
     # extract the client process information
     def load_process_info( self, arg_process_info ):
 
@@ -293,7 +292,6 @@ class SummaryItem( object ):
 
         self.detail_flags   = SummaryDetail.Nothing
 
-
     # extract information used to execute the task
     def load_task_info( self ):
 
@@ -305,7 +303,7 @@ class SummaryItem( object ):
         self.task_index = int( my_index )
         self.task_path = PathUtils.include_trailing_path_delimiter( str(  self.work_dir ))
 
-    def checkMissingResult(self, aProcessResult, aModuleName):
+    def check_missing_result(self, aProcessResult, aModuleName):
         message = aProcessResult[2]
         known_abnormal = False
         if aProcessResult[5] != SysUtils.NORMAL:
@@ -345,7 +343,7 @@ class SummaryItem( object ):
 
         # check for generate pair
         if ( self.detail_flags & SummaryDetail.GenCmd ) and not ( self.detail_flags & SummaryDetail.GenResult ):
-            retcode, message = self.checkMissingResult(self.process_result, "generator")
+            retcode, message = self.check_missing_result(self.process_result, "generator")
             self.load_gen_result( { "retcode": retcode
                                   , "stdout" : self.process_result[1]
                                   , "stderr" : self.process_result[2]
@@ -356,7 +354,7 @@ class SummaryItem( object ):
 
         # check for summary pair
         elif ( self.detail_flags & SummaryDetail.IssCmd ) and not ( self.detail_flags & SummaryDetail.IssResult ):
-            retcode, message = self.checkMissingResult(self.process_result, "iss")
+            retcode, message = self.check_missing_result(self.process_result, "iss")
             self.load_iss_result( { "retcode" : retcode
                                   , "log"     : None
                                   , "message": message
@@ -364,7 +362,7 @@ class SummaryItem( object ):
 
         # check for compare pair
         elif ( self.detail_flags & SummaryDetail.TraceCmpCmd ) and not ( self.detail_flags & SummaryDetail.TraceCmpResult ):
-            retcode, message = self.checkMissingResult(self.process_result, "trace-cmp")
+            retcode, message = self.check_missing_result(self.process_result, "trace-cmp")
             self.load_trace_cmp_result( { "trace-cmp-retcode" : retcode
                                         , "trace-cmp-log"     : None
                                         , "message": message
@@ -372,20 +370,20 @@ class SummaryItem( object ):
 
         # check for RTL pair
         elif ( self.detail_flags & SummaryDetail.RtlCmd ) and not ( self.detail_flags & SummaryDetail.RtlResult ):
-            retcode, message = self.checkMissingResult(self.process_result, "rtl")
+            retcode, message = self.check_missing_result(self.process_result, "rtl")
             self.load_rtl_result( { "retcode" : retcode
                                   , "log"     : None
                                   , "message" : message
                                   } )
 
     def load_process_line( self, arg_line ):
-
         Msg.user( "Process Result Line: %s" % (str( arg_line)), "SUM-TUPLE" )
-
+        if arg_line[0] == '[':
+            return
         my_val = None
         try:
             my_glb, my_loc = SysUtils.exec_content( arg_line, True )
-        except SyntaxError as arg_ex:
+        except (SyntaxError, TypeError) as arg_ex:
             return
         except :
             raise
@@ -581,18 +579,16 @@ class SummaryItem( object ):
 
         return ( my_gen_cnt, my_gen_ret, my_sim_cnt, my_sim_ret, my_rtl_cnt, my_rtl_ret, my_trace_cmp_cnt, my_trace_cmp_ret )
 
-class SummaryGroups( object ):
 
+class SummaryGroups( object ):
     def __init__( self ):
         self.groups = {}
         self.queue = SummaryQueue()
         # self.group_lookup = []
 
-
     def update_groups( self, arg_group ):
         if not arg_group in self.groups:
             self.groups[ arg_group ] = []
-
 
     # adds an item to a group list if the group does not exist the list is created
     def add_item( self, arg_item ):
@@ -614,7 +610,6 @@ class SummaryGroups( object ):
 
 # class SummaryThread( HiThread ):
 class SummaryThread( HiOldThread ):
-
     def __init__( self, sq, summary):
         self.summary_queue = sq
         self.summary = summary
@@ -632,40 +627,13 @@ class SummaryThread( HiOldThread ):
     def run( self ):
         # Block on process queue while we have threads running and stuff to do
 
-        # == Replaced ==>> while True:
-        # == Replaced ==>>     # Pop off the top of the process queue (should block if the queue is empty)
-        # == Replaced ==>>     try:
-        # == Replaced ==>>         next_item = self.summary_queue.dequeue(0)
-        # == Replaced ==>>     except TimeoutError:
-        # == Replaced ==>>         if (workers_done_event.isSet()):
-        # == Replaced ==>>             summary_done_event.Signal()
-        # == Replaced ==>>             return
-        # == Replaced ==>>         else:
-        # == Replaced ==>>             self.HeartBeat()
-        # == Replaced ==>>             continue
-        # == Replaced ==>>     my_item = self.summary.create_summary_item()
-        # == Replaced ==>>     my_item.load( next_item )
-        # == Replaced ==>>     self.summary.commit_item( my_item )
-        # == Replaced ==>>     next_item = None
-
         try:
-          while True: #not workers_done_event.isSet():
-
-                # if self.summary.is_terminated():
-                #     break
+            while True:  # not workers_done_event.isSet():
 
                 # Pop off the top of the process queue (should block if the queue is empty)
                 try:
-
-                    # my_item = self.summary.create_summary_item()
-                    # my_qitem = self.summary_queue.dequeue(0)
-                    # my_item.load( my_qitem )
-                    # self.summary.commit_item( my_item )
-                    # my_qitem = None
-                    # my_qitem = self.summary_queue.dequeue(0)
-
                     my_qitem = self.summary_queue.dequeue(0)
-                    if type( my_qitem ) is SummaryErrorQueueItem:
+                    if isinstance( my_qitem, SummaryErrorQueueItem):
                         Msg.user( str( my_qitem.error_info ), "SUMMARY_ERROR" )
                         my_eitem = SummaryErrorItem()
                         my_eitem.load( my_qitem )
@@ -677,18 +645,21 @@ class SummaryThread( HiOldThread ):
                         my_item.clean_up()
 
                     my_qitem = None
+
                 except TimeoutError as arg_ex:
                     # {{{TODO}}} Implement proper heartbeat
                     # Msg.dbg( str( arg_ex ) )
-                    if (workers_done_event.isSet()):
+                    if workers_done_event.isSet():
                         break
                     else:
                         self.HeartBeat()
                         continue
+
                 except Exception as arg_ex:
                     Msg.error_trace()
                     Msg.err( str( arg_ex ))
                     raise
+
                 except:
                     Msg.error_trace()
                     raise
@@ -696,12 +667,11 @@ class SummaryThread( HiOldThread ):
             summary_done_event.Signal()
 
 
-class  Summary( object ):
-
+class Summary( object ):
     def __init__( self, arg_summary_dir, arg_cleanUpRules):
 
         self.summary_dir = arg_summary_dir
-        self.tasks = {}
+        self.tasks = defaultdict(list)
         self.errors = []
         self.groups = SummaryGroups()
         self.queue = SummaryQueue()
@@ -736,10 +706,8 @@ class  Summary( object ):
                 Msg.info( my_err_line )
                 arg_ofile.write( "%s\n" % ( my_err_line ))
 
-
     def set_on_fail_proc( self, arg_on_fail_proc ):
         self.on_fail_proc = arg_on_fail_proc
-
 
     def do_on_fail(self, arg_sender ):
         # if a fail proc exists then it will be called in a protected mode
@@ -747,10 +715,8 @@ class  Summary( object ):
             if self.on_fail_proc is not None:
                 self.on_fail_proc( arg_sender )
 
-
     def set_is_term_proc( self, arg_is_term_proc ):
         self.is_term_proc = arg_is_term_proc
-
 
     def is_terminated(self):
 
@@ -761,9 +727,9 @@ class  Summary( object ):
                 return self.is_term_proc()
         return False
 
-
     # abstracts
     def create_summary_item( self ): pass
-    def commit_item( self, arg_item ): pass
-    def process_summary( self, sum_level = SummaryLevel.Fail ): pass
 
+    def commit_item( self, arg_item ): pass
+
+    def process_summary( self, sum_level = SummaryLevel.Fail ): pass

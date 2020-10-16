@@ -82,7 +82,7 @@ namespace Force {
 
     Object* Clone() const override { return new AddressingMultiRegister(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
     const std::string ToString() const override; //!< Return a string describing the current state of the Object.
-    const char* Type() const { return "AddressingMultiRegister"; } //!< Return a string describing the actual type of the Object.
+    const char* Type() const override { return "AddressingMultiRegister"; } //!< Return a string describing the actual type of the Object.
     void AddAddressingRegister(AddressingRegister* pAddrReg) { mAddressingRegisters.push_back(pAddrReg); } //!< Add an addressing register.
     const std::vector<AddressingRegister*>& GetAddressingRegisters() const { return mAddressingRegisters; } //!< Return addressing registers representing a single operand choice.
     void SetZeroWeight(); //!< Set solution weight to 0.

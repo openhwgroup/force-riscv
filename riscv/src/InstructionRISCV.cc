@@ -27,6 +27,7 @@
 #include <Log.h>
 
 #include <memory>
+#include <numeric>
 #include <sstream>
 
 /*!
@@ -90,12 +91,11 @@ namespace Force {
 
   bool VsetvlInstruction::GetPrePostAmbleRequests(Generator& gen) const
   {
-    bool has_requests = false;
-    for (Operand* opr : mOperands) {
-      has_requests |= opr->GetPrePostAmbleRequests(gen);
-    }
-
-    return has_requests;
+    return accumulate(mOperands.cbegin(), mOperands.cend(), bool(false),
+      [&gen](cbool hasRequests, const Operand* pOpr) {
+        bool opr_has_requests = pOpr->GetPrePostAmbleRequests(gen);
+        return (hasRequests | opr_has_requests);
+      });
   }
 
 }
