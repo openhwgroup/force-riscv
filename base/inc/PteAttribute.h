@@ -52,7 +52,7 @@ namespace Force {
   protected:
     PteAttribute(const PteAttribute& rOther); //!< Copy constructor.
     const ConstraintSet* ValueForced(const GenPageRequest& rPagingReq, bool &rValForced); //!< Check if PTE value is forced.
-    virtual bool GetValueConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rPermissionConstr) const { return false; } //!< Get value constraint.
+    virtual bool GetValueConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte, ConstraintSet& rPermissionConstr) const { return false; } //!< Get value constraint.
   protected:
     const PteAttributeStructure* mpStructure; //!< Pointer to PteAttributeStructure object that describes the structure of the PteAttribute object.
     uint64 mValue; //!< Value of the PTE attribute field.
@@ -124,7 +124,7 @@ namespace Force {
     void Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte) override; //!< Generate ConstraintPteAttribute details.
   protected:
     ConstraintPteAttribute(const ConstraintPteAttribute& rOther); //!< Copy constructor.
-    bool GetValueConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rValueConstr) const override = 0; //!< Get value constraint.  Need to be implemented by sub class.
+    bool GetValueConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte, ConstraintSet& rValueConstr) const override = 0; //!< Get value constraint.  Need to be implemented by sub class.
     void GetDefaultConstraint(ConstraintSet& rValueConstr) const; //!< Get default constraint when no additional constraint specified.
     virtual void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const { } //!< Interface to set PageGenAttribute onto the PageTableEntry object.
   };
@@ -142,10 +142,11 @@ namespace Force {
     ~ExceptionConstraintPteAttribute(); //!< Destructor.
   protected:
     ExceptionConstraintPteAttribute(const ExceptionConstraintPteAttribute& rOther); //!< Copy constructor.
-    bool GetValueConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rExceptConstr) const override; //!< Get value constraint.  Need to be implemented by sub class.
+    bool GetValueConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte, ConstraintSet& rExceptConstr) const override; //!< Get value constraint.  Need to be implemented by sub class.
     virtual EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const = 0; //!< Get exception type.
-    virtual void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rTriggerConstr) const = 0; //!< Return constraint that will trigger the exception.
-    virtual void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rPreventConstr) const = 0; //!< Return constraint that will prevent the exception.
+    virtual void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const = 0; //!< Return constraint that will trigger the exception.
+    virtual void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const = 0; //!< Return constraint that will prevent the exception.
+    virtual bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const = 0; //!< evaluates the architecture fault choices for the pte attr and returns true if a fault should be set
   };
 
 }

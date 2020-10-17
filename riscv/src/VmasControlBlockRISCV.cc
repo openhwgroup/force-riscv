@@ -286,21 +286,18 @@ namespace Force {
 
     GenPageRequest* page_req = mpGenerator->GenPageRequestInstance(is_instr, mem_access);
     set_system_pagereq_lambda(page_req, pPhysRegion);
+    uint32 user_access = (mPrivilegeLevel == EPrivilegeLevelType::U) ? 1 : 0;
     page_req->SetGenBoolAttribute(EPageGenBoolAttrType::CanAlias, can_alias); // Set a flag to allow aliasing to system page
-
-    //TODO fix fault regulation logic here once exception pte classes in place
     page_req->SetPteAttribute(EPteAttributeType::V, 1);
-    if (is_instr)
-    {
+    page_req->SetPteAttribute(EPteAttributeType::U, user_access);
+
+    if (is_instr) {
       page_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoInstrPageFault, true);
-      page_req->SetPteAttribute(EPteAttributeType::X, 1); // make sure instr page is executable
-      page_req->SetPteAttribute(EPteAttributeType::WR, 1); //ensure readable page
     }
-    else
-    {
+    else {
       page_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataPageFault, true);
-      page_req->SetPteAttribute(EPteAttributeType::WR, 3); // make sure data page is writable
     }
+
 
     return page_req;
   }
