@@ -39,7 +39,10 @@ def create_double_precision_app_register(aIndex, aRegSize):
     d_reg = Register(**{'name':"D%d" % aIndex, 'length':64, 'index':aIndex, 'type':"FPR", 'class':None, 'boot':0x3000})
     numberOfReg = 64 // aRegSize
     for i in range(0, numberOfReg):
-        d_field = RegisterField("D%d_%d" % (aIndex, i))
+        if numberOfReg > 1:
+            d_field = RegisterField("D%d_%d" % (aIndex, i))
+        else:
+            d_field = RegisterField("D%d" % aIndex)  
         d_field.mPhysicalRegister = "f%d_%d" % (aIndex, i)
         d_bfield = BitField(aRegSize, 0)
         d_field.mBitFields.append(d_bfield)
@@ -60,10 +63,10 @@ def create_quad_precision_app_register(aIndex, aRegSize):
     return q_reg
 
 def create_vector_app_register(aIndex, aRegSize):
-    v_reg = Register(**{'name':"V%d" % aIndex, 'length':128, 'index':aIndex, 'type':"VECREG", 'class':"LargeRegister", 'boot':0x3000})
+    v_reg = Register(**{'name':"v%d" % aIndex, 'length':128, 'index':aIndex, 'type':"VECREG", 'class':"LargeRegister", 'boot':0x3000})
     numberOfReg = 128 // aRegSize
     for i in range(0, numberOfReg):
-        v_field = RegisterField("V%d_%d" % (aIndex, i))
+        v_field = RegisterField("v%d_%d" % (aIndex, i))
         v_field.mPhysicalRegister = "v%d_%d" % (aIndex, i)
         v_bfield = BitField(aRegSize, 0)
         v_field.mBitFields.append(v_bfield)
