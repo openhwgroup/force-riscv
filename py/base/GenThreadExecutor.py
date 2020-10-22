@@ -79,9 +79,9 @@ class MultiGenThreadExecutor(GenThreadExecutor):
 
     ## Setup multi-thread dispatcher.
     #
-    def __init__(self, interface):
+    def __init__(self):
         super().__init__()
-        self.mMultiThreadDispatcher = MultiThreadDispatcher(interface)
+        self.mMultiThreadDispatcher = MultiThreadDispatcher()
         self.mGenThreads = None
 
     ## Execute the generator threads in pseudo random concurrent fashion.
@@ -162,11 +162,11 @@ class ExecutionContextManager:
 class GenThreadExecutorFactory:
 
     @staticmethod
-    def createGenThreadExecutor(genThreadCount, interface):
+    def createGenThreadExecutor(genThreadCount):
         if genThreadCount == 1:
             executor = SingleGenThreadExecutor()
         else:
-            executor = MultiGenThreadExecutor(interface)
+            executor = MultiGenThreadExecutor()
 
         ThreadDispatcher.setCurrentDispatcher(executor.mSingleThreadDispatcher)
         return executor
