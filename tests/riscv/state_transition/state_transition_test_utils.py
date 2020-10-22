@@ -49,10 +49,10 @@ def addRandomVectorRegisterStateElements(aSequence, aState, aStateElemCount, aPr
     expected_vec_reg_state_data = []
     vec_reg_indices = aSequence.sample(range(0, 32), aStateElemCount)
     for vec_reg_index in vec_reg_indices:
-        reg_value_count = aSequence.getLimitValue('MaxPhysicalVectorLen') // 64
+        reg_val_count = aSequence.getLimitValue('MaxPhysicalVectorLen') // 64
 
         vec_reg_values = []
-        for _ in range(reg_value_count):
+        for _ in range(reg_val_count):
             vec_reg_values.append(RandomUtils.random64())
 
         vec_reg_name = 'v%d' % vec_reg_index
