@@ -49,15 +49,13 @@ def addRandomVectorRegisterStateElements(aSequence, aState, aStateElemCount, aPr
     expected_vec_reg_state_data = []
     vec_reg_indices = aSequence.sample(range(0, 32), aStateElemCount)
     for vec_reg_index in vec_reg_indices:
-        vec_reg_name = 'v%d' % vec_reg_index
+        reg_value_count = aSequence.getLimitValue('MaxPhysicalVectorLen') // 64
 
         vec_reg_values = []
-
-        # TODO(Noah): Retrieve the vector register length from an API when said API is created. For
-        # now, we assume vector registers are 512 bits.
-        for _ in range(8):
+        for _ in range(reg_value_count):
             vec_reg_values.append(RandomUtils.random64())
 
+        vec_reg_name = 'v%d' % vec_reg_index
         aState.addRegisterStateElement(vec_reg_name, vec_reg_values, aPriority=RandomUtils.random32(aPriorityMin, aPriorityMax))
         expected_vec_reg_state_data.append((vec_reg_name, vec_reg_values))
 
