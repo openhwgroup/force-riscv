@@ -34,10 +34,7 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         state = self._createState()
         StateTransition.transitionToState(state)
-
-        # TODO(Noah): Verify the vector register State when the VL1R.V instruction can be generated
-        # and simulated successfully.
-        #state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
 
     ## Create a simple State to test an explicit StateTransition.
     def _createState(self):
