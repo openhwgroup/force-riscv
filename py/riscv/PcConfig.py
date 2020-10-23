@@ -39,9 +39,7 @@ def get_base_boot_pc():
     # return 0x80000000
 
 def get_initial_pc_offset():
-    return 0x10000 # Temporary to work on spike default memory model
-    # return 0x1000000
+    return 0x1000000
 
 def get_boot_pc_offset():
-    return 0x1000 # Temporary to work on spike default memory model
-    # return 0x100000
+    return 0x100000

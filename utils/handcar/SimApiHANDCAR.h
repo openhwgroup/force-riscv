@@ -79,6 +79,8 @@ namespace Force {
     ASSIGNMENT_OPERATOR_ABSENT(SimApiHANDCAR);
     COPY_CONSTRUCTOR_ABSENT(SimApiHANDCAR);
   private:
+    std::string BuildHandcarConfigurationString(const ApiSimConfig& rConfig);
+  private:
     SimDllApi * mpSimDllAPI;       //!< Simulator shared object APIs.
   };
 }
