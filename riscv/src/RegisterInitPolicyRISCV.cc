@@ -79,6 +79,8 @@ namespace Force {
 
   uint64 VlInitPolicy::GetVlmax() const
   {
+    mpGenerator->RandomInitializeRegister("vtype", "");
+
     const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
     Register* vtype_reg = reg_file->RegisterLookup("vtype");
     RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");

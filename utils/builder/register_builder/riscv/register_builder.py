@@ -121,14 +121,10 @@ def output_system_register_choices(aTree, aOutputFile, aPrefixLicenseFile):
     registers = aTree.findall('.//register')
 
     output_root = ET.Element('choices_file')
-    read = ET.Element('choices')
-    read.set('description', 'RISC-V Read system registers')
-    read.set('name', 'Read system registers')
-    read.set('type', 'RegisterOperand')
-    write = ET.Element('choices')
-    write.set('description', 'RISC-V Write system registers')
-    write.set('name', 'Write system registers')
-    write.set('type', 'RegisterOperand')
+    choices = ET.Element('choices')
+    choices.set('description', 'RISC-V system registers')
+    choices.set('name', 'System registers')
+    choices.set('type', 'RegisterOperand')
 
     for register in registers:
         if register.get('choice', 'true') == 'true':
@@ -136,15 +132,16 @@ def output_system_register_choices(aTree, aOutputFile, aPrefixLicenseFile):
             choice.set('description', '%s; %s' % (register.get('privilege'), register.get('description')))
             choice.set('name', register.get('name'))
             choice.set('value', register.get('index'))
-            choice.set('weight', register.get('choice_weight', '0'))
 
-            if 'R' in register.get('privilege'):
-                read.append(choice)
-            if 'W' in register.get('privilege'):
-                write.append(choice)
+            priv = register.get('privilege')
+            if priv.endswith('RO'):
+                choice.set('weight', '0')
+            else:
+                choice.set('weight', register.get('choice_weight', '0'))
 
-    output_root.append(read)
-    output_root.append(write)
+            choices.append(choice)
+
+    output_root.append(choices)
 
     # check system register fields before writing out xml file...
     reg_file = RISCV.RegisterFile( { 'system_tree' : output_root } )
@@ -208,6 +205,11 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
 
     if aRegister.get('class') and (aRegister.get('class') != 'ConfigureRegister'):
         register.set('class', aRegister.get('class'))
+    else:
+        priv = aRegister.get('privilege')
+
+        if priv and priv.endswith('RO'):
+            register.set('class', 'ReadOnlyRegister')
 
     if aRegister.get('init_policy'):
         register.set('init_policy', aRegister.get('init_policy'))
@@ -241,6 +243,11 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
 
         if aRegister.get('reset'):
             physical_register.set('reset', aRegister.get('reset'))
+        else:
+            priv = aRegister.get('privilege')
+
+            if priv and priv.endswith('RO'):
+                physical_register.set('reset', '0')
 
         aPhysicalRegisters.append(physical_register)
 

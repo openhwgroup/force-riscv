@@ -562,8 +562,7 @@ def adjust_aq_rs1(instr):
     return True
 
 # CSR register Instructions
-# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5" access="Read" choices="Read system registers"/>
-# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5" access="Write" choices="Write system registers"/>
+# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5" access="Write" choices="System registers"/>
 # CSRRW - always writes
 # if rd=x0, then the instruction shall not read the CSR and shall not cause any of the side effects that might occur on a CSR read
 # CSRRS/C - always reads
@@ -576,7 +575,7 @@ def adjust_csr_rs1(instr):
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
     csr_opr.access = "Write"
-    csr_opr.choices = "Write system registers"
+    csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 
     opr_adjustor.set_rs1_int()
@@ -598,7 +597,7 @@ def adjust_csr_imm(instr):
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
     csr_opr.access = "Write"
-    csr_opr.choices = "Write system registers"
+    csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 
     opr_adjustor.set_imm("uimm", "imm4", False)

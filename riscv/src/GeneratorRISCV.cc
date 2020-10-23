@@ -117,13 +117,11 @@ namespace Force {
   {
     switch(iGrpType) {
     case EInstructionGroupType::Vector:
-      RandomInitializeRegister("vstart", "");
-      RandomInitializeRegister("vxsat", "");
-      RandomInitializeRegister("vxrm", "");
-
-      // vtype needs to be initialized before vl, so we can calculate a valid value for vl
-      RandomInitializeRegister("vtype", "");
       RandomInitializeRegister("vl", "");
+      RandomInitializeRegister("vstart", "");
+      RandomInitializeRegister("vtype", "");
+      RandomInitializeRegister("vxrm", "");
+      RandomInitializeRegister("vxsat", "");
       break;
     default:
       // No action needed for default case
