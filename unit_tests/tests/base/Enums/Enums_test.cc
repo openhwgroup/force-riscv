@@ -1927,7 +1927,7 @@ CASE( "tests for EGlobalStateType" ) {
       EXPECT(EGlobalStateType_to_string(EGlobalStateType::PageTableRegionStart) == "PageTableRegionStart");
       EXPECT(EGlobalStateType_to_string(EGlobalStateType::MemoryFillPattern) == "MemoryFillPattern");
       EXPECT(EGlobalStateType_to_string(EGlobalStateType::ElfMachine) == "ElfMachine");
-      EXPECT(EGlobalStateType_to_string(EGlobalStateType::RV32) == "RV32");
+      EXPECT(EGlobalStateType_to_string(EGlobalStateType::AppRegisterWidth) == "AppRegisterWidth");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -1937,7 +1937,7 @@ CASE( "tests for EGlobalStateType" ) {
       EXPECT(string_to_EGlobalStateType("PageTableRegionStart") == EGlobalStateType::PageTableRegionStart);
       EXPECT(string_to_EGlobalStateType("MemoryFillPattern") == EGlobalStateType::MemoryFillPattern);
       EXPECT(string_to_EGlobalStateType("ElfMachine") == EGlobalStateType::ElfMachine);
-      EXPECT(string_to_EGlobalStateType("RV32") == EGlobalStateType::RV32);
+      EXPECT(string_to_EGlobalStateType("AppRegisterWidth") == EGlobalStateType::AppRegisterWidth);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -1958,7 +1958,7 @@ CASE( "tests for EGlobalStateType" ) {
       EXPECT(okay);
       EXPECT(try_string_to_EGlobalStateType("ElfMachine", okay) == EGlobalStateType::ElfMachine);
       EXPECT(okay);
-      EXPECT(try_string_to_EGlobalStateType("RV32", okay) == EGlobalStateType::RV32);
+      EXPECT(try_string_to_EGlobalStateType("AppRegisterWidth", okay) == EGlobalStateType::AppRegisterWidth);
       EXPECT(okay);
     }
 

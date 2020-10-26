@@ -282,7 +282,7 @@ namespace Force {
       string rs1_reg_name = rs1_ropr->ChoiceText();
       rs1_val = reg_file->RegisterLookup(rs1_reg_name)->Value();
 
-      bool rv32 = (Config::Instance()->GetGlobalStateValue(EGlobalStateType::RV32) != 0); // force-risc configured to 32-bits
+      bool rv32 = (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32); // force-risc configured to 32-bits
 
       if (rv32 && ( (branch_type == EBranchConditionType::BLT) || (branch_type == EBranchConditionType::BGE) ) ) {
 	// sign-extend unsigned 32 bit value to 64 bits...

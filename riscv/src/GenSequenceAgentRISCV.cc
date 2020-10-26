@@ -62,7 +62,7 @@ namespace Force {
   {
     // << "Loading register " << regPtr->Name() << " with 0x" << hex << loadValue << " size=" << dec << regPtr->Size() << " index=" << regPtr->IndexValue() << endl;
 
-    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::RV32) != 0) {
+    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32) {
       GetLoadGPR32BitSequence(regPtr, loadValue, reqSeq);
       return;
     }
@@ -628,7 +628,7 @@ namespace Force {
 
     uint32 imm12_to_load = loadValue & 0xFFF;
     if (imm12_to_load) {
-      bool is_rv32 = (Config::Instance()->GetGlobalStateValue(EGlobalStateType::RV32) != 0);
+      bool is_rv32 = (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32);
       const char* addiw_name = is_rv32 ? "ADDI##RISCV" : "ADDIW##RISCV";
       auto addiw_req = new GenInstructionRequest(addiw_name);
       addiw_req->AddOperandRequest(dest_opr, regPtr->IndexValue());

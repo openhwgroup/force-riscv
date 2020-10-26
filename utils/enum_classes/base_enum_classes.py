@@ -121,7 +121,7 @@ enum_classes_details = [
       [("Execute", 0), ("NoExecute", 1), ("PrivilegedNoExecute", 2)]
       ],
      ["GlobalStateType", "unsigned char", "Global state types",
-      [("ResetPC", 0), ("PageTableRegionSize", 1), ("PageTableRegionAlign", 2), ("PageTableRegionStart", 3), ("MemoryFillPattern", 4), ("ElfMachine", 5), ("RV32", 6) ]
+      [("ResetPC", 0), ("PageTableRegionSize", 1), ("PageTableRegionAlign", 2), ("PageTableRegionStart", 3), ("MemoryFillPattern", 4), ("ElfMachine", 5), ("AppRegisterWidth", 6) ]
       ],
      ["AddrType", "unsigned char", "Address types",
       [("DataAddr", 1), ("InstructionAddr", 2) ]

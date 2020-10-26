@@ -54,7 +54,7 @@ class LoadGPR64(Sequence):
     #
     #  @param aValue A 64-bit value.
     def _loadValue(self, aValue):
-        if self.getGlobalState('RV32') == 1:
+        if self.getGlobalState('AppRegisterWidth') == 32:
             self._load32BitValue(aValue)
             return
 
@@ -122,7 +122,7 @@ class LoadGPR64(Sequence):
 
         bottom_12_bits = aValue & 0xFFF
         if bottom_12_bits != 0:
-            if self.getGlobalState('RV32') == 1:
+            if self.getGlobalState('AppRegisterWidth') == 32:
                 self.genInstruction('ADDI##RISCV', {'rd': self._mRegisterIndex, 'rs1': self._mRegisterIndex, 'simm12': bottom_12_bits})
             else:
                 self.genInstruction('ADDIW##RISCV', {'rd': self._mRegisterIndex, 'rs1': self._mRegisterIndex, 'simm12': bottom_12_bits})

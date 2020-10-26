@@ -77,7 +77,7 @@ namespace Force {
 
     std::map<string, uint64> field_map;
 
-    bool rv32 = mpConfig->GetGlobalStateValue(EGlobalStateType::RV32) != 0; // force-risc configured to 32-bits 
+    bool rv32 = mpConfig->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32; // force-risc configured to 32-bits 
     
     // misa init...
     field_map["WLRL_VAR"] = 0;                                 // zero out 

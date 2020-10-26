@@ -53,7 +53,7 @@ namespace Force {
 
     RootPageTable root_table;
 
-    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::RV32) != 0)
+    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32)
       root_table.Setup(10, 31, 22, "", 2, 1);  // Sv32
     else
       root_table.Setup(9, 47, 39, "", 3, 3);   // Sv48

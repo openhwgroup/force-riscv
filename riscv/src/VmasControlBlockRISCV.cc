@@ -162,7 +162,7 @@ namespace Force {
   //!< if Force configured for 32-bit ISA, then paging mode must be Sv32...
   
   bool VmasControlBlockRISCV::SV32() const {
-    return Config::Instance()->GetGlobalStateValue(EGlobalStateType::RV32) != 0; // force-risc configured to 32-bits 
+    return Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32; // force-risc configured to 32-bits 
   }
  
   //!< Return PTE shift based on paging mode...
