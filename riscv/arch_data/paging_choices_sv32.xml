@@ -36,11 +36,11 @@
   <!-- Page Size Choices -->
   <choices name="Page size#4K granule#S#stage 1" type="Paging">
     <choice description="4K page size" name="4K" value="0x0" weight="97"/>
-    <choice description="2M page size" name="2M" value="0x1" weight="2"/>
+    <choice description="4M page size" name="4M" value="0x1" weight="2"/>
   </choices>
   <choices name="System Page size#4K granule#S#stage 1" type="Paging">
     <choice description="4K page size" name="4K" value="0x0" weight="100"/>
-    <choice description="2M page size" name="2M" value="0x1" weight="0"/>
+    <choice description="4M page size" name="4M" value="0x1" weight="0"/>
   </choices>
 
   <!-- Descriptor Attribute Generation Choices -->

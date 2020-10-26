@@ -1576,6 +1576,7 @@ CASE( "tests for EPteType" ) {
       EXPECT(EPteType_to_string(EPteType::P16K) == "P16K");
       EXPECT(EPteType_to_string(EPteType::P64K) == "P64K");
       EXPECT(EPteType_to_string(EPteType::P2M) == "P2M");
+      EXPECT(EPteType_to_string(EPteType::P4M) == "P4M");
       EXPECT(EPteType_to_string(EPteType::P32M) == "P32M");
       EXPECT(EPteType_to_string(EPteType::P512M) == "P512M");
       EXPECT(EPteType_to_string(EPteType::P1G) == "P1G");
@@ -1587,6 +1588,7 @@ CASE( "tests for EPteType" ) {
       EXPECT(string_to_EPteType("P16K") == EPteType::P16K);
       EXPECT(string_to_EPteType("P64K") == EPteType::P64K);
       EXPECT(string_to_EPteType("P2M") == EPteType::P2M);
+      EXPECT(string_to_EPteType("P4M") == EPteType::P4M);
       EXPECT(string_to_EPteType("P32M") == EPteType::P32M);
       EXPECT(string_to_EPteType("P512M") == EPteType::P512M);
       EXPECT(string_to_EPteType("P1G") == EPteType::P1G);
@@ -1606,6 +1608,8 @@ CASE( "tests for EPteType" ) {
       EXPECT(try_string_to_EPteType("P64K", okay) == EPteType::P64K);
       EXPECT(okay);
       EXPECT(try_string_to_EPteType("P2M", okay) == EPteType::P2M);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPteType("P4M", okay) == EPteType::P4M);
       EXPECT(okay);
       EXPECT(try_string_to_EPteType("P32M", okay) == EPteType::P32M);
       EXPECT(okay);

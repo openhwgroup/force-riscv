@@ -37,7 +37,7 @@
     <pte_attribute type="WR" bits="2-1" class="WRPteAttributeRISCV"/>
     <pte_attribute type="V" bits="0" value="1" class="ValidPteAttributeRISCV"/>
   </pte>
-  <pte type="2M" category="Page" granule="4K" level="1" stage="1">
+  <pte type="4M" category="Page" granule="4K" level="1" stage="1">
     <pte_attribute type="Address" bits="31-10" class="AddressPteAttributeRISCV"/>
     <pte_attribute type="SystemPage" bits="9" value="0"/>
     <pte_attribute type="RSW" bits="8" class="RandomPteAttribute"/>

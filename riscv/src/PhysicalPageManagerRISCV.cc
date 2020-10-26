@@ -24,6 +24,7 @@ namespace Force {
   {
     mPteTypes.push_back(EPteType::P4K);
     mPteTypes.push_back(EPteType::P2M);
+    mPteTypes.push_back(EPteType::P4M);
     mPteTypes.push_back(EPteType::P1G);
     mPteTypes.push_back(EPteType::P512G);
   }

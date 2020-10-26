@@ -2941,7 +2941,7 @@ namespace Force {
   }
 
 
-  unsigned char EPteTypeSize = 8;
+  unsigned char EPteTypeSize = 9;
 
   const string EPteType_to_string(EPteType in_enum)
   {
@@ -2950,6 +2950,7 @@ namespace Force {
     case EPteType::P16K: return "P16K";
     case EPteType::P64K: return "P64K";
     case EPteType::P2M: return "P2M";
+    case EPteType::P4M: return "P4M";
     case EPteType::P32M: return "P32M";
     case EPteType::P512M: return "P512M";
     case EPteType::P1G: return "P1G";
@@ -2980,8 +2981,21 @@ namespace Force {
       validate(in_str, "P4K", enum_type_name);
       return EPteType::P4K;
     case 77:
-      validate(in_str, "P2M", enum_type_name);
-      return EPteType::P2M;
+      {
+        size_t size_77 = in_str.size();
+        char hash_value_77 = in_str.at(1 < size_77 ? 1 : 1 % size_77);
+
+        switch (hash_value_77) {
+        case 50:
+          validate(in_str, "P2M", enum_type_name);
+          return EPteType::P2M;
+        case 52:
+          validate(in_str, "P4M", enum_type_name);
+          return EPteType::P4M;
+        default:
+          unknown_enum_name(enum_type_name, in_str);
+        }
+      }
     case 81:
       validate(in_str, "P32M", enum_type_name);
       return EPteType::P32M;
@@ -3017,8 +3031,22 @@ namespace Force {
       okay = (in_str == "P4K");
       return EPteType::P4K;
     case 77:
-      okay = (in_str == "P2M");
-      return EPteType::P2M;
+      {
+        size_t size_77 = in_str.size();
+        char hash_value_77 = in_str.at(1 < size_77 ? 1 : 1 % size_77);
+
+        switch (hash_value_77) {
+        case 50:
+          okay = (in_str == "P2M");
+          return EPteType::P2M;
+        case 52:
+          okay = (in_str == "P4M");
+          return EPteType::P4M;
+        default:
+          okay = false;
+          return EPteType::P4K;
+        }
+      }
     case 81:
       okay = (in_str == "P32M");
       return EPteType::P32M;

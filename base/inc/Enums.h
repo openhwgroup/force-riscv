@@ -545,10 +545,11 @@ namespace Force {
     P16K = 1,
     P64K = 2,
     P2M = 3,
-    P32M = 4,
-    P512M = 5,
-    P1G = 6,
-    P512G = 7,
+    P4M = 4,
+    P32M = 5,
+    P512M = 6,
+    P1G = 7,
+    P512G = 8,
   };
   extern unsigned char EPteTypeSize;
   extern const std::string EPteType_to_string(EPteType in_enum); //!< Get string name for enum.

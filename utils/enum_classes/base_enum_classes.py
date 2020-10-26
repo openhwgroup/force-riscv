@@ -100,7 +100,7 @@ enum_classes_details = [
       ("BicsClearSetFlagsShift32", 69), ("BicsClearSetFlagsShift64", 70)]
       ],
      ["PteType", "unsigned char", "Page table entry types",
-      [("P4K", 0), ("P16K", 1), ("P64K", 2), ("P2M", 3), ("P32M", 4), ("P512M", 5), ("P1G", 6), ("P512G", 7)]
+      [("P4K", 0), ("P16K", 1), ("P64K", 2), ("P2M", 3), ("P4M", 4), ("P32M", 5), ("P512M", 6), ("P1G", 7), ("P512G", 8)]
       ],
      ["PteCategoryType", "unsigned char", "Page table entry category types",
       [("Page", 0), ("Table", 1)]

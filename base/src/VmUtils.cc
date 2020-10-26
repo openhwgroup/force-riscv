@@ -48,6 +48,9 @@ namespace Force {
     case EPteType::P2M:
       page_shift = 21;
       break;
+    case EPteType::P4M:
+      page_shift = 22;
+      break;
     case EPteType::P32M:
       page_shift = 25;
       break;
@@ -124,6 +127,9 @@ namespace Force {
       break;
     case 21:
       pte_type = EPteType::P2M;
+      break;
+    case 22:
+      pte_type = EPteType::P4M;
       break;
     case 25:
       pte_type = EPteType::P32M;
