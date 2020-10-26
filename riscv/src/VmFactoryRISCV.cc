@@ -136,28 +136,28 @@ namespace Force {
 
   void VmFactoryRISCV::GetRegisterContext(std::vector<std::string>& rRegNames, bool pagingEnabled) const
   {
-    /*switch (mVmRegimeType)
+    //TODO PMP regs probably will affect context - need to evaluate when implemented
+    rRegNames.push_back("mstatus");
+    rRegNames.push_back("misa");
+    rRegNames.push_back("privilege");
+
+    switch (mVmRegimeType)
     {
       case EVmRegimeType::M:
+        break;
       case EVmRegimeType::S:
+        rRegNames.push_back("sstatus");
+        if (pagingEnabled) rRegNames.push_back("satp");
+        break;
       case EVmRegimeType::HS:
+        break;
         //hgatp, hstatus
       case EVmRegimeType::VS:
+        break;
         //vsstatus, vsatp
       default:
         LOG(fail) << "{VmFactoryRISCV::GetRegisterContext} Unsupported EVmRegimeType enum value: " << EVmRegimeType_to_string(mVmRegimeType) << endl;
         FAIL("invalid_regime_type_get_reg_context");
-    }*/
-    //PMP regs probably will affect context - need to evaluate when implemented
-
-    //TODO update explicitly for M/S/U modes
-    rRegNames.push_back("misa");
-    rRegNames.push_back("mstatus");
-    rRegNames.push_back("privilege");
-
-    if (pagingEnabled)
-    {
-      rRegNames.push_back("satp");
     }
   }
 

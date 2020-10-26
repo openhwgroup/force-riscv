@@ -191,10 +191,12 @@ class MasterRun( ModuleRun ):
             Msg.dbg( Formats.summ_level % ( self.sum_level ))
             self.summary.process_summary( self.sum_level )
 
-            #make cycle count and instruction count available in the shared object
-            if type(self.summary) is RegressionSummary: # TODO: total_cycle_count and total_instruction_count are specific to RegressionSummary and
-                                                        #  are used in the rtl application's reporter (PerformanceSummary does not contain either).
-                                                        #  Do the rtl application and performance mode ever get run at the same time?
+            # TODO: total_cycle_count and total_instruction_count are specific to RegressionSummary and
+            # are used in the rtl application's reporter (PerformanceSummary does not contain either).
+            # Do the rtl application and performance mode ever get run at the same time?
+
+            # make cycle count and instruction count available in the shared object
+            if isinstance(self.summary, RegressionSummary):
                 self.m_app_info.mTagToReportInfo.update({"master_run":{"total_cycle_count":self.summary.total_cycle_count,
                                                                        "total_instruction_count":self.summary.total_instruction_count,
                                                                        "initial_control_file":self.fctrl_name,

@@ -28,7 +28,7 @@
 #include <RegisterReload.h>
 #include <Enums.h>
 #include ARCH_ENUM_HEADER
-//#include <UtilityFunctionsRISCV.h>
+#include <UtilityFunctionsRISCV.h>
 #include <ExceptionManager.h>
 #include <SwitchPrivilegeSolverRISCV.h>
 #include <PageRequestRegulator.h>
@@ -65,7 +65,7 @@ namespace Force {
   bool GenExceptionAgentRISCV::IsExceptionReturn(const GenExceptionRequest* pExceptReq) const
   {
     auto except_req = mpExceptionRequest->CastInstance<GenHandleException>();
-    if (except_req->Id() == 0x4e) 
+    if (except_req->Id() == 0x4e)
     {
       return true;
     }
@@ -185,6 +185,9 @@ namespace Force {
     auto peState = new PeStateUpdate();
     if (mpGenerator->HasISS() == false) {
       peState->UpdateState("PrivilegeLevel", "Set", targetPrivLevel);
+      string status_name = (targetPrivLevel == 3) ? "mstatus" : "sstatus";
+      string pp_field_name = (targetPrivLevel == 3) ? "MPP" : "SPP";
+      peState->UpdateRegisterField(status_name, pp_field_name, targetPrivLevel);
 
       if(not mpGenerator->InSpeculative()){
         peState->UpdateState("PC", "Set", targetAddr);
@@ -254,7 +257,7 @@ namespace Force {
     }
 
     const PageRequestRegulator* page_req_regulator = mpGenerator->GetPageRequestRegulator();
-    page_req_regulator->RegulateBranchPageRequest(target_mapper, nullptr, page_req.get());
+    page_req_regulator->RegulateLoadStorePageRequest(target_mapper, nullptr, page_req.get());
 
     LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} current privilege level = " << dec << mpGenerator->PrivilegeLevel() << ", data block privilege level = " << result.mDataBlockPrivLevel << endl;
 
@@ -331,9 +334,9 @@ namespace Force {
     cuint32 priv_level = mpGenerator->PrivilegeLevel();
     const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
 
-    if (priv_level == cuint32(EPrivilegeLevelType::S))	
+    if (priv_level == cuint32(EPrivilegeLevelType::S))
     {
-      //We are in supervisor mode (0b01) so we look to the scause register for the EC value.	
+      //We are in supervisor mode (0b01) so we look to the scause register for the EC value.
       Register* scause_reg = reg_file->RegisterLookup("scause");
       if (not scause_reg->IsInitialized()) {
         LOG(warn) << "{GenExceptionAgentRISCV::NeedRecoveryAddress} function is called but scause was not initialized." << endl;
@@ -347,18 +350,18 @@ namespace Force {
       {
         recovery_exception = false;
 	need_check_ec = false;
-      }	
+      }
       else
-      {	
+      {
         //This is not an interrupt. Determine EC.
         ec_val = scause_reg->RegisterFieldLookup("EXCEPTION CODE_VAR")->FieldValue();
         LOG(notice) << "{GenExceptionAgentRISCV::NeedRecoveryAddress} found ec value for scause: " << ec_val  << endl;
 	need_check_ec = true;
-      }	
+      }
     }
-    else if (priv_level == cuint32(EPrivilegeLevelType::M))	
+    else if (priv_level == cuint32(EPrivilegeLevelType::M))
     {
-      //We are in machine mode (0b11) so we look to the mcause register for the EC value.	
+      //We are in machine mode (0b11) so we look to the mcause register for the EC value.
       Register* mcause_reg = reg_file->RegisterLookup("mcause");
       if (not mcause_reg->IsInitialized()) {
         LOG(warn) << "{GenExceptionAgentRISCV::NeedRecoveryAddress} function is called but mcause was not initialized." << endl;
@@ -372,18 +375,18 @@ namespace Force {
       {
         recovery_exception = false;
 	need_check_ec = false;
-      }	
+      }
       else
-      {	
+      {
         //This is not an interrupt. Determine EC.
         ec_val = mcause_reg->RegisterFieldLookup("EXCEPTION CODE_VAR")->FieldValue();
 	need_check_ec = true;
         LOG(notice) << "{GenExceptionAgentRISCV::NeedRecoveryAddress} found ec value for mcause: " << ec_val  << endl;
-      }	
+      }
     }
     else
     {
-      //We could be in user mode, a reserved mode or hypervisor mode. Exceptions from these modes are not supported currently. 
+      //We could be in user mode, a reserved mode or hypervisor mode. Exceptions from these modes are not supported currently.
       LOG(warn) << "{GenExceptionAgentRISCV::NeedRecoveryAddress} Current Privilege Level is not Supervisor nor is it Machine. User, Reserved or Hypervisor exceptions not supported. Returning false." << endl;
 
       recovery_exception = false;

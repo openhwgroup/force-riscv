@@ -109,6 +109,10 @@ class VectorOperandAdjustor(OperandAdjustor):
         vs2_opr = self.mInstr.find_operand('vs2')
         vs2_opr.differ = 'vd'
 
+    def set_vs2_differ_vs3(self):
+        vs2_opr = self.mInstr.find_operand('vs2')
+        vs2_opr.differ = 'vs3'
+
     def set_vs3(self):
         vs3_opr = self.mInstr.find_operand('vs3')
         vs3_opr.access = 'Read'
@@ -117,6 +121,11 @@ class VectorOperandAdjustor(OperandAdjustor):
     def set_vs3_ls_source(self):
         vs3_opr = self.mInstr.find_operand('vs3')
         vs3_opr.oclass = 'MultiVectorRegisterOperandRISCV'
+        self.set_vs3()
+
+    def set_vs3_ls_indexed_source(self):
+        vs3_opr = self.mInstr.find_operand('vs3')
+        vs3_opr.oclass = 'VectorIndexedDataRegisterOperand'
         self.set_vs3()
 
     def set_vdrd_int(self):
@@ -145,6 +154,11 @@ class VectorOperandAdjustor(OperandAdjustor):
         vd_opr.oclass = 'MultiVectorRegisterOperandRISCV'
         self.set_vd()
 
+    def set_vd_ls_indexed_dest(self):
+        vd_opr = self.mInstr.find_operand('vd')
+        vd_opr.oclass = 'VectorIndexedDataRegisterOperand'
+        self.set_vd()
+
     def set_vdrd_sp(self):
         vdrd_opr = self.mInstr.find_operand('vd/rd')
         if self.mInstr.name in self.rd_dictionary:
@@ -155,13 +169,13 @@ class VectorOperandAdjustor(OperandAdjustor):
             self.set_reg_vec(vdrd_opr)
         vdrd_opr.access = 'Write'
 
-    def set_wide_dest(self, aLayoutMultiple=2):
+    def adjust_dest_layout(self, aLayoutMultiple):
         dest_opr = self.mInstr.find_operand('vd', fail_not_found=False)
         if dest_opr is None:
             dest_opr = self.mInstr.find_operand('vd/rd')
 
         dest_opr.layoutMultiple = aLayoutMultiple
 
-    def set_wide_source(self, aLayoutMultiple=2):
+    def adjust_source_layout(self, aLayoutMultiple):
         vs2_opr = self.mInstr.find_operand('vs2')
         vs2_opr.layoutMultiple = aLayoutMultiple

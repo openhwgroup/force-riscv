@@ -51,13 +51,13 @@ namespace Force {
   protected:
     PageRequestRegulator(const PageRequestRegulator& rOther); //!< Copy constructor.
     ASSIGNMENT_OPERATOR_ABSENT(PageRequestRegulator);
-    virtual const std::string GetExceptionString(EPagingExceptionType exceptType) const; //!< Return exception string for the specified attribute type.
-    virtual void PreventDataPageFault(GenPageRequest* pPageReq) const; //!< Setup the page request object to prevent instruction aborts.
-    virtual void PreventInstrPageFault(GenPageRequest* pPageReq) const; //!< Setup the page request object to prevent instruction aborts.
+    virtual const std::string GetExceptionString(EPagingExceptionType exceptType) const; //!< Return exception string for the specified attribute type
+    virtual void PreventDataPageFault(GenPageRequest* pPageReq) const; //!< Setup the page request object to prevent data page faults
+    virtual void PreventInstrPageFault(GenPageRequest* pPageReq) const; //!< Setup the page request object to prevent instruction page faults
   protected:
     const Generator* mpGenerator; //!< Pointer to Generator instance.
-    const ValueVariable* mpNoDataPageFaultVariable; //!< Pointer to no data abort value variable.
-    const ValueVariable* mpNoInstrPageFaultVariable; //!< Pointer to no instruction abort value variable.
+    const ValueVariable* mpNoDataPageFaultVariable; //!< Pointer to no data page fault value variable.
+    const ValueVariable* mpNoInstrPageFaultVariable; //!< Pointer to no instruction page fault value variable.
     std::vector<EPagingExceptionType> mDataExceptionTypes; //!< Data paging exception types to process.
     std::vector<EPagingExceptionType> mInstrExceptionTypes; //!< Instruction paging exception types to process.
   };

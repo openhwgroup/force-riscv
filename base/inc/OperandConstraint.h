@@ -72,7 +72,7 @@ namespace Force {
         return cast_instance;
       }
 
-    void ApplyUserRequest(const OperandRequest& rOprReq); //!< Apply user request details.
+    void ApplyUserRequest(const OperandRequest& rOprReq, const OperandStructure& rOperandStruct); //!< Apply user request details.
     void SubConstraintValue(uint64 value, const OperandStructure& rOperandStruct) const; //!< Subtract value from constraint set.
     void SubDifferOperandValues(const Instruction& rInstr, const OperandStructure& rOperandStruct); //!< Subtract values of operands that must have different values from the constraint set, so this operand is generated with a different value.
   protected:
@@ -82,7 +82,8 @@ namespace Force {
     mutable ConstraintSet* mpConstraintSet; //!< Pointer to constraint set for the operand.
     bool mConstraintForced; //!< Return true if constraint is forced from the front end with single value.
   private:
-    virtual void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
+    void ValidateUserRequestConstraint(const ConstraintSet& rUserReqConstr, const OperandStructure& rOperandStruct); //! Fail if the specified constraint contains values outside of the operand's physical range.
+    virtual void GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
   };
 
   /*!

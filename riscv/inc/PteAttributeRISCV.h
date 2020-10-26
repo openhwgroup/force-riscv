@@ -22,24 +22,6 @@
 namespace Force {
 
   /*!
-    \class ValidPteAttributeRISCV
-    \brief pte attribute to manage the valid bit and corresponding fault behavior
-  */
-  class ValidPteAttributeRISCV : public ValuePteAttribute
-  {
-  public:
-    Object* Clone() const override { return new ValidPteAttributeRISCV(*this); } //!< Return a cloned ValidPteAttributeRISCV object of the same type and same contents of the object.
-    const char* Type() const override { return "ValidPteAttributeRISCV"; } //!< Return the type of the ValidPteAttributeRISCV object.
-
-    ValidPteAttributeRISCV() : ValuePteAttribute() { } //!< Constructor.
-    ~ValidPteAttributeRISCV() { } //!< Destructor.
-
-    void Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte) override; //!< Generate ValidPteAttributeRISCV details.
-  protected:
-    ValidPteAttributeRISCV(const ValidPteAttributeRISCV& rOther) : ValuePteAttribute(rOther) { } //!< Copy constructor.
-  };
-
-  /*!
     \class AddressPteAttributeRISCV
     \brief pte attribute to manage address and corresponding fault behavior
   */
@@ -59,38 +41,82 @@ namespace Force {
 
   /*!
     \class DAPteAttributeRISCV
-    \brief pte attribute to manage the 'DA' (Dirty/Access) bits and corresponding fault behavior
+    \brief pte attribute to manage the DA bits and corresponding fault behavior
   */
-  class DAPteAttributeRISCV : public PteAttribute
+  class DAPteAttributeRISCV : public ExceptionConstraintPteAttribute
   {
   public:
-    Object* Clone() const override { return new DAPteAttributeRISCV(*this); } //!< overridden method to clone WPteAttribute object
-    const char* Type() const override { return "DAPteAttributeRISCV"; } //!< overridden method to return WPteAttribute as object type
-
-    DAPteAttributeRISCV() : PteAttribute() { } //!< Constructor
+    Object* Clone() const override { return new DAPteAttributeRISCV(*this); } //!< overridden method to clone XPteAttribute object
+    const char* Type() const override { return "DAPteAttributeRISCV"; } //!< overridden method to return XPteAttribute as object type
+    DAPteAttributeRISCV() : ExceptionConstraintPteAttribute() { } //!< Constructor
     ~DAPteAttributeRISCV() { } //!< Destructor
 
-    void Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte) override; //!< Generate Writeable PTE attribute
   protected:
-    DAPteAttributeRISCV(const DAPteAttributeRISCV& rOther) : PteAttribute(rOther) { } //!< Copy Constructor
+    DAPteAttributeRISCV(const DAPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
+    EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
+    void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
+    bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
+  };
+
+  /*!
+    \class GPteAttributeRISCV
+    \brief pte attribute to manage the global bit
+  */
+  class GPteAttributeRISCV : public ConstraintPteAttribute
+  {
+  public:
+    Object* Clone() const override { return new GPteAttributeRISCV(*this); } //!< overridden method to clone WPteAttribute object
+    const char* Type() const override { return "GPteAttributeRISCV"; } //!< overridden method to return WPteAttribute as object type
+    GPteAttributeRISCV() : ConstraintPteAttribute() { } //!< Constructor
+    ~GPteAttributeRISCV() { } //!< Destructor
+
+  protected:
+    GPteAttributeRISCV(const GPteAttributeRISCV& rOther) : ConstraintPteAttribute(rOther) { } //!< Copy Constructor
+    bool GetValueConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte, ConstraintSet& rValueConstr) const override; //!< Get value constraint for G pte attribute
+  };
+
+  /*!
+    \class UPteAttributeRISCV
+    \brief pte attribute to manage the 'U' (User access) bit and corresponding fault behavior
+  */
+  class UPteAttributeRISCV : public ExceptionConstraintPteAttribute
+  {
+  public:
+    Object* Clone() const override { return new UPteAttributeRISCV(*this); } //!< overridden method to clone UPteAttribute object
+    const char* Type() const override { return "UPteAttributeRISCV"; } //!< overridden method to return UPteAttribute as object type
+    UPteAttributeRISCV() : ExceptionConstraintPteAttribute() { } //!< Constructor
+    ~UPteAttributeRISCV() { } //!< Destructor
+
+  protected:
+    UPteAttributeRISCV(const UPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
+    EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
+    void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
+    bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
   };
 
   /*!
     \class XPteAttributeRISCV
     \brief pte attribute to manage the 'X' (Executable) bit and corresponding fault behavior
   */
-  class XPteAttributeRISCV : public PteAttribute
+  class XPteAttributeRISCV : public ExceptionConstraintPteAttribute
   {
   public:
     Object* Clone() const override { return new XPteAttributeRISCV(*this); } //!< overridden method to clone XPteAttribute object
     const char* Type() const override { return "XPteAttributeRISCV"; } //!< overridden method to return XPteAttribute as object type
-
-    XPteAttributeRISCV() : PteAttribute() { } //!< Constructor
+    XPteAttributeRISCV() : ExceptionConstraintPteAttribute() { } //!< Constructor
     ~XPteAttributeRISCV() { } //!< Destructor
 
-    void Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte) override; //!< Generate Executable PTE attribute
   protected:
-    XPteAttributeRISCV(const XPteAttributeRISCV& rOther) : PteAttribute(rOther) { } //!< Copy Constructor
+    XPteAttributeRISCV(const XPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
+    EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
+    void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
+    bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
   };
 
   /*!
@@ -108,27 +134,31 @@ namespace Force {
   protected:
     WRPteAttributeRISCV(const WRPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
     EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
-    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
-    void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
     void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
+    bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
   };
 
   /*!
-    \class UPteAttributeRISCV
-    \brief pte attribute to manage the 'U' (User access) bit and corresponding fault behavior
+    \class VPteAttributeRISCV
+    \brief pte attribute to manage the valid bit and corresponding fault behavior
   */
-  class UPteAttributeRISCV : public ValuePteAttribute
+  class VPteAttributeRISCV : public ExceptionConstraintPteAttribute
   {
   public:
-    Object* Clone() const override { return new UPteAttributeRISCV(*this); } //!< overridden method to clone UPteAttribute object
-    const char* Type() const override { return "UPteAttributeRISCV"; } //!< overridden method to return UPteAttribute as object type
+    Object* Clone() const override { return new VPteAttributeRISCV(*this); } //!< overridden method to clone VPteAttribute object
+    const char* Type() const override { return "VPteAttributeRISCV"; } //!< overridden method to return VPteAttribute as object type
+    VPteAttributeRISCV() : ExceptionConstraintPteAttribute() { } //!< Constructor
+    ~VPteAttributeRISCV() { } //!< Destructor
 
-    UPteAttributeRISCV() : ValuePteAttribute() { } //!< Constructor
-    ~UPteAttributeRISCV() { } //!< Destructor
-
-    void Generate(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte) override; //!< Generate user access PTE attribute
   protected:
-    UPteAttributeRISCV(const UPteAttributeRISCV& rOther) : ValuePteAttribute(rOther) { } //!< Copy Constructor
+    VPteAttributeRISCV(const VPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
+    EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
+    void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
+    bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
   };
 
 }

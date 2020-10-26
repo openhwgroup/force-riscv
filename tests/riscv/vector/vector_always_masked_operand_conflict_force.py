@@ -17,36 +17,41 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from VectorTestSequence import VectorTestSequence
 
-## This test verifies that whole register load and store instructions can be generated and executed
-# successfully.
+## This test verifies that vector instructions that are always masked or treated as masked do not
+# set v0 as the destination operand.
 class MainSequence(VectorTestSequence):
 
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
-        # TODO(Noah): Add additional load/store whole register instructions when they are supported
-        # by Handcar.
         self._mInstrList = (
-            'VL1R.V##RISCV',
-            'VS1R.V##RISCV',
+            'VADC.VIM##RISCV',
+            'VADC.VVM##RISCV',
+            'VADC.VXM##RISCV',
+            'VFMERGE.VFM##RISCV',
+            'VMERGE.VIM##RISCV',
+            'VMERGE.VVM##RISCV',
+            'VMERGE.VXM##RISCV',
+            'VSBC.VVM##RISCV',
+            'VSBC.VXM##RISCV',
         )
+
+    ## Return the maximum number of test instructions to generate.
+    def _getMaxInstructionCount(self):
+        return 1000
 
     ## Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
         return self._mInstrList
 
-    ## Get allowed exception codes.
+    ## Verify additional aspects of the instruction generation and execution.
     #
     #  @param aInstr The name of the instruction.
-    def _getAllowedExceptionCodes(self, aInstr):
-        allowed_except_codes = set()
-
-        # TODO(Noah): Remove the line below permitting store page fault exceptions when the page
-        # descriptor generation is improved. Currently, we are generating read-only pages for load
-        # instructions, which is causing subsequent store instructions to the same page to fault.
-        allowed_except_codes.add(0xF)
-
-        return allowed_except_codes
+    #  @param aInstrRecord A record of the generated instruction.
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        vd_val = aInstrRecord['Dests']['vd']
+        if vd_val == 0:
+            self.error('Instruction %s is masked with v0 as the destination register' % aInstr)
 
 
 MainSequenceClass = MainSequence

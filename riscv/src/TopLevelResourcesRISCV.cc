@@ -62,14 +62,16 @@ namespace Force {
     obj_registry->RegisterObject(new CustomLayoutOperand());
     obj_registry->RegisterObject(new VectorIndexedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new MultiVectorRegisterOperandRISCV());
+    obj_registry->RegisterObject(new VectorIndexedDataRegisterOperand());
 
     // Register Paging related objects.
-    obj_registry->RegisterObject(new ValidPteAttributeRISCV());
     obj_registry->RegisterObject(new AddressPteAttributeRISCV());
     obj_registry->RegisterObject(new DAPteAttributeRISCV());
+    obj_registry->RegisterObject(new GPteAttributeRISCV());
     obj_registry->RegisterObject(new UPteAttributeRISCV());
     obj_registry->RegisterObject(new XPteAttributeRISCV());
     obj_registry->RegisterObject(new WRPteAttributeRISCV());
+    obj_registry->RegisterObject(new VPteAttributeRISCV());
 
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());

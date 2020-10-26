@@ -476,6 +476,11 @@ namespace Force {
 
   void VectorIndexedSolvingShared::SetupIndexChoices()
   {
+    // TODO(Noah): Relax the differ constraint to allow legal cases where the source/destination
+    // register and the index register are the same when a good way to do so can be determined.
+    OperandConstraint* index_opr_constr = mpIndexOpr->GetOperandConstraint();
+    index_opr_constr->SubDifferOperandValues(*mpInstruction, *(mpIndexOpr->GetOperandStructure()));
+
     vector<const Choice*> choices_list;
     mpIndexOpr->GetAvailableChoices(choices_list);
 

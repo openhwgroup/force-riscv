@@ -40,7 +40,7 @@ namespace Force {
   private:
     uint32 GetVl() const; //!< Get the current VL value.
     uint32 GetSew() const; //!< Get the current SEW value.
-    uint32 GetLmul() const; //!< Get the current LMUL value.
+    float GetLmul() const; //!< Get the current LMUL value.
   private:
     const RegisterFile* mpRegFile; //!< Register file
   };

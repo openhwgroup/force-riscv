@@ -100,6 +100,8 @@ namespace Force {
 
   void State::AddRegisterStateElement(const string& rRegName, const vector<uint64>& rRegValues, cuint32 priority)
   {
+    LOG(debug) << "[State::AddRegisterStateElement] '" << rRegName << "'" << std::endl;
+
     const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
     Register* reg = reg_file->RegisterLookup(rRegName);
 
@@ -118,29 +120,36 @@ namespace Force {
         // certainty is devised. Currently, we can determine if the field name matches, but there
         // may be multiple register fields with the same name spread across different system
         // registers.
-        LOG(warn) << "{State::AddRegisterStateElement} Register " << containing_reg->Name() << " contains field " << reg_field->Name() << ", which may be a VM context parameter field. Use AddVmContextStateElement() for VM context parameter fields." << endl;
+        LOG(warn) << "{State::AddRegisterStateElement} Register " << containing_reg->Name() << " contains field " 
+		  << reg_field->Name() << ", which may be a VM context parameter field. Use AddVmContextStateElement() for VM context parameter fields." << endl;
       }
     }
 
-    uint64 value_size = 64;
+    uint64 value_size = (containing_reg->Size() == 32) ? 32 : 64;
     uint64 values_count = containing_reg->Size() / value_size;
     vector<uint64> values(values_count, 0);
     vector<uint64> masks(values_count, 0);
-    if (containing_reg->Name() == reg->Name()) {
+
+    LOG(debug) << "[State::AddRegisterStateElement] containing register/size: " << containing_reg->Name() << "/" << std::dec << containing_reg->Size()
+	    << " values-count: " << values_count << " rRegValues.size: " << rRegValues.size() << std::endl;
+
+    if ((containing_reg->Name() == reg->Name()) and (rRegValues.size() == values_count)) {
       values = rRegValues;
       fill(masks.begin(), masks.end(), MAX_UINT64);
     }
     else {
-      // The specified register and containing register are different, so we need to determine which
-      // bits of the containing register are represented by the specified register and build the
-      // masks with those bits set.
+      // The provided register values don't specify all bits of the containing register, so we need
+      // to determine which bits of the containing register are represented by the provided values
+      // and build the masks with those bits set.
       set<PhysicalRegister*> phys_registers;
       reg->GetPhysicalRegisters(phys_registers);
 
       for (PhysicalRegister* phys_reg : phys_registers) {
-        uint64 mask = reg->GetPhysicalRegisterMask(*phys_reg);
-        masks[phys_reg->SubIndexValue()] = mask;
-        values[phys_reg->SubIndexValue()] = rRegValues[phys_reg->SubIndexValue()] << lowest_bit_set(mask);
+        if (phys_reg->SubIndexValue() < rRegValues.size()) {
+          uint64 mask = reg->GetPhysicalRegisterMask(*phys_reg);
+          masks[phys_reg->SubIndexValue()] = mask;
+          values[phys_reg->SubIndexValue()] = rRegValues[phys_reg->SubIndexValue()] << lowest_bit_set(mask);
+        }
       }
     }
 

@@ -7,6 +7,7 @@
 //
 //  http://www.apache.org/licenses/LICENSE-2.0
 //
+//
 // THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
 // FIT FOR A PARTICULAR PURPOSE.
@@ -150,6 +151,31 @@ CASE("Test string conversions and manipulations") {
       error_status = false;
       val = parse_uint64(test_string, &error_status);
       EXPECT(error_status);
+    }
+
+    SECTION("Test converting a string to float") {
+      test_string = "0.25";
+      bool error_status = false;
+      float val = parse_float(test_string, &error_status);
+      EXPECT(val == 0.25f);
+      EXPECT_NOT(error_status);
+
+      test_string = "20.23";
+      val = parse_float(test_string, &error_status);
+      EXPECT(val == 20.23f);
+      EXPECT_NOT(error_status);
+
+      test_string = "hello";
+      parse_float(test_string, &error_status);
+      EXPECT(error_status);
+      error_status = false;
+      EXPECT_FAIL(parse_float(test_string), "parse-error-float-invalid");
+
+      test_string = "1.5e100";
+      parse_float(test_string, &error_status);
+      EXPECT(error_status);
+      error_status = false;
+      EXPECT_FAIL(parse_float(test_string), "parse-error-float-range");
     }
 
     SECTION("Test converting a string to bool") {

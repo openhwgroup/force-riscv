@@ -90,7 +90,7 @@ namespace Force {
     mpFree->SubRange(address, init_end);
     mpUsable->MarkUsedForType(address, init_end, memInitRecord.InitType(), memInitRecord.AccessType(), memInitRecord.ThreadId());
 
-    LOG(trace) << "{MemoryBank::InitializeMemory} bank=" << EMemBankType_to_string(MemoryBankType()) << " start_addr=0x" 
+    LOG(trace) << "{MemoryBank::InitializeMemory} bank=" << EMemBankType_to_string(MemoryBankType()) << " start_addr=0x"
                << hex << address << " end_addr=0x" << init_end << endl;
 
     if (mpPhysicalPageManager != nullptr)
@@ -115,7 +115,7 @@ namespace Force {
     uint64 end_address = address + nBytes - 1;
     mpUsable->MarkShared(address, end_address);
 
-    LOG(trace) << "{MemoryBank::MarkShared} bank=" << EMemBankType_to_string(MemoryBankType()) << " start_addr=0x" 
+    LOG(trace) << "{MemoryBank::MarkShared} bank=" << EMemBankType_to_string(MemoryBankType()) << " start_addr=0x"
                << hex << address << " end_addr=0x" << end_address << endl;
 
     if (mpPhysicalPageManager != nullptr)

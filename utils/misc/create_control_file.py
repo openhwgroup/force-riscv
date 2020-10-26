@@ -198,17 +198,17 @@ def writeControlFile(control_item, reproduce_directory):
                     if gkey in ["--seed","-s"]:
                         string += "\"--seed\" : " + gvalue + ", "
                     else:
-                        if type(gvalue) is None:
+                        if gvalue is None:
                             string += "\"" + gkey + "\"" + " : None, "
-                        elif type(gvalue) is str:
+                        elif isinstance(gvalue, str):
                             string += "\"" + gkey + "\"" + " : \"" + gvalue + "\", "
                         else:
                             string += "\"" + gkey + "\"" + " : " + str(gvalue) + ", "
                 control_file.write(string + "},\n")
             else:
-                if type(value) is None:
+                if value is None:
                     control_file.write("\"" + key + "\" : None")
-                elif type(value) is dict:
+                elif isinstance(value, dict):
                     control_file.write("\"" + key + "\" : "+ str(value)+ ",")
                 else:
                     control_file.write("\"" + key + "\" : \"" + value + "\",")

@@ -48,13 +48,11 @@
     <choice description="SystemPage=0" name="notsyspage" value="0x0" weight="100"/>
     <choice description="SystemPage=1" name="syspage" value="0x1" weight="0"/>
   </choices>
-  <choices name="D#S#stage 1" type="Paging">
-    <choice description="D=0" name="0" value="0x0" weight="100"/>
-    <choice description="D=1" name="1" value="0x1" weight="0"/>
-  </choices>
-  <choices name="A#S#stage 1" type="Paging">
-    <choice description="A=0" name="0" value="0x0" weight="100"/>
-    <choice description="A=1" name="1" value="0x1" weight="0"/>
+  <choices name="DA#S#stage 1" type="Paging">
+    <choice description="DA=0b00" name="0" value="0x0" weight="1"/>
+    <choice description="DA=0b01" name="1" value="0x1" weight="100"/>
+    <choice description="DA=0b10" name="2" value="0x2" weight="1"/>
+    <choice description="DA=0b11" name="3" value="0x3" weight="100"/>
   </choices>
   <choices name="G#S#stage 1" type="Paging">
     <choice description="G=0" name="0" value="0x0" weight="100"/>
@@ -112,13 +110,13 @@
   </choices>
 
   <!-- Page Fault Generation Choices -->
-  <choices name="Invalid Descriptor#level 1#S#stage 1" type="Paging">
-    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
-    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
+  <choices name="Invalid V#level 1#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x0" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x1" weight="0"/>
   </choices>
-  <choices name="Invalid Descriptor#level 0#S#stage 1" type="Paging">
-    <choice description="V=1, valid"   name="false" value="0x1" weight="100"/>
-    <choice description="V=0, invalid" name="true"  value="0x0" weight="0"/>
+  <choices name="Invalid V#level 0#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x0" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x1" weight="0"/>
   </choices>
 
   <choices name="Invalid DA#level 1#S#stage 1" type="Paging">
@@ -140,13 +138,22 @@
     <choice description="invalid XWRV" name="true" value="0x1" weight="0"/>
   </choices>
 
-  <choices name="Invalid XWR#level 1#S#stage 1" type="Paging">
-    <choice description="XWR valid"   name="false" value="0x1" weight="100"/>
-    <choice description="XWR invalid" name="true"  value="0x0" weight="0"/>
+  <choices name="Invalid X#level 1#S#stage 1" type="Paging">
+    <choice description="X valid"   name="false" value="0x0" weight="100"/>
+    <choice description="X invalid" name="true"  value="0x1" weight="0"/>
   </choices>
-  <choices name="Invalid XWR#level 0#S#stage 1" type="Paging">
-    <choice description="XWR valid"   name="false" value="0x1" weight="100"/>
-    <choice description="XWR invalid" name="true"  value="0x0" weight="0"/>
+  <choices name="Invalid X#level 0#S#stage 1" type="Paging">
+    <choice description="X valid"   name="false" value="0x0" weight="100"/>
+    <choice description="X invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Invalid WR#level 1#S#stage 1" type="Paging">
+    <choice description="WR valid"   name="false" value="0x0" weight="100"/>
+    <choice description="WR invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+  <choices name="Invalid WR#level 0#S#stage 1" type="Paging">
+    <choice description="WR valid"   name="false" value="0x0" weight="100"/>
+    <choice description="WR invalid" name="true"  value="0x1" weight="0"/>
   </choices>
 
   <choices name="Invalid U#level 1#S#stage 1" type="Paging">

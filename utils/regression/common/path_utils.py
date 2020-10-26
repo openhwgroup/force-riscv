@@ -38,7 +38,7 @@ class PathUtils( object ):
     # Class Method that checks to see if the path string passed has a trailing
     # path delimiter and adds one if not exists and returns the resulting string
     @classmethod
-    def include_trailing_path_delimiter( arg_class, arg_path ):
+    def include_trailing_path_delimiter( cls, arg_path ):
         arg_path = str(arg_path)
         if not arg_path.endswith(PathUtils.path_delimiter):
             arg_path += PathUtils.path_delimiter
@@ -47,7 +47,7 @@ class PathUtils( object ):
     # Class Method that checks to see if the path string passed has a trailing
     # path delimiter and removes it if it exists and returns the resulting string
     @classmethod
-    def exclude_trailing_path_delimiter( arg_class, arg_path ):
+    def exclude_trailing_path_delimiter( cls, arg_path ):
         arg_path = str(arg_path)
         if arg_path.endswith(PathUtils.path_delimiter):
             arg_path = arg_path[:-1]
@@ -56,7 +56,7 @@ class PathUtils( object ):
     # Class Method that checks to see if the path string passed has a leading
     # path delimiter and adds one if not exists and returns the resulting string
     @classmethod
-    def include_leading_path_delimiter( arg_class, arg_path ):
+    def include_leading_path_delimiter( cls, arg_path ):
         arg_path = str(arg_path)
         if not arg_path.startswith( PathUtils.path_delimiter ):
             arg_path += PathUtils.path_delimiter + arg_path
@@ -65,7 +65,7 @@ class PathUtils( object ):
     # Class Method that checks to see if the path string passed has a leading
     # path delimiter and removes it if it exists and returns the resulting string
     @classmethod
-    def exclude_leading_path_delimiter( arg_class, arg_path ):
+    def exclude_leading_path_delimiter( cls, arg_path ):
         arg_path = str(arg_path)
         if arg_path.startswith( PathUtils.path_delimiter ):
             arg_path = arg_path[1:]
@@ -73,20 +73,20 @@ class PathUtils( object ):
 
     # Class Method that checks to see if the path string passed exists
     @classmethod
-    def valid_path( arg_class, arg_path ):
+    def valid_path( cls, arg_path ):
         arg_path = str(arg_path)
         return os.path.exists( arg_path )
 
     # Class Method that checks to see if file a can execute
     @classmethod
-    def check_exe( arg_class, arg_path ):
+    def check_exe( cls, arg_path ):
         if PathUtils.check_file( arg_path ):
             return os.access( str( arg_path ), os.X_OK)
         return False
 
     # Class Method that checks to see if a file exists
     @classmethod
-    def check_file( arg_class, arg_path ):
+    def check_file( cls, arg_path ):
         if PathUtils.valid_path( arg_path ):
             my_file = Path( str( arg_path ))
             return my_file.is_file()
@@ -94,32 +94,32 @@ class PathUtils( object ):
 
     # Class Method that checks to see if a directory exists
     @classmethod
-    def check_dir( arg_class, arg_path ):
+    def check_dir( cls, arg_path ):
         if PathUtils.valid_path( arg_path ):
             my_dir = Path( str( arg_path ))
             return my_dir.is_dir()
         return False
 
     @classmethod
-    def check_found( arg_class, arg_path ):
+    def check_found( cls, arg_path ):
         # see if file pattern exists
         my_list = glob.glob( arg_path )
-        return ( type( my_list ) is list ) and ( len( my_list ) > 0 )
+        return isinstance(my_list, list) and my_list
 
     # Class method that changes into a directory if that directory exists
     @classmethod
-    def set_dir( arg_class, arg_dir ):
+    def set_dir( cls, arg_dir ):
         if PathUtils.valid_path( arg_dir ):
             os.chdir( arg_dir )
 
     # Class method, takes a path and appends additional directories
     @classmethod
-    def append_path( arg_class, arg_path, arg_added_path ):
+    def append_path( cls, arg_path, arg_added_path ):
         return PathUtils.include_trailing_path_delimiter( arg_path ) + PathUtils.exclude_leading_path_delimiter( arg_added_path )
 
     # Class method that splits a path into a file name and a directory and returns both
     @classmethod
-    def split_path( arg_class, arg_path ):
+    def split_path( cls, arg_path ):
         if PathUtils.check_dir( arg_path ):
             return arg_path, None
         # print( "Path To Split: " + arg_path )
@@ -132,7 +132,7 @@ class PathUtils( object ):
 
     # Class method that splits a path into a file name and a directory and returns both
     @classmethod
-    def split_dir( arg_class, arg_path ):
+    def split_dir( cls, arg_path ):
         # print( "Path: %s" % (str( arg_path )))
         my_path = PathUtils.exclude_trailing_path_delimiter( arg_path )
         # print( "Path: %s" % (str( my_path )))
@@ -152,16 +152,16 @@ class PathUtils( object ):
 
     # retrieves the basename of the string passed
     @classmethod
-    def base_name( arg_class, arg_path ):
+    def base_name( cls, arg_path ):
         return os.path.basename( arg_path )
 
     @classmethod
-    def list_files( arg_class, arg_path ):
+    def list_files( cls, arg_path ):
         Msg.dbg( arg_path )
         return glob.glob( arg_path )
 
     @classmethod
-    def list_dirs( arg_class, arg_path = None ):
+    def list_dirs( cls, arg_path = None ):
         if arg_path is None:
             return PathUtils.list_dirs( PathUtils.current_dir())
         my_rawinfo = list( os.walk(arg_path))
@@ -172,7 +172,7 @@ class PathUtils( object ):
         return my_dirs
 
     @classmethod
-    def dir_count( arg_class, arg_path = None ):
+    def dir_count( cls, arg_path = None ):
         try:
             return len( PathUtils.list_dirs( arg_path ))
         except:
@@ -181,31 +181,31 @@ class PathUtils( object ):
         return 0
 
     @classmethod
-    def file_count( arg_class, arg_path ):
+    def file_count( cls, arg_path ):
         return len( list( filter( os.path.isfile, PathUtils.list_files( arg_path ))))
 
     # returns the fully qualified working directory
     @classmethod
-    def real_path( arg_class, arg_path ):
+    def real_path( cls, arg_path ):
         return os.path.realpath( arg_path )
 
     # get the parent directory unless that directory is the root
     # if it is the root return None
     @classmethod
-    def parent_dir( arg_class, arg_path ):
+    def parent_dir( cls, arg_path ):
         if os.path.realpath( arg_path ) != "/":
             return os.path.realpath( arg_path )
         return None
 
     #returns the current directory
     @classmethod
-    def current_dir( arg_class ):
+    def current_dir( cls ):
         return os.getcwd()
 
     # checks to see if a directory exists then changes into that directory,
     # returns True on success
     @classmethod
-    def chdir( arg_class, arg_dir, arg_force = False ):
+    def chdir( cls, arg_dir, arg_force = False ):
 
         Msg.dbg( "PathUtils::chdir( %s, %s )" % ( arg_dir, str( arg_force )))
         if not PathUtils.check_dir( PathUtils.exclude_trailing_path_delimiter( arg_dir )):
@@ -229,7 +229,7 @@ class PathUtils( object ):
 
     # creates a new directory with default permissions
     @classmethod
-    def mkdir( arg_class, arg_dir ):
+    def mkdir( cls, arg_dir ):
         Msg.dbg( "PathUtils.mkdir( %s )" % ( arg_dir ))
         try:
             os.makedirs( PathUtils.exclude_trailing_path_delimiter( arg_dir ))
@@ -244,7 +244,7 @@ class PathUtils( object ):
         return True
 
     @classmethod
-    def rmdir( arg_class, arg_dir, arg_force = False ):
+    def rmdir( cls, arg_dir, arg_force = False ):
         Msg.dbg( "PathUtils.rmdir( %s, %s )" % ( arg_dir, str( arg_force )))
         try:
             if arg_force:
@@ -262,7 +262,7 @@ class PathUtils( object ):
         return True
 
     @classmethod
-    def remove( arg_class, arg_path, arg_force = False ):
+    def remove( cls, arg_path, arg_force = False ):
         try:
             os.remove( arg_path )
             Msg.dbg( "Success, File Removed: %s" % ( arg_path ))
@@ -271,7 +271,7 @@ class PathUtils( object ):
             return False
 
     @classmethod
-    def move( arg_class, arg_src, arg_target = "." ):
+    def move( cls, arg_src, arg_target = "." ):
         Msg.dbg( "PathUtils::move( %s, %s )" % ( arg_src, arg_target ))
         try:
             shutil.move( arg_src, arg_target )
@@ -283,7 +283,7 @@ class PathUtils( object ):
         return True
 
     @classmethod
-    def rename( arg_class, arg_src, arg_tgt ):
+    def rename( cls, arg_src, arg_tgt ):
         Msg.dbg( "PathUtils::rename( %s, %s )" % ( arg_src, arg_tgt ))
         try:
             os.rename( arg_src, arg_tgt )
@@ -295,7 +295,7 @@ class PathUtils( object ):
         return True
 
     @classmethod
-    def copy_file( arg_class, arg_src, arg_dest = "." ):
+    def copy_file( cls, arg_src, arg_dest = "." ):
         try:
             shutil.copy( arg_src, arg_dest )
 
@@ -310,7 +310,7 @@ class PathUtils( object ):
         return True
 
     @classmethod
-    def purge_dirs( arg_class, arg_basedir ):
+    def purge_dirs( cls, arg_basedir ):
         try:
             my_dirlist = sorted( os.listdir( arg_basedir ))
             Msg.lout( my_dirlist, "dbg" )
@@ -333,7 +333,7 @@ class PathUtils( object ):
         return True
 
     @classmethod
-    def archive_dir( arg_class, arg_srcdir ):
+    def archive_dir( cls, arg_srcdir ):
 
         try:
             # get the base name
@@ -380,14 +380,14 @@ class PathUtils( object ):
             return False
 
     @classmethod
-    def next_dir( arg_class ):
+    def next_dir( cls ):
         # list any previous copies
         my_dirlist = sorted( PathUtils.list_files( "." ))
         Msg.lout( my_dirlist, "dbg" )
         return len( my_dirlist )
 
     @classmethod
-    def expire( arg_class, arg_rootdir, arg_expiredate, arg_srcmask ):
+    def expire( cls, arg_rootdir, arg_expiredate, arg_srcmask ):
         my_targetbase = PathUtils.base_name( arg_rootdir )
 
         # list any previous copies
@@ -398,7 +398,7 @@ class PathUtils( object ):
                 PathUtils.rmdir( my_dir , True )
 
     @classmethod
-    def move_files( arg_class, arg_target ):
+    def move_files( cls, arg_target ):
         PathUtils.mkdir( arg_target )
         my_target = "%s%s" % ( PathUtils.include_trailing_path_delimiter( PathUtils.current_dir()) , arg_target )
         Msg.dbg( "Current Directory: %s " % ( PathUtils.current_dir() ))
@@ -432,7 +432,7 @@ class PathUtils( object ):
         return mod_time
 
     @classmethod
-    def touch( arg_class, arg_fpath ):
+    def touch( cls, arg_fpath ):
         try:
             os.utime( arg_fpath, None )
         except OSError:

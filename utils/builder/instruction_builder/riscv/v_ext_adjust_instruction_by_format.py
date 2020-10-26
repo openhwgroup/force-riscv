@@ -143,29 +143,34 @@ def add_layout_operand(aInstruction):
     else:
         operand_adjustor.add_vtype_layout_operand()
 
-# Account for non-standard register layouts due to widening and narrowing instructions
+# Account for non-standard register layouts due to wide and narrow operands
 def adjust_register_layout(aInstruction):
-    wide_dest = False
+    adjust_dest = False
     dest_layout_multiple = 2
     if aInstruction.name.startswith('VW') or aInstruction.name.startswith('VFW'):
-        wide_dest = True
+        adjust_dest = True
     elif aInstruction.name.startswith('VQMACC'):
-        wide_dest = True
+        adjust_dest = True
         dest_layout_multiple = 4
 
-    wide_source = False
+    adjust_source = False
+    source_layout_multiple = 2
     if '.W' in aInstruction.name:
-        wide_source = True
+        adjust_source = True
+    elif aInstruction.name.startswith('VSEXT.VF') or aInstruction.name.startswith('VZEXT.VF'):
+        adjust_source = True
+        layout_divisor = int(aInstruction.name[-1])
+        source_layout_multiple = 1 / layout_divisor
 
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    if wide_dest:
-        operand_adjustor.set_wide_dest(aLayoutMultiple=dest_layout_multiple)
+    if adjust_dest:
+        operand_adjustor.adjust_dest_layout(dest_layout_multiple)
         operand_adjustor.set_vs1_differ_vd()
 
-    if wide_source:
-        operand_adjustor.set_wide_source()
+    if adjust_source:
+        operand_adjustor.adjust_source_layout(source_layout_multiple)
 
-    if wide_dest != wide_source:
+    if adjust_dest != adjust_source:
         operand_adjustor.set_vs2_differ_vd()
 
 def get_element_size(aConstBitsOpr):
@@ -258,9 +263,10 @@ def adjust_vs3_rs1_vm(aInstruction):
 
 def adjust_vs3_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_vs3_ls_indexed_source()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -307,6 +313,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -318,7 +325,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
 
     add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
-    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_vs3_ls_indexed_source()
     operand_adjustor.set_vm()
     return True
 
@@ -377,9 +384,10 @@ def adjust_vd_rs1_vm(aInstruction):
 
 def adjust_vd_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd_ls_dest()
+    operand_adjustor.set_vd_ls_indexed_dest()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -426,6 +434,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand('const_bits'))
     attr_dict = dict()
@@ -437,7 +446,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
 
     add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
-    operand_adjustor.set_vd_ls_dest()
+    operand_adjustor.set_vd_ls_indexed_dest()
     operand_adjustor.set_vm()
     return True
 
@@ -457,6 +466,10 @@ def adjust_vd_vs2_vm(aInstruction):
     operand_adjustor.set_vd()
     operand_adjustor.set_vs2()
     operand_adjustor.set_vm()
+
+    if aInstruction.name in ('VMSBF.M', 'VMSIF.M', 'VMSOF.M', 'VIOTA.M'):
+        operand_adjustor.set_vs2_differ_vd()
+
     return True
 
 def adjust_vdrd_vs2(aInstruction):
@@ -516,6 +529,11 @@ def adjust_vd_vs2_vs1(aInstruction):
     operand_adjustor.set_vd()
     operand_adjustor.set_vs2()
     operand_adjustor.set_vs1()
+
+    if aInstruction.name == 'VCOMPRESS.VM':
+        operand_adjustor.set_vs2_differ_vd()
+        operand_adjustor.set_vs1_differ_vd()
+
     return True
 
 def adjust_vd_nonzero_vs2_vs1(aInstruction):
@@ -531,6 +549,11 @@ def adjust_vd_vs2_vs1_vm(aInstruction):
     operand_adjustor.set_vs2()
     operand_adjustor.set_vs1()
     operand_adjustor.set_vm()
+
+    if aInstruction.name == 'VRGATHER.VV':
+        operand_adjustor.set_vs2_differ_vd()
+        operand_adjustor.set_vs1_differ_vd()
+
     return True
 
 def adjust_vd_simm5(aInstruction):
@@ -559,6 +582,10 @@ def adjust_vd_vs2_simm5_vm(aInstruction):
     operand_adjustor.set_vs2()
     operand_adjustor.set_imm('simm5', 'simm5', True)
     operand_adjustor.set_vm()
+
+    if aInstruction.name in ('VRGATHER.VI', 'VSLIDEUP.VI'):
+        operand_adjustor.set_vs2_differ_vd()
+
     return True
 
 def adjust_vd_vs2_rs1(aInstruction):
@@ -584,7 +611,12 @@ def adjust_vd_vs2_rs1_vm(aInstruction):
         operand_adjustor.set_rs1_sp()
     else:
         operand_adjustor.set_rs1_int()
+
     operand_adjustor.set_vm()
+
+    if aInstruction.name in ('VFSLIDE1UP.VF', 'VRGATHER.VX', 'VSLIDE1UP.VX', 'VSLIDEUP.VX'):
+        operand_adjustor.set_vs2_differ_vd()
+
     return True
 
 def adjust_vdrd_vs2_rs1_vm(aInstruction):

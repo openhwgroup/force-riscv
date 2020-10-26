@@ -140,27 +140,4 @@ namespace Force {
     PageRequestRegulator::RegulateBranchPageRequest(pVmMapper, pBrStruct, pPageReq);
   }
 
-  //TODO - tidy up logic here once exception pte attribute generation functional
-  void PageRequestRegulatorRISCV::PreventDataPageFault(GenPageRequest* pPageReq) const
-  {
-    PageRequestRegulator::PreventDataPageFault(pPageReq);
-    pPageReq->SetExceptionConstraint(EPagingExceptionType::LoadPageFault, EExceptionConstraintType::PreventHard);
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::Invalid, 0); // ensure Invalid attribute is set to 0.
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::AddrSizeFault, 0); // Don't generate address size fault for system pages
-    /*pPageReq->SetPteAttribute(EPteAttributeType::W, 1);
-    pPageReq->SetPteAttribute(EPteAttributeType::WR, 3);
-    pPageReq->SetPteAttribute(EPteAttributeType::V, 1);*/
-  }
-
-  void PageRequestRegulatorRISCV::PreventInstrPageFault(GenPageRequest* pPageReq) const
-  {
-    PageRequestRegulator::PreventInstrPageFault(pPageReq);
-    pPageReq->SetExceptionConstraint(EPagingExceptionType::InstructionPageFault, EExceptionConstraintType::PreventHard);
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::Invalid, 0); // ensure Invalid attribute is set to 0.
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::AddrSizeFault, 0); // Don't generate address size fault for system pages
-    /*pPageReq->SetPteAttribute(EPteAttributeType::X, 1);
-    pPageReq->SetPteAttribute(EPteAttributeType::WR, 1);
-    pPageReq->SetPteAttribute(EPteAttributeType::V, 1);*/
-  }
-
 }

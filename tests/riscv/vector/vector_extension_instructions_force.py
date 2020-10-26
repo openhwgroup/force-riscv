@@ -18,21 +18,19 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from VectorTestSequence import VectorTestSequence
 from base.ChoicesModifier import ChoicesModifier
 
-## This test verifies that vector register operands with different layouts in quad-widening
-# instructions don't overlap.
+## This test verifies that vector sign and zero extension instructions are generated legally.
 class MainSequence(VectorTestSequence):
 
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
         self._mInstrList = (
-            'VQMACC.VV##RISCV',
-            'VQMACC.VX##RISCV',
-            'VQMACCSU.VV##RISCV',
-            'VQMACCSU.VX##RISCV',
-            'VQMACCU.VV##RISCV',
-            'VQMACCU.VX##RISCV',
-            'VQMACCUS.VX##RISCV',
+            'VSEXT.VF2##RISCV',
+            'VSEXT.VF4##RISCV',
+            'VSEXT.VF8##RISCV',
+            'VZEXT.VF2##RISCV',
+            'VZEXT.VF4##RISCV',
+            'VZEXT.VF8##RISCV',
         )
 
     ## Set up the environment prior to generating the test instructions.
@@ -40,17 +38,16 @@ class MainSequence(VectorTestSequence):
         choices_mod = ChoicesModifier(self.genThread)
 
         # TODO(Noah): Remove the restriction on SEW when a mechanism to skip instructions with
-        # illegal vector layouts is implemented. For now, ensure vector element width is set to no
-        # more than 16 bits.
-        choice_weights = {'0x0': 10, '0x1': 10, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        # illegal vector layouts is implemented. For now, SEW = 64 ensures all applicable
+        # instructions can be legally generated.
+        choice_weights = {'0x0': 0, '0x1': 0, '0x2': 0, '0x3': 10, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', choice_weights)
 
-        # Ensure vector register group size is no more than 2, as larger values are not legal for
-        # quad-widening instructions
-        vlmul_choice_weights = {'0x0': 10, '0x1': 10, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
-        choices_mod.modifyRegisterFieldValueChoices('vtype.VLMUL', vlmul_choice_weights)
-
         choices_mod.commitSet()
+
+    ## Return the maximum number of test instructions to generate.
+    def _getMaxInstructionCount(self):
+        return 1000
 
     ## Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
@@ -61,14 +58,14 @@ class MainSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrRecord A record of the generated instruction.
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
-        vd_val = aInstrRecord['Dests']['vd']
-        vs1_val = aInstrRecord['Srcs'].get('vs1')
         vs2_val = aInstrRecord['Srcs']['vs2']
-        if vs1_val and (vd_val == (vs1_val & 0x1C)):
-            self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+        vd_val = aInstrRecord['Dests']['vd']
+        if vs2_val == vd_val:
+            self.error('Instruction %s used overlapping source and destination registers' % aInstr)
 
-        if vd_val == (vs2_val & 0x1C):
-            self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
+        vm_val = aInstrRecord['Imms']['vm']
+        if (vm_val == 0) and (vd_val == 0):
+            self.error('Instruction %s is masked with v0 as the destination register' % aInstr)
 
 
 MainSequenceClass = MainSequence
