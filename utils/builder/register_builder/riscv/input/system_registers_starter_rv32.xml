@@ -331,7 +331,11 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="31"/>
     </register_field>
   </register>
-  <register description="Supervisor bad address or instruction." index="0x143" name="stval" physical_register="stval" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor bad address or instruction." index="0x143" name="stval" physical_register="stval" privilege="SRW" size="32" type="SysReg">
+    <register_field name="STVAL" size="32">
+      <bit_field shift="0" size="32"/>
+    </register_field>
+  </register>
   <register description="Supervisor interrupt pending." index="0x144" name="sip" physical_register="sip" privilege="SRW" size="0" type="SysReg"/>
   <register boot="0x5001" description="Supervisor address translation and protection." index="0x180" name="satp" physical_register="satp" privilege="SRW" size="32" type="SysReg">
     <register_field name="MODE" size="1">
@@ -796,7 +800,7 @@ Add RISCV system registers starter information in this file.
       <choice description="Delegate to S-mode" value="0x1" weight="0"/>
     </register_field>
   </register>
-  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg">
+  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="32" type="SysReg">
     <register_field name="MIDELEG" size="32">
       <bit_field shift="0" size="32"/>
     </register_field>

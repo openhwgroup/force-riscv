@@ -37,7 +37,7 @@
     <physical_register index="0x140" name="sscratch" size="32" type="SysReg"/>
     <physical_register index="0x141" name="sepc" size="32" type="SysReg"/>
     <physical_register index="0x142" name="scause" size="32" type="SysReg"/>
-    <physical_register index="0x143" name="stval" size="64" type="SysReg"/>
+    <physical_register index="0x143" name="stval" size="32" type="SysReg"/>
     <physical_register index="0x144" name="sip" size="64" type="SysReg"/>
     <physical_register index="0x180" name="satp" size="32" type="SysReg"/>
     <physical_register index="0x205" name="vstvec" size="32" type="SysReg"/>
@@ -49,7 +49,7 @@
     <physical_register index="0x300" name="mstatus" size="32" type="SysReg"/>
     <physical_register index="0x301" name="misa" size="32" type="SysReg"/>
     <physical_register index="0x302" name="medeleg" size="32" type="SysReg"/>
-    <physical_register index="0x303" name="mideleg" size="64" type="SysReg"/>
+    <physical_register index="0x303" name="mideleg" size="32" type="SysReg"/>
     <physical_register index="0x304" name="mie" size="64" type="SysReg"/>
     <physical_register index="0x305" name="mtvec" size="32" type="SysReg"/>
     <physical_register index="0x306" name="mcounteren" size="32" type="SysReg"/>
@@ -500,7 +500,11 @@
         <bit_field shift="0" size="31"/>
       </register_field>
     </register>
-    <register boot="0" index="0x143" name="stval" size="64" type="SysReg"/>
+    <register boot="1" index="0x143" name="stval" size="32" type="SysReg">
+      <register_field name="STVAL" physical_register="stval" size="32">
+        <bit_field shift="0" size="32"/>
+      </register_field>
+    </register>
     <register boot="0" index="0x144" name="sip" size="64" type="SysReg"/>
     <register boot="0x5001" index="0x180" name="satp" size="32" type="SysReg">
       <register_field name="MODE" physical_register="satp" size="1">
@@ -758,7 +762,7 @@
         <bit_field shift="15" size="1"/>
       </register_field>
     </register>
-    <register boot="0" index="0x303" name="mideleg" size="64" type="SysReg">
+    <register boot="1" index="0x303" name="mideleg" size="32" type="SysReg">
       <register_field name="MIDELEG" physical_register="mideleg" size="32">
         <bit_field shift="0" size="32"/>
       </register_field>

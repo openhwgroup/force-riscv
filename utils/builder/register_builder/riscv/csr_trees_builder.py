@@ -183,7 +183,8 @@ class CSRTreeBuilder:
                             'vtype', 'vxsat', 'vstart', 'vl', 'vxrm',
                             'sedeleg', 'sideleg',
                             'mtval2', 'mtinst', 'minstret',
-                            'mip', 'mie', 'sip', 'sie'
+                            'mip', 'mie', 'sip', 'sie',
+                            'mstatus_hyp'
                            ]
         # skip implementation specific CSRs...
         implementation_specific_csrs = [

@@ -124,7 +124,7 @@ Hypervisor_RO_CSRs = {
 
 Machine_RW_CSRs = {
     'mstatus':10,
-    'mstatus_hyp':10,
+    'mstatus_hyp':0,
     'misa':10,
     'medeleg':10,
     'mideleg':10,
