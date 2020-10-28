@@ -50,7 +50,8 @@ class MainSequence(Sequence):
     ## --------------------------------------------------------------------------------------------
 
     def genRandomInstrs(self, min_cnt, max_cnt):
-        instruction_group = RV_A_instructions # select random instructions from this group
+        # select random instructions from this group:
+        instruction_group = RV32I_instructions if self.getGlobalState('AppRegisterWidth') else RV_A_instructions
 
         for _ in range( RandomUtils.random32(min_cnt, max_cnt) ):
             the_instruction = self.pickWeighted(instruction_group)
@@ -97,7 +98,7 @@ class MainSequence(Sequence):
             csr_group_index = 'All_%s_%s_CSRs' % (priv_level,read_write)
         else:
             csr_group_index = '%s_%s_CSRs' % (priv_level,read_write)
-        
+
         (csr_group, is_writable) = csr_trees[csr_group_index]
         if len(csr_group) == 0:
             return (None, False)

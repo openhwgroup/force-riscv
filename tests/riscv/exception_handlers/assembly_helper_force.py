@@ -27,38 +27,49 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         assembly_helper = AssemblyHelperRISCV(self)
 
+        appRegSize = self.getGlobalState('AppRegisterWidth')
+
+        if appRegSize == 32:
+            self.notice("FORCE/RISCV configured for 32-bits...")
+        else:
+            self.notice("FORCE/RISCV configured for 64-bits...")
+            
         # TODO(Noah): Test branch instruction generation methods when there is time to do so.
 
         (dest_reg_index, src_reg_index, src_reg_index_2) = self.getRandomGPRs(3, exclude='0')
         load_gpr64_seq = LoadGPR64(self.genThread)
-        src_reg_val = RandomUtils.random64()
+        
+        src_reg_val = RandomUtils.random32() if appRegSize==32 else RandomUtils.random64()
         load_gpr64_seq.load(src_reg_index, src_reg_val)
-        src_reg_val_2 = RandomUtils.random64()
+        
+        src_reg_val_2 = RandomUtils.random32() if appRegSize==32 else RandomUtils.random64()
         load_gpr64_seq.load(src_reg_index_2, src_reg_val_2)
 
-        MAX_GPR_VAL = 0xFFFFFFFFFFFFFFFF
+        MAX_GPR_VAL = 0xFFFFFFFF if appRegSize==32 else 0xFFFFFFFFFFFFFFFF
 
         imm_val = RandomUtils.random32(0, 2047)
         assembly_helper.genMoveImmediate(dest_reg_index, imm_val)
         dest_reg_val = imm_val
         exception_handlers_test_utils.assertGprHasValue(self, dest_reg_index, dest_reg_val)
 
-        shift_amount = RandomUtils.random32(0, 63)
+        max_shift_val = 32 if appRegSize==32 else 64
+        
+        shift_amount = RandomUtils.random32(0, max_shift_val)
         assembly_helper.genShiftLeftImmediate(dest_reg_index, shift_amount)
         dest_reg_val = (dest_reg_val << shift_amount) & MAX_GPR_VAL
         exception_handlers_test_utils.assertGprHasValue(self, dest_reg_index, dest_reg_val)
-
-        shift_amount = RandomUtils.random32(0, 63)
+    
+        shift_amount = RandomUtils.random32(0, max_shift_val)
         assembly_helper.genShiftRightImmediate(dest_reg_index, shift_amount)
         dest_reg_val = (dest_reg_val >> shift_amount) & MAX_GPR_VAL
         exception_handlers_test_utils.assertGprHasValue(self, dest_reg_index, dest_reg_val)
 
-        shift_amount = RandomUtils.random32(0, 63)
+        shift_amount = RandomUtils.random32(0, max_shift_val)
         assembly_helper.genShiftLeftImmediate(dest_reg_index, shift_amount, aSrcRegIndex=src_reg_index)
         dest_reg_val = (src_reg_val << shift_amount) & MAX_GPR_VAL
         exception_handlers_test_utils.assertGprHasValue(self, dest_reg_index, dest_reg_val)
 
-        shift_amount = RandomUtils.random32(0, 63)
+        shift_amount = RandomUtils.random32(0, max_shift_val)
         assembly_helper.genShiftRightImmediate(dest_reg_index, shift_amount, aSrcRegIndex=src_reg_index)
         dest_reg_val = (src_reg_val >> shift_amount) & MAX_GPR_VAL
         exception_handlers_test_utils.assertGprHasValue(self, dest_reg_index, dest_reg_val)
@@ -109,7 +120,7 @@ class MainSequence(Sequence):
 
         # Reset destination register value after copying directly from source; otherwise, the tests
         # that follow will be less interesting
-        dest_reg_val = RandomUtils.random64()
+        dest_reg_val = RandomUtils.random32() if appRegSize==32 else RandomUtils.random64()
         load_gpr64_seq.load(dest_reg_index, dest_reg_val)
 
         assembly_helper.genAndRegister(dest_reg_index, src_reg_index)
