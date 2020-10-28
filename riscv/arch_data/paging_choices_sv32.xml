@@ -59,21 +59,21 @@
     <choice description="G=1" name="1" value="0x1" weight="0"/>
   </choices>
   <choices name="U#S#stage 1" type="Paging">
-    <choice description="U=0" name="0" value="0x0" weight="100"/>
-    <choice description="U=1" name="1" value="0x1" weight="0"/>
+    <choice description="U=0" name="0" value="0x0" weight="10"/>
+    <choice description="U=1" name="1" value="0x1" weight="10"/>
   </choices>
   <choices name="X#S#stage 1" type="Paging">
-    <choice description="X=0" name="0" value="0x0" weight="0"/>
-    <choice description="X=1" name="1" value="0x1" weight="100"/>
+    <choice description="X=0" name="0" value="0x0" weight="10"/>
+    <choice description="X=1" name="1" value="0x1" weight="10"/>
   </choices>
   <choices name="WR#S#stage 1" type="Paging">
-    <choice description="no access" name="0" value="0x0" weight="0"/>
-    <choice description="read access" name="1" value="0x1" weight="0"/>
-    <choice description="invalid WR" name="2" value="0x2" weight="0"/>
+    <choice description="no access" name="0" value="0x0" weight="10"/>
+    <choice description="read access" name="1" value="0x1" weight="100"/>
+    <choice description="invalid WR" name="2" value="0x2" weight="1"/>
     <choice description="readwrite access" name="3" value="0x3" weight="100"/>
   </choices>
   <choices name="V#S#stage 1" type="Paging">
-    <choice description="V=0" name="0" value="0x0" weight="0"/>
+    <choice description="V=0" name="0" value="0x0" weight="1"/>
     <choice description="V=1" name="1" value="0x1" weight="100"/>
   </choices>
 
@@ -120,12 +120,12 @@
   </choices>
 
   <choices name="Invalid DA#level 1#S#stage 1" type="Paging">
-    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
-    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
+    <choice description="DA valid"   name="false" value="0x0" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x1" weight="0"/>
   </choices>
   <choices name="Invalid DA#level 0#S#stage 1" type="Paging">
-    <choice description="DA valid"   name="false" value="0x1" weight="100"/>
-    <choice description="DA invalid" name="true"  value="0x0" weight="0"/>
+    <choice description="DA valid"   name="false" value="0x0" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x1" weight="0"/>
   </choices>
 
   <choices name="Misaligned Superpage#level 1#S#stage 1" type="Paging">
@@ -134,8 +134,8 @@
   </choices>
 
   <choices name="Last Level Pointer#level 0#S#stage 1" type="Paging">
-    <choice description="valid XWRV" name="false" value="0x0" weight="100"/>
-    <choice description="invalid XWRV" name="true" value="0x1" weight="0"/>
+    <choice description="Last level leaf node" name="false" value="0x0" weight="100"/>
+    <choice description="Last level pointer" name="true" value="0x1" weight="0"/>
   </choices>
 
   <choices name="Invalid X#level 1#S#stage 1" type="Paging">
@@ -157,12 +157,12 @@
   </choices>
 
   <choices name="Invalid U#level 1#S#stage 1" type="Paging">
-    <choice description="U valid"   name="false" value="0x1" weight="100"/>
-    <choice description="U invalid" name="true"  value="0x0" weight="0"/>
+    <choice description="U valid"   name="false" value="0x0" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x1" weight="0"/>
   </choices>
   <choices name="Invalid U#level 0#S#stage 1" type="Paging">
-    <choice description="U valid"   name="false" value="0x1" weight="100"/>
-    <choice description="U invalid" name="true"  value="0x0" weight="0"/>
+    <choice description="U valid"   name="false" value="0x0" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x1" weight="0"/>
   </choices>
 
   <choices name="Va Address Error#S#stage 1" type="Paging">
