@@ -26,11 +26,14 @@ class SystemCallSequence(Sequence):
         self._mAssemblyHelper = AssemblyHelperRISCV(self)
         self._mDataBlockAddrRegIndex = None
         self._mActionCodeRegIndex = None
+        self._mAppRegSize = 64
 
     def generate(self, **kwargs):
         (handlers_set_name, valid) = self.getOption('handlers_set')
         if valid and (handlers_set_name == 'Fast'):
             self.error('Fast exception handlers are enabled. SystemCallSequence only supports using comprehensive exception handlers.')
+
+        self._mAppRegSize = self.getGlobalState('AppRegisterWidth')
 
         function = kwargs.setdefault('Function', 'SwitchPrivilegeLevel')
         if function == 'SwitchPrivilegeLevel':
@@ -176,12 +179,23 @@ class SystemCallSequence(Sequence):
 
         # The action code register is used as a scratch register here to reduce the number of
         # required registers
-        self.genInstruction('LD##RISCV', {'rd': self._mActionCodeRegIndex, 'rs1': self._mDataBlockAddrRegIndex, 'simm12': 0, 'NoRestriction': 1})
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 0) 
         self._mAssemblyHelper.genWriteSystemRegister(('%sstatus' % priv_level_prefix.lower()), self._mActionCodeRegIndex)
-        self.genInstruction('LD##RISCV', {'rd': self._mActionCodeRegIndex, 'rs1': self._mDataBlockAddrRegIndex, 'simm12': 8, 'NoRestriction': 1})
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 1) 
         self._mAssemblyHelper.genWriteSystemRegister(('%sepc' % priv_level_prefix.lower()), self._mActionCodeRegIndex)
-        self.genInstruction('LD##RISCV', {'rd': self._mActionCodeRegIndex, 'rs1': self._mDataBlockAddrRegIndex, 'simm12': 16, 'NoRestriction': 1})
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 2) 
         self._mAssemblyHelper.genWriteSystemRegister('satp', self._mActionCodeRegIndex)
-        self.genInstruction('LD##RISCV', {'rd': self._mActionCodeRegIndex, 'rs1': self._mDataBlockAddrRegIndex, 'simm12': 24, 'NoRestriction': 1})
-        self.genInstruction('LD##RISCV', {'rd': self._mDataBlockAddrRegIndex, 'rs1': self._mDataBlockAddrRegIndex, 'simm12': 32, 'NoRestriction': 1})
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 3) 
+        self._genLoadGPR(self._mDataBlockAddrRegIndex, self._mDataBlockAddrRegIndex, 4) 
         self.genInstruction(('%sRET##RISCV' % priv_level_prefix), {'NoRestriction': 1})
+
+    ## Generate instruction to load a single GPR
+    #
+    # @param aDestReg - index of destination GPR 
+    # @param aAddrReg - index of GPR containing base address
+    # @param aOffset  - offset from base address
+    def _genLoadGPR(self, aDestReg, aAddrReg, aOffset = 0):
+        if self._mAppRegSize == 32:
+            self.genInstruction('LW##RISCV', {'rd': aDestReg, 'rs1': aAddrReg, 'simm12': aOffset * 4, 'NoRestriction': 1})
+        else:
+            self.genInstruction('LD##RISCV', {'rd': aDestReg, 'rs1': aAddrReg, 'simm12': aOffset * 8, 'NoRestriction': 1})

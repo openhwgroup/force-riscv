@@ -100,13 +100,17 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.mAssemblyHelper.logDebugSymbol('PAGE_FAULT_HANDLER entered...')
 
-        self.callRoutine('CheckFaultAddress')  # returns 0 if successful
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            # not relevant for Sv32...
+            pass
+        else:
+            self.callRoutine('CheckFaultAddress')  # returns 0 if successful
             
-        self.mAssemblyHelper.logDebugSymbol('Return from CheckFaultAddress.')
+            self.mAssemblyHelper.logDebugSymbol('Return from CheckFaultAddress.')
         
-        (rcode_reg_index,scratch_reg_index) = handler_regs.RegisterSet( ['rcode', 'scratch_reg'] )
-        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
-        self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 26, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
+            (rcode_reg_index,scratch_reg_index) = handler_regs.RegisterSet( ['rcode', 'scratch_reg'] )
+            self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
+            self.mAssemblyHelper.genConditionalBranchToLabel(rcode_reg_index, scratch_reg_index, 26, 'EQ', 'PAGE_FAULT_HANDLER_EXIT')
 
         # faulting address seems to be okay. lets move on...
         
@@ -141,7 +145,9 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.mAssemblyHelper.logDebugSymbol('Returned from ClearPageFault.')
 
-        self.mAssemblyHelper.addLabel('PAGE_FAULT_HANDLER_EXIT')
+        if self.getGlobalState('AppRegisterWidth') != 32:
+            self.mAssemblyHelper.addLabel('PAGE_FAULT_HANDLER_EXIT')
+        
         self.mHandlerStack.freeStackFrame() # restore 'handler-saved' registers,
         self.mAssemblyHelper.genReturn()    #   return
 
@@ -469,20 +475,24 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         # use pte level to generate superpage address offset mask...
 
-        # ppn[0] is bits 18..10
-        self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0x1ff)  # each pte.ppn field is nine bits 
+        # Sv32:       ppn[0] is bits 19..10
+        # Sv39, Sv48: ppn[0] is bits 18..10
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0x3ff)  # for Sv32, each pte.ppn field is ten bits 
+        else:
+            self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0x1ff)  # else each pte.ppn field is nine bits 
         self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index,10,scratch_reg2_index)
         self.mAssemblyHelper.genMoveRegister(scratch_reg_index,scratch_reg2_index)
         self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 1)
         self.mAssemblyHelper.genConditionalBranchToLabel(pte_level_reg_index, scratch_reg3_index, 14, 'EQ', 'SUPER_PAGE_FIXUP')
 
-        # ppn[1] is bits 27..19
+        # Sv39, Sv48: ppn[1] is bits 27..19
         self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index,9)
         self.mAssemblyHelper.genOrRegister(scratch_reg_index, scratch_reg_index, scratch_reg2_index)
         self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 2)
         self.mAssemblyHelper.genConditionalBranchToLabel(pte_level_reg_index, scratch_reg3_index, 6, 'EQ', 'SUPER_PAGE_FIXUP')
 
-        # ppn[2] is bits 36..28
+        # Sv48: ppn[2] is bits 36..28
         self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index,9)
         self.mAssemblyHelper.genOrRegister(scratch_reg_index, scratch_reg_index, scratch_reg2_index)
 
@@ -504,7 +514,10 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
     # generate code to write PTE to memory...
     
     def genWritePTE(self, pte_addr_reg_index, pte_value_reg_index):
-        self.genInstruction('SD##RISCV', {'rs1': pte_addr_reg_index, 'rs2': pte_value_reg_index, 'simm12': 0, 'NoRestriction': 1})
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self.genInstruction('SW##RISCV', {'rs1': pte_addr_reg_index, 'rs2': pte_value_reg_index, 'simm12': 0, 'NoRestriction': 1})
+        else:
+            self.genInstruction('SD##RISCV', {'rs1': pte_addr_reg_index, 'rs2': pte_value_reg_index, 'simm12': 0, 'NoRestriction': 1})
 
         
     # generate code to setup/issue sfence.vma instruction, to in effect cause a tlb flush for a faulting address.

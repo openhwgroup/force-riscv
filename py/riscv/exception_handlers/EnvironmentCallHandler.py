@@ -24,6 +24,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
 
         self.mDataBlockAddrRegIndex = None
         self.mActionCodeRegIndex = None
+        self._mAppRegSize = 64
 
     def generateHandler(self, **kwargs):
         try:
@@ -32,6 +33,8 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
             self.error('INTERNAL ERROR: one or more arguments to EnvironmentCallHandlerRISCV generate method missing.')
 
         self.debug('[EnvironmentCallHandlerRISCV] generate handler address: 0x%x' % self.getPEstate('PC'))
+
+        self._mAppRegSize = self.getGlobalState('AppRegisterWidth')
 
         self.mAssemblyHelper.clearLabels('EnvironmentCallHandlerRISCV')
 
@@ -86,7 +89,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
             self.mAssemblyHelper.genOrRegister(xstatus_reg_index, scratch_reg_index)
             self.mAssemblyHelper.genWriteSystemRegister(('%sstatus' % priv_level.name.lower()), xstatus_reg_index)
 
-            self.genInstruction('LD##RISCV', {'rd': scratch_reg_index, 'rs1': self.mDataBlockAddrRegIndex, 'simm12': 0, 'NoRestriction': 1})
+            self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 0)
             self.mAssemblyHelper.genWriteSystemRegister(('%sepc' % priv_level.name.lower()), scratch_reg_index)
 
         self.mAssemblyHelper.genRelativeBranchToLabel(52, 'RETURN')
@@ -103,14 +106,26 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
         scratch_reg_index = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 1)
 
         for priv_level in self.mAssemblyHelper.genPrivilegeLevelInstructions(aPrivLevels=tuple(PrivilegeLevelRISCV)[1:], aInstrCountPerLevel=4, aScratchRegIndex=scratch_reg_index, aPrivLevelRegIndex=priv_level_reg_index):
-            self.genInstruction('LD##RISCV', {'rd': scratch_reg_index, 'rs1': self.mDataBlockAddrRegIndex, 'simm12': 0, 'NoRestriction': 1})
+            self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 0)
             self.mAssemblyHelper.genWriteSystemRegister(('%sstatus' % priv_level.name.lower()), scratch_reg_index)
-            self.genInstruction('LD##RISCV', {'rd': scratch_reg_index, 'rs1': self.mDataBlockAddrRegIndex, 'simm12': 8, 'NoRestriction': 1})
+            self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 1)
             self.mAssemblyHelper.genWriteSystemRegister(('%sepc' % priv_level.name.lower()), scratch_reg_index)
 
-        self.genInstruction('LD##RISCV', {'rd': scratch_reg_index, 'rs1': self.mDataBlockAddrRegIndex, 'simm12': 16, 'NoRestriction': 1})
+        self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 2)
         self.mAssemblyHelper.genWriteSystemRegister('satp', scratch_reg_index)
-        self.genInstruction('LD##RISCV', {'rd': self.mActionCodeRegIndex, 'rs1': self.mDataBlockAddrRegIndex, 'simm12': 24, 'NoRestriction': 1})
-        self.genInstruction('LD##RISCV', {'rd': self.mDataBlockAddrRegIndex, 'rs1': self.mDataBlockAddrRegIndex, 'simm12': 32, 'NoRestriction': 1})
+        self._genLoadRegFromDataBlock(self.mActionCodeRegIndex,    self.mDataBlockAddrRegIndex, 3)
+        self._genLoadRegFromDataBlock(self.mDataBlockAddrRegIndex, self.mDataBlockAddrRegIndex, 4)
 
         self.mAssemblyHelper.genRelativeBranchToLabel(20, 'RETURN')
+
+    ## Generate instruction to load a single GPR from the data block.
+    #
+    # @param aDestReg - destination GPR
+    # @param aAddrReg - GPR containing base address to load from
+    # @param aOffset  - offset from base address, if any
+    def _genLoadRegFromDataBlock(self, aDestReg, aAddrReg, aOffset):
+        if self._mAppRegSize == 32:
+            self.genInstruction('LW##RISCV', {'rd': aDestReg, 'rs1': aAddrReg, 'simm12': aOffset * 4, 'NoRestriction': 1})
+        else:
+            self.genInstruction('LD##RISCV', {'rd': aDestReg, 'rs1': aAddrReg, 'simm12': aOffset * 8, 'NoRestriction': 1})
+        

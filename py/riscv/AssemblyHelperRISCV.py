@@ -231,15 +231,6 @@ class AssemblyHelperRISCV(AssemblyHelper):
     def genWriteSystemRegister(self, aSysRegName, aSrcRegIndex):
         self.mSequence.genInstruction('CSRRW#register#RISCV', {'rd': 0, 'rs1': aSrcRegIndex, 'csr': self.mSequence.getRegisterIndex(aSysRegName)})
 
-    ## Generate an instruction to load a value from a memory location defined in a GPR w/ a 12 bit 
-    # immediate offset. Value loaded into GPR.
-    #
-    #  @param aDestRegIndex The index of the register to be written with the value from memory.
-    #  @param aAddrRegIndex The index of the register containing the address to load from memory
-    #  @param aImmOffsetVal The 12b signed immediate offset applied to the address in aAddrRegIndex
-    def genLoadMemory(self, aDestRegIndex, aAddrRegIndex, aImmOffsetVal):
-        self.mSequence.genInstruction('LD##RISCV', {'rd': aDestRegIndex, 'rs1': aAddrRegIndex, 'simm12':aImmOffsetVal, 'NoRestriction': 1})
-
     ## Generate a conditional branch instruction to the specified address.
     #
     #  @param aLhRegIndex The index of the register to use for the left-hand side of the comparison.

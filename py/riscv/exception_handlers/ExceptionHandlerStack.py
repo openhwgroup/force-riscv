@@ -35,7 +35,8 @@ class ExceptionHandlerStackRISCV(Sequence):
         self._mSpIndex = None
         self._mSpName = None
         self._mStackFrames = []
-
+        self._mAppRegSize = 64
+        
     def generate(self, **kwargs):
         self._mStackMemAddr = kwargs.get('stack_mem')
         if self._mStackMemAddr is None:
@@ -53,6 +54,8 @@ class ExceptionHandlerStackRISCV(Sequence):
 
         self._initializeStackPointer(kwargs.get('load_stack_pointer', True))
 
+        self._mAppRegSize = self.getGlobalState('AppRegisterWidth')
+        
         return self._mSpIndex
 
     ## Create a new stack frame with the values of the specified registers.
@@ -108,19 +111,28 @@ class ExceptionHandlerStackRISCV(Sequence):
     def push(self, aRegIndex):
         # Decrement the stack pointer before the push, so the stack pointer always points to the
         # last value pushed
-        self.genInstruction('ADDI##RISCV', {'rd': self._mSpIndex, 'rs1': self._mSpIndex, 'simm12': 0xFF8})
-
-        self.genInstruction('SD##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': 0, 'NoRestriction': 1})
+        if self._mAppRegSize == 32:
+            self.genInstruction('ADDI##RISCV', {'rd': self._mSpIndex, 'rs1': self._mSpIndex, 'simm12': 0xFFC})
+            self.genInstruction('SW##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': 0, 'NoRestriction': 1})
+        else:
+            self.genInstruction('ADDI##RISCV', {'rd': self._mSpIndex, 'rs1': self._mSpIndex, 'simm12': 0xFF8})
+            self.genInstruction('SD##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': 0, 'NoRestriction': 1})
 
     ## Pop a value from the top of the stack.
     #
     #  @param aRegIndex The index of the register in which to load the popped value.
     def pop(self, aRegIndex):
-        self.genInstruction('LD##RISCV', {'rd': aRegIndex, 'rs1': self._mSpIndex, 'simm12': 0, 'NoRestriction': 1})
+        if self._mAppRegSize == 32:
+            self.genInstruction('LW##RISCV', {'rd': aRegIndex, 'rs1': self._mSpIndex, 'simm12': 0, 'NoRestriction': 1})
+        else:
+            self.genInstruction('LD##RISCV', {'rd': aRegIndex, 'rs1': self._mSpIndex, 'simm12': 0, 'NoRestriction': 1})
 
         # Increment the stack pointer after the pop, so the stack pointer always points to the last
         # value pushed
-        self.genInstruction('ADDI##RISCV', {'rd': self._mSpIndex, 'rs1': self._mSpIndex, 'simm12': 0x8})
+        if self._mAppRegSize == 32:
+            self.genInstruction('ADDI##RISCV', {'rd': self._mSpIndex, 'rs1': self._mSpIndex, 'simm12': 0x4})
+        else:
+            self.genInstruction('ADDI##RISCV', {'rd': self._mSpIndex, 'rs1': self._mSpIndex, 'simm12': 0x8})
 
     ## Read a value from the stack without modifying the stack.
     #
@@ -128,8 +140,12 @@ class ExceptionHandlerStackRISCV(Sequence):
     #  @param aOffset The number of entries from the top of the stack to read. The top of the stack
     #       has an aOffset value of 0.
     def peek(self, aRegIndex, aOffset=0):
-        offset = aOffset * 8
-        self.genInstruction('LD##RISCV', {'rd': aRegIndex, 'rs1': self._mSpIndex, 'simm12': offset, 'NoRestriction': 1})
+        if self._mAppRegSize == 32:
+            offset = aOffset * 4
+            self.genInstruction('LW##RISCV', {'rd': aRegIndex, 'rs1': self._mSpIndex, 'simm12': offset, 'NoRestriction': 1})
+        else:
+            offset = aOffset * 8
+            self.genInstruction('LD##RISCV', {'rd': aRegIndex, 'rs1': self._mSpIndex, 'simm12': offset, 'NoRestriction': 1})
 
     ## Modify a value in the stack without modifying the structure of the stack.
     #
@@ -137,8 +153,12 @@ class ExceptionHandlerStackRISCV(Sequence):
     #  @param aOffset The number of entries from the top of the stack to modify. The top of the
     #       stack has an aOffset value of 0.
     def modify(self, aRegIndex, aOffset=0):
-        offset = aOffset * 8
-        self.genInstruction('SD##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': offset, 'NoRestriction': 1})
+        if self._mAppRegSize == 32:
+            offset = aOffset * 4
+            self.genInstruction('LW##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': offset, 'NoRestriction': 1})
+        else:
+            offset = aOffset * 8
+            self.genInstruction('SD##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': offset, 'NoRestriction': 1})
 
     ## Return the index of the register used as the stack pointer.
     def pointerIndex(self):

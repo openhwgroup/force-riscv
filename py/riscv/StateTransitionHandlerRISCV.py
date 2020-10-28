@@ -44,7 +44,11 @@ class MemoryStateTransitionHandlerRISCV(StateTransitionHandler):
         load_gpr64_seq = LoadGPR64(self.genThread)
         load_gpr64_seq.load(base_reg_index, aStateElem.getStartAddress())
         load_gpr64_seq.load(mem_val_reg_index, aStateElem.getValues()[0])
-        self.genInstruction('SD##RISCV', {'rs1': base_reg_index, 'rs2': mem_val_reg_index, 'simm12': 0, 'NoRestriction': 1})
+
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self.genInstruction('SW##RISCV', {'rs1': base_reg_index, 'rs2': mem_val_reg_index, 'simm12': 0, 'NoRestriction': 1})
+        else:
+            self.genInstruction('SD##RISCV', {'rs1': base_reg_index, 'rs2': mem_val_reg_index, 'simm12': 0, 'NoRestriction': 1})
 
         self._mHelperGprSet.releaseHelperGprs()
 
@@ -79,7 +83,10 @@ class MemoryStateTransitionHandlerRISCV(StateTransitionHandler):
                 load_gpr64_seq.load(base_reg_index, base_addr)
                 offset = 0
 
-            self.genInstruction('SD##RISCV', {'rs1': base_reg_index, 'rs2': mem_val_reg_index, 'simm12': offset, 'NoRestriction': 1})
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                self.genInstruction('SW##RISCV', {'rs1': base_reg_index, 'rs2': mem_val_reg_index, 'simm12': offset, 'NoRestriction': 1})
+            else:
+                self.genInstruction('SD##RISCV', {'rs1': base_reg_index, 'rs2': mem_val_reg_index, 'simm12': offset, 'NoRestriction': 1})
 
         self._mHelperGprSet.releaseHelperGprs()
 
@@ -200,7 +207,10 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
                 load_gpr64_seq.load(mem_block_ptr_index, mem_block_ptr_val)
                 offset = 0
 
-            self.genInstruction('LD##RISCV', {'rd': reg_val_gpr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                self.genInstruction('LW##RISCV', {'rd': reg_val_gpr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+            else:
+                self.genInstruction('LD##RISCV', {'rd': reg_val_gpr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
             if state_elem.getName() == 'vtype':
                 self._processVtypeStateElement(reg_val_gpr_index)
             elif state_elem.getName() == 'vl':
@@ -265,11 +275,18 @@ class GprStateTransitionHandlerRISCV(StateTransitionHandler):
 
         offset = 0
         for state_elem in aStateElems[:-1]:
-            self.genInstruction('LD##RISCV', {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
-            offset += 8
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                self.genInstruction('LW##RISCV', {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+                offset += 4
+            else:
+                self.genInstruction('LD##RISCV', {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+                offset += 8
 
         # Load the last StateElement value into the memory block pointer register as the last step
-        self.genInstruction('LD##RISCV', {'rd': mem_block_ptr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self.genInstruction('LW##RISCV', {'rd': mem_block_ptr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+        else:
+            self.genInstruction('LD##RISCV', {'rd': mem_block_ptr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
 
 
 ## This class generates instructions to update the system State according to the VM context
