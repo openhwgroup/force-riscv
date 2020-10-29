@@ -60,6 +60,7 @@ namespace Force {
     obj_registry->RegisterObject(new VtypeLayoutOperand());
     obj_registry->RegisterObject(new WholeRegisterLayoutOperand());
     obj_registry->RegisterObject(new CustomLayoutOperand());
+    obj_registry->RegisterObject(new SegmentedLayoutOperand());
     obj_registry->RegisterObject(new VectorIndexedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new MultiVectorRegisterOperandRISCV());
     obj_registry->RegisterObject(new VectorIndexedDataRegisterOperand());

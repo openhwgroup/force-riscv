@@ -74,6 +74,14 @@ namespace Force {
     rVecLayout.mRegIndexAlignment = rVecLayoutOprStruct.GetRegisterIndexAlignment();
   }
 
+  void VectorLayoutSetupRISCV::SetSegmentedRegisterSize(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
+  {
+    // For segmented instructions, register count is always specified.
+    if (rVecLayout.mRegCount < rVecLayout.mFieldCount) {
+        rVecLayout.mRegCount = rVecLayout.mFieldCount;
+    }
+  }
+
   uint32 VectorLayoutSetupRISCV::GetVl() const
   {
     Register* vl_reg = mpRegFile->RegisterLookup("vl");

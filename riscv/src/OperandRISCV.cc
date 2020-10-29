@@ -297,6 +297,18 @@ namespace Force {
     instr_constr->SetVectorLayout(vec_layout);
   }
 
+  void SegmentedLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
+
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
+    vec_layout_setup.SetUpVectorLayoutFixedElementSize(*(mpStructure->CastOperandStructure<VectorLayoutOperandStructure>()), vec_layout);
+    vec_layout_setup.SetSegmentedRegisterSize(*(mpStructure->CastOperandStructure<VectorLayoutOperandStructure>()), vec_layout);
+
+    instr_constr->SetVectorLayout(vec_layout);
+  }
+
   void WholeRegisterLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
