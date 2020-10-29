@@ -18,6 +18,7 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.ChoicesModifier import ChoicesModifier
 from DV.riscv.trees.instruction_tree import RV_G_instructions
+from DV.riscv.trees.instruction_tree import RV32_G_instructions
 import RandomUtils
 
 ## This test evaluates invoking the privilege level switching function of the system call sequence
@@ -55,7 +56,10 @@ class MainSequence(Sequence):
     ## Generate a short sequence of random instructions.
     def _genRandomInstructions(self):
         for _ in range(10):
-            self.genInstruction(self.pickWeighted(RV_G_instructions))
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                self.genInstruction(self.pickWeighted(RV32_G_instructions))
+            else:
+                self.genInstruction(self.pickWeighted(RV_G_instructions))
 
     ## Get the current system state relevant for privilege level switching.
     def _getState(self):

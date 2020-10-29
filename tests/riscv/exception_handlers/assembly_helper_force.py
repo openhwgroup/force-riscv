@@ -52,7 +52,7 @@ class MainSequence(Sequence):
         dest_reg_val = imm_val
         exception_handlers_test_utils.assertGprHasValue(self, dest_reg_index, dest_reg_val)
 
-        max_shift_val = 32 if appRegSize==32 else 64
+        max_shift_val = 31 if appRegSize==32 else 63
         
         shift_amount = RandomUtils.random32(0, max_shift_val)
         assembly_helper.genShiftLeftImmediate(dest_reg_index, shift_amount)

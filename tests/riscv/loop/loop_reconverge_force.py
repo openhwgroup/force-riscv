@@ -38,6 +38,20 @@ class MainSequence(LoopTestSequence):
             'SRLI#RV64I#RISCV': 10,
         }
 
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self._mInstructionWeights = {
+                'ADDI##RISCV': 10,
+                'BEQ##RISCV': 2,
+                'BGE##RISCV': 2,
+                'BGEU##RISCV': 2,
+                'BLT##RISCV': 2,
+                'BLTU##RISCV': 2,
+                'BNE##RISCV': 2,
+                'LUI##RISCV': 10,
+                'SLLI#RV32I#RISCV': 10,
+                'SRLI#RV32I#RISCV': 10,
+        }
+            
     ## Return a dictionary of names of instructions to generate in the loop body with their
     # corresponding weights.
     def getInstructionWeights(self):

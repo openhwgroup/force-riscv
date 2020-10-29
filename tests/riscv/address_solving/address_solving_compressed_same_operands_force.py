@@ -22,7 +22,12 @@ from base.Sequence import Sequence
 class MainSequence(Sequence):
 
     def generate(self, **kargs):
+        
         instructions = ('C.FLD##RISCV', 'C.FSD##RISCV', 'C.LD##RISCV', 'C.LW##RISCV', 'C.SD##RISCV', 'C.SW##RISCV')
+
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            instructions = ('C.FLD##RISCV', 'C.FSD##RISCV', 'C.LW##RISCV', 'C.SW##RISCV')
+            
         for _ in range(50):
             instr_id = self.genInstruction(self.choice(instructions), {'NoPreamble': 1})
 

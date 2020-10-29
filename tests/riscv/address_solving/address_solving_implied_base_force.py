@@ -23,6 +23,10 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         instructions = ('C.FLDSP##RISCV', 'C.FSDSP##RISCV', 'C.LDSP##RISCV', 'C.LWSP##RISCV', 'C.SDSP##RISCV', 'C.SWSP##RISCV')
+
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            instructions = ('C.FLDSP##RISCV', 'C.FSDSP##RISCV', 'C.LWSP##RISCV', 'C.SWSP##RISCV')
+            
         for _ in range(100):
             instr_id = self.genInstruction(self.choice(instructions), {'NoPreamble': 1})
 

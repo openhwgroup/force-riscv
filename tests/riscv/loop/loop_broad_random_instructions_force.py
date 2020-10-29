@@ -28,6 +28,7 @@ class MainSequence(LoopTestSequence):
         # initialization issue is resolved.
         # TODO(Noah): Uncomment the branch instructions when running Force with co-simulation is
         # enabled for RISCV.
+        
         self._mInstructionWeights = {
             'ADD##RISCV': 10,
             'ADDI##RISCV': 10,
@@ -93,6 +94,56 @@ class MainSequence(LoopTestSequence):
             'XORI##RISCV': 10,
         }
 
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self._mInstructionWeights = {
+                'ADD##RISCV': 10,
+                'ADDI##RISCV': 10,
+                'AND##RISCV': 10,
+                'ANDI##RISCV': 10,
+                'AUIPC##RISCV': 10,
+                #'BEQ##RISCV': 10,
+                #'BGE##RISCV': 10,
+                #'BGEU##RISCV': 10,
+                #'BLT##RISCV': 10,
+                #'BLTU##RISCV': 10,
+                #'BNE##RISCV': 10,
+                'DIV##RISCV': 10,
+                'DIVU##RISCV': 10,
+                'JAL##RISCV': 10,
+                'JALR##RISCV': 10,
+                #'LB##RISCV': 10,
+                #'LBU##RISCV': 10,
+                #'LH##RISCV': 10,
+                #'LHU##RISCV': 10,
+                'LUI##RISCV': 10,
+                #'LW##RISCV': 10,
+                #'LWU##RISCV': 10,
+                'MUL##RISCV': 10,
+                'MULH##RISCV': 10,
+                'MULHSU##RISCV': 10,
+                'MULHU##RISCV': 10,
+                'OR##RISCV': 10,
+                'ORI##RISCV': 10,
+                'REM##RISCV': 10,
+                'REMU##RISCV': 10,
+                #'SB##RISCV': 10,
+                #'SH##RISCV': 10,
+                'SLL##RISCV': 10,
+                'SLLI#RV32I#RISCV': 10,
+                'SLT##RISCV': 10,
+                'SLTI##RISCV': 10,
+                'SLTIU##RISCV': 10,
+                'SLTU##RISCV': 10,
+                'SRA##RISCV': 10,
+                'SRAI#RV32I#RISCV': 10,
+                'SRL##RISCV': 10,
+                'SRLI#RV32I#RISCV': 10,
+                'SUB##RISCV': 10,
+                #'SW##RISCV': 10,
+                'XOR##RISCV': 10,
+                'XORI##RISCV': 10,
+            }
+        
     ## Return a dictionary of names of instructions to generate in the loop body with their
     # corresponding weights.
     def getInstructionWeights(self):

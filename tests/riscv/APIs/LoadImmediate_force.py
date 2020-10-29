@@ -28,17 +28,26 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         boundary_values = (0x1, 0x7FFFF000, 0xFFFFF000, 0xFFFFFFFF000, 0xFFFFFFFFFFF000, 0xFFFFFFFFFFFFEFFF)
+
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            boundary_values = (0x1, 0x7FFFF000, 0xFFFFF000, 0xFFFFF000, 0xFFFFEFFF)
+            
         for boundary_value in boundary_values:
             for bottom_bits in (0x0, 0x7FF, 0xFFF):
                 for adjustment in (-1, 0, 1):
                     value = boundary_value + bottom_bits + adjustment
+                    if self.getGlobalState('AppRegisterWidth') == 32:
+                        value &= 0xffffffff
                     self._testLoadGpr(value)
 
         for _ in range(50):
             self._testLoadGpr(self.random32())
 
-        for _ in range(50):
-            self._testLoadGpr(self.random64())
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            pass
+        else:
+            for _ in range(50):
+                self._testLoadGpr(self.random64())
 
     ## Load an immediate value into a random general purpose register; then verify the result.
     #

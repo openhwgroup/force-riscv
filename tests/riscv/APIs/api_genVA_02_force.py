@@ -36,6 +36,10 @@ class MainSequence(Sequence):
 
         theAddressRange  = '0x1F00-0x1FFF'
 
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            ldstr_double_ops = ldstr_word_ops
+
+            
         # Validate all of the range can be returned.  For range 0x1F00-0x1FFF, 16 requests for 16 bytes each are possible.
         for _ in range(16):
 
@@ -51,9 +55,15 @@ class MainSequence(Sequence):
         for _ in range(50):
 
             theAddressRange  = ['0x60200-0x611FF']
-            theAddressRange += ['0xF220000000-0xFFFFFFFFFF']
-            theAddressRange += ['0xFFF00000000-0xFFFFFFFFFFF']
-            theAddressRange += ['0x1000-0x1FFF,0x88000-0x89800,0xFFF00000000-0xFFFFFFFFFFF']
+
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                theAddressRange += ['0xF2200000-0xFFEFFFFF']
+                theAddressRange += ['0xFFF00000-0xFFFFFFFF']
+                theAddressRange += ['0x1000-0x1FFF,0x88000-0x89800']
+            else:
+                theAddressRange += ['0xF220000000-0xFFFFFFFFFF']
+                theAddressRange += ['0xFFF00000000-0xFFFFFFFFFFF']
+                theAddressRange += ['0x1000-0x1FFF,0x88000-0x89800,0xFFF00000000-0xFFFFFFFFFFF']
 
             for addrRange in theAddressRange:
 

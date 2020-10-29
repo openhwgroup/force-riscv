@@ -42,10 +42,12 @@ class MainSequence(Sequence):
 
     def generate(self, **kwargs):
 
-        available_page_sizes = { '4K', '2M', '1G', '512G'}
-        # available_page_sizes = { '4K' }
-        page_size_dict = { '4K': 0x1000, '2M': 0x200000, '1G': 0x40000000, 
-                           '512G': 0x8000000000}
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            available_page_sizes = { '4K', '4M' }
+            page_size_dict = { '4K': 0x1000, '4M': 0x400000 }            
+        else:
+            available_page_sizes = { '4K', '2M', '1G', '512G' }
+            page_size_dict = { '4K': 0x1000, '2M': 0x200000, '1G': 0x40000000, '512G': 0x8000000000 }
 
         for number_of_pages in range(2,20):
 
@@ -121,25 +123,23 @@ class MainSequence(Sequence):
                     the_instruction))
 
 
-
-
-
 # Set up the valid paging choices, in case they are not enabled by default
 def gen_thread_initialization(gen_thread):
+
+    satp_info = gen_thread.getRegisterInfo("satp", gen_thread.getRegisterIndex('satp') )
+    rv32 = satp_info['Width'] == 32
+    
     choices_mod = ChoicesModifier(gen_thread)
 
     # Make the pages small, so it is easy to generate a mapping that crosses 
     # page boundaries
-    choices_mod.modifyPagingChoices('Page size#4K granule#S#stage 1', 
-                {'4K': 25, '2M': 25, '1G': 25, '512G': 25})
 
+    if rv32:
+        choices_mod.modifyPagingChoices('Page size#4K granule#S#stage 1', {'4K': 25, '4M': 25} )
+    else:
+        choices_mod.modifyPagingChoices('Page size#4K granule#S#stage 1', {'4K': 25, '2M': 25, '1G': 25, '512G': 25} )
+            
     choices_mod.commitSet()
-
-
-
-
-
-
 
 
 GenThreadInitialization = gen_thread_initialization

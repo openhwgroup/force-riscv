@@ -27,11 +27,13 @@ import UtilityFunctions
 #  @param aPrioirtyMin A lower bound on the priority of the MemoryStateElements.
 #  @param aPriorityMax An upper bound on the priority of the MemoryStateElements.
 def addRandomMemoryStateElements(aSequence, aState, aStateElemCount, aPriorityMin=1, aPriorityMax=100):
+    rv32 = aSequence.getGlobalState('AppRegisterWidth') == 32
+    msize = 4 if rv32 else 8
     expected_mem_state_data = []
     for _ in range(aStateElemCount):
-        mem_start_addr = aSequence.genVA(Size=8, Align=8, Type='D')
-        mem_val = RandomUtils.random64()
-        aState.addMemoryStateElement(mem_start_addr, 8, mem_val, aPriority=RandomUtils.random32(aPriorityMin, aPriorityMax))
+        mem_start_addr = aSequence.genVA(Size=msize, Align=8, Type='D')
+        mem_val = RandomUtils.random32() if rv32 else RandomUtils.random64()
+        aState.addMemoryStateElement(mem_start_addr, msize, mem_val, aPriority=RandomUtils.random32(aPriorityMin, aPriorityMax))
         expected_mem_state_data.append((mem_start_addr, mem_val))
 
     return expected_mem_state_data
@@ -75,7 +77,7 @@ def addRandomGprStateElements(aSequence, aState, aStateElemCount, aPriorityMin=1
     gpr_indices = aSequence.getRandomGPRs(aStateElemCount, exclude='0')
     for gpr_index in gpr_indices:
         gpr_name = 'x%d' % gpr_index
-        gpr_val = RandomUtils.random64()
+        gpr_val = RandomUtils.random32() if aSequence.getGlobalState('AppRegisterWidth') == 32 else RandomUtils.random64()
         aState.addRegisterStateElement(gpr_name, (gpr_val,), aPriority=RandomUtils.random32(aPriorityMin, aPriorityMax))
         expected_gpr_state_data.append((gpr_name, gpr_val))
 
@@ -204,8 +206,10 @@ def _verifyMemoryState(aSequence, aExpectedMemStateData):
     (base_reg_index, mem_val_reg_index) = aSequence.getRandomGPRs(2, exclude='0')
     for (mem_start_addr, expected_mem_val) in aExpectedMemStateData:
         load_gpr64_seq.load(base_reg_index, mem_start_addr)
-        aSequence.genInstruction('LD##RISCV', {'rd': mem_val_reg_index, 'rs1': base_reg_index, 'simm12': 0, 'NoRestriction': 1})
-
+        if aSequence.getGlobalState('AppRegisterWidth') == 32:
+            aSequence.genInstruction('LW##RISCV', {'rd': mem_val_reg_index, 'rs1': base_reg_index, 'simm12': 0, 'NoRestriction': 1})
+        else:
+            aSequence.genInstruction('LD##RISCV', {'rd': mem_val_reg_index, 'rs1': base_reg_index, 'simm12': 0, 'NoRestriction': 1})
         mem_val_reg_name = 'x%d' % mem_val_reg_index
         (mem_val, valid) = aSequence.readRegister(mem_val_reg_name)
         assertValidRegisterValue(aSequence, mem_val_reg_name, valid)

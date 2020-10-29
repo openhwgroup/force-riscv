@@ -42,7 +42,7 @@ class MainSequence(Sequence):
 
         expected_sys_reg_state_data = []
 
-        mscratch_val = RandomUtils.random64()
+        mscratch_val = RandomUtils.random32() if self.getGlobalState('AppRegisterWidth') == 32 else RandomUtils.random64()
         state.addRegisterStateElement('mscratch', (mscratch_val,))
         expected_sys_reg_state_data.append(('mscratch', mscratch_val))
 

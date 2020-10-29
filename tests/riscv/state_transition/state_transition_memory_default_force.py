@@ -37,7 +37,12 @@ class MainSequence(Sequence):
         state = self._createState()
 
         target_addr_range = '%d-%d' % (self._mMemBlockStartAddr, self._mMemBlockEndAddr)
-        instructions = ('LD##RISCV', 'SD##RISCV')
+
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            instructions = ('LW##RISCV', 'SW##RISCV')
+        else:
+            instructions = ('LD##RISCV', 'SD##RISCV')
+        
         for _ in range(RandomUtils.random32(2, 5)):
             for _ in range(RandomUtils.random32(50, 100)):
                 self.genInstruction(self.choice(instructions), {'LSTarget': target_addr_range})
@@ -55,10 +60,16 @@ class MainSequence(Sequence):
         self._mMemBlockEndAddr = self._mMemBlockStartAddr + mem_block_size - 1
         cur_addr = self._mMemBlockStartAddr
         while cur_addr <= self._mMemBlockEndAddr:
-            mem_val = RandomUtils.random64()
-            state.addMemoryStateElement(cur_addr, 8, mem_val)
-            expected_mem_state_data.append((cur_addr, mem_val))
-            cur_addr += 8
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                mem_val = RandomUtils.random32()
+                state.addMemoryStateElement(cur_addr, 4, mem_val)
+                expected_mem_state_data.append((cur_addr, mem_val))
+                cur_addr += 4
+            else:
+                mem_val = RandomUtils.random64()
+                state.addMemoryStateElement(cur_addr, 8, mem_val)
+                expected_mem_state_data.append((cur_addr, mem_val))
+                cur_addr += 8
 
         self._mExpectedStateData[EStateElementType.Memory] = expected_mem_state_data
 

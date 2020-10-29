@@ -36,12 +36,17 @@ class MainSequence(Sequence):
         returned data matches.
         """
 
+        rv32 = self.getGlobalState('AppRegisterWidth') == 32
+        
         # Build the list of register ids
         reg_list = list()
 
         # generate GPR id's x1, x2 ... x31.  x0 is not used.  mask=0xFFFFFFFFFFFFFFFF
+
+        gpr_mask = 0xFFFFFFFF if rv32 else 0xFFFFFFFFFFFFFFFF
+        
         for i in range(1,32):
-            reg_list.append( ('x{}'.format(i), 0xFFFFFFFFFFFFFFFF) )            
+            reg_list.append( ('x{}'.format(i), gpr_mask) )            
 
         # generate FPR id's D0, D1, ... D31.   mask=0xFFFFFFFFFFFFFFFF
         for i in range(0, 32):                          
@@ -64,6 +69,10 @@ class MainSequence(Sequence):
             if self._isFloatingPointRegisterInitialized(reg_id):  continue
 
             initial_data = RandomUtils.random64()
+
+            if reg_id[0] in ('x') and rv32:
+                initial_data = RandomUtils.random32()
+                
             self.initializeRegister(reg_id, initial_data)
             self._verifyInitialization(reg_id, reg_mask, initial_data)
 
