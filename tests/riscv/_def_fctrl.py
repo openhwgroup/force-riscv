@@ -35,4 +35,6 @@ control_items = [ {"fname":"APIs/_def_fctrl.py",     "generator" : {"--cfg" : "c
                   {"fname":"vector/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"../../examples/riscv/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"bnt/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"register/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"register/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                 ]

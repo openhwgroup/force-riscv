@@ -116,7 +116,7 @@ Add RISCV system registers starter information in this file.
     </register_field>
   </register>
   
-  <register description="Fixed-point Saturate Flag." index="0x9" name="vxsat" physical_register="vxsat" privilege="URW" size="64" type="SysReg" choice="false">
+  <register description="Fixed-point Saturate Flag." index="0x9" name="vxsat" physical_register="vxsat" privilege="URW" size="64" type="SysReg">
     <register_field name="RESERVED" size="63">
       <bit_field shift="1" size="63"/>
     </register_field>
@@ -125,7 +125,7 @@ Add RISCV system registers starter information in this file.
     </register_field>
   </register>
     
-  <register description="Vector fixed-point rounding mode." index="0xa" name="vxrm" physical_register="vxrm" privilege="URW" size="64" type="SysReg" choice="false">
+  <register description="Vector fixed-point rounding mode." index="0xa" name="vxrm" physical_register="vxrm" privilege="URW" size="64" type="SysReg">
     <register_field name="RESERVED" size="62">
       <bit_field shift="2" size="62"/>
     </register_field>
@@ -1344,12 +1344,12 @@ Add RISCV system registers starter information in this file.
   <register description="Performance-monitoring counter." index="0xc1d" name="hpmcounter29" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1e" name="hpmcounter30" privilege="URO" size="0" type="SysReg"/>
   <register description="Performance-monitoring counter." index="0xc1f" name="hpmcounter31" privilege="URO" size="0" type="SysReg"/>
-  <register description="Vector length." index="0xc20" name="vl" physical_register="vl" privilege="URO" size="64" type="SysReg" choice="false" init_policy="VlInitPolicy">
+  <register description="Vector length." index="0xc20" name="vl" physical_register="vl" privilege="URW" size="64" type="SysReg" choice_weight="0" init_policy="VlInitPolicy">
     <register_field name="VL" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>
   </register>
-  <register description="Vector data type register." index="0xc21" name="vtype" physical_register="vtype" privilege="URW" size="64" type="SysReg" choice="true">
+  <register description="Vector data type register." index="0xc21" name="vtype" physical_register="vtype" privilege="URW" size="64" type="SysReg" choice="true" choice_weight="0">
     <register_field name="VILL" size="1" init_policy="VtypeInitPolicy">
       <bit_field shift="63" size="1"/>
     </register_field>
@@ -1386,7 +1386,7 @@ Add RISCV system registers starter information in this file.
       <choice description="1028-bit elements" value="0x7" weight="0"/>
     </register_field>
   </register>
-  <register description="VLEN/8 (vector register length in bytes)." class="ReadOnlyRegister" index="0xc22" name="vlenb" physical_register="vlenb" privilege="URO" size="64" reset="0x10" type="SysReg" choice="false">
+  <register boot="0" description="VLEN/8 (vector register length in bytes)." index="0xc22" name="vlenb" physical_register="vlenb" privilege="URO" size="64" reset="0x10" type="SysReg">
     <register_field name="VLENB" size="64">
       <bit_field shift="0" size="64"/>
     </register_field>

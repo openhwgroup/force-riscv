@@ -42,8 +42,8 @@ User_RW_CSRs = {
 
 User_RO_CSRs = {
     'cycle':0,
-    'time':10,
-    'instret':10,
+    'time':0,
+    'instret':0,
     'hpmcounter3':0,
     'hpmcounter4':0,
     'hpmcounter5':0,
