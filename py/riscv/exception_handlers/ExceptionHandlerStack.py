@@ -155,7 +155,7 @@ class ExceptionHandlerStackRISCV(Sequence):
     def modify(self, aRegIndex, aOffset=0):
         if self._mAppRegSize == 32:
             offset = aOffset * 4
-            self.genInstruction('LW##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': offset, 'NoRestriction': 1})
+            self.genInstruction('SW##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': offset, 'NoRestriction': 1})
         else:
             offset = aOffset * 8
             self.genInstruction('SD##RISCV', {'rs1': self._mSpIndex, 'rs2': aRegIndex, 'simm12': offset, 'NoRestriction': 1})
