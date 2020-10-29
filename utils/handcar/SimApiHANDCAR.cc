@@ -62,7 +62,7 @@ extern "C" {
     if ( (reg_name_copy == "PC") && isa_rv32 )             // restrict PC to 32-bits
       rval &= 0xffffffff;  //  in Rv32 config
 
-    std::cout << "[update_generator_register] isa_rv32: " << isa_rv32 << " " << reg_name_copy << ": 0x" << std::hex << rval << std::dec << std::endl;
+    //std::cout << "[update_generator_register] isa_rv32: " << isa_rv32 << " " << reg_name_copy << ": 0x" << std::hex << rval << std::dec << std::endl;
 
     Force::spSimApiHandle->RecordRegisterUpdate(cpuid, reg_name_copy.c_str(), rval, mask, pAccessType);
   }
