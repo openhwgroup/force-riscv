@@ -178,7 +178,7 @@ class CSRTreeBuilder:
         # N extension exceptions are not yet supported...
         # interrupt related registers (at least the enable/pending regs) are not yet supported...
         unsupported_csrs = [
-                            'count', 'event', 'pmp', 'cycle',
+                            'count', 'event', 'pmp', 'cycle', 'time', 'instret',
                             'utvec', 'utval', 'uip', 'uepc', 'ucause', 'uscratch', 'ustatus', 'uie',
                             'vtype', 'vxsat', 'vstart', 'vl', 'vxrm',
                             'sedeleg', 'sideleg',
