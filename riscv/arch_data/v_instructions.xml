@@ -1565,15 +1565,6 @@
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
     <asm format="VMULHU.VX %s, %s, %s, %s" op1="vd" op2="vs2" op3="rs1" op4="vm"/>
   </I>
-  <I name="VMV&lt;NF&gt;R.VI" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001110111010111"/>
-    <O name="vtype" type="SysReg" access="Read" class="ImpliedRegisterOperand"/>
-    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
-    <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
-    <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
-    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
-    <asm format="VMV&lt;NF&gt;R.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
-  </I>
   <I name="VMV.S.X" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="010000000001101010111"/>
     <O name="vtype" type="SysReg" access="Read" class="ImpliedRegisterOperand"/>
@@ -1589,6 +1580,15 @@
     <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
     <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
     <asm format="VMV.X.S %s, %s, %s" op1="vd" op2="vs2" op3="vm"/>
+  </I>
+  <I name="VMV&lt;NF&gt;R.VI" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001110111010111"/>
+    <O name="vtype" type="SysReg" access="Read" class="ImpliedRegisterOperand"/>
+    <O name="vd" type="VECREG" bits="11-7" access="Write" choices="Vector registers"/>
+    <O name="vs2" type="VECREG" bits="24-20" access="Read" choices="Vector registers"/>
+    <O name="simm5" type="Immediate" bits="19-15" class="SignedImmediateOperand"/>
+    <O name="vm" type="Choices" bits="25-25" choices="Vector mask"/>
+    <asm format="VMV&lt;NF&gt;R.VI %s, %s, %s, %s" op1="vd" op2="vs2" op3="simm5" op4="vm"/>
   </I>
   <I name="VMXNOR.VV" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0111110101010111"/>
