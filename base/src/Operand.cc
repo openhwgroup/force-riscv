@@ -139,7 +139,7 @@ namespace Force {
         opr_req->SetIgnored();
       }
       else{
-        new_constraint->ApplyUserRequest(*opr_req);
+        new_constraint->ApplyUserRequest(*opr_req, *mpStructure);
       }
     }
     new_constraint->Setup(gen, instr, *(this->mpStructure));

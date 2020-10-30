@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<instruction_file>
+  <I name="FADD.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,6-0" value="00000001010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FADD.S %s, %s, %s" op1="rs1" op2="rs2" op3="rd"/>
+  </I>
+  <I name="FCLASS.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="1110000000000011010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FCLASS.S %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.L.S" isa="RISCV" group="Float" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100000000101010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FCVT.L.S %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.LU.S" isa="RISCV" group="Float" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100000000111010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FCVT.LU.S %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.S.L" isa="RISCV" group="Float" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101000000101010011"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FCVT.S.L %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.S.LU" isa="RISCV" group="Float" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101000000111010011"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FCVT.S.LU %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.S.W" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101000000001010011"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FCVT.S.W %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.S.WU" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101000000011010011"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FCVT.S.WU %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.W.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100000000001010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FCVT.W.S %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.WU.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100000000011010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FCVT.WU.S %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FDIV.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,6-0" value="00011001010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FDIV.S %s, %s, %s" op1="rs1" op2="rs2" op3="rd"/>
+  </I>
+  <I name="FEQ.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="10100000101010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FEQ.S %s, %s, %s" op1="rd" op2="rs2" op3="rs1"/>
+  </I>
+  <I name="FLE.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="10100000001010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FLE.S %s, %s, %s" op1="rd" op2="rs2" op3="rs1"/>
+  </I>
+  <I name="FLT.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="10100000011010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FLT.S %s, %s, %s" op1="rd" op2="rs2" op3="rs1"/>
+  </I>
+  <I name="FLW" isa="RISCV" class="LoadStoreInstruction" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="14-12,6-0" value="0100000111"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <O name="LoadStore-rs1-simm12" type="LoadStore" alignment="4" base="rs1" data-size="4" element-size="4" mem-access="Read" offset="simm12" offset-scale="0">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+      <O name="simm12" type="Immediate" bits="31-20" class="SignedImmediateOperand"/>
+    </O>
+    <asm format="FLW %s, %s, %s" op1="simm12" op2="rs1" op3="rd"/>
+  </I>
+  <I name="FMADD.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="001000011"/>
+    <O name="rs3" type="FPR" bits="31-27" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FMADD.S %s, %s, %s, %s" op1="rs1" op2="rs2" op3="rs3" op4="rd"/>
+  </I>
+  <I name="FMAX.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00101000011010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FMAX.S %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+  </I>
+  <I name="FMIN.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00101000001010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FMIN.S %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+  </I>
+  <I name="FMSUB.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="001000111"/>
+    <O name="rs3" type="FPR" bits="31-27" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FMSUB.S %s, %s, %s, %s" op1="rs1" op2="rs2" op3="rs3" op4="rd"/>
+  </I>
+  <I name="FMUL.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,6-0" value="00010001010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FMUL.S %s, %s, %s" op1="rs1" op2="rs2" op3="rd"/>
+  </I>
+  <I name="FMV.W.X" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="1111000000000001010011"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FMV.W.X %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FMV.X.W" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,14-12,6-0" value="1110000000000001010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FMV.X.W %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FNMADD.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="001001111"/>
+    <O name="rs3" type="FPR" bits="31-27" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FNMADD.S %s, %s, %s, %s" op1="rs1" op2="rs2" op3="rs3" op4="rd"/>
+  </I>
+  <I name="FNMSUB.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="26-25,6-0" value="001001011"/>
+    <O name="rs3" type="FPR" bits="31-27" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FNMSUB.S %s, %s, %s, %s" op1="rs1" op2="rs2" op3="rs3" op4="rd"/>
+  </I>
+  <I name="FSGNJ.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00100000001010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FSGNJ.S %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+  </I>
+  <I name="FSGNJN.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00100000011010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FSGNJN.S %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+  </I>
+  <I name="FSGNJX.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00100000101010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FSGNJX.S %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+  </I>
+  <I name="FSQRT.S" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="0101100000001010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FSQRT.S %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FSUB.S" form="Single-precision" isa="RISCV" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="31-25,6-0" value="00001001010011"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
+    <asm format="FSUB.S %s, %s, %s" op1="rs1" op2="rs2" op3="rd"/>
+  </I>
+  <I name="FSW" isa="RISCV" class="LoadStoreInstruction" group="Float" extension="RV32F">
+    <O name="const_bits" type="Constant" bits="14-12,6-0" value="0100100111"/>
+    <O name="rs2" type="FPR" bits="24-20" access="Read" choices="32-bit SIMD/FP registers"/>
+    <O name="LoadStore-rs1-simm12" type="LoadStore" alignment="4" base="rs1" data-size="4" element-size="4" mem-access="Write" offset="simm12" offset-scale="0">
+      <O name="rs1" type="GPR" bits="19-15" choices="Nonzero GPRs"/>
+      <O name="simm12" type="Immediate" bits="31-25,11-7" class="SignedImmediateOperand"/>
+    </O>
+    <asm format="FSW %s, %s, %s" op1="simm12" op2="rs1" op3="rs2"/>
+  </I>
+</instruction_file>

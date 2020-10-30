@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname": "*_force.py"},
+    {"fname": "*_force.py", "options": {"max-instr": 20000}},
 
     # TODO(Noah): Uncomment the control item below when the simulator supports multiprocessing.
     #{"fname": "state_transition_by_all_state_elem_types_force.py", "options": {"num-cores": 4}},

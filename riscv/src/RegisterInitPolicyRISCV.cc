@@ -82,10 +82,13 @@ namespace Force {
 
   uint64 VlInitPolicy::GetVlmax() const
   {
+    mpGenerator->RandomInitializeRegister("vtype", "");
+
     VectorLayoutSetupRISCV vec_layout_setup(mpGenerator->GetRegisterFile());
     uint64 sew = vec_layout_setup.GetSew();
     float lmul = vec_layout_setup.GetLmul();
     uint64 vlmax = lround(lmul * Config::Instance()->LimitValue(ELimitType::MaxPhysicalVectorLen) / sew);
+
     return vlmax;
   }
 

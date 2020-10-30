@@ -62,7 +62,7 @@ class Env(object):
         self.defaultInitSeqClass = None
         self.genThreadInitFunc = None
 
-        self.executor = GenThreadExecutorFactory.createGenThreadExecutor(self.numberChips * self.numberCores * self.numberThreads, interface)
+        self.executor = GenThreadExecutorFactory.createGenThreadExecutor(self.numberChips * self.numberCores * self.numberThreads)
 
     ## Configure generator memory
     def configureMemory(self, memfile_module):

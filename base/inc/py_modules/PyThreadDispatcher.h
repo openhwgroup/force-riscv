@@ -18,6 +18,8 @@
 
 #include <ThreadDispatcher.h>
 
+#include <Scheduler.h>
+
 #include <pybind11/pybind11.h>
 
 namespace py = pybind11;
@@ -31,8 +33,8 @@ namespace Force {
       ;
 
     py::class_<MultiThreadDispatcher, ThreadDispatcher>(mod, "MultiThreadDispatcher")
-      .def(py::init([](PyInterface* pInterface) {
-          return new MultiThreadDispatcher(pInterface->GetScheduler());
+      .def(py::init([]() {
+          return new MultiThreadDispatcher(Scheduler::Instance());
         }) /* No call guard because never blocks */)
       .def("start", &MultiThreadDispatcher::Start, py::call_guard<py::gil_scoped_release>())
       .def("stop", &MultiThreadDispatcher::Stop, py::call_guard<py::gil_scoped_release>())

@@ -201,7 +201,7 @@ namespace Force {
     ReadOnly = 2,
     NoExecute = 3,
     PrivilegedNoExecute = 4,
-    UnpriviligedNoExecute = 5,
+    UnprivilegedNoExecute = 5,
     NoUserAccess = 6,
     PageTable = 7,
     UserAccess = 8,

@@ -49,15 +49,13 @@ def addRandomVectorRegisterStateElements(aSequence, aState, aStateElemCount, aPr
     expected_vec_reg_state_data = []
     vec_reg_indices = aSequence.sample(range(0, 32), aStateElemCount)
     for vec_reg_index in vec_reg_indices:
-        vec_reg_name = 'v%d' % vec_reg_index
+        reg_val_count = aSequence.getLimitValue('MaxPhysicalVectorLen') // 64
 
         vec_reg_values = []
-
-        # TODO(Noah): Retrieve the vector register length from an API when said API is created. For
-        # now, we assume vector registers are 512 bits.
-        for _ in range(8):
+        for _ in range(reg_val_count):
             vec_reg_values.append(RandomUtils.random64())
 
+        vec_reg_name = 'v%d' % vec_reg_index
         aState.addRegisterStateElement(vec_reg_name, vec_reg_values, aPriority=RandomUtils.random32(aPriorityMin, aPriorityMax))
         expected_vec_reg_state_data.append((vec_reg_name, vec_reg_values))
 
@@ -221,16 +219,13 @@ def _verifyMemoryState(aSequence, aExpectedMemStateData):
 #  @param aExpectedRegStateData A list of expected vector register State values.
 def _verifyVectorRegisterState(aSequence, aExpectedRegStateData):
     for (reg_name, expected_reg_values) in aExpectedRegStateData:
-        reg_index = int(reg_name[1:])
-        reg_info = aSequence.getRegisterInfo(reg_name, reg_index)
+        for (val_index, expected_reg_val) in enumerate(expected_reg_values):
+            field_name = '%s_%d' % (reg_name, val_index)
+            (field_val, valid) = aSequence.readRegister(reg_name, field=field_name)
+            assertValidRegisterValue(aSequence, reg_name, valid)
 
-        # TODO(Noah): Determine another way to retrieve the vector register value when the VL1R.V
-        # instruction can be generated and simulated successfully. getRegisterInfo() doesn't return
-        # the register value.
-        reg_values = reg_info['Value']
-
-        if reg_values != expected_reg_values:
-            aSequence.error('Value of vector register %s does not match the specified State. Expected=%s, Actual=%s' % (reg_name, expected_reg_values, reg_values))
+            if field_val != expected_reg_val:
+                aSequence.error('Value of vector register field %s does not match the specified State. Expected=0x%x, Actual=0x%x' % (field_name, expected_reg_val, field_val))
 
 
 ## Assert that the actual VM context State matches the expected VM context State.

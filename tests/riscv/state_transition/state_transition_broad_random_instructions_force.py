@@ -16,7 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.instruction_list import instructions
+from DV.riscv.trees.instruction_tree import RV_G_map
 import state_transition_test_utils
 from Enums import EStateElementType
 from State import State
@@ -46,13 +46,8 @@ class MainSequence(Sequence):
     ## Generate a random number of a wide variety of instructions.
     def _genRandomInstructions(self):
         for _ in range(RandomUtils.random32(100, 200)):
-            instr = self.choice(instructions)
-
-            # TODO(Noah): Permit instructions that begin with E and F when exception handlers are
-            # implemented. The excluded instructions, EBREAK, ECALL and floating point instructions,
-            # are generally prone to triggering exceptions.
-            if not (instr.startswith('E') or instr.startswith('F')):
-                self.genInstruction(instr)
+            instr = RV_G_map.pick(self.genThread)
+            self.genInstruction(instr)
 
     ## Create a random State to test an explicit StateTransition.
     def _createState(self):

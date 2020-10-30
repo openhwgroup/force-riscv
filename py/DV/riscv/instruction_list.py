@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import warnings
+
+warnings.warn("DV.instruction_list is deprecated; please use DV.riscv.trees.instruction_tree", DeprecationWarning)
+
 branch_instructions = [
     'BEQ##RISCV',
     'BGE##RISCV',

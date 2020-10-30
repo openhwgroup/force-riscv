@@ -16,7 +16,6 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.instruction_list import instructions
 import state_transition_test_utils
 from Enums import EStateElementType, EStateTransitionOrderMode
 from State import State
@@ -71,8 +70,7 @@ class MainSequence(Sequence):
         expected_vm_context_state_data.append(('mstatus', 'SUM', sum_val))
         self._mExpectedStateData[EStateElementType.VmContext] = expected_vm_context_state_data
 
-        # TODO(Noah): Add vector register StateElements when the default
-        # VectorRegisterStateTransitionHandler is implemented.
+        self._mExpectedStateData[EStateElementType.VectorRegister] = state_transition_test_utils.addRandomVectorRegisterStateElements(self, state, RandomUtils.random32(0, 20))
 
         return state
 

@@ -40,7 +40,7 @@ class PageFaultSequence(Sequence):
         self.notice("Applying all valid level and exception level page fault choices")
         page_fault_mod = self.createPageFaultModifier()
         page_fault_mod.apply(**{"All":1})
-        #page_fault_mod.apply(**{"Type":"Invalid U"})
+        #page_fault_mod.apply(**{"Type":"Invalid V"})
 
         instruction_list = self.getInstructionList()
         instr_count = 0

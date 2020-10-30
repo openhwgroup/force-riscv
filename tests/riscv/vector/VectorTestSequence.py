@@ -62,7 +62,7 @@ class VectorTestSequence(Sequence):
 
     ## Fail if the valid flag is false.
     #
-    #  @param aRegName The index of the register.
+    #  @param aRegName The name of the register.
     #  @param aValid A flag indicating whether the specified register has a valid value.
     def assertValidRegisterValue(self, aRegName, aValid):
         if not aValid:

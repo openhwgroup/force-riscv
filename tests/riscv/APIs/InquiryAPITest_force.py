@@ -50,20 +50,9 @@ class MainSequence(Sequence):
 
         for instr in list_of_csr_instructions:
             csr_address = self.choice(fcsr_addresses)
-            #self.genInstruction(instr, {'csr': csr_address})
-            self.genInstruction(instr, {'csr': csr_address, 'rs1': reloadValue})
+            self.genInstruction(instr, {'csr': csr_address})
 
 
-
-
-
-
-## Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
-
-## Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
-
-## Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-
