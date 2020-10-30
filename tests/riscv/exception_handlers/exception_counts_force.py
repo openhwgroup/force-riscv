@@ -36,6 +36,8 @@ class MainSequence(Sequence):
         self._configureExceptionDelegation(self._mExceptCounts.keys())
         self._switchToRandomPrivilegeLevel()
 
+        rv32 = self.getGlobalState('AppRegisterWidth') == 32
+        
         orig_gpr_values = exception_handlers_test_utils.reserveRandomGprs(self, 20)
         ecall_except_codes = {0: 8, 1: 9, 3: 11}
         for _ in range(100):
@@ -45,12 +47,18 @@ class MainSequence(Sequence):
 
             if except_code == 4:
                 unaligned_target_addr = self.genVA(Size=16, Align=8, Type='D') + 1
-                self.genInstruction('LD##RISCV', {'LSTarget': unaligned_target_addr})
+                if rv32:
+                    self.genInstruction('LW##RISCV', {'LSTarget': unaligned_target_addr})
+                else:
+                    self.genInstruction('LD##RISCV', {'LSTarget': unaligned_target_addr})
                 self._verifyExceptionCount(4)
                 exception_handlers_test_utils.assertGprValuesUnchanged(self, orig_gpr_values)
             elif except_code == 6:
                 unaligned_target_addr = self.genVA(Size=16, Align=8, Type='D') + 1
-                self.genInstruction('SD##RISCV', {'LSTarget': unaligned_target_addr})
+                if rv32:
+                    self.genInstruction('SW##RISCV', {'LSTarget': unaligned_target_addr})
+                else:
+                    self.genInstruction('SD##RISCV', {'LSTarget': unaligned_target_addr})
                 self._verifyExceptionCount(6)
                 exception_handlers_test_utils.assertGprValuesUnchanged(self, orig_gpr_values)
             elif except_code == ecall_except_code:

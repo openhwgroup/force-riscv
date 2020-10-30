@@ -137,7 +137,7 @@ class MainSequence(Sequence):
             exception_handlers_test_utils.assertValidGprValue(self, aGprIndex, valid)
         else:
             load_gpr64_seq = LoadGPR64(self.genThread)
-            gpr_val = RandomUtils.random64()
+            gpr_val = RandomUtils.random32() if self.getGlobalState('AppRegisterWidth') == 32 else RandomUtils.random64()
             load_gpr64_seq.load(aGprIndex, gpr_val)
 
         return gpr_val

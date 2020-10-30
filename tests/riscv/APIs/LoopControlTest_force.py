@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from DV.riscv.trees.instruction_tree import ALU_Int_All_instructions
+from DV.riscv.trees.instruction_tree import ALU_Int32_All_instructions
 
 from riscv.Utils import LoopControl
 
@@ -42,11 +43,13 @@ class MainSequence(Sequence):
     loop_ctrl_seq.start(LoopReg=loop_gpr, LoopCount=2)
 
     # Use genInstructionLoop sequence to create varying nested inner loops
-    self.genInstructionLoop(inner_loop_gpr, 3, 10, ALU_Int_All_instructions)
-    self.genInstructionLoop(inner_loop_gpr, 5, 20, ALU_Int_All_instructions)
+    instr_tree = ALU_Int32_All_instructions if self.getGlobalState('AppRegisterWidth') == 32 else ALU_Int_All_instructions
+    self.genInstructionLoop(inner_loop_gpr, 3, 10, instr_tree)
+    self.genInstructionLoop(inner_loop_gpr, 5, 20, instr_tree)
 
     loop_ctrl_seq.end()
 
+    
 ## Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 

@@ -24,12 +24,9 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
 
         for i in range(500):
-            instr = self.pickWeighted(LDST_All_instructions)
+            instrs_tree = LDST32_All_instructions if self.getGlobalState('AppRegisterWidth') == 32 else LDST_All_instructions
+            instr =  self.pickWeighted(instrs_tree)
             self.genInstruction(instr, {"NoPreamble": 1})
-
-
-
-
 
 
 

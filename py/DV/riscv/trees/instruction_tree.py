@@ -453,6 +453,17 @@ LD_Int_instructions = {
 
 LD_Int_map = InstructionMap('LD_Int_instructions', LD_Int_instructions)
 
+LD_Int32_instructions = {
+    'LB##RISCV':10,
+    'LBU##RISCV':10,
+    'LH##RISCV':10,
+    'LHU##RISCV':10,
+    'LW##RISCV':10,
+    'LWU##RISCV':10
+    }
+
+LD_Int32_map = InstructionMap('LD_Int32_instructions', LD_Int32_instructions)
+
 
 
 
@@ -465,6 +476,14 @@ ST_Int_instructions = {
     }
 
 ST_Int_map = InstructionMap('ST_Int_instructions', ST_Int_instructions)
+
+ST_Int32_instructions = {
+    'SB##RISCV':10,
+    'SH##RISCV':10,
+    'SW##RISCV':10 
+    }
+
+ST_Int32_map = InstructionMap('ST_Int32_instructions', ST_Int32_instructions)
 
 
 
@@ -543,12 +562,18 @@ LDST_Double_map = InstructionMap('LDST_Double_instructions', LDST_Double_instruc
 LDST_Int_instructions = Merge(LD_Int_instructions, ST_Int_instructions)
 LDST_Int_map = InstructionMap('LDST_Int_instructions', LDST_Int_instructions)
 
+LDST_Int32_instructions = Merge(LD_Int32_instructions, ST_Int32_instructions)
+LDST_Int32_map = InstructionMap('LDST_Int32_instructions', LDST_Int32_instructions)
+
 LDST_Float_instructions = Merge(LD_Float_instructions, ST_Float_instructions)
 LDST_Float_map = InstructionMap('LDST_Float_instructions', LDST_Float_instructions)
 
 
 LDST_IntFloat_instructions = Merge(LDST_Float_instructions, LDST_Int_instructions)
 LDST_IntFloat_map = InstructionMap('LDST_IntFloat_instructions', LDST_IntFloat_instructions)
+
+LDST32_IntFloat_instructions = Merge(LDST_Float_instructions, LDST_Int32_instructions)
+LDST32_IntFloat_map = InstructionMap('LDST_IntFloat_instructions', LDST32_IntFloat_instructions)
 
 
 
@@ -563,6 +588,15 @@ LD_C_instructions = {
 
 LD_C_map = InstructionMap('LD_C_instructions', LD_C_instructions)
 
+LD_C32_instructions = {
+    "C.FLD##RISCV": 10,
+    "C.LW##RISCV": 10,
+    "C.FLDSP##RISCV": 10,
+    "C.LWSP##RISCV": 10
+    }
+
+LD_C32_map = InstructionMap('LD_C32_instructions', LD_C32_instructions)
+
 ST_C_instructions = {
     "C.FSD##RISCV": 10,
     "C.SD##RISCV": 10,
@@ -574,19 +608,38 @@ ST_C_instructions = {
 
 ST_C_map = InstructionMap('ST_C_instructions', ST_C_instructions)
 
+ST_C32_instructions = {
+    "C.FSD##RISCV": 10,
+    "C.SW##RISCV": 10,
+    "C.FSDSP##RISCV": 10,
+    "C.SWSP##RISCV": 10
+    }
+
+ST_C32_map = InstructionMap('ST_C32_instructions', ST_C32_instructions)
+
 LDST_C_instructions = Merge(LD_C_instructions, ST_C_instructions)
 LDST_C_map = InstructionMap('LDST_C_instructions', LDST_C_instructions)
+
+LDST_C32_instructions = Merge(LD_C32_instructions, ST_C32_instructions)
+LDST_C32_map = InstructionMap('LDST_C32_instructions', LDST_C32_instructions)
 
 
 # All LDST except vector
 LDST_IFC_instructions = Merge(LDST_IntFloat_instructions, LDST_C_instructions)
 LDST_IFC_map = InstructionMap('LDST_IFC_instructions', LDST_IFC_instructions)
 
+LDST32_IFC_instructions = Merge(LDST32_IntFloat_instructions, LDST_C32_instructions)
+LDST32_IFC_map = InstructionMap('LDST32_IFC_instructions', LDST32_IFC_instructions)
+
 
 # All LDST -   >>>> Needs V added <<<<<<
 LDST_All_instructions = Merge(LDST_IFC_instructions)
 #LDST_All_instructions = Merge(LDST_IntFloat_instructions)
 LDST_All_map = InstructionMap('LDST_All_instructions', LDST_All_instructions)
+
+LDST32_All_instructions = Merge(LDST32_IFC_instructions)
+#LDST32_All_instructions = Merge(LDST_IntFloat_instructions)
+LDST32_All_map = InstructionMap('LDST32_All_instructions', LDST32_All_instructions)
 
 
 
@@ -781,6 +834,23 @@ ALU_Int_C_instructions = {
     "C.XOR##RISCV": 10
     }
 
+ALU_Int32_C_instructions = {
+    "C.ADD##RISCV": 10,
+    "C.ADDI##RISCV": 10,
+    "C.ADDI16SP##RISCV": 10,
+    "C.ADDI4SPN##RISCV": 10,
+    "C.AND##RISCV": 10,
+    "C.ANDI##RISCV": 10,
+    "C.LI##RISCV": 10,
+    "C.LUI##RISCV": 10,
+    "C.MV##RISCV": 10,
+    "C.NOP##RISCV": 10,
+    "C.OR##RISCV": 10,
+    "C.SLLI##RISCV": 10,
+    "C.SUB##RISCV": 10,
+    "C.XOR##RISCV": 10
+    }
+
 ALU_Int_C_map = InstructionMap('ALU_Int_C_instructions', ALU_Int_C_instructions)
 
 
@@ -796,6 +866,10 @@ RV_C_map = {
 
 ALU_Int_All_instructions = Merge(ALU_Int32_instructions, ALU_Int64_instructions, ALU_M_instructions, ALU_Int_C_instructions)
 ALU_Int_All_map = InstructionMap('ALU_Int_All_instructions', ALU_Int_All_instructions)
+
+
+ALU_Int32_All_instructions = Merge(ALU_Int32_instructions, RV32M_instructions, ALU_Int32_C_instructions)
+ALU_Int32_All_map = InstructionMap('ALU_Int32_All_instructions', ALU_Int32_All_instructions)
 
 
 

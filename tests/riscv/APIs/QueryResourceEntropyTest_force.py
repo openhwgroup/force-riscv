@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from DV.riscv.counter.depdenceSequence import depSequence
 from DV.riscv.trees.instruction_tree import LDST_All_instructions
+from DV.riscv.trees.instruction_tree import LDST32_All_instructions
 import sys
 
 
@@ -29,7 +30,8 @@ class MainSequence(depSequence):
         self.notice('Warm up resource entropy')
         for i in range(100):
             #instr = instMap.pick(self)
-            instr = self.pickWeighted(LDST_All_instructions)
+            instr_tree = LDST32_All_instructions if self.getGlobalState('AppRegisterWidth') == 32 else LDST_All_instructions
+            instr = self.pickWeighted(instr_tree)
             self.genMetaInstruction(instr)
             #self.genInstruction(instr)
 

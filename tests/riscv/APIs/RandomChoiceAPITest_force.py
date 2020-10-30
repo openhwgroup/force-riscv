@@ -28,9 +28,11 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
 
+        instrs_tree = ALU_Int32_All_instructions if self.getGlobalState('AppRegisterWidth') == 32 else ALU_Int_All_instructions
+        
         # test sample function - note sample function doesn't support dictionary for the input sequence!
         sample_list = []
-        for (instr, weight) in sorted(ALU_Int_All_instructions.items()):
+        for (instr, weight) in sorted(instrs_tree.items()):
             sample_list.append(instr)
         samples = self.sample(sample_list, 5)
         for item in samples:
@@ -45,15 +47,15 @@ class MainSequence(Sequence):
 
         # Use self.choice to pick from a list
         self.notice("Randomly pickup a simple instruction from list...")
-        instr = self.choice(list(ALU_Int_All_instructions.keys()))
+        instr = self.choice(list(instrs_tree.keys()))
         instr_rec = self.genInstruction(instr)
         self.notice("%s <<== %s" % (instr_rec, instr))
         myInstrList.append(instr_rec)
 
         # Use self.choice to pick from a tuple
         self.notice("Randomly pickup a simple instruction from tuple...")
-        instr1 = self.choice(list(ALU_Int_All_instructions.keys()))
-        instr2 = self.choice(list(ALU_Int_All_instructions.keys()))
+        instr1 = self.choice(list(instrs_tree.keys()))
+        instr2 = self.choice(list(instrs_tree.keys()))
         instr_pair = (instr1, instr2)
         instr = self.choice(instr_pair)
         instr_rec = self.genInstruction(instr)
@@ -62,18 +64,17 @@ class MainSequence(Sequence):
 
         # Use self.choice to pick from a dictionary
         self.notice("Randomly pick an instruction from dictionary...")
-        one_instr, weight = self.choice(ALU_Int_All_instructions);
+        one_instr, weight = self.choice(instrs_tree);
         instr_rec = self.genInstruction(one_instr)
         self.notice("%s <<== %s" % (instr_rec, one_instr))
         myInstrList.append(instr_rec)
 
         # Use self.choicePermutated to pick from a dictionary
         self.notice("Permutate from dictionary and pick one at a time...")
-        for instr, weight in self.choicePermutated(ALU_Int_All_instructions):
+        for instr, weight in self.choicePermutated(instrs_tree):
             instr_rec = self.genInstruction(instr)
             self.notice("%s <<== %s" % (instr_rec, instr))
             myInstrList.append(instr_rec)
-
 
 
         self.notice("Query generated instruction information...")
