@@ -133,4 +133,68 @@
     <choice description="Reserved 0" value="0x0" weight="10"/>
     <choice description="Reserved 1" value="0x1" weight="0"/>
   </choices>
+  <choices name="medeleg.Instruction address misaligned" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Instruction access fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Illegal instruction" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Breakpoint" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Load address misaligned" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Load access fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Store/AMO address misaligned" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Store/AMO access fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Environment call from U-mode" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Environment call from S-mode" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.RESERVED 3" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.RESERVED - Environment call from M-mode" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Instruction page fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Load page fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.RESERVED 4" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Store/AMO page fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
 </choices_file>
