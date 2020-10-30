@@ -236,7 +236,7 @@ Use this script to produce a CSR 'trees' file, from the system registers starter
 """
     
 if __name__ == '__main__':
-    mSysRegsStarterFile = 'input/system_registers_starter.xml'
+    mSysRegsStarterFile = 'input/system_registers_starter_rv64.xml'
     mCSRTreeFile = 'output/csr_trees.py'
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'hi:o:', [ 'help','system_registers_starter_file=', 'csr_trees_file=' ] )

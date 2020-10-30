@@ -47,7 +47,7 @@ system_registers: $(REGISTER_BUILDER)
 .PHONY: csr_trees
 csr_trees: $(CSR_TREES_BUILDER)
 	@echo 'Building Registers: csr trees'
-	@$(CSR_TREES_BUILDER)
+	@$(CSR_TREES_BUILDER) --system_registers_starter_file=input/system_registers_starter_rv64.xml
 
 .PHONY: system_register_choices
 system_register_choices: $(REGISTER_BUILDER)
@@ -62,10 +62,10 @@ register_field_choices: $(REGISTER_BUILDER)
 .PHONY: install
 install:
 	@echo 'Building Registers: installing register files'
-	@cp -f output/app_registers.xml $(INSTALL_DIR)/app_registers.xml
-	@cp -f output/system_registers.xml $(INSTALL_DIR)/system_registers.xml
-	@cp -f output/system_register_choices.xml $(INSTALL_DIR)/system_register_choices.xml
-	@cp -f output/register_field_choices.xml $(INSTALL_DIR)/register_field_choices.xml
+	@cp -f output/app_registers_rv64.xml $(INSTALL_DIR)/app_registers.xml
+	@cp -f output/system_registers_rv64.xml $(INSTALL_DIR)/system_registers.xml
+	@cp -f output/system_register_choices_rv64.xml $(INSTALL_DIR)/system_register_choices.xml
+	@cp -f output/register_field_choices_rv64.xml $(INSTALL_DIR)/register_field_choices.xml
 	@cp -f output/csr_trees.py $(TREES_INSTALL_DIR)/csr_trees.py
 
 .PHONY: clean

@@ -90,7 +90,7 @@ license_string = """<!--
 -->
 """
 
-def output_system_registers(aTree, aOutputFile, aPrefixLicenseFile):
+def output_system_registers(aTree, aOutputFile, aPrefixLicenseFile, aSize):
     #print("\t  Processing system registers...")
     
     registers = aTree.findall('.//register')
@@ -101,7 +101,7 @@ def output_system_registers(aTree, aOutputFile, aPrefixLicenseFile):
     register_file.set('name', 'RISC-V Registers')
 
     for register in registers:
-        generate_register(register, physical_registers, register_file)
+        generate_register(register, physical_registers, register_file, aSize)
 
     output_root.append(physical_registers)
     output_root.append(register_file)
@@ -110,7 +110,7 @@ def output_system_registers(aTree, aOutputFile, aPrefixLicenseFile):
     reg_file = RISCV.RegisterFile( { 'system_tree' : output_root } )
 
     reg_file.checkRegisterFieldSize()
-        
+
     pretty_print_xml(aOutputFile, output_root, aPrefixLicenseFile)
 
     #print("\t  Done.")
@@ -192,11 +192,11 @@ def pretty_print_xml(aOutputFile, aOutputRoot, aPrefixLicenseFile):
             f.write(license_string)
         f.write(xml_str)
 
-def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
+def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
     register = ET.Element('register')
     register.set('index', aRegister.get('index'))
     register.set('name', aRegister.get('name'))
-    register.set('size', '64' if str(aRegister.get('size')) == '0' else aRegister.get('size'))
+    register.set('size', aSize if str(aRegister.get('size')) == '0' else aRegister.get('size'))
     register.set('type', aRegister.get('type'))
     if aRegister.get('size') != '0':
         register.set('boot', aRegister.get('boot', '1'))
@@ -236,7 +236,7 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile):
         physical_register = ET.Element('physical_register')
         physical_register.set('index', aRegister.get('index'))
         physical_register.set('name', aRegister.get('physical_register', aRegister.get('name')))
-        physical_register.set('size', '64' if str(aRegister.get('size')) == '0' else aRegister.get('size'))
+        physical_register.set('size', aSize if str(aRegister.get('size')) == '0' else aRegister.get('size'))
         physical_register.set('type', aRegister.get('type'))
         if aRegister.get('class') == 'ConfigureRegister':
             physical_register.set('class', aRegister.get('class'))
@@ -265,9 +265,9 @@ def insert_filename_prefix(aFilePath,aFilePrefix):
     return (aFilePath,edited_filepath)
 
 
-def build_registers(aXmlStarterFile='input/system_registers_starter.xml', aSystemRegistersFile='output/system_registers.xml',
-                    aSystemRegisterChoicesFile='output/system_register_choices.xml', aRegisterFieldChoicesFile='output/register_field_choices.xml',
-                    aModificationsScript=None):
+def build_registers(aXmlStarterFile='input/system_registers_starter_rv64.xml', aSystemRegistersFile='output/system_registers_rv64.xml',
+                    aSystemRegisterChoicesFile='output/system_register_choices_rv64.xml', aRegisterFieldChoicesFile='output/register_field_choices_rv64.xml',
+                    aSize = '64', aModificationsScript=None):
 
     xml_starter_file             = aXmlStarterFile
     system_registers_file        = aSystemRegistersFile
@@ -343,7 +343,7 @@ def build_registers(aXmlStarterFile='input/system_registers_starter.xml', aSyste
 
     try:
         if output_all or system_registers:
-            output_system_registers(systemRegisterDefinitions, system_registers_file, prefix_license_file)
+            output_system_registers(systemRegisterDefinitions, system_registers_file, prefix_license_file, aSize)
             if do_mods:
                 print("\tIntermediate system register definitions file: %s" % system_registers_file)
                 src_mod_files['system']  = system_registers_file
@@ -383,4 +383,7 @@ def build_registers(aXmlStarterFile='input/system_registers_starter.xml', aSyste
         
 if __name__ == '__main__':
     build_registers()
+    build_registers(aXmlStarterFile='input/system_registers_starter_rv32.xml', aSystemRegistersFile='output/system_registers_rv32.xml',
+                    aSystemRegisterChoicesFile='output/system_register_choices_rv32.xml', aRegisterFieldChoicesFile='output/register_field_choices_rv32.xml', 
+                    aSize = '32', aModificationsScript=None)
 

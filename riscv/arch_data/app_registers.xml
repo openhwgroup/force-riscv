@@ -370,7 +370,7 @@
     <physical_register name="v31_6" index="31" size="64" type="VECREG" sub_index="6"/>
     <physical_register name="v31_7" index="31" size="64" type="VECREG" sub_index="7"/>
   </physical_registers>
-  <register_file name="RISC-V Registers">
+  <register_file name="RISC-V 64-bit Registers">
     <register name="x1" index="1" size="64" type="GPR" boot="0x1000">
       <register_field name="x1" physical_register="x1" size="64">
         <bit_field shift="0" size="64"/>
