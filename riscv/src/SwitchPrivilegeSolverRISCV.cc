@@ -381,6 +381,7 @@ namespace Force {
 
     mVmReloadRegisters.clear();
     mVmReloadRegisters["satp"] = reg_reload->GetRegisterValue("satp");
+    LOG(debug) << "[SwitchPrivilegeSolver::ValidateVmContextAndUpdate] satp: 0x" << std::hex << reg_reload->GetRegisterValue("satp") << std::dec << std::endl;
   }
 
   VmMapper* SwitchPrivilegeSolver::GetVmMapper(cuint32 privLevel) const

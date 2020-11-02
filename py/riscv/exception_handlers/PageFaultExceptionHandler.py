@@ -539,9 +539,16 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         # flush tlb entry - non-global so use asid...
 
-        self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, 'satp' )
-        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index,4)         # isolate satp.asid field
-        self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index,48)
+        self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, 'satp')
+
+        # isolate satp.asid field...
+
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index,1)
+            self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index,23)
+        else:
+            self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index,4)
+            self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index,48)
         
         self.genInstruction('SFENCE.VMA##RISCV', {'rs1': vaddr_reg_index, 'rs2': scratch_reg_index, 'NoRestriction': 1})
 

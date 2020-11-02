@@ -137,7 +137,11 @@ class SystemCallSequence(Sequence):
             # For a 2 ECALL sequence, the data block contains a return address for the first ECALL
             # as the first entry; after the first ECALL, we increment the data block address pointer
             # to allow loading the data block as usual in the second ECALL
-            self._mAssemblyHelper.genAddImmediate(self._mDataBlockAddrRegIndex, 8)
+
+            if self._mAppRegSize == 32:
+                self._mAssemblyHelper.genAddImmediate(self._mDataBlockAddrRegIndex, 4)
+            else:
+                self._mAssemblyHelper.genAddImmediate(self._mDataBlockAddrRegIndex, 8)
 
             action_code = 2  # Load From Data Block
             self._mAssemblyHelper.genMoveImmediate(self._mActionCodeRegIndex, action_code)

@@ -18,6 +18,7 @@
 #include <StringUtils.h>
 #include <Random.h>
 #include <Generator.h>
+#include <Config.h>
 #include <Register.h>
 #include <VmManager.h>
 #include <VmMapper.h>
@@ -199,6 +200,8 @@ namespace Force {
 
   uint64 GenExceptionAgentRISCV::BuildDataBlock(const SwitchPrivilegeResultInfo& result, const map<string, uint64>& sysRegReloads)
   {
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} entered..." << std::endl;
+    
     uint64 satp_val = 0;
     auto satp_itr = sysRegReloads.find("satp");
     if (satp_itr != sysRegReloads.end()) {
@@ -213,30 +216,67 @@ namespace Force {
 
     uint64 action_code_reg_val = 0;
     string action_code_reg_name = "x" + to_string(mArgRegIndices[1]);
+
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} action code reg: " << action_code_reg_name << std::endl;
+    
     mpGenerator->RandomInitializeRegister(action_code_reg_name, "");
     mpGenerator->ReadRegister(action_code_reg_name, "", action_code_reg_val);
 
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} action code reg: " << action_code_reg_name
+	       << " value: 0x" << std::hex << action_code_reg_val << std::dec << std::endl;
+    
     uint64 data_block_addr_reg_val = 0;
     string data_block_addr_reg_name = "x" + to_string(mArgRegIndices[0]);
     mpGenerator->RandomInitializeRegister(data_block_addr_reg_name, "");
     mpGenerator->ReadRegister(data_block_addr_reg_name, "", data_block_addr_reg_val);
 
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} data block addr reg: " << data_block_addr_reg_name
+	       << " value: 0x" << std::hex << data_block_addr_reg_val << std::dec << std::endl;
+   
+    int dsize = 8;
+
+    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32) {
+      dsize = 4;
+      LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} force-risc configured to 32-bits, dsize = " << std::dec << dsize << std::endl;
+    }
+    
     DataBlock dataBlock(8);
+    int dblock_offset = 0;
+    
     uint64 big_endian = mpGenerator->IsDataBigEndian();
     if (result.mInstrSeqCode == 3) {
-      dataBlock.AddUnit(result.mIntermediateRetAddr, 8, big_endian);
+      dataBlock.AddUnit(result.mIntermediateRetAddr, dsize, big_endian);
+      LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} intermediate return address/dblock offset: 0x"
+		 << std::hex << result.mIntermediateRetAddr << "/0x" << dblock_offset << std::dec << std::endl;
+      dblock_offset+= dsize;
     }
 
-    dataBlock.AddUnit(result.mStatusVal, 8, big_endian);
-    dataBlock.AddUnit(result.mTargetAddr, 8, big_endian);
-    dataBlock.AddUnit(satp_val, 8, big_endian);
-    dataBlock.AddUnit(action_code_reg_val, 8, big_endian);
-    dataBlock.AddUnit(data_block_addr_reg_val, 8, big_endian);
+    dataBlock.AddUnit(result.mStatusVal, dsize, big_endian);
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} status value/dblock offset: 0x"
+	       << std::hex << result.mStatusVal << "/0x" << dblock_offset << std::dec << std::endl;
+    dblock_offset+= dsize;
+    dataBlock.AddUnit(result.mTargetAddr, dsize, big_endian);
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} target address/dblock offset: 0x"
+	       << std::hex << result.mTargetAddr << "/0x" << dblock_offset << std::dec << std::endl;
+    dblock_offset+= dsize;
+    dataBlock.AddUnit(satp_val, dsize, big_endian);
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} satp/dblock offset: 0x"
+	       << std::hex << satp_val << "/0x" << dblock_offset << std::dec << std::endl;
+    dblock_offset+= dsize;
+    dataBlock.AddUnit(action_code_reg_val, dsize, big_endian);
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} action code reg value/dblock offset: 0x"
+	       << std::hex << result.mTargetAddr << "/0x" << dblock_offset << std::dec << std::endl;
+    dblock_offset+= dsize;
+    dataBlock.AddUnit(action_code_reg_val, dsize, big_endian);
 
     auto addr_table_man = mpGenerator->GetAddressTableManager();
     uint32 sys_table_mem_bank = 0;
     auto table_ptr = addr_table_man->GetAddressTable(sys_table_mem_bank);
-    dataBlock.AddUnit(table_ptr->GetCurrentAddress()+8, (uint64)8, big_endian);
+
+    dataBlock.AddUnit(table_ptr->GetCurrentAddress() + dsize, (uint64) dsize, big_endian);
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} next table address/dblock offset: 0x"
+	       << std::hex << table_ptr->GetCurrentAddress() + dsize << "/0x" << dblock_offset << std::dec << std::endl;
+    dblock_offset+= dsize;
 
     VmManager* vm_manager = mpGenerator->GetVmManager();
     unique_ptr<VmInfo> vm_info(vm_manager->VmInfoInstance());
@@ -251,6 +291,7 @@ namespace Force {
     unique_ptr<GenPageRequest> page_req(mpGenerator->GenPageRequestInstance(false, EMemAccessType::Read));
     page_req->SetPrivilegeLevel(EPrivilegeLevelType(result.mDataBlockPrivLevel));
     page_req->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataPageFault, true);
+
     if (result.mInstrSeqCode != 2) {
       // Transitioning to data block privilege level via ECALL exception
       page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ViaException, true);
@@ -259,9 +300,12 @@ namespace Force {
     const PageRequestRegulator* page_req_regulator = mpGenerator->GetPageRequestRegulator();
     page_req_regulator->RegulateLoadStorePageRequest(target_mapper, nullptr, page_req.get());
 
-    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} current privilege level = " << dec << mpGenerator->PrivilegeLevel() << ", data block privilege level = " << result.mDataBlockPrivLevel << endl;
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} current privilege level = " << dec << mpGenerator->PrivilegeLevel()
+	       << ", data block privilege level = " << result.mDataBlockPrivLevel << endl;
 
     uint64 data_block_address = dataBlock.Allocate(mpGenerator, target_mapper, page_req.get());
+
+    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} data block address: 0x" << std::hex << data_block_address << std::dec << std::endl;
 
     return data_block_address;
   }

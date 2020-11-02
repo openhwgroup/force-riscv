@@ -53,7 +53,9 @@ class MainSequence(Sequence):
     
     def genMisalignedInstrAddress(self):
         target_addr = self.genVA(Type="I")
-        
+    
+        self.notice(">>>>>  Next target addr: {:012x}".format(target_addr) )
+
         if (target_addr & 0x3) == 0:
             # didn't get a misaligned address? help it along...
             target_addr = target_addr | self.random32(1,3)
