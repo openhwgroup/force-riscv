@@ -31,8 +31,7 @@ make_dir:
 	@mkdir -p output
 
 .PHONY: registers
-registers: app_registers app_registers_rv32 system_registers system_registers_rv32 system_register_choices system_register_choices_rv32 \
-           register_field_choices register_field_choices_rv32 csr_trees
+registers: app_registers system_registers system_register_choices register_field_choices csr_trees
 	@echo Done
 
 .PHONY: app_registers
@@ -40,60 +39,40 @@ app_registers: app_registers_builder.py
 	@echo 'Building Registers: application registers'
 	@./app_registers_builder.py
 
-.PHONY: app_registers_rv32
-app_registers_rv32: app_registers_builder.py
-	@echo 'Building Registers (xlen = 32): application registers'
-	@./app_registers_builder.py --xlen 32
-
 .PHONY: system_registers
 system_registers: $(REGISTER_BUILDER)
 	@echo 'Building Registers: system registers'
 	@$(REGISTER_BUILDER) --system_registers
 
-.PHONY: system_registers_rv32
-system_registers_rv32: $(REGISTER_BUILDER)
-	@echo 'Building Registers: system registers (xlen=32)'
-	@$(REGISTER_BUILDER) -i input/system_registers_starter_rv32.xml -S --system_registers_file=output/system_registers_rv32.xml
-
 .PHONY: csr_trees
 csr_trees: $(CSR_TREES_BUILDER)
 	@echo 'Building Registers: csr trees'
-	@$(CSR_TREES_BUILDER)
+	@$(CSR_TREES_BUILDER) --system_registers_starter_file=input/system_registers_starter_rv64.xml
 
 .PHONY: system_register_choices
 system_register_choices: $(REGISTER_BUILDER)
 	@echo 'Building Registers: system register choices'
 	@$(REGISTER_BUILDER) --system_register_choices
 
-.PHONY: system_register_choices_rv32
-system_register_choices_rv32: $(REGISTER_BUILDER)
-	@echo 'Building Registers: system register choices (xlen=32)'
-	@$(REGISTER_BUILDER) -i input/system_registers_starter_rv32.xml -R --system_register_choices_file=output/system_register_choices_rv32.xml
-
 .PHONY: register_field_choices
 register_field_choices: $(REGISTER_BUILDER)
 	@echo 'Building Registers: register field choices'
 	@$(REGISTER_BUILDER) --register_field_choices
 
-.PHONY: register_field_choices_rv32
-register_field_choices_rv32: $(REGISTER_BUILDER)
-	@echo 'Building Registers: register field choices (xlen=32)'
-	@$(REGISTER_BUILDER) --register_field_choices -i input/system_registers_starter_rv32.xml --register_field_choices_file=output/register_field_choices_rv32.xml
-
 .PHONY: install
 install:
 	@echo 'Building Registers: installing register files'
-	@cp -f output/app_registers.xml $(INSTALL_DIR)/app_registers.xml
+	@cp -f output/app_registers_rv64.xml $(INSTALL_DIR)/app_registers.xml
+	@cp -f output/system_registers_rv64.xml $(INSTALL_DIR)/system_registers.xml
+	@cp -f output/system_register_choices_rv64.xml $(INSTALL_DIR)/system_register_choices.xml
+	@cp -f output/register_field_choices_rv64.xml $(INSTALL_DIR)/register_field_choices.xml
 	@cp -f output/app_registers_rv32.xml $(INSTALL_DIR)/app_registers_rv32.xml
-	@cp -f output/system_registers.xml $(INSTALL_DIR)/system_registers.xml
-	@cp -f output/system_register_choices.xml $(INSTALL_DIR)/system_register_choices.xml
 	@cp -f output/system_registers_rv32.xml $(INSTALL_DIR)/system_registers_rv32.xml
 	@cp -f output/system_register_choices_rv32.xml $(INSTALL_DIR)/system_register_choices_rv32.xml
-	@cp -f output/register_field_choices.xml $(INSTALL_DIR)/register_field_choices.xml
 	@cp -f output/register_field_choices_rv32.xml $(INSTALL_DIR)/register_field_choices_rv32.xml
 	@cp -f output/csr_trees.py $(TREES_INSTALL_DIR)/csr_trees.py
 
 .PHONY: clean
 clean:
 	@echo 'Building Registers: clean'
-	@rm -f output/*.xml output/*.txt
+	@rm -f output/*.xml output/*.txt /output/*py

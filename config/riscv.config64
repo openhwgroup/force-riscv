@@ -16,19 +16,20 @@
     <limit name="ThreadsLimit" value="4"/>
     <limit name="CoresLimit" value="4"/>
     <limit name="ChipsLimit" value="32"/>
-    <limit name="PhysicalAddressLimit" value="0xffffffff"/>
+    <limit name="PhysicalAddressLimit" value="0xffffffffffff"/>
     <limit name="MaxInstructions" value="100000"/>
     <limit name="DependencyHistoryLimit" value="32"/>
     <limit name="BranchNotTakenLimit" value = "3"/>
     <limit name="SpeculativeBntLevelLimit" value = "3"/>
     <limit name="SpeculativeBntInstructionLimit" value = "128"/>
-    <limit name="MaxPhysicalVectorLen" value = "512"/>
-    <limit name="MaxVectorElementWidth" value = "64"/>
+    <!-- The below ones are not applicable but keep them here for now. -->
+    <limit name="MaxPhysicalVectorLen" value = "256"/>
+    <!-- The above ones are not applicable but keep them here for now. -->
   </limits>
   <instruction_files>
-    <instruction_file file="riscv/arch_data/riscv_instructions.xml"/>
-    <instruction_file file="riscv/arch_data/c_instructions.xml"/>
-    <instruction_file file="riscv/arch_data/v_instructions.xml"/>
+    <instruction_file file="riscv/arch_data/riscv_instructions_int64.xml"/>
+    <instruction_file file="riscv/arch_data/riscv_instructions_compressed_rv64.xml"/>
+    <instruction_file file="riscv/arch_data/riscv_instructions_vector.xml"/>
     <instruction_file file="riscv/arch_data/priv_instructions.xml"/>
   </instruction_files>
   <default_classes>
@@ -52,8 +53,7 @@
     <default_class category="operand" type="AuthBranch" class="AuthBranchOperand"/>
     <default_class category="operand" type="AuthLoadStore" class="AuthLoadStoreOperand"/>
     <default_class category="operand" type="PREDREG" class="RegisterOperand"/>
-    <default_class category="operand" type="VECREG" class="MultiVectorRegisterOperandRISCV"/>
-    <default_class category="operand" type="VectorLayout" class="VtypeLayoutOperand"/>
+    <default_class category="operand" type="VECREG" class="RegisterOperand"/>
     <!-- The above ones are not applicable but keep them here for now. -->
     <default_class category="pte" class="Page"/>
     <default_class category="pte_attribute" class="PteAttribute"/>
@@ -64,27 +64,27 @@
     <default_class category="bit_field" class="BitField"/>
   </default_classes>
   <register_files>
-    <register_file file="riscv/arch_data/app_registers_rv32.xml"/>
-    <register_file file="riscv/arch_data/system_registers_rv32.xml"/>
+    <register_file file="riscv/arch_data/new/app_registers_rv64.xml"/>
+    <register_file file="riscv/arch_data/new/system_registers_rv64..xml"/>
   </register_files>
   <choices_files>
     <choices_file file="riscv/arch_data/operand_choices.xml"/>
     <choices_file file="riscv/arch_data/general_choices.xml"/>
-    <choices_file file="riscv/arch_data/register_field_choices_rv32.xml"/>
-    <choices_file file="riscv/arch_data/paging_choices_sv32.xml"/>
+    <choices_file file="riscv/arch_data/register_field_choices_rv64.xml"/>
+    <choices_file file="riscv/arch_data/paging_choices_sv48.xml"/>
     <choices_file file="riscv/arch_data/dependence_choices.xml"/>
-    <choices_file file="riscv/arch_data/system_register_choices_rv32.xml"/>
+    <choices_file file="riscv/arch_data/system_register_choices_rv64.xml"/>
   </choices_files>
   <paging_files>
-    <paging_file file="riscv/arch_data/page_tables_sv32.xml"/>
+    <paging_file file="riscv/arch_data/page_tables_sv48.xml"/>
   </paging_files>
   <variable_files>
-    <variable_file file="riscv/arch_data/variables_rv32.xml"/>
+    <variable_file file="riscv/arch_data/variables.xml"/>
   </variable_files>
-  <memory_file file="py/riscv/memory32.py"/>
+  <memory_file file="py/riscv/memory.py"/>
   <simulator_api_module file="bin/SimApiHANDCAR.so"/>
   <bnt_file file="py/riscv/DefaultBntSequence.py"/>
   <simulator_shared_object file="utils/handcar/handcar_cosim.so"/>
-  <simulator_config_string value="--isa=RV32IMAFDCV_zfh"/>
-  <simulator_standalone file="fpix/bin/fpix_riscv_rv32"/>
+  <simulator_cfg_string value="RV64IMAFDCV_zfh"/>
+  <simulator_standalone file="fpix/bin/fpix_riscv"/>
 </config_file>

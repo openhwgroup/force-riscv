@@ -178,7 +178,7 @@ class CSRTreeBuilder:
         # N extension exceptions are not yet supported...
         # interrupt related registers (at least the enable/pending regs) are not yet supported...
         unsupported_csrs = [
-                            'count', 'event', 'pmp', 'cycle',
+                            'count', 'event', 'pmp', 'cycle', 'time', 'instret',
                             'utvec', 'utval', 'uip', 'uepc', 'ucause', 'uscratch', 'ustatus', 'uie',
                             'vtype', 'vxsat', 'vstart', 'vl', 'vxrm',
                             'sedeleg', 'sideleg',
@@ -237,7 +237,7 @@ Use this script to produce a CSR 'trees' file, from the system registers starter
 """
     
 if __name__ == '__main__':
-    mSysRegsStarterFile = 'input/system_registers_starter.xml'
+    mSysRegsStarterFile = 'input/system_registers_starter_rv64.xml'
     mCSRTreeFile = 'output/csr_trees.py'
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'hi:o:', [ 'help','system_registers_starter_file=', 'csr_trees_file=' ] )

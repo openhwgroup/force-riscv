@@ -153,46 +153,46 @@
     <physical_register index="0xb1d" name="mhpmcounter29" size="64" type="SysReg"/>
     <physical_register index="0xb1e" name="mhpmcounter30" size="64" type="SysReg"/>
     <physical_register index="0xb1f" name="mhpmcounter31" size="64" type="SysReg"/>
-    <physical_register index="0xc00" name="cycle" size="64" type="SysReg"/>
-    <physical_register index="0xc01" name="time" size="64" type="SysReg"/>
-    <physical_register index="0xc02" name="instret" size="64" type="SysReg"/>
-    <physical_register index="0xc03" name="hpmcounter3" size="64" type="SysReg"/>
-    <physical_register index="0xc04" name="hpmcounter4" size="64" type="SysReg"/>
-    <physical_register index="0xc05" name="hpmcounter5" size="64" type="SysReg"/>
-    <physical_register index="0xc06" name="hpmcounter6" size="64" type="SysReg"/>
-    <physical_register index="0xc07" name="hpmcounter7" size="64" type="SysReg"/>
-    <physical_register index="0xc08" name="hpmcounter8" size="64" type="SysReg"/>
-    <physical_register index="0xc09" name="hpmcounter9" size="64" type="SysReg"/>
-    <physical_register index="0xc0a" name="hpmcounter10" size="64" type="SysReg"/>
-    <physical_register index="0xc0b" name="hpmcounter11" size="64" type="SysReg"/>
-    <physical_register index="0xc0c" name="hpmcounter12" size="64" type="SysReg"/>
-    <physical_register index="0xc0d" name="hpmcounter13" size="64" type="SysReg"/>
-    <physical_register index="0xc0e" name="hpmcounter14" size="64" type="SysReg"/>
-    <physical_register index="0xc0f" name="hpmcounter15" size="64" type="SysReg"/>
-    <physical_register index="0xc10" name="hpmcounter16" size="64" type="SysReg"/>
-    <physical_register index="0xc11" name="hpmcounter17" size="64" type="SysReg"/>
-    <physical_register index="0xc12" name="hpmcounter18" size="64" type="SysReg"/>
-    <physical_register index="0xc13" name="hpmcounter19" size="64" type="SysReg"/>
-    <physical_register index="0xc14" name="hpmcounter20" size="64" type="SysReg"/>
-    <physical_register index="0xc15" name="hpmcounter21" size="64" type="SysReg"/>
-    <physical_register index="0xc16" name="hpmcounter22" size="64" type="SysReg"/>
-    <physical_register index="0xc17" name="hpmcounter23" size="64" type="SysReg"/>
-    <physical_register index="0xc18" name="hpmcounter24" size="64" type="SysReg"/>
-    <physical_register index="0xc19" name="hpmcounter25" size="64" type="SysReg"/>
-    <physical_register index="0xc1a" name="hpmcounter26" size="64" type="SysReg"/>
-    <physical_register index="0xc1b" name="hpmcounter27" size="64" type="SysReg"/>
-    <physical_register index="0xc1c" name="hpmcounter28" size="64" type="SysReg"/>
-    <physical_register index="0xc1d" name="hpmcounter29" size="64" type="SysReg"/>
-    <physical_register index="0xc1e" name="hpmcounter30" size="64" type="SysReg"/>
-    <physical_register index="0xc1f" name="hpmcounter31" size="64" type="SysReg"/>
+    <physical_register index="0xc00" name="cycle" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc01" name="time" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc02" name="instret" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc03" name="hpmcounter3" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc04" name="hpmcounter4" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc05" name="hpmcounter5" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc06" name="hpmcounter6" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc07" name="hpmcounter7" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc08" name="hpmcounter8" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc09" name="hpmcounter9" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc0a" name="hpmcounter10" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc0b" name="hpmcounter11" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc0c" name="hpmcounter12" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc0d" name="hpmcounter13" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc0e" name="hpmcounter14" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc0f" name="hpmcounter15" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc10" name="hpmcounter16" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc11" name="hpmcounter17" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc12" name="hpmcounter18" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc13" name="hpmcounter19" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc14" name="hpmcounter20" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc15" name="hpmcounter21" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc16" name="hpmcounter22" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc17" name="hpmcounter23" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc18" name="hpmcounter24" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc19" name="hpmcounter25" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc1a" name="hpmcounter26" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc1b" name="hpmcounter27" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc1c" name="hpmcounter28" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc1d" name="hpmcounter29" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc1e" name="hpmcounter30" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xc1f" name="hpmcounter31" reset="0" size="64" type="SysReg"/>
     <physical_register index="0xc20" name="vl" size="64" type="SysReg"/>
     <physical_register index="0xc21" name="vtype" size="64" type="SysReg"/>
     <physical_register index="0xc22" name="vlenb" reset="0x10" size="64" type="SysReg"/>
-    <physical_register index="0xe07" name="hgeip" size="64" type="SysReg"/>
-    <physical_register index="0xf11" name="mvendorid" size="32" type="SysReg"/>
-    <physical_register index="0xf12" name="marchid" size="64" type="SysReg"/>
-    <physical_register index="0xf13" name="mimpid" size="64" type="SysReg"/>
-    <physical_register index="0xf14" name="mhartid" size="64" type="SysReg"/>
+    <physical_register index="0xe07" name="hgeip" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xf11" name="mvendorid" reset="0" size="32" type="SysReg"/>
+    <physical_register index="0xf12" name="marchid" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xf13" name="mimpid" reset="0" size="64" type="SysReg"/>
+    <physical_register index="0xf14" name="mhartid" reset="0" size="64" type="SysReg"/>
   </physical_registers>
   <register_file name="RISC-V Registers">
     <register boot="0" index="0x0" name="ustatus" size="64" type="SysReg">
@@ -1389,38 +1389,38 @@
     <register boot="0" index="0xb1d" name="mhpmcounter29" size="64" type="SysReg"/>
     <register boot="0" index="0xb1e" name="mhpmcounter30" size="64" type="SysReg"/>
     <register boot="0" index="0xb1f" name="mhpmcounter31" size="64" type="SysReg"/>
-    <register boot="0" index="0xc00" name="cycle" size="64" type="SysReg"/>
-    <register boot="0" index="0xc01" name="time" size="64" type="SysReg"/>
-    <register boot="0" index="0xc02" name="instret" size="64" type="SysReg"/>
-    <register boot="0" index="0xc03" name="hpmcounter3" size="64" type="SysReg"/>
-    <register boot="0" index="0xc04" name="hpmcounter4" size="64" type="SysReg"/>
-    <register boot="0" index="0xc05" name="hpmcounter5" size="64" type="SysReg"/>
-    <register boot="0" index="0xc06" name="hpmcounter6" size="64" type="SysReg"/>
-    <register boot="0" index="0xc07" name="hpmcounter7" size="64" type="SysReg"/>
-    <register boot="0" index="0xc08" name="hpmcounter8" size="64" type="SysReg"/>
-    <register boot="0" index="0xc09" name="hpmcounter9" size="64" type="SysReg"/>
-    <register boot="0" index="0xc0a" name="hpmcounter10" size="64" type="SysReg"/>
-    <register boot="0" index="0xc0b" name="hpmcounter11" size="64" type="SysReg"/>
-    <register boot="0" index="0xc0c" name="hpmcounter12" size="64" type="SysReg"/>
-    <register boot="0" index="0xc0d" name="hpmcounter13" size="64" type="SysReg"/>
-    <register boot="0" index="0xc0e" name="hpmcounter14" size="64" type="SysReg"/>
-    <register boot="0" index="0xc0f" name="hpmcounter15" size="64" type="SysReg"/>
-    <register boot="0" index="0xc10" name="hpmcounter16" size="64" type="SysReg"/>
-    <register boot="0" index="0xc11" name="hpmcounter17" size="64" type="SysReg"/>
-    <register boot="0" index="0xc12" name="hpmcounter18" size="64" type="SysReg"/>
-    <register boot="0" index="0xc13" name="hpmcounter19" size="64" type="SysReg"/>
-    <register boot="0" index="0xc14" name="hpmcounter20" size="64" type="SysReg"/>
-    <register boot="0" index="0xc15" name="hpmcounter21" size="64" type="SysReg"/>
-    <register boot="0" index="0xc16" name="hpmcounter22" size="64" type="SysReg"/>
-    <register boot="0" index="0xc17" name="hpmcounter23" size="64" type="SysReg"/>
-    <register boot="0" index="0xc18" name="hpmcounter24" size="64" type="SysReg"/>
-    <register boot="0" index="0xc19" name="hpmcounter25" size="64" type="SysReg"/>
-    <register boot="0" index="0xc1a" name="hpmcounter26" size="64" type="SysReg"/>
-    <register boot="0" index="0xc1b" name="hpmcounter27" size="64" type="SysReg"/>
-    <register boot="0" index="0xc1c" name="hpmcounter28" size="64" type="SysReg"/>
-    <register boot="0" index="0xc1d" name="hpmcounter29" size="64" type="SysReg"/>
-    <register boot="0" index="0xc1e" name="hpmcounter30" size="64" type="SysReg"/>
-    <register boot="0" index="0xc1f" name="hpmcounter31" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc00" name="cycle" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc01" name="time" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc02" name="instret" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc03" name="hpmcounter3" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc04" name="hpmcounter4" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc05" name="hpmcounter5" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc06" name="hpmcounter6" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc07" name="hpmcounter7" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc08" name="hpmcounter8" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc09" name="hpmcounter9" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc0a" name="hpmcounter10" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc0b" name="hpmcounter11" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc0c" name="hpmcounter12" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc0d" name="hpmcounter13" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc0e" name="hpmcounter14" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc0f" name="hpmcounter15" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc10" name="hpmcounter16" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc11" name="hpmcounter17" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc12" name="hpmcounter18" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc13" name="hpmcounter19" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc14" name="hpmcounter20" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc15" name="hpmcounter21" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc16" name="hpmcounter22" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc17" name="hpmcounter23" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc18" name="hpmcounter24" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc19" name="hpmcounter25" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc1a" name="hpmcounter26" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc1b" name="hpmcounter27" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc1c" name="hpmcounter28" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc1d" name="hpmcounter29" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc1e" name="hpmcounter30" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xc1f" name="hpmcounter31" size="64" type="SysReg"/>
     <register boot="1" index="0xc20" init_policy="VlInitPolicy" name="vl" size="64" type="SysReg">
       <register_field name="VL" physical_register="vl" size="64">
         <bit_field shift="0" size="64"/>
@@ -1447,13 +1447,13 @@
         <bit_field shift="2" size="3"/>
       </register_field>
     </register>
-    <register boot="1" class="ReadOnlyRegister" index="0xc22" name="vlenb" size="64" type="SysReg">
+    <register boot="0" class="ReadOnlyRegister" index="0xc22" name="vlenb" size="64" type="SysReg">
       <register_field name="VLENB" physical_register="vlenb" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register boot="0" index="0xe07" name="hgeip" size="64" type="SysReg"/>
-    <register boot="0" index="0xf11" name="mvendorid" size="32" type="SysReg">
+    <register boot="0" class="ReadOnlyRegister" index="0xe07" name="hgeip" size="64" type="SysReg"/>
+    <register boot="0" class="ReadOnlyRegister" index="0xf11" name="mvendorid" size="32" type="SysReg">
       <register_field name="BANK" physical_register="mvendorid" size="25">
         <bit_field shift="7" size="25"/>
       </register_field>
@@ -1461,17 +1461,17 @@
         <bit_field shift="0" size="7"/>
       </register_field>
     </register>
-    <register boot="0" index="0xf12" name="marchid" size="64" type="SysReg">
+    <register boot="0" class="ReadOnlyRegister" index="0xf12" name="marchid" size="64" type="SysReg">
       <register_field name="ARCHITECTURE ID_VAR" physical_register="marchid" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register boot="0" index="0xf13" name="mimpid" size="64" type="SysReg">
+    <register boot="0" class="ReadOnlyRegister" index="0xf13" name="mimpid" size="64" type="SysReg">
       <register_field name="IMPLEMENTATION_VAR" physical_register="mimpid" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
     </register>
-    <register boot="0" index="0xf14" name="mhartid" size="64" type="SysReg">
+    <register boot="0" class="ReadOnlyRegister" index="0xf14" name="mhartid" size="64" type="SysReg">
       <register_field name="HART ID_VAR" physical_register="mhartid" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
