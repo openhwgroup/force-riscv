@@ -22,6 +22,15 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
         ldstr_instructions = ['LD##RISCV', 'SD##RISCV']
+        addr_size = 48
+        alignment = 8
+        
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            random_instructions = ['ADD##RISCV', 'SRLI#RV32I#RISCV', 'ADDI##RISCV', 'SLLI#RV32I#RISCV', 'LUI##RISCV']
+            ldstr_instructions = ['LW##RISCV', 'SW##RISCV']
+            addr_size = 32
+            alignment = 4
+            
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
                 self.genInstruction(self.choice(random_instructions))
@@ -30,9 +39,9 @@ class MainSequence(Sequence):
 
             rand_VA = 0
             if opt_valid:
-                rand_VA = self.genVA(Size=48, Align=8, Type="D", Bank=0, FlatMap=opt_value)
+                rand_VA = self.genVA(Size=addr_size, Align=alignment, Type="D", Bank=0, FlatMap=opt_value)
             else:
-                rand_VA = self.genVA(Size=48, Align=8, Type="D", Bank=0)
+                rand_VA = self.genVA(Size=addr_size, Align=alignment, Type="D", Bank=0)
 
             self.notice("gen target VA={:#x}".format(rand_VA))
             self.genInstruction(self.choice(ldstr_instructions), {'LSTarget':rand_VA})

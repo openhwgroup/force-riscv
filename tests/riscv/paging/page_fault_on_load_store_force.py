@@ -31,12 +31,17 @@ class MainSequence(PageFaultSequence):
             'LD##RISCV',
             'SD##RISCV',
             )
-
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self._mInstrList = (
+                'LW##RISCV',
+                'SW##RISCV',
+            )
+            
         self._mExceptionCodes = ( 13, 15 ) # for risc-v, load: 13, store: 15
         self._mExceptionSubCodes = { } # for now, riscv does not support exception sub-codes
         
     def createPageFaultModifier(self):
-            return PageFaultModifier(self.genThread)
+            return PageFaultModifier(self.genThread, self.getGlobalState('AppRegisterWidth'))
 
     def getInstructionList(self):
             return self._mInstrList

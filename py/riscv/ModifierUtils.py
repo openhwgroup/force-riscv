@@ -19,8 +19,9 @@ import RandomUtils
 
 class PageFaultModifier(ChoicesModifier):
 
-    def __init__(self, aGenThread):
+    def __init__(self, aGenThread, aAppRegWidth):
         super().__init__(aGenThread, 'PageFaultModifier')
+
         self._mValidFaultTypes = [
                 'Invalid DA',
                 'Invalid U',
@@ -43,6 +44,19 @@ class PageFaultModifier(ChoicesModifier):
                 #'Last Level Pointer':[0],
                 }
 
+        if aAppRegWidth == 32:
+            # Sv32...
+            self._mValidFaultLevels = {
+                'Invalid DA':[0,1],
+                'Invalid U':[0,1],
+                'Invalid X':[0,1],
+                'Invalid WR':[0,1],
+                'Invalid V':[1,0],
+                #'Va Address Error':[3,2,1,0]
+                #'Misaligned Superpage':[3,2,1],
+                #'Last Level Pointer':[0],
+                }
+        
         self._mValidPrivilegeLevels = {
                 'Invalid DA':['S'],
                 'Invalid U':['S'],

@@ -21,6 +21,9 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            random_instructions = ['ADD##RISCV', 'SRLI#RV32I#RISCV', 'ADDI##RISCV', 'SLLI#RV32I#RISCV', 'LUI##RISCV']
+            
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
                 self.genInstruction(self.choice(random_instructions))
