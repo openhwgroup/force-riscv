@@ -104,7 +104,7 @@ class MainSequence(Sequence):
         expected_gpr_state_data = []
         for gpr_index in range(1, 32, 2):
             gpr_name = 'x%d' % gpr_index
-            gpr_val = 0xFFFFFFFFFFFFFFFF
+            gpr_val = 0xFFFFFFFF if self.getGlobalState('AppRegisterWidth') == 32 else 0xFFFFFFFFFFFFFFFF
             state.addRegisterStateElement(gpr_name, (gpr_val,))
             expected_gpr_state_data.append((gpr_name, gpr_val))
 
