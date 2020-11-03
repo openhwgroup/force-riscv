@@ -23,6 +23,12 @@
     <choice description="No Supervisor access to User Memory" value="0x0" weight="10"/>
     <choice description="Supervisor access to User Memory" value="0x1" weight="0"/>
   </choices>
+  <choices name="mstatus.VS" type="RegisterFieldValue">
+    <choice description="Vector unit off" value="0x0" weight="0"/>
+    <choice description="Vector unit initial" value="0x1" weight="10"/>
+    <choice description="Vector unit clean" value="0x2" weight="10"/>
+    <choice description="Vector unit dirty" value="0x3" weight="10"/>
+  </choices>
   <choices name="misa.MXL" type="RegisterFieldValue">
     <choice description="Undefined" value="0x0" weight="0"/>
     <choice description="ISA width is 32" value="0x1" weight="10"/>
