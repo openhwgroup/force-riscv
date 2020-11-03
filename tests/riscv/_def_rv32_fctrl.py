@@ -15,44 +15,26 @@
 #
 
 control_items = [ {"fname":"rv32/_def_fctrl.py",     "generator" : {"--cfg" : "config/riscv.config32", }},
-
-                  # api tests have a few fails (api_genFreePagesRange_01_force.py, LoopControlTest_force.py)
                   {"fname":"APIs/_def_fctrl.py",     "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"APIs/_noiss_fctrl.py",   "generator" : {"--cfg" : "config/riscv.config32", }},
-
-                  # these seem okay...
                   {"fname":"address_solving/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"loop/_def_fctrl.py",     "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"loop/_noiss_fctrl.py",   "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"branch/_def_fctrl.py",   "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"branch/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  
-                  # exception tests have some fails (stack_force.py, instruction_misaligned_exception_force)  
                   {"fname":"exception_handlers/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  
-                  # segregate 32-bit only instruction groups...
-                  #{"fname":"instructions/riscv_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  #{"fname":"instructions/riscv_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  ##{"fname":"instructions/c_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  #{"fname":"instructions/c_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  
-                  # vector tests are a problem...
-                  #{"fname":"instructions/v_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  #{"fname":"instructions/v_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  
-                  # paging tests seem okay...
+                  {"fname":"instructions/riscv_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"instructions/riscv_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"instructions/c_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"instructions/c_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"instructions/v_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"instructions/v_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"paging/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"paging/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-
-                  # these seem okay...
                   {"fname":"privilege_switch/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"privilege_switch/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-
-                  # fixed some, but a number still fail...
                   {"fname":"state_transition/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-
-                  # haven't looked at these yet...
-                  #{"fname":"vector/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  #{"fname":"../../examples/riscv/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
-                  #{"fname":"bnt/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"vector/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"../../examples/riscv/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"bnt/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                 ]

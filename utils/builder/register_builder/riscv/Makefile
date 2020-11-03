@@ -75,4 +75,4 @@ install:
 .PHONY: clean
 clean:
 	@echo 'Building Registers: clean'
-	@rm -f output/*.xml output/*.txt /output/*py
+	@rm -f output/*.xml output/*.txt output/*py

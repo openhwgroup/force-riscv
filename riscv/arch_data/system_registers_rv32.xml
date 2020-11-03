@@ -228,9 +228,9 @@
     <physical_register index="0xc1d" name="hpmcounter29" reset="0" size="32" type="SysReg"/>
     <physical_register index="0xc1e" name="hpmcounter30" reset="0" size="32" type="SysReg"/>
     <physical_register index="0xc1f" name="hpmcounter31" reset="0" size="32" type="SysReg"/>
-    <physical_register index="0xc20" name="vl" reset="0" size="32" type="SysReg"/>
-    <physical_register index="0xc21" name="vtype" reset="0" size="32" type="SysReg"/>
-    <physical_register index="0xc22" name="vlenb" reset="0" size="32" type="SysReg"/>
+    <physical_register index="0xc20" name="vl" size="32" type="SysReg"/>
+    <physical_register index="0xc21" name="vtype" size="32" type="SysReg"/>
+    <physical_register index="0xc22" name="vlenb" reset="0x10" size="32" type="SysReg"/>
     <physical_register index="0xc80" name="cycleh" reset="0" size="32" type="SysReg"/>
     <physical_register index="0xc81" name="timeh" reset="0" size="32" type="SysReg"/>
     <physical_register index="0xc82" name="instreth" reset="0" size="32" type="SysReg"/>
@@ -1520,29 +1520,33 @@
     <register boot="0" class="ReadOnlyRegister" index="0xc1d" name="hpmcounter29" size="32" type="SysReg"/>
     <register boot="0" class="ReadOnlyRegister" index="0xc1e" name="hpmcounter30" size="32" type="SysReg"/>
     <register boot="0" class="ReadOnlyRegister" index="0xc1f" name="hpmcounter31" size="32" type="SysReg"/>
-    <register boot="1" class="ReadOnlyRegister" index="0xc20" name="vl" size="32" type="SysReg">
+    <register boot="1" index="0xc20" init_policy="VlInitPolicy" name="vl" size="32" type="SysReg">
       <register_field name="VL" physical_register="vl" size="32">
         <bit_field shift="0" size="32"/>
       </register_field>
     </register>
-    <register boot="1" class="ReadOnlyRegister" index="0xc21" name="vtype" size="32" type="SysReg">
-      <register_field name="VILL" physical_register="vtype" size="1">
+    <register boot="1" index="0xc21" name="vtype" size="32" type="SysReg">
+      <register_field init_policy="VtypeInitPolicy" name="VILL" physical_register="vtype" size="1">
         <bit_field shift="31" size="1"/>
       </register_field>
-      <register_field name="RESERVED (WRITE 0)" physical_register="vtype" size="24">
-        <bit_field shift="7" size="24"/>
+      <register_field init_policy="VtypeInitPolicy" name="RESERVED (WRITE 0)" physical_register="vtype" size="23">
+        <bit_field shift="8" size="23"/>
       </register_field>
-      <register_field name="Vediv" physical_register="vtype" size="2">
-        <bit_field shift="5" size="2"/>
+      <register_field init_policy="VtypeInitPolicy" name="VMA" physical_register="vtype" size="1">
+        <bit_field shift="7" size="1"/>
       </register_field>
-      <register_field name="VLMUL" physical_register="vtype" size="2">
+      <register_field init_policy="VtypeInitPolicy" name="VTA" physical_register="vtype" size="1">
+        <bit_field shift="6" size="1"/>
+      </register_field>
+      <register_field name="VLMUL" physical_register="vtype" size="3">
+        <bit_field shift="5" size="1"/>
         <bit_field shift="0" size="2"/>
       </register_field>
       <register_field name="VSEW" physical_register="vtype" size="3">
         <bit_field shift="2" size="3"/>
       </register_field>
     </register>
-    <register boot="1" class="ReadOnlyRegister" index="0xc22" name="vlenb" size="32" type="SysReg">
+    <register boot="0" class="ReadOnlyRegister" index="0xc22" name="vlenb" size="32" type="SysReg">
       <register_field name="VLENB" physical_register="vlenb" size="32">
         <bit_field shift="0" size="32"/>
       </register_field>

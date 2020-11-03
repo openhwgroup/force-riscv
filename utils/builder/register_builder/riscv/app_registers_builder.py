@@ -93,12 +93,12 @@ def build_app_registers(app_registers_file, xlen):
         app_register_doc.addRegister(create_app_register("PC", size, 32, "PC", None, 0))
 
         # number of sub-registers needed for quad FP 128-bit registers
-        numberOfFpSubReg = 128 // size
+        numberOfFpSubReg = 2
 
         # Add f0-f31 and S0-S31
         for i in range(0, 32):
             for subIndex in range(numberOfFpSubReg):
-                app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("f%d_%d" % (i, subIndex), size, i, "FPR", aSubIndex=subIndex))
+                app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("f%d_%d" % (i, subIndex), 64, i, "FPR", aSubIndex=subIndex))
             
             app_register_doc.addRegister(create_app_register("S%d" % i, 32, i, "FPR", None, 0, "f%d_0" % i))
 
@@ -108,21 +108,21 @@ def build_app_registers(app_registers_file, xlen):
 
         # Add D0-D31
         for i in range(0, 32):
-            app_register_doc.addRegister(create_double_precision_app_register(i, size))
+            app_register_doc.addRegister(create_double_precision_app_register(i, 64))
 
         # Add Q0-Q31
         for i in range(0, 32):
-            app_register_doc.addRegister(create_quad_precision_app_register(i, size))
+            app_register_doc.addRegister(create_quad_precision_app_register(i, 64))
 
         # number of sub-registers needed for vector 512-bit registers
-        numberOfVecSubReg = 512 // size
+        numberOfVecSubReg = 8
 
         # add vector registers V0-V31
         for i in range(0, 32):
             for subIndex in range(numberOfVecSubReg):
-                app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("v%d_%d" % (i, subIndex), size, i, "VECREG", aSubIndex=subIndex))
+                app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("v%d_%d" % (i, subIndex), 64, i, "VECREG", aSubIndex=subIndex))
             
-            app_register_doc.addRegister(create_vector_app_register(i, size))
+            app_register_doc.addRegister(create_vector_app_register(i, 64))
         
         app_register_doc.writeXmlFile('output/app_registers_rv%s.xml' % size)
 

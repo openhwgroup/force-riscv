@@ -229,6 +229,9 @@
     <choice description="URO; Performance-monitoring counter." name="hpmcounter29" value="0xc1d" weight="0"/>
     <choice description="URO; Performance-monitoring counter." name="hpmcounter30" value="0xc1e" weight="0"/>
     <choice description="URO; Performance-monitoring counter." name="hpmcounter31" value="0xc1f" weight="0"/>
+    <choice description="URW; Vector length." name="vl" value="0xc20" weight="0"/>
+    <choice description="URW; Vector data type register." name="vtype" value="0xc21" weight="0"/>
+    <choice description="URO; VLEN/8 (vector register length in bytes)." name="vlenb" value="0xc22" weight="0"/>
     <choice description="URO; Upper 32 bits of cycle, RV32 only." name="cycleh" value="0xc80" weight="0"/>
     <choice description="URO; Upper 32 bits of time, RV32 only." name="timeh" value="0xc81" weight="0"/>
     <choice description="URO; Upper 32 bits of instret, RV32 only." name="instreth" value="0xc82" weight="0"/>
