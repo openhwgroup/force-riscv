@@ -61,16 +61,22 @@ class MyMainSequence(Sequence):
 
 
 
-# Modify the Paging Choices so that the test uses only 2M pages
+# Modify the Paging Choices so that the test uses only 4K, 2M, or 4M page sizes
 # This will be run before the MainSequence.generate()
 def gen_thread_initialization(gen_thread):
 
+    # when satp csr width is 32 bits then Sv32 is only paging mode possible...
+    satp_info = gen_thread.getRegisterInfo("satp", gen_thread.getRegisterIndex('satp') )
+    rv32 = satp_info['Width'] == 32
+    
     choices_mod = ChoicesModifier(gen_thread)
 
-    # Increase the likelihood of using GPRs  x10, x11, x12 and x13 by
-    # increasing the weighting.  The default weighting in the operand_choices.xml
-    # file is 10 for each GPR.
-    choices_mod.modifyPagingChoices("Page size#4K granule#S#stage 1", {"4K":10, "2M":10, "1G":0, "512G":0})
+    if rv32:
+        # Sv32 only choices...
+        choices_mod.modifyPagingChoices("Page size#4K granule#S#stage 1", {"4K":10, "4M":10} )
+    else:
+        # Sv48 otherwise...
+        choices_mod.modifyPagingChoices("Page size#4K granule#S#stage 1", {"4K":10, "2M":10, "1G":0, "512G":0} )
 
     choices_mod.commitSet()
 
