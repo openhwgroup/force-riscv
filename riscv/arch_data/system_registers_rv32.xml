@@ -416,7 +416,7 @@
       <register_field name="WPRI" physical_register="mstatus" size="20">
         <bit_field shift="20" size="11"/>
         <bit_field shift="17" size="1"/>
-        <bit_field shift="9" size="4"/>
+        <bit_field shift="11" size="2"/>
         <bit_field shift="7" size="1"/>
         <bit_field shift="2" size="3"/>
       </register_field>
@@ -431,6 +431,9 @@
       </register_field>
       <register_field name="FS" physical_register="mstatus" size="2">
         <bit_field shift="13" size="2"/>
+      </register_field>
+      <register_field name="VS" physical_register="mstatus" size="2">
+        <bit_field shift="9" size="2"/>
       </register_field>
       <register_field name="SPP" physical_register="mstatus" size="1">
         <bit_field shift="8" size="1"/>
