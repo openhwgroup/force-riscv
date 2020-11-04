@@ -27,7 +27,7 @@ class RiscVTestBuilder(BaseTestBuilder):
 
     def __init__(self):
         super().__init__("RISCV", True, 10, "", "", "debug_output.txt")
-        self.mXmlFiles = ["riscv_instructions.xml", "c_instructions.xml", "v_instructions.xml", "priv_instructions.xml"]
+        self.mXmlFiles = ["riscv_instructions.xml", "c_instructions.xml", "v_instructions.xml", "priv_instructions.xml", "c_instructions_rv64only.xml"]
         self.mTxtFiles = ["genonly.txt", "unsupported.txt"]
 
 if __name__ == "__main__":

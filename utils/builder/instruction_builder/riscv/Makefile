@@ -39,7 +39,7 @@ main_instructions: $(INSTR_BUILDER) input/riscv_instructions_starter.xml
 	@$(INSTR_BUILDER) --main
 
 .PHONY: c_instructions
-c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml
+c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/rv64only_c_instructions_starter.xml
 	@echo 'Building Instructions: c-ext'
 	@$(INSTR_BUILDER) --c-ext
 
@@ -58,6 +58,7 @@ install:
 	@echo 'Building Instructions: installing instruction files'
 	@cp -f output/supported_riscv_instructions.xml $(INSTALL_DIR)/riscv_instructions.xml
 	@cp -f output/supported_c_instructions.xml $(INSTALL_DIR)/c_instructions.xml
+	@cp -f output/supported_rv64only_c_instructions.xml $(INSTALL_DIR)/c_instructions_rv64only.xml
 	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
 	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
 

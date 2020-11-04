@@ -22,7 +22,11 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
 
-        seq_library = MySequenceLibrary(self.genThread)
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            seq_library = MySequenceLibrary32(self.genThread)
+        else:
+            seq_library = MySequenceLibrary(self.genThread)
+            
         # 4 iterations of selecting a sequence randomly from the list
         for _ in range(4):
             current_sequence = seq_library.chooseOne()
@@ -31,10 +35,6 @@ class MainSequence(Sequence):
         # In a random order, select and run with each sequence in the list
         for current_sequence in seq_library.getPermutated():
             current_sequence.run()
-
-            
-
-
 
 
 class  MySequenceLibrary(SequenceLibrary):
@@ -45,10 +45,13 @@ class  MySequenceLibrary(SequenceLibrary):
         ("Bunch_of_ALU_Int", "DV.riscv.sequences.BasicSequences", "Your Description", 20),\
         ("Bunch_of_LDST", "DV.riscv.sequences.BasicSequences", "Your Description", 20)]
 
+class  MySequenceLibrary32(SequenceLibrary):
 
-
-
-
+    def createSequenceList (self):
+        # Really simple test
+        self.seqList = [\
+        ("Bunch_of_ALU_Int", "DV.riscv.sequences.BasicSequences", "Your Description", 20),\
+        ("Bunch_of_LDST32", "DV.riscv.sequences.BasicSequences", "Your Description", 20)]
 
 
 

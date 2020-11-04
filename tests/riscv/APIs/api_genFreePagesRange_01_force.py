@@ -117,7 +117,10 @@ class MainSequence(Sequence):
             self.notice(">>>>>>>>>>>>   LSTarget address:  {:#x}".format(
                     target_address))
 
-            the_instruction = self.pickWeighted(LDST_All_instructions)
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                the_instruction = self.pickWeighted(LDST32_All_instructions)
+            else:
+                the_instruction = self.pickWeighted(LDST_All_instructions)
             self.genInstruction(the_instruction, {'LSTarget': target_address})
             self.notice(">>>>>>>>>>>>   Generated instruction is {}".format(
                     the_instruction))

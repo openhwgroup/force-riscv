@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from DV.riscv.trees.instruction_tree import LDST_All_instructions
+from DV.riscv.trees.instruction_tree import LDST32_All_instructions
 from DV.riscv.trees.instruction_tree import LDST_Byte_instructions
 from DV.riscv.trees.instruction_tree import LDST_Half_instructions
 from DV.riscv.trees.instruction_tree import LDST_Word_instructions
@@ -28,7 +29,10 @@ class MyMainSequence(Sequence):
     def generate(self, **kargs):
 
         for _ in range(100):
-            instr = self.pickWeighted(LDST_All_instructions)
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                instr = self.pickWeighted(LDST32_All_instructions)
+            else:
+                instr = self.pickWeighted(LDST_All_instructions)
 
             # Get two adjacent 4K pages.
             page_addr = self.genVA(Size=0x2000, Align=0x1000)   

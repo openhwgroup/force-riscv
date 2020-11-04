@@ -20,6 +20,7 @@ from base.ChoicesModifier import ChoicesModifier
 from DV.riscv.trees.instruction_tree import RV_G_instructions
 from DV.riscv.trees.instruction_tree import ALU_Float_All_map
 from DV.riscv.trees.instruction_tree import LDST_All_map
+from DV.riscv.trees.instruction_tree import LDST32_All_map
 
 
 class MyMainSequence(Sequence):
@@ -52,6 +53,11 @@ class MyMainSequence(Sequence):
 
                 instr_mix = { ALU_Float_All_map:10,
                               LDST_All_map:10 }
+
+                if self.getGlobalState('AppRegisterWidth') == 32:
+                    instr_mix = { ALU_Float_All_map:10,
+                                  LDST32_All_map:10 }
+                    
                 instr = self.pickWeighted(instr_mix)
                 self.genInstruction(instr)
                

@@ -38,12 +38,26 @@ RVC_load_store_instructions = {
     "C.SWSP##RISCV": 10
 }   
 
+RVC32_load_store_instructions = {
+    "C.FLD##RISCV": 10,
+    "C.LW##RISCV": 10,
+    "C.FLDSP##RISCV": 10,
+    "C.LWSP##RISCV": 10,
+    "C.FSD##RISCV": 10,
+    "C.SW##RISCV": 10,
+    "C.FSDSP##RISCV": 10,
+    "C.SWSP##RISCV": 10
+}   
+
 class MyMainSequence(Sequence):
 
     def generate(self, **kargs):    
         for _ in range(100):
             # pick random RVC load/store instruction...
-            instr = self.pickWeighted(RVC_load_store_instructions)
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                instr = self.pickWeighted(RVC32_load_store_instructions)
+            else:
+                instr = self.pickWeighted(RVC_load_store_instructions)
             # pick a random address aligned to a page boundary,
             # then (re)align that address close to the end of the page, on half-word boundary.
             # should yield a fair amount of misaligned load/stores...

@@ -121,6 +121,7 @@ def build_instructions():
 
     if output_all or c_ext_only:
         process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", c_ext_adjust_instruction_by_format)
+        process_instruction_file("input/rv64only_c_instructions_starter.xml", "output/rv64only_c_instructions.xml", "output/supported_rv64only_c_instructions.xml", c_ext_adjust_instruction_by_format)
         process_instruction_file("input/rv32c_instructions_starter.xml", "output/rv32c_instructions.xml", "output/rv32c_supported_instructions.xml", c_ext_adjust_instruction_by_format)
         process_instruction_file("input/rv64c_instructions_starter.xml", "output/rv64c_instructions.xml", "output/rv64c_supported_instructions.xml", c_ext_adjust_instruction_by_format)
 
