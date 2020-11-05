@@ -107,8 +107,10 @@ def addRandomPcStateElement(aSequence, aState, aPriorityMin=1, aPriorityMax=100)
 def addRandomFloatingPointRegisterStateElements(aSequence, aState, aStateElemCount, aPriorityMin=1, aPriorityMax=100):
     expected_fp_reg_state_data = []
     fp_reg_indices = aSequence.sample(range(0, 32), aStateElemCount)
+    
     for fp_reg_index in fp_reg_indices:
-        fp_reg_name_prefix = aSequence.choice(('S', 'D'))
+        # NOTE: utility used to move gpr reg values to fp regs doesn't work with double precision in 32-bit mode...
+        fp_reg_name_prefix = aSequence.choice(('S')) if aSequence.getGlobalState('AppRegisterWidth') == 32 else aSequence.choice(('S', 'D'))
         fp_reg_name = '%s%d' % (fp_reg_name_prefix, fp_reg_index)
 
         if fp_reg_name_prefix == 'S':

@@ -473,7 +473,10 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
         # TODO(Noah): Handle Q regisers when the Q extension is supported.
         load_gpr64_seq = LoadGPR64(self.genThread)
         load_gpr64_seq.load(reg_val_gpr_index, aStateElem.getValues()[0])
-        self.genInstruction('FMV.D.X##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': reg_val_gpr_index})
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            self.genInstruction('FMV.W.X##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': reg_val_gpr_index})
+        else:
+            self.genInstruction('FMV.D.X##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': reg_val_gpr_index})
 
         self._mHelperGprSet.releaseHelperGprs()
 
