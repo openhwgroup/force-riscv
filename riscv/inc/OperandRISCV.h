@@ -325,6 +325,7 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of the appropriate OperandConstraint object.
     const std::string GetNextRegisterName(uint32& indexVar) const; //!< Return the name of the next register in the list.
     ChoicesFilter* GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return the choices filter.
+    uint32 GetMinimumRegisterCount() { return 1; } //!< Returns the minimum register count.
 
     std::string mDataType; //!< Data type of the multi vector list in string.
   private:
@@ -334,10 +335,29 @@ namespace Force {
   };
 
   /*!
+    \class VectorDataRegisterOperand
+    \brief Operand class handling number of registers
+  */
+  class VectorDataRegisterOperand : public MultiVectorRegisterOperandRISCV {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorDataRegisterOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorDataRegisterOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorDataRegisterOperand);
+
+    Object* Clone() const override { return new VectorDataRegisterOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorDataRegisterOperand"; } //!< Return a string describing the actual type of the Object.
+
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorDataRegisterOperand);
+
+    uint32 GetMinimumRegisterCount(); //<! Returns the minimum register count.
+  };
+
+  /*!
     \class VectorIndexedDataRegisterOperand
     \brief Operand for RISCV vector indexed load/store data register operands.
   */
-  class VectorIndexedDataRegisterOperand : public MultiVectorRegisterOperandRISCV {
+  class VectorIndexedDataRegisterOperand : public VectorDataRegisterOperand {
   public:
     DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
