@@ -36,7 +36,11 @@ class MainSequence(Sequence):
         StateTransition.transitionToState(state_a, EStateTransitionOrderMode.ByPriority)
         state_transition_test_utils.verifyState(self, self._mExpectedStateData)
 
-        instructions = ('ADDI##RISCV', 'ADDW##RISCV', 'LUI##RISCV', 'SLLI#RV64I#RISCV', 'SRLI#RV64I#RISCV')
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            instructions = ('ADDI##RISCV', 'ADD##RISCV', 'LUI##RISCV', 'SLLI#RV32I#RISCV', 'SRLI#RV32I#RISCV')
+        else:
+            instructions = ('ADDI##RISCV', 'ADDW##RISCV', 'LUI##RISCV', 'SLLI#RV64I#RISCV', 'SRLI#RV64I#RISCV')
+            
         for _ in range(RandomUtils.random32(200, 500)):
             self.genInstruction(self.choice(instructions))
 
@@ -45,7 +49,10 @@ class MainSequence(Sequence):
         state_transition_test_utils.verifyState(self, self._mExpectedStateData)
 
         for _ in range(RandomUtils.random32(200, 500)):
-            self.genInstruction('SD##RISCV')
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                self.genInstruction('SW##RISCV')
+            else:
+                self.genInstruction('SD##RISCV')
 
         state_c = self._createStateC()
         StateTransition.transitionToState(state_c)
