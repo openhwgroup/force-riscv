@@ -297,18 +297,6 @@ namespace Force {
     instr_constr->SetVectorLayout(vec_layout);
   }
 
-  void SegmentedLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
-  {
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    VectorLayout vec_layout(*(instr_constr->GetVectorLayout()));
-
-    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
-    vec_layout_setup.SetUpVectorLayoutFixedElementSize(*(mpStructure->CastOperandStructure<VectorLayoutOperandStructure>()), vec_layout);
-    vec_layout_setup.SetSegmentedRegisterSize(*(mpStructure->CastOperandStructure<VectorLayoutOperandStructure>()), vec_layout);
-
-    instr_constr->SetVectorLayout(vec_layout);
-  }
-
   void WholeRegisterLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
@@ -434,6 +422,16 @@ namespace Force {
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto vec_reg_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
     mRegCount = vec_layout->GetRegisterCount(vec_reg_opr_constr->GetLayoutMultiple());
+    if (mRegCount < GetMinimumRegisterCount(rInstr)) {
+        mRegCount = GetMinimumRegisterCount(rInstr);
+    }
+  }
+
+  const uint32 VectorDataRegisterOperand::GetMinimumRegisterCount(const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    return vec_layout->mFieldCount;
   }
 
   OperandConstraint* VectorIndexedDataRegisterOperand::InstantiateOperandConstraint() const

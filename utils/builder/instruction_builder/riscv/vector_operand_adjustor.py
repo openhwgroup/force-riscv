@@ -35,15 +35,6 @@ class VectorOperandAdjustor(OperandAdjustor):
         layout_opr.oclass = "VtypeLayoutOperand"
         self.mInstr.insert_operand(0, layout_opr)
 
-    def add_segmented_layout_operand(self, aRegCount, aElemWidth):
-        layout_opr = Operand()
-        layout_opr.name = "segmented"
-        layout_opr.type = "VectorLayout"
-        layout_opr.oclass = "SegmentedLayoutOperand"
-        layout_opr.regCount = aRegCount
-        layout_opr.elemWidth = aElemWidth
-        self.mInstr.insert_operand(0, layout_opr)
-
     def add_custom_layout_operand(self, aRegCount, aElemWidth):
         layout_opr = Operand()
         layout_opr.name = "custom"
@@ -129,7 +120,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vs3_ls_source(self):
         vs3_opr = self.mInstr.find_operand('vs3')
-        vs3_opr.oclass = 'MultiVectorRegisterOperandRISCV'
+        vs3_opr.oclass = 'VectorDataRegisterOperand'
         self.set_vs3()
 
     def set_vs3_ls_indexed_source(self):
@@ -160,7 +151,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vd_ls_dest(self):
         vd_opr = self.mInstr.find_operand('vd')
-        vd_opr.oclass = 'MultiVectorRegisterOperandRISCV'
+        vd_opr.oclass = 'VectorDataRegisterOperand'
         self.set_vd()
 
     def set_vd_ls_indexed_dest(self):
