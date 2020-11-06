@@ -35,16 +35,6 @@ class VectorOperandAdjustor(OperandAdjustor):
         layout_opr.oclass = "VtypeLayoutOperand"
         self.mInstr.insert_operand(0, layout_opr)
 
-    def add_segmented_layout_operand(self, aRegCount, aElemWidth):
-        layout_opr = Operand()
-        layout_opr.name = "segmented"
-        layout_opr.type = "VectorLayout"
-        #layout_opr.oclass = "SegmentedLayoutOperand"
-        layout_opr.oclass = "CustomLayoutOperand"
-        layout_opr.regCount = aRegCount
-        layout_opr.elemWidth = aElemWidth
-        self.mInstr.insert_operand(0, layout_opr)
-
     def add_custom_layout_operand(self, aRegCount, aElemWidth):
         layout_opr = Operand()
         layout_opr.name = "custom"

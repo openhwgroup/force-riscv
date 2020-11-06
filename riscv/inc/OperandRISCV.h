@@ -241,24 +241,6 @@ namespace Force {
   };
 
   /*!
-    \class SegmentedLayoutOperand
-    \brief Operand class for vector register layouts corresponding to vtype.
-  */
-  class SegmentedLayoutOperand : public VectorLayoutOperand {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(SegmentedLayoutOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(SegmentedLayoutOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(SegmentedLayoutOperand);
-
-    Object* Clone() const override { return new SegmentedLayoutOperand(*this); } //!< Return a cloned VtypeLayoutOperand object of the same type and same contents of the object.
-    const char* Type() const override { return "SegmentedLayoutOperand"; } //!< Return the type of the VtypeLayoutOperand object in C string.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(SegmentedLayoutOperand);
-  private:
-    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
-  };
-
-  /*!
     \class WholeRegisterLayoutOperand
     \brief Operand class for fixed vector register layouts that read or write the whole vector register.
   */
@@ -325,7 +307,7 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of the appropriate OperandConstraint object.
     const std::string GetNextRegisterName(uint32& indexVar) const; //!< Return the name of the next register in the list.
     ChoicesFilter* GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return the choices filter.
-    uint32 GetMinimumRegisterCount() { return 1; } //!< Returns the minimum register count.
+    virtual const uint32 GetMinimumRegisterCount(const Instruction& rInstr) { return 1; } //!< Returns the minimum register count.
 
     std::string mDataType; //!< Data type of the multi vector list in string.
   private:
@@ -350,7 +332,7 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorDataRegisterOperand);
 
-    uint32 GetMinimumRegisterCount(); //<! Returns the minimum register count.
+    const uint32 GetMinimumRegisterCount(const Instruction& rInstr) override; //<! Returns the minimum register count.
   };
 
   /*!

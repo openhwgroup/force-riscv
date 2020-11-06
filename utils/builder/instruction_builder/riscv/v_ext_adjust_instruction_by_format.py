@@ -139,10 +139,8 @@ def add_layout_operand(aInstruction):
             elem_width = ints[1]
         else:
             elem_width = ints[0]
-        if 'SEG' in aInstruction.name:
-            operand_adjustor.add_segmented_layout_operand(aRegCount=reg_count, aElemWidth=elem_width)
-        else:
-            operand_adjustor.add_custom_layout_operand(aRegCount=reg_count, aElemWidth=elem_width)
+
+        operand_adjustor.add_custom_layout_operand(aRegCount=reg_count, aElemWidth=elem_width)
     else:
         operand_adjustor.add_vtype_layout_operand()
 
@@ -289,7 +287,7 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
 
     reg_count = 1
     if 'SEG' in aInstruction.name:
-        layout_opr = aInstruction.find_operand('segmented')
+        layout_opr = aInstruction.find_operand('custom')
         reg_count = int(layout_opr.regCount)
 
     operand_adjustor.set_vs3_ls_source()
@@ -410,7 +408,7 @@ def adjust_vd_rs1_rs2_vm(aInstruction):
 
     reg_count = 1
     if 'SEG' in aInstruction.name:
-        layout_opr = aInstruction.find_operand('segmented')
+        layout_opr = aInstruction.find_operand('custom')
         reg_count = int(layout_opr.regCount)
 
     operand_adjustor.set_vd_ls_dest()
