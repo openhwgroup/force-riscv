@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname": "*_force.py", "options": {"max-instr": 20000}},
-    {"fname": "state_transition_by_all_state_elem_types_force.py", "options": {"num-cores": 4}},
+    {"fname": "*_force.py", "options": {"num-cores": 4}},
+    {"fname": "*_force.py", "options": {"num-cores": 4}, "generator": {"--options": "\"PrivilegeLevel=1\""}},
+    {"fname": "*_force.py", "options": {"num-chips": 8, "num-cores": 2, "num-threads": 2}},
+    {"fname": "*_force.py", "options": {"num-chips": 8, "num-cores": 2, "num-threads": 2}, "generator": {"--options": "\"PrivilegeLevel=1\""}},
 ]

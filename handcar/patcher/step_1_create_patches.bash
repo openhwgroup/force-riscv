@@ -16,14 +16,10 @@
 # limitations under the License.
 #
 
-mkdir originals
-mkdir modified
-mkdir patches
-mkdir patched
-mkdir originals/insns
-mkdir modified/insns
-mkdir patches/insns
-mkdir patched/insns
+mkdir -p originals/insns
+mkdir -p modified/insns
+mkdir -p patches/insns
+mkdir -p patched/insns
 
 cp ../standalone/config.h ./originals
 cp ../standalone/riscv/devices.h ./originals

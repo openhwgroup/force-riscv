@@ -16,8 +16,8 @@
 # limitations under the License.
 #
 
-rm ./patched/*
-rm ./patched/insns/*
+rm -rf ./patched/*
+mkdir -p ./patched/insns
 
 patch originals/config.h -i patches/config.h.patch -o patched/config.h 
 patch originals/devices.h -i patches/devices.h.patch -o patched/devices.h 
