@@ -35,7 +35,9 @@ class MainSequence(Sequence):
 
         # We have to specify an order for all element types even if the State we create doesn't use
         # all types
-        state_elem_type_order = (EStateElementType.VectorRegister, EStateElementType.Memory, EStateElementType.SystemRegister, EStateElementType.FloatingPointRegister, EStateElementType.PredicateRegister, EStateElementType.GPR, EStateElementType.VmContext, EStateElementType.PrivilegeLevel, EStateElementType.PC)
+        state_elem_type_order = (EStateElementType.VectorRegister, EStateElementType.Memory, EStateElementType.SystemRegister, \
+                                 EStateElementType.FloatingPointRegister, EStateElementType.PredicateRegister, EStateElementType.GPR, \
+                                 EStateElementType.VmContext, EStateElementType.PrivilegeLevel, EStateElementType.PC)
 
         StateTransition.transitionToState(state, EStateTransitionOrderMode.ByStateElementType, state_elem_type_order)
 
