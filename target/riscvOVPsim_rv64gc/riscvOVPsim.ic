@@ -1,0 +1,17 @@
+# riscvOVPsim configuration file - generic RV64
+#
+# there are many many configurtion options for riscvOVPsim to ensure that the simulated device is what is needed
+--variant RVB64I
+--override riscvOVPsim/cpu/add_Extensions=MAFDCSU
+--override riscvOVPsim/cpu/unaligned=T
+--override riscvOVPsim/cpu/mtvec_mask=0x0 # 0
+--override riscvOVPsim/cpu/user_version=2.3
+--override riscvOVPsim/cpu/priv_version=1.11
+--override riscvOVPsim/cpu/mvendorid=0
+--override riscvOVPsim/cpu/marchid=0
+--override riscvOVPsim/cpu/mimpid=0
+--override riscvOVPsim/cpu/mhartid=0
+--override riscvOVPsim/cpu/cycle_undefined=F
+--override riscvOVPsim/cpu/instret_undefined=F
+--override riscvOVPsim/cpu/time_undefined=T
+--override riscvOVPsim/cpu/wfi_is_nop=T

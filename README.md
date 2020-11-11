@@ -1,5 +1,5 @@
  Copyright (C) [2020] Futurewei Technologies, Inc.
-
+ 
  FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -7,7 +7,7 @@
   http://www.apache.org/licenses/LICENSE-2.0
 
  THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT L/OutputIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
  FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
@@ -27,17 +27,7 @@ FORCE-RISCV provides full support of the RISC-V ISA, including:
 * Support for non-trivial exception handlers is planned.
 * Full support for the v48 virtual memory systems, including 4KB, 2MB, 1GB and 512GB page sizes.
 
-
-
-
-
-
-
-
-
-#  
-
-
+To run the output of FORCE-RISCV with the CORE-V-VERIF UVM testbench and to run the Imperas riscvOVPsim simulator get instruction functional coverage, see the sections below: Using riscvOVPsim to report coverage of generated tests.
 
 # FORCE-RISCV Quick Start Guide for RISC-V
 
@@ -145,7 +135,7 @@ fpix_sim.log | A text file that contains the disassembled instruction stream, th
 gen.log | Detailed output from FORCE-RISCV regarding the generation process.
 sim.log | A text file that contains the disassembled instruction stream as the instructions are being generated, along with the associated values of the registers and memory read and written by the instructions.  Similar to the fpix_sim.log but sim.log has some additional information and better formatting.
 
-### The process to build handcar_cosim.so
+### The process to build FORCE-RISCV handcar_cosim.so
 
 The Handcar cosim shared object (utils/handcar/handcar_cosim.so) is implemented based on Spike ISS (https://github.com/riscv/riscv-isa-sim).  We implemented additional code to package Spike code into a shared object with well-defined C APIs.  Since the build process is slightly involved, we have included a prebuilt handcar_cosim.so inside the utils/handcar directory.
 
@@ -160,7 +150,22 @@ To build the handcar_cosim.so:
 
 If the regenerate_and_build.bash script failed for some reason, it might be a good idea to execute the commands in there step-by-step.  We intend to improve this process and make it more robust down the road.
 
-### Near term roadmap
+# Using riscvOVPsim to report coverage of generated tests
+
+The [riscvOVPsim](https://github.com/riscv-ovpsim/imperas-riscv-tests) free RISC-V simulator from [Imperas](https://www.imperas.com/) includes the capability to report instruction functional coverage when running RISC-V programs.
+
+In this repository there are several [target](target) directories that provide configuration files and run scripts to make it easy to get started.
+
+The [README.md](target/README.md) provides information on downloading and using riscvOVPsim with the targets.
+
+# Using the generated tests with the OpenHW CORE-V-VERIF UVM testbench
+
+Currently we are working on FORCE-RISCV providing support for 32bit RISC-V processors. When this is working we will provide scripts and notes so the generated .elf files can work easily with the CV32E40P 32bit core.
+
+There is a placeholder target directory: [cv32e40p](target/riscvOVPsim_cv32e40p)
+
+
+# Near term FORCE_RISCV roadmap
 * Finish support for paging exceptions and control
 * Finish support for Vector extension version 0.9
 * Fast exception handling
