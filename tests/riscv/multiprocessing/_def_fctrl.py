@@ -16,9 +16,6 @@
 control_items = [
     {"fname": "*_force.py", "options": {"num-cores": 4}},
     {"fname": "*_force.py", "options": {"num-chips": 4, "num-cores": 2, "num-threads": 2, "max-instr": 50000}},
-
-    # TODO(Noah): Enable the paging tests when the issue with Handcar's simlib_t::get_disassembly()
-    # method is resolved.
-    #{"fname": "*_force.py", "options": {"num-cores": 4}, "generator": {"--options": "\"PrivilegeLevel=1\""}},
-    #{"fname": "*_force.py", "options": {"num-chips": 4, "num-cores": 2, "num-threads": 2, "max-instr": 50000}, "generator": {"--options": "\"PrivilegeLevel=1\""}},
+    {"fname": "*_force.py", "options": {"num-cores": 4}, "generator": {"--options": "\"PrivilegeLevel=1\""}},
+    {"fname": "*_force.py", "options": {"num-chips": 4, "num-cores": 2, "num-threads": 2, "max-instr": 50000}, "generator": {"--options": "\"PrivilegeLevel=1\""}},
 ]
