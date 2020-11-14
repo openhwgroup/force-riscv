@@ -209,6 +209,17 @@ namespace Force {
     }
 
     /*!
+      Process the differ attribute of an operand.
+    */
+    void process_differ_attribute(const string& attr_value, OperandStructure* op_struct)
+    {
+      StringSplitter string_splitter(attr_value, ',');
+      while (not string_splitter.EndOfString()) {
+        op_struct->AddDiffer(string_splitter.NextSubString());
+      }
+    }
+
+    /*!
       Process attributes of \<O\> element.  Make sure not to use the mpOperandStructure pointer here, since get_operand_structure could return either mpOperandStructure or mpGroupOperandStructure.
     */
     void process_operand_attributes(pugi::xml_node& node)
@@ -245,8 +256,7 @@ namespace Force {
             cast_struct->mChoices.push_back(attr.value());
           }
           else if (strcmp(attr_name, "differ") == 0) {
-            auto cast_struct = dynamic_cast<DifferOperandStructure* > (op_struct);
-            cast_struct-> SetDiffers(attr.value());
+            process_differ_attribute(attr.value(), op_struct);
           }
           else if (strcmp(attr_name, "exclude") == 0) {
             auto cast_struct = dynamic_cast<ExcludeOperandStructure* > (op_struct);
@@ -357,6 +367,22 @@ namespace Force {
             auto cast_struct = dynamic_cast<AluOperandStructure*> (op_struct);
             cast_struct->SetOperationType(string_to_EAluOperationType(attr.value()));
           }
+          else if (strcmp(attr_name, "layout-multiple") == 0) {
+            auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
+            cast_struct->SetLayoutMultiple(parse_float(attr.value()));
+          }
+          else if (strcmp(attr_name, "reg-count") == 0) {
+            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
+            cast_struct->SetRegisterCount(parse_uint32(attr.value()));
+          }
+          else if (strcmp(attr_name, "reg-index-alignment") == 0) {
+            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
+            cast_struct->SetRegisterIndexAlignment(parse_uint32(attr.value()));
+          }
+          else if (strcmp(attr_name, "elem-width") == 0) {
+            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
+            cast_struct->SetElementWidth(parse_uint32(attr.value()));
+          }
 
           // TODO(Noah): Devise and implement a better way of processing attributes generically when there is time to
           // do so. For now, keep the DataProcessing attribute processing at the end.
@@ -443,12 +469,15 @@ namespace Force {
         mpGroupOperandStructure = new DataProcessingOperandStructure();
         return mpGroupOperandStructure;
       }
-
-      auto const differ_attr = node.attribute("differ");
-      if (not differ_attr.empty()) {
-        mpOperandStructure = new DifferOperandStructure();
+      else if (strcmp(opr_type, "VECREG") == 0) {
+        mpOperandStructure = new VectorRegisterOperandStructure();
         return mpOperandStructure;
       }
+      else if (strcmp(opr_type, "VectorLayout") == 0) {
+        mpOperandStructure = new VectorLayoutOperandStructure();
+        return mpOperandStructure;
+      }
+
       auto const choices_attr = node.attribute("choices");
       if (not choices_attr.empty()) {
         mpOperandStructure = new ChoicesOperandStructure();

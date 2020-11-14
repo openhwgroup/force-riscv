@@ -17,10 +17,18 @@
 #include <InstructionConstraintRISCV.h>
 #include <OperandRISCV.h>
 #include <RetOperandRISCV.h>
+#include <VectorLayoutSetupRISCV.h>
+#include <Choices.h>
+#include <ChoicesModerator.h>
 #include <Generator.h>
 #include <GenRequest.h>
-#include <Log.h>
 #include <Register.h>
+#include <VectorLayout.h>
+#include <Log.h>
+
+#include <memory>
+#include <numeric>
+#include <sstream>
 
 /*!
   \file InstructionRISCV.cc
@@ -30,44 +38,6 @@
 using namespace std;
 
 namespace Force {
-
-  void VectorInstruction::Setup(const GenInstructionRequest& instrReq, Generator& gen)
-  {
-    Instruction::Setup(instrReq, gen);
-
-    LocateDataTypeOperand();
-  }
-
-  void VectorInstruction::LocateDataTypeOperand()
-  {
-    const VectorDataTypeOperand* vec_dt_opr = nullptr;
-    for (auto opr_ptr : mOperands) {
-      vec_dt_opr = dynamic_cast<const VectorDataTypeOperand* >(opr_ptr);
-      if (nullptr != vec_dt_opr) {
-        dynamic_cast<VectorInstructionConstraint* >(mpInstructionConstraint)->SetDataTypeOperand(vec_dt_opr);
-        return;
-      }
-    }
-
-    //LOG(fail) << "{VectorInstruction::LocateDataTypeOperand} data type operand not found." << endl;
-    //FAIL("vector-data-type-operand-not-found");
-  }
-
-  VectorInstruction::VectorInstruction(const VectorInstruction& rOther)
-    : Instruction(rOther)
-  {
-
-  }
-
-  InstructionConstraint* VectorInstruction::InstantiateInstructionConstraint() const
-  {
-    return new VectorInstructionConstraint();
-  }
-
-  InstructionConstraint* VectorLoadStoreInstruction::InstantiateInstructionConstraint() const
-  {
-    return new VectorLoadStoreInstructionConstraint();
-  }
 
   void RetInstruction::Setup(const GenInstructionRequest& instrReq, Generator& gen)
   {
@@ -99,5 +69,33 @@ namespace Force {
   {
     return new RetInstructionConstraint();
   }
-}
 
+  bool VectorAMOInstructionRISCV::Validate(const Generator& gen, string& error) const
+  {
+    VectorLayoutSetupRISCV vec_layout_setup(gen.GetRegisterFile());
+    VectorLayout data_vec_layout;
+    vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
+    if (data_vec_layout.mElemSize < 32) {
+      ChoicesModerator* choices_moderator = gen.GetChoicesModerator(EChoicesType::GeneralChoices);
+      unique_ptr<Choice> choices_tree(choices_moderator->CloneChoiceTree("Skip Generation - Vector AMO"));
+      auto chosen = choices_tree->Choose();
+      if (chosen->Name() == "DoSkip") {
+        stringstream err_stream;
+        err_stream << "Instruction \"" << Name() << "\" skipped because Handcar does not currently support SEW < 32 (SEW = " << data_vec_layout.mElemSize << "). To enable generation, adjust the \"Skip Generation - Vector AMO\" general choice tree.";
+        error = err_stream.str();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool VsetvlInstruction::GetPrePostAmbleRequests(Generator& gen) const
+  {
+    return accumulate(mOperands.cbegin(), mOperands.cend(), bool(false),
+      [&gen](cbool hasRequests, const Operand* pOpr) {
+        bool opr_has_requests = pOpr->GetPrePostAmbleRequests(gen);
+        return (hasRequests | opr_has_requests);
+      });
+  }
+
+}

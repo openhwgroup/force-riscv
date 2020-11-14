@@ -60,6 +60,12 @@ namespace Force {
 #define PICKY_IGNORE_BLOCK_START _Pragma("GCC diagnostic push") \
 _Pragma("GCC diagnostic ignored \"-Weffc++\"")
 #define PICKY_IGNORE_BLOCK_END _Pragma("GCC diagnostic pop")
+
+  template<typename T>
+  uint64 sizeof_bits()
+  {
+    return sizeof(T) * 8;
+  }
 }
 
 #endif

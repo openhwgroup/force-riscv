@@ -33,13 +33,13 @@ using namespace std;
 namespace Force {
 
   PageRequestRegulator::PageRequestRegulator()
-    : Object(), mpGenerator(nullptr), mpNoDataAbortVariable(nullptr), mpNoInstrAbortVariable(nullptr), mDataExceptionTypes(), mInstrExceptionTypes()
+    : Object(), mpGenerator(nullptr), mpNoDataPageFaultVariable(nullptr), mpNoInstrPageFaultVariable(nullptr), mDataExceptionTypes(), mInstrExceptionTypes()
   {
 
   }
 
   PageRequestRegulator::PageRequestRegulator(const PageRequestRegulator& rOther)
-    : Object(rOther), mpGenerator(nullptr), mpNoDataAbortVariable(nullptr), mpNoInstrAbortVariable(nullptr), mDataExceptionTypes(rOther.mDataExceptionTypes), mInstrExceptionTypes(rOther.mInstrExceptionTypes)
+    : Object(rOther), mpGenerator(nullptr), mpNoDataPageFaultVariable(nullptr), mpNoInstrPageFaultVariable(nullptr), mDataExceptionTypes(rOther.mDataExceptionTypes), mInstrExceptionTypes(rOther.mInstrExceptionTypes)
   {
 
   }
@@ -86,9 +86,8 @@ namespace Force {
     mpGenerator = pGen;
 
     const VariableModerator* var_mod = mpGenerator->GetVariableModerator(EVariableType::Value);
-    mpNoDataAbortVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No data abort allowed"));
-    mpNoInstrAbortVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No instruction abort allowed"));
-    // << "no data abort? " << mpNoDataAbortVariable->Value() << " no instr abort? " << mpNoInstrAbortVariable->Value() << endl;
+    mpNoDataPageFaultVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No data page fault allowed"));
+    mpNoInstrPageFaultVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No instruction page fault allowed"));
   }
 
   void PageRequestRegulator::RegulatePageRequest(const VmMapper* pVmMapper, GenPageRequest* pPageReq) const
@@ -103,13 +102,13 @@ namespace Force {
 
   void PageRequestRegulator::RegulateLoadStorePageRequest(const VmMapper* pVmMapper, const LoadStoreOperandStructure* pLsStruct, GenPageRequest* pPageReq) const
   {
-    if (mpNoDataAbortVariable->Value() || pPageReq->GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::NoDataAbort)) {
-      PreventDataAbort(pPageReq);
-      LOG(info) << "{PageRequestRegulator::RegulateLoadStorePageRequest} preventing all data abort." << endl;
+    if (mpNoDataPageFaultVariable->Value() || pPageReq->GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::NoDataPageFault)) {
+      PreventDataPageFault(pPageReq);
+      LOG(info) << "{PageRequestRegulator::RegulateLoadStorePageRequest} preventing all data page faults." << endl;
     }
     else {
       for (auto except_type : mDataExceptionTypes) {
-        auto except_name = string("Data ") + GetExceptionString(except_type);
+        auto except_name = GetExceptionString(except_type);
         EExceptionConstraintType except_constr_type = pVmMapper->GetExceptionConstraintType(except_name);
         pPageReq->SetExceptionConstraint(except_type, except_constr_type);
         LOG(info) << "{PageRequestRegulator::RegulateLoadStorePageRequest} exception type: " << EPagingExceptionType_to_string(except_type) << " exception name: " << except_name << " exception constraint type: "
@@ -120,7 +119,7 @@ namespace Force {
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::Regulated, true);
   }
 
-  void PageRequestRegulator::PreventDataAbort(GenPageRequest* pPageReq) const
+  void PageRequestRegulator::PreventDataPageFault(GenPageRequest* pPageReq) const
   {
     for (auto except_type : mDataExceptionTypes) {
       pPageReq->SetExceptionConstraint(except_type, EExceptionConstraintType::PreventHard);
@@ -129,13 +128,13 @@ namespace Force {
 
   void PageRequestRegulator::RegulateBranchPageRequest(const VmMapper* pVmMapper, const BranchOperandStructure* pBrStruct, GenPageRequest* pPageReq) const
   {
-    if (mpNoInstrAbortVariable->Value() || pPageReq->GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::NoInstrAbort)) {
-      PreventInstrAbort(pPageReq);
-      LOG(info) << "{PageRequestRegulator::RegulateBranchPageRequest} preventing all instruction abort." << endl;
+    if (mpNoInstrPageFaultVariable->Value() || pPageReq->GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::NoInstrPageFault)) {
+      PreventInstrPageFault(pPageReq);
+      LOG(info) << "{PageRequestRegulator::RegulateBranchPageRequest} preventing all instruction page faults." << endl;
     }
     else {
       for (auto except_type : mInstrExceptionTypes) {
-        auto except_name = string("Instruction ") + GetExceptionString(except_type);
+        auto except_name = GetExceptionString(except_type);
         EExceptionConstraintType except_constr_type = pVmMapper->GetExceptionConstraintType(except_name);
         pPageReq->SetExceptionConstraint(except_type, except_constr_type);
         LOG(info) << "{PageRequestRegulator::RegulateBranchPageRequest} exception type: " << EPagingExceptionType_to_string(except_type) << " exception name: " << except_name << " exception constraint type: "
@@ -146,11 +145,16 @@ namespace Force {
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::Regulated, true);
   }
 
-  void PageRequestRegulator::PreventInstrAbort(GenPageRequest* pPageReq) const
+  void PageRequestRegulator::PreventInstrPageFault(GenPageRequest* pPageReq) const
   {
     for (auto except_type : mInstrExceptionTypes) {
       pPageReq->SetExceptionConstraint(except_type, EExceptionConstraintType::PreventHard);
     }
+  }
+
+  const std::string PageRequestRegulator::GetExceptionString(EPagingExceptionType exceptType) const
+  {
+    return EPagingExceptionType_to_string(exceptType);
   }
 
 }

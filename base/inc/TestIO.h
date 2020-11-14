@@ -21,17 +21,18 @@
 
 namespace Force {
 
-class Memory;
-class TestImage;
-class Generator;
+  class Memory;
+  class SymbolManager;
+  class TestImage;
+  class Generator;
 
   /*!
     \class TestIO
     \brief A Test IO model to allow a test memory image to be written to or from disk in ELF format.
   */
-class TestIO {
+  class TestIO {
   public:
-    TestIO(uint32 memBank, const Memory& mem, bool createImage = true);
+  TestIO(uint32 memBank, const Memory* pMem, const SymbolManager* pSymManager, bool createImage = true);
     ~TestIO();
     ASSIGNMENT_OPERATOR_ABSENT(TestIO);
     COPY_CONSTRUCTOR_ABSENT(TestIO);
@@ -46,7 +47,8 @@ class TestIO {
 #endif
   private:
     uint32 mMemoryBank;
-    const Memory& mrMemory;
+    const Memory* mpMemory; //!< Pointer to memory object.
+    const SymbolManager* mpSymbolManager; //!< Pointer to symbol manager object.
     TestImage *mpTestImage;
 };
 

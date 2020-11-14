@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
@@ -14,6 +13,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
+<?xml version="1.0" ?>
 <choices_file>
   <choices name="sstatus.MXR" type="RegisterFieldValue">
     <choice description="No make executable readable" value="0x0" weight="10"/>
@@ -22,6 +22,12 @@
   <choices name="sstatus.SUM" type="RegisterFieldValue">
     <choice description="No Supervisor access to User Memory" value="0x0" weight="10"/>
     <choice description="Supervisor access to User Memory" value="0x1" weight="0"/>
+  </choices>
+  <choices name="mstatus.VS" type="RegisterFieldValue">
+    <choice description="Vector unit off" value="0x0" weight="0"/>
+    <choice description="Vector unit initial" value="0x1" weight="10"/>
+    <choice description="Vector unit clean" value="0x2" weight="10"/>
+    <choice description="Vector unit dirty" value="0x3" weight="10"/>
   </choices>
   <choices name="misa.MXL" type="RegisterFieldValue">
     <choice description="Undefined" value="0x0" weight="0"/>
@@ -196,5 +202,33 @@
   <choices name="medeleg.Store/AMO page fault" type="RegisterFieldValue">
     <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
     <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="vtype.VMA" type="RegisterFieldValue">
+    <choice description="Inactive elements remain undisturbed" value="0x0" weight="10"/>
+    <choice description="Inactive elements may be overwritten" value="0x1" weight="10"/>
+  </choices>
+  <choices name="vtype.VTA" type="RegisterFieldValue">
+    <choice description="Tail elements remain undisturbed" value="0x0" weight="10"/>
+    <choice description="Tail elements may be overwritten" value="0x1" weight="10"/>
+  </choices>
+  <choices name="vtype.VLMUL" type="RegisterFieldValue">
+    <choice description="32 register groups" value="0x0" weight="10"/>
+    <choice description="16 register groups" value="0x1" weight="10"/>
+    <choice description="8 register groups" value="0x2" weight="10"/>
+    <choice description="4 register groups" value="0x3" weight="10"/>
+    <choice description="Reserved" value="0x4" weight="0"/>
+    <choice description="1/8, 32 register groups" value="0x5" weight="10"/>
+    <choice description="1/4, 32 register groups" value="0x6" weight="10"/>
+    <choice description="1/2, 32 register groups" value="0x7" weight="10"/>
+  </choices>
+  <choices name="vtype.VSEW" type="RegisterFieldValue">
+    <choice description="8-bit elements" value="0x0" weight="0"/>
+    <choice description="16-bit elements" value="0x1" weight="10"/>
+    <choice description="32-bit elements" value="0x2" weight="10"/>
+    <choice description="64-bit elements" value="0x3" weight="10"/>
+    <choice description="128-bit elements" value="0x4" weight="0"/>
+    <choice description="256-bit elements" value="0x5" weight="0"/>
+    <choice description="512-bit elements" value="0x6" weight="0"/>
+    <choice description="1028-bit elements" value="0x7" weight="0"/>
   </choices>
 </choices_file>

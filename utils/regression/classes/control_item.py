@@ -213,7 +213,7 @@ class ControlItem( object ):
             raise Exception( "Control Item Data Dictionary Not Initialized" )
 
         # it must be a dictionary type
-        if not type( aItemDict ) is dict:
+        if not isinstance( aItemDict, dict ):
             raise TypeError( "Control Item Data: Must Be a Dictionary, Control Item: %s" % ( str( aItemDict )))
 
         # check for valid data in control item line
@@ -225,7 +225,7 @@ class ControlItem( object ):
         for my_key in my_keys:
             my_tmp_dict = aItemDict.get( my_key, None )
             if my_tmp_dict is not None:
-                if not type( my_tmp_dict ) is dict:
+                if not isinstance( my_tmp_dict, dict ):
                     raise TypeError( "Control Item[\"%s\"]: Must Be a Dictionary, \"%s\":%s" % (my_key, my_key, str(my_tmp_dict)))
         return True
 
@@ -350,7 +350,7 @@ class ControlItem( object ):
 
     def print_vals( self, arg_obj, arg_indent = "" ):
         my_str = ""
-        if type( arg_obj ) is dict:
+        if isinstance( arg_obj, dict ):
             my_sep = "{ "
             my_term = ""
             for my_key in arg_obj:
@@ -360,10 +360,10 @@ class ControlItem( object ):
                     my_str += "%s%s'%s': {}" % ( arg_indent, my_sep, my_key )
                 elif arg_obj[ my_key ] is None:
                     my_str += "%s%s'%s': None" % ( arg_indent, my_sep, my_key )
-                elif type( arg_obj[ my_key ] ) in [dict]:
+                elif isinstance( arg_obj[ my_key ], dict ):
                     my_str += "%s%s'%s':\n" % ( arg_indent, my_sep, str( my_key ))
                     my_str += self.print_vals( arg_obj[ my_key ], "\t%s" % (arg_indent ))
-                elif type( arg_obj[ my_key ] ) in [int, bool, list]:
+                elif isinstance( arg_obj[ my_key ], (int, bool, list)):
                     my_str += "%s%s'%s': %s" % ( arg_indent, my_sep, my_key, str( arg_obj[ my_key ]  ))
                 else:
                     my_str += "%s%s'%s': '%s'" % ( arg_indent, my_sep, my_key, str( arg_obj[ my_key ]  ))

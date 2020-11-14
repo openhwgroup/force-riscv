@@ -34,6 +34,8 @@ namespace Force {
     ~RegisterFileRISCV(); //!< Destructor
 
     Register* GetContainingRegister(const Register* pReg) const override; //!< Return an RISC-V register that contains the passed register object, if applicable.
+    bool InitContainingRegister(Register* rContainingReg, const Register* pReg) const override; //!< initialize container reg from the reg it contains
+
     bool AllowReExecutionInit(const std::string& rRegName) const override; //!< Check if a register is allowed to be initialized in re-execution.
     void SetupRegisterReserver() override;  //!< set up register reserver.
     Register* RegisterLookupByIndex(uint32 index, const ERegisterType reg_type, uint32 size) const override; //!< RISC-V layer register lookup by index method.

@@ -245,6 +245,8 @@ namespace Force {
     case EDataAccessPermissionType::ReadWriteUserOnly:
       rVmConstraints[uint32(EVmConstraintType::UserAccess)]->AddRange(pPage->Lower(), pPage->Upper());
       break;
+    case EDataAccessPermissionType::NoAccess:
+      break;
     default:
       LOG(fail) << "{VmasControlBlock::CommitPage} unexpected data access permission type: " << EDataAccessPermissionType_to_string(dap_type) << endl;
       FAIL("unexpected-data-access-permission-type");

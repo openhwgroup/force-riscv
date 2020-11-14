@@ -120,7 +120,6 @@ namespace Force {
     void GenerateLoopRestoreInstructions(cuint32 threadId, cuint32 loopId) const; //!< Mark the beginning of the loop restore instruction sequence.
     void RegisterModificationSet(uint32 threadId, const py::object& choicesType, uint32 set_id); //!< API to register choices modifications
     bool VerifyVirtualAddress(uint32 threadId, uint64 va, uint64 size, bool isInstr) const; //!< verify virtual address is usable or not
-    Scheduler* GetScheduler() const { return mpScheduler; } //!< Get the back end scheduler.
   private:
     void SetupModulePaths(const std::string& templatePath); //!< Setup necessary paths for loading Python modules.
     void GenerateTemplate(py::object& template_obj); //!< Generate test using test template.

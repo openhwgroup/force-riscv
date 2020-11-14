@@ -115,10 +115,22 @@ namespace Force {
 
   void GeneratorRISCV::SetupInstructionGroup(EInstructionGroupType iGrpType)
   {
+    switch(iGrpType) {
+    case EInstructionGroupType::Vector:
+      RandomInitializeRegister("vl", "");
+      RandomInitializeRegister("vstart", "");
+      RandomInitializeRegister("vtype", "");
+      RandomInitializeRegister("vxrm", "");
+      RandomInitializeRegister("vxsat", "");
+      break;
+    default:
+      // No action needed for default case
+      break;
+    }
   }
 
   /*!
-    Currently only used in address solving related code, therefore only taking care of GPR, SP.
+    Currently only used in address solving related code, therefore only taking care of GPR, SP, VECREG.
   */
   bool GeneratorRISCV::OperandTypeCompatible(ERegisterType regType, EOperandType oprType) const
   {
@@ -126,6 +138,9 @@ namespace Force {
     switch (regType) {
     case ERegisterType::GPR:
       compatible = (oprType == EOperandType::GPR);
+      break;
+    case ERegisterType::VECREG:
+      compatible = (oprType == EOperandType::VECREG);
       break;
     default:
       LOG(fail) << "{GeneratorRISCV::OperandTypeCompatible} not handled register type: " << ERegisterType_to_string(regType) << endl;

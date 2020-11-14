@@ -63,8 +63,8 @@ def create_quad_precision_app_register(aIndex, aRegSize):
     return q_reg
 
 def create_vector_app_register(aIndex, aRegSize):
-    v_reg = Register(**{'name':"v%d" % aIndex, 'length':128, 'index':aIndex, 'type':"VECREG", 'class':"LargeRegister", 'boot':0x3000})
-    numberOfReg = 128 // aRegSize
+    v_reg = Register(**{'name':"v%d" % aIndex, 'length':512, 'index':aIndex, 'type':"VECREG", 'class':"LargeRegister", 'boot':0x3000})
+    numberOfReg = 512 // aRegSize
     for i in range(0, numberOfReg):
         v_field = RegisterField("v%d_%d" % (aIndex, i))
         v_field.mPhysicalRegister = "v%d_%d" % (aIndex, i)
@@ -92,17 +92,21 @@ def build_app_registers():
         app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("PC", size, 32, "PC"))
         app_register_doc.addRegister(create_app_register("PC", size, 32, "PC", None, 0))
 
-        # number of sub-registers needed for quad and vector 128-bit registers
-        numberOfSubReg = 128 // size
+        # number of sub-registers needed for quad FP 128-bit registers
+        numberOfFpSubReg = 128 // size
 
         # Add f0-f31 and S0-S31
         for i in range(0, 32):
-            for subIndex in range(numberOfSubReg):
+            for subIndex in range(numberOfFpSubReg):
                 app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("f%d_%d" % (i, subIndex), size, i, "FPR", aSubIndex=subIndex))
             
             app_register_doc.addRegister(create_app_register("S%d" % i, 32, i, "FPR", None, 0, "f%d_0" % i))
 
-            # Add D0-D31
+        # Add H0-H31
+        for i in range(0, 32):
+            app_register_doc.addRegister(create_app_register("H%d" % i, 16, i, "FPR", None, 0, "f%d_0" % i))
+
+        # Add D0-D31
         for i in range(0, 32):
             app_register_doc.addRegister(create_double_precision_app_register(i, size))
 
@@ -110,9 +114,12 @@ def build_app_registers():
         for i in range(0, 32):
             app_register_doc.addRegister(create_quad_precision_app_register(i, size))
 
-            # add vector registers V0-V31
+        # number of sub-registers needed for vector 512-bit registers
+        numberOfVecSubReg = 512 // size
+
+        # add vector registers V0-V31
         for i in range(0, 32):
-            for subIndex in range(numberOfSubReg):
+            for subIndex in range(numberOfVecSubReg):
                 app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("v%d_%d" % (i, subIndex), size, i, "VECREG", aSubIndex=subIndex))
             
             app_register_doc.addRegister(create_vector_app_register(i, size))

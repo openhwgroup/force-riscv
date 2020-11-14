@@ -105,18 +105,10 @@ class VectorRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
         if aStateElem.getStateElementType() != EStateElementType.VectorRegister:
             return False
 
-        (base_reg_index,) = self._mHelperGprSet.acquireHelperGprs(1)
+        (mem_block_ptr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
 
-        # TODO(Noah): Finish implementing this method when the VL1R.V instruction can be generated
-        # and simulated successfully.
-
-        # TODO(Noah): Retrieve the vector register length from an API when said API is created. For
-        # now, we assume vector registers are 128 bits.
-
-        # target_addr = self.genVA(Size=16, Align=16, Type='D')
-        #load_gpr64_seq = LoadGPR64(self.genThread)
-        #load_gpr64_seq.load(base_reg_index, target_addr)
-        #self.genInstruction('VL1R.V##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': base_reg_index, 'NoRestriction': 1})
+        self.initializeMemoryBlock(mem_block_ptr_index, (aStateElem,))
+        self.genInstruction('VL1R.V##RISCV', {'vd': aStateElem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'NoRestriction': 1})
 
         self._mHelperGprSet.releaseHelperGprs()
 
@@ -134,23 +126,15 @@ class VectorRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
         if aStateElems[0].getStateElementType() != EStateElementType.VectorRegister:
             self.error('This StateTransitionHandler can only process StateElements of type %s' % EStateElementType.VectorRegister)
 
-        # TODO(Noah): Finish implementing this method when the VL1R.V instruction can be generated
-        # and simulated successfully.
+        (mem_block_ptr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
+        self.initializeMemoryBlock(mem_block_ptr_index, aStateElems)
 
-        # The logic below assumes there will never be more than 2,048 vector register
-        # StateElements
-        if len(aStateElems) > 2048:
-            self.error('Unexpected number of vector register StateElements: %d' % len(aStateElems))
+        for state_elem in aStateElems:
+            self.genInstruction('VL1R.V##RISCV', {'vd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'NoRestriction': 1})
+            offset = len(state_elem.getValues()) * 8
+            self.genInstruction('ADDI##RISCV', {'rd': mem_block_ptr_index, 'rs1': mem_block_ptr_index, 'simm12': offset})
 
-        #(mem_block_ptr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
-        #self.initializeMemoryBlock(mem_block_ptr_index, aStateElems)
-
-        #offset = 0
-        #for state_elem in aStateElems:
-            #self.genInstruction('VL1R.V##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': base_reg_index, 'NoRestriction': 1})
-            #offset += 8
-
-        #self._mHelperGprSet.releaseHelperGprs()
+        self._mHelperGprSet.releaseHelperGprs()
 
 
 ## This class generates instructions to update the system State according to the system register
@@ -235,7 +219,7 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     def _processVlStateElement(self, aStateElem, aRegValGprIndex, aScratchGprIndex):
         # Read the current value of vtype and pass it to VSETVL in order to preserve the value of
         # vtype
-        self.genInstruction('CSRRS#register#RISCV', {'rd': aScratchGprIndex, 'rs1': 0, 'csr': state_elem.getRegisterIndex()})
+        self.genInstruction('CSRRS#register#RISCV', {'rd': aScratchGprIndex, 'rs1': 0, 'csr': self.getRegisterIndex('vtype')})
         self.genInstruction('VSETVL##RISCV', {'rd': 0, 'rs1': aRegValGprIndex, 'rs2': aScratchGprIndex})
 
 

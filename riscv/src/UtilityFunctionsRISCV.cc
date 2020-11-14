@@ -60,7 +60,7 @@ namespace Force {
   {
     switch(level)
     {
-      case 3: 
+      case 3:
         return 47;
       case 2:
         return 38;
@@ -75,4 +75,18 @@ namespace Force {
     return 0;
   }
 
+  EPagingExceptionType get_exception_type_from_access_type(bool isInstr, EMemAccessType memAccess)
+  {
+    if (isInstr)
+    {
+      return EPagingExceptionType::InstructionPageFault;
+    }
+
+    if (memAccess == EMemAccessType::ReadWrite or memAccess == EMemAccessType::Write)
+    {
+      return EPagingExceptionType::StoreAmoPageFault;
+    }
+
+    return EPagingExceptionType::LoadPageFault; //TODO need to handle unknown memaccess potentially
+  }
 }

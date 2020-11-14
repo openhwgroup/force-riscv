@@ -48,6 +48,7 @@ CASE( "tests for ELimitType" ) {
       EXPECT(ELimitType_to_string(ELimitType::MaxPhysicalVectorLen) == "MaxPhysicalVectorLen");
       EXPECT(ELimitType_to_string(ELimitType::ErrRegisterNumber) == "ErrRegisterNumber");
       EXPECT(ELimitType_to_string(ELimitType::SpeculativeBntInstructionLimit) == "SpeculativeBntInstructionLimit");
+      EXPECT(ELimitType_to_string(ELimitType::MaxVectorElementWidth) == "MaxVectorElementWidth");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -63,6 +64,7 @@ CASE( "tests for ELimitType" ) {
       EXPECT(string_to_ELimitType("MaxPhysicalVectorLen") == ELimitType::MaxPhysicalVectorLen);
       EXPECT(string_to_ELimitType("ErrRegisterNumber") == ELimitType::ErrRegisterNumber);
       EXPECT(string_to_ELimitType("SpeculativeBntInstructionLimit") == ELimitType::SpeculativeBntInstructionLimit);
+      EXPECT(string_to_ELimitType("MaxVectorElementWidth") == ELimitType::MaxVectorElementWidth);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -94,6 +96,8 @@ CASE( "tests for ELimitType" ) {
       EXPECT(try_string_to_ELimitType("ErrRegisterNumber", okay) == ELimitType::ErrRegisterNumber);
       EXPECT(okay);
       EXPECT(try_string_to_ELimitType("SpeculativeBntInstructionLimit", okay) == ELimitType::SpeculativeBntInstructionLimit);
+      EXPECT(okay);
+      EXPECT(try_string_to_ELimitType("MaxVectorElementWidth", okay) == ELimitType::MaxVectorElementWidth);
       EXPECT(okay);
     }
 
@@ -130,6 +134,7 @@ CASE( "tests for EOperandType" ) {
       EXPECT(EOperandType_to_string(EOperandType::PREDREG) == "PREDREG");
       EXPECT(EOperandType_to_string(EOperandType::ALU) == "ALU");
       EXPECT(EOperandType_to_string(EOperandType::DataProcessing) == "DataProcessing");
+      EXPECT(EOperandType_to_string(EOperandType::VectorLayout) == "VectorLayout");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -152,6 +157,7 @@ CASE( "tests for EOperandType" ) {
       EXPECT(string_to_EOperandType("PREDREG") == EOperandType::PREDREG);
       EXPECT(string_to_EOperandType("ALU") == EOperandType::ALU);
       EXPECT(string_to_EOperandType("DataProcessing") == EOperandType::DataProcessing);
+      EXPECT(string_to_EOperandType("VectorLayout") == EOperandType::VectorLayout);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -197,6 +203,8 @@ CASE( "tests for EOperandType" ) {
       EXPECT(try_string_to_EOperandType("ALU", okay) == EOperandType::ALU);
       EXPECT(okay);
       EXPECT(try_string_to_EOperandType("DataProcessing", okay) == EOperandType::DataProcessing);
+      EXPECT(okay);
+      EXPECT(try_string_to_EOperandType("VectorLayout", okay) == EOperandType::VectorLayout);
       EXPECT(okay);
     }
 
@@ -1815,6 +1823,7 @@ CASE( "tests for EDataAccessPermissionType" ) {
   SETUP ( "setup EDataAccessPermissionType" )  {
 
     SECTION( "test enum to string conversion" ) {
+      EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::NoAccess) == "NoAccess");
       EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::ReadWrite) == "ReadWrite");
       EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::ReadOnly) == "ReadOnly");
       EXPECT(EDataAccessPermissionType_to_string(EDataAccessPermissionType::ReadWriteNoUser) == "ReadWriteNoUser");
@@ -1824,6 +1833,7 @@ CASE( "tests for EDataAccessPermissionType" ) {
     }
 
     SECTION( "test string to enum conversion" ) {
+      EXPECT(string_to_EDataAccessPermissionType("NoAccess") == EDataAccessPermissionType::NoAccess);
       EXPECT(string_to_EDataAccessPermissionType("ReadWrite") == EDataAccessPermissionType::ReadWrite);
       EXPECT(string_to_EDataAccessPermissionType("ReadOnly") == EDataAccessPermissionType::ReadOnly);
       EXPECT(string_to_EDataAccessPermissionType("ReadWriteNoUser") == EDataAccessPermissionType::ReadWriteNoUser);
@@ -1833,11 +1843,13 @@ CASE( "tests for EDataAccessPermissionType" ) {
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
-      EXPECT_THROWS_AS(string_to_EDataAccessPermissionType("R_adWrite"), EnumTypeError);
+      EXPECT_THROWS_AS(string_to_EDataAccessPermissionType("N_Access"), EnumTypeError);
     }
 
     SECTION( "test non-throwing string to enum conversion" ) {
       bool okay = false;
+      EXPECT(try_string_to_EDataAccessPermissionType("NoAccess", okay) == EDataAccessPermissionType::NoAccess);
+      EXPECT(okay);
       EXPECT(try_string_to_EDataAccessPermissionType("ReadWrite", okay) == EDataAccessPermissionType::ReadWrite);
       EXPECT(okay);
       EXPECT(try_string_to_EDataAccessPermissionType("ReadOnly", okay) == EDataAccessPermissionType::ReadOnly);
@@ -1854,7 +1866,7 @@ CASE( "tests for EDataAccessPermissionType" ) {
 
     SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
       bool okay = false;
-      try_string_to_EDataAccessPermissionType("R_adWrite", okay);
+      try_string_to_EDataAccessPermissionType("N_Access", okay);
       EXPECT(!okay);
     }
   }

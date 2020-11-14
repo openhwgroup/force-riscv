@@ -122,7 +122,7 @@ namespace Force {
     const vector<AddressingMode* >& ref_solutions = rAddrSolver.GetSolutionChoicesForFiltering();
     rRemainder = 0;
     for (AddressingMode* addr_item : ref_solutions) {
-      auto base_index_mode = dynamic_cast<BaseIndexExtendMode* >(addr_item);
+      auto base_index_mode = dynamic_cast<BaseIndexMode*>(addr_item);
       vector<IndexSolution* >& ref_index_solutions = base_index_mode->GetSolutionChoicesForFiltering();
       rRemainder += ref_index_solutions.size();
 
@@ -153,7 +153,6 @@ namespace Force {
     const AddressingOperand* reg_opr_ptr = rAddrSolver.GetAddressingOperand();
     const OperandStructure* opr_struct = reg_opr_ptr->GetOperandStructure();
     const auto lsop_struct = opr_struct->CastOperandStructure<LoadStoreOperandStructure>();
-    if ( lsop_struct->Index().find("Zm") !=string::npos) { return nullptr; }//TBD: add Z register dependence
 
     const Operand* index_opr_ptr = reg_opr_ptr->MatchOperand(lsop_struct->Index());
     const OperandStructure* index_opr_struct = index_opr_ptr->GetOperandStructure();
@@ -193,8 +192,8 @@ namespace Force {
     rRemainder = 0;
     for (auto s_iter = ref_solutions.begin(); s_iter != ref_solutions.end(); ++ s_iter)
     {
-      if (!(dynamic_cast<BaseIndexExtendMode* >(*s_iter))) { return false; } // TBD: BaseVectorIndexExtendMode
-      auto base_index_mode = dynamic_cast<BaseIndexExtendMode* >(*s_iter);
+      if (!(dynamic_cast<BaseIndexMode*>(*s_iter))) { return false; } // TBD: BaseVectorIndexExtendMode
+      auto base_index_mode = dynamic_cast<BaseIndexMode*>(*s_iter);
       vector<IndexSolution* >& ref_index_solutions = base_index_mode->GetSolutionChoicesForFiltering();
       rRemainder += ref_index_solutions.size();
       const Register* base_reg = base_index_mode->Base();
@@ -222,7 +221,7 @@ namespace Force {
     vector<AddressingMode* >& ref_filtered = rAddrSolver.GetFilteredChoicesForFiltering();
     for (auto s_iter = ref_solutions.begin(); s_iter != ref_solutions.end();)
     {
-      auto base_index_mode = dynamic_cast<BaseIndexExtendMode* >(*s_iter);
+      auto base_index_mode = dynamic_cast<BaseIndexMode*>(*s_iter);
       vector<IndexSolution* >& ref_index_solutions = base_index_mode->GetSolutionChoicesForFiltering();
       if (0 == ref_index_solutions.size())
       {
@@ -285,7 +284,7 @@ namespace Force {
 
     bool filtered = false;
     AddressingMode* address_tmplate = ref_solutions[0];
-    if (address_tmplate->HasIndex()) {
+    if (address_tmplate->ShouldApplyIndexFilters()) {
       filtered = FilterIndexSolutions(rAddrSolver, rInstr, rRemainder);
     }
     else {

@@ -121,14 +121,10 @@ def output_system_register_choices(aTree, aOutputFile, aPrefixLicenseFile):
     registers = aTree.findall('.//register')
 
     output_root = ET.Element('choices_file')
-    read = ET.Element('choices')
-    read.set('description', 'RISC-V Read system registers')
-    read.set('name', 'Read system registers')
-    read.set('type', 'RegisterOperand')
-    write = ET.Element('choices')
-    write.set('description', 'RISC-V Write system registers')
-    write.set('name', 'Write system registers')
-    write.set('type', 'RegisterOperand')
+    choices = ET.Element('choices')
+    choices.set('description', 'RISC-V system registers')
+    choices.set('name', 'System registers')
+    choices.set('type', 'RegisterOperand')
 
     for register in registers:
         if register.get('choice', 'true') == 'true':
@@ -136,15 +132,16 @@ def output_system_register_choices(aTree, aOutputFile, aPrefixLicenseFile):
             choice.set('description', '%s; %s' % (register.get('privilege'), register.get('description')))
             choice.set('name', register.get('name'))
             choice.set('value', register.get('index'))
-            choice.set('weight', register.get('choice_weight', '0'))
 
-            if 'R' in register.get('privilege'):
-                read.append(choice)
-            if 'W' in register.get('privilege'):
-                write.append(choice)
+            priv = register.get('privilege')
+            if priv.endswith('RO'):
+                choice.set('weight', '0')
+            else:
+                choice.set('weight', register.get('choice_weight', '0'))
 
-    output_root.append(read)
-    output_root.append(write)
+            choices.append(choice)
+
+    output_root.append(choices)
 
     # check system register fields before writing out xml file...
     reg_file = RISCV.RegisterFile( { 'system_tree' : output_root } )
@@ -162,23 +159,22 @@ def output_register_field_choices(aTree, aOutputFile, aPrefixLicenseFile):
     output_root = ET.Element('choices_file')
 
     for register in registers:
-        if register.get('choice', 'true') == 'true':
-            fields = register.findall('.//register_field')
-            for field in fields:
-                choices = field.findall('.//choice')
-                if choices:
-                    choices_element = ET.Element('choices')
-                    choices_element.set('name', '%s.%s' % (register.get('name'), field.get('name')))
-                    choices_element.set('type', 'RegisterFieldValue')
+        fields = register.findall('.//register_field')
+        for field in fields:
+            choices = field.findall('.//choice')
+            if choices:
+                choices_element = ET.Element('choices')
+                choices_element.set('name', '%s.%s' % (register.get('name'), field.get('name')))
+                choices_element.set('type', 'RegisterFieldValue')
 
-                    for choice in choices:
-                        choice_element = ET.Element('choice')
-                        choice_element.set('description', choice.get('description'))
-                        choice_element.set('value', choice.get('value'))
-                        choice_element.set('weight', choice.get('weight', '10'))
-                        choices_element.append(choice_element)
+                for choice in choices:
+                    choice_element = ET.Element('choice')
+                    choice_element.set('description', choice.get('description'))
+                    choice_element.set('value', choice.get('value'))
+                    choice_element.set('weight', choice.get('weight', '10'))
+                    choices_element.append(choice_element)
 
-                    output_root.append(choices_element)
+                output_root.append(choices_element)
 
     # check system register fields before writing out xml file...
     reg_file = RISCV.RegisterFile( { 'system_tree' : output_root } )
@@ -207,6 +203,17 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
     else:
         register.set('boot', '0')
 
+    if aRegister.get('class') and (aRegister.get('class') != 'ConfigureRegister'):
+        register.set('class', aRegister.get('class'))
+    else:
+        priv = aRegister.get('privilege')
+
+        if priv and priv.endswith('RO'):
+            register.set('class', 'ReadOnlyRegister')
+
+    if aRegister.get('init_policy'):
+        register.set('init_policy', aRegister.get('init_policy'))
+
     fields = aRegister.findall('.//register_field')
     for field in fields:
         register_field = ET.Element('register_field')
@@ -231,8 +238,17 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
         physical_register.set('name', aRegister.get('physical_register', aRegister.get('name')))
         physical_register.set('size', aSize if str(aRegister.get('size')) == '0' else aRegister.get('size'))
         physical_register.set('type', aRegister.get('type'))
-        if aRegister.get('class'):
+        if aRegister.get('class') == 'ConfigureRegister':
             physical_register.set('class', aRegister.get('class'))
+
+        if aRegister.get('reset'):
+            physical_register.set('reset', aRegister.get('reset'))
+        else:
+            priv = aRegister.get('privilege')
+
+            if priv and priv.endswith('RO'):
+                physical_register.set('reset', '0')
+
         aPhysicalRegisters.append(physical_register)
 
     aRegisterFile.append(register)
@@ -249,8 +265,8 @@ def insert_filename_prefix(aFilePath,aFilePrefix):
     return (aFilePath,edited_filepath)
 
 
-def build_registers(aXmlStarterFile='input/system_registers_starter_rv64.xml', aSystemRegistersFile='output/system_registers_rv64..xml',
-                    aSystemRegisterChoicesFile='output/system_register_choices_rv64..xml', aRegisterFieldChoicesFile='output/register_field_choices_rv64..xml',
+def build_registers(aXmlStarterFile='input/system_registers_starter_rv64.xml', aSystemRegistersFile='output/system_registers_rv64.xml',
+                    aSystemRegisterChoicesFile='output/system_register_choices_rv64.xml', aRegisterFieldChoicesFile='output/register_field_choices_rv64.xml',
                     aSize = '64', aModificationsScript=None):
 
     xml_starter_file             = aXmlStarterFile

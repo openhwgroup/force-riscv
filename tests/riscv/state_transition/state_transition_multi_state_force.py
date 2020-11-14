@@ -121,19 +121,6 @@ class MainSequence(Sequence):
 
         expected_sys_reg_state_data = []
 
-        sstatus_name = 'sstatus'
-        fs_val = RandomUtils.random32(1, 3)
-        state.addSystemRegisterStateElementByField(sstatus_name, 'FS', fs_val)
-        (sstatus_val, valid) = self.readRegister(sstatus_name)
-        state_transition_test_utils.assertValidRegisterValue(self, sstatus_name, valid)
-        sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(self, sstatus_name, sstatus_val, 'FS', fs_val)
-
-        # TODO(Noah): Enable verification of setting the sstatus register when Force maintains the
-        # correct representation of sstatus. Currently, sstatus is mapped to a separate physical
-        # register from mstatus, so updates to mstatus are not reflected in sstatus, even though
-        # mstatus and sstatus share the same architectural representation.
-        #expected_sys_reg_state_data.append((sstatus_name, sstatus_val))
-
         fcsr_name = 'fcsr'
         state.addSystemRegisterStateElementByField(fcsr_name, 'FRM', 1)
         (fcsr_val, valid) = self.readRegister(fcsr_name)
@@ -145,14 +132,33 @@ class MainSequence(Sequence):
         # to a non-zero value by Force, which is not legal.
         #expected_sys_reg_state_data.append((fcsr_name, fcsr_val))
 
-        self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
-
         expected_fp_reg_state_data = []
         for fp_reg_index in range(0, 32):
             fp_reg_val = RandomUtils.random64(0, 0x3FFFFFFFFFFFFFFF)
             state.addRegisterStateElement(('D%d' % fp_reg_index), (fp_reg_val,))
 
         self._mExpectedStateData[EStateElementType.FloatingPointRegister] = expected_fp_reg_state_data
+
+        sstatus_name = 'sstatus'
+        fs_val = RandomUtils.random32(1, 3)
+        state.addSystemRegisterStateElementByField(sstatus_name, 'FS', fs_val)
+        (sstatus_val, valid) = self.readRegister(sstatus_name)
+        state_transition_test_utils.assertValidRegisterValue(self, sstatus_name, valid)
+        sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(self, sstatus_name, sstatus_val, 'FS', fs_val)
+
+        # Adjust expected value of SD bit according to architecture rules
+        (xs_val, valid) = self.readRegister(sstatus_name, field='XS')
+        state_transition_test_utils.assertValidRegisterValue(self, sstatus_name, valid)
+        (vs_val, valid) = self.readRegister(sstatus_name, field='VS')
+        state_transition_test_utils.assertValidRegisterValue(self, sstatus_name, valid)
+        if (fs_val == 3) or (xs_val == 3) or (vs_val == 3):
+            sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(self, sstatus_name, sstatus_val, 'SD', 1)
+        else:
+            sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(self, sstatus_name, sstatus_val, 'SD', 0)
+
+        expected_sys_reg_state_data.append((sstatus_name, sstatus_val))
+
+        self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
 
         return state
 

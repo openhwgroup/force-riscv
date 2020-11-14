@@ -22,99 +22,128 @@ using namespace std;
 
 namespace Force {
 
-  uint64 parse_uint64(const string& str, bool* error_status)
+  uint64 parse_uint64(const string& rStr, bool* pErrorStatus)
   {
     size_t pos = 0;
     uint64 ret_val = 0;
 
     try {
-      ret_val = stoull(str, &pos, 0);
+      ret_val = stoull(rStr, &pos, 0);
     }
-    catch (invalid_argument &iaE) {
-      if (error_status) {
-        //LOG(error) << "{parse_uint64} Error parsing \'" << str << "\', invalid argument." << endl;
-        *error_status = true;
+    catch (invalid_argument& iaE) {
+      if (pErrorStatus) {
+        //LOG(error) << "{parse_uint64} Error parsing \'" << rStr << "\', invalid argument." << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', invalid argument." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', invalid argument." << endl;
         FAIL("parse-error-uint64-invalid");
       }
     }
-    catch (out_of_range &oorE) {
-      if (error_status) {
-        //LOG(error) << "{parse_uint64} Error parsing \'" << str << "\', invalid argument" << endl;
-        *error_status = true;
+    catch (out_of_range& oorE) {
+      if (pErrorStatus) {
+        //LOG(error) << "{parse_uint64} Error parsing \'" << rStr << "\', invalid argument" << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', out of range." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', out of range." << endl;
         FAIL("parse-error-uint64-range");
       }
     }
     return ret_val;
   }
 
-  uint32 parse_uint32(const string& str, bool* error_status)
+  uint32 parse_uint32(const string& rStr, bool* pErrorStatus)
   {
     size_t pos = 0;
     uint32 ret_val = 0;
 
     try {
-      ret_val = stoul(str, &pos, 0);
+      ret_val = stoul(rStr, &pos, 0);
     }
-    catch (invalid_argument &iaE) {
-      if (error_status) {
-        //LOG(error) << "{parse_uint32} Error parsing \'" << str << "\', invalid argument." << endl;
-        *error_status = true;
+    catch (invalid_argument& iaE) {
+      if (pErrorStatus) {
+        //LOG(error) << "{parse_uint32} Error parsing \'" << rStr << "\', invalid argument." << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', invalid argument." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', invalid argument." << endl;
         FAIL("parse-error-uint32-invalid");
       }
     }
-    catch (out_of_range &oorE) {
-      if (error_status) {
-        //LOG(error) << "{parse_uint32} Error parsing \'" << str << "\', invalid argument" << endl;
-        *error_status = true;
+    catch (out_of_range& oorE) {
+      if (pErrorStatus) {
+        //LOG(error) << "{parse_uint32} Error parsing \'" << rStr << "\', invalid argument" << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', out of range." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', out of range." << endl;
         FAIL("parse-error-uint32-range");
       }
     }
     return ret_val;
   }
 
-  bool parse_bool(const string& str)
+  float parse_float(const string& rStr, bool* pErrorStatus)
   {
-    if (str == "true" || str == "True")
+    float ret_val = 0;
+
+    try {
+      ret_val = stof(rStr);
+    }
+    catch (invalid_argument) {
+      if (pErrorStatus) {
+        LOG(debug) << "{parse_float} Error parsing \'" << rStr << "\', invalid argument." << endl;
+        *pErrorStatus = true;
+      } else {
+        LOG(fail) << "{parse_float} Failed parsing \'" << rStr << "\', invalid argument." << endl;
+        FAIL("parse-error-float-invalid");
+      }
+    }
+    catch (out_of_range) {
+      if (pErrorStatus) {
+        LOG(debug) << "{parse_float} Error parsing \'" << rStr << "\', invalid argument" << endl;
+        *pErrorStatus = true;
+      } else {
+        LOG(fail) << "{parse_float} Failed parsing \'" << rStr << "\', out of range." << endl;
+        FAIL("parse-error-float-range");
+      }
+    }
+
+    return ret_val;
+  }
+
+  bool parse_bool(const string& rStr)
+  {
+    if (rStr == "true" || rStr == "True")
       return true;
-    else if (str == "false" || str == "False")
+    else if (rStr == "false" || rStr == "False")
       return false;
 
-    LOG(fail) << "Failed parsing \'" << str << "\', failed." << endl;
+    LOG(fail) << "Failed parsing \'" << rStr << "\', failed." << endl;
     FAIL("parse-error-bool");
     return false;
   }
 
-  uint32 parse_bin32(const string& str, bool* error_status)
+  uint32 parse_bin32(const string& rStr, bool* pErrorStatus)
   {
     size_t pos = 0;
     uint32 ret_val = 0;
 
     try {
-      ret_val = stoul(str, &pos, 2);
+      ret_val = stoul(rStr, &pos, 2);
     }
-    catch (invalid_argument &iaE) {
-      if (error_status) {
-        LOG(error) << "{parse_bin32} Error parsing \'" << str << "\', invalid argument." << endl;
-        *error_status = true;
+    catch (invalid_argument& iaE) {
+      if (pErrorStatus) {
+        LOG(error) << "{parse_bin32} Error parsing \'" << rStr << "\', invalid argument." << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', invalid argument." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', invalid argument." << endl;
         FAIL("parse-error-bin32-invalid");
       }
     }
-    catch (out_of_range &oorE) {
-      if (error_status) {
-        LOG(error) << "{parse_bin32} Error parsing \'" << str << "\', out of range." << endl;
-        *error_status = true;
+    catch (out_of_range& oorE) {
+      if (pErrorStatus) {
+        LOG(error) << "{parse_bin32} Error parsing \'" << rStr << "\', out of range." << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', out of range." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', out of range." << endl;
         FAIL("parse-error-bin32-range");
       }
     }
@@ -122,29 +151,29 @@ namespace Force {
     return ret_val;
   }
 
-  uint64 parse_bin64(const string& str, bool* error_status)
+  uint64 parse_bin64(const string& rStr, bool* pErrorStatus)
   {
     size_t pos = 0;
     uint64 ret_val = 0;
 
     try {
-      ret_val = stoull(str, &pos, 2);
+      ret_val = stoull(rStr, &pos, 2);
     }
-    catch (invalid_argument &iaE) {
-      if (error_status) {
-        LOG(error) << "{parse_bin64} Error parsing \'" << str << "\', invalid argument." << endl;
-        *error_status = true;
+    catch (invalid_argument& iaE) {
+      if (pErrorStatus) {
+        LOG(error) << "{parse_bin64} Error parsing \'" << rStr << "\', invalid argument." << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', invalid argument." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', invalid argument." << endl;
         FAIL("parse-error-bin64-invalid");
       }
     }
-    catch (out_of_range &oorE) {
-      if (error_status) {
-        LOG(error) << "{parse_bin64} Error parsing \'" << str << "\', out of range." << endl;
-        *error_status = true;
+    catch (out_of_range& oorE) {
+      if (pErrorStatus) {
+        LOG(error) << "{parse_bin64} Error parsing \'" << rStr << "\', out of range." << endl;
+        *pErrorStatus = true;
       } else {
-        LOG(fail) << "Failed parsing \'" << str << "\', out of range." << endl;
+        LOG(fail) << "Failed parsing \'" << rStr << "\', out of range." << endl;
         FAIL("parse-error-bin64-range");
       }
     }
@@ -152,62 +181,58 @@ namespace Force {
     return ret_val;
   }
 
-  bool parse_range32(const string& str, uint32& range_low, uint32& range_high)
+  bool parse_range32(const string& rStr, uint32& rRangeLow, uint32& rRangeHigh)
   {
-    for (string::size_type pos = 0; pos < str.size(); ++ pos) {
-      if (str[pos] == '-') {
-        string first_part = str.substr(0, pos);
-        range_high = parse_uint32(first_part);
-        string second_part = str.substr(pos + 1);
-        range_low = parse_uint32(second_part);
-        if (range_high < range_low) {
-          uint32 temp = range_high;
-          range_high = range_low;
-          range_low = temp;
+    for (string::size_type pos = 0; pos < rStr.size(); ++ pos) {
+      if (rStr[pos] == '-') {
+        string first_part = rStr.substr(0, pos);
+        rRangeHigh = parse_uint32(first_part);
+        string second_part = rStr.substr(pos + 1);
+        rRangeLow = parse_uint32(second_part);
+        if (rRangeHigh < rRangeLow) {
+          swap(rRangeLow, rRangeHigh);
         }
-        return (range_high > range_low);
+        return (rRangeHigh > rRangeLow);
       }
     }
-    range_low = parse_uint32(str);
-    range_high = range_low;
+    rRangeLow = parse_uint32(rStr);
+    rRangeHigh = rRangeLow;
     return false;
   }
 
   /*!
     The str coming into parse_range64 tend to be in lower-higher order, different from parse_range32
   */
-  bool parse_range64(const string& str, uint64& range_low, uint64& range_high)
+  bool parse_range64(const string& rStr, uint64& rRangeLow, uint64& rRangeHigh)
   {
-    for (string::size_type pos = 0; pos < str.size(); ++ pos) {
-      if (str[pos] == '-') {
-        string first_part = str.substr(0, pos);
-        range_low = parse_uint64(first_part);
-        string second_part = str.substr(pos + 1);
-        range_high = parse_uint64(second_part);
-        if (range_high < range_low) {
-          uint64 temp = range_high;
-          range_high = range_low;
-          range_low = temp;
+    for (string::size_type pos = 0; pos < rStr.size(); ++ pos) {
+      if (rStr[pos] == '-') {
+        string first_part = rStr.substr(0, pos);
+        rRangeLow = parse_uint64(first_part);
+        string second_part = rStr.substr(pos + 1);
+        rRangeHigh = parse_uint64(second_part);
+        if (rRangeHigh < rRangeLow) {
+          swap(rRangeLow, rRangeHigh);
         }
-        return (range_high > range_low);
+        return (rRangeHigh > rRangeLow);
       }
     }
-    range_low = parse_uint64(str);
-    range_high = range_low;
+    rRangeLow = parse_uint64(rStr);
+    rRangeHigh = rRangeLow;
     return false;
   }
 
-  bool parse_assignment(const string& str, string& var, string& val)
+  bool parse_assignment(const string& rStr, string& rVar, string& rVal)
   {
-    for (string::size_type pos = 0; pos < str.size(); ++ pos) {
-      if (str[pos] == '=') {
-        var = str.substr(0, pos);
-        strip_white_spaces(var);
-        val = str.substr(pos + 1);
-        strip_white_spaces(val);
+    for (string::size_type pos = 0; pos < rStr.size(); ++ pos) {
+      if (rStr[pos] == '=') {
+        rVar = rStr.substr(0, pos);
+        strip_white_spaces(rVar);
+        rVal = rStr.substr(pos + 1);
+        strip_white_spaces(rVal);
 
-        if (var.size() == 0) return false;
-        if (val.size() == 0) return false;
+        if (rVar.size() == 0) return false;
+        if (rVal.size() == 0) return false;
 
         return true;
       }
@@ -216,28 +241,28 @@ namespace Force {
     return false;
   }
 
-  bool parse_brackets_strings(const string& str, vector<string>& strings)
+  bool parse_brackets_strings(const string& rStr, vector<string>& rStrings)
   {
-    size_t prefix = str.find("(");
+    size_t prefix = rStr.find("(");
     if (prefix == string::npos)
       return true;
-    size_t postfix = str.find(")");
+    size_t postfix = rStr.find(")");
     if (postfix == string::npos)
       return false;
-    string eval = str.substr(prefix + 1, postfix - prefix - 1);
-    strings.push_back(eval);
-    string remains = str.substr(postfix + 1);
-    return parse_brackets_strings(remains, strings);
+    string eval = rStr.substr(prefix + 1, postfix - prefix - 1);
+    rStrings.push_back(eval);
+    string remains = rStr.substr(postfix + 1);
+    return parse_brackets_strings(remains, rStrings);
   }
 
-  void strip_white_spaces(string& in_str)
+  void strip_white_spaces(string& rStr)
   {
-    string::iterator end_pos = remove(in_str.begin(), in_str.end(), ' ');
-    in_str.erase(end_pos, in_str.end());
+    string::iterator end_pos = remove(rStr.begin(), rStr.end(), ' ');
+    rStr.erase(end_pos, rStr.end());
   }
 
-  StringSplitter::StringSplitter(const string& in_str, char sep, bool no_skip)
-    : mString(in_str), mSeparator(sep), mStart(0), mNoSkip(no_skip)
+  StringSplitter::StringSplitter(const string& rStr, char sep, bool no_skip)
+    : mString(rStr), mSeparator(sep), mStart(0), mNoSkip(no_skip)
   {
   }
 

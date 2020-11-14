@@ -20,9 +20,9 @@
 #include <string.h>
 
 //TODO - use constant or count # regs programatically. or just remove
-#define TOTAL_REGISTER_NUMBER 19
+#define TOTAL_REGISTER_NUMBER 20
 //TODO - use constant or count # regs programatically. or just remove
-#define TOTAL_PHYSICAL_REGISTER_NUMBER 20
+#define TOTAL_PHYSICAL_REGISTER_NUMBER 21
 
 #define private public
 #define protected public
@@ -460,6 +460,26 @@ CASE("Choice Tree logic")
       sstatus_reg->InitializeRandomly(pModerator);
       sstatus_reg->InitializeRandomly(pModerator);
     }
+
+    SECTION("Randomly initialize RegisetrField")
+    {
+      // Only one choice value has non-zero weight to make the test predictable
+      Register* vtype_reg = test_register_file->RegisterLookup("vtype");
+      test_register_file->InitializeRegisterFieldRandomly(vtype_reg, "VSEW", pModerator);
+      RegisterField* vsew_field = vtype_reg->RegisterFieldLookup("VSEW");
+      EXPECT(vsew_field->Value() == 0x8ull);
+      EXPECT(vsew_field->FieldValue() == 0x2ull);
+    }
+
+    SECTION("Randomly initialize RegisetrField with disjoint BitFields")
+    {
+      // Only one choice value has non-zero weight to make the test predictable
+      Register* vtype_reg = test_register_file->RegisterLookup("vtype");
+      test_register_file->InitializeRegisterFieldRandomly(vtype_reg, "VLMUL", pModerator);
+      RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
+      EXPECT(vlmul_field->Value() == 0x21ull);
+      EXPECT(vlmul_field->FieldValue() == 0x5ull);
+    }
   }
 }
 CASE("RES0 logic")
@@ -476,7 +496,7 @@ CASE("RES0 logic")
 
     SECTION("Random Init")
     {
-      res0_fcsr->InitializeRandomly();
+      res0_fcsr->InitializeFieldRandomly();
       for (auto it = res0_fcsr->mBitFields.begin(); it != res0_fcsr->mBitFields.end(); ++it)
       {
         EXPECT( 0u == (*it)->BitFieldValue());
@@ -501,7 +521,7 @@ CASE("RES0 logic")
 
       phy_fcsr->Initialize(init_val, init_mask);
       EXPECT_FAIL(phy_fcsr->Value(size_mask), "physicalregister_not_initialized_nor_reset_fail");
-      res0_fcsr->InitializeRandomly();
+      res0_fcsr->InitializeFieldRandomly();
 
       //random init of field should set any uninit bits to 0
       for (auto it = res0_fcsr->mBitFields.begin(); it != res0_fcsr->mBitFields.end(); ++it)
@@ -512,8 +532,8 @@ CASE("RES0 logic")
     }
     SECTION("Multiple Random Init")
     {
-      res0_fcsr->InitializeRandomly();
-      res0_fcsr->InitializeRandomly();
+      res0_fcsr->InitializeFieldRandomly();
+      res0_fcsr->InitializeFieldRandomly();
       for (auto it = res0_fcsr->mBitFields.begin(); it != res0_fcsr->mBitFields.end(); ++it)
       {
         EXPECT( 0u == (*it)->BitFieldValue());

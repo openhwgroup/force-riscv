@@ -124,6 +124,11 @@ namespace Force {
     return out_str.str();
   }
 
+  VectorRegisterOperandStructure::VectorRegisterOperandStructure()
+    : mLayoutMultiple(1)
+  {
+  }
+
   ExcludeOperandStructure::~ExcludeOperandStructure()
   {
     delete mpExcludeConstraint;
@@ -168,6 +173,11 @@ namespace Force {
     if (mAlignment == 0) {
       mAlignment = mElementSize;
     }
+  }
+
+  VectorLayoutOperandStructure::VectorLayoutOperandStructure()
+    : mRegCount(0), mElemWidth(8), mRegIndexAlignment(0)
+  {
   }
 
   // TODO this need improvement

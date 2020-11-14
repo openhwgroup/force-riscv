@@ -19,6 +19,7 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.ChoicesModifier import ChoicesModifier
 from base.InstructionMap import InstructionMap
+from riscv.ModifierUtils import TrapsRedirectModifier
 from DV.riscv.trees.instruction_tree import *
 
 import RandomUtils
@@ -34,26 +35,48 @@ class MainSequence(Sequence):
                 self.genInstruction(the_instruction)
             
             if RandomUtils.random32(0,1) == 1:
-                self.genInstruction('ECALL##RISCV')
+                params = {}
+                params['Function'] = 'SwitchPrivilegeLevel' #Choices modified to only select ECALL
+                self.systemCall(params)
             else:
                 self.genInstruction('EBREAK##RISCV')
+                
+            for _ in range( RandomUtils.random32(1,10) ):
+                the_instruction = self.pickWeighted(instruction_group)
+                self.genInstruction(the_instruction)
+
 
 
 def gen_thread_initialization(gen_thread):
+    gen_choices_mod = ChoicesModifier(gen_thread)
+    gen_choices_mod.modifyGeneralChoices('Privilege level switch to lower or same level', { 'ECALL':10, 'xRET':0 })
+    gen_choices_mod.commitSet()
+
+    traps_modifier = TrapsRedirectModifier(gen_thread)
+
     (delegate_opt, valid) = gen_thread.getOption("DelegateExceptions")
-    if valid and delegate_opt == 1: 
-        delegation_enables = ChoicesModifier(gen_thread)
-        weightDict = { "0x0":0, "0x1":50 }
-        delegation_enables.modifyRegisterFieldValueChoices( 'medeleg.Breakpoint', weightDict )
-        delegation_enables.modifyRegisterFieldValueChoices( 'medeleg.Environment call from U-mode', weightDict )
-        delegation_enables.commitSet()
+
+    if valid and delegate_opt == 1:
+        traps_modifier.update(ExceptionCode='Breakpoint', TrapChoice="Delegate", Weight = 50)
+        traps_modifier.update(ExceptionCode='Environment call from U-mode', TrapChoice="Delegate", Weight = 50)
+        traps_modifier.update(ExceptionCode='Environment call from S-mode', TrapChoice="Delegate", Weight = 50)
+        have_mods = True
+
+    (redirect_opt, valid) = gen_thread.getOption("RedirectTraps")
+
+    if valid and redirect_opt == 1: 
+        traps_modifier.update(ExceptionCode='Breakpoint', TrapChoice="Redirect", Weight = 100)
+        traps_modifier.update(ExceptionCode='Environment call from U-mode', TrapChoice="Redirect", Weight = 50)
+        traps_modifier.update(ExceptionCode='Environment call from S-mode', TrapChoice="Redirect", Weight = 50)
+        have_mods = True
+
+    traps_modifier.commit()
 
     (paging_opt, valid) = gen_thread.getOption("PagingDisabled")
     if valid and paging_opt == 1: 
         gen_thread.initializeRegister(name='satp', value=0, field='MODE')
     
 GenThreadInitialization = gen_thread_initialization
-
 
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV

@@ -212,7 +212,7 @@ class Sequence(object):
 
         return UtilityFunctions.shuffle_list(myList)
 
-    # replace Python randon.sample to assure the random normalization!
+    # replace Python random.sample to assure the random normalization!
     def sample(self, items, sample_size):
         return self.genThread.sample(items, sample_size)
 

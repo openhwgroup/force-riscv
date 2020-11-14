@@ -516,3 +516,46 @@ CASE("test set 12 for Constraint module, testing MergeConstraint") {
   }
 }
 
+CASE("test set 13 for ConstraintSet module, testing FilterAlignedElements") {
+  SETUP("setup ConstraintSet") {
+    ConstraintSet my_constr_set("0x5-0x8,0xb,0xd-0x10,0x13,0x18-0x20,0x26");
+    EXPECT(my_constr_set.ToSimpleString() == "0x5-0x8,0xb,0xd-0x10,0x13,0x18-0x20,0x26");
+    EXPECT(my_constr_set.CalculateSize() == my_constr_set.Size());
+
+    SECTION("test ConstraintSet::FilterAlignedElements method with 2-bit alignment") {
+      my_constr_set.FilterAlignedElements(0xfffffffffffffffe);
+      EXPECT(my_constr_set.ToSimpleString() == "0x6,0x8,0xe,0x10,0x18,0x1a,0x1c,0x1e,0x20,0x26");
+      EXPECT(my_constr_set.CalculateSize() == 10u);
+      EXPECT(my_constr_set.CalculateSize() == my_constr_set.Size());
+    }
+
+    SECTION("test ConstraintSet::FilterAlignedElements method with 8-bit alignment") {
+      my_constr_set.FilterAlignedElements(0xfffffffffffffff8);
+      EXPECT(my_constr_set.ToSimpleString() == "0x8,0x10,0x18,0x20");
+      EXPECT(my_constr_set.CalculateSize() == 4u);
+      EXPECT(my_constr_set.CalculateSize() == my_constr_set.Size());
+    }
+
+    SECTION("test ConstraintSet::FilterAlignedElements method with non-alignment mask") {
+      EXPECT_FAIL(my_constr_set.FilterAlignedElements(0xfff4), "invalid-alignment");
+    }
+
+    SECTION("test ConstraintSet::FilterAlignedElements method with empty ConstraintSet") {
+      ConstraintSet empty_constr_set;
+      empty_constr_set.FilterAlignedElements(0xfffffffffffffff0);
+      EXPECT(empty_constr_set.IsEmpty());
+    }
+
+    SECTION("test ConstraintSet::FilterAlignedElements method with full mask") {
+      my_constr_set.FilterAlignedElements(MAX_UINT64);
+      EXPECT(my_constr_set.ToSimpleString() == "0x5-0x8,0xb,0xd-0x10,0x13,0x18-0x20,0x26");
+      EXPECT(my_constr_set.CalculateSize() == 20u);
+      EXPECT(my_constr_set.CalculateSize() == my_constr_set.Size());
+    }
+
+    SECTION("test ConstraintSet::FilterAlignedElements method with large alignment") {
+      my_constr_set.FilterAlignedElements(0xffffffffffff0000);
+      EXPECT(my_constr_set.IsEmpty());
+    }
+  }
+}

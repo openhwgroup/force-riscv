@@ -22,18 +22,94 @@ from riscv.PrivilegeLevel import PrivilegeLevelRISCV
 from riscv.SecurityState import SecurityStateRISCV
 from riscv.exception_handlers.ExceptionClass import ExceptionClassRISCV
 from riscv.exception_handlers.HandlerSubroutineGenerator import HandlerSubroutineGeneratorRISCV
+from base.exception_handlers.ExceptionHandlerAssignmentParser import ExceptionHandlerAssignmentParser
+from base.exception_handlers.ExceptionHandlerAssignment import ExceptionHandlerAssignmentRequest
 
 class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
 
     def __init__(self, gen_thread, factory):
         super().__init__(gen_thread, factory)
 
+        self.mGenThread = gen_thread
+        
         for mem_bank in MemoryBankRISCV:
             self.memBankHandlerRegistryRepo.addMemoryBankHandlerRegistry(MemoryBankHandlerRegistry(gen_thread, mem_bank))
 
-    def registerDefaultExceptionHandlers(self):
-        super().registerDefaultExceptionHandlers()
+    # return True if a particular exception can be redirected at a given privilege level, based on General choices... 
+    def useTrapHandler(self, exceptionClassName, subexceptionClassName, privilegeLevel):
+        if privilegeLevel == PrivilegeLevelRISCV.M:
+            # trap redirection supported (for now) only from machine-mode...
+            pass
+        else:
+            return False
 
+        # translate exception class name into redirect-trap choices tree...
+        (class_prefix, exception_name) = exceptionClassName.split('.')
+        exc_choice_trees = {
+            "INSTRUCTION_ADDRESS_MISALIGNED" : "Redirect Trap - Instruction address misaligned",
+            "INSTRUCTION_ACCESS_FAULT" : "Redirect Trap - Instruction access fault",
+            "ILLEGAL_INSTRUCTION" : "Redirect Trap - Illegal instruction",
+            "BREAKPOINT" : "Redirect Trap - Breakpoint",
+            "LOAD_ADDRESS_MISALIGNED" : "Redirect Trap - Load address misaligned",
+            "LOAD_ACCESS_FAULT" : "Redirect Trap - Load access fault",
+            "STORE_AMO_ADDRESS_MISALIGNED" : "Redirect Trap - Store/AMO address misaligned",
+            "STORE_AMO_ACCESS_FAULT" : "Redirect Trap - Store/AMO access fault",
+            "ENV_CALL_FROM_U_MODE" : "Redirect Trap - Environment call from U-mode",
+            "ENV_CALL_FROM_S_MODE" : "Redirect Trap - Environment call from S-mode",
+            "INSTRUCTION_PAGE_FAULT" : "Redirect Trap - Instruction page fault",
+            "LOAD_PAGE_FAULT" : "Redirect Trap - Load page fault",
+            "STORE_AMO_PAGE_FAULT" : "Redirect Trap - Store/AMO page fault"
+        }
+
+        use_trap_handler = False
+        
+        try:
+            # make the choice...
+            choices = self.mGenThread.getChoicesTreeInfo(exc_choice_trees[exception_name], "GeneralChoices" )
+            use_trap_handler = self.pickWeighted(choices) == 'DoRedirect'
+            print("XXX: use trap handler? ",exceptionClassName, use_trap_handler)
+        except KeyError:
+            # not all exceptions can be redirected...
+            pass
+        
+        return use_trap_handler
+
+
+    def registerDefaultExceptionHandlers(self):
+        print("XXX: registerDefaultExceptionHandlers")
+        
+        assignment_file_path = self.getDefaultAssignmentFilePath(self.default_set_name)
+        assignment_parser = ExceptionHandlerAssignmentParser()
+        handler_assignments = assignment_parser.parseHandlerAssignments(assignment_file_path)
+
+        trap_handler_module_name = None
+        trap_handler_class_name = None
+        have_trap_handler = False
+        
+        for ((exception_class_name, subexception_class_name), (handler_module_name, handler_class_name)) in handler_assignments.items():
+            if "TRAP_REDIRECTION" in exception_class_name:
+                trap_handler_module_name = handler_module_name
+                trap_handler_class_name = handler_class_name
+                print("XXX: trap-handler module/class: ",trap_handler_module_name,trap_handler_class_name)
+                have_trap_handler = True
+                continue
+            
+            exception_class = self.getExceptionClass(exception_class_name)
+
+            subexception_class = None
+            if subexception_class_name is not None:
+                subexception_class = self.getExceptionClass(subexception_class_name)
+
+            for (priv_level, security_state) in self.getPrivilegeLevelSecurityStateCombinations():
+                if have_trap_handler and self.useTrapHandler(exception_class_name, subexception_class_name, priv_level):
+                    handler_module_name = trap_handler_module_name
+                    handler_class_name = trap_handler_class_name
+                    
+                print("XXX handler privilege level: %s, module/class/sub-class: %s/%s/%s" % ( priv_level, handler_module_name, handler_class_name, subexception_class_name) )
+                handler_assignment_request = ExceptionHandlerAssignmentRequest(exception_class, (priv_level,), (security_state,), handler_module_name, handler_class_name, aMemBank=None, aSubexcClass=subexception_class)
+                
+                self.thread_handler_set.assignSynchronousExceptionHandler(handler_assignment_request)
+                                                                          
         for mem_bank_handler_registry in self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistries():
             mem_bank_handler_registry.mHandlerSubroutineGenerator = HandlerSubroutineGeneratorRISCV(self.genThread, self.factory, self.exceptions_stack)
 

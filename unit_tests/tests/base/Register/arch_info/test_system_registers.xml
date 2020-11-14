@@ -23,6 +23,7 @@
     <physical_register index="0x300" name="mstatus" size="64" type="SysReg"/>
     <physical_register index="0x340" name="mscratch" size="64" type="SysReg"/>
     <physical_register index="0x3A0" name="pmpcfg0" size="64" type="SysReg"/>
+    <physical_register index="0xc21" name="vtype" size="64" type="SysReg"/>
   </physical_registers>
   <register_file name="RISC-V Registers">
     <register boot="0x5000" index="0x3" name="fcsr" size="64" type="SysReg">
@@ -309,6 +310,27 @@
       </register_field>
       <register_field name="pmp7cfg" physical_register="pmpcfg0" size="8">
         <bit_field shift="56" size="8"/>
+      </register_field>
+    </register>
+    <register boot="1" index="0xc21" name="vtype" size="64" type="SysReg">
+      <register_field init_policy="VtypeInitPolicy" name="VILL" physical_register="vtype" size="1">
+        <bit_field shift="63" size="1"/>
+      </register_field>
+      <register_field init_policy="VtypeInitPolicy" name="RESERVED (WRITE 0)" physical_register="vtype" size="55">
+        <bit_field shift="8" size="55"/>
+      </register_field>
+      <register_field init_policy="VtypeInitPolicy" name="VMA" physical_register="vtype" size="1">
+        <bit_field shift="7" size="1"/>
+      </register_field>
+      <register_field init_policy="VtypeInitPolicy" name="VTA" physical_register="vtype" size="1">
+        <bit_field shift="6" size="1"/>
+      </register_field>
+      <register_field name="VLMUL" physical_register="vtype" size="3">
+        <bit_field shift="5" size="1"/>
+        <bit_field shift="0" size="2"/>
+      </register_field>
+      <register_field name="VSEW" physical_register="vtype" size="3">
+        <bit_field shift="2" size="3"/>
       </register_field>
     </register>
   </register_file>

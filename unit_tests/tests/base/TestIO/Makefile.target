@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 # add all necessary source files here
-ALL_SRCS := TestIO_test.cc TestIO.cc Memory.cc Log.cc Random.cc Enums.cc GenException.cc UtilityFunctions.cc StringUtils.cc
+ALL_SRCS := TestIO_test.cc TestIO.cc Memory.cc Log.cc Random.cc Enums.cc GenException.cc UtilityFunctions.cc StringUtils.cc SymbolManager.cc
 TARGET_NAME := TestIO_test

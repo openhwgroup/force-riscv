@@ -86,7 +86,7 @@ namespace Force {
   */
   class OperandStructure {
   public:
-  OperandStructure() : mName(), mShortName(), mClass(), mType(EOperandType(0)), mAccess(ERegAttrType::Read), mSize(0), mMask(0), mEncodingBits(), mSlave(false), mUopParamType(UopParamBool) { } //!< Constructor, empty
+  OperandStructure() : mName(), mShortName(), mClass(), mType(EOperandType(0)), mAccess(ERegAttrType::Read), mSize(0), mMask(0), mEncodingBits(), mSlave(false), mUopParamType(UopParamBool), mDiffers() { } //!< Constructor, empty
     virtual ~OperandStructure() { } //!< Destructor, virtual
     const std::string& Name() const { return mName; }
     const std::string& ShortName() const { return mShortName; }
@@ -95,7 +95,8 @@ namespace Force {
 
     void SetBits(const std::string& bits_str); //!< Assign the opcode bits occupied by the operand.
     uint32 Encoding(uint32 opr_value) const;   //!< Encode the operand value into its opcode bits.
-    virtual void SetDiffers(const std::string& differ) { } //<! set differs, do nothing in default
+    void AddDiffer(const std::string& differ) { mDiffers.push_back(differ); } //<! Add name of operand that must have a different value
+    const std::vector<std::string>& GetDiffers() const { return mDiffers; } //<! Get names of operands that must have a different value
     virtual const std::string ToString() const; //!< Return string representing the Operand structure details.
 
     /*!
@@ -139,6 +140,8 @@ namespace Force {
     std::vector<EncodingBits> mEncodingBits; //!< Opcode bits of the operand.
     bool mSlave; //!< slave operand which is sub-ordered by its master
     EUopParameterType mUopParamType; //!< type to be used in the Uop interface if applicable
+  private:
+    std::vector<std::string> mDiffers; //!< Names of operands that must have a different value
   };
 
   /*!
@@ -178,19 +181,20 @@ namespace Force {
   };
 
   /*!
-    \class DifferOperandStructure
-    \brief Record static structural information about an choice operand with differrent register.
+    \class VectorRegisterOperandStructure
+    \brief Record static structural information about a vector register operand.
   */
-  class DifferOperandStructure : public ChoicesOperandStructure {
+  class VectorRegisterOperandStructure : public ChoicesOperandStructure {
   public:
-    DifferOperandStructure() : ChoicesOperandStructure(), mDiffers() { } //!< Constructor, empty
-    ~DifferOperandStructure() { } //!< Destructor, virtual
-    void SetDiffers(const std::string& differ) override { mDiffers = differ;}
-    const std::string& Differs() const { return mDiffers; }
+    VectorRegisterOperandStructure();
+    COPY_CONSTRUCTOR_ABSENT(VectorRegisterOperandStructure);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorRegisterOperandStructure);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandStructure);
+
+    void SetLayoutMultiple(const float layoutMultiple) { mLayoutMultiple = layoutMultiple; } //!< Set the multiple used to adjust the register operand layout for widening and narrowing instructions.
+    float GetLayoutMultiple() const { return mLayoutMultiple; } //!< Return the multiple used to adjust the register operand layout for widening and narrowing instructions.
   private:
-    COPY_CONSTRUCTOR_ABSENT(DifferOperandStructure); //!< Copy constructor absent.
-  protected:
-    std::string mDiffers; //!< Names of the different choices settting.
+    float mLayoutMultiple; //!< Multiple used to adjust the register operand layout for widening and narrowing instructions
   };
 
   class ConstraintSet;
@@ -227,6 +231,29 @@ namespace Force {
     COPY_CONSTRUCTOR_ABSENT(GroupOperandStructure); //!< Copy constructor absent.
   public:
     std::vector<OperandStructure* > mOperandStructures; //!< Vector of children operands
+  };
+
+  /*!
+    \class VectorLayoutOperandStructure
+    \brief Record static structural information about a vector layout operand.
+  */
+  class VectorLayoutOperandStructure : public OperandStructure {
+  public:
+    VectorLayoutOperandStructure();
+    COPY_CONSTRUCTOR_ABSENT(VectorLayoutOperandStructure);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLayoutOperandStructure);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperandStructure);
+
+    uint32 GetRegisterCount() const { return mRegCount; } //!< Get the number of registers per vector register group.
+    uint32 GetElementWidth() const { return mElemWidth; } //!< Get the width of each element in the vector register group.
+    uint32 GetRegisterIndexAlignment() const { return mRegIndexAlignment; } //!< Get a power of 2 to which vector register indices must be aligned.
+    void SetRegisterCount(cuint32 regCount) { mRegCount = regCount; } //!< Set the number of registers per vector register group.
+    void SetElementWidth(cuint32 elemWidth) { mElemWidth = elemWidth; } //!< Set the width of each element in the vector register group
+    void SetRegisterIndexAlignment(cuint32 regIndexAlignment) { mRegIndexAlignment = regIndexAlignment; } //!< Set a power of 2 to which vector register indices must be aligned.
+  private:
+    uint32 mRegCount; //!< The number of registers per vector register group.
+    uint32 mElemWidth; //!< The width of each element in the vector register group.
+    uint32 mRegIndexAlignment; //!< A power of 2 to which vector register indices must be aligned
   };
 
   /*!

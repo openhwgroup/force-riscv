@@ -287,26 +287,21 @@ namespace Force {
   */
   class MultiRegisterOperand : public virtual RegisterOperand {
   public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(MultiRegisterOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(MultiRegisterOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(MultiRegisterOperand);
+
     Object* Clone() const override = 0; //!< Return a cloned MultiRegisterOperand object of the same type and same contents of the object.
     const char* Type() const override { return "MultiRegisterOperand"; } //!< Return the type of the MultiRegisterOperand object in C string.
 
-    MultiRegisterOperand() : RegisterOperand(), mExtraRegisters() { } //!< Constructor.
-    ~MultiRegisterOperand() { } //!< Destructor
-
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate MultiRegisterOperand details.
     void Commit(Generator& gen, Instruction& instr) override; //!< Commit generated MultiRegisterOperand.
     virtual uint32 NumberRegisters() const = 0; //!< Return number of registers.
-  protected:
-    explicit MultiRegisterOperand(const RegisterOperand& rOther) //!< Copy constructor.
-      : RegisterOperand(rOther), mExtraRegisters()
-    {
-    }
-
     void GetExtraRegisterNames(uint32 regIndex, std::vector<std::string>& nameVec) const; //!< Return a list of the extra register names.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(MultiRegisterOperand);
+
     virtual const std::string GetNextRegisterName(uint32& indexVar) const = 0; //!< Return the name of the next register.
     ChoicesFilter * GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return choices filter for MultiRegisterOperand.
-  protected:
-    std::vector<std::string> mExtraRegisters; //!< Names of the extra few registers.
   };
 
   /*!
@@ -442,6 +437,23 @@ namespace Force {
     std::vector<Operand* > mOperands; //!< Container holding pointer to all sub operands.
   };
 
+  /*!
+    \class VectorLayoutOperand
+    \brief Class for vector layout operands.
+  */
+  class VectorLayoutOperand : public Operand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorLayoutOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLayoutOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperand);
+
+    void Setup(Generator& gen, Instruction& instr) override; //!< Setup conditions, constraining mechanisms before generating operand.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorLayoutOperand);
+  private:
+    virtual void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) = 0; //!< Determine and set the vector layout attributes.
+  };
+
   class AddressSolver;
   class AddressingMode;
 
@@ -461,11 +473,12 @@ namespace Force {
     AddressingOperand() : GroupOperand(), mTargetAddress(0) { } //!< Constructor.
     ~AddressingOperand() { } //!< Destructor
 
+    void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
     uint64 TargetAddress() const { return mTargetAddress; } //!< Return the target address of the addressingOperand.
   protected:
     AddressingOperand(const AddressingOperand& rOther) : GroupOperand(rOther), mTargetAddress(0) { } //!< Copy constructor.
     virtual bool BaseGenerate(Generator& gen, Instruction& instr, bool noRestrict=false); //!< Call base class generate to generate the basic structure of the operand.
-    virtual void UpdateNoRestrictionTarget(const Instruction&) { } //!< Update target address when no-restriction is specified.
+    virtual void UpdateNoRestrictionTarget(const Instruction&); //!< Update target address when no-restriction is specified.
     virtual void GenerateWithPreamble(Generator& gen, Instruction& instr) { } //!< Generate with preamble.
     virtual bool GenerateNoPreamble(Generator& gen, Instruction& instr) { return false; } //!< Generate the AddressingOperand using no-preamble approach.
     virtual AddressingMode* GetAddressingMode(uint64 alignment=1) const { return nullptr; } //!< Return an AddressingMode instance.
@@ -475,6 +488,9 @@ namespace Force {
     virtual uint64 GetAddressingAlignment(uint64 alignment, uint64 dataSize = 0) const { return alignment; } //!< Get addressing alignment.
   protected:
     uint64 mTargetAddress; //!< Recording the target virtual address,
+  private:
+    virtual void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) { } //!< Finalize memory access dimensions based on runtime state.
+    virtual bool MustGeneratePreamble(const Generator& rGen) const; //!< Return true if the operand is required to be generated using preamble.
   };
 
   /*!
@@ -520,16 +536,16 @@ namespace Force {
     RegisterBranchOperand() : BranchOperand() { } //!< Constructor.
     ~RegisterBranchOperand() { } //!< Destructor
 
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate RegisterBranchOperand details.
     bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests for the RegisterBranchOperand, if any.
   protected:
     RegisterBranchOperand(const RegisterBranchOperand& rOther) : BranchOperand(rOther) { } //!< Copy constructor.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate the RegisterBranchOperand using preamble approach.
     bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the RegisterBranchOperand using no-preamble approach.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for RegisterBranchOperand.
-    void UpdateNoRestrictionTarget(const Instruction& instr) override; //!< Update target address in no-restriction case.
     uint64 GetAddressingAlignment(uint64 alignment, uint64 dataSize = 0) const override; //!< Get register branch addressing alignment.
     AddressingMode* GetAddressingMode(uint64 alignment) const override; //!< Return suitable addressing mode object.
+  private:
+    bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
   };
 
   /*!
@@ -570,7 +586,7 @@ namespace Force {
     void Generate(Generator& gen, Instruction& instr) override; //!< Generate MultiVectorRegisterOperand details.
 
   protected:
-    explicit MultiVectorRegisterOperand(const RegisterOperand& rOther) //!< Copy constructor.
+    explicit MultiVectorRegisterOperand(const MultiVectorRegisterOperand& rOther) //!< Copy constructor.
       : VectorRegisterOperand(rOther), MultiRegisterOperand(rOther)
     {
     }
@@ -625,8 +641,12 @@ namespace Force {
     LoadStoreOperand(const LoadStoreOperand& rOther) : AddressingOperand(rOther) { } //!< Copy constructor.
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for LoadStoreOperand.
+    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
   private:
+    virtual void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses the instruction will access.
     bool IsTargetSharedRead(const EMemAccessType memAccessType, cuint64 targetAddr, cuint64 dataSize) const; //!< Returns true if read access is specified and the target address range intersects shared memory.
+    uint64 GetTargetConstraintForcedAlignment(cuint64 alignment) const; //!< Get the alignment when the target address is forced.
+    virtual void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) { } //!< Capture the solved operand values.
   };
 
   /*!
@@ -645,15 +665,14 @@ namespace Force {
     BaseOffsetLoadStoreOperand() : LoadStoreOperand() { } //!< Constructor.
     ~BaseOffsetLoadStoreOperand() { } //!< Destructor
 
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate BaseOffsetLoadStoreOperand details.
     bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests for the BaseOffsetLoadStoreOperand, if any.
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance for the BaseOffsetLoadStoreOperand.
   protected:
     BaseOffsetLoadStoreOperand(const BaseOffsetLoadStoreOperand& rOther) : LoadStoreOperand(rOther) { } //!< Copy constructor.
-    void UpdateNoRestrictionTarget(const Instruction& instr) override; //!< Update branch target when no-restriction is specified.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate the BaseOffsetLoadStoreOperand using preamble approach.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the BaseOffsetLoadStoreOperand using no-preamble approach.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseOffsetLoadStoreOperand.
+  private:
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
@@ -700,15 +719,15 @@ namespace Force {
     BaseIndexLoadStoreOperand() : LoadStoreOperand() { } //!< Constructor.
     ~BaseIndexLoadStoreOperand() { } //!< Destructor
 
-    void UpdateNoRestrictionTarget(const Instruction&) override; //!< Update target address when no-restriction is specified.
-    void Generate(Generator& gen, Instruction& instr) override; //!< Generate BaseIndexLoadStoreOperand details.
     bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests for the BaseIndexLoadStoreOperand, if any.
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance for the BaseIndexLoadStoreOperand.
   protected:
     BaseIndexLoadStoreOperand(const BaseIndexLoadStoreOperand& rOther) : LoadStoreOperand(rOther) { } //!< Copy constructor.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate base index addressing mode with preamble.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate base index addressing mode with no preamble.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseIndexLoadStoreOperand.
+  private:
+    bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
@@ -731,6 +750,66 @@ namespace Force {
    protected:
     PcOffsetLoadStoreOperand(const PcOffsetLoadStoreOperand& rOther) : LoadStoreOperand(rOther) { } //!< Copy constructor.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for PcOffsetLoadStoreOperand.
+    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override { return false; } //!< Generate the AddressingOperand using no-preamble approach.
+  };
+
+  class LoadStoreOperandStructure;
+
+  /*!
+    \class VectorStridedLoadStoreOperand
+    \brief Operand for vector strided load/store operations.
+  */
+  class VectorStridedLoadStoreOperand : public LoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorStridedLoadStoreOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorStridedLoadStoreOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorStridedLoadStoreOperand);
+
+    Object* Clone() const override { return new VectorStridedLoadStoreOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorStridedLoadStoreOperand"; } //!< Return a string describing the actual type of the Object.
+    bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests, if any.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorStridedLoadStoreOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+    void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
+    AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
+  private:
+    void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
+    void DifferStrideOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the stride operand uses a different register from the base operand.
+    void CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, cuint64 initAddrBlockSize, uint64& rBaseVal, uint64& rStrideVal) const; //!< Calculate the values of the base and stride operands.
+    uint64 CalculateStrideValue(const Instruction& rInstr, cuint32 alignment, cuint32 addrRangeSize) const; //!< Calculate the value of the stride operand.
+    uint64 CalculateBaseValue(cuint64 baseAddr, cuint32 alignment, cuint32 addrRangeSize, cuint64 strideVal) const; //!< Calculate the value of the base operand.
+    uint64 GetInitialAddressBlockSize(const Generator& rGen); //!< Get the initial address block size for preamble stride calculations.
+  };
+
+  /*!
+    \class VectorIndexedLoadStoreOperand
+    \brief Operand for vector indexed load/store operations.
+  */
+  class VectorIndexedLoadStoreOperand : public LoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedLoadStoreOperand);
+
+    bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests, if any.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+    void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
+    AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
+  private:
+    void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
+    virtual void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const = 0; //!< Get the names of the index registers.
+    uint64 AllocateIndexOperandDataBlock(Generator& rGen, cuint32 relativeRegIndex) const; //!< Allocate and initialize a block of memory to use for preamble loading of an index operand register.
+    void DifferIndexOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the index operand uses a different register from other vector register operands.
+    void RecordIndexElementByteSize(const Instruction& rInstr); //!< Compute and capture the index vector element size in bytes.
+    uint64 CalculateBaseAndFirstIndexElementValues(const Instruction& rInstr, cuint32 alignment, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the base operand and first index operand element.
+    void CalculateIndexElementValues(const Instruction& rInstr, cuint32 alignment, cuint64 baseVal, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the index operand elements after the first one.
   };
 
   /*!
@@ -776,6 +855,24 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(DataProcessingOperand); //!< Copy constructor.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for DataProcessingOperand.
+  };
+
+  /*!
+    \class VectorBaseOffsetLoadStoreOperand
+    \brief Operand for vector base offset load/store operations.
+  */
+  class VectorBaseOffsetLoadStoreOperand : public BaseOffsetLoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorBaseOffsetLoadStoreOperand);
+
+    Object* Clone() const override { return new VectorBaseOffsetLoadStoreOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorBaseOffsetLoadStoreOperand"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
+  private:
+    void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
   };
 
 }

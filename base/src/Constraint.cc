@@ -2242,6 +2242,59 @@ namespace Force {
     reverse(mConstraints.begin(), mConstraints.end());
   }
 
+  void ConstraintSet::FilterAlignedElements(cuint64 alignMask)
+  {
+    if (IsEmpty() or (alignMask == MAX_UINT64)) {
+      return;
+    }
+
+    vector<Constraint*> new_constraints;
+    uint64 alignment = get_alignment(alignMask);
+    uint64 reserve_size = mSize / alignment;
+    if (reserve_size > 0) {
+      new_constraints.reserve(reserve_size);
+    }
+
+    for (Constraint* constr : mConstraints) {
+      if (constr->Type() == EConstraintType::Value) {
+        auto val_constr = dynamic_cast<ValueConstraint*>(constr);
+        uint64 val = val_constr->Value();
+
+        if ((val & alignMask) == val) {
+          new_constraints.push_back(new ValueConstraint(val));
+        }
+      }
+      else if (constr->Type() == EConstraintType::Range) {
+        auto range_constr = dynamic_cast<RangeConstraint*>(constr);
+        uint64 lower_bound = range_constr->LowerBound();
+        uint64 upper_bound = range_constr->UpperBound();
+
+        if ((upper_bound & alignMask) >= lower_bound) {
+          uint64 cur_val = lower_bound & alignMask;
+
+          if (cur_val < lower_bound) {
+            cur_val += alignment;
+          }
+
+          for ( ; cur_val <= upper_bound; cur_val += alignment) {
+            new_constraints.push_back(new ValueConstraint(cur_val));
+          }
+        }
+      }
+    }
+
+    mConstraints.swap(new_constraints);
+    mConstraints.shrink_to_fit();
+
+    // Clean up the old constraints, which are referenced by the new_constraints vector following
+    // the swap() call
+    for (Constraint* constr : new_constraints) {
+      DELETE_CONSTRAINT(constr);
+    }
+
+    mSize = CalculateSize();
+  }
+
   void ConstraintSet::ApplyConstraint(const Constraint& applyConstr)
   {
     if (IsEmpty()) return; // already empty

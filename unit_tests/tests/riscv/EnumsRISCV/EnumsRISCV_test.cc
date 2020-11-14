@@ -288,8 +288,7 @@ CASE( "tests for EPteAttributeType" ) {
       EXPECT(EPteAttributeType_to_string(EPteAttributeType::G) == "G");
       EXPECT(EPteAttributeType_to_string(EPteAttributeType::U) == "U");
       EXPECT(EPteAttributeType_to_string(EPteAttributeType::X) == "X");
-      EXPECT(EPteAttributeType_to_string(EPteAttributeType::W) == "W");
-      EXPECT(EPteAttributeType_to_string(EPteAttributeType::R) == "R");
+      EXPECT(EPteAttributeType_to_string(EPteAttributeType::WR) == "WR");
       EXPECT(EPteAttributeType_to_string(EPteAttributeType::V) == "V");
     }
 
@@ -303,8 +302,7 @@ CASE( "tests for EPteAttributeType" ) {
       EXPECT(string_to_EPteAttributeType("G") == EPteAttributeType::G);
       EXPECT(string_to_EPteAttributeType("U") == EPteAttributeType::U);
       EXPECT(string_to_EPteAttributeType("X") == EPteAttributeType::X);
-      EXPECT(string_to_EPteAttributeType("W") == EPteAttributeType::W);
-      EXPECT(string_to_EPteAttributeType("R") == EPteAttributeType::R);
+      EXPECT(string_to_EPteAttributeType("WR") == EPteAttributeType::WR);
       EXPECT(string_to_EPteAttributeType("V") == EPteAttributeType::V);
     }
 
@@ -332,9 +330,7 @@ CASE( "tests for EPteAttributeType" ) {
       EXPECT(okay);
       EXPECT(try_string_to_EPteAttributeType("X", okay) == EPteAttributeType::X);
       EXPECT(okay);
-      EXPECT(try_string_to_EPteAttributeType("W", okay) == EPteAttributeType::W);
-      EXPECT(okay);
-      EXPECT(try_string_to_EPteAttributeType("R", okay) == EPteAttributeType::R);
+      EXPECT(try_string_to_EPteAttributeType("WR", okay) == EPteAttributeType::WR);
       EXPECT(okay);
       EXPECT(try_string_to_EPteAttributeType("V", okay) == EPteAttributeType::V);
       EXPECT(okay);
@@ -395,8 +391,8 @@ CASE( "tests for EPageGenBoolAttrType" ) {
       EXPECT(EPageGenBoolAttrType_to_string(EPageGenBoolAttrType::ForceAlias) == "ForceAlias");
       EXPECT(EPageGenBoolAttrType_to_string(EPageGenBoolAttrType::ForceMemAttrs) == "ForceMemAttrs");
       EXPECT(EPageGenBoolAttrType_to_string(EPageGenBoolAttrType::ForceNewAddr) == "ForceNewAddr");
-      EXPECT(EPageGenBoolAttrType_to_string(EPageGenBoolAttrType::NoDataAbort) == "NoDataAbort");
-      EXPECT(EPageGenBoolAttrType_to_string(EPageGenBoolAttrType::NoInstrAbort) == "NoInstrAbort");
+      EXPECT(EPageGenBoolAttrType_to_string(EPageGenBoolAttrType::NoDataPageFault) == "NoDataPageFault");
+      EXPECT(EPageGenBoolAttrType_to_string(EPageGenBoolAttrType::NoInstrPageFault) == "NoInstrPageFault");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -410,8 +406,8 @@ CASE( "tests for EPageGenBoolAttrType" ) {
       EXPECT(string_to_EPageGenBoolAttrType("ForceAlias") == EPageGenBoolAttrType::ForceAlias);
       EXPECT(string_to_EPageGenBoolAttrType("ForceMemAttrs") == EPageGenBoolAttrType::ForceMemAttrs);
       EXPECT(string_to_EPageGenBoolAttrType("ForceNewAddr") == EPageGenBoolAttrType::ForceNewAddr);
-      EXPECT(string_to_EPageGenBoolAttrType("NoDataAbort") == EPageGenBoolAttrType::NoDataAbort);
-      EXPECT(string_to_EPageGenBoolAttrType("NoInstrAbort") == EPageGenBoolAttrType::NoInstrAbort);
+      EXPECT(string_to_EPageGenBoolAttrType("NoDataPageFault") == EPageGenBoolAttrType::NoDataPageFault);
+      EXPECT(string_to_EPageGenBoolAttrType("NoInstrPageFault") == EPageGenBoolAttrType::NoInstrPageFault);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -440,9 +436,9 @@ CASE( "tests for EPageGenBoolAttrType" ) {
       EXPECT(okay);
       EXPECT(try_string_to_EPageGenBoolAttrType("ForceNewAddr", okay) == EPageGenBoolAttrType::ForceNewAddr);
       EXPECT(okay);
-      EXPECT(try_string_to_EPageGenBoolAttrType("NoDataAbort", okay) == EPageGenBoolAttrType::NoDataAbort);
+      EXPECT(try_string_to_EPageGenBoolAttrType("NoDataPageFault", okay) == EPageGenBoolAttrType::NoDataPageFault);
       EXPECT(okay);
-      EXPECT(try_string_to_EPageGenBoolAttrType("NoInstrAbort", okay) == EPageGenBoolAttrType::NoInstrAbort);
+      EXPECT(try_string_to_EPageGenBoolAttrType("NoInstrPageFault", okay) == EPageGenBoolAttrType::NoInstrPageFault);
       EXPECT(okay);
     }
 
@@ -516,12 +512,13 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::ReadOnly) == "ReadOnly");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::NoExecute) == "NoExecute");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::PrivilegedNoExecute) == "PrivilegedNoExecute");
-      EXPECT(EVmConstraintType_to_string(EVmConstraintType::UnpriviligedNoExecute) == "UnpriviligedNoExecute");
+      EXPECT(EVmConstraintType_to_string(EVmConstraintType::UnprivilegedNoExecute) == "UnprivilegedNoExecute");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::NoUserAccess) == "NoUserAccess");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::PageTable) == "PageTable");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::UserAccess) == "UserAccess");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::PageFault) == "PageFault");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::FlatMap) == "FlatMap");
+      EXPECT(EVmConstraintType_to_string(EVmConstraintType::AccessFault) == "AccessFault");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -530,12 +527,13 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(string_to_EVmConstraintType("ReadOnly") == EVmConstraintType::ReadOnly);
       EXPECT(string_to_EVmConstraintType("NoExecute") == EVmConstraintType::NoExecute);
       EXPECT(string_to_EVmConstraintType("PrivilegedNoExecute") == EVmConstraintType::PrivilegedNoExecute);
-      EXPECT(string_to_EVmConstraintType("UnpriviligedNoExecute") == EVmConstraintType::UnpriviligedNoExecute);
+      EXPECT(string_to_EVmConstraintType("UnprivilegedNoExecute") == EVmConstraintType::UnprivilegedNoExecute);
       EXPECT(string_to_EVmConstraintType("NoUserAccess") == EVmConstraintType::NoUserAccess);
       EXPECT(string_to_EVmConstraintType("PageTable") == EVmConstraintType::PageTable);
       EXPECT(string_to_EVmConstraintType("UserAccess") == EVmConstraintType::UserAccess);
       EXPECT(string_to_EVmConstraintType("PageFault") == EVmConstraintType::PageFault);
       EXPECT(string_to_EVmConstraintType("FlatMap") == EVmConstraintType::FlatMap);
+      EXPECT(string_to_EVmConstraintType("AccessFault") == EVmConstraintType::AccessFault);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -554,7 +552,7 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(okay);
       EXPECT(try_string_to_EVmConstraintType("PrivilegedNoExecute", okay) == EVmConstraintType::PrivilegedNoExecute);
       EXPECT(okay);
-      EXPECT(try_string_to_EVmConstraintType("UnpriviligedNoExecute", okay) == EVmConstraintType::UnpriviligedNoExecute);
+      EXPECT(try_string_to_EVmConstraintType("UnprivilegedNoExecute", okay) == EVmConstraintType::UnprivilegedNoExecute);
       EXPECT(okay);
       EXPECT(try_string_to_EVmConstraintType("NoUserAccess", okay) == EVmConstraintType::NoUserAccess);
       EXPECT(okay);
@@ -565,6 +563,8 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(try_string_to_EVmConstraintType("PageFault", okay) == EVmConstraintType::PageFault);
       EXPECT(okay);
       EXPECT(try_string_to_EVmConstraintType("FlatMap", okay) == EVmConstraintType::FlatMap);
+      EXPECT(okay);
+      EXPECT(try_string_to_EVmConstraintType("AccessFault", okay) == EVmConstraintType::AccessFault);
       EXPECT(okay);
     }
 
@@ -856,6 +856,8 @@ CASE( "tests for EInstructionExtensionType" ) {
       EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV64C) == "RV64C");
       EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV128C) == "RV128C");
       EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV64Priv) == "RV64Priv");
+      EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV32H) == "RV32H");
+      EXPECT(EInstructionExtensionType_to_string(EInstructionExtensionType::RV64H) == "RV64H");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -878,6 +880,8 @@ CASE( "tests for EInstructionExtensionType" ) {
       EXPECT(string_to_EInstructionExtensionType("RV64C") == EInstructionExtensionType::RV64C);
       EXPECT(string_to_EInstructionExtensionType("RV128C") == EInstructionExtensionType::RV128C);
       EXPECT(string_to_EInstructionExtensionType("RV64Priv") == EInstructionExtensionType::RV64Priv);
+      EXPECT(string_to_EInstructionExtensionType("RV32H") == EInstructionExtensionType::RV32H);
+      EXPECT(string_to_EInstructionExtensionType("RV64H") == EInstructionExtensionType::RV64H);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -923,6 +927,10 @@ CASE( "tests for EInstructionExtensionType" ) {
       EXPECT(try_string_to_EInstructionExtensionType("RV128C", okay) == EInstructionExtensionType::RV128C);
       EXPECT(okay);
       EXPECT(try_string_to_EInstructionExtensionType("RV64Priv", okay) == EInstructionExtensionType::RV64Priv);
+      EXPECT(okay);
+      EXPECT(try_string_to_EInstructionExtensionType("RV32H", okay) == EInstructionExtensionType::RV32H);
+      EXPECT(okay);
+      EXPECT(try_string_to_EInstructionExtensionType("RV64H", okay) == EInstructionExtensionType::RV64H);
       EXPECT(okay);
     }
 

@@ -33,6 +33,8 @@ namespace Force {
   uint64 data_array_to_element_value_little_endian(cuint8* data_array, cuint32 num_bytes); //!< Convert byte stream data array in little endian byte order to element value.
   void verify_alignment(uint64 align); //!< Verify that the align variable contains a valid alignment value.
   uint32 get_align_shift(uint64 align); //!< Return align shift for a given align size.
+  uint64 get_align_mask(cuint64 align); //!< Return align mask for a given align size.
+  uint64 get_alignment(cuint64 alignMask); //!< Return alignment for a given align mask. This is the inverse of get_align_mask().
   uint64 get_aligned_value(cuint64 value, cuint64 align); //!< Return value aligned to the specified alignment.
   uint64 sign_extend64(uint64 value, uint32 size); //!< Sign extend a value with the spedificed size.
   uint32 sign_extend32(uint32 value, uint32 size); //!<  Sign extend a value with the spedificed size.
@@ -64,8 +66,9 @@ namespace Force {
 
   std::string value_to_lsdata_str(uint64 value, uint32 esize, uint32 size, const std::string& delim=";"); //!< Convert values to the LSData format string.
   std::string large_value_to_lsdata_str(const std::vector<uint64>& values, uint32 esize, uint32 size=64, const std::string& delim=";"); //!< Convert values to the LSData format string.
-  void change_elementform_to_uint64(uint32 element_size, uint32 valid_size, std::vector<uint64> orignal_value_list, std::vector<uint64>& uint64_value_list);
-  void change_uint64_to_elementform(uint32 element_size, uint32 valid_size, std::vector<uint64> uint64_value_list, std::vector<uint64>& result_value_list);
+  void change_elementform_to_uint64(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& orignal_value_list, std::vector<uint64>& uint64_value_list); //!< Return the values in 64-bit segments given the element values.
+  void change_uint64_to_elementform(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& uint64_value_list, std::vector<uint64>& result_value_list); //!< Return the element values given the values in 64-bit segments.
+  uint64 change_uint64_to_elementform_at_index(cuint32 element_size, const std::vector<uint64>& uint64_value_list, cuint32 element_index); //!< Return the element value at the specified index given the values in 64-bit segments.
   uint64 kmg_number(const std::string& strKMG); //!< convert KMG string to number
   uint64 ParseTypeValue(const std::string& valueStr);
 

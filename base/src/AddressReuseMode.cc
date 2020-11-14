@@ -28,6 +28,11 @@ namespace Force {
   {
   }
 
+  AddressReuseMode::AddressReuseMode(const AddressReuseMode& rOther)
+    : mModeBits(rOther.mModeBits)
+  {
+  }
+
   void AddressReuseMode::DisableAllReuseTypes()
   {
     mModeBits = 0;

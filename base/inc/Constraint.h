@@ -241,6 +241,7 @@ namespace Force {
     void DivideElementsWithFactorRange(cuint64 divisor, cuint64 startFactor, cuint64 endFactor); //!< Transform the ConstraintSet such that it contains some subset of the elements E such that E * divisor would be in the original ConstraintSet. The factor range values determine which subset results. 0 <= factor(Low/High) < divisor.
     void DivideElementsWithFactorRangeUnionedWithZero(cuint64 divisor, cuint64 startFactor, cuint64 endFactor); //!< Transform the ConstraintSet such that it contains some subset of the elements E such that E * divisor would be in the original ConstraintSet. The factor range values determine which subset results. 0 <= factor(Low/High) < divisor.
     void NotElements(); //!< Replace each element with its bitwise complement.
+    void FilterAlignedElements(cuint64 alignMask); //!< Filter out elements that are not aligned according to the specified mask. The resulting ConstraintSet will contain all elements E such that E & alignMask = E.
     uint64 GetAlignedSizeFromBottom(uint64 alignMask, uint64 alignSize) const; //!< Get an aligned range with size from the bottom of the constraint set.
     uint64 GetAlignedSizeFromTop(uint64 alignMask, uint64 alignSize) const; //!< Get an aligned range with size from the top of the constraint set.
     uint64 OnlyValue() const; //!< Return the only value in the constraint set.

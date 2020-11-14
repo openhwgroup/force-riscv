@@ -145,7 +145,7 @@ namespace Force {
         if (bnt_node != nullptr) {
           LOG(info) << "{GenInstructionAgent::StepInstruction} Request to execute Bnt node: " << bnt_node->ToString() << endl;
           auto bnt_req = new GenSpeculativeBntRequest(bnt_node, ESpeculativeBntActionType::Execute);
-          mpGenerator->AddSpeculativeRequest(bnt_req);
+          mpGenerator->AddPostInstructionStepRequest(bnt_req);
         }
       }
     }
@@ -239,8 +239,13 @@ namespace Force {
         }
         auto wider_reg = reg_file->GetContainingRegister(reg_init);
         if ((nullptr != wider_reg) and (not wider_reg->IsInitialized())) {
-          LOG(info) << "{GenInstructionAgent::SendInitsToISS} register " << reg_init->Name() << " wider register " << wider_reg->Name() << " not fully initialized." << endl;
-          reg_file->InitializeRegisterRandomly(wider_reg, choice_mod_ptr);
+          LOG(info) << "{GenInstructionAgent::SendInitsToISS} register " << reg_init->Name() 
+		    << " value: 0x" << std::hex << reg_init->Value() << std::dec 
+		    << " wider register " << wider_reg->Name() << " not fully initialized." << endl;
+	  if (reg_file->InitContainingRegister(wider_reg, reg_init)) {
+             // was able to directly init the 'wider' reg from the 'init' reg...
+	  } else
+             reg_file->InitializeRegisterRandomly(wider_reg, choice_mod_ptr);
         }
         std::set<PhysicalRegister* > phyRegisterSet;
         reg_init->GetPhysicalRegisters(phyRegisterSet);
@@ -266,6 +271,7 @@ namespace Force {
                   << " Initial value 0x"<< hex << phys_reg_ptr->InitialValue(phys_reg_mask) << ", value 0x" << phys_reg_ptr->Value(phys_reg_mask) << endl;
         continue;
       }
+
       LOG(info) << "{ GenInstructionAgent::SendInitsToISS} writing register " << phys_reg_ptr->Name() << " initial value 0x" << hex << phys_reg_ptr->InitialValue(phys_reg_mask) << endl;
       sim_ptr->WriteRegister(thread_id, phys_reg_ptr->Name().c_str(), phys_reg_ptr->InitialValue(phys_reg_mask), phys_reg_mask);
     }

@@ -39,7 +39,7 @@ namespace Force {
     cuint32 mElementIndex;
     cuint32 mElementByteLength; 
   };
-  
+
   class VectorElementUpdates {
   public:
     VectorElementUpdates(uint32 processorId, uint32 vectorLogicalRegisterWidth, const std::vector<std::string>& rVectorPhysicalRegisterNames, cuint32 physRegSize, cuint32 numPhysRegs) : 
@@ -60,12 +60,12 @@ namespace Force {
       mElementWriteUpdates(other.mElementWriteUpdates)
     {}
   
-    bool insert(uint32 processorId, const char* pRegisterName, uint32 eltIndex, uint32 eltByteWidth,  const uint8_t* pEntireRegValue, uint32 regByteWidth, const char* pAccessType);
+    void insert(uint32 processorId, const char* pRegisterName, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pEntireRegValue, uint32 regByteWidth, const char* pAccessType);
   
     void translateElementToRegisterUpdates(SimAPI& rApiHandle, std::vector<RegUpdate>& rRegisterUpdates) const;
   
   private:
-    bool validateInsertArguments(uint32 processorId, const char* pRegisterName, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pEntireRegValue, uint32 regByteWidth, const char* pAccessType); //!< Return true if the provided arguments have valid values for the insert() method; false otherwise.
+    void validateInsertArguments(uint32 processorId, const char* pRegisterName, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pEntireRegValue, uint32 regByteWidth, const char* pAccessType); //!< Fail if any of the provided arguments have invalid values for the insert() method.
   private:
     cuint32 mProcessorId;
     cuint32 mVectorLogicalRegisterWidth;
