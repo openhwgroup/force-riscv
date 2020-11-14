@@ -14,5 +14,6 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname": "*_force.py"},
+    {"fname": "*_force.py", "options": {"max-instr": 20000}},
+    {"fname": "*_force.py", "options": {"max-instr": 20000}, "generator": {"--options": "\"PrivilegeLevel=1\""}},
 ]

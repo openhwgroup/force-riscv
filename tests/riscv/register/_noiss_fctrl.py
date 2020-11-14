@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 control_items = [
-	 {"fname":"./test_muldiv_nan_boxing_force.py"}
-                ]
+    {"fname": "*_force.py", "generator": {"--noiss": None}},
+]

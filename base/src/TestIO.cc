@@ -36,7 +36,9 @@ using namespace ELFIO;
 
 namespace Force {
 
-#define MAX_SEGMENTS_NUM   ((1u << 16) - 1)  //<! maximal segments number
+// ELFIO uses a 16-bit integer to store the number of segments; a larger number of segments than can
+// be represented by 16 bits causes memory corruption
+#define MAX_SEGMENTS_NUM   ((1u << 16) - 1)
 
  /*!
     \class TestSection
@@ -216,8 +218,14 @@ namespace Force {
       const ThreadInstructionResults* inst_results = generator->GetInstructionResults();
       const std::map<uint64, Instruction* >& instructions = inst_results->GetInstructions(memBank);
 
+      /*!
+	TODO: hex dump of instruction assumes 8 hex digits (32-bit
+	      instructions).  If the architecture permits variable length
+	      instructions, then the opcode length should be obtained form the
+	      architecture as part of the instruction information.
+      */
       for (auto inst : instructions)
-          asmFile << fmtx0(inst.first, 16) << ":" << fmtx0(inst.second->Opcode()) << " " << inst.second->AssemblyText() << endl;
+	  asmFile << fmtx0(inst.first, 16) << ":" << fmtx0(inst.second->Opcode(), 8) << " " << inst.second->AssemblyText() << endl;
     }
 #endif
     /*!
@@ -384,7 +392,7 @@ namespace Force {
     TestSegment* CreateTestSegment(const TestSection* section)
     {
       if (mTotalSegments++ >= MAX_SEGMENTS_NUM) {
-        LOG(fail) << "segments number " << mTotalSegments << "is overflow";
+        LOG(fail) << "The number of ELF file segments " << mTotalSegments << " has exceeded the maximum allowed " << MAX_SEGMENTS_NUM << endl;
         FAIL("overflow-segments-number");
         return nullptr;
       }

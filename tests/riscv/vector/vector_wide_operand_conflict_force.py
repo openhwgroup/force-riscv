@@ -16,6 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from VectorTestSequence import VectorTestSequence
+from base.ChoicesModifier import ChoicesModifier
 
 ## This test verifies that vector register operands with different layouts don't overlap.
 class MainSequence(VectorTestSequence):
@@ -61,6 +62,23 @@ class MainSequence(VectorTestSequence):
             'VWSUBU.WX##RISCV',
         )
 
+    ## Set up the environment prior to generating the test instructions.
+    def _setUpTest(self):
+        choices_mod = ChoicesModifier(self.genThread)
+
+        # TODO(Noah): Remove the restriction on SEW when a mechanism to skip instructions with
+        # illegal vector layouts is implemented. For now, ensure vector element width is set to no
+        # more than 32 bits.
+        choice_weights = {'0x0': 10, '0x1': 10, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', choice_weights)
+
+        # Ensure vector register group size is no more than 4, as larger values are not legal for
+        # widening and narrowing instructions
+        vlmul_choice_weights = {'0x0': 10, '0x1': 10, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 10, '0x6': 10, '0x7': 10}
+        choices_mod.modifyRegisterFieldValueChoices('vtype.VLMUL', vlmul_choice_weights)
+
+        choices_mod.commitSet()
+
     ## Return the maximum number of test instructions to generate.
     def _getMaxInstructionCount(self):
         return 1000
@@ -78,13 +96,13 @@ class MainSequence(VectorTestSequence):
         vs1_val = aInstrRecord['Srcs'].get('vs1')
         vs2_val = aInstrRecord['Srcs']['vs2']
         if aInstr.startswith('VW'):
-            if vs1_val and (vd_val == (vs1_val & 0x1E)):
+            if vs1_val and (vd_val == (vs1_val & 0x1F)):
                 self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
 
-            if ('.W' not in aInstr) and (vd_val == (vs2_val & 0x1E)):
+            if ('.W' not in aInstr) and (vd_val == (vs2_val & 0x1F)):
                 self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
         elif aInstr.startswith('VN'):
-            if (vd_val & 0x1E) == vs2_val:
+            if (vd_val & 0x1F) == vs2_val:
                 self.error('Instruction %s used overlapping source and destination registers of different formats' % aInstr)
         else:
             self.error('Unexpected instruction %s' % aInstr)

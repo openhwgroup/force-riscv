@@ -512,7 +512,7 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::ReadOnly) == "ReadOnly");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::NoExecute) == "NoExecute");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::PrivilegedNoExecute) == "PrivilegedNoExecute");
-      EXPECT(EVmConstraintType_to_string(EVmConstraintType::UnpriviligedNoExecute) == "UnpriviligedNoExecute");
+      EXPECT(EVmConstraintType_to_string(EVmConstraintType::UnprivilegedNoExecute) == "UnprivilegedNoExecute");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::NoUserAccess) == "NoUserAccess");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::PageTable) == "PageTable");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::UserAccess) == "UserAccess");
@@ -527,7 +527,7 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(string_to_EVmConstraintType("ReadOnly") == EVmConstraintType::ReadOnly);
       EXPECT(string_to_EVmConstraintType("NoExecute") == EVmConstraintType::NoExecute);
       EXPECT(string_to_EVmConstraintType("PrivilegedNoExecute") == EVmConstraintType::PrivilegedNoExecute);
-      EXPECT(string_to_EVmConstraintType("UnpriviligedNoExecute") == EVmConstraintType::UnpriviligedNoExecute);
+      EXPECT(string_to_EVmConstraintType("UnprivilegedNoExecute") == EVmConstraintType::UnprivilegedNoExecute);
       EXPECT(string_to_EVmConstraintType("NoUserAccess") == EVmConstraintType::NoUserAccess);
       EXPECT(string_to_EVmConstraintType("PageTable") == EVmConstraintType::PageTable);
       EXPECT(string_to_EVmConstraintType("UserAccess") == EVmConstraintType::UserAccess);
@@ -552,7 +552,7 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(okay);
       EXPECT(try_string_to_EVmConstraintType("PrivilegedNoExecute", okay) == EVmConstraintType::PrivilegedNoExecute);
       EXPECT(okay);
-      EXPECT(try_string_to_EVmConstraintType("UnpriviligedNoExecute", okay) == EVmConstraintType::UnpriviligedNoExecute);
+      EXPECT(try_string_to_EVmConstraintType("UnprivilegedNoExecute", okay) == EVmConstraintType::UnprivilegedNoExecute);
       EXPECT(okay);
       EXPECT(try_string_to_EVmConstraintType("NoUserAccess", okay) == EVmConstraintType::NoUserAccess);
       EXPECT(okay);

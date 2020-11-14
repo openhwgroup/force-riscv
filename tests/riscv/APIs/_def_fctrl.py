@@ -18,6 +18,7 @@ control_items = [
                 {"fname":"api_genVA_02_force.py",                      "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000}},
                 #fails#{"fname":"api_genVA_01_force.py",                      "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 {"fname":"api_genVA_02_force.py",                      "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+                {"fname":"api_genVA_reuse_force.py",                      "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 {"fname":"api_genPA_01_force.py",                      "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 {"fname":"api_genVAforPA_01_force.py",                 "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
                 #fails#{"fname":"api_getPageInfo_01_force.py",                "options":{"max-instr":50000,}, "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},

@@ -86,9 +86,8 @@ namespace Force {
     mpGenerator = pGen;
 
     const VariableModerator* var_mod = mpGenerator->GetVariableModerator(EVariableType::Value);
-    mpNoDataPageFaultVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No data abort allowed"));
-    mpNoInstrPageFaultVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No instruction abort allowed"));
-    // << "no data abort? " << mpNoDataPageFaultVariable->Value() << " no instr abort? " << mpNoInstrPageFaultVariable->Value() << endl;
+    mpNoDataPageFaultVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No data page fault allowed"));
+    mpNoInstrPageFaultVariable = dynamic_cast<const ValueVariable*>(var_mod->GetVariableSet()->GetVariable("No instruction page fault allowed"));
   }
 
   void PageRequestRegulator::RegulatePageRequest(const VmMapper* pVmMapper, GenPageRequest* pPageReq) const
@@ -105,7 +104,7 @@ namespace Force {
   {
     if (mpNoDataPageFaultVariable->Value() || pPageReq->GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::NoDataPageFault)) {
       PreventDataPageFault(pPageReq);
-      LOG(info) << "{PageRequestRegulator::RegulateLoadStorePageRequest} preventing all data abort." << endl;
+      LOG(info) << "{PageRequestRegulator::RegulateLoadStorePageRequest} preventing all data page faults." << endl;
     }
     else {
       for (auto except_type : mDataExceptionTypes) {
@@ -131,7 +130,7 @@ namespace Force {
   {
     if (mpNoInstrPageFaultVariable->Value() || pPageReq->GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::NoInstrPageFault)) {
       PreventInstrPageFault(pPageReq);
-      LOG(info) << "{PageRequestRegulator::RegulateBranchPageRequest} preventing all instruction abort." << endl;
+      LOG(info) << "{PageRequestRegulator::RegulateBranchPageRequest} preventing all instruction page faults." << endl;
     }
     else {
       for (auto except_type : mInstrExceptionTypes) {

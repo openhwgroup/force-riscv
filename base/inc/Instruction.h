@@ -60,7 +60,7 @@ namespace Force {
     const InstructionConstraint* GetInstructionConstraint() const { return mpInstructionConstraint; } //!< Return const pointer to instruction constraint object.
     void SetOperandDataValue(const std::string& oprName, uint64 oprValue, uint32 valueSize) const; //!< Set operand data value.
     void SetOperandDataValue(const std::string& oprName, const std::string& oprValue, uint32 valueSize) const; //!< Set operand data value
-    void SetOperandDataValue(const std::string& oprName, std::vector<uint64> oprValues, uint32 valueSize) const; //!< Set operand data values for LargeRegiser(Z).
+    void SetOperandDataValue(const std::string& oprName, std::vector<uint64> oprValues, uint32 valueSize) const; //!< Set operand data values for LargeRegister(Z).
     ResourceAccessStage* GiveHotResource(); //!< give hot resource
     virtual void Initialize(const InstructionStructure* instrStructure); //!< Initialize instruction object.
     virtual void Setup(const GenInstructionRequest& instrReq, Generator& gen); //!< Setup conditions, constraining mechanisms before generating instruction.
@@ -68,6 +68,7 @@ namespace Force {
     virtual void Commit(Generator& gen); //!< Commit generated instruction.
     virtual void CleanUp(); //!< Clean up resources that can be released.
     virtual bool GetPrePostAmbleRequests(Generator& gen) const { return false; } //!< Return preamble requests if there is any.
+    virtual bool Validate(const Generator& gen, std::string& error) const { return true; } //!< Validate generation control.
     /*!
       Templated function to find Operand by its class type.
       For example, const VectorRegisterOperand* vec_opr = instr.FindOperand<VectorRegisterOperand>();

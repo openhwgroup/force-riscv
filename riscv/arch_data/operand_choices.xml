@@ -415,19 +415,19 @@
     <choice name="Unaligned" value="0x1" weight="100"/>
   </choices>
   <choices name="Read after read address reuse" type="ChoicesOperand">
-    <choice name="No reuse" value="0x0" weight="100"/>
-    <choice name="Reuse" value="0x1" weight="0"/>
+    <choice name="No reuse" value="0x0" weight="0"/>
+    <choice name="Reuse" value="0x1" weight="100"/>
   </choices>
   <choices name="Read after write address reuse" type="ChoicesOperand">
-    <choice name="No reuse" value="0x0" weight="100"/>
-    <choice name="Reuse" value="0x1" weight="0"/>
+    <choice name="No reuse" value="0x0" weight="0"/>
+    <choice name="Reuse" value="0x1" weight="100"/>
   </choices>
   <choices name="Write after read address reuse" type="ChoicesOperand">
-    <choice name="No reuse" value="0x0" weight="100"/>
-    <choice name="Reuse" value="0x1" weight="0"/>
+    <choice name="No reuse" value="0x0" weight="0"/>
+    <choice name="Reuse" value="0x1" weight="100"/>
   </choices>
   <choices name="Write after write address reuse" type="ChoicesOperand">
-    <choice name="No reuse" value="0x0" weight="100"/>
-    <choice name="Reuse" value="0x1" weight="0"/>
+    <choice name="No reuse" value="0x0" weight="0"/>
+    <choice name="Reuse" value="0x1" weight="100"/>
   </choices>
 </choices_file>

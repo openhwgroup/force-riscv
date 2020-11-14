@@ -22,10 +22,11 @@
 #include <Random.h>
 #include <Log.h>
 #include <Operand.h>
-#include <VectorLayout.h>
 #include <Generator.h>
 #include <Register.h>
 #include <RegisterReserver.h>
+#include <VectorLayout.h>
+#include <VectorLayoutSetupRISCV.h>
 
 #include <algorithm>
 
@@ -38,7 +39,19 @@ using namespace std;
 
 namespace Force {
 
-  void VectorMaskOperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  void VsetvlVtypeImmediateOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    if (not HasConstraint()) {
+      // We want to maintain the same vtype value by default
+      const RegisterFile* reg_file = rGen.GetRegisterFile();
+      Register* vtype_reg = reg_file->RegisterLookup("vtype");
+      mpConstraintSet = new ConstraintSet(vtype_reg->Value() & rOperandStruct.mMask);
+    }
+  }
+
+  void VectorMaskOperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
   {
     if (differVal == 0) {
       rAdjDifferValues.AddValue(differVal);
@@ -109,6 +122,16 @@ namespace Force {
       mpConstraintSet->SubConstraintSet(compressed_write_reserv_constr);
     }
     //LOG(notice) << " constraints (with reserved regs removed): " << mpConstraintSet->ToSimpleString() << endl;
+  }
+
+  void VsetvlRegisterOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    RegisterOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    if (not mConstraintForced) {
+      // Avoid x0 because it cannot be pre-loaded with a value
+      SubConstraintValue(0, rOperandStruct);
+    }
   }
 
   void ConditionalBranchOperandRISCVConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
@@ -280,9 +303,16 @@ namespace Force {
     LOG(notice) << "{FullsizeConditionalBranchOperandConstraint::SetConditionalBranchTaken} condition branch is set to " << ((mTaken) ? "taken" : "not taken") << endl;
   }
 
+    VectorRegisterOperandConstraintRISCV::VectorRegisterOperandConstraintRISCV()
+      : VectorRegisterOperandConstraint(), mLayoutMultiple(0)
+    {
+    }
+
   void VectorRegisterOperandConstraintRISCV::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct)
   {
     VectorRegisterOperandConstraint::Setup(gen, instr, operandStruct);
+
+    mLayoutMultiple = CalculateLayoutMultiple(gen, instr, operandStruct);
 
     if (mConstraintForced) {
       return;
@@ -294,45 +324,91 @@ namespace Force {
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&operandStruct);
-    uint32 reg_index_alignment = vec_layout->mRegIndexAlignment * vec_reg_operand_struct->GetLayoutMultiple();
+    uint32 reg_count = vec_layout->GetRegisterCount(mLayoutMultiple);
+    if (reg_count == 0) {
+      reg_count = 1;
+    }
+
+    // Notification for illegal instruction when EMUL * NFIELDS > 8 (Section 7.8)
+    // TODO (Chris): Handle this case when implementing generic generation control option later
+    uint32 illegal_reg_limit = reg_count;
+    if (reg_count > 8) {
+      LOG(notice) << "{VectorRegisterOperandConstraintRISCV::Setup} EMUL * NFIELDS = " << reg_count << " > 8" << endl;
+      illegal_reg_limit = 8;
+    }
+
+    // Removing invalid vector register choices for vd/vs3 (Section 7.8)
+    for (uint32 i = 1; i < illegal_reg_limit; ++i) {
+      SubConstraintValue(32 - i, operandStruct);
+    }
+
+    uint32 reg_index_alignment = vec_layout->GetRegisterIndexAlignment(mLayoutMultiple);
     if (reg_index_alignment == 0) {
-      LOG(fail) << "{VectorRegisterOperandConstraintRISCV::Setup} invalid register index alignment " << dec << reg_index_alignment << endl;
-      FAIL("invalid-register-index-alignment");
+      reg_index_alignment = 1;
+    }
+    else if (reg_index_alignment > 8) {
+      // 8 is the maximum legal register count and register index alignment; we adjust any larger
+      // values to the maximum here to avoid unnecessarily failing to generate an illegal
+      // instruction
+      reg_index_alignment = 8;
     }
 
     // Unaligned register indices are architecturally illegal choices
     mpConstraintSet->FilterAlignedElements(get_align_mask(reg_index_alignment));
   }
 
-  void VectorRegisterOperandConstraintRISCV::GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  void VectorRegisterOperandConstraintRISCV::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
   {
-    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rOperandStruct);
-    auto differ_vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rDifferOperandStruct);
-    uint32 layout_multiple = vec_reg_operand_struct->GetLayoutMultiple();
-    uint32 differ_layout_multiple = differ_vec_reg_operand_struct->GetLayoutMultiple();
-
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    uint32 reg_index_alignment = vec_layout->mRegIndexAlignment;
 
-    // If the operands have the same layout multiples, they will only conflict if they have the same
-    // exact value. However, if the operands have different layouts, we need to ensure that the
-    // register ranges used by the operands don't overlap. For example, if this operand has a layout
-    // multiple of 2, the differ operand has the value 7 and the register index alignment is 2, this
-    // operand will conflict if it uses the value 4 because the register range will include
-    // registers 4, 5, 6 and 7.
-    if (layout_multiple == differ_layout_multiple) {
-      rAdjDifferValues.AddValue(differVal);
+    uint32 reg_count = vec_layout->GetRegisterCount(mLayoutMultiple);
+    if (reg_count == 0) {
+      reg_count = 1;
     }
-    else if (layout_multiple > differ_layout_multiple) {
-      uint64 align_mask = get_align_mask(reg_index_alignment * layout_multiple);
-      rAdjDifferValues.AddValue(differVal & align_mask);
+    else if (reg_count > 8) {
+      // 8 is the maximum legal register count; we adjust any larger values to the maximum here to
+      // avoid unnecessarily failing to generate an illegal instruction
+      reg_count = 8;
     }
-    else {
-      uint32 range_max = differVal + (reg_index_alignment * differ_layout_multiple);
-      rAdjDifferValues.AddRange(differVal, range_max);
+
+    auto vec_reg_opr_constr = rDifferOprConstr.CastInstance<const VectorRegisterOperandConstraintRISCV>();
+    uint32 differ_reg_count = vec_layout->GetRegisterCount(vec_reg_opr_constr->mLayoutMultiple);
+    if (differ_reg_count == 0) {
+      differ_reg_count = 1;
     }
+    else if (differ_reg_count > 8) {
+      differ_reg_count = 8;
+    }
+
+    // We need to make sure that this operand's last register doesn't overlap the differ operand's
+    // first register and that the differ operand's last register doesn't overlap this operand's
+    // first register
+    uint64 min_differ_val = 0;
+    if (differVal >= reg_count) {
+      min_differ_val = differVal - reg_count + 1;
+    }
+
+    uint64 max_differ_val = differVal + differ_reg_count - 1;
+    rAdjDifferValues.AddRange(min_differ_val, max_differ_val);
+  }
+
+  float VectorRegisterOperandConstraintRISCV::CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const
+  {
+    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rOperandStruct);
+    return vec_reg_operand_struct->GetLayoutMultiple();
+  }
+
+  float VectorIndexedDataRegisterOperandConstraint::CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const
+  {
+    VectorLayout data_vec_layout;
+    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
+    vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* index_vec_layout = instr_constr->GetVectorLayout();
+
+    return data_vec_layout.mElemSize / static_cast<float>(index_vec_layout->mElemSize);
   }
 
 }

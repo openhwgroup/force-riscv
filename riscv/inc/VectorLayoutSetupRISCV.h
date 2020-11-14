@@ -37,10 +37,10 @@ namespace Force {
     void SetUpVectorLayoutVtype(VectorLayout& rVecLayout); //!< Configure the VectorLayout object using current vtype register values.
     void SetUpVectorLayoutFixedElementSize(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout); //!< Configure the VectorLayout object using vtype register values, but with the element width specified by the layout operand structure.
     void SetUpVectorLayoutWholeRegister(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout); //!< Configure the VectorLayout object for a whole register instruction.
+    uint32 GetSew() const; //!< Get the current SEW value.
+    float GetLmul() const; //!< Get the current LMUL value.
   private:
     uint32 GetVl() const; //!< Get the current VL value.
-    uint32 GetSew() const; //!< Get the current SEW value.
-    uint32 GetLmul() const; //!< Get the current LMUL value.
   private:
     const RegisterFile* mpRegFile; //!< Register file
   };

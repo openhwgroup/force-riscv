@@ -48,6 +48,7 @@ CASE( "tests for ELimitType" ) {
       EXPECT(ELimitType_to_string(ELimitType::MaxPhysicalVectorLen) == "MaxPhysicalVectorLen");
       EXPECT(ELimitType_to_string(ELimitType::ErrRegisterNumber) == "ErrRegisterNumber");
       EXPECT(ELimitType_to_string(ELimitType::SpeculativeBntInstructionLimit) == "SpeculativeBntInstructionLimit");
+      EXPECT(ELimitType_to_string(ELimitType::MaxVectorElementWidth) == "MaxVectorElementWidth");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -63,6 +64,7 @@ CASE( "tests for ELimitType" ) {
       EXPECT(string_to_ELimitType("MaxPhysicalVectorLen") == ELimitType::MaxPhysicalVectorLen);
       EXPECT(string_to_ELimitType("ErrRegisterNumber") == ELimitType::ErrRegisterNumber);
       EXPECT(string_to_ELimitType("SpeculativeBntInstructionLimit") == ELimitType::SpeculativeBntInstructionLimit);
+      EXPECT(string_to_ELimitType("MaxVectorElementWidth") == ELimitType::MaxVectorElementWidth);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -94,6 +96,8 @@ CASE( "tests for ELimitType" ) {
       EXPECT(try_string_to_ELimitType("ErrRegisterNumber", okay) == ELimitType::ErrRegisterNumber);
       EXPECT(okay);
       EXPECT(try_string_to_ELimitType("SpeculativeBntInstructionLimit", okay) == ELimitType::SpeculativeBntInstructionLimit);
+      EXPECT(okay);
+      EXPECT(try_string_to_ELimitType("MaxVectorElementWidth", okay) == ELimitType::MaxVectorElementWidth);
       EXPECT(okay);
     }
 

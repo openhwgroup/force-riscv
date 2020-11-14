@@ -26,6 +26,7 @@
 #include <InstructionStructure.h>
 #include <Log.h>
 #include <Random.h>
+#include <Register.h>
 #include <VaGenerator.h>
 #include <VectorLayout.h>
 #include <VmMapper.h>
@@ -45,6 +46,11 @@ using namespace std;
 */
 
 namespace Force {
+
+  OperandConstraint* VsetvlVtypeImmediateOperand::InstantiateOperandConstraint() const
+  {
+    return new VsetvlVtypeImmediateOperandConstraint();
+  }
 
   void VectorMaskOperand::Generate(Generator& gen, Instruction& instr)
   {
@@ -197,6 +203,78 @@ namespace Force {
     return new CompressedRegisterOperandRISCVConstraint();
   }
 
+  VsetvlAvlRegisterOperand::VsetvlAvlRegisterOperand()
+    : RegisterOperand(), mAvlRegVal(0)
+  {
+  }
+
+  VsetvlAvlRegisterOperand::VsetvlAvlRegisterOperand(const VsetvlAvlRegisterOperand& rOther)
+    : RegisterOperand(rOther), mAvlRegVal(rOther.mAvlRegVal)
+  {
+  }
+
+  void VsetvlAvlRegisterOperand::Generate(Generator& gen, Instruction& instr)
+  {
+    RegisterOperand::Generate(gen, instr);
+
+    // We want to maintain the same vl value by default
+    const RegisterFile* reg_file = gen.GetRegisterFile();
+    Register* vl_reg = reg_file->RegisterLookup("vl");
+    mAvlRegVal = vl_reg->Value();
+  }
+
+  bool VsetvlAvlRegisterOperand::GetPrePostAmbleRequests(Generator& gen) const
+  {
+    if (not mpOperandConstraint->ConstraintForced()) {
+      gen.AddLoadRegisterAmbleRequests(mChoiceText, mAvlRegVal);
+      return true;
+    }
+
+    return false;
+  }
+
+  OperandConstraint* VsetvlAvlRegisterOperand::InstantiateOperandConstraint() const
+  {
+    return new VsetvlRegisterOperandConstraint();
+  }
+
+  VsetvlVtypeRegisterOperand::VsetvlVtypeRegisterOperand()
+    : RegisterOperand(), mVtypeRegVal(0)
+  {
+  }
+
+  VsetvlVtypeRegisterOperand::VsetvlVtypeRegisterOperand(const VsetvlVtypeRegisterOperand& rOther)
+    : RegisterOperand(rOther), mVtypeRegVal(rOther.mVtypeRegVal)
+  {
+  }
+
+  void VsetvlVtypeRegisterOperand::Generate(Generator& gen, Instruction& instr)
+  {
+    mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
+
+    RegisterOperand::Generate(gen, instr);
+
+    // We want to maintain the same vtype value by default
+    const RegisterFile* reg_file = gen.GetRegisterFile();
+    Register* vtype_reg = reg_file->RegisterLookup("vtype");
+    mVtypeRegVal = vtype_reg->Value();
+  }
+
+  bool VsetvlVtypeRegisterOperand::GetPrePostAmbleRequests(Generator& gen) const
+  {
+    if (not mpOperandConstraint->ConstraintForced()) {
+      gen.AddLoadRegisterAmbleRequests(mChoiceText, mVtypeRegVal);
+      return true;
+    }
+
+    return false;
+  }
+
+  OperandConstraint* VsetvlVtypeRegisterOperand::InstantiateOperandConstraint() const
+  {
+    return new VsetvlRegisterOperandConstraint();
+  }
+
   void VtypeLayoutOperand::SetupVectorLayout(const Generator& rGen, const Instruction& rInstr)
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
@@ -232,14 +310,19 @@ namespace Force {
 
   void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
   {
-    VectorLayout vec_layout;
-    VectorLayoutSetupRISCV vec_layout_setup(rGen.GetRegisterFile());
-    vec_layout_setup.SetUpVectorLayoutVtype(vec_layout);
+    Operand* data_opr = GetDataOperand(rInstr);
+    OperandConstraint* data_opr_constr = data_opr->GetOperandConstraint();
+    auto vec_reg_opr_constr = data_opr_constr->CastInstance<VectorRegisterOperandConstraintRISCV>();
+    float data_layout_multiple = vec_reg_opr_constr->GetLayoutMultiple();
+
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* index_vec_layout = instr_constr->GetVectorLayout();
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    lsop_struct->SetElementSize(vec_layout.mElemSize);
-    lsop_struct->SetDataSize(vec_layout.mElemSize);
-    lsop_struct->SetAlignment(vec_layout.mElemSize);
+    uint32 data_elem_byte_size = lround(index_vec_layout->mElemSize * data_layout_multiple) / 8;
+    lsop_struct->SetElementSize(data_elem_byte_size);
+    lsop_struct->SetAlignment(data_elem_byte_size);
+    lsop_struct->SetDataSize(data_elem_byte_size * index_vec_layout->mFieldCount);
   }
 
   void VectorIndexedLoadStoreOperandRISCV::GetIndexRegisterNames(vector<string>& rIndexRegNames) const
@@ -250,13 +333,37 @@ namespace Force {
     index_opr->GetExtraRegisterNames(index_opr->Value(), rIndexRegNames);
   }
 
+  Operand* VectorIndexedLoadStoreOperandRISCV::GetDataOperand(const Instruction& rInstr) const
+  {
+    Operand* data_opr = nullptr;
+
+    auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
+    RegisterOperand* index_opr = indexed_opr_constr->IndexOperand();
+    vector<Operand*> operands = rInstr.GetOperands();
+
+    auto itr = find_if(operands.cbegin(), operands.cend(),
+      [index_opr](const Operand* pOpr) { return ((pOpr->OperandType() == EOperandType::VECREG) and (pOpr != index_opr)); });
+
+    if (itr != operands.end()) {
+      data_opr = *itr;
+    }
+    else {
+      LOG(fail) << "{VectorIndexedLoadStoreOperandRISCV::GetDataOperand} data operand not found" << endl;
+      FAIL("no-data-operand");
+    }
+
+    return data_opr;
+  }
+
+  void MultiVectorRegisterOperandRISCV::Setup(Generator& gen, Instruction& instr)
+  {
+    MultiVectorRegisterOperand::Setup(gen, instr);
+
+    AdjustRegisterCount(instr);
+  }
+
   void MultiVectorRegisterOperandRISCV::Generate(Generator& gen, Instruction& instr)
   {
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(mpStructure);
-    mRegCount = vec_layout->mRegCount * vec_reg_operand_struct->GetLayoutMultiple();
-
     mpOperandConstraint->SubDifferOperandValues(instr, *mpStructure);
 
     MultiVectorRegisterOperand::Generate(gen, instr);
@@ -265,7 +372,7 @@ namespace Force {
   void MultiVectorRegisterOperandRISCV::GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const
   {
     uint32 end_index = regIndex + mRegCount - 1;
-    if (end_index < 31) {
+    if (end_index < 32) {
       rRegIndices.AddRange(regIndex, end_index);
     }
     else {
@@ -284,6 +391,11 @@ namespace Force {
 
   uint32 MultiVectorRegisterOperandRISCV::NumberRegisters() const
   {
+    if (mRegCount == 0) {
+      LOG(fail) << "{MultiVectorRegisterOperandRISCV::NumberRegisters} invalid register count " << dec << mRegCount << endl;
+      FAIL("invalid-register-count");
+    }
+
     return mRegCount;
   }
 
@@ -302,6 +414,29 @@ namespace Force {
   ChoicesFilter* MultiVectorRegisterOperandRISCV::GetChoicesFilter(const ConstraintSet* pConstrSet) const
   {
     return new ConstraintChoicesFilter(pConstrSet);
+  }
+
+  void MultiVectorRegisterOperandRISCV::AdjustRegisterCount(const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    auto vec_reg_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
+    mRegCount = vec_layout->GetRegisterCount(vec_reg_opr_constr->GetLayoutMultiple());
+    if (mRegCount < GetMinimumRegisterCount(rInstr)) {
+        mRegCount = GetMinimumRegisterCount(rInstr);
+    }
+  }
+
+  const uint32 VectorDataRegisterOperand::GetMinimumRegisterCount(const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    return vec_layout->mFieldCount;
+  }
+
+  OperandConstraint* VectorIndexedDataRegisterOperand::InstantiateOperandConstraint() const
+  {
+    return new VectorIndexedDataRegisterOperandConstraint();
   }
 
 }

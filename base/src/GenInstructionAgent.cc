@@ -145,7 +145,7 @@ namespace Force {
         if (bnt_node != nullptr) {
           LOG(info) << "{GenInstructionAgent::StepInstruction} Request to execute Bnt node: " << bnt_node->ToString() << endl;
           auto bnt_req = new GenSpeculativeBntRequest(bnt_node, ESpeculativeBntActionType::Execute);
-          mpGenerator->AddSpeculativeRequest(bnt_req);
+          mpGenerator->AddPostInstructionStepRequest(bnt_req);
         }
       }
     }

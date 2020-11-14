@@ -61,6 +61,7 @@ int main(int argc, char* argv[]) {
                         my_config.ThreadsPerCpu(), /* # threads */
                         my_config.PhysicalAddressSize(), /* physical address size */
                         my_config.VectorRegisterLength(), /* vector register length */
+                        my_config.MaxVectorElementWidth(), /* maximum vector element width */
                         "./fpix_sim.log", /* simulator debug trace file */
                         true
                        );

@@ -1,0 +1,1422 @@
+<?xml version="1.0" ?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<!--
+Add RISCV system registers starter information in this file.
+-->
+<registers>
+  <register boot="0" description="User status register." index="0x0" name="ustatus" physical_register="mstatus" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="59">
+      <bit_field shift="5" size="59"/>
+    </register_field>
+    <register_field name="UPIE" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="WPRI" size="3">
+      <bit_field shift="1" size="3"/>
+    </register_field>
+    <register_field name="UIE" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Floating-Point Accrued Exceptions." index="0x1" name="fflags" physical_register="fflags" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="59">
+      <bit_field shift="5" size="59"/>
+    </register_field>
+    <register_field name="NZ" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="DZ" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="OF" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="UF" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="NX" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Floating-Point Dynamic Rounding Mode." index="0x2" name="frm" physical_register="frm" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="61">
+      <bit_field shift="8" size="56"/>
+      <bit_field shift="0" size="5"/>
+    </register_field>
+    <register_field name="FRM" size="3">
+      <bit_field shift="5" size="3"/>
+    </register_field>
+  </register>
+  <register boot="0x5000" description="Floating-point control and status register." index="0x3" name="fcsr" physical_register="fcsr" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="56">
+      <bit_field shift="8" size="56"/>
+    </register_field>
+    <register_field name="FRM" size="3">
+      <bit_field shift="5" size="3"/>
+    </register_field>
+    <register_field name="NZ" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="DZ" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="OF" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="UF" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="NX" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="User interrupt-enable register." index="0x4" name="uie" physical_register="uie" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="55">
+      <bit_field shift="9" size="55"/>
+    </register_field>
+    <register_field name="UEIE" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="WPRI" size="6">
+      <bit_field shift="5" size="3"/>
+      <bit_field shift="1" size="3"/>
+    </register_field>
+    <register_field name="UTIE" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="USIE" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="User trap handler base address." index="0x5" name="utvec" physical_register="utvec" privilege="URW" size="64" type="SysReg">
+    <register_field name="BASE_VAR" size="62">
+      <bit_field shift="2" size="62"/>
+    </register_field>
+    <register_field name="MODE" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="64" type="SysReg" init_policy="VstartInitPolicy">
+    <register_field name="VSTART" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  
+  <register description="Fixed-point Saturate Flag." index="0x9" name="vxsat" physical_register="vxsat" privilege="URW" size="64" type="SysReg">
+    <register_field name="RESERVED" size="63">
+      <bit_field shift="1" size="63"/>
+    </register_field>
+    <register_field name="VXSAT" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+    
+  <register description="Vector fixed-point rounding mode." index="0xa" name="vxrm" physical_register="vxrm" privilege="URW" size="64" type="SysReg">
+    <register_field name="RESERVED" size="62">
+      <bit_field shift="2" size="62"/>
+    </register_field>
+    <register_field name="VXRM" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+
+  <register description="Scratch register for user trap handlers." index="0x40" name="uscratch" physical_register="uscratch" privilege="URW" size="64" type="SysReg">
+    <register_field name="SCRATCH" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="User exception program counter." index="0x41" name="uepc" privilege="URW" size="0" type="SysReg"/>
+  <register description="User trap cause." index="0x42" name="ucause" privilege="URW" size="0" type="SysReg"/>
+  <register description="User bad address or instruction." index="0x43" name="utval" privilege="URW" size="0" type="SysReg"/>
+  <register description="User interrupt pending." index="0x44" name="uip" physical_register="uip" privilege="URW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="55">
+      <bit_field shift="9" size="55"/>
+    </register_field>
+    <register_field name="UEIP" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="WPRI" size="6">
+      <bit_field shift="5" size="3"/>
+      <bit_field shift="1" size="3"/>
+    </register_field>
+    <register_field name="UTIP" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="USIP" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register boot="0" description="Supervisor status register." index="0x100" name="sstatus" physical_register="mstatus" privilege="SRW" size="64" type="SysReg">
+    <register_field name="SD" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="WPRI_VAR" size="29">
+      <bit_field shift="34" size="29"/>
+    </register_field>
+    <register_field name="UXL" size="2">
+      <bit_field shift="32" size="2"/>
+    </register_field>
+    <register_field name="WPRI" size="19">
+      <bit_field shift="20" size="12"/>
+      <bit_field shift="17" size="1"/>
+      <bit_field shift="11" size="2"/>
+      <bit_field shift="7" size="1"/>
+      <bit_field shift="2" size="3"/>
+    </register_field>
+    <register_field name="MXR" size="1">
+      <bit_field shift="19" size="1"/>
+      <choice description="No make executable readable" value="0x0" weight="10"/>
+      <choice description="Make executable readable" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="SUM" size="1">
+      <bit_field shift="18" size="1"/>
+      <choice description="No Supervisor access to User Memory" value="0x0" weight="10"/>
+      <choice description="Supervisor access to User Memory" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="XS" size="2">
+      <bit_field shift="15" size="2"/>
+    </register_field>
+    <register_field name="FS" size="2">
+      <bit_field shift="13" size="2"/>
+    </register_field>
+    <register_field name="VS" size="2">
+      <bit_field shift="9" size="2"/>
+    </register_field>
+    <register_field name="SPP" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="UBE" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="SPIE" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="SIE" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="UIE" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Supervisor exception delegation register." index="0x102" name="sedeleg" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor interrupt delegation register." index="0x103" name="sideleg" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor interrupt-enable register." index="0x104" name="sie" physical_register="mie" privilege="SRW" size="0" type="SysReg"/>
+  <register description="Supervisor trap handler base address." index="0x105" name="stvec" physical_register="stvec" privilege="SRW" size="64" type="SysReg">
+    <register_field name="BASE_VAR" size="62">
+      <bit_field shift="2" size="62"/>
+    </register_field>
+    <register_field name="MODE" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+  <register description="Supervisor counter enable." index="0x106" name="scounteren" physical_register="scounteren" privilege="SRW" size="32" type="SysReg">
+    <register_field name="HPM31" size="1">
+      <bit_field shift="31" size="1"/>
+    </register_field>
+    <register_field name="HPM30" size="1">
+      <bit_field shift="30" size="1"/>
+    </register_field>
+    <register_field name="HPM29" size="1">
+      <bit_field shift="29" size="1"/>
+    </register_field>
+    <register_field name="HPM28" size="1">
+      <bit_field shift="28" size="1"/>
+    </register_field>
+    <register_field name="HPM27" size="1">
+      <bit_field shift="27" size="1"/>
+    </register_field>
+    <register_field name="HPM26" size="1">
+      <bit_field shift="26" size="1"/>
+    </register_field>
+    <register_field name="HPM25" size="1">
+      <bit_field shift="25" size="1"/>
+    </register_field>
+    <register_field name="HPM24" size="1">
+      <bit_field shift="24" size="1"/>
+    </register_field>
+    <register_field name="HPM23" size="1">
+      <bit_field shift="23" size="1"/>
+    </register_field>
+    <register_field name="HPM22" size="1">
+      <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="HPM21" size="1">
+      <bit_field shift="21" size="1"/>
+    </register_field>
+    <register_field name="HPM20" size="1">
+      <bit_field shift="20" size="1"/>
+    </register_field>
+    <register_field name="HPM19" size="1">
+      <bit_field shift="19" size="1"/>
+    </register_field>
+    <register_field name="HPM18" size="1">
+      <bit_field shift="18" size="1"/>
+    </register_field>
+    <register_field name="HPM17" size="1">
+      <bit_field shift="17" size="1"/>
+    </register_field>
+    <register_field name="HPM16" size="1">
+      <bit_field shift="16" size="1"/>
+    </register_field>
+    <register_field name="HPM15" size="1">
+      <bit_field shift="15" size="1"/>
+    </register_field>
+    <register_field name="HPM14" size="1">
+      <bit_field shift="14" size="1"/>
+    </register_field>
+    <register_field name="HPM13" size="1">
+      <bit_field shift="13" size="1"/>
+    </register_field>
+    <register_field name="HPM12" size="1">
+      <bit_field shift="12" size="1"/>
+    </register_field>
+    <register_field name="HPM11" size="1">
+      <bit_field shift="11" size="1"/>
+    </register_field>
+    <register_field name="HPM10" size="1">
+      <bit_field shift="10" size="1"/>
+    </register_field>
+    <register_field name="HPM9" size="1">
+      <bit_field shift="9" size="1"/>
+    </register_field>
+    <register_field name="HPM8" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="HPM7" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="HPM6" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="HPM5" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="HPM4" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="HPM3" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="IR" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="TM" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="CY" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Scratch register for supervisor trap handlers." index="0x140" name="sscratch" physical_register="sscratch" privilege="SRW" size="64" type="SysReg">
+    <register_field name="SSCRATCH" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Supervisor exception program counter." index="0x141" name="sepc" physical_register="sepc" privilege="SRW" size="64" type="SysReg">
+    <register_field name="SEPC" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  
+  <register description="Supervisor trap cause." index="0x142" name="scause" physical_register="scause" privilege="SRW" size="64" type="SysReg">
+    <register_field name="INTERRUPT" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="EXCEPTION CODE_VAR" size="63">
+      <bit_field shift="0" size="63"/>
+    </register_field>
+  </register>
+  <register description="Supervisor bad address or instruction." index="0x143" name="stval" physical_register="stval" privilege="SRW" size="0" type="SysReg">
+    <register_field name="STVAL" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Supervisor interrupt pending." index="0x144" name="sip" physical_register="mip" privilege="SRW" size="0" type="SysReg"/>
+  <register boot="0x5001" description="Supervisor address translation and protection." index="0x180" name="satp" physical_register="satp" privilege="SRW" size="64" type="SysReg">
+    <register_field name="MODE" size="4">
+      <bit_field shift="60" size="4"/>
+    </register_field>
+    <register_field name="ASID" size="16">
+      <bit_field shift="44" size="16"/>
+    </register_field>
+    <register_field name="PPN" size="44" init_policy="PpnInitPolicy">
+      <bit_field shift="0" size="44"/>
+    </register_field>
+  </register>
+  <register description="Virtual supervisor status register." index="0x200" name="vsstatus" physical_register="vsstatus" privilege="HRW" size="64" type="SysReg">
+    <register_field name="SD" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="WPRI_VAR" size="29">
+      <bit_field shift="34" size="29"/>
+    </register_field>
+    <register_field name="UXL" size="2">
+      <bit_field shift="32" size="2"/>
+    </register_field>
+    <register_field name="WPRI" size="20">
+      <bit_field shift="20" size="12"/>
+      <bit_field shift="17" size="1"/>
+      <bit_field shift="11" size="2"/>
+      <bit_field shift="7" size="1"/>
+      <bit_field shift="2" size="3"/>
+      <bit_field shift="0" size="1"/>
+    </register_field>
+    <register_field name="MXR" size="1">
+      <bit_field shift="19" size="1"/>
+    </register_field>
+    <register_field name="SUM" size="1">
+      <bit_field shift="18" size="1"/>
+    </register_field>
+    <register_field name="XS" size="2">
+      <bit_field shift="15" size="2"/>
+    </register_field>
+    <register_field name="FS" size="2">
+      <bit_field shift="13" size="2"/>
+    </register_field>
+    <register_field name="VS" size="2">
+      <bit_field shift="9" size="2"/>
+    </register_field>
+    <register_field name="SPP" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="UBE" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="SPIE" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="SIE" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+  </register>
+  <register description="Virtual supervisor interrupt-enable register." index="0x204" name="vsie" physical_register="sie" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Virtual supervisor trap handler base address." index="0x205" name="vstvec" physical_register="vstvec" privilege="HRW" size="64" type="SysReg">
+    <register_field name="BASE_VAR" size="62">
+      <bit_field shift="2" size="62"/>
+    </register_field>
+    <register_field name="MODE" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+  <register description="Virtual supervisor scratch register." index="0x240" name="vsscratch" physical_register="vsscratch" privilege="HRW" size="64" type="SysReg">
+    <register_field name="VSSCRATCH_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Virtual supervisor exception program counter." index="0x241" name="vsepc" physical_register="vsepc" privilege="HRW" size="64" type="SysReg">
+    <register_field name="VSEPC_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Virtual supervisor trap cause." index="0x242" name="vscause" physical_register="vscause" privilege="HRW" size="64" type="SysReg">
+    <register_field name="INTERRUPT" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="EXCEPTION CODE_VAR" size="63">
+      <bit_field shift="0" size="63"/>
+    </register_field>
+  </register>
+  <register description="Virtual supervisor bad address or instruction." index="0x243" name="vstval" physical_register="vstval" privilege="HRW" size="64" type="SysReg">
+    <register_field name="VSTVAL_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Virtual supervisor interrupt pending." index="0x244" name="vsip" physical_register="sip" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Virtual supervisor address translation and protection." index="0x280" name="vsatp" physical_register="vsatp" privilege="HRW" size="64" type="SysReg">
+    <register_field name="MODE" size="4">
+      <bit_field shift="60" size="4"/>
+    </register_field>
+    <register_field name="ASID" size="16">
+      <bit_field shift="44" size="16"/>
+    </register_field>
+    <register_field name="PPN" size="44">
+      <bit_field shift="0" size="44"/>
+    </register_field>
+  </register>
+  <register boot="0x5002" description="Machine status register." index="0x300" name="mstatus" physical_register="mstatus" privilege="MRW" size="64" type="SysReg">
+    <register_field name="SD" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="WPRI" size="38">
+      <bit_field shift="36" size="27"/>
+      <bit_field shift="23" size="9"/>
+      <bit_field shift="6" size="1"/>
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="SXL" size="2">
+      <bit_field shift="34" size="2"/>
+    </register_field>
+    <register_field name="UXL" size="2">
+      <bit_field shift="32" size="2"/>
+    </register_field>
+    <register_field name="TSR" size="1">
+      <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="TW" size="1">
+      <bit_field shift="21" size="1"/>
+    </register_field>
+    <register_field name="TVM" size="1">
+      <bit_field shift="20" size="1"/>
+    </register_field>
+    <register_field name="MXR" size="1">
+      <bit_field shift="19" size="1"/>
+    </register_field>
+    <register_field name="SUM" size="1">
+      <bit_field shift="18" size="1"/>
+    </register_field>
+    <register_field name="MPRV" size="1">
+      <bit_field shift="17" size="1"/>
+    </register_field>
+    <register_field name="XS" size="2">
+      <bit_field shift="15" size="2"/>
+    </register_field>
+    <register_field name="FS" size="2">
+      <bit_field shift="13" size="2"/>
+    </register_field>
+    <register_field name="MPP" size="2">
+      <bit_field shift="11" size="2"/>
+    </register_field>
+    <register_field name="VS" size="2">
+      <bit_field shift="9" size="2"/>
+      <choice description="Vector unit off" value="0x0" weight="0"/>
+      <choice description="Vector unit initial" value="0x1" weight="10"/>
+      <choice description="Vector unit clean" value="0x2" weight="10"/>
+      <choice description="Vector unit dirty" value="0x3" weight="10"/>
+    </register_field>
+    <register_field name="SPP" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="MPIE" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="SPIE" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="UPIE" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="MIE" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="SIE" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="UIE" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Machine status register." index="0x300" name="mstatus_hyp" physical_register="mstatus" privilege="MRW" size="64" type="SysReg" choice="false">
+    <register_field name="SD" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="WPRI_VAR" size="25">
+      <bit_field shift="38" size="25"/>
+    </register_field>
+    <register_field name="MBE" size="1">
+      <bit_field shift="37" size="1"/>
+    </register_field>
+    <register_field name="SBE" size="1">
+      <bit_field shift="36" size="1"/>
+    </register_field>
+    <register_field name="SXL" size="2">
+      <bit_field shift="34" size="2"/>
+    </register_field>
+    <register_field name="UXL" size="2">
+      <bit_field shift="32" size="2"/>
+    </register_field>
+    <register_field name="WPRI" size="14">
+      <bit_field shift="23" size="9"/>
+      <bit_field shift="9" size="2"/>
+      <bit_field shift="4" size="1"/>
+      <bit_field shift="2" size="1"/>
+      <bit_field shift="0" size="1"/>
+    </register_field>
+    <register_field name="TSR" size="1">
+      <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="TW" size="1">
+      <bit_field shift="21" size="1"/>
+    </register_field>
+    <register_field name="TVM" size="1">
+      <bit_field shift="20" size="1"/>
+    </register_field>
+    <register_field name="MXR" size="1">
+      <bit_field shift="19" size="1"/>
+    </register_field>
+    <register_field name="SUM" size="1">
+      <bit_field shift="18" size="1"/>
+    </register_field>
+    <register_field name="MPRV" size="1">
+      <bit_field shift="17" size="1"/>
+    </register_field>
+    <register_field name="XS" size="2">
+      <bit_field shift="15" size="2"/>
+    </register_field>
+    <register_field name="FS" size="2">
+      <bit_field shift="13" size="2"/>
+    </register_field>
+    <register_field name="MPP" size="2">
+      <bit_field shift="11" size="2"/>
+    </register_field>
+    <register_field name="SPP" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="MPIE" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="UBE" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="SPIE" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="MIE" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="SIE" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+  </register>
+  <register boot="0x5003" description="ISA and extensions" index="0x301" name="misa" physical_register="misa" privilege="MRW" size="64" type="SysReg">
+    <register_field name="MXL" size="2">
+      <bit_field shift="62" size="2"/>
+      <choice description="Undefined" value="0x0" weight="0"/>
+      <choice description="ISA width is 32" value="0x1" weight="0"/>     
+      <choice description="ISA width is 64" value="0x2" weight="10"/>     
+      <choice description="ISA width is 128" value="0x3" weight="0"/>     
+    </register_field>
+    <register_field name="WLRL_VAR" size="36">
+      <bit_field shift="26" size="36"/>
+    </register_field>
+    <register_field name="A" size="1">
+      <bit_field shift="0" size="1"/>
+      <choice description="Atomic extension is not supported" value="0x0" weight="0"/>
+      <choice description="Atomic extension is supported" value="0x1" weight="10"/>     
+    </register_field>    
+    <register_field name="B" size="1">
+      <bit_field shift="1" size="1"/>
+      <choice description="Bit-Manipulation extension is not supported" value="0x0" weight="10"/>
+      <choice description="Bit-Manipulation extension is supported" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="C" size="1">
+      <bit_field shift="2" size="1"/>
+      <choice description="Compressed extension is not supported" value="0x0" weight="0"/>
+      <choice description="Compressed extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="D" size="1">
+      <bit_field shift="3" size="1"/>
+      <choice description="Double-precision floating-point extension is not supported" value="0x0" weight="0"/>
+      <choice description="Double-precision floating-point extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="E" size="1">
+      <bit_field shift="4" size="1"/>
+      <choice description="RV32E base ISA is not supported" value="0x0" weight="10"/>
+      <choice description="RV32E base ISA is supported" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="F" size="1">
+      <bit_field shift="5" size="1"/>
+      <choice description="Single-precision floating-point extension is not supported" value="0x0" weight="0"/>
+      <choice description="Single-precision floating-point extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="G" size="1">
+      <bit_field shift="6" size="1"/>
+      <choice description="Additional standard extensions are not present" value="0x0" weight="10"/>
+      <choice description="Additional standard extensions are present" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="H" size="1">
+      <bit_field shift="7" size="1"/>
+      <choice description="Hypervisor extension is not supported" value="0x0" weight="10"/>
+      <choice description="Hypervisor extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="I" size="1">
+      <bit_field shift="8" size="1"/>
+      <choice description="Integer base ISA is not present" value="0x0" weight="0"/>
+      <choice description="Integer base ISA is present" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="J" size="1">
+      <bit_field shift="9" size="1"/>
+      <choice description="Dynamically Translated Languages extension is not supported" value="0x0" weight="10"/>
+      <choice description="Dynamically Translated Languages extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="K" size="1">
+      <bit_field shift="10" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="L" size="1">
+      <bit_field shift="11" size="1"/>
+      <choice description="Decimal Floating-Point extension is not supported" value="0x0" weight="10"/>
+      <choice description="Decimal Floating-Point extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="M" size="1">
+      <bit_field shift="12" size="1"/>
+      <choice description="Integer Multiply/Divide extension is not supported" value="0x0" weight="0"/>
+      <choice description="Integer Multiply/Divide  extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="N" size="1">
+      <bit_field shift="13" size="1"/>
+      <choice description="User-level interrupts are not supported" value="0x0" weight="10"/>
+      <choice description="User-level interrupts are supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="O" size="1">
+      <bit_field shift="14" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="P" size="1">
+      <bit_field shift="15" size="1"/>
+      <choice description="Packed-SIMD extension is not supported" value="0x0" weight="10"/>
+      <choice description="Packed-SIMD extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Q" size="1">
+      <bit_field shift="16" size="1"/>
+      <choice description="Quad-precision Floating-Point extension is not supported" value="0x0" weight="10"/>
+      <choice description="Quad-precision Floating-Point extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="R" size="1">
+      <bit_field shift="17" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="S" size="1">
+      <bit_field shift="18" size="1"/>
+      <choice description="Supervisor mode is not supported" value="0x0" weight="0"/>
+      <choice description="Supervisor mode is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="T" size="1">
+      <bit_field shift="19" size="1"/>
+      <choice description="Transactional Memory extension is not supported" value="0x0" weight="10"/>
+      <choice description="Transactional Memory extension is supported" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="U" size="1">
+      <bit_field shift="20" size="1"/>
+      <choice description="User mode is not supported" value="0x0" weight="0"/>
+      <choice description="User mode is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="V" size="1">
+      <bit_field shift="21" size="1"/>
+      <choice description="Vector extension is not supported" value="0x0" weight="0"/>
+      <choice description="Vector extension is supported" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="W" size="1">
+      <bit_field shift="22" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="X" size="1">
+      <bit_field shift="23" size="1"/>
+      <choice description="Non-standard extensions are not present" value="0x0" weight="10"/>
+      <choice description="Non-standard extensions are present" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Y" size="1">
+      <bit_field shift="24" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="Z" size="1">
+      <bit_field shift="25" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+  </register>  
+  <register description="Machine exception delegation register." index="0x302" name="medeleg" physical_register="medeleg" privilege="MRW" size="64" type="SysReg">
+    <register_field name="RESERVED 1" size="8">
+      <bit_field shift="16" size="8"/>
+    </register_field>
+    <register_field name="CUSTOM USE 1" size="8">
+      <bit_field shift="24" size="8"/>
+    </register_field>
+    <register_field name="RESERVED 2" size="16">
+      <bit_field shift="32" size="16"/>
+    </register_field>
+    <register_field name="CUSTOM USE 2" size="16">
+      <bit_field shift="48" size="16"/>
+    </register_field>
+    <register_field name="Instruction address misaligned" size="1">
+      <bit_field shift="0" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Instruction access fault" size="1">
+      <bit_field shift="1" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Illegal instruction" size="1">
+      <bit_field shift="2" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Breakpoint" size="1">
+      <bit_field shift="3" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Load address misaligned" size="1">
+      <bit_field shift="4" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Load access fault" size="1">
+      <bit_field shift="5" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Store/AMO address misaligned" size="1">
+      <bit_field shift="6" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Store/AMO access fault" size="1">
+      <bit_field shift="7" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Environment call from U-mode" size="1">
+      <bit_field shift="8" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Environment call from S-mode" size="1">
+      <bit_field shift="9" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="RESERVED 3" size="1">
+      <bit_field shift="10" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="RESERVED - Environment call from M-mode" size="1">
+      <bit_field shift="11" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="Instruction page fault" size="1">
+      <bit_field shift="12" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="Load page fault" size="1">
+      <bit_field shift="13" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+    <register_field name="RESERVED 4" size="1">
+      <bit_field shift="14" size="1"/>
+      <choice description="Reserved 0" value="0x0" weight="10"/>
+      <choice description="Reserved 1" value="0x1" weight="0"/>     
+    </register_field>
+    <register_field name="Store/AMO page fault" size="1">
+      <bit_field shift="15" size="1"/>
+      <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+      <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+    </register_field>
+  </register>
+  <register description="Machine interrupt delegation register." index="0x303" name="mideleg" physical_register="mideleg" privilege="MRW" size="0" type="SysReg">
+    <register_field name="MIDELEG" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Machine interrupt-enable register." index="0x304" name="mie" physical_register="mie" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine trap-handler base address." index="0x305" name="mtvec" physical_register="mtvec" privilege="MRW" size="64" type="SysReg">
+    <register_field name="BASE_VAR" size="62">
+      <bit_field shift="2" size="62"/>
+    </register_field>
+    <register_field name="MODE" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+  <register description="Machine counter enable." index="0x306" name="mcounteren" physical_register="mcounteren" privilege="MRW" size="32" type="SysReg">
+    <register_field name="HPM31" size="1">
+      <bit_field shift="31" size="1"/>
+    </register_field>
+    <register_field name="HPM30" size="1">
+      <bit_field shift="30" size="1"/>
+    </register_field>
+    <register_field name="HPM29" size="1">
+      <bit_field shift="29" size="1"/>
+    </register_field>
+    <register_field name="HPM28" size="1">
+      <bit_field shift="28" size="1"/>
+    </register_field>
+    <register_field name="HPM27" size="1">
+      <bit_field shift="27" size="1"/>
+    </register_field>
+    <register_field name="HPM26" size="1">
+      <bit_field shift="26" size="1"/>
+    </register_field>
+    <register_field name="HPM25" size="1">
+      <bit_field shift="25" size="1"/>
+    </register_field>
+    <register_field name="HPM24" size="1">
+      <bit_field shift="24" size="1"/>
+    </register_field>
+    <register_field name="HPM23" size="1">
+      <bit_field shift="23" size="1"/>
+    </register_field>
+    <register_field name="HPM22" size="1">
+      <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="HPM21" size="1">
+      <bit_field shift="21" size="1"/>
+    </register_field>
+    <register_field name="HPM20" size="1">
+      <bit_field shift="20" size="1"/>
+    </register_field>
+    <register_field name="HPM19" size="1">
+      <bit_field shift="19" size="1"/>
+    </register_field>
+    <register_field name="HPM18" size="1">
+      <bit_field shift="18" size="1"/>
+    </register_field>
+    <register_field name="HPM17" size="1">
+      <bit_field shift="17" size="1"/>
+    </register_field>
+    <register_field name="HPM16" size="1">
+      <bit_field shift="16" size="1"/>
+    </register_field>
+    <register_field name="HPM15" size="1">
+      <bit_field shift="15" size="1"/>
+    </register_field>
+    <register_field name="HPM14" size="1">
+      <bit_field shift="14" size="1"/>
+    </register_field>
+    <register_field name="HPM13" size="1">
+      <bit_field shift="13" size="1"/>
+    </register_field>
+    <register_field name="HPM12" size="1">
+      <bit_field shift="12" size="1"/>
+    </register_field>
+    <register_field name="HPM11" size="1">
+      <bit_field shift="11" size="1"/>
+    </register_field>
+    <register_field name="HPM10" size="1">
+      <bit_field shift="10" size="1"/>
+    </register_field>
+    <register_field name="HPM9" size="1">
+      <bit_field shift="9" size="1"/>
+    </register_field>
+    <register_field name="HPM8" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="HPM7" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="HPM6" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="HPM5" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="HPM4" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="HPM3" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="IR" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="TM" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="CY" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Machine counter-inhibit register." index="0x320" name="mcountinhibit" physical_register="mcountinhibit" privilege="MRW" size="32" type="SysReg">
+    <register_field name="HPM31" size="1">
+      <bit_field shift="31" size="1"/>
+    </register_field>
+    <register_field name="HPM30" size="1">
+      <bit_field shift="30" size="1"/>
+    </register_field>
+    <register_field name="HPM29" size="1">
+      <bit_field shift="29" size="1"/>
+    </register_field>
+    <register_field name="HPM28" size="1">
+      <bit_field shift="28" size="1"/>
+    </register_field>
+    <register_field name="HPM27" size="1">
+      <bit_field shift="27" size="1"/>
+    </register_field>
+    <register_field name="HPM26" size="1">
+      <bit_field shift="26" size="1"/>
+    </register_field>
+    <register_field name="HPM25" size="1">
+      <bit_field shift="25" size="1"/>
+    </register_field>
+    <register_field name="HPM24" size="1">
+      <bit_field shift="24" size="1"/>
+    </register_field>
+    <register_field name="HPM23" size="1">
+      <bit_field shift="23" size="1"/>
+    </register_field>
+    <register_field name="HPM22" size="1">
+      <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="HPM21" size="1">
+      <bit_field shift="21" size="1"/>
+    </register_field>
+    <register_field name="HPM20" size="1">
+      <bit_field shift="20" size="1"/>
+    </register_field>
+    <register_field name="HPM19" size="1">
+      <bit_field shift="19" size="1"/>
+    </register_field>
+    <register_field name="HPM18" size="1">
+      <bit_field shift="18" size="1"/>
+    </register_field>
+    <register_field name="HPM17" size="1">
+      <bit_field shift="17" size="1"/>
+    </register_field>
+    <register_field name="HPM16" size="1">
+      <bit_field shift="16" size="1"/>
+    </register_field>
+    <register_field name="HPM15" size="1">
+      <bit_field shift="15" size="1"/>
+    </register_field>
+    <register_field name="HPM14" size="1">
+      <bit_field shift="14" size="1"/>
+    </register_field>
+    <register_field name="HPM13" size="1">
+      <bit_field shift="13" size="1"/>
+    </register_field>
+    <register_field name="HPM12" size="1">
+      <bit_field shift="12" size="1"/>
+    </register_field>
+    <register_field name="HPM11" size="1">
+      <bit_field shift="11" size="1"/>
+    </register_field>
+    <register_field name="HPM10" size="1">
+      <bit_field shift="10" size="1"/>
+    </register_field>
+    <register_field name="HPM9" size="1">
+      <bit_field shift="9" size="1"/>
+    </register_field>
+    <register_field name="HPM8" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="HPM7" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="HPM6" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="HPM5" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="HPM4" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="HPM3" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="IR" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="0" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="CY" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Machine performance-monitoring event selector." index="0x323" name="mhpmevent3" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x324" name="mhpmevent4" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x325" name="mhpmevent5" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x326" name="mhpmevent6" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x327" name="mhpmevent7" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x328" name="mhpmevent8" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x329" name="mhpmevent9" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x32a" name="mhpmevent10" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x32b" name="mhpmevent11" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x32c" name="mhpmevent12" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x32d" name="mhpmevent13" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x32e" name="mhpmevent14" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x32f" name="mhpmevent15" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x330" name="mhpmevent16" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x331" name="mhpmevent17" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x332" name="mhpmevent18" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x333" name="mhpmevent19" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x334" name="mhpmevent20" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x335" name="mhpmevent21" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x336" name="mhpmevent22" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x337" name="mhpmevent23" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x338" name="mhpmevent24" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x339" name="mhpmevent25" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x33a" name="mhpmevent26" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x33b" name="mhpmevent27" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x33c" name="mhpmevent28" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x33d" name="mhpmevent29" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x33e" name="mhpmevent30" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring event selector." index="0x33f" name="mhpmevent31" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Scratch register for machine trap handlers." index="0x340" name="mscratch" physical_register="mscratch" privilege="MRW" size="64" type="SysReg" choice_weight="10">
+    <register_field name="MSCRATCH" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Machine exception program counter." index="0x341" name="mepc" physical_register="mepc" privilege="MRW" size="64" type="SysReg">
+    <register_field name="MEPC" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Machine trap cause." index="0x342" name="mcause" physical_register="mcause" privilege="MRW" size="64" type="SysReg">
+    <register_field name="INTERRUPT" size="1">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="EXCEPTION CODE_VAR" size="63">
+      <bit_field shift="0" size="63"/>
+    </register_field>
+  </register>
+  <register description="Machine bad address or instruction." index="0x343" name="mtval" physical_register="mtval" privilege="MRW" size="64" type="SysReg">
+    <register_field name="MTVAL_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Machine interrupt pending." index="0x344" name="mip" physical_register="mip" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine trap instruction (transformed)." index="0x34a" name="mtinst" physical_register="mtinst" privilege="MRW" size="64" type="SysReg">
+    <register_field name="MTINST_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Machine bad guest physical address." index="0x34b" name="mtval2" physical_register="mtval2" privilege="MRW" size="64" type="SysReg">
+    <register_field name="MTVAL2_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Physical memory protection configuration." index="0x3a0" name="pmpcfg0" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection configuration." index="0x3a2" name="pmpcfg2" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b0" name="pmpaddr0" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b1" name="pmpaddr1" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b2" name="pmpaddr2" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b3" name="pmpaddr3" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b4" name="pmpaddr4" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b5" name="pmpaddr5" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b6" name="pmpaddr6" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b7" name="pmpaddr7" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b8" name="pmpaddr8" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3b9" name="pmpaddr9" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3ba" name="pmpaddr10" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3bb" name="pmpaddr11" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3bc" name="pmpaddr12" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3bd" name="pmpaddr13" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3be" name="pmpaddr14" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Physical memory protection address register." index="0x3bf" name="pmpaddr15" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Hypervisor status register." index="0x600" name="hstatus" physical_register="hstatus" privilege="HRW" size="64" type="SysReg">
+    <register_field name="WPRI_VAR" size="30">
+      <bit_field shift="34" size="30"/>
+    </register_field>
+    <register_field name="VSXL" size="2">
+      <bit_field shift="32" size="2"/>
+    </register_field>
+    <register_field name="WPRI" size="19">
+      <bit_field shift="23" size="9"/>
+      <bit_field shift="21" size="1"/>
+      <bit_field shift="18" size="2"/>
+      <bit_field shift="10" size="2"/>
+      <bit_field shift="6" size="1"/>
+      <bit_field shift="1" size="4"/>
+    </register_field>
+    <register_field name="VTSR" size="1">
+      <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="VTVM" size="1">
+      <bit_field shift="20" size="1"/>
+    </register_field>
+    <register_field name="VGEIN" size="6">
+      <bit_field shift="12" size="6"/>
+    </register_field>
+    <register_field name="SP2V" size="1">
+      <bit_field shift="9" size="1"/>
+    </register_field>
+    <register_field name="SP2P" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="SPV" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="VSBE" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="SPRV" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Hypervisor exception delegation register." index="0x602" name="hedeleg" physical_register="hedeleg" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor interrupt delegation register." index="0x603" name="hideleg" physical_register="hideleg" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor interrupt-enable register." index="0x604" name="hie" physical_register="hie" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor counter enable." index="0x606" name="hcounteren" physical_register="hcounteren" privilege="HRW" size="32" type="SysReg">
+    <register_field name="HPM31" size="1">
+      <bit_field shift="31" size="1"/>
+    </register_field>
+    <register_field name="HPM30" size="1">
+      <bit_field shift="30" size="1"/>
+    </register_field>
+    <register_field name="HPM29" size="1">
+      <bit_field shift="29" size="1"/>
+    </register_field>
+    <register_field name="HPM28" size="1">
+      <bit_field shift="28" size="1"/>
+    </register_field>
+    <register_field name="HPM27" size="1">
+      <bit_field shift="27" size="1"/>
+    </register_field>
+    <register_field name="HPM26" size="1">
+      <bit_field shift="26" size="1"/>
+    </register_field>
+    <register_field name="HPM25" size="1">
+      <bit_field shift="25" size="1"/>
+    </register_field>
+    <register_field name="HPM24" size="1">
+      <bit_field shift="24" size="1"/>
+    </register_field>
+    <register_field name="HPM23" size="1">
+      <bit_field shift="23" size="1"/>
+    </register_field>
+    <register_field name="HPM22" size="1">
+      <bit_field shift="22" size="1"/>
+    </register_field>
+    <register_field name="HPM21" size="1">
+      <bit_field shift="21" size="1"/>
+    </register_field>
+    <register_field name="HPM20" size="1">
+      <bit_field shift="20" size="1"/>
+    </register_field>
+    <register_field name="HPM19" size="1">
+      <bit_field shift="19" size="1"/>
+    </register_field>
+    <register_field name="HPM18" size="1">
+      <bit_field shift="18" size="1"/>
+    </register_field>
+    <register_field name="HPM17" size="1">
+      <bit_field shift="17" size="1"/>
+    </register_field>
+    <register_field name="HPM16" size="1">
+      <bit_field shift="16" size="1"/>
+    </register_field>
+    <register_field name="HPM15" size="1">
+      <bit_field shift="15" size="1"/>
+    </register_field>
+    <register_field name="HPM14" size="1">
+      <bit_field shift="14" size="1"/>
+    </register_field>
+    <register_field name="HPM13" size="1">
+      <bit_field shift="13" size="1"/>
+    </register_field>
+    <register_field name="HPM12" size="1">
+      <bit_field shift="12" size="1"/>
+    </register_field>
+    <register_field name="HPM11" size="1">
+      <bit_field shift="11" size="1"/>
+    </register_field>
+    <register_field name="HPM10" size="1">
+      <bit_field shift="10" size="1"/>
+    </register_field>
+    <register_field name="HPM9" size="1">
+      <bit_field shift="9" size="1"/>
+    </register_field>
+    <register_field name="HPM8" size="1">
+      <bit_field shift="8" size="1"/>
+    </register_field>
+    <register_field name="HPM7" size="1">
+      <bit_field shift="7" size="1"/>
+    </register_field>
+    <register_field name="HPM6" size="1">
+      <bit_field shift="6" size="1"/>
+    </register_field>
+    <register_field name="HPM5" size="1">
+      <bit_field shift="5" size="1"/>
+    </register_field>
+    <register_field name="HPM4" size="1">
+      <bit_field shift="4" size="1"/>
+    </register_field>
+    <register_field name="HPM3" size="1">
+      <bit_field shift="3" size="1"/>
+    </register_field>
+    <register_field name="IR" size="1">
+      <bit_field shift="2" size="1"/>
+    </register_field>
+    <register_field name="TM" size="1">
+      <bit_field shift="1" size="1"/>
+    </register_field>
+    <register_field name="CY" size="1">
+      <bit_field shift="0" size="1"/>
+    </register_field>
+  </register>
+  <register description="Hypervisor guest external interrupt-enable register." index="0x607" name="hgeie" physical_register="hgeie" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor bad guest physical address." index="0x643" name="htval" physical_register="htval" privilege="HRW" size="64" type="SysReg">
+    <register_field name="HTVAL_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Hypervisor interrupt pending." index="0x644" name="hip" physical_register="hip" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Hypervisor trap instruction (transformed)." index="0x64a" name="htinst" physical_register="htinst" privilege="HRW" size="64" type="SysReg">
+    <register_field name="HTINST_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Hypervisor guest address translation and protection." index="0x680" name="hgatp" privilege="HRW" size="0" type="SysReg"/>
+  <register description="Debug control and status register." index="0x7b0" name="dcsr" privilege="DRW" size="0" type="SysReg"/>
+  <register description="Debug PC." index="0x7b1" name="dpc" privilege="DRW" size="0" type="SysReg"/>
+  <register description="Debug scratch register 0." index="0x7b2" name="dscratch0" privilege="DRW" size="0" type="SysReg"/>
+  <register description="Debug scratch register 1." index="0x7b3" name="dscratch1" privilege="DRW" size="0" type="SysReg"/>
+  <register boot="0" description="Privilege register." class="ConfigureRegister" index="0x7c0" name="privilege" physical_register="privilege" size="2" type="Internal" choice="false">
+    <register_field name="MODE" size="2">
+      <bit_field shift="0" size="2"/>
+    </register_field>
+  </register>
+  <register description="Machine cycle counter." index="0xb00" name="mcycle" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine instructions-retired counter." index="0xb02" name="minstret" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb03" name="mhpmcounter3" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb04" name="mhpmcounter4" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb05" name="mhpmcounter5" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb06" name="mhpmcounter6" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb07" name="mhpmcounter7" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb08" name="mhpmcounter8" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb09" name="mhpmcounter9" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb0a" name="mhpmcounter10" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb0b" name="mhpmcounter11" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb0c" name="mhpmcounter12" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb0d" name="mhpmcounter13" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb0e" name="mhpmcounter14" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb0f" name="mhpmcounter15" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb10" name="mhpmcounter16" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb11" name="mhpmcounter17" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb12" name="mhpmcounter18" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb13" name="mhpmcounter19" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb14" name="mhpmcounter20" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb15" name="mhpmcounter21" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb16" name="mhpmcounter22" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb17" name="mhpmcounter23" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb18" name="mhpmcounter24" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb19" name="mhpmcounter25" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb1a" name="mhpmcounter26" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb1b" name="mhpmcounter27" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb1c" name="mhpmcounter28" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb1d" name="mhpmcounter29" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb1e" name="mhpmcounter30" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Machine performance-monitoring counter." index="0xb1f" name="mhpmcounter31" privilege="MRW" size="0" type="SysReg"/>
+  <register description="Cycle counter for RDCYCLE instruction." index="0xc00" name="cycle" privilege="URO" size="0" type="SysReg"/>
+  <register description="Timer for RDTIME instruction." index="0xc01" name="time" privilege="URO" size="0" type="SysReg"/>
+  <register description="Instructions-retired counter for RDINSTRET instruction." index="0xc02" name="instret" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc03" name="hpmcounter3" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc04" name="hpmcounter4" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc05" name="hpmcounter5" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc06" name="hpmcounter6" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc07" name="hpmcounter7" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc08" name="hpmcounter8" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc09" name="hpmcounter9" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc0a" name="hpmcounter10" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc0b" name="hpmcounter11" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc0c" name="hpmcounter12" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc0d" name="hpmcounter13" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc0e" name="hpmcounter14" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc0f" name="hpmcounter15" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc10" name="hpmcounter16" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc11" name="hpmcounter17" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc12" name="hpmcounter18" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc13" name="hpmcounter19" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc14" name="hpmcounter20" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc15" name="hpmcounter21" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc16" name="hpmcounter22" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc17" name="hpmcounter23" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc18" name="hpmcounter24" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc19" name="hpmcounter25" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc1a" name="hpmcounter26" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc1b" name="hpmcounter27" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc1c" name="hpmcounter28" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc1d" name="hpmcounter29" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc1e" name="hpmcounter30" privilege="URO" size="0" type="SysReg"/>
+  <register description="Performance-monitoring counter." index="0xc1f" name="hpmcounter31" privilege="URO" size="0" type="SysReg"/>
+  <register description="Vector length." index="0xc20" name="vl" physical_register="vl" privilege="URW" size="64" type="SysReg" choice_weight="0" init_policy="VlInitPolicy">
+    <register_field name="VL" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Vector data type register." index="0xc21" name="vtype" physical_register="vtype" privilege="URW" size="64" type="SysReg" choice="true" choice_weight="0">
+    <register_field name="VILL" size="1" init_policy="VtypeInitPolicy">
+      <bit_field shift="63" size="1"/>
+    </register_field>
+    <register_field name="RESERVED (WRITE 0)" size="55" init_policy="VtypeInitPolicy">
+      <bit_field shift="8" size="55"/>
+    </register_field>
+    <register_field name="VMA" size="1">
+      <bit_field shift="7" size="1"/>
+      <choice description="Inactive elements remain undisturbed" value="0x0" weight="10"/>
+      <choice description="Inactive elements may be overwritten" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="VTA" size="1">
+      <bit_field shift="6" size="1"/>
+      <choice description="Tail elements remain undisturbed" value="0x0" weight="10"/>
+      <choice description="Tail elements may be overwritten" value="0x1" weight="10"/>
+    </register_field>
+    <register_field name="VLMUL" size="3" init_policy="VlmulInitPolicy">
+      <bit_field shift="5" size="1"/>
+      <bit_field shift="0" size="2"/>
+      <choice description="32 register groups" value="0x0" weight="10"/>
+      <choice description="16 register groups" value="0x1" weight="10"/>
+      <choice description="8 register groups" value="0x2" weight="10"/>
+      <choice description="4 register groups" value="0x3" weight="10"/>
+      <choice description="Reserved" value="0x4" weight="0"/>
+      <choice description="1/8, 32 register groups" value="0x5" weight="10"/>
+      <choice description="1/4, 32 register groups" value="0x6" weight="10"/>
+      <choice description="1/2, 32 register groups" value="0x7" weight="10"/>
+    </register_field>
+    <register_field name="VSEW" size="3">
+      <bit_field shift="2" size="3"/>
+      <choice description="8-bit elements" value="0x0" weight="0"/>
+      <choice description="16-bit elements" value="0x1" weight="10"/>
+      <choice description="32-bit elements" value="0x2" weight="10"/>
+      <choice description="64-bit elements" value="0x3" weight="10"/>
+      <choice description="128-bit elements" value="0x4" weight="0"/>
+      <choice description="256-bit elements" value="0x5" weight="0"/>
+      <choice description="512-bit elements" value="0x6" weight="0"/>
+      <choice description="1028-bit elements" value="0x7" weight="0"/>
+    </register_field>
+  </register>
+  <register boot="0" description="VLEN/8 (vector register length in bytes)." index="0xc22" name="vlenb" physical_register="vlenb" privilege="URO" size="64" reset="0x10" type="SysReg">
+    <register_field name="VLENB" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register description="Hypervisor guest external interrupt pending." index="0xe07" name="hgeip" physical_register="hgeip" privilege="HRO" size="0" type="SysReg"/>
+  <register boot="0" description="Vendor ID." index="0xf11" name="mvendorid" physical_register="mvendorid" privilege="MRO" size="32" type="SysReg">
+    <register_field name="BANK" size="25">
+      <bit_field shift="7" size="25"/>
+    </register_field>
+    <register_field name="OFFSET" size="7">
+      <bit_field shift="0" size="7"/>
+    </register_field>
+  </register>
+  <register boot="0" description="Architecture ID." index="0xf12" name="marchid" physical_register="marchid" privilege="MRO" size="64" type="SysReg">
+    <register_field name="ARCHITECTURE ID_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register boot="0" description="Implementation ID." index="0xf13" name="mimpid" physical_register="mimpid" privilege="MRO" size="64" type="SysReg">
+    <register_field name="IMPLEMENTATION_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+  <register boot="0" description="Hardware thread ID." index="0xf14" name="mhartid" physical_register="mhartid" privilege="MRO" size="64" type="SysReg">
+    <register_field name="HART ID_VAR" size="64">
+      <bit_field shift="0" size="64"/>
+    </register_field>
+  </register>
+</registers>

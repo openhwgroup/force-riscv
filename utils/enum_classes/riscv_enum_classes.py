@@ -42,7 +42,7 @@ enum_classes_details = [
       [("InstructionAccessFault", 0), ("LoadAccessFault", 1), ("StoreAmoAccessFault", 2), ("InstructionPageFault", 3), ("LoadPageFault", 4), ("StoreAmoPageFault", 5)]
       ],
      ["VmConstraintType", "unsigned char", "Virtual memory constraint types.",
-      [("Existing", 0), ("AddressError", 1), ("ReadOnly", 2), ("NoExecute", 3), ("PrivilegedNoExecute", 4), ("UnpriviligedNoExecute", 5), ("NoUserAccess", 6), ("PageTable", 7), ("UserAccess", 8), ("PageFault", 9), ("FlatMap", 10), ("AccessFault", 11)]
+      [("Existing", 0), ("AddressError", 1), ("ReadOnly", 2), ("NoExecute", 3), ("PrivilegedNoExecute", 4), ("UnprivilegedNoExecute", 5), ("NoUserAccess", 6), ("PageTable", 7), ("UserAccess", 8), ("PageFault", 9), ("FlatMap", 10), ("AccessFault", 11)]
       ],
      ["PrivilegeLevelType", "unsigned char", "Exception level types",
       [("U", 0), ("S", 1), ("H", 2), ("M", 3)]

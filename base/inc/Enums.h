@@ -43,6 +43,7 @@ namespace Force {
     MaxPhysicalVectorLen = 9,
     ErrRegisterNumber = 10,
     SpeculativeBntInstructionLimit = 11,
+    MaxVectorElementWidth = 12,
   };
   extern unsigned char ELimitTypeSize;
   extern const std::string ELimitType_to_string(ELimitType in_enum); //!< Get string name for enum.

@@ -19,8 +19,8 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.ChoicesModifier import ChoicesModifier
 from base.InstructionMap import InstructionMap
-from DV.riscv.trees.instruction_tree import *
 from riscv.ModifierUtils import TrapsRedirectModifier
+from DV.riscv.trees.instruction_tree import *
 
 import RandomUtils
 
@@ -35,7 +35,9 @@ class MainSequence(Sequence):
                 self.genInstruction(the_instruction)
             
             if RandomUtils.random32(0,1) == 1:
-                self.genInstruction('ECALL##RISCV')
+                params = {}
+                params['Function'] = 'SwitchPrivilegeLevel' #Choices modified to only select ECALL
+                self.systemCall(params)
             else:
                 self.genInstruction('EBREAK##RISCV')
                 
@@ -44,7 +46,12 @@ class MainSequence(Sequence):
                 self.genInstruction(the_instruction)
 
 
+
 def gen_thread_initialization(gen_thread):
+    gen_choices_mod = ChoicesModifier(gen_thread)
+    gen_choices_mod.modifyGeneralChoices('Privilege level switch to lower or same level', { 'ECALL':10, 'xRET':0 })
+    gen_choices_mod.commitSet()
+
     traps_modifier = TrapsRedirectModifier(gen_thread)
 
     (delegate_opt, valid) = gen_thread.getOption("DelegateExceptions")
@@ -64,13 +71,12 @@ def gen_thread_initialization(gen_thread):
         have_mods = True
 
     traps_modifier.commit()
-            
+
     (paging_opt, valid) = gen_thread.getOption("PagingDisabled")
     if valid and paging_opt == 1: 
         gen_thread.initializeRegister(name='satp', value=0, field='MODE')
     
 GenThreadInitialization = gen_thread_initialization
-
 
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV

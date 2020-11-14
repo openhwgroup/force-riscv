@@ -19,6 +19,7 @@
 #include <Defines.h>
 #include <vector>
 #include <string>
+#include <type_traits>
 #include <Enums.h>
 #include ARCH_ENUM_HEADER
 
@@ -57,11 +58,21 @@ namespace Force {
     template<typename T>
       T* CastInstance()
       {
-        T* cast_instance = dynamic_cast<T* >(this);
+        T* cast_instance = dynamic_cast<T*>(this);
         return cast_instance;
       }
 
-    void ApplyUserRequest(const OperandRequest& rOprReq); //!< Apply user request details.
+    /*!
+      This is a const variant of CastInstance().
+     */
+    template<typename T>
+      typename std::enable_if<std::is_const<T>::value, T*>::type CastInstance() const
+      {
+        T* cast_instance = dynamic_cast<T*>(this);
+        return cast_instance;
+      }
+
+    void ApplyUserRequest(const OperandRequest& rOprReq, const OperandStructure& rOperandStruct); //!< Apply user request details.
     void SubConstraintValue(uint64 value, const OperandStructure& rOperandStruct) const; //!< Subtract value from constraint set.
     void SubDifferOperandValues(const Instruction& rInstr, const OperandStructure& rOperandStruct); //!< Subtract values of operands that must have different values from the constraint set, so this operand is generated with a different value.
   protected:
@@ -71,7 +82,8 @@ namespace Force {
     mutable ConstraintSet* mpConstraintSet; //!< Pointer to constraint set for the operand.
     bool mConstraintForced; //!< Return true if constraint is forced from the front end with single value.
   private:
-    virtual void GetAdjustedDifferValues(const Instruction& rInstr, const OperandStructure& rOperandStruct, const OperandStructure& rDifferOperandStruct, cuint64 differVal, ConstraintSet& rAdjDifferValues) const { } //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
+    void ValidateUserRequestConstraint(const ConstraintSet& rUserReqConstr, const OperandStructure& rOperandStruct); //! Fail if the specified constraint contains values outside of the operand's physical range.
+    virtual void GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
   };
 
   /*!
@@ -230,6 +242,8 @@ namespace Force {
     GroupOperandConstraint(const GroupOperandConstraint& rOther) : OperandConstraint(rOther) { } //!< Copy constructor, not meant to be used.
   };
 
+  class AddressReuseMode;
+  class ChoicesModerator;
   class ImmediateOperand;
   class SignedImmediateOperand;
   class VmMapper;
@@ -262,6 +276,7 @@ namespace Force {
     bool HasDataConstraints() const { return mDataConstraints.size(); } //!< Return true if has any data constraint.
     bool TargetConstraintForced() const; //!< Return true if target constraint is forced.
     inline VmMapper* GetVmMapper() const { return mpVmMapper; } //!< Return VM mapper object.
+    const AddressReuseMode* GetAddressReuseMode() const { return mpAddrReuseMode; } //!< Return address reuse configuration.
   protected:
     AddressingOperandConstraint(const AddressingOperandConstraint& rOther); //!< Copy constructor, not meant to be used.
     SignedImmediateOperand* GetSignedOffsetOperand(const Instruction& rInstr, const OperandStructure& rOperandStruct) const; //!< Return a pointer to a signed-immediate sub operand of the AddressingOperand object.
@@ -274,6 +289,11 @@ namespace Force {
     ConstraintSet* mpTargetConstraint; //!< Addressing target constraint.
     VmMapper* mpVmMapper; //!< Pointer to VM mapper object/
     std::vector<ConstraintSet* > mDataConstraints; //!< Data of addressing constraint.
+  private:
+    void SetupAddressReuseMode(const Generator& rGen); //!< Configure address reuse.
+    bool ChooseAddressReuseEnabled(const ChoicesModerator& rChoicesMod, const std::string& rChoiceTreeName); //!< Choose whether the address reuse type indicated by the choice tree should be enabled.
+  private:
+    AddressReuseMode* mpAddrReuseMode; //!< Address reuse configuration.
   };
 
   /*!
@@ -543,16 +563,16 @@ namespace Force {
     void GetRegisterOperands(std::vector<const RegisterOperand* >& rRegOps) override; //!< Get pointers to sub RegisterOperands.
     RegisterOperand* IndexOperand() const override { return mpIndex; } //!< Return pointer to index operand.
     uint64 BaseValue() const { return mBaseValue; } //!< Return base value.
-    const std::vector<uint64>& IndexValues() const { return mIndexValues; } //!< Return index element values.
+    const std::vector<uint64>& IndexElementValues() const { return mIndexElemValues; } //!< Return index element values.
     uint32 IndexElementSize() const { return mIndexElemSize; } //!< Return index element size in bytes.
     void SetBaseValue(cuint64 baseValue) { mBaseValue = baseValue; } //!< Set base value.
-    void SetIndexValues(const std::vector<uint64>& rIndexValues) { mIndexValues = rIndexValues; } //!< Set index element values.
+    void SetIndexElementValues(const std::vector<uint64>& rIndexElemValues) { mIndexElemValues = rIndexElemValues; } //!< Set index element values.
     void SetIndexElementSize(cuint32 indexElemSize) { mIndexElemSize = indexElemSize; } //!< Set the index element size in bytes.
   private:
     RegisterOperand* mpBase; //!< Base operand
     RegisterOperand* mpIndex; //!< Index operand
     uint64 mBaseValue; //!< Base value
-    std::vector<uint64> mIndexValues; //!< Index element values
+    std::vector<uint64> mIndexElemValues; //!< Index element values
     uint32 mIndexElemSize; //!< Index element size in bytes
   };
 

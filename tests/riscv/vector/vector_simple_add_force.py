@@ -36,10 +36,12 @@ class MainSequence(VectorTestSequence):
 
     ## Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
-        # Ensure vector element size is set to 32 bites
+        # Ensure vector element size is set to 32 bits and vector register group size is set to 1
         choices_mod = ChoicesModifier(self.genThread)
-        choice_weights = {'0x0': 0, '0x1': 0, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
-        choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', choice_weights)
+        vsew_choice_weights = {'0x0': 0, '0x1': 0, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', vsew_choice_weights)
+        vlmul_choice_weights = {'0x0': 10, '0x1': 0, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        choices_mod.modifyRegisterFieldValueChoices('vtype.VLMUL', vlmul_choice_weights)
         choices_mod.commitSet()
 
         (self._mRegIndex1, self._mRegIndex2) = self.getRandomRegisters(2, 'VECREG', exclude='0')

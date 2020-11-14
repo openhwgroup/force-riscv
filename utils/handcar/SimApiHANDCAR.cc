@@ -153,11 +153,8 @@ namespace Force {
 
     SetVectorRegisterWidth(rConfig.mVectorRegLen);
 
-    stringstream varch;
-    varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mVectorRegLen;
-    string varch_str = varch.str();
-
-    mpSimDllAPI->initialize_simulator(varch_str.c_str());
+    string config_str = BuildHandcarConfigurationString(rConfig);
+    mpSimDllAPI->initialize_simulator(config_str.c_str());
   }
 
   //!< write out simulation trace file (if any), send 'terminate' directive to simulator, close sim dll...
@@ -507,12 +504,23 @@ namespace Force {
 
   void SimApiHANDCAR::EnterSpeculativeMode(uint32 cpuId)
   {
-    mInSpeculativeMode[cpuId] = true;  
+    mInSpeculativeMode[cpuId] = uint32(1);
   }
 
   void SimApiHANDCAR::LeaveSpeculativeMode(uint32 cpuId)
   {
-    mInSpeculativeMode[cpuId] = false;
+    mInSpeculativeMode[cpuId] = uint32(0);
   }
-  
+
+  string SimApiHANDCAR::BuildHandcarConfigurationString(const ApiSimConfig& rConfig)
+  {
+    stringstream config_stream;
+
+    config_stream << "-p" << (rConfig.mChipNum * rConfig.mCoreNum * rConfig.mThreadNum) << " ";
+
+    config_stream << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mMaxVectorElemWidth;
+
+    return config_stream.str();
+  }
+
 }

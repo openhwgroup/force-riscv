@@ -333,8 +333,11 @@ CASE("RegisterField class") {
   reg_field_0.mHasReset             = true;
   reg_field_0.mLsb                  = 4u;
   reg_field_0.mLsbBlock             = 0u;
-  reg_field_0.mBitFields.push_back (bfield_0);
+
+  // BitFields must be added from high order to low order
   reg_field_0.mBitFields.push_back (bfield_1);
+  reg_field_0.mBitFields.push_back (bfield_0);
+
   reg_field_0.Initialize           (0x1234567u);
 
   bool           partial        = false; //flag for partial masks
@@ -417,6 +420,46 @@ CASE("RegisterField class") {
   delete phy_reg_1;
 }
 
+CASE("RegisterField with disjoint BitFields") {
+  PhysicalRegister phy_reg;
+  BitField* bfield_0 = new BitField();
+  BitField* bfield_1 = new BitField();
+
+  init_phy_reg(&phy_reg, "phy_reg", 64, ERegisterType::SysReg, 2, 0, 0);
+  init_bit_field(bfield_0, &phy_reg, 4, 20);
+  init_bit_field(bfield_1, &phy_reg, 3, 6);
+
+  RegisterField reg_field;
+  reg_field.mName = "reg_field";
+  reg_field.mSize = 7;
+  reg_field.mPhysicalRegisterName = "phy_reg";
+  reg_field.mReset = 0x38;
+  reg_field.mHasReset = true;
+  reg_field.mLsb = 6;
+  reg_field.mLsbBlock = 0;
+
+  // BitFields must be added from high order to low order
+  reg_field.mBitFields.push_back(bfield_0);
+  reg_field.mBitFields.push_back(bfield_1);
+
+  reg_field.InitializeField(0x65);
+  bool partial = false;
+  EXPECT(reg_field.IsInitialized(&partial));
+  EXPECT_NOT(partial);
+  EXPECT(reg_field.Value() == 0xC00140ull);
+  EXPECT(reg_field.FieldValue() == 0x65ull);
+
+  reg_field.SetFieldValue(0x7C);
+  EXPECT(reg_field.Value() == 0xF00100ull);
+  EXPECT(reg_field.FieldValue() == 0x7Cull);
+  EXPECT(reg_field.InitialValue() == 0xC00140ull);
+  EXPECT(reg_field.InitialFieldValue() == 0x65ull);
+
+  reg_field.SetFieldResetValue(0x3E);
+  EXPECT(phy_reg.mResetValue == 0x700180ull);
+  EXPECT(phy_reg.mResetMask == 0xF001C0ull);
+}
+
 CASE("Register class") {
   PhysicalRegister* phy_reg_0 = new PhysicalRegister();
   BitField* bfield_0          = new BitField();
@@ -432,8 +475,9 @@ CASE("Register class") {
   init_reg_field(reg_field_0, "reg_field_0", 20u, "phy_reg_0", 0x1u, true, 4u, 0u);
   init_reg_field(reg_field_1, "reg_field_1", 4u , "phy_reg_0", 0x1u, true, 0u, 0u);
 
-  reg_field_0->mBitFields.push_back(bfield_0);
+  // BitFields must be added from high order to low order
   reg_field_0->mBitFields.push_back(bfield_1);
+  reg_field_0->mBitFields.push_back(bfield_0);
   reg_field_1->mBitFields.push_back(bfield_2);
 
   Register reg_0;
@@ -576,12 +620,14 @@ CASE("RegisterFile class") {
     init_register(reg_0, "reg_0", ERegisterType::GPR, 64u, 1u, 2u);
     init_register(reg_1, "reg_1", ERegisterType::GPR, 32u, 0u, 1u);
 
-    reg_field_0->mBitFields.push_back(bfield_0);
+    // BitFields must be added from high order to low order
     reg_field_0->mBitFields.push_back(bfield_1);
+    reg_field_0->mBitFields.push_back(bfield_0);
     reg_field_1->mBitFields.push_back(bfield_2);
     reg_field_2->mBitFields.push_back(bfield_3);
     reg_field_3->mBitFields.push_back(bfield_4);
     reg_field_3->mBitFields.push_back(bfield_5);
+
     reg_0->mRegisterFields.push_back(reg_field_0);
     reg_0->mRegisterFields.push_back(reg_field_1);
     reg_1->mRegisterFields.push_back(reg_field_2);
@@ -811,11 +857,13 @@ CASE("LargeRegister class") {
 
   reg_field_0->mBitFields.push_back(bfield_0);
   reg_field_1->mBitFields.push_back(bfield_1);
+
   reg_0->mRegisterFields.push_back(reg_field_0);
   reg_0->mRegisterFields.push_back(reg_field_1);
 
   reg_field_2->mBitFields.push_back(bfield_2);
   reg_field_3->mBitFields.push_back(bfield_3);
+
   reg_1->mRegisterFields.push_back(reg_field_2);
   reg_1->mRegisterFields.push_back(reg_field_3);
 
@@ -910,12 +958,14 @@ CASE("Reserve/Unreserve register") {
     init_register(reg_0, "reg_0", ERegisterType::GPR, 64u, 1u, 2u);
     init_register(reg_1, "reg_1", ERegisterType::GPR, 32u, 0u, 1u);
 
-    reg_field_0->mBitFields.push_back(bfield_0);
+    // BitFields must be added from high order to low order
     reg_field_0->mBitFields.push_back(bfield_1);
+    reg_field_0->mBitFields.push_back(bfield_0);
     reg_field_1->mBitFields.push_back(bfield_2);
     reg_field_2->mBitFields.push_back(bfield_3);
     reg_field_3->mBitFields.push_back(bfield_4);
     reg_field_3->mBitFields.push_back(bfield_5);
+
     reg_0->mRegisterFields.push_back(reg_field_0);
     reg_0->mRegisterFields.push_back(reg_field_1);
     reg_1->mRegisterFields.push_back(reg_field_2);

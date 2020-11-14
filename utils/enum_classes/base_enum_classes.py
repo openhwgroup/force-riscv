@@ -16,7 +16,7 @@
 enum_classes_details = [
     ["LimitType", "unsigned char", "Various limitation values",
      [("ThreadsLimit", 0), ("CoresLimit", 1), ("ChipsLimit", 2), ("PhysicalAddressLimit", 3), ("MaxInstructions", 4), ("PerMonRegisterNumber", 5), ("DependencyHistoryLimit", 6),
-      ("BranchNotTakenLimit", 7), ("SpeculativeBntLevelLimit", 8), ("MaxPhysicalVectorLen", 9),  ("ErrRegisterNumber", 10), ("SpeculativeBntInstructionLimit", 11)]
+      ("BranchNotTakenLimit", 7), ("SpeculativeBntLevelLimit", 8), ("MaxPhysicalVectorLen", 9),  ("ErrRegisterNumber", 10), ("SpeculativeBntInstructionLimit", 11), ("MaxVectorElementWidth", 12)]
     ],
     ["OperandType", "unsigned char", "Operand types in the instruction files",
      [("Constant", 0), ("Immediate", 1), ("Choices", 2), ("Register", 3), ("GPR", 4), ("GPRSP", 5), ("FPR", 6), ("SIMDSR", 7), ("SIMDVR", 8), ("SysReg", 9), ("Branch", 10), ("LoadStore", 11), ("AuthBranch", 12), ("AuthLoadStore", 13), ("SystemOp", 14), ("VECREG", 15), ("PREDREG", 16), ("ALU", 17), ("DataProcessing", 18), ("VectorLayout", 19)]

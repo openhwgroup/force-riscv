@@ -117,13 +117,11 @@ namespace Force {
   {
     switch(iGrpType) {
     case EInstructionGroupType::Vector:
-      RandomInitializeRegister("vstart", "");
-      RandomInitializeRegister("vxsat", "");
-      RandomInitializeRegister("vxrm", "");
-
-      // vtype needs to be initialized before vl, so we can calculate a valid value for vl
-      RandomInitializeRegister("vtype", "");
       RandomInitializeRegister("vl", "");
+      RandomInitializeRegister("vstart", "");
+      RandomInitializeRegister("vtype", "");
+      RandomInitializeRegister("vxrm", "");
+      RandomInitializeRegister("vxsat", "");
       break;
     default:
       // No action needed for default case
@@ -132,7 +130,7 @@ namespace Force {
   }
 
   /*!
-    Currently only used in address solving related code, therefore only taking care of GPR, SP.
+    Currently only used in address solving related code, therefore only taking care of GPR, SP, VECREG.
   */
   bool GeneratorRISCV::OperandTypeCompatible(ERegisterType regType, EOperandType oprType) const
   {
@@ -140,6 +138,9 @@ namespace Force {
     switch (regType) {
     case ERegisterType::GPR:
       compatible = (oprType == EOperandType::GPR);
+      break;
+    case ERegisterType::VECREG:
+      compatible = (oprType == EOperandType::VECREG);
       break;
     default:
       LOG(fail) << "{GeneratorRISCV::OperandTypeCompatible} not handled register type: " << ERegisterType_to_string(regType) << endl;

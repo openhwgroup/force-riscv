@@ -645,7 +645,8 @@ namespace Force {
   private:
     virtual void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const; //!< Return a list of target addresses the instruction will access.
     bool IsTargetSharedRead(const EMemAccessType memAccessType, cuint64 targetAddr, cuint64 dataSize) const; //!< Returns true if read access is specified and the target address range intersects shared memory.
-    virtual void RecordOperandValues(const AddressingMode& rAddrMode) { } //!< Capture the solved operand values.
+    uint64 GetTargetConstraintForcedAlignment(cuint64 alignment) const; //!< Get the alignment when the target address is forced.
+    virtual void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) { } //!< Capture the solved operand values.
   };
 
   /*!
@@ -671,7 +672,7 @@ namespace Force {
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate the BaseOffsetLoadStoreOperand using preamble approach.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseOffsetLoadStoreOperand.
   private:
-    void RecordOperandValues(const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
@@ -726,7 +727,7 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for BaseIndexLoadStoreOperand.
   private:
     bool MustGeneratePreamble(const Generator& rGen) const override; //!< Return true if the operand is required to be generated using preamble.
-    void RecordOperandValues(const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
   };
 
   /*!
@@ -772,13 +773,15 @@ namespace Force {
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
   private:
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
     void DifferStrideOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the stride operand uses a different register from the base operand.
+    void CalculateBaseAndStrideValues(const Instruction& rInstr, cuint32 alignment, cuint64 initAddrBlockSize, uint64& rBaseVal, uint64& rStrideVal) const; //!< Calculate the values of the base and stride operands.
     uint64 CalculateStrideValue(const Instruction& rInstr, cuint32 alignment, cuint32 addrRangeSize) const; //!< Calculate the value of the stride operand.
     uint64 CalculateBaseValue(cuint64 baseAddr, cuint32 alignment, cuint32 addrRangeSize, cuint64 strideVal) const; //!< Calculate the value of the base operand.
+    uint64 GetInitialAddressBlockSize(const Generator& rGen); //!< Get the initial address block size for preamble stride calculations.
   };
 
   /*!
@@ -797,16 +800,16 @@ namespace Force {
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
     void GenerateWithPreamble(Generator& gen, Instruction& instr) override; //!< Generate with preamble.
-    bool GenerateNoPreamble(Generator& gen, Instruction& instr) override; //!< Generate the AddressingOperand using no-preamble approach.
     AddressingMode* GetAddressingMode(uint64 alignment=1) const override; //!< Return an AddressingMode instance.
   private:
     void GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, std::vector<uint64>& rTargetAddresses) const override; //!< Return a list of target addresses the instruction will access.
+    void RecordOperandValues(const Instruction& rInstr, const AddressingMode& rAddrMode) override; //!< Capture the solved operand values.
     virtual void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const = 0; //!< Get the names of the index registers.
     uint64 AllocateIndexOperandDataBlock(Generator& rGen, cuint32 relativeRegIndex) const; //!< Allocate and initialize a block of memory to use for preamble loading of an index operand register.
     void DifferIndexOperand(Generator& rGen, Instruction& rInstr); //!< Ensure the index operand uses a different register from other vector register operands.
     void RecordIndexElementByteSize(const Instruction& rInstr); //!< Compute and capture the index vector element size in bytes.
-    uint64 CalculateBaseAndFirstIndexValues(const Instruction& rInstr, cuint32 alignment, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the base operand and first index operand element.
-    void CalculateIndexValues(const Instruction& rInstr, cuint32 alignment, cuint64 baseVal, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the index operand elements after the first one.
+    uint64 CalculateBaseAndFirstIndexElementValues(const Instruction& rInstr, cuint32 alignment, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the base operand and first index operand element.
+    void CalculateIndexElementValues(const Instruction& rInstr, cuint32 alignment, cuint64 baseVal, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the index operand elements after the first one.
   };
 
   /*!

@@ -35,6 +35,7 @@ namespace Force {
   {
     rVecLayout.mElemCount = GetVl();
     rVecLayout.mElemSize = GetSew();
+    rVecLayout.mFieldCount = 1;
     rVecLayout.mRegCount = GetLmul();
     rVecLayout.mRegIndexAlignment = rVecLayout.mRegCount;
   }
@@ -42,7 +43,7 @@ namespace Force {
   void VectorLayoutSetupRISCV::SetUpVectorLayoutFixedElementSize(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
   {
     uint32 sew = GetSew();
-    uint32 lmul = GetLmul();
+    float lmul = GetLmul();
 
     // EMUL = (EEW / SEW) * LMUL. EEW is the element width for the instruction. Register operands
     // must be aligned to EMUL.
@@ -53,12 +54,13 @@ namespace Force {
 
     // The total register count is EMUL * NFIELDS. NFIELDS is the register count for the
     // instruction. For instructions other than load/store segment instructions, NFIELDS = 1.
-    rVecLayout.mRegCount = rVecLayoutOprStruct.GetRegisterCount() * rVecLayout.mRegIndexAlignment;
+    rVecLayout.mFieldCount = rVecLayoutOprStruct.GetRegisterCount();
+    rVecLayout.mRegCount = rVecLayout.mFieldCount * rVecLayout.mRegIndexAlignment;
 
     rVecLayout.mElemSize = rVecLayoutOprStruct.GetElementWidth();
 
     // The total element count is NFIELDS * vl.
-    rVecLayout.mElemCount = rVecLayoutOprStruct.GetRegisterCount() * GetVl();
+    rVecLayout.mElemCount = rVecLayout.mFieldCount * GetVl();
   }
 
   void VectorLayoutSetupRISCV::SetUpVectorLayoutWholeRegister(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
@@ -67,6 +69,7 @@ namespace Force {
     Config* config = Config::Instance();
     rVecLayout.mElemCount = config->LimitValue(ELimitType::MaxPhysicalVectorLen) / rVecLayout.mElemSize;
 
+    rVecLayout.mFieldCount = 1;
     rVecLayout.mRegCount = rVecLayoutOprStruct.GetRegisterCount();
     rVecLayout.mRegIndexAlignment = rVecLayoutOprStruct.GetRegisterIndexAlignment();
   }
@@ -85,11 +88,43 @@ namespace Force {
     return sew;
   }
 
-  uint32 VectorLayoutSetupRISCV::GetLmul() const
+  float VectorLayoutSetupRISCV::GetLmul() const
   {
     Register* vtype_reg = mpRegFile->RegisterLookup("vtype");
     RegisterField* vlmul_field = vtype_reg->RegisterFieldLookup("VLMUL");
-    uint32 lmul = (1 << vlmul_field->FieldValue());
+    float lmul = 0;
+    switch (vlmul_field->FieldValue()) {
+      case 0:
+        lmul = 1;
+        break;
+      case 1:
+        lmul = 2;
+        break;
+      case 2:
+        lmul = 4;
+        break;
+      case 3:
+        lmul = 8;
+        break;
+      case 4:
+        // VLMUL = 4 is reserved (Section 3.3.2)
+        LOG(fail) << "{VectorLayoutSetupRISCV::GetLmul} VLMUL = 4 is reserved" << std::endl;
+        FAIL("reserved-vlmul");
+        break;
+      case 5:
+        lmul = 0.125;
+        break;
+      case 6:
+        lmul = 0.25;
+        break;
+      case 7:
+        lmul = 0.5;
+        break;
+      default:
+        // VLMUL > 7 is undefined (Section 3.3.2)
+        LOG(fail) << "{VectorLayoutSetupRISCV::GetLmul} VLMUL = " << vlmul_field->FieldValue() << " is not defined" << std::endl;
+        FAIL("undefined-vlmul");
+    }
     return lmul;
   }
 

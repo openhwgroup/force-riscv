@@ -30,6 +30,7 @@
 #include <PageRequestRegulator.h>
 #include <VmManager.h>
 #include <VmMapper.h>
+#include <AddressReuseMode.h>
 #include <Log.h>
 
 #include <memory>
@@ -50,7 +51,7 @@ namespace Force {
     delete mpConstraintSet;
   }
 
-  void OperandConstraint::ApplyUserRequest(const OperandRequest& rOprReq)
+  void OperandConstraint::ApplyUserRequest(const OperandRequest& rOprReq, const OperandStructure& rOperandStruct)
   {
     auto value_constr = rOprReq.GetValueConstraint();
     if (nullptr != value_constr) {
@@ -58,11 +59,23 @@ namespace Force {
         LOG(fail) << "{OperandConstraint::ApplyUserRequest} expect mpConstraintSet to be nullptr at this point." << endl;
         FAIL("dangling-constraint-set-pointer");
       }
+
+      ValidateUserRequestConstraint(*value_constr, rOperandStruct);
+
       mpConstraintSet = value_constr->Clone();
       if (mpConstraintSet->Size() == 1) {
         mConstraintForced = true;
       }
       rOprReq.SetApplied();
+    }
+  }
+
+  void OperandConstraint::ValidateUserRequestConstraint(const ConstraintSet& rUserReqConstr, const OperandStructure& rOperandStruct)
+  {
+    unique_ptr<ConstraintSet> default_constr(DefaultConstraintSet(rOperandStruct));
+    if (not default_constr->ContainsConstraintSet(rUserReqConstr)) {
+      LOG(fail) << "{OperandConstraint::ValidateUserRequestConstraint} requested operand value range (" << rUserReqConstr.ToSimpleString() << ") for operand " << rOperandStruct.Name() << " contains values outside of the physical range for the operand (" << default_constr->ToSimpleString() << ")" << endl;
+      FAIL("illegal-operand-request");
     }
   }
 
@@ -84,7 +97,7 @@ namespace Force {
 
         const Operand* opr = rInstr.FindOperand(differ, true);
         ConstraintSet adj_differ_values;
-        GetAdjustedDifferValues(rInstr, rOperandStruct, *(opr->GetOperandStructure()), opr->Value(), adj_differ_values);
+        GetAdjustedDifferValues(rInstr, *(opr->GetOperandConstraint()), opr->Value(), adj_differ_values);
         mpConstraintSet->SubConstraintSet(adj_differ_values);
       }
     }
@@ -98,6 +111,11 @@ namespace Force {
   void OperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
 
+  }
+
+  void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    rAdjDifferValues.AddValue(differVal);
   }
 
   void ImmediatePartialOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
@@ -346,12 +364,12 @@ namespace Force {
   }
 
   AddressingOperandConstraint::AddressingOperandConstraint()
-    : GroupOperandConstraint(), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints()
+    : GroupOperandConstraint(), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints(), mpAddrReuseMode(new AddressReuseMode())
   {
   }
 
   AddressingOperandConstraint::AddressingOperandConstraint(const AddressingOperandConstraint& rOther)
-    : GroupOperandConstraint(rOther), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints()
+    : GroupOperandConstraint(rOther), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints(), mpAddrReuseMode(new AddressReuseMode(*(rOther.mpAddrReuseMode)))
   {
   }
 
@@ -388,6 +406,8 @@ namespace Force {
     }
     SetupVmMapper(rGen);
     // << "instruction " << rInstr.Name() << " use preamble? " << mUsePreamble << " no preamble? " << mNoPreamble << endl;
+
+    SetupAddressReuseMode(rGen);
   }
 
   AddressingOperandConstraint::~AddressingOperandConstraint()
@@ -395,6 +415,7 @@ namespace Force {
     delete mpPageRequest;
     delete mpTargetConstraint;
     mpVmMapper = nullptr;
+    delete mpAddrReuseMode;
   }
 
   bool AddressingOperandConstraint::TargetConstraintForced() const
@@ -441,6 +462,37 @@ namespace Force {
     for (auto reg_opr : reg_vec) {
       reg_opr->AddWriteConstraint(rGen);
     }
+  }
+
+  void AddressingOperandConstraint::SetupAddressReuseMode(const Generator& rGen)
+  {
+    if (IsInstruction() or HasDataConstraints()) {
+      return;
+    }
+
+    const ChoicesModerator* choices_mod = rGen.GetChoicesModerator(EChoicesType::OperandChoices);
+    if (ChooseAddressReuseEnabled(*choices_mod, "Read after read address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterRead);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Read after write address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterWrite);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Write after read address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterRead);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Write after write address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterWrite);
+    }
+  }
+
+  bool AddressingOperandConstraint::ChooseAddressReuseEnabled(const ChoicesModerator& rChoicesMod, const string& rChoiceTreeName)
+  {
+    unique_ptr<ChoiceTree> reuse_choices(rChoicesMod.CloneChoiceTree(rChoiceTreeName));
+    const Choice* reuse_choice = reuse_choices->Choose();
+    return (reuse_choice->Value() == 1);
   }
 
   void BranchOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
@@ -785,7 +837,7 @@ namespace Force {
   }
 
   VectorIndexedLoadStoreOperandConstraint::VectorIndexedLoadStoreOperandConstraint()
-    : LoadStoreOperandConstraint(), mpBase(nullptr), mpIndex(nullptr), mBaseValue(0), mIndexValues(0), mIndexElemSize(0)
+    : LoadStoreOperandConstraint(), mpBase(nullptr), mpIndex(nullptr), mBaseValue(0), mIndexElemValues(0), mIndexElemSize(0)
   {
   }
 

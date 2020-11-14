@@ -813,7 +813,7 @@ namespace Force {
     case EVmConstraintType::ReadOnly: return "ReadOnly";
     case EVmConstraintType::NoExecute: return "NoExecute";
     case EVmConstraintType::PrivilegedNoExecute: return "PrivilegedNoExecute";
-    case EVmConstraintType::UnpriviligedNoExecute: return "UnpriviligedNoExecute";
+    case EVmConstraintType::UnprivilegedNoExecute: return "UnprivilegedNoExecute";
     case EVmConstraintType::NoUserAccess: return "NoUserAccess";
     case EVmConstraintType::PageTable: return "PageTable";
     case EVmConstraintType::UserAccess: return "UserAccess";
@@ -864,8 +864,8 @@ namespace Force {
       validate(in_str, "FlatMap", enum_type_name);
       return EVmConstraintType::FlatMap;
     case 58:
-      validate(in_str, "UnpriviligedNoExecute", enum_type_name);
-      return EVmConstraintType::UnpriviligedNoExecute;
+      validate(in_str, "UnprivilegedNoExecute", enum_type_name);
+      return EVmConstraintType::UnprivilegedNoExecute;
     case 60:
       validate(in_str, "ReadOnly", enum_type_name);
       return EVmConstraintType::ReadOnly;
@@ -913,8 +913,8 @@ namespace Force {
       okay = (in_str == "FlatMap");
       return EVmConstraintType::FlatMap;
     case 58:
-      okay = (in_str == "UnpriviligedNoExecute");
-      return EVmConstraintType::UnpriviligedNoExecute;
+      okay = (in_str == "UnprivilegedNoExecute");
+      return EVmConstraintType::UnprivilegedNoExecute;
     case 60:
       okay = (in_str == "ReadOnly");
       return EVmConstraintType::ReadOnly;
