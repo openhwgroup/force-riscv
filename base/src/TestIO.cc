@@ -18,13 +18,14 @@
 #include <fstream>
 #include <numeric>
 
-#include <Log.h>
 #include <Memory.h>
 #include <fmt.h>
 #include <Generator.h>
 #include <Instruction.h>
 #include <InstructionResults.h>
 #include <TestIO.h>
+#include <SymbolManager.h>
+#include <Log.h>
 
 using namespace std;
 using namespace ELFIO;
@@ -97,8 +98,10 @@ namespace Force {
     /*!
       build a Test image from memory object
     */
-    void CreateFromMem(const Memory& memory)
+    void CreateFromMem(const Memory& memory, const SymbolManager* pSymManager)
     {
+      mpSymbolManager = pSymManager;
+      
       int d_no = 0;
       int t_no = 0;
       std::vector<Section> sections;
@@ -195,6 +198,7 @@ namespace Force {
 
       DumpSegmentsToElf(mTextSegments, writer);
       DumpSegmentsToElf(mDataSegments, writer);
+      DumpSymbolsToElf(writer);
 
       writer.set_entry(mEntry);
       if (!writer.save(elfFilePath)) {
@@ -266,7 +270,7 @@ namespace Force {
     }
 #endif
 
-    TestImage() : mEntry(0ull), mBigEndian(true), mDataSegments(), mTextSegments(), mTotalSegments(0) {}
+    TestImage() : mEntry(0ull), mBigEndian(true), mDataSegments(), mTextSegments(), mTotalSegments(0), mpSymbolManager(nullptr) {}
 
     ~TestImage()  {
       for (auto pDataSegment : mDataSegments)
@@ -330,7 +334,7 @@ namespace Force {
         segment* pSegment = elf_writer.segments.add();
         pSegment->set_type(PT_LOAD);
         pSegment->set_flags(seg->mFlag);
-
+	
         for (auto sect : seg->mSections) {
           section* pSect = elf_writer.sections.add(sect->mName);
           pSect->set_address(sect->mAddress);
@@ -343,8 +347,38 @@ namespace Force {
         pSegment->set_virtual_address(seg->mVirtAddress);
         pSegment->set_physical_address(seg->mVirtAddress);
         pSegment->set_align(4);
+      }      
+    }
+    
+    void DumpSymbolsToElf(elfio& elf_writer)
+    {
+      if (not mpSymbolManager->HasSymbols())
+	return;
+
+      // Add .symtab
+      section* pSymtabSection = elf_writer.sections.add(".symtab");
+      pSymtabSection->set_address(0);
+      pSymtabSection->set_type(SHT_SYMTAB);
+      //pSymtabSection->set_flags();
+      section* pStrtabSection = elf_writer.sections.add(".strtab");
+      pStrtabSection->set_address(0);
+      pStrtabSection->set_type(SHT_STRTAB);
+	  
+      symbol_section_accessor symbols_accessor(elf_writer, pSymtabSection);
+      string_section_accessor strings_accessor(pStrtabSection);
+
+      const map<string, Symbol*>& symbol_map = mpSymbolManager->GetSymbols();
+      for (auto map_item : symbol_map) {
+	const Symbol* symbol_ptr = map_item.second;
+	symbols_accessor.add_symbol(strings_accessor, symbol_ptr->Name().c_str(), symbol_ptr->Address(), 0, (STT_NOTYPE | (STB_GLOBAL << 4)), STV_DEFAULT, SHT_SYMTAB);
       }
 
+      pSymtabSection->set_link(pStrtabSection->get_index());
+      pSymtabSection->set_info(3); // number of entries + 1
+      pSymtabSection->set_addr_align(8); // 64-bit ELF align.
+      pSymtabSection->set_entry_size(24); // 64-bit ELF Symbol table entry size.
+
+      pStrtabSection->set_addr_align(1);
     }
 
     TestSegment* CreateTestSegment(const TestSection* section)
@@ -357,20 +391,24 @@ namespace Force {
       auto *new_segment = new TestSegment(section, SegmentFlagForSection(section->mFlag));
       return new_segment;
     }
-
+    
+    ASSIGNMENT_OPERATOR_ABSENT(TestImage);
+    COPY_CONSTRUCTOR_ABSENT(TestImage);
+    
     uint64 mEntry;  //!< elf entries
     bool   mBigEndian;  //!< big endian or not
     vector<TestSegment* > mDataSegments; //!< more data segments to store sparse data
     vector<TestSegment* > mTextSegments; //!< more instruction segments to store sparse data
     unsigned mTotalSegments; //!< total segments
+    const SymbolManager* mpSymbolManager; //!< Pointer to symbol manager.
   };
 
-  TestIO::TestIO(uint32 memBank, const Memory& mem, bool createImage)
-    : mMemoryBank(memBank), mrMemory(mem), mpTestImage(nullptr)
+  TestIO::TestIO(uint32 memBank, const Memory* pMem, const SymbolManager* pSymManager, bool createImage)
+    : mMemoryBank(memBank), mpMemory(pMem), mpSymbolManager(pSymManager), mpTestImage(nullptr)
   {
     mpTestImage = new TestImage();
     if (createImage)
-        mpTestImage->CreateFromMem(mrMemory);
+      mpTestImage->CreateFromMem(*mpMemory, mpSymbolManager);
 
   }
 
@@ -391,7 +429,7 @@ namespace Force {
     mpTestImage->CreateFromElf(elfFilePath, machineType);
     bigEndian = mpTestImage->GetEndian();
     entry = mpTestImage->GetEntry();
-    mpTestImage->DumpToMem(mrMemory);
+    mpTestImage->DumpToMem(*mpMemory);
   }
 
 #ifndef UNIT_TEST
