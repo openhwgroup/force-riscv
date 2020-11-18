@@ -526,6 +526,23 @@ class RegisterFile:
 #****************************************************************************************************     
 class RegistersDocument(object):
 
+    LICENSE_STRING = """<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+"""
+
     def __init__(self, aRegisterFileName):
         self.mPhysicalRegisters = PhysicalRegisterFile()
         self.mRegisterFile = RegisterFile()
@@ -542,6 +559,7 @@ class RegistersDocument(object):
     ## Write out the physical register and register contents into an XML file
     def writeXmlFile(self, aFileName):
         with open(aFileName, 'w') as f:
+            f.write(self.LICENSE_STRING)
             f.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n")
             f.write("<registers>\n")
 
@@ -550,5 +568,3 @@ class RegistersDocument(object):
             f.write(self.mRegisterFile.toXmlString("  "))
 
             f.write("</registers>")
-                    
-                

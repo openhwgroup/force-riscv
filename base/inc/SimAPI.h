@@ -47,8 +47,8 @@ namespace Force {
   //!< MemUpdate - struct used to record memory updates from simulator...
 
   struct MemUpdate {
-    MemUpdate(uint64 _virtual_address, unsigned int _mem_bank, uint64 _physical_address, unsigned int _size, const char *_bytes, const char *_access_type)
-      : mem_bank(_mem_bank), virtual_address(_virtual_address), physical_address(_physical_address), size(_size), bytes(), access_type()
+    MemUpdate(uint32 _CpuID, uint64 _virtual_address, unsigned int _mem_bank, uint64 _physical_address, unsigned int _size, const char *_bytes, const char *_access_type)
+      : mem_bank(_mem_bank), virtual_address(_virtual_address), physical_address(_physical_address), size(_size), bytes(), access_type(), CpuID(_CpuID)
     {
       for (unsigned int i = 0; i < _size; i++) {
         bytes.push_back(_bytes[i]);
@@ -63,6 +63,7 @@ namespace Force {
     uint32 size;
     std::vector<unsigned char> bytes;
     std::string access_type;
+    uint32 CpuID;
   };
 
   //!< RegUpdate - struct used to record register updates from simulator...
@@ -121,10 +122,10 @@ namespace Force {
 
   class ApiSimConfig {
   public:
-    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mpTraceFile(NULL), mUseTraceFile(false) { } //!< default constructor
+    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mMaxVectorElemWidth(32), mpTraceFile(NULL), mUseTraceFile(false) { } //!< default constructor
 
-    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, const char* pTraceFile, bool outputTraceFile) //!< Constructor.
-      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile)
+    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, uint32 maxVectorElemWidth, const char* pTraceFile, bool outputTraceFile) //!< Constructor.
+      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mMaxVectorElemWidth(maxVectorElemWidth), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile)
     {
     }
 
@@ -137,6 +138,8 @@ namespace Force {
     uint32 mCoreNum; //!< Core number per chip.
     uint32 mThreadNum; //!< Thread number per core.
     uint32 mPhysicalAddressSize; //!< Supported physical address size.
+    uint32 mVectorRegLen; //!< Vector register length in bits.
+    uint32 mMaxVectorElemWidth; //!< Maximum vector element width in bits.
     const char* mpTraceFile; //!< trace file. not output trace if it is NULL
     bool mUseTraceFile;
   };
@@ -196,13 +199,15 @@ namespace Force {
     //!< 'record' methods used by extern C 'update' methods; not protected or private since the extern C functions need
     //!< to be able to access...
     void RecordRegisterUpdate(uint32 CpuID,const char *regname,uint64 rval,uint64 mask, const char *pAccessType);
-    void RecordMemoryUpdate(uint64 virtualAddress, unsigned int memBank,
+    void RecordMemoryUpdate(uint32 CpuID, uint64 virtualAddress, unsigned int memBank,
                             uint64 physicalAddress, unsigned int size,
                             const char* pBytes, const char* pAccessType);
     void RecordMmuEvent(MmuEvent *event);
     void RecordVectorRegisterUpdate(uint32 CpuID, const char* pRegname, uint32 vecRegIndex, uint32 eltIndex, uint32 eltByteWidth, const uint8_t* pValue, uint32 byteLength, const char* pAccessType);
     void RecordTermination(uint32 CpuId, uint32 exitCode, const char* pMsg); //!< Return termination state of the CPU with the specified ID.
   protected:
+    void SetVectorRegisterWidth(cuint64 vecRegWidthBits); //!< Set the vector register width in bits.
+
     //!< used by Step:
     bool GetRegisterUpdates(std::vector<RegUpdate> &rRegUpdates);
     bool GetMemoryUpdates(std::vector<MemUpdate> &rMemUpdates);
@@ -238,10 +243,17 @@ namespace Force {
     mutable std::ofstream mOfsApiTrace;
     mutable std::ofstream mOfsSimTrace;   
 
-    cuint32 mVecRegWidth;
-    const std::vector<std::string> mVecPhysRegNames;
-    cuint32 mNumPhysRegs;
+    //!< Implementation specific characteristics of vector registers
+    uint32 mVecRegWidth;
+    std::vector<std::string> mVecPhysRegNames;
+    uint32 mNumPhysRegs;
     cuint32 mPhysRegSize;
+
+    //!< Speculative mode output modification
+    std::map<uint32, uint32> mInSpeculativeMode;
+    const std::vector<std::string> mSpecModeStrings;
+    //const std::string mSpecModeOn;
+    //const std::string mSpecModeOff;
   };
 
 }

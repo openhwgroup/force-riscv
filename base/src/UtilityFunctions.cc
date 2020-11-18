@@ -277,11 +277,25 @@ namespace Force {
     return align_shift;
   }
 
-  uint64 get_aligned_value(cuint64 value, cuint64 align)
+  uint64 get_align_mask(cuint64 align)
   {
     verify_alignment(align);
 
-    return (value & ~(align - 1));
+    return (~(align - 1));
+  }
+
+  uint64 get_alignment(cuint64 alignMask)
+  {
+    uint64 align = ~alignMask + 1;
+
+    verify_alignment(align);
+
+    return align;
+  }
+
+  uint64 get_aligned_value(cuint64 value, cuint64 align)
+  {
+    return (value & get_align_mask(align));
   }
 
   uint32 sign_extend32(uint32 value, uint32 size)
@@ -655,7 +669,8 @@ namespace Force {
     }
     return ss.str();
   }
-  void change_elementform_to_uint64(uint32 element_size, uint32 valid_size, std::vector<uint64> orignal_value_list, std::vector<uint64>& uint64_value_list)
+
+  void change_elementform_to_uint64(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& orignal_value_list, std::vector<uint64>& uint64_value_list)
   {
     //element_size == 64 and valid_size == 32 or 64
     if (64 == element_size) {
@@ -664,7 +679,7 @@ namespace Force {
     }
     uint64 data = 0ull;
     uint32 total_bytes = 0;
-    for (std::vector<uint64>::iterator it = orignal_value_list.begin(); it != orignal_value_list.end(); ++it) {
+    for (std::vector<uint64>::const_iterator it = orignal_value_list.begin(); it != orignal_value_list.end(); ++it) {
       data |=  (*it<< (total_bytes * 8));
       total_bytes +=  (valid_size>> 3);
       if (total_bytes >= 8) {
@@ -677,7 +692,8 @@ namespace Force {
       uint64_value_list.push_back(data);
     }
   }
-  void change_uint64_to_elementform(uint32 element_size, uint32 valid_size, std::vector<uint64> uint64_value_list, std::vector<uint64>& result_value_list)
+
+  void change_uint64_to_elementform(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& uint64_value_list, std::vector<uint64>& result_value_list)
   {
     if ((64 == element_size) and (64 == valid_size)) {
       result_value_list = uint64_value_list;
@@ -687,7 +703,7 @@ namespace Force {
       LOG(fail) <<"{change_uint64_to_elementform} not support!" <<endl;
       FAIL("not-support-size");
     }
-    for (std::vector<uint64>::iterator it = uint64_value_list.begin(); it != uint64_value_list.end(); ++it) {
+    for (std::vector<uint64>::const_iterator it = uint64_value_list.begin(); it != uint64_value_list.end(); ++it) {
       if ((64 == element_size) and (32 == valid_size)){
         result_value_list.push_back(*it & ((1ull << valid_size) -1));
       } else {
@@ -697,6 +713,16 @@ namespace Force {
         }
       }
     }
+  }
+
+  uint64 change_uint64_to_elementform_at_index(cuint32 element_size, const std::vector<uint64>& uint64_value_list, cuint32 element_index)
+  {
+    uint32 uint64_val_index = (element_size * element_index) / sizeof_bits<uint64>();
+    uint32 uint64_val_shift = ((element_size * element_index) % sizeof_bits<uint64>()) * element_size;
+    uint64 uint64_val_mask = get_mask64(element_size, uint64_val_shift);
+    uint64 elem_val = (uint64_value_list[uint64_val_index] & uint64_val_mask) >> uint64_val_shift;
+
+    return elem_val;
   }
 
   uint64 kmg_number(const std::string& strKMG)

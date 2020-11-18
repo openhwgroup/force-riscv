@@ -43,6 +43,7 @@ namespace Force {
     MaxPhysicalVectorLen = 9,
     ErrRegisterNumber = 10,
     SpeculativeBntInstructionLimit = 11,
+    MaxVectorElementWidth = 12,
   };
   extern unsigned char ELimitTypeSize;
   extern const std::string ELimitType_to_string(ELimitType in_enum); //!< Get string name for enum.
@@ -74,6 +75,7 @@ namespace Force {
     PREDREG = 16,
     ALU = 17,
     DataProcessing = 18,
+    VectorLayout = 19,
   };
   extern unsigned char EOperandTypeSize;
   extern const std::string EOperandType_to_string(EOperandType in_enum); //!< Get string name for enum.
@@ -628,12 +630,13 @@ namespace Force {
     Data access permission types.
   */
   enum class EDataAccessPermissionType : unsigned char {
-    ReadWrite = 0,
-    ReadOnly = 1,
-    ReadWriteNoUser = 2,
-    ReadOnlyNoUser = 3,
-    ReadWriteUserOnly = 4,
-    ReadOnlyUserOnly = 5,
+    NoAccess = 0,
+    ReadWrite = 1,
+    ReadOnly = 2,
+    ReadWriteNoUser = 3,
+    ReadOnlyNoUser = 4,
+    ReadWriteUserOnly = 5,
+    ReadOnlyUserOnly = 6,
   };
   extern unsigned char EDataAccessPermissionTypeSize;
   extern const std::string EDataAccessPermissionType_to_string(EDataAccessPermissionType in_enum); //!< Get string name for enum.

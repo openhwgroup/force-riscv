@@ -84,7 +84,12 @@ OperandConstraint::~OperandConstraint(){}
 void OperandConstraint::Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operand_struct)
 {
 }
+
 void  OperandConstraint::SubConstraintValue(unsigned long long Val, Force::OperandStructure const& Os) const
+{
+}
+
+void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
 {
 }
 

@@ -127,7 +127,10 @@ namespace Force {
         /* This is not an error value we care about. Don't do anything here. */
         LOG(notice) << "Unrecorded Exception Value: " << error.what() << endl;
       }
+
       mpGenerator->ExecuteHandler();
+
+      AddPostExceptionRequests();
     }
     else {
       mpGenerator->ExceptionReturn();

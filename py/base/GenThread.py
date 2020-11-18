@@ -156,7 +156,7 @@ class GenThread(object):
             if name in GenThread.sharedThreadObjects:
                 return GenThread.sharedThreadObjects[name]
             else:
-                self.error("[getSharedThreadObject] shared object not found name=%s" % (name))
+                Log.fail("[getSharedThreadObject] shared object not found name=%s" % (name))
 
     def hasSharedThreadObject(self, name):
         with ThreadRequestContextManager():
@@ -515,7 +515,7 @@ class GenThread(object):
 
             picked_value -= weight
         else:
-            self.error("Error picking item from weighted dict")
+            Log.fail("Error picking item from weighted dict")
     
     def pickWeightedValue(self, weighted_dict):
         picked_val = self.pickWeighted(weighted_dict);
@@ -534,7 +534,7 @@ class GenThread(object):
         try:
             self.bntSequenceObject.setBntCallback(getattr(self.bntSequenceObject, function))
         except AttributeError:
-            self.error("unknown bnt function:%s" % function)
+            Log.fail("unknown bnt function:%s" % function)
 
         if 'BntInstructionNumber' in param_dict.keys():
             instr_num = param_dict['BntInstructionNumber']

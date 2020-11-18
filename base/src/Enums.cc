@@ -61,7 +61,7 @@ namespace Force {
   }
 
 
-  unsigned char ELimitTypeSize = 12;
+  unsigned char ELimitTypeSize = 13;
 
   const string ELimitType_to_string(ELimitType in_enum)
   {
@@ -78,6 +78,7 @@ namespace Force {
     case ELimitType::MaxPhysicalVectorLen: return "MaxPhysicalVectorLen";
     case ELimitType::ErrRegisterNumber: return "ErrRegisterNumber";
     case ELimitType::SpeculativeBntInstructionLimit: return "SpeculativeBntInstructionLimit";
+    case ELimitType::MaxVectorElementWidth: return "MaxVectorElementWidth";
     default:
       unknown_enum_value("ELimitType", (unsigned char)(in_enum));
     }
@@ -94,6 +95,9 @@ namespace Force {
     case 1:
       validate(in_str, "ChipsLimit", enum_type_name);
       return ELimitType::ChipsLimit;
+    case 2:
+      validate(in_str, "MaxVectorElementWidth", enum_type_name);
+      return ELimitType::MaxVectorElementWidth;
     case 6:
       validate(in_str, "CoresLimit", enum_type_name);
       return ELimitType::CoresLimit;
@@ -143,6 +147,9 @@ namespace Force {
     case 1:
       okay = (in_str == "ChipsLimit");
       return ELimitType::ChipsLimit;
+    case 2:
+      okay = (in_str == "MaxVectorElementWidth");
+      return ELimitType::MaxVectorElementWidth;
     case 6:
       okay = (in_str == "CoresLimit");
       return ELimitType::CoresLimit;
@@ -184,7 +191,7 @@ namespace Force {
   }
 
 
-  unsigned char EOperandTypeSize = 19;
+  unsigned char EOperandTypeSize = 20;
 
   const string EOperandType_to_string(EOperandType in_enum)
   {
@@ -208,6 +215,7 @@ namespace Force {
     case EOperandType::PREDREG: return "PREDREG";
     case EOperandType::ALU: return "ALU";
     case EOperandType::DataProcessing: return "DataProcessing";
+    case EOperandType::VectorLayout: return "VectorLayout";
     default:
       unknown_enum_value("EOperandType", (unsigned char)(in_enum));
     }
@@ -218,66 +226,69 @@ namespace Force {
   {
     string enum_type_name = "EOperandType";
     size_t size = in_str.size();
-    char hash_value = in_str.at(1 < size ? 1 : 1 % size) ^ in_str.at(4 < size ? 4 : 4 % size) ^ in_str.at(9 < size ? 9 : 9 % size);
+    char hash_value = in_str.at(4 < size ? 4 : 4 % size) ^ in_str.at(12 < size ? 12 : 12 % size) ^ in_str.at(13 < size ? 13 : 13 % size);
 
     switch (hash_value) {
-    case 64:
-      validate(in_str, "Immediate", enum_type_name);
-      return EOperandType::Immediate;
     case 65:
       validate(in_str, "ALU", enum_type_name);
       return EOperandType::ALU;
-    case 66:
-      validate(in_str, "DataProcessing", enum_type_name);
-      return EOperandType::DataProcessing;
-    case 69:
-      validate(in_str, "PREDREG", enum_type_name);
-      return EOperandType::PREDREG;
     case 70:
       validate(in_str, "FPR", enum_type_name);
       return EOperandType::FPR;
     case 71:
       validate(in_str, "GPR", enum_type_name);
       return EOperandType::GPR;
-    case 77:
-      validate(in_str, "AuthLoadStore", enum_type_name);
-      return EOperandType::AuthLoadStore;
-    case 78:
+    case 73:
+      validate(in_str, "SIMDSR", enum_type_name);
+      return EOperandType::SIMDSR;
+    case 76:
+      validate(in_str, "SIMDVR", enum_type_name);
+      return EOperandType::SIMDVR;
+    case 79:
       validate(in_str, "SysReg", enum_type_name);
       return EOperandType::SysReg;
     case 80:
+      validate(in_str, "PREDREG", enum_type_name);
+      return EOperandType::PREDREG;
+    case 81:
       validate(in_str, "GPRSP", enum_type_name);
       return EOperandType::GPRSP;
-    case 82:
-      validate(in_str, "VECREG", enum_type_name);
-      return EOperandType::VECREG;
-    case 91:
-      validate(in_str, "SIMDVR", enum_type_name);
-      return EOperandType::SIMDVR;
-    case 94:
-      validate(in_str, "SIMDSR", enum_type_name);
-      return EOperandType::SIMDSR;
-    case 95:
-      validate(in_str, "AuthBranch", enum_type_name);
-      return EOperandType::AuthBranch;
-    case 100:
-      validate(in_str, "Choices", enum_type_name);
-      return EOperandType::Choices;
-    case 101:
-      validate(in_str, "SystemOp", enum_type_name);
-      return EOperandType::SystemOp;
-    case 112:
-      validate(in_str, "LoadStore", enum_type_name);
-      return EOperandType::LoadStore;
-    case 115:
-      validate(in_str, "Register", enum_type_name);
-      return EOperandType::Register;
-    case 116:
-      validate(in_str, "Constant", enum_type_name);
-      return EOperandType::Constant;
-    case 127:
+    case 83:
       validate(in_str, "Branch", enum_type_name);
       return EOperandType::Branch;
+    case 86:
+      validate(in_str, "VECREG", enum_type_name);
+      return EOperandType::VECREG;
+    case 89:
+      validate(in_str, "DataProcessing", enum_type_name);
+      return EOperandType::DataProcessing;
+    case 92:
+      validate(in_str, "VectorLayout", enum_type_name);
+      return EOperandType::VectorLayout;
+    case 94:
+      validate(in_str, "AuthBranch", enum_type_name);
+      return EOperandType::AuthBranch;
+    case 97:
+      validate(in_str, "Constant", enum_type_name);
+      return EOperandType::Constant;
+    case 100:
+      validate(in_str, "LoadStore", enum_type_name);
+      return EOperandType::LoadStore;
+    case 101:
+      validate(in_str, "Immediate", enum_type_name);
+      return EOperandType::Immediate;
+    case 104:
+      validate(in_str, "AuthLoadStore", enum_type_name);
+      return EOperandType::AuthLoadStore;
+    case 109:
+      validate(in_str, "SystemOp", enum_type_name);
+      return EOperandType::SystemOp;
+    case 116:
+      validate(in_str, "Register", enum_type_name);
+      return EOperandType::Register;
+    case 117:
+      validate(in_str, "Choices", enum_type_name);
+      return EOperandType::Choices;
     default:
       unknown_enum_name(enum_type_name, in_str);
     }
@@ -288,66 +299,69 @@ namespace Force {
   {
     okay = true;
     size_t size = in_str.size();
-    char hash_value = in_str.at(1 < size ? 1 : 1 % size) ^ in_str.at(4 < size ? 4 : 4 % size) ^ in_str.at(9 < size ? 9 : 9 % size);
+    char hash_value = in_str.at(4 < size ? 4 : 4 % size) ^ in_str.at(12 < size ? 12 : 12 % size) ^ in_str.at(13 < size ? 13 : 13 % size);
 
     switch (hash_value) {
-    case 64:
-      okay = (in_str == "Immediate");
-      return EOperandType::Immediate;
     case 65:
       okay = (in_str == "ALU");
       return EOperandType::ALU;
-    case 66:
-      okay = (in_str == "DataProcessing");
-      return EOperandType::DataProcessing;
-    case 69:
-      okay = (in_str == "PREDREG");
-      return EOperandType::PREDREG;
     case 70:
       okay = (in_str == "FPR");
       return EOperandType::FPR;
     case 71:
       okay = (in_str == "GPR");
       return EOperandType::GPR;
-    case 77:
-      okay = (in_str == "AuthLoadStore");
-      return EOperandType::AuthLoadStore;
-    case 78:
+    case 73:
+      okay = (in_str == "SIMDSR");
+      return EOperandType::SIMDSR;
+    case 76:
+      okay = (in_str == "SIMDVR");
+      return EOperandType::SIMDVR;
+    case 79:
       okay = (in_str == "SysReg");
       return EOperandType::SysReg;
     case 80:
+      okay = (in_str == "PREDREG");
+      return EOperandType::PREDREG;
+    case 81:
       okay = (in_str == "GPRSP");
       return EOperandType::GPRSP;
-    case 82:
-      okay = (in_str == "VECREG");
-      return EOperandType::VECREG;
-    case 91:
-      okay = (in_str == "SIMDVR");
-      return EOperandType::SIMDVR;
-    case 94:
-      okay = (in_str == "SIMDSR");
-      return EOperandType::SIMDSR;
-    case 95:
-      okay = (in_str == "AuthBranch");
-      return EOperandType::AuthBranch;
-    case 100:
-      okay = (in_str == "Choices");
-      return EOperandType::Choices;
-    case 101:
-      okay = (in_str == "SystemOp");
-      return EOperandType::SystemOp;
-    case 112:
-      okay = (in_str == "LoadStore");
-      return EOperandType::LoadStore;
-    case 115:
-      okay = (in_str == "Register");
-      return EOperandType::Register;
-    case 116:
-      okay = (in_str == "Constant");
-      return EOperandType::Constant;
-    case 127:
+    case 83:
       okay = (in_str == "Branch");
       return EOperandType::Branch;
+    case 86:
+      okay = (in_str == "VECREG");
+      return EOperandType::VECREG;
+    case 89:
+      okay = (in_str == "DataProcessing");
+      return EOperandType::DataProcessing;
+    case 92:
+      okay = (in_str == "VectorLayout");
+      return EOperandType::VectorLayout;
+    case 94:
+      okay = (in_str == "AuthBranch");
+      return EOperandType::AuthBranch;
+    case 97:
+      okay = (in_str == "Constant");
+      return EOperandType::Constant;
+    case 100:
+      okay = (in_str == "LoadStore");
+      return EOperandType::LoadStore;
+    case 101:
+      okay = (in_str == "Immediate");
+      return EOperandType::Immediate;
+    case 104:
+      okay = (in_str == "AuthLoadStore");
+      return EOperandType::AuthLoadStore;
+    case 109:
+      okay = (in_str == "SystemOp");
+      return EOperandType::SystemOp;
+    case 116:
+      okay = (in_str == "Register");
+      return EOperandType::Register;
+    case 117:
+      okay = (in_str == "Choices");
+      return EOperandType::Choices;
     default:
       okay = false;
       return EOperandType::Constant;
@@ -3323,11 +3337,12 @@ namespace Force {
   }
 
 
-  unsigned char EDataAccessPermissionTypeSize = 6;
+  unsigned char EDataAccessPermissionTypeSize = 7;
 
   const string EDataAccessPermissionType_to_string(EDataAccessPermissionType in_enum)
   {
     switch (in_enum) {
+    case EDataAccessPermissionType::NoAccess: return "NoAccess";
     case EDataAccessPermissionType::ReadWrite: return "ReadWrite";
     case EDataAccessPermissionType::ReadOnly: return "ReadOnly";
     case EDataAccessPermissionType::ReadWriteNoUser: return "ReadWriteNoUser";
@@ -3344,63 +3359,69 @@ namespace Force {
   {
     string enum_type_name = "EDataAccessPermissionType";
     size_t size = in_str.size();
-    char hash_value = in_str.at(9 < size ? 9 : 9 % size);
+    char hash_value = in_str.at(11 < size ? 11 : 11 % size);
 
     switch (hash_value) {
-    case 78:
+    case 85:
       validate(in_str, "ReadWriteNoUser", enum_type_name);
       return EDataAccessPermissionType::ReadWriteNoUser;
-    case 82:
+    case 97:
       validate(in_str, "ReadWrite", enum_type_name);
       return EDataAccessPermissionType::ReadWrite;
-    case 85:
-      validate(in_str, "ReadWriteUserOnly", enum_type_name);
-      return EDataAccessPermissionType::ReadWriteUserOnly;
-    case 101:
+    case 99:
+      validate(in_str, "NoAccess", enum_type_name);
+      return EDataAccessPermissionType::NoAccess;
+    case 100:
       validate(in_str, "ReadOnly", enum_type_name);
       return EDataAccessPermissionType::ReadOnly;
-    case 111:
-      validate(in_str, "ReadOnlyNoUser", enum_type_name);
-      return EDataAccessPermissionType::ReadOnlyNoUser;
-    case 115:
+    case 101:
+      validate(in_str, "ReadWriteUserOnly", enum_type_name);
+      return EDataAccessPermissionType::ReadWriteUserOnly;
+    case 114:
       validate(in_str, "ReadOnlyUserOnly", enum_type_name);
       return EDataAccessPermissionType::ReadOnlyUserOnly;
+    case 115:
+      validate(in_str, "ReadOnlyNoUser", enum_type_name);
+      return EDataAccessPermissionType::ReadOnlyNoUser;
     default:
       unknown_enum_name(enum_type_name, in_str);
     }
-    return EDataAccessPermissionType::ReadWrite;
+    return EDataAccessPermissionType::NoAccess;
   }
 
   EDataAccessPermissionType try_string_to_EDataAccessPermissionType(const string& in_str, bool& okay)
   {
     okay = true;
     size_t size = in_str.size();
-    char hash_value = in_str.at(9 < size ? 9 : 9 % size);
+    char hash_value = in_str.at(11 < size ? 11 : 11 % size);
 
     switch (hash_value) {
-    case 78:
+    case 85:
       okay = (in_str == "ReadWriteNoUser");
       return EDataAccessPermissionType::ReadWriteNoUser;
-    case 82:
+    case 97:
       okay = (in_str == "ReadWrite");
       return EDataAccessPermissionType::ReadWrite;
-    case 85:
-      okay = (in_str == "ReadWriteUserOnly");
-      return EDataAccessPermissionType::ReadWriteUserOnly;
-    case 101:
+    case 99:
+      okay = (in_str == "NoAccess");
+      return EDataAccessPermissionType::NoAccess;
+    case 100:
       okay = (in_str == "ReadOnly");
       return EDataAccessPermissionType::ReadOnly;
-    case 111:
-      okay = (in_str == "ReadOnlyNoUser");
-      return EDataAccessPermissionType::ReadOnlyNoUser;
-    case 115:
+    case 101:
+      okay = (in_str == "ReadWriteUserOnly");
+      return EDataAccessPermissionType::ReadWriteUserOnly;
+    case 114:
       okay = (in_str == "ReadOnlyUserOnly");
       return EDataAccessPermissionType::ReadOnlyUserOnly;
+    case 115:
+      okay = (in_str == "ReadOnlyNoUser");
+      return EDataAccessPermissionType::ReadOnlyNoUser;
     default:
       okay = false;
-      return EDataAccessPermissionType::ReadWrite;
+      return EDataAccessPermissionType::NoAccess;
     }
-    return EDataAccessPermissionType::ReadWrite;
+    return EDataAccessPermissionType::NoAccess;
   }
 
 

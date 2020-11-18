@@ -22,7 +22,7 @@ import shutil
 #
 def print_vals(aObj, aIndent = "" ):
     my_str = ""
-    if type( aObj ) is dict:
+    if isinstance( aObj, dict ):
         my_sep = "{ "
         my_term = ""
         for my_key in aObj:
@@ -31,10 +31,10 @@ def print_vals(aObj, aIndent = "" ):
                 my_str += "%s%s'%s': {}" % ( aIndent, my_sep, my_key )
             elif aObj[ my_key ] is None:
                 my_str += "%s%s'%s': None" % ( aIndent, my_sep, my_key )
-            elif type( aObj[ my_key ] ) in [dict]:
+            elif isinstance( aObj[ my_key ], dict ):
                 my_str += "%s%s'%s':\n" % ( aIndent, my_sep, str( my_key ))
                 my_str += print_vals( aObj[ my_key ], "\t%s" % (aIndent ))
-            elif type( aObj[ my_key ] ) in [int,bool]:
+            elif isinstance( aObj[ my_key ], (int, bool)):
                 my_str += "%s%s'%s': %s" % ( aIndent, my_sep, my_key, str( aObj[ my_key ]  ))
             else:
                 my_str += "%s%s'%s': '%s'" % ( aIndent, my_sep, my_key, str( aObj[ my_key ]  ))

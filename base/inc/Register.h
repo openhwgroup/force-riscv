@@ -194,6 +194,7 @@ namespace Force {
     void Initialize(uint64 value);        //!< Init phy reg with (value & bitfield mask)
     void InitializePartial(uint64 value); //!< Init phy reg using only uninit'd bits from bitfield mask
     void InitializeBitField(uint64 value) { Initialize(value << mShift); } //!< Init using unshifted field value
+    void InitializeBitFieldPartial(uint64 value) { InitializePartial(value << mShift); } //!< Init uninitialized bits using unshifted field value
 
     uint64            mMask;       //!< Mask bit map determined from mSize and mShift
     uint32            mSize;       //!< Size (in bits)
@@ -261,7 +262,7 @@ namespace Force {
   protected:
     virtual void Initialize(uint64 value);       //!< Initialization from logical register value.
     virtual void InitializeField(uint64 value);                               //!< Initialize from physical register value.
-    virtual void InitializeRandomly(const ChoiceTree* pChoiceTree = nullptr); //!< Initialize this field randomly.
+    virtual void InitializeFieldRandomly(const ChoiceTree* pChoiceTree = nullptr); //!< Initialize this field randomly.
 
     virtual void Setup(const RegisterFile* pRegisterFile);                         //!< Setup bitfields phy reg pointers and phy reg reset.
     void GetPhysicalRegisters(std::set<PhysicalRegister*>& phyRegisterSet) const; //!< Add this registerfields phy registers to input vector.
@@ -300,7 +301,7 @@ namespace Force {
   protected:
     RegisterFieldRes0(const RegisterFieldRes0& rOther); //!< Copy constructor, protected.
 
-    void InitializeRandomly(const ChoiceTree* pChoiceTree = nullptr) override;  //!< Initialize this field randomly.
+    void InitializeFieldRandomly(const ChoiceTree* pChoiceTree = nullptr) override;  //!< Initialize this field randomly.
     uint64 ReloadValue(uint64& reloadValue, const ChoiceTree* pChoiceTree = 0) const override;  //!< Get Reload Value without setting it.
     uint64 ReloadValue(uint64& reloadValue, const ConstraintSet* constraintSets= 0) const override;  //!< Get Reload Value without setting it.
   };
@@ -322,7 +323,7 @@ namespace Force {
   protected:
     RegisterFieldRes1(const RegisterFieldRes1& rOther); //!< Copy constructor
 
-    void InitializeRandomly(const ChoiceTree* pChoiceTree = nullptr) override;  //!< Initialize this field randomly.
+    void InitializeFieldRandomly(const ChoiceTree* pChoiceTree = nullptr) override;  //!< Initialize this field randomly.
     uint64 ReloadValue(uint64& reloadValue, const ChoiceTree* pChoiceTree = 0) const override;  //!< Get Reload Value without setting it.
     uint64 ReloadValue(uint64& reloadValue, const ConstraintSet* constraintSets= 0) const override;  //!< Get Reload Value without setting it.
   };
@@ -355,7 +356,7 @@ namespace Force {
 
     void InitializeField(uint64 value) override { RegisterField::InitializeField(0u); } //!< Initialize from physical register value.
     void Initialize(uint64 value) override { RegisterField::Initialize(0u);  } //!< Initialization from logical register value .
-    void InitializeRandomly(const ChoiceTree* pChoiceTree = nullptr) override; //!< Initialize this field randomly.
+    void InitializeFieldRandomly(const ChoiceTree* pChoiceTree = nullptr) override; //!< Initialize this field randomly.
   };
 
   /*! \class RegisterFielRaowi
@@ -386,7 +387,7 @@ namespace Force {
 
     void InitializeField(uint64 value) override { RegisterField::InitializeField(MAX_UINT64); } //!< Initialize from physical register value.
     void Initialize(uint64 value) override { RegisterField::Initialize(MAX_UINT64); } //!< Initialization from logical register value .
-    void InitializeRandomly(const ChoiceTree* pChoiceTree = nullptr) override; //!< Initialize this field randomly.
+    void InitializeFieldRandomly(const ChoiceTree* pChoiceTree = nullptr) override; //!< Initialize this field randomly.
   };
 
    /*!
@@ -412,7 +413,7 @@ namespace Force {
     bool IgnoreUpdate() const override { return true; } //! Virtual ignore updates, used for ISS Write Update checking
     void Initialize(uint64 value) override;  //!< Initialization from logical register value
     void InitializeField(uint64 value) override; //!< Initialize from physical register value.
-    void InitializeRandomly(const ChoiceTree* pChoiceTree = nullptr) override; //!< Initialize this field randomly.
+    void InitializeFieldRandomly(const ChoiceTree* pChoiceTree = nullptr) override; //!< Initialize this field randomly.
   protected:
     void Setup(const RegisterFile* pRegisterFile) override;  //!< Setup bitfields phy reg pointers and phy reg reset.
   };
@@ -528,6 +529,7 @@ namespace Force {
 
     std::vector<uint64> Values() const; //!< return vector of values for entire large register
     std::vector<uint64> InitialValues() const; //!< return vector of initial values for entire large register
+    std::vector<uint64> ReloadValues() const; //!< return vector of reload values for entire large register
 
     bool IsLargeRegister() const override { return true; } //!< Return true for being a LargeRegister
 
@@ -711,6 +713,7 @@ namespace Force {
     void InitializeRegisterRandomly(const std::string& rRegName, const ChoicesModerator* pChoicesModerator = nullptr) const;              //!< Initialize register randomly.
     void InitializeRegisterRandomly(Register* pRegister, const ChoicesModerator* pChoicesModerator = nullptr) const;              //!< Initialize register randomly.
     virtual Register* GetContainingRegister(const Register* pReg) const { return nullptr; } //!< Return a register that contains the passed register object, if applicable.
+    virtual bool InitContainingRegister(Register* rContainingReg, const Register* pReg) const { return false; }; //!< initialize container reg from the reg it contains
     const RegisterField* InitializeRegisterFieldRandomly(Register* pRegister, const std::string& fieldName, const ChoicesModerator* pChoicesModerator) const; //!< Initialze a register field if not yet initialized.
     const RegisterField* InitializeRegisterField(Register* pRegister, const std::string& rFieldName, const uint64 value, const ChoicesModerator* pChoicesModerator = nullptr) const; //!< Initialize register field with value meant for the field.
     const RegisterField* InitializeRegisterFieldFullValue(Register* pRegister, const std::string& rFieldName, const uint64 value, const ChoicesModerator* pChoicesModerator = nullptr) const;  //!< Initialization register field from full logical register value .

@@ -149,6 +149,11 @@ namespace Force {
       }
     }
 
+    string error;
+    if (!Validate(gen, error)) {
+      throw InstructionError(error);
+    }
+
     for (auto opr_ptr : mOperands) {
       LOG(info)<<" opname="<<opr_ptr->Name()<<endl;
       opr_ptr->Generate(gen, *this);
@@ -365,4 +370,15 @@ namespace Force {
     SetUnpredictable(true);
     LOG(notice) << "{UnpredictStoreInstruction::Generate} Set instructon to be unpredicted" << endl;
   }
+
+  InstructionConstraint* VectorInstruction::InstantiateInstructionConstraint() const
+  {
+    return new VectorInstructionConstraint();
+  }
+
+  InstructionConstraint* VectorLoadStoreInstruction::InstantiateInstructionConstraint() const
+  {
+    return new VectorLoadStoreInstructionConstraint();
+  }
+
 }

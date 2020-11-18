@@ -48,29 +48,37 @@ namespace Force {
     ObjectRegistry* obj_registry = ObjectRegistry::Instance();
 
     // Register Operand based objects.
+    obj_registry->RegisterObject(new VsetvlVtypeImmediateOperand());
+    obj_registry->RegisterObject(new VectorMaskOperand());
     obj_registry->RegisterObject(new BaseOffsetBranchOperand());
     obj_registry->RegisterObject(new RetOperand());
     obj_registry->RegisterObject(new ConditionalBranchOperandRISCV());
     obj_registry->RegisterObject(new CompressedConditionalBranchOperandRISCV());
     obj_registry->RegisterObject(new CompressedRegisterOperandRISCV());
-    obj_registry->RegisterObject(new VectorRegisterOperand());
-    obj_registry->RegisterObject(new VectorLoadStoreOperand());
-    obj_registry->RegisterObject(new ConstDataTypeOperand());
-    obj_registry->RegisterObject(new RISCMultiVectorRegisterOperand());
+    obj_registry->RegisterObject(new VsetvlAvlRegisterOperand());
+    obj_registry->RegisterObject(new VsetvlVtypeRegisterOperand());
+    obj_registry->RegisterObject(new VtypeLayoutOperand());
+    obj_registry->RegisterObject(new WholeRegisterLayoutOperand());
+    obj_registry->RegisterObject(new CustomLayoutOperand());
+    obj_registry->RegisterObject(new VectorIndexedLoadStoreOperandRISCV());
+    obj_registry->RegisterObject(new MultiVectorRegisterOperandRISCV());
+    obj_registry->RegisterObject(new VectorDataRegisterOperand());
+    obj_registry->RegisterObject(new VectorIndexedDataRegisterOperand());
 
     // Register Paging related objects.
-    obj_registry->RegisterObject(new ValidPteAttributeRISCV());
     obj_registry->RegisterObject(new AddressPteAttributeRISCV());
     obj_registry->RegisterObject(new DAPteAttributeRISCV());
+    obj_registry->RegisterObject(new GPteAttributeRISCV());
     obj_registry->RegisterObject(new UPteAttributeRISCV());
     obj_registry->RegisterObject(new XPteAttributeRISCV());
-    obj_registry->RegisterObject(new WPteAttributeRISCV());
-    obj_registry->RegisterObject(new RPteAttributeRISCV());
+    obj_registry->RegisterObject(new WRPteAttributeRISCV());
+    obj_registry->RegisterObject(new VPteAttributeRISCV());
 
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());
-    obj_registry->RegisterObject(new VectorInstruction());
     obj_registry->RegisterObject(new VectorLoadStoreInstruction());
+    obj_registry->RegisterObject(new VectorAMOInstructionRISCV());
+    obj_registry->RegisterObject(new VsetvlInstruction());
   }
 
   void destroy_top_level_resources_RISCV()

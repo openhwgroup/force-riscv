@@ -285,7 +285,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.privilegeLevel = handler_context.mPrivLevel
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
 
-        self.mAssemblyHelper.logDebugSymbol('ClearPageFault entered, pte reg: x%d, pte level x%d' % (pte_reg_index, pte_level_reg_index) )
+        self.mAssemblyHelper.logDebugSymbol('ClearPageFault entered, pte addr reg: x%d pte reg: x%d, pte level reg: x%d' % (pte_addr_reg_index, pte_reg_index, pte_level_reg_index) )
 
         # get faulting address...
 
@@ -422,21 +422,43 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         #    supervisor mode?...
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 1)
-        self.mAssemblyHelper.genConditionalBranchToLabel(prev_priv_level_reg_index, scratch_reg_index, 22, 'NE', 'NOT_UBIT_SUPER_MODE')
-        #    load/store?...
+        self.mAssemblyHelper.genConditionalBranchToLabel(prev_priv_level_reg_index, scratch_reg_index, 62, 'NE', 'NOT_UBIT_SUPER_MODE')
+        
+        #    instr?...
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 12)
-        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 18, 'NE', 'NOT_UBIT_SUPER_MODE')
+        self.mAssemblyHelper.genConditionalBranchToLabel(ec_code_reg_index, scratch_reg_index, 30, 'NE', 'NOT_UBIT_SUPER_MODE_INSTR')
+
+        #    instr, U bit set?...
+        self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 0x10, pte_reg_index)
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 54, 'NE', 'NOT_UBIT_SUPER_MODE')
+        self.mAssemblyHelper.genXorImmediate(scratch_reg_index, 0x10, pte_reg_index)
+        
+        # write updated pte (with U-bit clear), issue sfence...
+        self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'UBIT_SET_INSTR')
+        self.mAssemblyHelper.genReturn()
+
+        # must be load/store...
+        self.mAssemblyHelper.addLabel('NOT_UBIT_SUPER_MODE_INSTR')
         #    U bit set?...
         self.mAssemblyHelper.genOrImmediate(scratch_reg_index, 0x10, pte_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 14, 'NE', 'NOT_UBIT_SUPER_MODE')
-        #    sstatus.sum bit clear?...
-        self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index,'sstatus')
-        self.genInstruction('LUI##RISCV', {'rd': scratch_reg2_index, 'simm20': 0x40})
-        self.mAssemblyHelper.genOrRegister(scratch_reg2_index, scratch_reg_index)
-        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 6, 'NE', 'NOT_UBIT_SUPER_MODE')
-        #    set sstatus.sum bit, return...
-        self.mAssemblyHelper.genWriteSystemRegister('sstatus',scratch_reg_index)
+        self.mAssemblyHelper.genConditionalBranchToLabel(pte_reg_index, scratch_reg_index, 26, 'NE', 'NOT_UBIT_SUPER_MODE')
+        self.mAssemblyHelper.genXorImmediate(scratch_reg_index, 0x10, pte_reg_index)
+        # write updated pte (with U-bit clear), issue sfence...
+        self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
+        self.genSFENCE(stval_reg_index, pte_level_reg_index, scratch_reg_index, scratch_reg2_index, 'UBIT_SET_DATA')
         self.mAssemblyHelper.genReturn()
+        
+        # !!! DONT MESS WITH SSTATUS.SUM YET. CAUSES PROBLEMS FOR VmPagingMapper
+        #    sstatus.sum bit clear?...
+        #self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index,'sstatus')
+        #self.genInstruction('LUI##RISCV', {'rd': scratch_reg2_index, 'simm20': 0x40})
+        #self.mAssemblyHelper.genOrRegister(scratch_reg2_index, scratch_reg_index)
+        #self.mAssemblyHelper.genConditionalBranchToLabel(scratch_reg2_index, scratch_reg_index, 6, 'EQ', 'NOT_UBIT_SUPER_MODE')
+        #    set sstatus.sum bit, return...
+        #self.mAssemblyHelper.genWriteSystemRegister('sstatus',scratch_reg2_index)
+        #self.mAssemblyHelper.genReturn()
+        
         self.mAssemblyHelper.addLabel('NOT_UBIT_SUPER_MODE')
 
         # superpage table address misaligned?...

@@ -16,7 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.instruction_list import branch_instructions
+from DV.riscv.trees.instruction_tree import BranchJump_map
 import state_transition_test_utils
 from Enums import EStateElementType
 from State import State
@@ -46,7 +46,8 @@ class MainSequence(Sequence):
     ## Generate a random number of random branch instructions.
     def _genRandomBranchInstructions(self):
         for _ in range(RandomUtils.random32(100, 200)):
-            instr = self.choice(branch_instructions)
+            instr = BranchJump_map.pick(self.genThread)
+            self.genInstruction(instr)
 
     ## Create a random State to test an explicit StateTransition.
     def _createState(self):

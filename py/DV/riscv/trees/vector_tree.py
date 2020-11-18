@@ -76,12 +76,12 @@ vinteger_instructions = {
     'VSRL.VI##RISCV':10,
     'VSRL.VV##RISCV':10,
     'VSRL.VX##RISCV':10,
-    'VNSRA.VI##RISCV':10,                   # ISA has vnsra.wi
-    'VNSRA.VV##RISCV':10,                   # ISA has vnsra.wv
-    'VNSRA.VX##RISCV':10,                   # ISA has vnsra.wx
-    'VNSRL.VI##RISCV':10,                   # ISA has vnsrl.wi
-    'VNSRL.VV##RISCV':10,                   # ISA has vnsrl.wv
-    'VNSRL.VX##RISCV':10,                   # ISA has vnsrl.wx
+    'VNSRA.WI##RISCV':10,
+    'VNSRA.WV##RISCV':10,
+    'VNSRA.WX##RISCV':10,
+    'VNSRL.WI##RISCV':10,
+    'VNSRL.WV##RISCV':10,
+    'VNSRL.WX##RISCV':10,
     'VMSEQ.VI##RISCV':10,
     'VMSEQ.VV##RISCV':10,
     'VMSEQ.VX##RISCV':10,

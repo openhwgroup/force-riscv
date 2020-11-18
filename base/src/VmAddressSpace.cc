@@ -270,7 +270,7 @@ namespace Force {
     }
 
     LOG(debug) << "{VmAddressSpace::UpdateVirtualUsableByPage} page v_lower=0x" << hex << pPage->Lower() << " v_upper=0x"
-               << pPage->Upper() << " p_lower=0x" << pPage->PhysicalLower() << " p_upper=0x" << pPage->PhysicalUpper() 
+               << pPage->Upper() << " p_lower=0x" << pPage->PhysicalLower() << " p_upper=0x" << pPage->PhysicalUpper()
                << " p_bank=" << EMemBankType_to_string(pPage->MemoryBank()) << endl;
 
     auto mem_manager   = mpGenerator->GetMemoryManager();
@@ -1066,12 +1066,11 @@ namespace Force {
 
   EExceptionConstraintType VmAddressSpace::GetExceptionConstraintType(const std::string& rExceptName) const
   {
-    auto choices_tree = mpControlBlock->GetChoicesAdapter()->GetPagingChoiceTree(rExceptName);
-    std::unique_ptr<ChoiceTree> choices_tree_storage(choices_tree);
-
+    // << "[VmAddressSpace::GetExceptionConstraintType] rExceptName=" << rExceptName << endl;
+    std::unique_ptr<ChoiceTree> choices_tree(mpControlBlock->GetChoicesAdapter()->GetPagingChoiceTree(rExceptName));
     auto choice_ptr = choices_tree->Choose();
     uint32 available_choices = choices_tree->AvailableChoices();
-    // << "found choice tree: " << choices_tree->Name() << " chosen value: " << choice_ptr->Value() << " available choices: " << available_choices << endl;
+    // << "[VmAddressSpace::GetExceptionConstraintType] found choice tree: " << choices_tree->Name() << " chosen value: " << choice_ptr->Value() << " available choices: " << available_choices << endl;
 
     EExceptionConstraintType except_constr_type = EExceptionConstraintType::Invalid;
     switch (choice_ptr->Value()) {

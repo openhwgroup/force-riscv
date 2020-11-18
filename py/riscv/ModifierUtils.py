@@ -22,26 +22,36 @@ class PageFaultModifier(ChoicesModifier):
     def __init__(self, aGenThread):
         super().__init__(aGenThread, 'PageFaultModifier')
         self._mValidFaultTypes = [
-                'Invalid Descriptor',
-                'Misaligned Superpage',
-                'Last Level Pointer',
                 'Invalid DA',
+                'Invalid U',
+                'Invalid X',
+                'Invalid WR',
+                'Invalid V',
                 #'Va Address Error',
-                #'Invalid XWR',
+                #'Misaligned Superpage',
+                #'Last Level Pointer',
                 ]
 
         self._mValidFaultLevels = {
-                'Invalid Descriptor':[3,2,1,0],
-                'Misaligned Superpage':[3,2,1],
-                'Last Level Pointer':[0],
                 'Invalid DA':[0,1,2,3],
+                'Invalid U':[0,1,2,3],
+                'Invalid X':[0,1,2,3],
+                'Invalid WR':[0,1,2,3],
+                'Invalid V':[3,2,1,0],
+                #'Va Address Error':[3,2,1,0]
+                #'Misaligned Superpage':[3,2,1],
+                #'Last Level Pointer':[0],
                 }
 
         self._mValidPrivilegeLevels = {
-                'Invalid Descriptor':['S'],
-                'Misaligned Superpage':['S'],
-                'Last Level Pointer':['S'],
                 'Invalid DA':['S'],
+                'Invalid U':['S'],
+                'Invalid X':['S'],
+                'Invalid WR':['S'],
+                'Invalid V':['S'],
+                #'Va Address Error':['S']
+                #'Misaligned Superpage':['S'],
+                #'Last Level Pointer':['S'],
                 }
 
 
@@ -56,6 +66,13 @@ class PageFaultModifier(ChoicesModifier):
                     Log.error('invalid type specified, type={}'.format(kwargs['Type']))
             else:
                 Log.error('specify All or fault name as kwarg to update choices.')
+
+    def modifyExceptionRegulation(self):
+        choice_dict = {'Prevent':100, 'Allow':1, 'Trigger':0}
+        self.modifyPagingChoices('InstructionPageFault#S#stage 1', choice_dict)
+        self.modifyPagingChoices('LoadPageFault#S#stage 1', choice_dict)
+        self.modifyPagingChoices('StoreAmoPageFault#S#stage 1', choice_dict)
+
 
     def updatePageFaultChoice(self, aType, aLevel, aPriv, aWeight):
         choice_name = '{}#level {}#{}#stage 1'.format(aType, aLevel, aPriv)
@@ -94,6 +111,8 @@ class PageFaultModifier(ChoicesModifier):
 
                 self.updatePageFaultChoice(aType, table_level, priv_level, weight)
 
+        self.modifyExceptionRegulation()
+
         if 'All' in kwargs:
             #ensure we can get both superpages/full walks for last level ptr + misaligned superpage
             self.updateSuperpageSizeChoices(50)
@@ -109,5 +128,68 @@ class PageFaultModifier(ChoicesModifier):
 
     def updateSuperpageSizeChoices(self, aWeight):
         choice_name = 'Page size#4K granule#S#stage 1'
-        choice_dict = {'4K':101-aWeight, '2M':aWeight, '1G':aWeight, '512G':aWeight}
+        choice_dict = {'4K':101-aWeight, '2M':aWeight, '1G':aWeight, '512G':0}
         self.modifyPagingChoices(choice_name, choice_dict)
+
+
+class TrapsRedirectModifier(ChoicesModifier):
+    def __init__(self, aGenThread):
+        super().__init__(aGenThread, 'TrapsRedirectModifier')
+
+        self.mSupportedExceptions = {
+            "Instruction address misaligned" : 1,
+            "Instruction access fault"       : 1,
+            "Illegal instruction"            : 1,
+            "Breakpoint"                     : 1,
+            "Load address misaligned"        : 1,
+            "Load access fault"              : 1,
+            "Store/AMO address misaligned"   : 1,
+            "Store/AMO access fault"         : 1,
+            "Environment call from U-mode"   : 1,
+            "Environment call from S-mode"   : 1,
+            "Instruction page fault"         : 1,
+            "Load page fault"                : 1,
+            "Store/AMO page fault"           : 1
+        }
+
+        self.mHaveMods = False
+        
+    def update(self, **kwargs):
+        try:
+            if 'Weight' in kwargs:
+                self.updateChoices(kwargs['ExceptionCode'], kwargs['TrapChoice'], kwargs['Weight'])
+            else:
+                self.updateChoices(kwargs['ExceptionCode'], kwargs['TrapChoice'])
+        except KeyError:
+            Log.error("TrapDelegationRedirectionModifier: 'ExceptionCode' or 'TrapChoice' arguments missing.")
+
+    def updateChoices(self,aExceptionCode, aTrapChoice, aWeight):
+        try:
+            rcode = self.mSupportedExceptions[aExceptionCode]
+        except KeyError:
+            Log.error("TrapDelegationRedirectionModifier: ExceptionCode '%s' is not supported.", aExceptionCode)
+            
+        if aTrapChoice == "Delegate":
+            self.delegateException(aExceptionCode, aWeight)
+        elif aTrapChoice == "Redirect":
+            self.redirectException(aExceptionCode, aWeight)
+        else:
+            Log.error("TrapDelegationRedirectionModifier: TrapChoice '%s' not recognized" % aTrapChoice)
+
+    def delegateException(self, aExceptionCode, aWeight = 100):
+        my_choice = "medeleg.{}".format(aExceptionCode)
+        Log.notice("delegation choice:{}".format(my_choice))
+        weightDict = { "0x0":100 - aWeight, "0x1":aWeight }
+        self.modifyRegisterFieldValueChoices(my_choice, weightDict)
+        self.mHaveMods = True
+
+    def redirectException(self, aExceptionCode, aWeight = 100):
+        my_choice = "Redirect Trap - {}".format(aExceptionCode)
+        Log.notice("redirect choice:{}".format(my_choice))
+        weightDict = { "DoNotRedirect":100 - aWeight, "DoRedirect":aWeight }
+        self.modifyGeneralChoices(my_choice, weightDict)
+        self.mHaveMods = True
+
+    def commit(self):
+        if self.mHaveMods:
+            self.commitSet()

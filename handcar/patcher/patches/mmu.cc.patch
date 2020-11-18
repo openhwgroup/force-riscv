@@ -73,17 +73,18 @@
 < bool mmu_t::mmio_ok(reg_t addr, access_type type)
 ---
 > void mmu_t::load_slow_path_partially_initialized(reg_t addr, reg_t len, uint8_t* bytes)
-106,108c136,138
+106,108c136,137
 <   // Disallow access to debug region when not in debug mode
 <   if (addr >= DEBUG_START && addr <= DEBUG_END && proc && !proc->state.debug_mode)
 <     return false;
 ---
 >   reg_t paddr = translate(addr, len, LOAD);
 >   sim->sparse_read_partially_initialized(paddr, len, bytes);
->   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "read"); 
-110c140,150
+110c139,151
 <   return true;
 ---
+>   update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "read");
+> 
 >   if (tracer.interested_in_range(paddr, paddr + PGSIZE, LOAD))
 >     tracer.trace(paddr, len, LOAD);
 >   else
@@ -95,17 +96,17 @@
 >     if (matched_trigger)
 >       throw *matched_trigger;
 >   }
-113c153
+113c154
 < bool mmu_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
 > void mmu_t::load_slow_path(reg_t addr, reg_t len, uint8_t* bytes)
-115,116c155,156
+115,116c156,157
 <   if (!mmio_ok(addr, LOAD))
 <     return false;
 ---
 >   reg_t paddr = translate(addr, len, LOAD);
 >   uint64_t buff = 0ull;
-118,119c158,168
+118,119c159,163
 <   return sim->mmio_load(addr, len, bytes);
 < }
 ---
@@ -114,33 +115,36 @@
 >   {
 >       bytes[byte_idx] = reinterpret_cast<uint8_t*>(&buff)[len -1 -byte_idx];
 >   }
->   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "read"); 
-> 
->   if (tracer.interested_in_range(paddr, paddr + PGSIZE, LOAD))
->     tracer.trace(paddr, len, LOAD);
->   else
->     refill_tlb(addr, paddr, 0 /*host_addr*/, LOAD);
-121,126c170,175
+121,124c165
 < bool mmu_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
 < {
 <   if (!mmio_ok(addr, STORE))
 <     return false;
-< 
+---
+>   update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "read");
+126c167,177
 <   return sim->mmio_store(addr, len, bytes);
 ---
+>   if (tracer.interested_in_range(paddr, paddr + PGSIZE, LOAD))
+>     tracer.trace(paddr, len, LOAD);
+>   else
+>     refill_tlb(addr, paddr, 0 /*host_addr*/, LOAD);
+> 
 >   if (!matched_trigger) {
 >     reg_t data = reg_from_bytes(len, bytes);
 >     matched_trigger = trigger_exception(OPERATION_LOAD, addr, data);
 >     if (matched_trigger)
 >       throw *matched_trigger;
 >   }
-129c178
+129c180
 < void mmu_t::load_slow_path(reg_t addr, reg_t len, uint8_t* bytes)
 ---
 > void mmu_t::initialize_slow_path(reg_t addr, reg_t len, const uint8_t* bytes)
-131,141c180,181
+131c182
 <   reg_t paddr = translate(addr, len, LOAD);
-< 
+---
+>   reg_t paddr = translate(addr, len, STORE);
+133,141c184
 <   if (auto host_addr = sim->addr_to_mem(paddr)) {
 <     memcpy(bytes, host_addr, len);
 <     if (tracer.interested_in_range(paddr, paddr + PGSIZE, LOAD))
@@ -151,13 +155,12 @@
 <     throw trap_load_access_fault(addr);
 <   }
 ---
->   reg_t paddr = translate(addr, len, STORE);
->   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "write"); 
-145c185
+>   update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "write");
+145c188
 <     matched_trigger = trigger_exception(OPERATION_LOAD, addr, data);
 ---
 >     matched_trigger = trigger_exception(OPERATION_STORE, addr, data);
-148a189,203
+148a192,206
 > 
 >   // Initialize the memory if necessary
 >   if(! sim->sparse_is_pa_initialized(paddr, len))
@@ -173,10 +176,10 @@
 >     tracer.trace(paddr, len, STORE);
 >   else
 >     refill_tlb(addr, paddr, 0 /*host_addr*/, STORE);
-153a209,210
->   update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "write"); 
+154a213,214
+>   update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(bytes), "write");
 > 
-162,169c219,227
+162,169c222,230
 <   if (auto host_addr = sim->addr_to_mem(paddr)) {
 <     memcpy(host_addr, bytes, len);
 <     if (tracer.interested_in_range(paddr, paddr + PGSIZE, STORE))
@@ -195,13 +198,13 @@
 >   else
 >   {//perform the write
 >     sim->sparse_write(paddr, bytes, len);
-170a229,233
+170a232,236
 > 
 >   if (tracer.interested_in_range(paddr, paddr + PGSIZE, STORE))
 >     tracer.trace(paddr, len, STORE);
 >   else
 >     refill_tlb(addr, paddr, 0 /*host_addr*/, STORE);
-200a264,317
+200a267,320
 > reg_t mmu_t::pmp_ok_api(reg_t addr, reg_t* pmpaddr_ptr, uint8_t* pmpcfg_ptr, reg_t len, access_type type, reg_t mode)
 > {
 >   if (!proc || proc->n_pmp == 0)
@@ -256,29 +259,29 @@
 >   return mode == PRV_M;
 > }
 > 
-287a405
+287a408
 > 
-289a408
+289a411
 >   //std::cout << "mmu_t::walk addr=0x" << std::hex << addr << " mode=0x" << mode << std::endl;
-293a413,414
+293a416,417
 >   //std::cout << "mmu_t::walk vm.ptbase=0x" << std::hex << vm.ptbase << " levels=0x" << vm.levels << std::endl;
 > 
-304a426,427
+304a429,430
 >   //std::cout << "mmu_t::walk va_bits=0x" << std::hex << va_bits << " xlen=0x" << proc->xlen << " mask=0x" << mask << " masked_msbs=0x" << masked_msbs << " levels=0x" << vm.levels << std::endl;
 > 
-307a431
+307a434
 >     //std::cout << "mmu_t::walk i=0x" << std::hex << i << " ptshift=0x" << ptshift << " levels=0x" << vm.levels << std::endl;
-309c433
+309c436
 < 
 ---
 >     //std::cout << "mmu_t::walk idx=0x" << std::hex << idx << std::endl;
-312c436,438
+312c439,441
 <     auto ppte = sim->addr_to_mem(pte_paddr);
 ---
 >     //std::cout << "mmu_t::walk pte_paddr=0x" << std::hex << pte_paddr << std::endl;
 >     //auto ppte = sim->addr_to_mem(pte_paddr); //TODO replace with check that our memory model accepts this pa
 >     bool ppte = sim->sparse_is_pa_initialized(pte_paddr, vm.ptesize);
-316c442,474
+316c445,477
 <     reg_t pte = vm.ptesize == 4 ? from_le(*(uint32_t*)ppte) : from_le(*(uint64_t*)ppte);
 ---
 >     uint64_t ppte_val = 0ull;
@@ -314,21 +317,21 @@
 >     //
 >     //
 >     reg_t pte = vm.ptesize == 4 ? from_le((uint32_t)ppte_val) : from_le(ppte_val); //TODO load the actual data from the memory model
-318a477,478
+318a480,481
 >     //std::cout << "mmu_t::walk pte=0x" << std::hex << pte << " ppn=0x" << ppn << std::endl;
 > 
-320a481
+320a484
 >       //std::cout << "mmu_t::walk next level table base=0x" << std::hex << base << std::endl;
-321a483
+321a486
 >       //std::cout << "mmu_t::walk u bit set causing page fault" << std::endl;
-323a486
+323a489
 >       //std::cout << "mmu_t::walk v bit not set, or R+W not set causing page fault" << std::endl;
-327a491
+327a494
 >       //std::cout << "mmu_t::walk non-executable, or load not readable causing page fault" << std::endl;
-329a494,495
+329a497,498
 >       reg_t test_val = ppn & ((reg_t(1) << ptshift) - 1);
 >       //std::cout << "mmu_t::walk misaligned superpage val=0x" << std::hex << test_val << " causing page fault" << std::endl;
-338c504,508
+338c507,511
 <         *(uint32_t*)ppte |= to_le((uint32_t)ad);
 ---
 >         (uint32_t)ppte_val |= to_le((uint32_t)ad); //TODO replace with a write to the memory model data, needs an iso check during dev too
@@ -336,12 +339,12 @@
 >         uint32_t debug_buff = 0;
 >         sim->sparse_read_partially_initialized(pte_paddr, vm.ptesize, reinterpret_cast<uint8_t*>(&debug_buff));
 >         assert(debug_buff == (uint32_t)ppte_val && "Failed to modify ppte_val correctly");
-342a513,514
+342a516,517
 >       {
 >         //std::cout << "mmu_t::walk ad bits ad=0x" << std::hex << ad << " causing page fault" << std::endl;
-343a516
+343a519
 >       }
-347a521,527
+347a524,530
 > 
 >       //report the translation via the callback mechanism
 >       bool has_stage_two = (vm.levels > 1); 
@@ -349,7 +352,7 @@
 >       update_mmu_event(&mmu_event);
 > 
 >       //std::cout << "mmu_t::walk end value=0x" << std::hex << value << std::endl;
-356a537,665
+356a540,668
 >   }
 > }
 > 

@@ -98,7 +98,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/Operand.cc</fileName>
-        <lineNumber>420</lineNumber>
+        <lineNumber>424</lineNumber>
     </suppress>
 
 <!-- OperandConstraintRISCV module -->
@@ -159,7 +159,7 @@
     <suppress>
         <id>oppositeExpression</id>
         <fileName>base/src/UtilityFunctions.cc</fileName>
-        <lineNumber>590</lineNumber>
+        <lineNumber>604</lineNumber>
     </suppress>
 
 <!-- VmControlBlock module -->

@@ -29,10 +29,11 @@ namespace Force {
   class GenPageRequest;
   class Operand;
   class VmConstraint;
+  class AddressReuseMode;
 
   class VaGenerator {
   public:
-    explicit VaGenerator(VmMapper* vmMapper, const GenPageRequest* pPageReq=nullptr, const ConstraintSet* pTargetConstr = nullptr, bool isOperand = true); //!< Most used constructor.
+    explicit VaGenerator(VmMapper* vmMapper, const GenPageRequest* pPageReq=nullptr, const ConstraintSet* pTargetConstr=nullptr, bool isOperand=true, const AddressReuseMode* pAddrReuseMode=nullptr); //!< Most used constructor.
     ~VaGenerator(); //!< Destructor.
     COPY_CONSTRUCTOR_ABSENT(VaGenerator);
     ASSIGNMENT_OPERATOR_ABSENT(VaGenerator);
@@ -71,6 +72,8 @@ namespace Force {
     bool mAccurateBranch; //!< Indicate if this is generating for accurate branch.
     mutable bool mNewPagesAdded; //!< New pages added in the process.
     std::vector <VmConstraint* > mHardVmConstraints; //!< Hard VM constraints if any.
+  private:
+    AddressReuseMode* mpAddrReuseMode; //!< Address reuse configuration.
   };
 }
 

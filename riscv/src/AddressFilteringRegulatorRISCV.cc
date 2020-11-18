@@ -104,7 +104,7 @@ namespace Force {
     {
       case EExceptionConstraintType::PreventHard:
         {
-          bool privileged = false;
+          /*bool privileged = false;
           rPageReq.GetGenBoolAttribute(EPageGenBoolAttrType::Privileged, privileged);
           if (privileged)
           {
@@ -113,7 +113,7 @@ namespace Force {
             {
               rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::PrivilegedNoExecute, vm_constr));
             }
-          }
+          }*/
         }
         break;
       default:
@@ -128,10 +128,31 @@ namespace Force {
     {
       case EExceptionConstraintType::PreventHard:
         {
-          const ConstraintSet* vm_constr = rVmMapper.GetVmConstraint(EVmConstraintType::PageFault);
-          if (vm_constr != nullptr)
+          if (rPageReq.PrivilegeLevelSpecified() and (rPageReq.PrivilegeLevel() == EPrivilegeLevelType::U))
           {
-            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::PageFault, vm_constr));
+            const ConstraintSet* unpriv_constr = rVmMapper.GetVmConstraint(EVmConstraintType::UnprivilegedNoExecute);
+            if (unpriv_constr != nullptr)
+            {
+              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::UnprivilegedNoExecute, unpriv_constr));
+            }
+          }
+          else
+          {
+            bool privileged = rPageReq.GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::Privileged);
+            if (privileged)
+            {
+              const ConstraintSet* priv_constr = rVmMapper.GetVmConstraint(EVmConstraintType::PrivilegedNoExecute);
+              if (priv_constr != nullptr)
+              {
+                rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::PrivilegedNoExecute, priv_constr));
+              }
+            }
+          }
+
+          const ConstraintSet* pf_constr = rVmMapper.GetVmConstraint(EVmConstraintType::PageFault);
+          if (pf_constr != nullptr)
+          {
+            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::PageFault, pf_constr));
           }
         }
         break;
@@ -141,41 +162,12 @@ namespace Force {
     }
   }
 
-
-
-
   void AddressFilteringRegulatorRISCV::GetDataAccessVmConstraints(const GenPageRequest& rPageReq, const VmMapper& rVmMapper, vector<VmConstraint* >& rVmConstraints, EExceptionConstraintType permConstrType) const
   {
     switch (permConstrType)
     {
       case EExceptionConstraintType::PreventHard:
         {
-          if (rPageReq.PrivilegeLevelSpecified() && (rPageReq.PrivilegeLevel() == EPrivilegeLevelType::U))
-          {
-            const ConstraintSet* vm_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NoUserAccess);
-            if (vm_constr != nullptr)
-            {
-              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NoUserAccess, vm_constr));
-            }
-          }
-          else
-          {
-            const ConstraintSet* vm_constr = rVmMapper.GetVmConstraint(EVmConstraintType::UserAccess);
-            if (vm_constr != nullptr)
-            {
-              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::UserAccess, vm_constr));
-            }
-          }
-
-          auto mem_access = rPageReq.MemoryAccessType();
-          if (EMemAccessTypeBaseType(mem_access) & EMemAccessTypeBaseType(EMemAccessType::Write))
-          {
-            const ConstraintSet* vm_constr = rVmMapper.GetVmConstraint(EVmConstraintType::ReadOnly);
-            if (vm_constr != nullptr)
-            {
-              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::ReadOnly, vm_constr));
-            }
-          }
         }
         break;
       default:
@@ -202,10 +194,36 @@ namespace Force {
     {
       case EExceptionConstraintType::PreventHard:
         {
-          const ConstraintSet* vm_constr = rVmMapper.GetVmConstraint(EVmConstraintType::PageFault);
-          if (vm_constr != nullptr)
+          if (rPageReq.PrivilegeLevelSpecified() && (rPageReq.PrivilegeLevel() == EPrivilegeLevelType::U))
           {
-            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::PageFault, vm_constr));
+            const ConstraintSet* no_user_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NoUserAccess);
+            if (no_user_constr != nullptr)
+            {
+              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NoUserAccess, no_user_constr));
+            }
+          }
+          else //TODO need SUM logic here to not exclude those pages when sum is set
+          {
+            const ConstraintSet* user_constr = rVmMapper.GetVmConstraint(EVmConstraintType::UserAccess);
+            if (user_constr != nullptr)
+            {
+              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::UserAccess, user_constr));
+            }
+          }
+
+          auto mem_access = rPageReq.MemoryAccessType();
+          if (EMemAccessTypeBaseType(mem_access) & EMemAccessTypeBaseType(EMemAccessType::Write))
+          {
+            const ConstraintSet* ro_constr = rVmMapper.GetVmConstraint(EVmConstraintType::ReadOnly);
+            if (ro_constr != nullptr)
+            {
+              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::ReadOnly, ro_constr));
+            }
+          }
+          const ConstraintSet* pf_constr = rVmMapper.GetVmConstraint(EVmConstraintType::PageFault);
+          if (pf_constr != nullptr)
+          {
+            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::PageFault, pf_constr));
           }
         }
         break;

@@ -76,6 +76,10 @@ class Operand(object):
         self.exclude = None
         self.differ = None
         self.slave = None
+        self.layoutMultiple = None
+        self.regCount = None
+        self.regIndexAlignment = None
+        self.elemWidth = None
         self.uop_param_type = None
         self.width = 0
         self.sizeType = None
@@ -124,6 +128,14 @@ class Operand(object):
             ret_str += " class=\"%s\"" % self.oclass
         if self.slave:
             ret_str += " slave=\"%s\"" % self.slave
+        if self.layoutMultiple:
+            ret_str += " layout-multiple=\"%s\"" % self.layoutMultiple
+        if self.regCount:
+            ret_str += " reg-count=\"%s\"" % self.regCount
+        if self.regIndexAlignment:
+            ret_str += " reg-index-alignment=\"%s\"" % self.regIndexAlignment
+        if self.elemWidth:
+            ret_str += " elem-width=\"%s\"" % self.elemWidth
         if self.uop_param_type:
             ret_str += " uop-param-type=\"%s\"" % self.uop_param_type
         if self.exclude:
@@ -211,7 +223,7 @@ class Operand(object):
         raise Error
 
     def set_attribute(self, name, value):
-        if name in ["name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "ext", "slave"]:
+        if name in ["name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "ext", "slave", "layoutMultiple", "regCount", "regIndexAlignment"]:
             setattr(self, name, value)
         elif name == "uop-param-type":
             self.uop_param_type = value

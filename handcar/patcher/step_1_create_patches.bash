@@ -16,10 +16,10 @@
 # limitations under the License.
 #
 
-mkdir originals
-mkdir modified
-mkdir patches
-mkdir patched
+mkdir -p originals/insns
+mkdir -p modified/insns
+mkdir -p patches/insns
+mkdir -p patched/insns
 
 cp ../standalone/config.h ./originals
 cp ../standalone/riscv/devices.h ./originals
@@ -40,6 +40,71 @@ cp ../standalone/riscv/sim.cc ./originals
 cp ../standalone/riscv/simif.h ./originals
 cp ../standalone/softfloat/specialize.h ./originals
 cp ../standalone/spike_main/spike.cc ./originals
+
+# Instructions
+cp ../standalone/riscv/insns/vmsof_m.h ./originals/insns/
+cp ../standalone/riscv/insns/vmadc_vim.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_x_f_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vfwcvt_xu_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vrgather_vv.h ./originals/insns/
+cp ../standalone/riscv/insns/vmsbc_vvm.h ./originals/insns/
+cp ../standalone/riscv/insns/vsbc_vvm.h ./originals/insns/
+cp ../standalone/riscv/insns/vrgather_vi.h ./originals/insns/
+cp ../standalone/riscv/insns/vs1r_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vfcvt_f_xu_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vfwcvt_rtz_x_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vsbc_vxm.h ./originals/insns/
+cp ../standalone/riscv/insns/vfmv_v_f.h ./originals/insns/
+cp ../standalone/riscv/insns/vmv_s_x.h ./originals/insns/
+cp ../standalone/riscv/insns/vadc_vvm.h ./originals/insns/
+cp ../standalone/riscv/insns/vfmv_f_s.h ./originals/insns/
+cp ../standalone/riscv/insns/vadc_vim.h ./originals/insns/
+cp ../standalone/riscv/insns/vl1r_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vfcvt_rtz_xu_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vfslide1up_vf.h ./originals/insns/
+cp ../standalone/riscv/insns/vfirst_m.h ./originals/insns/
+cp ../standalone/riscv/insns/vfcvt_rtz_x_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vpopc_m.h ./originals/insns/
+cp ../standalone/riscv/insns/vfcvt_f_x_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_rtz_x_f_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_f_x_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vmv_x_s.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_f_f_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vfwcvt_f_xu_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vwmulsu_vv.h ./originals/insns/
+cp ../standalone/riscv/insns/vfwcvt_x_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vmulhsu_vv.h ./originals/insns/
+cp ../standalone/riscv/insns/vmvnfr_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vmerge_vvm.h ./originals/insns/
+cp ../standalone/riscv/insns/vfwcvt_f_x_v.h ./originals/insns/
+cp ../standalone/riscv/insns/viota_m.h ./originals/insns/
+cp ../standalone/riscv/insns/vwmulsu_vx.h ./originals/insns/
+cp ../standalone/riscv/insns/vslide1up_vx.h ./originals/insns/
+cp ../standalone/riscv/insns/vmadc_vxm.h ./originals/insns/
+cp ../standalone/riscv/insns/vfslide1down_vf.h ./originals/insns/
+cp ../standalone/riscv/insns/vmerge_vim.h ./originals/insns/
+cp ../standalone/riscv/insns/vmadc_vvm.h ./originals/insns/
+cp ../standalone/riscv/insns/vfcvt_xu_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vmerge_vxm.h ./originals/insns/
+cp ../standalone/riscv/insns/vfwcvt_f_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vrgather_vx.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_rod_f_f_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vfmerge_vfm.h ./originals/insns/
+cp ../standalone/riscv/insns/vmsif_m.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_xu_f_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vfmv_s_f.h ./originals/insns/
+cp ../standalone/riscv/insns/vid_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vmulhsu_vx.h ./originals/insns/
+cp ../standalone/riscv/insns/vslide1down_vx.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_f_xu_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vcompress_vm.h ./originals/insns/
+cp ../standalone/riscv/insns/vfcvt_x_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vfncvt_rtz_xu_f_w.h ./originals/insns/
+cp ../standalone/riscv/insns/vfwcvt_rtz_xu_f_v.h ./originals/insns/
+cp ../standalone/riscv/insns/vmsbc_vxm.h ./originals/insns/
+cp ../standalone/riscv/insns/vmsbf_m.h ./originals/insns/
+cp ../standalone/riscv/insns/vadc_vxm.h ./originals/insns/
+
 
 #These lines were used when first creating the patches. There are not normally to be used unless updating the patches. DO NOT UNCOMMENT unless you know what you are doing.
 ###
@@ -81,6 +146,131 @@ cp ../standalone/spike_main/spike.cc ./originals
 #rm patches/simif.h.patch  
 #rm patches/specialize.h.patch
 #rm patches/spike.cc.patch
+
+#cp ../spike_mod/insns/vmsof_m.h ./modified/insns/
+#cp ../spike_mod/insns/vmadc_vim.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_x_f_w.h ./modified/insns/
+#cp ../spike_mod/insns/vfwcvt_xu_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vrgather_vv.h ./modified/insns/
+#cp ../spike_mod/insns/vmsbc_vvm.h ./modified/insns/
+#cp ../spike_mod/insns/vsbc_vvm.h ./modified/insns/
+#cp ../spike_mod/insns/vrgather_vi.h ./modified/insns/
+#cp ../spike_mod/insns/vs1r_v.h ./modified/insns/
+#cp ../spike_mod/insns/vfcvt_f_xu_v.h ./modified/insns/
+#cp ../spike_mod/insns/vfwcvt_rtz_x_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vsbc_vxm.h ./modified/insns/
+#cp ../spike_mod/insns/vfmv_v_f.h ./modified/insns/
+#cp ../spike_mod/insns/vmv_s_x.h ./modified/insns/
+#cp ../spike_mod/insns/vadc_vvm.h ./modified/insns/
+#cp ../spike_mod/insns/vfmv_f_s.h ./modified/insns/
+#cp ../spike_mod/insns/vadc_vim.h ./modified/insns/
+#cp ../spike_mod/insns/vl1r_v.h ./modified/insns/
+#cp ../spike_mod/insns/vfcvt_rtz_xu_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vfslide1up_vf.h ./modified/insns/
+#cp ../spike_mod/insns/vfirst_m.h ./modified/insns/
+#cp ../spike_mod/insns/vfcvt_rtz_x_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vpopc_m.h ./modified/insns/
+#cp ../spike_mod/insns/vfcvt_f_x_v.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_rtz_x_f_w.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_f_x_w.h ./modified/insns/
+#cp ../spike_mod/insns/vmv_x_s.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_f_f_w.h ./modified/insns/
+#cp ../spike_mod/insns/vfwcvt_f_xu_v.h ./modified/insns/
+#cp ../spike_mod/insns/vwmulsu_vv.h ./modified/insns/
+#cp ../spike_mod/insns/vfwcvt_x_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vmulhsu_vv.h ./modified/insns/
+#cp ../spike_mod/insns/vmvnfr_v.h ./modified/insns/
+#cp ../spike_mod/insns/vmerge_vvm.h ./modified/insns/
+#cp ../spike_mod/insns/vfwcvt_f_x_v.h ./modified/insns/
+#cp ../spike_mod/insns/viota_m.h ./modified/insns/
+#cp ../spike_mod/insns/vwmulsu_vx.h ./modified/insns/
+#cp ../spike_mod/insns/vslide1up_vx.h ./modified/insns/
+#cp ../spike_mod/insns/vmadc_vxm.h ./modified/insns/
+#cp ../spike_mod/insns/vfslide1down_vf.h ./modified/insns/
+#cp ../spike_mod/insns/vmerge_vim.h ./modified/insns/
+#cp ../spike_mod/insns/vmadc_vvm.h ./modified/insns/
+#cp ../spike_mod/insns/vfcvt_xu_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vmerge_vxm.h ./modified/insns/
+#cp ../spike_mod/insns/vfwcvt_f_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vrgather_vx.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_rod_f_f_w.h ./modified/insns/
+#cp ../spike_mod/insns/vfmerge_vfm.h ./modified/insns/
+#cp ../spike_mod/insns/vmsif_m.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_xu_f_w.h ./modified/insns/
+#cp ../spike_mod/insns/vfmv_s_f.h ./modified/insns/
+#cp ../spike_mod/insns/vid_v.h ./modified/insns/
+#cp ../spike_mod/insns/vmulhsu_vx.h ./modified/insns/
+#cp ../spike_mod/insns/vslide1down_vx.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_f_xu_w.h ./modified/insns/
+#cp ../spike_mod/insns/vcompress_vm.h ./modified/insns/
+#cp ../spike_mod/insns/vfcvt_x_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vfncvt_rtz_xu_f_w.h ./modified/insns/
+#cp ../spike_mod/insns/vfwcvt_rtz_xu_f_v.h ./modified/insns/
+#cp ../spike_mod/insns/vmsbc_vxm.h ./modified/insns/
+#cp ../spike_mod/insns/vmsbf_m.h ./modified/insns/
+#cp ../spike_mod/insns/vadc_vxm.h ./modified/insns/
+#rm patches/insns/vmsof_m.h.patch
+#rm patches/insns/vmadc_vim.h.patch
+#rm patches/insns/vfncvt_x_f_w.h.patch
+#rm patches/insns/vfwcvt_xu_f_v.h.patch
+#rm patches/insns/vrgather_vv.h.patch
+#rm patches/insns/vmsbc_vvm.h.patch
+#rm patches/insns/vsbc_vvm.h.patch
+#rm patches/insns/vrgather_vi.h.patch
+#rm patches/insns/vs1r_v.h.patch
+#rm patches/insns/vfcvt_f_xu_v.h.patch
+#rm patches/insns/vfwcvt_rtz_x_f_v.h.patch
+#rm patches/insns/vsbc_vxm.h.patch
+#rm patches/insns/vfmv_v_f.h.patch
+#rm patches/insns/vmv_s_x.h.patch
+#rm patches/insns/vadc_vvm.h.patch
+#rm patches/insns/vfmv_f_s.h.patch
+#rm patches/insns/vadc_vim.h.patch
+#rm patches/insns/vl1r_v.h.patch
+#rm patches/insns/vfcvt_rtz_xu_f_v.h.patch
+#rm patches/insns/vfslide1up_vf.h.patch
+#rm patches/insns/vfirst_m.h.patch
+#rm patches/insns/vfcvt_rtz_x_f_v.h.patch
+#rm patches/insns/vpopc_m.h.patch
+#rm patches/insns/vfcvt_f_x_v.h.patch
+#rm patches/insns/vfncvt_rtz_x_f_w.h.patch
+#rm patches/insns/vfncvt_f_x_w.h.patch
+#rm patches/insns/vmv_x_s.h.patch
+#rm patches/insns/vfncvt_f_f_w.h.patch
+#rm patches/insns/vfwcvt_f_xu_v.h.patch
+#rm patches/insns/vwmulsu_vv.h.patch
+#rm patches/insns/vfwcvt_x_f_v.h.patch
+#rm patches/insns/vmulhsu_vv.h.patch
+#rm patches/insns/vmvnfr_v.h.patch
+#rm patches/insns/vmerge_vvm.h.patch
+#rm patches/insns/vfwcvt_f_x_v.h.patch
+#rm patches/insns/viota_m.h.patch
+#rm patches/insns/vwmulsu_vx.h.patch
+#rm patches/insns/vslide1up_vx.h.patch
+#rm patches/insns/vmadc_vxm.h.patch
+#rm patches/insns/vfslide1down_vf.h.patch
+#rm patches/insns/vmerge_vim.h.patch
+#rm patches/insns/vmadc_vvm.h.patch
+#rm patches/insns/vfcvt_xu_f_v.h.patch
+#rm patches/insns/vmerge_vxm.h.patch
+#rm patches/insns/vfwcvt_f_f_v.h.patch
+#rm patches/insns/vrgather_vx.h.patch
+#rm patches/insns/vfncvt_rod_f_f_w.h.patch
+#rm patches/insns/vfmerge_vfm.h.patch
+#rm patches/insns/vmsif_m.h.patch
+#rm patches/insns/vfncvt_xu_f_w.h.patch
+#rm patches/insns/vfmv_s_f.h.patch
+#rm patches/insns/vid_v.h.patch
+#rm patches/insns/vmulhsu_vx.h.patch
+#rm patches/insns/vslide1down_vx.h.patch
+#rm patches/insns/vfncvt_f_xu_w.h.patch
+#rm patches/insns/vcompress_vm.h.patch
+#rm patches/insns/vfcvt_x_f_v.h.patch
+#rm patches/insns/vfncvt_rtz_xu_f_w.h.patch
+#rm patches/insns/vfwcvt_rtz_xu_f_v.h.patch
+#rm patches/insns/vmsbc_vxm.h.patch
+#rm patches/insns/vmsbf_m.h.patch
+#rm patches/insns/vadc_vxm.h.patch
 #
 #echo "#" >> patches/config.h.patch
 #echo "# Copyright (C) [2020] Futurewei Technologies, Inc." >> patches/config.h.patch
@@ -406,3 +596,134 @@ cp ../standalone/spike_main/spike.cc ./originals
 #diff originals/spike.cc modified/handcar* >> patches/spike.cc.patch
 #
 ###
+#
+### Instruction patches
+#
+#license="#\n# Copyright (C) [2020] Futurewei Technologies, Inc.\n#\n# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the \"License\");\n#  you may not use this file except in compliance with the License.\n#  You may obtain a copy of the License at\n#\n#  http://www.apache.org/licenses/LICENSE-2.0\n#\n# THIS SOFTWARE IS PROVIDED ON AN \"AS IS\" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER\n# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR\n# FIT FOR A PARTICULAR PURPOSE.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#"
+#
+#echo -e $license >> patches/insns/vmsof_m.h.patch
+#echo -e $license >> patches/insns/vmadc_vim.h.patch
+#echo -e $license >> patches/insns/vfncvt_x_f_w.h.patch
+#echo -e $license >> patches/insns/vfwcvt_xu_f_v.h.patch
+#echo -e $license >> patches/insns/vrgather_vv.h.patch
+#echo -e $license >> patches/insns/vmsbc_vvm.h.patch
+#echo -e $license >> patches/insns/vsbc_vvm.h.patch
+#echo -e $license >> patches/insns/vrgather_vi.h.patch
+#echo -e $license >> patches/insns/vs1r_v.h.patch
+#echo -e $license >> patches/insns/vfcvt_f_xu_v.h.patch
+#echo -e $license >> patches/insns/vfwcvt_rtz_x_f_v.h.patch
+#echo -e $license >> patches/insns/vsbc_vxm.h.patch
+#echo -e $license >> patches/insns/vfmv_v_f.h.patch
+#echo -e $license >> patches/insns/vmv_s_x.h.patch
+#echo -e $license >> patches/insns/vadc_vvm.h.patch
+#echo -e $license >> patches/insns/vfmv_f_s.h.patch
+#echo -e $license >> patches/insns/vadc_vim.h.patch
+#echo -e $license >> patches/insns/vl1r_v.h.patch
+#echo -e $license >> patches/insns/vfcvt_rtz_xu_f_v.h.patch
+#echo -e $license >> patches/insns/vfslide1up_vf.h.patch
+#echo -e $license >> patches/insns/vfirst_m.h.patch
+#echo -e $license >> patches/insns/vfcvt_rtz_x_f_v.h.patch
+#echo -e $license >> patches/insns/vpopc_m.h.patch
+#echo -e $license >> patches/insns/vfcvt_f_x_v.h.patch
+#echo -e $license >> patches/insns/vfncvt_rtz_x_f_w.h.patch
+#echo -e $license >> patches/insns/vfncvt_f_x_w.h.patch
+#echo -e $license >> patches/insns/vmv_x_s.h.patch
+#echo -e $license >> patches/insns/vfncvt_f_f_w.h.patch
+#echo -e $license >> patches/insns/vfwcvt_f_xu_v.h.patch
+#echo -e $license >> patches/insns/vwmulsu_vv.h.patch
+#echo -e $license >> patches/insns/vfwcvt_x_f_v.h.patch
+#echo -e $license >> patches/insns/vmulhsu_vv.h.patch
+#echo -e $license >> patches/insns/vmvnfr_v.h.patch
+#echo -e $license >> patches/insns/vmerge_vvm.h.patch
+#echo -e $license >> patches/insns/vfwcvt_f_x_v.h.patch
+#echo -e $license >> patches/insns/viota_m.h.patch
+#echo -e $license >> patches/insns/vwmulsu_vx.h.patch
+#echo -e $license >> patches/insns/vslide1up_vx.h.patch
+#echo -e $license >> patches/insns/vmadc_vxm.h.patch
+#echo -e $license >> patches/insns/vfslide1down_vf.h.patch
+#echo -e $license >> patches/insns/vmerge_vim.h.patch
+#echo -e $license >> patches/insns/vmadc_vvm.h.patch
+#echo -e $license >> patches/insns/vfcvt_xu_f_v.h.patch
+#echo -e $license >> patches/insns/vmerge_vxm.h.patch
+#echo -e $license >> patches/insns/vfwcvt_f_f_v.h.patch
+#echo -e $license >> patches/insns/vrgather_vx.h.patch
+#echo -e $license >> patches/insns/vfncvt_rod_f_f_w.h.patch
+#echo -e $license >> patches/insns/vfmerge_vfm.h.patch
+#echo -e $license >> patches/insns/vmsif_m.h.patch
+#echo -e $license >> patches/insns/vfncvt_xu_f_w.h.patch
+#echo -e $license >> patches/insns/vfmv_s_f.h.patch
+#echo -e $license >> patches/insns/vid_v.h.patch
+#echo -e $license >> patches/insns/vmulhsu_vx.h.patch
+#echo -e $license >> patches/insns/vslide1down_vx.h.patch
+#echo -e $license >> patches/insns/vfncvt_f_xu_w.h.patch
+#echo -e $license >> patches/insns/vcompress_vm.h.patch
+#echo -e $license >> patches/insns/vfcvt_x_f_v.h.patch
+#echo -e $license >> patches/insns/vfncvt_rtz_xu_f_w.h.patch
+#echo -e $license >> patches/insns/vfwcvt_rtz_xu_f_v.h.patch
+#echo -e $license >> patches/insns/vmsbc_vxm.h.patch
+#echo -e $license >> patches/insns/vmsbf_m.h.patch
+#echo -e $license >> patches/insns/vadc_vxm.h.patch
+#
+#diff originals/insns/vmsof_m.h modified/insns/vmsof_m.h >> patches/insns/vmsof_m.h.patch
+#diff originals/insns/vmadc_vim.h modified/insns/vmadc_vim.h >> patches/insns/vmadc_vim.h.patch
+#diff originals/insns/vfncvt_x_f_w.h modified/insns/vfncvt_x_f_w.h >> patches/insns/vfncvt_x_f_w.h.patch
+#diff originals/insns/vfwcvt_xu_f_v.h modified/insns/vfwcvt_xu_f_v.h >> patches/insns/vfwcvt_xu_f_v.h.patch
+#diff originals/insns/vrgather_vv.h modified/insns/vrgather_vv.h >> patches/insns/vrgather_vv.h.patch
+#diff originals/insns/vmsbc_vvm.h modified/insns/vmsbc_vvm.h >> patches/insns/vmsbc_vvm.h.patch
+#diff originals/insns/vsbc_vvm.h modified/insns/vsbc_vvm.h >> patches/insns/vsbc_vvm.h.patch
+#diff originals/insns/vrgather_vi.h modified/insns/vrgather_vi.h >> patches/insns/vrgather_vi.h.patch
+#diff originals/insns/vs1r_v.h modified/insns/vs1r_v.h >> patches/insns/vs1r_v.h.patch
+#diff originals/insns/vfcvt_f_xu_v.h modified/insns/vfcvt_f_xu_v.h >> patches/insns/vfcvt_f_xu_v.h.patch
+#diff originals/insns/vfwcvt_rtz_x_f_v.h modified/insns/vfwcvt_rtz_x_f_v.h >> patches/insns/vfwcvt_rtz_x_f_v.h.patch
+#diff originals/insns/vsbc_vxm.h modified/insns/vsbc_vxm.h >> patches/insns/vsbc_vxm.h.patch
+#diff originals/insns/vfmv_v_f.h modified/insns/vfmv_v_f.h >> patches/insns/vfmv_v_f.h.patch
+#diff originals/insns/vmv_s_x.h modified/insns/vmv_s_x.h >> patches/insns/vmv_s_x.h.patch
+#diff originals/insns/vadc_vvm.h modified/insns/vadc_vvm.h >> patches/insns/vadc_vvm.h.patch
+#diff originals/insns/vfmv_f_s.h modified/insns/vfmv_f_s.h >> patches/insns/vfmv_f_s.h.patch
+#diff originals/insns/vadc_vim.h modified/insns/vadc_vim.h >> patches/insns/vadc_vim.h.patch
+#diff originals/insns/vl1r_v.h modified/insns/vl1r_v.h >> patches/insns/vl1r_v.h.patch
+#diff originals/insns/vfcvt_rtz_xu_f_v.h modified/insns/vfcvt_rtz_xu_f_v.h >> patches/insns/vfcvt_rtz_xu_f_v.h.patch
+#diff originals/insns/vfslide1up_vf.h modified/insns/vfslide1up_vf.h >> patches/insns/vfslide1up_vf.h.patch
+#diff originals/insns/vfirst_m.h modified/insns/vfirst_m.h >> patches/insns/vfirst_m.h.patch
+#diff originals/insns/vfcvt_rtz_x_f_v.h modified/insns/vfcvt_rtz_x_f_v.h >> patches/insns/vfcvt_rtz_x_f_v.h.patch
+#diff originals/insns/vpopc_m.h modified/insns/vpopc_m.h >> patches/insns/vpopc_m.h.patch
+#diff originals/insns/vfcvt_f_x_v.h modified/insns/vfcvt_f_x_v.h >> patches/insns/vfcvt_f_x_v.h.patch
+#diff originals/insns/vfncvt_rtz_x_f_w.h modified/insns/vfncvt_rtz_x_f_w.h >> patches/insns/vfncvt_rtz_x_f_w.h.patch
+#diff originals/insns/vfncvt_f_x_w.h modified/insns/vfncvt_f_x_w.h >> patches/insns/vfncvt_f_x_w.h.patch
+#diff originals/insns/vmv_x_s.h modified/insns/vmv_x_s.h >> patches/insns/vmv_x_s.h.patch
+#diff originals/insns/vfncvt_f_f_w.h modified/insns/vfncvt_f_f_w.h >> patches/insns/vfncvt_f_f_w.h.patch
+#diff originals/insns/vfwcvt_f_xu_v.h modified/insns/vfwcvt_f_xu_v.h >> patches/insns/vfwcvt_f_xu_v.h.patch
+#diff originals/insns/vwmulsu_vv.h modified/insns/vwmulsu_vv.h >> patches/insns/vwmulsu_vv.h.patch
+#diff originals/insns/vfwcvt_x_f_v.h modified/insns/vfwcvt_x_f_v.h >> patches/insns/vfwcvt_x_f_v.h.patch
+#diff originals/insns/vmulhsu_vv.h modified/insns/vmulhsu_vv.h >> patches/insns/vmulhsu_vv.h.patch
+#diff originals/insns/vmvnfr_v.h  modified/insns/vmvnfr_v.h  >> patches/insns/vmvnfr_v.h.patch
+#diff originals/insns/vmerge_vvm.h modified/insns/vmerge_vvm.h >> patches/insns/vmerge_vvm.h.patch
+#diff originals/insns/vfwcvt_f_x_v.h modified/insns/vfwcvt_f_x_v.h >> patches/insns/vfwcvt_f_x_v.h.patch
+#diff originals/insns/viota_m.h  modified/insns/viota_m.h  >> patches/insns/viota_m.h.patch
+#diff originals/insns/vwmulsu_vx.h modified/insns/vwmulsu_vx.h >> patches/insns/vwmulsu_vx.h.patch
+#diff originals/insns/vslide1up_vx.h modified/insns/vslide1up_vx.h >> patches/insns/vslide1up_vx.h.patch
+#diff originals/insns/vmadc_vxm.h  modified/insns/vmadc_vxm.h >> patches/insns/vmadc_vxm.h.patch
+#diff originals/insns/vfslide1down_vf.h modified/insns/vfslide1down_vf.h >> patches/insns/vfslide1down_vf.h.patch
+#diff originals/insns/vmerge_vim.h modified/insns/vmerge_vim.h >> patches/insns/vmerge_vim.h.patch
+#diff originals/insns/vmadc_vvm.h  modified/insns/vmadc_vvm.h >> patches/insns/vmadc_vvm.h.patch
+#diff originals/insns/vfcvt_xu_f_v.h modified/insns/vfcvt_xu_f_v.h >> patches/insns/vfcvt_xu_f_v.h.patch
+#diff originals/insns/vmerge_vxm.h modified/insns/vmerge_vxm.h >> patches/insns/vmerge_vxm.h.patch
+#diff originals/insns/vfwcvt_f_f_v.h modified/insns/vfwcvt_f_f_v.h >> patches/insns/vfwcvt_f_f_v.h.patch
+#diff originals/insns/vrgather_vx.h modified/insns/vrgather_vx.h >> patches/insns/vrgather_vx.h.patch
+#diff originals/insns/vfncvt_rod_f_f_w.h modified/insns/vfncvt_rod_f_f_w.h >> patches/insns/vfncvt_rod_f_f_w.h.patch
+#diff originals/insns/vfmerge_vfm.h modified/insns/vfmerge_vfm.h >> patches/insns/vfmerge_vfm.h.patch
+#diff originals/insns/vmsif_m.h  modified/insns/vmsif_m.h  >> patches/insns/vmsif_m.h.patch
+#diff originals/insns/vfncvt_xu_f_w.h modified/insns/vfncvt_xu_f_w.h >> patches/insns/vfncvt_xu_f_w.h.patch
+#diff originals/insns/vfmv_s_f.h  modified/insns/vfmv_s_f.h  >> patches/insns/vfmv_s_f.h.patch
+#diff originals/insns/vid_v.h  modified/insns/vid_v.h  >> patches/insns/vid_v.h.patch
+#diff originals/insns/vmulhsu_vx.h modified/insns/vmulhsu_vx.h >> patches/insns/vmulhsu_vx.h.patch
+#diff originals/insns/vslide1down_vx.h modified/insns/vslide1down_vx.h >> patches/insns/vslide1down_vx.h.patch
+#diff originals/insns/vfncvt_f_xu_w.h modified/insns/vfncvt_f_xu_w.h >> patches/insns/vfncvt_f_xu_w.h.patch
+#diff originals/insns/vcompress_vm.h modified/insns/vcompress_vm.h >> patches/insns/vcompress_vm.h.patch
+#diff originals/insns/vfcvt_x_f_v.h modified/insns/vfcvt_x_f_v.h >> patches/insns/vfcvt_x_f_v.h.patch
+#diff originals/insns/vfncvt_rtz_xu_f_w.h modified/insns/vfncvt_rtz_xu_f_w.h >> patches/insns/vfncvt_rtz_xu_f_w.h.patch
+#diff originals/insns/vfwcvt_rtz_xu_f_v.h modified/insns/vfwcvt_rtz_xu_f_v.h >> patches/insns/vfwcvt_rtz_xu_f_v.h.patch
+#diff originals/insns/vmsbc_vxm.h modified/insns/vmsbc_vxm.h >> patches/insns/vmsbc_vxm.h.patch
+#diff originals/insns/vmsbf_m.h modified/insns/vmsbf_m.h >> patches/insns/vmsbf_m.h.patch
+#diff originals/insns/vadc_vxm.h modified/insns/vadc_vxm.h >> patches/insns/vadc_vxm.h.patch
+#

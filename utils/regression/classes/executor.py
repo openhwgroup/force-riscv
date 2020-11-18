@@ -14,15 +14,12 @@
 # limitations under the License.
 #
 # name: executor.py
-# comments: Defines and Implementes the Executor abstract class which serves as the abstration
-#           used to spawn a process or execute a process
+# comments: Defines and implements the Executor abstract class which serves as
+#           the abstraction used to spawn a process or execute a process
 
-from common.path_utils import PathUtils
 from common.msg_utils import Msg
-from common.sys_utils import SysUtils
-from common.errors import *
+from common.errors import AbstractionError
 
-from classes.control_item import ControlItem, CtrlItmKeys
 
 # executor response that comes from SysUtils::exec_process
 class ProcessResult:
@@ -32,6 +29,7 @@ class ProcessResult:
     process_stderr  = 2
     process_start   = 3
     process_end     = 4
+
 
 # Executor abstract class
 class Executor( object ):
@@ -59,38 +57,6 @@ class Executor( object ):
 
     def set_task_name( self, arg_task_name ):
         self.task_name = arg_task_name
-
-    def addDictOptions(self, aOptDict, aIgnoreKeys):
-        ret_str = ""
-        for (key, value) in sorted(aOptDict.items()):
-            if key in aIgnoreKeys:
-                continue
-
-            key_str = str(key)
-            value_str = str(value)
-            ret_str += " %s" % key_str
-
-            if value is None:
-                continue
-
-            if key_str.endswith('='):
-                ret_str += value_str
-            else:
-                ret_str += ' ' + value_str
-
-        Msg.user( "addDictOptions: %s " % ret_str)
-        return ret_str
-
-    def addDefaultOptions(self, aCmdLine, aDefOptions):
-        ret_str = ""
-        for def_opt in aDefOptions:
-            if def_opt.isSpecified(aCmdLine):
-                #Msg.user("option %s specified. " % def_opt._mName)
-                pass
-            else:
-                ret_str += " " + def_opt.formatDefaultOption()
-                #Msg.user("adding option: %s" % ret_str)
-        return ret_str
 
     def execute( self ):
         Msg.error_trace()
@@ -146,4 +112,3 @@ class Executor( object ):
     def factory( self, arg_ctrl_item ):
         Msg.error_trace()
         raise NotImplementedError( "{{{TODO}}}: Implement a factory method to create one or more executors, Executor::factory() ..." )
-

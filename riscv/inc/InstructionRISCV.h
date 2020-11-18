@@ -21,42 +21,6 @@
 namespace Force {
 
   /*!
-    \class VectorInstruction
-    \brief Base class for instructions.
-  */
-  class VectorInstruction : public virtual Instruction {
-  public:
-    Object* Clone() const override { return new VectorInstruction(*this); } //!< Return a cloned VectorInstruction object of the same type and same contents of the object.
-    const char* Type() const override { return "VectorInstruction"; } //!< Return the type of the VectorInstruction object in C string.
-
-    VectorInstruction() : Instruction() { } //!< Constructor
-    ~VectorInstruction() { } //!< Destructor.
-
-    void Setup(const GenInstructionRequest& instrReq, Generator& gen) override; //!< Setup conditions, constrainting mechanisms before generation instruction.
-  protected:
-    VectorInstruction(const VectorInstruction& rOther); //!< Copy constructor.
-    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstaint object.
-    void LocateDataTypeOperand(); //!< Locate VectorInstruction's data-type operand.
-  };
-
-  /*!
-    \class VectorLoadStoreInstruction
-    \brief derived class for vector load store instructions.
-  */
-  class VectorLoadStoreInstruction : public VectorInstruction, public LoadStoreInstruction {
-  public:
-    Object* Clone() const override { return new VectorLoadStoreInstruction(*this); } //!< Return a cloned object of the same type and same contents of the object.
-    const char* Type() const override { return "VectorLoadStoreInstruction"; } //!< Return the type of the VectorInstruction object in C string.
-
-  VectorLoadStoreInstruction() : Instruction(), VectorInstruction(), LoadStoreInstruction() { } //!< Constructor
-    ~VectorLoadStoreInstruction() { } //!< Destructor.
-
-  protected:
-    VectorLoadStoreInstruction(const VectorLoadStoreInstruction& rOther) : VectorInstruction(rOther), LoadStoreInstruction(rOther) { } //!< Copy constructor.
-    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstaint object.
-  };
-
-  /*!
     \class RetInstruction
     \brief class for RET instructions.
   */
@@ -73,6 +37,40 @@ namespace Force {
   protected:
     RetInstruction(const RetInstruction& rOther) : Instruction(rOther) { } //!< Copy constructor.
     InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstaint object.
+  };
+
+  /*!
+    \class VectorAMOInstructionRISCV
+    \brief Class for RISCV vector AMO instructions.
+  */
+  class VectorAMOInstructionRISCV : public VectorLoadStoreInstruction {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorAMOInstructionRISCV);
+
+    Object* Clone() const override { return new VectorAMOInstructionRISCV(*this); } //!< Return a cloned VectorAMOInstructionRISCV object of the same type and same contents of the object.
+    const char* Type() const override { return "VectorAMOInstructionRISCV"; } //!< Return the type of the VectorAMOInstructionRISCV object in C string.
+    bool Validate(const Generator& gen, std::string& error) const override; //!< Validates generation control for RISCV VAMO instructions.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
+  };
+
+  /*!
+    \class VsetvlInstruction
+    \brief Class for VSETVL and VSETVLI instructions.
+  */
+  class VsetvlInstruction : public Instruction {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlInstruction);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlInstruction);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlInstruction);
+
+    Object* Clone() const override { return new VsetvlInstruction(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VsetvlInstruction"; } //!< Return a string describing the actual type of the Object.
+    bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return preamble requests if there is any.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VsetvlInstruction);
   };
 
 }

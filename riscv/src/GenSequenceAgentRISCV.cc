@@ -236,7 +236,7 @@ namespace Force {
     uint32 gpr_index;
     if (gprPtr == nullptr)
     {
-      gpr_index = mpGenerator->GetRandomRegister(ERegisterType::VECREG, "0");
+      gpr_index = mpGenerator->GetRandomRegister(ERegisterType::GPR, "0");
       char reg_prefix = 'v';
       char print_buffer[16];
       snprintf(print_buffer, 16, "%c%d", reg_prefix, gpr_index);
@@ -255,6 +255,7 @@ namespace Force {
     auto vl_req = new GenInstructionRequest(instr_name);
     vl_req->AddOperandRequest(src_opr, gpr_index);
     vl_req->AddOperandRequest(dest_opr, regPtr->IndexValue());
+    vl_req->AddDetail("NoRestriction", 1);
     reqSeq.push_back(vl_req);
   }
 

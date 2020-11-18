@@ -30,6 +30,7 @@
 #include <PageRequestRegulator.h>
 #include <VmManager.h>
 #include <VmMapper.h>
+#include <AddressReuseMode.h>
 #include <Log.h>
 
 #include <memory>
@@ -50,7 +51,7 @@ namespace Force {
     delete mpConstraintSet;
   }
 
-  void OperandConstraint::ApplyUserRequest(const OperandRequest& rOprReq)
+  void OperandConstraint::ApplyUserRequest(const OperandRequest& rOprReq, const OperandStructure& rOperandStruct)
   {
     auto value_constr = rOprReq.GetValueConstraint();
     if (nullptr != value_constr) {
@@ -58,11 +59,23 @@ namespace Force {
         LOG(fail) << "{OperandConstraint::ApplyUserRequest} expect mpConstraintSet to be nullptr at this point." << endl;
         FAIL("dangling-constraint-set-pointer");
       }
+
+      ValidateUserRequestConstraint(*value_constr, rOperandStruct);
+
       mpConstraintSet = value_constr->Clone();
       if (mpConstraintSet->Size() == 1) {
         mConstraintForced = true;
       }
       rOprReq.SetApplied();
+    }
+  }
+
+  void OperandConstraint::ValidateUserRequestConstraint(const ConstraintSet& rUserReqConstr, const OperandStructure& rOperandStruct)
+  {
+    unique_ptr<ConstraintSet> default_constr(DefaultConstraintSet(rOperandStruct));
+    if (not default_constr->ContainsConstraintSet(rUserReqConstr)) {
+      LOG(fail) << "{OperandConstraint::ValidateUserRequestConstraint} requested operand value range (" << rUserReqConstr.ToSimpleString() << ") for operand " << rOperandStruct.Name() << " contains values outside of the physical range for the operand (" << default_constr->ToSimpleString() << ")" << endl;
+      FAIL("illegal-operand-request");
     }
   }
 
@@ -74,6 +87,22 @@ namespace Force {
     mpConstraintSet->SubValue(value);
   }
 
+  void OperandConstraint::SubDifferOperandValues(const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    if (not mConstraintForced) {
+      for (const string& differ : rOperandStruct.GetDiffers()) {
+        if (mpConstraintSet == nullptr) {
+          mpConstraintSet = DefaultConstraintSet(rOperandStruct);
+        }
+
+        const Operand* opr = rInstr.FindOperand(differ, true);
+        ConstraintSet adj_differ_values;
+        GetAdjustedDifferValues(rInstr, *(opr->GetOperandConstraint()), opr->Value(), adj_differ_values);
+        mpConstraintSet->SubConstraintSet(adj_differ_values);
+      }
+    }
+  }
+
   ConstraintSet* OperandConstraint::DefaultConstraintSet(const OperandStructure& rOperandStruct) const
   {
     return new ConstraintSet(0, (1u << rOperandStruct.mSize) - 1);
@@ -82,6 +111,11 @@ namespace Force {
   void OperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
 
+  }
+
+  void OperandConstraint::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    rAdjDifferValues.AddValue(differVal);
   }
 
   void ImmediatePartialOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
@@ -330,12 +364,12 @@ namespace Force {
   }
 
   AddressingOperandConstraint::AddressingOperandConstraint()
-    : GroupOperandConstraint(), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints()
+    : GroupOperandConstraint(), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints(), mpAddrReuseMode(new AddressReuseMode())
   {
   }
 
   AddressingOperandConstraint::AddressingOperandConstraint(const AddressingOperandConstraint& rOther)
-    : GroupOperandConstraint(rOther), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints()
+    : GroupOperandConstraint(rOther), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints(), mpAddrReuseMode(new AddressReuseMode(*(rOther.mpAddrReuseMode)))
   {
   }
 
@@ -368,10 +402,12 @@ namespace Force {
     auto addr_op_struct = rOperandStruct.CastOperandStructure<AddressingOperandStructure>();
     mpPageRequest = rGen.GenPageRequestInstance(IsInstruction(), addr_op_struct->MemAccessType());
     if (rInstr.NoDataAbort()){
-      mpPageRequest->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataAbort, true);
+      mpPageRequest->SetGenBoolAttribute(EPageGenBoolAttrType::NoDataPageFault, true);
     }
     SetupVmMapper(rGen);
     // << "instruction " << rInstr.Name() << " use preamble? " << mUsePreamble << " no preamble? " << mNoPreamble << endl;
+
+    SetupAddressReuseMode(rGen);
   }
 
   AddressingOperandConstraint::~AddressingOperandConstraint()
@@ -379,6 +415,7 @@ namespace Force {
     delete mpPageRequest;
     delete mpTargetConstraint;
     mpVmMapper = nullptr;
+    delete mpAddrReuseMode;
   }
 
   bool AddressingOperandConstraint::TargetConstraintForced() const
@@ -425,6 +462,37 @@ namespace Force {
     for (auto reg_opr : reg_vec) {
       reg_opr->AddWriteConstraint(rGen);
     }
+  }
+
+  void AddressingOperandConstraint::SetupAddressReuseMode(const Generator& rGen)
+  {
+    if (IsInstruction() or HasDataConstraints()) {
+      return;
+    }
+
+    const ChoicesModerator* choices_mod = rGen.GetChoicesModerator(EChoicesType::OperandChoices);
+    if (ChooseAddressReuseEnabled(*choices_mod, "Read after read address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterRead);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Read after write address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterWrite);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Write after read address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterRead);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Write after write address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterWrite);
+    }
+  }
+
+  bool AddressingOperandConstraint::ChooseAddressReuseEnabled(const ChoicesModerator& rChoicesMod, const string& rChoiceTreeName)
+  {
+    unique_ptr<ChoiceTree> reuse_choices(rChoicesMod.CloneChoiceTree(rChoiceTreeName));
+    const Choice* reuse_choice = reuse_choices->Choose();
+    return (reuse_choice->Value() == 1);
   }
 
   void BranchOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
@@ -655,7 +723,7 @@ namespace Force {
     mpBase = dynamic_cast<RegisterOperand* >(base_ptr);
     if (nullptr == mpBase) {
       LOG(fail) << "{BaseOffsetLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-      FAIL("expecting-register_operand");
+      FAIL("expecting-register-operand");
     }
 
     if (bols_struct->Offset().size() > 0) {
@@ -680,14 +748,14 @@ namespace Force {
     mpBase = dynamic_cast<RegisterOperand* >(base_ptr);
     if (nullptr == mpBase) {
       LOG(fail) << "{BaseIndexLoadStoreOperandConstraint::Setup} expecting operand " << base_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-      FAIL("expecting-register_operand");
+      FAIL("expecting-register-operand");
     }
     if (bils_struct->Index().size() > 0) {
       auto register_ptr = rInstr.FindOperandMutable(bils_struct->Index(), true);
       mpIndex =  dynamic_cast<RegisterOperand* >(register_ptr);
       if (nullptr == mpIndex) {
          LOG(fail) << "{BaseIndexLoadStoreOperandConstraint::Setup} expecting operand " << register_ptr->Name() << " to be \"RegisterOperand\" type." << endl;
-         FAIL("expecting-register_operand");
+         FAIL("expecting-register-operand");
       }
       mIndexUsePreamble = rGen.AddressProtection() or not rGen.HasISS();
       const std::vector<Operand* > operands = rInstr.GetOperands();
@@ -730,6 +798,78 @@ namespace Force {
   {
     LoadStoreOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
     mpOffset = GetSignedOffsetOperand(rInstr, rOperandStruct);
+  }
+
+  VectorStridedLoadStoreOperandConstraint::VectorStridedLoadStoreOperandConstraint()
+    : LoadStoreOperandConstraint(), mpBase(nullptr), mpStride(nullptr), mBaseValue(0), mStrideValue(0)
+  {
+  }
+
+  void VectorStridedLoadStoreOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    LoadStoreOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    auto lsop_struct = dynamic_cast<const LoadStoreOperandStructure*>(&rOperandStruct);
+    if (lsop_struct == nullptr) {
+      LOG(fail) << "{VectorStridedLoadStoreOperandConstraint::Setup} expecting operand " << rOperandStruct.mName << " to be \"LoadStoreOperandStructure\" type." << endl;
+      FAIL("expecting-load-store-operand-structure");
+    }
+
+    Operand* base_opr = rInstr.FindOperandMutable(lsop_struct->Base(), true);
+    mpBase = dynamic_cast<RegisterOperand*>(base_opr);
+    if (mpBase == nullptr) {
+      LOG(fail) << "{VectorStridedLoadStoreOperandConstraint::Setup} expecting operand " << base_opr->Name() << " to be \"RegisterOperand\" type." << endl;
+      FAIL("expecting-register-operand");
+    }
+
+    Operand* stride_opr = rInstr.FindOperandMutable(lsop_struct->Index(), true);
+    mpStride = dynamic_cast<RegisterOperand*>(stride_opr);
+    if (mpStride == nullptr) {
+      LOG(fail) << "{VectorStridedLoadStoreOperandConstraint::Setup} expecting operand " << stride_opr->Name() << " to be \"RegisterOperand\" type." << endl;
+      FAIL("expecting-register-operand");
+    }
+  }
+
+  void VectorStridedLoadStoreOperandConstraint::GetRegisterOperands(vector<const RegisterOperand*>& rRegOps)
+  {
+    rRegOps.push_back(mpBase);
+    rRegOps.push_back(mpStride);
+  }
+
+  VectorIndexedLoadStoreOperandConstraint::VectorIndexedLoadStoreOperandConstraint()
+    : LoadStoreOperandConstraint(), mpBase(nullptr), mpIndex(nullptr), mBaseValue(0), mIndexElemValues(0), mIndexElemSize(0)
+  {
+  }
+
+  void VectorIndexedLoadStoreOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    LoadStoreOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    auto lsop_struct = dynamic_cast<const LoadStoreOperandStructure*>(&rOperandStruct);
+    if (lsop_struct == nullptr) {
+      LOG(fail) << "{VectorIndexedLoadStoreOperandConstraint::Setup} expecting operand " << rOperandStruct.mName << " to be \"LoadStoreOperandStructure\" type." << endl;
+      FAIL("expecting-load-store-operand-structure");
+    }
+
+    Operand* base_opr = rInstr.FindOperandMutable(lsop_struct->Base(), true);
+    mpBase = dynamic_cast<RegisterOperand*>(base_opr);
+    if (mpBase == nullptr) {
+      LOG(fail) << "{VectorIndexedLoadStoreOperandConstraint::Setup} expecting operand " << base_opr->Name() << " to be \"RegisterOperand\" type." << endl;
+      FAIL("expecting-register-operand");
+    }
+
+    Operand* index_opr = rInstr.FindOperandMutable(lsop_struct->Index(), true);
+    mpIndex = dynamic_cast<RegisterOperand*>(index_opr);
+    if (mpIndex == nullptr) {
+      LOG(fail) << "{VectorIndexedLoadStoreOperandConstraint::Setup} expecting operand " << index_opr->Name() << " to be \"RegisterOperand\" type." << endl;
+      FAIL("expecting-register-operand");
+    }
+  }
+
+  void VectorIndexedLoadStoreOperandConstraint::GetRegisterOperands(vector<const RegisterOperand*>& rRegOps)
+  {
+    rRegOps.push_back(mpBase);
+    rRegOps.push_back(mpIndex);
   }
 
 }

@@ -175,14 +175,14 @@ def arrange_operand_values(names, values):
     opr_name_val_lst = list()
     for const_val in values.keys():
         opr_val = values[const_val]
-        if type(opr_val) == type("string"):
+        if isinstance(opr_val, str):
             opr_val = [values[const_val]]
 
         const_opr_name = None
         opr_names =  None
         for key, value in names.items():
             const_opr_name = [key]
-            if type(value) == type("string"):
+            if isinstance(value, str):
                 opr_names = [value]
             else:
                 opr_names = value

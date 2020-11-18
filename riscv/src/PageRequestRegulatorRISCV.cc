@@ -37,6 +37,13 @@ namespace Force {
   PageRequestRegulatorRISCV::PageRequestRegulatorRISCV()
     : PageRequestRegulator()
   {
+    //mInstrExceptionTypes.push_back(EPagingExceptionType::InstructionAccessFault);
+    mInstrExceptionTypes.push_back(EPagingExceptionType::InstructionPageFault);
+
+    //mDataExceptionTypes.push_back(EPagingExceptionType::LoadAccessFault);
+    //mDataExceptionTypes.push_back(EPagingExceptionType::StoreAmoAccessFault);
+    mDataExceptionTypes.push_back(EPagingExceptionType::LoadPageFault);
+    mDataExceptionTypes.push_back(EPagingExceptionType::StoreAmoPageFault);
   }
 
   PageRequestRegulatorRISCV::PageRequestRegulatorRISCV(const PageRequestRegulatorRISCV& rOther)
@@ -131,27 +138,6 @@ namespace Force {
     }
 
     PageRequestRegulator::RegulateBranchPageRequest(pVmMapper, pBrStruct, pPageReq);
-  }
-
-  const char* PageRequestRegulatorRISCV::GetExceptionString(EPagingExceptionType exceptType) const
-  {
-    return EPagingExceptionType_to_string(exceptType).c_str();
-  }
-
-  void PageRequestRegulatorRISCV::PreventDataAbort(GenPageRequest* pPageReq) const
-  {
-    PageRequestRegulator::PreventDataAbort(pPageReq);
-    pPageReq->SetExceptionConstraint(EPagingExceptionType::LoadPageFault, EExceptionConstraintType::PreventHard);
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::Invalid, 0); // ensure Invalid attribute is set to 0.
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::AddrSizeFault, 0); // Don't generate address size fault for system pages
-  }
-
-  void PageRequestRegulatorRISCV::PreventInstrAbort(GenPageRequest* pPageReq) const
-  {
-    PageRequestRegulator::PreventInstrAbort(pPageReq);
-    pPageReq->SetExceptionConstraint(EPagingExceptionType::InstructionPageFault, EExceptionConstraintType::PreventHard);
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::Invalid, 0); // ensure Invalid attribute is set to 0.
-    pPageReq->SetGenAttributeValue(EPageGenAttributeType::AddrSizeFault, 0); // Don't generate address size fault for system pages
   }
 
 }

@@ -32,6 +32,8 @@ class OperandAdjustor(object):
         self.add_asm_op(opr)
 
     def set_fpr_choices(self, opr, size):
+        if size == 2:
+            opr.choices = "16-bit SIMD/FP registers"
         if size == 4:
             opr.choices = "32-bit SIMD/FP registers"
         elif size == 8:
@@ -43,6 +45,11 @@ class OperandAdjustor(object):
         rd_opr = self.mInstr.find_operand("rd")
         rd_opr.access = "Write"
         self.set_reg_int(rd_opr)
+
+    def set_rd_hp(self):
+        rd_opr = self.mInstr.find_operand("rd")
+        rd_opr.access = "Write"
+        self.set_reg_hp(rd_opr)
 
     def set_rd_sp(self):
         rd_opr = self.mInstr.find_operand("rd")
@@ -78,20 +85,39 @@ class OperandAdjustor(object):
         rs2_opr.access = "Read"
         self.set_reg_int(rs2_opr)
 
+    def set_rs2_int_ls_base(self):
+        rs2_opr = self.mInstr.find_operand("rs2")
+        self.set_reg_nonzero_int(rs2_opr)
+
     def set_rs3_int(self):
         rs3_opr = self.mInstr.find_operand("rs3")
         rs3_opr.access = "Read"
         self.set_reg_int(rs3_opr)
+
+    def set_rs1_hp(self):
+        rs1_opr = self.mInstr.find_operand("rs1")
+        rs1_opr.access = "Read"
+        self.set_reg_hp(rs1_opr)
 
     def set_rs1_sp(self):
         rs1_opr = self.mInstr.find_operand("rs1")
         rs1_opr.access = "Read"
         self.set_reg_sp(rs1_opr)
 
+    def set_rs2_hp(self):
+        rs2_opr = self.mInstr.find_operand("rs2")
+        rs2_opr.access = "Read"
+        self.set_reg_hp(rs2_opr)
+
     def set_rs2_sp(self):
         rs2_opr = self.mInstr.find_operand("rs2")
         rs2_opr.access = "Read"
         self.set_reg_sp(rs2_opr)
+
+    def set_rs3_hp(self):
+        rs3_opr = self.mInstr.find_operand("rs3")
+        rs3_opr.access = "Read"
+        self.set_reg_hp(rs3_opr)
 
     def set_rs3_sp(self):
         rs3_opr = self.mInstr.find_operand("rs3")
@@ -131,6 +157,11 @@ class OperandAdjustor(object):
     def set_reg_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "GPRs"
+        self.add_asm_op(aSrcOpr)
+
+    def set_reg_hp(self, aSrcOpr):
+        aSrcOpr.type = "FPR"
+        aSrcOpr.choices = "16-bit SIMD/FP registers"
         self.add_asm_op(aSrcOpr)
 
     def set_reg_sp(self, aSrcOpr):

@@ -40,6 +40,7 @@ namespace Force {
   class PagingChoicesAdapter;
   class MemoryConstraint;
   class AddressReuseMode;
+  class SymbolManager;
 
   /*!
     \class MemoryBank
@@ -50,7 +51,7 @@ namespace Force {
     explicit MemoryBank(EMemBankType bankType); //!< Constructor with memory bank type given.
 
     MemoryBank() //!< Default constructor.
-      : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr)
+      : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr)
     {
     }
 
@@ -80,6 +81,7 @@ namespace Force {
     bool AllocatePageTableBlock(uint64 align, uint64 size, const ConstraintSet* range, uint64& start); //!< Allocate page table block in a certain memory bank.
     inline PhysicalPageManager* GetPhysicalPageManager() const { return mpPhysicalPageManager; } //!< Return the physical page manager for the specified memory bank.
     inline PageTableManager* GetPageTableManager() const { return mpPageTableManager; } //!< Return page table manager for the specified memory bank.
+    inline SymbolManager* GetSymbolManager() const { return mpSymbolManager; } //!< Return symbol manager for the specified memory bank.
   private:
     Memory* mpMemory; //!< Pointer to memory object.
     ConstraintSet* mpBaseConstraint; //!< Pointer to base memory constraint.
@@ -87,6 +89,7 @@ namespace Force {
     MemoryConstraint* mpUsable; //!< Usable memory constraint.
     PhysicalPageManager* mpPhysicalPageManager; //!< Pointer to physical page manager object
     PageTableManager* mpPageTableManager; //!< Pointer to the page table manager object
+    SymbolManager* mpSymbolManager; //!< Pointer to the symbol manager object.
   };
 
   /*!

@@ -103,6 +103,10 @@ def adjust_fp_rs2_rs1_int_rd(instr):
     opr_adjustor.set_rd_int()
     instr.group="Float"
 
+    if ".H" in instr.name:
+        opr_adjustor.set_rs2_hp()
+        opr_adjustor.set_rs1_hp()
+        return True
     if ".S" in instr.name:
         opr_adjustor.set_rs2_sp()
         opr_adjustor.set_rs1_sp()
@@ -124,6 +128,11 @@ def adjust_fp_rs2_rs1_rd(instr):
 
     instr.group="Float"
 
+    if ".H" in instr.name:
+        opr_adjustor.set_rs2_hp()
+        opr_adjustor.set_rs1_hp()
+        opr_adjustor.set_rd_hp()
+        return True
     if ".S" in instr.name:
         opr_adjustor.set_rs2_sp()
         opr_adjustor.set_rs1_sp()
@@ -169,6 +178,9 @@ def adjust_imm12_rs1_rd(instr):
         opr_adjustor.set_imm("imm[11:0]", "simm12", True)
         opr_adjustor.set_rs1_int_ls_base()
 
+        if "H" in instr_full_ID:
+            size = 2
+            opr_adjustor.set_rd_hp()
         if "W" in instr_full_ID:
             size = 4
             opr_adjustor.set_rd_sp()
@@ -221,6 +233,10 @@ def adjust_rs1_rd(instr):
     instr_full_ID = instr.get_full_ID()
     if instr_full_ID.startswith("FCLASS"):
         instr.group = "Float"
+        if ".H" in instr_full_ID:
+            opr_adjustor.set_rs1_hp()
+            opr_adjustor.set_rd_int()
+            return True
         if ".S" in instr_full_ID:
             opr_adjustor.set_rs1_sp()
             opr_adjustor.set_rd_int()
@@ -241,6 +257,14 @@ def adjust_rs1_rd(instr):
             return True
         elif ".X.W" in instr_full_ID:
             opr_adjustor.set_rs1_sp()
+            opr_adjustor.set_rd_int()
+            return True
+        elif ".H.X" in instr_full_ID:
+            opr_adjustor.set_rs1_int()
+            opr_adjustor.set_rd_hp()
+            return True
+        elif ".X.H" in instr_full_ID:
+            opr_adjustor.set_rs1_hp()
             opr_adjustor.set_rd_int()
             return True
         elif ".D.X" in instr_full_ID:
@@ -377,7 +401,7 @@ def adjust_stores(instr):
     if instr.name in ["SB", "SD", "SH", "SW"]:
         return adjust_int_stores(instr)
 
-    if instr.name in ["FSW", "FSD", "FSQ"]:
+    if instr.name in ["FSW", "FSD", "FSQ", "FSH"]:
         return adjust_fp_stores(instr)
 
     return False
@@ -420,7 +444,7 @@ def adjust_int_stores(instr):
     add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
-# FSW, FSD, FSQ - floating point store instructions
+# FSW, FSD, FSQ, FSH - floating point store instructions
 def adjust_fp_stores(instr):
     opr_adjustor = OperandAdjustor(instr)
     opr_adjustor.set_imm("imm[11:5]", "simm12", True)
@@ -438,6 +462,9 @@ def adjust_fp_stores(instr):
     if "W" in instr.name:
         size = 4
         opr_adjustor.set_rs2_sp()
+    if "H" in instr.name:
+        size = 2
+        opr_adjustor.set_rs2_hp()
     elif "D" in instr.name:
         size = 8
         opr_adjustor.set_rs2_dp()
@@ -535,8 +562,7 @@ def adjust_aq_rs1(instr):
     return True
 
 # CSR register Instructions
-# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5" access="Read" choices="Read system registers"/>
-# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5" access="Write" choices="Write system registers"/>
+# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5" access="Write" choices="System registers"/>
 # CSRRW - always writes
 # if rd=x0, then the instruction shall not read the CSR and shall not cause any of the side effects that might occur on a CSR read
 # CSRRS/C - always reads
@@ -549,7 +575,7 @@ def adjust_csr_rs1(instr):
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
     csr_opr.access = "Write"
-    csr_opr.choices = "Write system registers"
+    csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 
     opr_adjustor.set_rs1_int()
@@ -571,7 +597,7 @@ def adjust_csr_imm(instr):
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
     csr_opr.access = "Write"
-    csr_opr.choices = "Write system registers"
+    csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 
     opr_adjustor.set_imm("uimm", "imm4", False)
@@ -590,7 +616,14 @@ def adjust_f_rs3(instr):
 
     opr_adjustor.set_rm()
 
-    if ".S" in instr_full_ID:
+    if ".H" in instr_full_ID:
+        instr.form = "Half-precision"
+        opr_adjustor.set_rs1_hp()
+        opr_adjustor.set_rs2_hp()
+        opr_adjustor.set_rs3_hp()
+        opr_adjustor.set_rd_hp()
+        return True
+    elif ".S" in instr_full_ID:
         instr.form = "Single-precision"
         opr_adjustor.set_rs1_sp()
         opr_adjustor.set_rs2_sp()
@@ -625,7 +658,13 @@ def adjust_f_rs2(instr):
 
     opr_adjustor.set_rm()
 
-    if ".S" in instr_full_ID:
+    if ".H" in instr_full_ID:
+        instr.form = "Half-precision"
+        opr_adjustor.set_rs1_hp()
+        opr_adjustor.set_rs2_hp()
+        opr_adjustor.set_rd_hp()
+        return True
+    elif ".S" in instr_full_ID:
         instr.form = "Single-precision"
         opr_adjustor.set_rs1_sp()
         opr_adjustor.set_rs2_sp()
@@ -656,7 +695,11 @@ def adjust_f_rs1(instr):
     opr_adjustor.set_rm()
 
     if instr_full_ID.startswith("FSQRT"):
-        if ".S" in instr_full_ID:
+        if ".H" in instr_full_ID:
+            opr_adjustor.set_rs1_hp()
+            opr_adjustor.set_rd_hp()
+            return True
+        elif ".S" in instr_full_ID:
             opr_adjustor.set_rs1_sp()
             opr_adjustor.set_rd_sp()
             return True
@@ -678,6 +721,8 @@ def adjust_f_rs1(instr):
 
         if "S" in src_str:
             opr_adjustor.set_rs1_sp()
+        elif "H" in src_str:
+            opr_adjustor.set_rs1_hp()
         elif "D" in src_str:
             opr_adjustor.set_rs1_dp()
         elif "Q" in src_str:
@@ -695,6 +740,8 @@ def adjust_f_rs1(instr):
 
         if "S" in dest_str:
             opr_adjustor.set_rd_sp()
+        if "H" in dest_str:
+            opr_adjustor.set_rd_hp()
         elif "D" in dest_str:
             opr_adjustor.set_rd_dp()
         elif "Q" in dest_str:

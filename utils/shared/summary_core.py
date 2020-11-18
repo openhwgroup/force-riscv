@@ -15,6 +15,7 @@
 #
 # Threading Base
 import re
+from collections import defaultdict
 
 from shared.path_utils import PathUtils
 from shared.sys_utils import SysUtils
@@ -40,11 +41,10 @@ class SummaryDetail:
 
 
 class SummaryQueueItem( object ):
-
     def __init__( self, arg_process_info ): # arg_frun_path, arg_parent_fctrl, arg_fctrl_item, arg_group ):
         self.process_info = arg_process_info
 
-class SummaryErrorQueueItem( SummaryQueueItem ):
+class SummaryErrorQueueItem( object ):
     def __init__( self, arg_error_info ):
         self.error_info = arg_error_info
 
@@ -487,7 +487,7 @@ class SummaryThread( HiThread ):
                     # my_qitem = self.summary_queue.dequeue(0)
 
                     my_qitem = self.summary_queue.dequeue(0)
-                    if type( my_qitem ) is SummaryErrorQueueItem:
+                    if isinstance( my_qitem, SummaryErrorQueueItem):
                         Msg.user( str( my_qitem.error_info ), "SUMMARY_ERROR" )
                         my_eitem = SummaryErrorItem()
                         my_eitem.load( my_qitem )
@@ -520,7 +520,7 @@ class  Summary( object ):
 
     def __init__( self, arg_summary_dir ):
         self.summary_dir = arg_summary_dir
-        self.tasks = {}
+        self.tasks = defaultdict(list)
         self.errors = []
         self.groups = SummaryGroups()
         self.queue = SummaryQueue()

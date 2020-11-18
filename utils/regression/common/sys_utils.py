@@ -41,31 +41,31 @@ class SysUtils:
 
     # mimics the c++ conditional statement
     @classmethod
-    def ifthen( arg_class, arg_test, arg_true_val, arg_false_val ):
+    def ifthen( cls, arg_test, arg_true_val, arg_false_val ):
 
         # print( "SysUtils::ifthen\n" )
         # print( str( arg_test ), str( arg_true_val) , str( arg_false_val ))
         # print( "----- SysUtils::ifthen\n" )
 
-        if ( type( arg_test ) is bool ) and arg_test:
+        if arg_test:
             return arg_true_val
         return arg_false_val
 
     @classmethod
-    def ifkey( arg_class, arg_key, arg_dict, arg_def_val ):
+    def ifkey( cls, arg_key, arg_dict, arg_def_val ):
         if arg_key in arg_dict:
             return arg_dict[ arg_key ]
         return arg_def_val
 
     @classmethod
-    def percent( arg_class, arg_num, arg_denom ):
+    def percent( cls, arg_num, arg_denom ):
         if bool( arg_denom ):
             return 100 * arg_num/arg_denom
         return 0.0
 
 
     @classmethod
-    def envar( arg_class, arg_key, arg_defval = None, arg_def_warn = True ):
+    def envar( cls, arg_key, arg_defval = None, arg_def_warn = True ):
         try:
             return os.environ[ arg_key]
         except KeyError as arg_ex:
@@ -76,26 +76,26 @@ class SysUtils:
         return arg_defval
 
     @classmethod
-    def envar_set( arg_class, arg_var, arg_val ):
+    def envar_set( cls, arg_var, arg_val ):
         os.environ[ arg_var ] = arg_val
         return (SysUtils.envar( arg_var, arg_val ) == arg_val)
 
     @classmethod
-    def envar_unset( arg_class, arg_var ):
+    def envar_unset( cls, arg_var ):
         del os.environ[ arg_var ]
         return ( SysUtils.envar( arg_var, "default" ) == "default" )
 
     @classmethod
-    def check_host( arg_class, arg_teststr ):
+    def check_host( cls, arg_teststr ):
         my_hostname = str( subprocess.check_output( [ "uname", "-n" ] ), "utf-8" )
         return ( my_hostname.find( arg_teststr ) == 0 )
 
     @classmethod
-    def exec_cmd( arg_class, arg_cmd ):
+    def exec_cmd( cls, arg_cmd ):
         return os.system( arg_cmd )
 
     @classmethod
-    def open_output( arg_class, arg_fout = None, arg_ferr = None ):
+    def open_output( cls, arg_fout = None, arg_ferr = None ):
 
         Msg.dbg( "arg_fout: %s, arg_ferr: %s" % ( str(arg_fout), str(arg_ferr) ))
         try:
@@ -114,8 +114,8 @@ class SysUtils:
         return( my_fout, my_ferr )
 
     @classmethod
-    def exec_process( arg_class, arg_cmd, arg_fout = None, arg_ferr = None, arg_timeout = None, arg_kill = False, arg_set_process = None ):
-    #def exec_process( arg_class, arg_cmd, arg_fout = None, arg_ferr = None, arg_timeout = None, arg_kill_all = True ):
+    def exec_process( cls, arg_cmd, arg_fout = None, arg_ferr = None, arg_timeout = None, arg_kill = False, arg_set_process = None ):
+    #def exec_process( cls, arg_cmd, arg_fout = None, arg_ferr = None, arg_timeout = None, arg_kill_all = True ):
 
         my_process_cmd = arg_cmd
         Msg.dbg(my_process_cmd)
@@ -214,12 +214,12 @@ class SysUtils:
         return ( 0, None, "Unable to Spawn Process ....", 0, None, None, SysUtils.PROCESS_UNABLE_TO_SPAWN )
 
     @classmethod
-    def exec_content( arg_class, arg_content, arg_suppress = False, aLocals = None ):
+    def exec_content( cls, arg_content, arg_suppress = False, aLocals = None ):
 
         # control_items = None
         my_glb={}
         my_loc={}
-        if type(aLocals) is dict:
+        if isinstance(aLocals, dict):
             import copy
             my_loc = copy.deepcopy(aLocals)
 
@@ -241,7 +241,7 @@ class SysUtils:
             raise
 
         except Exception as arg_ex:
-            Msg.err( str( arg_ex ) + ", " + str( type( arg_ex ) ))
+            Msg.err( str( arg_ex ) + ", " + str(type( arg_ex )) )
 
         except:
 
@@ -257,14 +257,14 @@ class SysUtils:
         return None
 
     @classmethod
-    def is_numeric( arg_class, arg_var, arg_no_complex = True ):
+    def is_numeric( cls, arg_var, arg_no_complex = True ):
         if arg_no_complex:
             return isinstance( arg_var, int ) or isinstance( arg_var, float )
         return isinstance( arg_var, int ) or isinstance( arg_var, float ) or isinstance( arg_var, complex )
 
 
     @classmethod
-    def sleep( arg_class, arg_interval ):
+    def sleep( cls, arg_interval ):
         time.sleep( arg_interval/1000 )
 
     @classmethod
@@ -276,20 +276,20 @@ class SysUtils:
             time.sleep( 1 )
 
     @classmethod
-    def found( arg_class, arg_pos ):
+    def found( cls, arg_pos ):
         return arg_pos >= 0
 
     @classmethod
-    def success( arg_class, arg_retcode ):
+    def success( cls, arg_retcode ):
         return arg_retcode is not None and int( arg_retcode ) == int( 0 )
 
     @classmethod
-    def failed( arg_class, arg_retcode ):
+    def failed( cls, arg_retcode ):
         return not SysUtils.success( arg_retcode )
 
     # Return shell command output using Pyton subprocess module
     @classmethod
-    def get_command_output( arg_class, arg_command ):
+    def get_command_output( cls, arg_command ):
         ret_okay = True
         import subprocess
         try:

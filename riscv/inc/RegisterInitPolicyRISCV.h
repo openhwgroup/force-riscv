@@ -42,6 +42,87 @@ namespace Force {
   protected:
     PpnInitPolicy(const PpnInitPolicy& rOther) : RegisterInitPolicy(rOther) { } //!< Copy constructor.
   };
+
+  /*!
+    \class VlInitPolicy
+    \brief A class to help initialize the vl register.
+  */
+  class VlInitPolicy : public RegisterInitPolicy {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VlInitPolicy);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VlInitPolicy);
+    ASSIGNMENT_OPERATOR_ABSENT(VlInitPolicy);
+
+    Object* Clone() const override { return new VlInitPolicy(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VlInitPolicy"; } //!< Return a string describing the actual type of the Object.
+
+    void InitializeRegister(Register* pRegister) const override; //!< Initialize register.
+    uint64 RegisterReloadValue(Register* pRegister) const override; //!< Reload register value.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VlInitPolicy);
+  private:
+    uint64 GetVlmax() const; //!< Get the maximum valid vl value.
+  };
+
+  /*!
+    \class VstartInitPolicy
+    \brief A class to help initialize the vstart register.
+  */
+  class VstartInitPolicy : public RegisterInitPolicy {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VstartInitPolicy);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VstartInitPolicy);
+    ASSIGNMENT_OPERATOR_ABSENT(VstartInitPolicy);
+
+    Object* Clone() const override { return new VstartInitPolicy(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VstartInitPolicy"; } //!< Return a string describing the actual type of the Object.
+
+    void InitializeRegister(Register* pRegister) const override; //!< Initialize register.
+    uint64 RegisterReloadValue(Register* pRegister) const override; //!< Reload register value.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VstartInitPolicy);
+  };
+
+  /*!
+    \class VtypeInitPolicy
+    \brief A class to help initialize the vtype register.
+  */
+  class VtypeInitPolicy : public RegisterInitPolicy {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VtypeInitPolicy);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VtypeInitPolicy);
+    ASSIGNMENT_OPERATOR_ABSENT(VtypeInitPolicy);
+
+    Object* Clone() const override { return new VtypeInitPolicy(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VtypeInitPolicy"; } //!< Return a string describing the actual type of the Object.
+
+    void InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree = nullptr) const override; //!< Initialize register field.
+    uint64 RegisterFieldReloadValue(RegisterField* pRegField) const override; //!< Reload register field value.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VtypeInitPolicy);
+  };
+
+  /*!
+    \class VlmulInitPolicy
+    \brief A class to help initialize the vtype.VLMUL field.
+  */
+  class VlmulInitPolicy : public RegisterInitPolicy {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VlmulInitPolicy);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VlmulInitPolicy);
+    ASSIGNMENT_OPERATOR_ABSENT(VlmulInitPolicy);
+
+    Object* Clone() const override { return new VlmulInitPolicy(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VlmulInitPolicy"; } //!< Return a string describing the actual type of the Object.
+
+    void InitializeRegisterField(RegisterField* pRegField, const ChoiceTree* pChoiceTree = nullptr) const override; //!< Initialize register field.
+    uint64 RegisterFieldReloadValue(RegisterField* pRegField) const override; //!< Reload register field value.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VlmulInitPolicy);
+  private:
+    uint64 ChooseVlmulValue() const; //!< Choose a legal value for VLMUL.
+  };
+
 }
 
-#endif 
+#endif

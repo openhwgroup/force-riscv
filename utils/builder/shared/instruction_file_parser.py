@@ -86,14 +86,13 @@ class InstructionFileHandler(xml.sax.handler.ContentHandler, object):
             return self.currentGroupOperand
         else:
             return Operand()
-    
+
     def start_O(self, attrs):
         self.currentOperand = self.create_operand(attrs["type"])
         names = attrs.getNames()
-        my_attr_list = [ "name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "slave", "uop-param-type", "sizeType"]
+        my_attr_list = [ "name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "slave", "layout-multiple", "reg-count", "reg-index-alignment", "elem-width", "uop-param-type", "sizeType"]
         for name in names:
-            # if name in ["name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "ext", "key", "modifier", "pointer", "address-based"]:
-            if name in my_attr_list:   		
+            if name in my_attr_list:
                 setattr(self.currentOperand, name, attrs[name])
             elif name == "class":
                 self.currentOperand.oclass = attrs[name]
@@ -102,7 +101,7 @@ class InstructionFileHandler(xml.sax.handler.ContentHandler, object):
 
         if not self.currentOperand.bits:
             self.currentOperand.width = 0
-        else: 
+        else:
             self.currentOperand.width = builder_utils.get_bits_size(self.currentOperand.bits)
 
     def end_O(self):

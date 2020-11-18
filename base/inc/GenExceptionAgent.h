@@ -64,6 +64,8 @@ namespace Force {
     virtual ExceptionContext* ExceptionContextInstance(EExceptionClassType exceptClass) const; //!< Return an ExceptionContext object.
   protected:
     GenExceptionRequest* mpExceptionRequest; //!< Pointer to GenExceptionRequest object.
+  private:
+    virtual void AddPostExceptionRequests() { } //!< Add necessary requests following the exception, if any.
   };
 
 }

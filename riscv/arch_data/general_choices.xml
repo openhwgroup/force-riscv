@@ -68,4 +68,65 @@
     <choice description="resolving free pages in high range" name="high range" value="0x1" weight="40"/>
     <choice description="resolving free pages cross range from high to low" name="cross range" value="0x2" weight="20"/>
   </choices>
+
+  <choices name="Redirect Trap - Instruction address misaligned" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Instruction access fault" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Illegal instruction" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Breakpoint" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Load address misaligned" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Load access fault" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Store/AMO address misaligned" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Store/AMO access fault" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Environment call from U-mode" type="General">
+    <choice description="Do NOT redirect trap to U-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to U-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Environment call from S-mode" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Instruction page fault" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Load page fault" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Redirect Trap - Store/AMO page fault" type="General">
+    <choice description="Do NOT redirect trap to S-mode" name="DoNotRedirect" value="0x0" weight="10"/>
+    <choice description="Redirect trap to S-mode" name="DoRedirect" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Skip Generation - Vector AMO" type="General">
+    <choice description="Do NOT skip generation when SEW < 32" name="DoNotSkip" value="0x0" weight="0"/>
+    <choice description="Skip generation when SEW < 32" name="DoSkip" value="0x1" weight="10"/>
+  </choices>
+  <choices name="Reset vstart" type="General">
+    <choice description="Do NOT reset vstart after an exception" name="NoReset" value="0x0" weight="0"/>
+    <choice description="Reset vstart after an exception" name="Reset" value="0x1" weight="10"/>
+  </choices>
 </choices_file>

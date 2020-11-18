@@ -38,7 +38,7 @@ class ProcessAction():
     NoWrite=3     # execute without write to control file
 
     @classmethod
-    def translate( arg_class, arg_str ):
+    def translate( cls, arg_str ):
         if arg_str == "write-only": return ProcessAction.WriteOnly
         if arg_str == "immediate" : return ProcessAction.Immediate
         if arg_str == "delay"     : return ProcessAction.Delay
@@ -46,7 +46,7 @@ class ProcessAction():
         raise Execption( "Unable to translate string value: %s, to ProcessAction" % ( arg_str ))
 
     @classmethod
-    def asstr( arg_class, arg_val ):
+    def asstr( cls, arg_val ):
         if arg_val == ProcessAction.WriteOnly : return "write-only"
         if arg_val == ProcessAction.Immediate : return "immediate"
         if arg_val == ProcessAction.Delay     : return "delay"
@@ -98,7 +98,7 @@ class ProcessWorkerThread( HiThread ):
 
         self.extract_results( my_retcode, my_cmd, my_log, self.queue_item, start, end )
         self.done_semaphore.release()
-        self.thread_count.delta(-1)
+        self.thread_count.add(-1)
 
 class ProcessThread( HiThread ):
     def __init__( self, arg_process_queue, arg_summary, max_process_count, arg_done_signal):
@@ -119,7 +119,7 @@ class ProcessThread( HiThread ):
                 # Launch a thread with the item. Sempahore will block if we've reached max workers
                 self.semaphore.acquire(True)
                 my_work_thread = ProcessWorkerThread(self.process_queue, self.summary, self.semaphore, self.thread_count, my_queue_item)
-                self.thread_count.delta(1)
+                self.thread_count.add(1)
             except TimeoutError:
                 pass
             self.HeartBeat()

@@ -91,7 +91,7 @@
 > 
 503a533
 >       reg_t set_vl_api(reg_t reqVL, reg_t newType);
-515a546,573
+515a546,583
 > 
 > extern "C"{
 >   // update_vector_element function: for the given cpuid, this callback function is called by the simulator to notify the user that a vector register element has been read or written
@@ -115,8 +115,18 @@
 > void processor_t::vectorUnit_t::do_callback(reg_t vecRegIndex, reg_t eltIndex, const char pAccessType[]) const  
 > {
 >   reg_t elts_per_reg = (VLEN >> 3) / (sizeof(T));
->   vecRegIndex += eltIndex / elts_per_reg;
+>   reg_t corrected_vreg_index = vecRegIndex + eltIndex / elts_per_reg;
+>   if(corrected_vreg_index > vecRegIndex)
+>   {
+>     eltIndex %= elts_per_reg;  	
+>   }
 > 
->   uint8_t *p_reg_start = (uint8_t*)((char*)reg_file + vecRegIndex * (VLEN >> 3));
->   update_vector_element(p->get_state()->pid, vr_name[vecRegIndex], vecRegIndex, eltIndex, sizeof(T), p_reg_start, (VLEN >> 3), pAccessType);
+>   #ifdef WORDS_BIGENDIAN
+>   // "V" spec 0.7.1 requires lower indices to map to lower significant
+>   // bits when changing SEW, thus we need to index from the end on BE.
+>   eltIndex ^= elts_per_reg - 1;
+>   #endif
+> 
+>   uint8_t *p_reg_start = (uint8_t*)((char*)reg_file + corrected_vreg_index * (VLEN >> 3));
+>   update_vector_element(p->get_state()->pid, vr_name[corrected_vreg_index], corrected_vreg_index, eltIndex, sizeof(T), p_reg_start, (VLEN >> 3), pAccessType);
 > }

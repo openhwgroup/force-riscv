@@ -47,7 +47,11 @@ class BaseInstructionGroup(ABC):
         return self.sPostMainSeq
 
     def print_test(self, testOutputPath):
-        file_name = "T{0:d}-{1}_force.py".format(len(self.mInstructions), self.sGroupName)
+        single_instr_str = ""
+        if len(self.mInstructions) == 1:
+            single_instr_str = "-{}".format(self.mInstructions[0].name.replace("/", "-").replace(".", "-"))
+
+        file_name = "T{0:d}-{1}{2}_force.py".format(len(self.mInstructions), self.sGroupName, single_instr_str)
         instr_list = []
         for instr in self.mInstructions:
             instr_list.append("\"" + instr.get_full_ID() + "\"")

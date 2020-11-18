@@ -220,12 +220,10 @@ namespace Force {
     if (value_forced)
       return SetPteGenAttribute(rPagingReq, rPte);
 
-    auto choices_adapter = rVmas.GetChoicesAdapter();
-    auto choices_tree = choices_adapter->GetPagingChoiceTree(mpStructure->TypeText());
-    std::unique_ptr<Choice> choices_tree_storage(choices_tree);
+    std::unique_ptr<ChoiceTree> choices_tree(rVmas.GetChoicesAdapter()->GetPagingChoiceTree(mpStructure->TypeText()));
 
     ConstraintSet value_constr;
-    bool hard_constr = GetValueConstraint(rPagingReq, value_constr);
+    bool hard_constr = GetValueConstraint(rPagingReq, rVmas, rPte, value_constr);
 
     if (nullptr != user_constr) {
       // when user constraint present.
@@ -250,7 +248,7 @@ namespace Force {
     mValue = choices_tree->ChooseValueWithConstraint(value_constr, has_choice, fall_back_value);
     if (not has_choice) {
       if (hard_constr) {
-        LOG(fail) << "{ApPteAttributeARM::Generate} no choice available with hard value constraint: " << value_constr.ToSimpleString() << endl;
+        LOG(fail) << "{ConstraintPteAttribute::Generate} no choice available with hard value constraint: " << value_constr.ToSimpleString() << endl;
         FAIL("no-choice-with-hard-constraint");
       }
       else {
@@ -285,29 +283,51 @@ namespace Force {
 
   }
 
-  bool ExceptionConstraintPteAttribute::GetValueConstraint(const GenPageRequest& rPagingReq, ConstraintSet& rExceptConstr) const
+  bool ExceptionConstraintPteAttribute::GetValueConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte, ConstraintSet& rExceptConstr) const
   {
     bool hard_constr = false;
-    EExceptionConstraintType except_constr_type = rPagingReq.GetExceptionConstraint(GetExceptionType());
-    LOG(info) << "{ExceptionConstraintPteAttribute::GetValueConstraint} exception type: " << EPagingExceptionType_to_string(GetExceptionType()) << " constraint type: " << EExceptionConstraintType_to_string(except_constr_type) << endl;
+    bool hard_fault_choice = false;
+    //hard fault choice set true when only arch fault choices available will trigger fault
+    bool fault_choice = EvaluateArchFaultChoice(rVmas, rPte, hard_fault_choice);
+    EExceptionConstraintType except_constr_type = rPagingReq.GetExceptionConstraint(GetExceptionType(rPagingReq));
+    LOG(info) << "{ExceptionConstraintPteAttribute::GetValueConstraint} exception type: " << EPagingExceptionType_to_string(GetExceptionType(rPagingReq)) << " constraint type: " << EExceptionConstraintType_to_string(except_constr_type) << endl;
+
     switch (except_constr_type) {
     case EExceptionConstraintType::TriggerHard:
       hard_constr = true; // fall through
     case EExceptionConstraintType::Trigger:
-      ExceptionTriggeringConstraint(rPagingReq, rExceptConstr);
+      ExceptionTriggeringConstraint(rPagingReq, rVmas, rExceptConstr);
       break;
     case EExceptionConstraintType::PreventHard:
-      hard_constr = true; // fall through
+      hard_constr = true;
+      if (hard_fault_choice) {
+        LOG(warn) << "{ExceptionConstraintPteAttribute::GetValueConstraint} arch fault choice set but being ignored due to exception regulation" << endl;
+      }
+      ExceptionPreventingConstraint(rPagingReq, rVmas, rExceptConstr);
+      break;
     case EExceptionConstraintType::Prevent:
-      ExceptionPreventingConstraint(rPagingReq, rExceptConstr);
+      if (hard_fault_choice) {
+        ExceptionTriggeringConstraint(rPagingReq, rVmas, rExceptConstr);
+      }
+      else {
+        ExceptionPreventingConstraint(rPagingReq, rVmas, rExceptConstr);
+      }
       break;
     case EExceptionConstraintType::Allow:
-      GetDefaultConstraint(rExceptConstr);
+      if (fault_choice) {
+        ExceptionTriggeringConstraint(rPagingReq, rVmas, rExceptConstr);
+      }
+      else {
+        GetDefaultConstraint(rExceptConstr);
+      }
       break;
     default:
       LOG(fail) << "{ExceptionConstraintPteAttribute::GetValueConstraint} unexpected exception constraint type: " << EExceptionConstraintType_to_string(except_constr_type) << endl;
       FAIL("unexpected-exception-constraint-type");
     }
+
+    // << "obj=" << ToString() << " ValueConstraint=" << rExceptConstr.ToSimpleString() << " h_fc=" << hard_fault_choice << " fc=" << fault_choice << " h_c=" << hard_constr << endl;
+
     return hard_constr;
   }
 

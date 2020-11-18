@@ -51,7 +51,7 @@
 > 
 > extern "C" {
 >     // memory r/w callback
->     void update_generator_memory(uint64_t virtualAddress, uint32_t memBank, uint64_t physicalAddress, uint32_t size, const char *pBytes, const char *pAccessType);
+>     void update_generator_memory(uint32_t cpuid, uint64_t virtualAddress, uint32_t memBank, uint64_t physicalAddress, uint32_t size, const char *pBytes, const char *pAccessType);
 > 
 >     // mmu update callback
 >     void update_mmu_event(MmuEvent *event);
@@ -92,7 +92,7 @@
 >             reinterpret_cast<uint8_t*>(&sparse_load)[byte_idx] = reinterpret_cast<uint8_t*>(&buff)[len -1 -byte_idx]; \
 >         } \
 >         /* confirm this */ sparse_load = from_le(sparse_load); \
->         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&sparse_load), "read"); \
+>         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(&sparse_load), "read"); \
 >         return sparse_load; \
 102c167,176
 <         type##_t data = from_le(*(type##_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr)); \
@@ -110,7 +110,7 @@
 108c182
 <         if (proc) READ_MEM(addr, size); \
 ---
->         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&data), "read"); \
+>         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(&data), "read"); \
 129,134c203,214
 < #ifndef RISCV_ENABLE_COMMITLOG
 < # define WRITE_MEM(addr, value, size) ({})
@@ -142,7 +142,7 @@
 >       { \
 >         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
 >         reg_t len = sizeof(type##_t); \
->         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
+>         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
 >         if(unlikely(! sim->sparse_is_pa_initialized(paddr, len))) \
 >         { \
 >             uint64_t attrs = 0ull; \
@@ -163,7 +163,7 @@
 ---
 >         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
 >         reg_t len = sizeof(type##_t); \
->         update_generator_memory(addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
+>         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
 >         if(unlikely(! sim->sparse_is_pa_initialized(paddr, len))) \
 >         { \
 >             uint64_t attrs = 0ull; \

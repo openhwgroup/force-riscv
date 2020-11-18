@@ -126,21 +126,23 @@ namespace Force {
     uint64 values_count = containing_reg->Size() / value_size;
     vector<uint64> values(values_count, 0);
     vector<uint64> masks(values_count, 0);
-    if (containing_reg->Name() == reg->Name()) {
+    if ((containing_reg->Name() == reg->Name()) and (rRegValues.size() == values_count)) {
       values = rRegValues;
       fill(masks.begin(), masks.end(), MAX_UINT64);
     }
     else {
-      // The specified register and containing register are different, so we need to determine which
-      // bits of the containing register are represented by the specified register and build the
-      // masks with those bits set.
+      // The provided register values don't specify all bits of the containing register, so we need
+      // to determine which bits of the containing register are represented by the provided values
+      // and build the masks with those bits set.
       set<PhysicalRegister*> phys_registers;
       reg->GetPhysicalRegisters(phys_registers);
 
       for (PhysicalRegister* phys_reg : phys_registers) {
-        uint64 mask = reg->GetPhysicalRegisterMask(*phys_reg);
-        masks[phys_reg->SubIndexValue()] = mask;
-        values[phys_reg->SubIndexValue()] = rRegValues[phys_reg->SubIndexValue()] << lowest_bit_set(mask);
+        if (phys_reg->SubIndexValue() < rRegValues.size()) {
+          uint64 mask = reg->GetPhysicalRegisterMask(*phys_reg);
+          masks[phys_reg->SubIndexValue()] = mask;
+          values[phys_reg->SubIndexValue()] = rRegValues[phys_reg->SubIndexValue()] << lowest_bit_set(mask);
+        }
       }
     }
 

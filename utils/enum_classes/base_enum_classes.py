@@ -16,10 +16,10 @@
 enum_classes_details = [
     ["LimitType", "unsigned char", "Various limitation values",
      [("ThreadsLimit", 0), ("CoresLimit", 1), ("ChipsLimit", 2), ("PhysicalAddressLimit", 3), ("MaxInstructions", 4), ("PerMonRegisterNumber", 5), ("DependencyHistoryLimit", 6),
-      ("BranchNotTakenLimit", 7), ("SpeculativeBntLevelLimit", 8), ("MaxPhysicalVectorLen", 9),  ("ErrRegisterNumber", 10), ("SpeculativeBntInstructionLimit", 11)]
+      ("BranchNotTakenLimit", 7), ("SpeculativeBntLevelLimit", 8), ("MaxPhysicalVectorLen", 9),  ("ErrRegisterNumber", 10), ("SpeculativeBntInstructionLimit", 11), ("MaxVectorElementWidth", 12)]
     ],
     ["OperandType", "unsigned char", "Operand types in the instruction files",
-     [("Constant", 0), ("Immediate", 1), ("Choices", 2), ("Register", 3), ("GPR", 4), ("GPRSP", 5), ("FPR", 6), ("SIMDSR", 7), ("SIMDVR", 8), ("SysReg", 9), ("Branch", 10), ("LoadStore", 11), ("AuthBranch", 12), ("AuthLoadStore", 13), ("SystemOp", 14), ("VECREG", 15), ("PREDREG", 16), ("ALU", 17), ("DataProcessing", 18)]
+     [("Constant", 0), ("Immediate", 1), ("Choices", 2), ("Register", 3), ("GPR", 4), ("GPRSP", 5), ("FPR", 6), ("SIMDSR", 7), ("SIMDVR", 8), ("SysReg", 9), ("Branch", 10), ("LoadStore", 11), ("AuthBranch", 12), ("AuthLoadStore", 13), ("SystemOp", 14), ("VECREG", 15), ("PREDREG", 16), ("ALU", 17), ("DataProcessing", 18), ("VectorLayout", 19)]
     ],
      ["MemDataType", "unsigned char", "Memory data types in memory model",
       [("Init", 1),("Instruction", 2), ("Data", 4), ("Both", 6)]
@@ -115,7 +115,7 @@ enum_classes_details = [
       [("MemAttrImpl", 0), ("Invalid", 1), ("AddrSizeFault", 2), ("DataAccessPermission", 3), ("InstrAccessPermission", 4)]
       ],
      ["DataAccessPermissionType", "unsigned char", "Data access permission types.",
-      [("ReadWrite", 0), ("ReadOnly", 1), ("ReadWriteNoUser", 2), ("ReadOnlyNoUser", 3), ("ReadWriteUserOnly", 4), ("ReadOnlyUserOnly", 5)]
+      [("NoAccess", 0), ("ReadWrite", 1), ("ReadOnly", 2), ("ReadWriteNoUser", 3), ("ReadOnlyNoUser", 4), ("ReadWriteUserOnly", 5), ("ReadOnlyUserOnly", 6)]
       ],
      ["InstrAccessPermissionType", "unsigned char", "Instruction access permission types.",
       [("Execute", 0), ("NoExecute", 1), ("PrivilegedNoExecute", 2)]
