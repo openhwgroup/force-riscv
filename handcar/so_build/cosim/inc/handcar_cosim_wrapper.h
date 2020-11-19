@@ -126,6 +126,7 @@ int step_simulator(int target_id, int num_steps, int stx_failed);
 //      2 could not complete because either no processors were instantiated or no allocated opcode or disassembly string buffers were provided
 //      
 int get_disassembly(const uint64_t* pPc, char** pOpcode, char** pDisassembly);
+int get_disassembly_for_target(int target_id, const uint64_t* pPc, char** pOpcode, char** pDisassembly);
 
 // read_simulator_memory function: for the given target_id and physical address addr and length, writes the contents of the relevant memory address into the provided data buffer
 //

@@ -20,11 +20,9 @@
 This script needs to be run before make whenever changes have been made to Spike or Handcar base code
 """
 
-from pathlib import Path
 import os
-from shutil import copy
+import shutil
 import errno
-from shutil import move
 
 ## Controls
 NOISY = True
@@ -1624,6 +1622,7 @@ GLOB_REPLACEMENT_INSTRUCTION_HEADER_FILENAMES = ["insns/*.h"]
 if(NOISY):
     print("###\n### Copying original Spike files and then modifying them. Output will be in src and inc directories.\n###")
 
+
 def makedir(path):
     try:
         os.mkdir(path)
@@ -1632,6 +1631,12 @@ def makedir(path):
             pass
         else:
             raise
+
+
+def copy(src, dest ):
+    if os.stat(src).st_mtime - os.stat(dest).st_mtime > 0:
+        shutil.copy2 (src, dest)
+
 
 def copy_files(prefix_path_string, filenames_list, destination_directory):
     if(NOISY):
@@ -1644,6 +1649,7 @@ def copy_files(prefix_path_string, filenames_list, destination_directory):
        else:
            copy(prefix_path_string + "/" + filename, destination_directory)
 
+
 copy_files(ORIGINAL_SOURCE_DIRECTORY, SPIKE_SOURCE_FILENAMES, "./src")
 copy_files(ORIGINAL_SOURCE_DIRECTORY, SPIKE_HEADER_FILENAMES, "./inc")
 copy_files(ORIGINAL_INSTRUCTIONS_DIRECTORY, INSTRUCTION_SOURCE_FILENAMES, "./src")
@@ -1655,6 +1661,7 @@ copy_files(REPLACEMENTS_DIRECTORY, REPLACEMENT_HEADER_FILENAMES, "./inc")
 makedir("./inc/insns")
 copy_files(ORIGINAL_INSTRUCTION_HEADERS_DIRECTORY, INSTRUCTION_HEADER_FILENAMES, "./inc/insns") 
 copy_files(REPLACEMENTS_DIRECTORY, REPLACEMENT_INSTRUCTION_HEADER_FILENAMES, "./inc/insns")
+
 
 import glob
 for f in glob.glob(str(REPLACEMENTS_DIRECTORY + "/" + GLOB_REPLACEMENT_INSTRUCTION_HEADER_FILENAMES[0])):

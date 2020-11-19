@@ -61,7 +61,7 @@ if [ -z "${NO_GIT}" ]; then
     pause "Preparing to clone spike"
     rm -rf standalone
     git clone https://github.com/riscv/riscv-isa-sim standalone
-    cd standalone
+    cd standalone || exit 3
     git checkout 61f0dab33f7e529cc709908840311a8a7dcb23ce
 else
     echo
@@ -70,7 +70,7 @@ else
     echo "a clone of https://github.com/riscv/riscv-isa-sim, and a checkout"
     echo "of hash 61f0dab33f7e529cc709908840311a8a7dcb23ce"
     echo
-    cd standalone
+    cd standalone || exit 3
 fi
 
 echo "===== Preparing to remove DTC dependencies"
@@ -102,15 +102,9 @@ mkdir src
 mkdir -p spike_mod/insns
 mkdir -p so_build/cosim/src
 mkdir bin
-./create_handcar_files.bash  
-./filesurgeon.py
-make -j8
-cp bin/handcar_cosim.so ../utils/handcar
 
 pause "===== Preparing to patch and build handcar"
-
-cd ./patcher
-./step_1_create_patches.bash
-./step_2_apply_patches.bash
-./step_3_stage_patched.bash
-cd ..
+./create_handcar_files.bash
+./filesurgeon.py
+make -j
+cp bin/handcar_cosim.so ../utils/handcar
