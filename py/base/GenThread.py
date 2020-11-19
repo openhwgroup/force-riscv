@@ -594,6 +594,15 @@ class GenThread(object):
     def setThreadGroup(self, aId, aJob, aThreads):
         self.interface.setThreadGroup(aId, aJob, aThreads)
 
+    def numberOfChips(self):
+        return self.interface.numberOfChips()
+
+    def numberOfCores(self):
+        return self.interface.numberOfCores()
+
+    def numberOfThreads(self):
+        return self.interface.numberOfThreads()
+
     def lockThreadScheduler(self):
         self.interface.lockThreadScheduler(self.genThreadID)
 
