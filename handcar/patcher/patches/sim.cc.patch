@@ -138,8 +138,11 @@
 <   if (!debug && log)
 <     set_procs_debug(true);
 ---
->   procs[target_id]->step(num_steps);
->   procs[target_id]->get_mmu()->yield_load_reservation();
+>   processor_t* proc_ptr = get_core(target_id);
+>   if (proc_ptr == nullptr)
+>     return 1;
+>   proc_ptr->step(num_steps);
+>   proc_ptr->get_mmu()->yield_load_reservation();
 >   const char pc_name[] = "PC\0";
 >   const uint64_t pc_mask = 0xFFFFFFFFFFFFFFFF;
 >   uint64_t pc_value = 0x0;
