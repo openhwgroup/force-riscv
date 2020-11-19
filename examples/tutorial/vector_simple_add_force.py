@@ -34,11 +34,11 @@ class MainSequence(VectorTestSequence):
 
     ## Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
-        # Ensure vector element size is set to 32 bits and vector register group size is set to 1
+        # Allowing fractional VLMULs and any valid VSEW values
         choices_mod = ChoicesModifier(self.genThread)
-        vsew_choice_weights = {'0x0': 0, '0x1': 0, '0x2': 10, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        vsew_choice_weights = {'0x0': 0, '0x1': 10, '0x2': 10, '0x3': 10, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VSEW', vsew_choice_weights)
-        vlmul_choice_weights = {'0x0': 10, '0x1': 0, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 0, '0x6': 0, '0x7': 0}
+        vlmul_choice_weights = {'0x0': 10, '0x1': 0, '0x2': 0, '0x3': 0, '0x4': 0, '0x5': 10, '0x6': 10, '0x7': 10}
         choices_mod.modifyRegisterFieldValueChoices('vtype.VLMUL', vlmul_choice_weights)
         choices_mod.commitSet()
 
@@ -74,6 +74,28 @@ class MainSequence(VectorTestSequence):
         field_value = aElemVals[2 * aSubIndex]
         field_value |= aElemVals[2 * aSubIndex + 1] << 32
         return field_value
+
+    ## Perform any post instruction operation
+    def _performAdditionalVerification(self, aInstr, aInstrRecord):
+        # Logging VLMUL and VSEW into gen.log
+        (vlmul, _) = self.readRegister('vtype', field='VLMUL')
+        (vsew, _) = self.readRegister('vtype', field='VSEW')
+        if vlmul == 0x0:
+            vlmul = '1'
+        elif vlmul == 0x5:
+            vlmul = '1/8'
+        elif vlmul == 0x6:
+            vlmul = '1/4'
+        elif vlmul == 0x7:
+            vlmul = '1/2'
+        if vsew == 0x1:
+            vsew = '16'
+        elif vsew == 0x2:
+            vsew = '32'
+        elif vsew == 0x3:
+            vsew = '64'
+        self.notice('VLMUL: %s' % vlmul)
+        self.notice('VSEW: %s' % vsew)
 
 
 MainSequenceClass = MainSequence
