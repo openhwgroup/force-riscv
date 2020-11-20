@@ -21,16 +21,24 @@ import RandomUtils
 
 ## This test verifies that a basic add vector instruction can be generated and executed. It verifies
 # that the initial values are correctly communicated to the simulator and that the resulting values
-# are successfully returned. The test assumes the use of 512-bit vector registers and 32-bit vector
-# register elements.
+# are successfully returned. The test assumes the use of 512-bit vector registers.
 class MainSequence(VectorTestSequence):
 
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
-        self._mInstrList = ('VADD.VV##RISCV',)
+        self._mInstrList = ('VADD.VV##RISCV',
+                            'VADD.VX##RISCV',
+                            'VADD.VI##RISCV',
+                            'VSUB.VV##RISCV',
+                            'VSUB.VX##RISCV',)
         self._mRegIndex1 = None
         self._mRegIndex2 = None
+
+    ## Entry point into the test.
+    def generate(self, **kargs):
+        super().generate(**kargs)
+        self._logChoices()
 
     ## Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
@@ -54,48 +62,33 @@ class MainSequence(VectorTestSequence):
     def _getInstructionParameters(self):
         return {'vd': self._mRegIndex1, 'vs1': self._mRegIndex1, 'vs2': self._mRegIndex2, 'vm': 1}
 
-    ## Initialize the specified vector register and return a list of 32-bit element values.
+    ## Initialize the specified vector register.
     def _initializeVectorRegister(self, aRegName):
-        elem_vals = []
-        for elem_index in range(16):
-            elem_val = RandomUtils.random32(0, 0xFFFF)
-            elem_vals.append(elem_val)
-
         for sub_index in range(8):
+            field_value = RandomUtils.random64(0, 0xFFFFFFFF)
             field_name = '%s_%d' % (aRegName, sub_index)
-            field_val = self._getFieldValue(sub_index, elem_vals)
-            self.initializeRegisterFields(aRegName, {field_name: field_val})
+            self.initializeRegisterFields(aRegName, {field_name: field_value})
 
-    ## Get the value of a 64-bit field for a vector register.
-    #
-    #  @param aSubIndex A 64-bit vector register field index.
-    #  @param aElemVals A list of 32-bit element values.
-    def _getFieldValue(self, aSubIndex, aElemVals):
-        field_value = aElemVals[2 * aSubIndex]
-        field_value |= aElemVals[2 * aSubIndex + 1] << 32
-        return field_value
-
-    ## Perform any post instruction operation
-    def _performAdditionalVerification(self, aInstr, aInstrRecord):
-        # Logging VLMUL and VSEW into gen.log
+    ## Logging selected VLMUL and VSEW choices
+    def _logChoices(self):
         (vlmul, _) = self.readRegister('vtype', field='VLMUL')
         (vsew, _) = self.readRegister('vtype', field='VSEW')
         if vlmul == 0x0:
-            vlmul = '1'
+            lmul = '1'
         elif vlmul == 0x5:
-            vlmul = '1/8'
+            lmul = '1/8'
         elif vlmul == 0x6:
-            vlmul = '1/4'
+            lmul = '1/4'
         elif vlmul == 0x7:
-            vlmul = '1/2'
+            lmul = '1/2'
         if vsew == 0x1:
-            vsew = '16'
+            sew = '16'
         elif vsew == 0x2:
-            vsew = '32'
+            sew = '32'
         elif vsew == 0x3:
-            vsew = '64'
-        self.notice('VLMUL: %s' % vlmul)
-        self.notice('VSEW: %s' % vsew)
+            sew = '64'
+        self.notice('LMUL: %s' % lmul)
+        self.notice('SEW: %s' % sew)
 
 
 MainSequenceClass = MainSequence
