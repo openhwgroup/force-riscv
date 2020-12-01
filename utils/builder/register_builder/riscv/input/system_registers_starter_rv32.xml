@@ -110,7 +110,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="2"/>
     </register_field>
   </register>
-  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="32" type="SysReg" choice="false">
+  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="32" type="SysReg">
     <register_field name="VSTART" size="32">
       <bit_field shift="0" size="32"/>
     </register_field>
