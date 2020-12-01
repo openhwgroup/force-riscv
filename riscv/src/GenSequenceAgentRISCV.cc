@@ -562,8 +562,14 @@ namespace Force {
       GetReloadBaseAddressSequence(inter_reg_ptr, 8, reqSeq);
     }
 
-    const char* ldr_name = "LD##RISCV";
-    auto ldr_req = new GenInstructionRequest(ldr_name);
+    GenInstructionRequest* ldr_req = nullptr;
+    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32) {
+      ldr_req = new GenInstructionRequest("LW##RISCV");
+    }
+    else {
+      ldr_req = new GenInstructionRequest("LD##RISCV");
+    }
+
     ldr_req->AddOperandRequest("rd", regPtr->IndexValue());
     ldr_req->AddOperandRequest("rs1", inter_reg_ptr->IndexValue());
     ldr_req->AddDetail("LSData", to_string(loadValue));
