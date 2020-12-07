@@ -7,7 +7,7 @@
   http://www.apache.org/licenses/LICENSE-2.0
 
  THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
- EXPRESS OR IMPLIED, INCLUDING BUT NOT L/OutputIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
  FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
@@ -21,11 +21,13 @@ Test templates (written in Python) are used to control FORCE-RISCV instruction g
 FORCE-RISCV is integrated with the Handcar instruction simulator to model the behavior of the generated RISC-V instructions.  Handcar is based on the Spike open source RISC-V instruction simulator.  The format for the generation output is the standard *.ELF file and a disassembled text *.S file.
 
 FORCE-RISCV provides full support of the RISC-V ISA, including:
-* RV64G - (RV64I, MAFDC).  (V extension support planned)
+* RV64G - (RV64I, MAFDC).  (V extension 0.9)
 * RISC-V privileged ISA, including full support for the U, S, and M privilege levels.
 * RISC-V traps and exceptions basic handling.
-* Support for non-trivial exception handlers is planned.
 * Full support for the v48 virtual memory systems, including 4KB, 2MB, 1GB and 512GB page sizes.
+* Fast exception handling.
+* Non-trivial exception handlers.
+* Full privileged mode switching support.
 
 To run the output of FORCE-RISCV with the CORE-V-VERIF UVM testbench and to run the Imperas riscvOVPsim simulator get instruction functional coverage, see the sections below: Using riscvOVPsim to report coverage of generated tests.
 
@@ -166,11 +168,10 @@ There is a placeholder target directory: [cv32e40p](target/riscvOVPsim_cv32e40p)
 
 
 # Near term FORCE_RISCV roadmap
-* Finish support for paging exceptions and control
-* Finish support for Vector extension version 0.9
-* Fast exception handling
-* Full machine mode switching support (currently from lower privileged mode to high privileged mode is not yet supported)
-* Support for 32-bit RISC-V ISS and ISG (We hope there is some help coming in for this from the open source community)
-
+* Finish support for paging exceptions and control (90%)
+* Support Vector extension 1.0 when the official spec is released.
+* Support for 32-bit RISC-V ISS and ISG (We hope there is some help coming in for this from the open source community).
+* Advanced resource dependency generation.
+* MP/MT support.
 
 
