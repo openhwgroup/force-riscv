@@ -14,8 +14,5 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname": "paging_*_force.py"},
-    {"fname": "state_transition_*_force.py"},
-    {"fname": "vector_*_force.py"},
-    {"fname": "thread_group_partition_same_core_force.py", "options": {"num-chips": 1, "num-cores": 4, "num-threads": 2}},
+    {"fname": "*_force.py", "options": {"num-chips": 2, "num-cores": 4, "num-threads": 2}, "generator": {"--noiss": None}},
 ]
