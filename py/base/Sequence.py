@@ -552,27 +552,8 @@ class Sequence(object):
         self.genThread.setThreadGroup(aId, aJob, aThreads)
 
     def getThreadNumber(self):
-        (num_chips_opt,is_valid) = self.getOption("num-chips")
-        if (is_valid==1):
-            num_chips = int(num_chips_opt)
-        else:
-            num_chips = 1
+        return (self.genThread.numberOfChips() * self.genThread.numberOfCores() * self.genThread.numberOfThreads())
 
-        (num_cores_opt,is_valid) = self.getOption("num-cores")
-        if (is_valid==1):
-            num_cores = int(num_cores_opt)
-        else:
-            num_cores = 1
-
-        (num_threads_per_core_opt,is_valid) = self.getOption("num-threads")
-        if (is_valid==1):    
-            num_threads_per_core = int(num_threads_per_core_opt)
-        else:
-            num_threads_per_core = 1
-        
-        total_num_threads = num_chips * (num_cores * num_threads_per_core)
-        return total_num_threads
-     
     def lockThreadScheduler(self):
         self.genThread.lockThreadScheduler()
 

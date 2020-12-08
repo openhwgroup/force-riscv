@@ -39,4 +39,6 @@ control_items = [ {"fname":"APIs/_def_fctrl.py",     "generator" : {"--cfg" : "c
                   {"fname":"register/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"multiprocessing/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"multiprocessing/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"thread_group/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"thread_group/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                 ]
