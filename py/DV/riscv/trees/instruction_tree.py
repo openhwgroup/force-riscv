@@ -870,6 +870,3 @@ ALU_Int_All_map = InstructionMap('ALU_Int_All_instructions', ALU_Int_All_instruc
 
 ALU_Int32_All_instructions = Merge(ALU_Int32_instructions, RV32M_instructions, ALU_Int32_C_instructions)
 ALU_Int32_All_map = InstructionMap('ALU_Int32_All_instructions', ALU_Int32_All_instructions)
-
-
-

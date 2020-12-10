@@ -40,12 +40,6 @@
     <O name="rd'" type="GPR" bits="4-2" access="Write" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
     <asm format="C.ADDI4SPN %s, %s" op1="rd'" op2="imm8"/>
   </I>
-  <I name="C.ADDIW" isa="RISCV" group="General" extension="RV64C">
-    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
-    <O name="rd" type="GPR" bits="11-7" access="ReadWrite" choices="Nonzero GPRs"/>
-    <O name="imm6" type="Immediate" bits="12,6-2"/>
-    <asm format="C.ADDIW %s, %s" op1="rd" op2="imm6"/>
-  </I>
   <I name="C.ADDW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110101"/>
     <O name="rd'" type="GPR" bits="9-7" access="ReadWrite" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>

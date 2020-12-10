@@ -404,11 +404,6 @@ namespace Force {
           LOG(info) << "{GenInstructionAgent::UpdateRegisterFromSimulation} update PC value 0x" << hex << update.rval << endl;
         }
         else {
-        //if (update.regname == "SSBS")
-        //{
-        //  LOG(warn) << "{GenInstructionAgent::UpdateRegisterFromSimulation} skipping update for PSTATE SSBS name=" << update.regname << " value=0x" << hex << update.rval << " mask=0x" << update.mask << endl;
-        //  continue;
-        //}
           auto reg_file = mpGenerator->GetRegisterFile();
           auto phys_register = reg_file->PhysicalRegisterLookup(update.regname);
           LOG(info) << "{GenInstructionAgent::UpdateRegisterFromSimulation} update register " << update.regname << " value 0x" << hex << update.rval << ", mask 0x" << update.mask << endl;

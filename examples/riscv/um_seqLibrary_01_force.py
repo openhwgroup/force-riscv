@@ -21,7 +21,6 @@ from base.SequenceLibrary import SequenceLibrary
 class MainSequence(Sequence):
 
     def generate(self, **kargs):
-
         if self.getGlobalState('AppRegisterWidth') == 32:
             seq_library = MySequenceLibrary32(self.genThread)
         else:
@@ -37,24 +36,17 @@ class MainSequence(Sequence):
             current_sequence.run()
 
 
-class  MySequenceLibrary(SequenceLibrary):
+class MySequenceLibrary(SequenceLibrary):
 
     def createSequenceList (self):
-        # Really simple test
-        self.seqList = [\
-        ("Bunch_of_ALU_Int", "DV.riscv.sequences.BasicSequences", "Your Description", 20),\
-        ("Bunch_of_LDST", "DV.riscv.sequences.BasicSequences", "Your Description", 20)]
+        self.seqList = [("Bunch_of_ALU_Int", "DV.riscv.sequences.BasicSequences", "Your Description", 20),
+                        ("Bunch_of_LDST", "DV.riscv.sequences.BasicSequences", "Your Description", 20),]
 
-class  MySequenceLibrary32(SequenceLibrary):
+class MySequenceLibrary32(SequenceLibrary):
 
     def createSequenceList (self):
-        # Really simple test
-        self.seqList = [\
-        ("Bunch_of_ALU_Int", "DV.riscv.sequences.BasicSequences", "Your Description", 20),\
-        ("Bunch_of_LDST32", "DV.riscv.sequences.BasicSequences", "Your Description", 20)]
-
-
-
+        self.seqList = [("Bunch_of_ALU_Int32", "DV.riscv.sequences.BasicSequences", "Your Description", 20),
+                        ("Bunch_of_LDST32", "DV.riscv.sequences.BasicSequences", "Your Description", 20),]
 
 ## Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence

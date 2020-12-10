@@ -51,4 +51,10 @@
     </O>
     <asm format="C.SDSP %s" op1="rs2"/>
   </I>
+  <I name="C.ADDIW" isa="RISCV" group="General" extension="RV64C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
+    <O name="rd" type="GPR" bits="11-7" access="ReadWrite" choices="Nonzero GPRs"/>
+    <O name="imm6" type="Immediate" bits="12,6-2"/>
+    <asm format="C.ADDIW %s, %s" op1="rd" op2="imm6"/>
+  </I>
 </instruction_file>

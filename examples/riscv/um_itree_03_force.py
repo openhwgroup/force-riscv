@@ -20,6 +20,7 @@ from base.InstructionMap import InstructionMap
 from DV.riscv.trees.instruction_tree import LDST_All_map
 from DV.riscv.trees.instruction_tree import LDST32_All_map
 from DV.riscv.trees.instruction_tree import ALU_Int_All_map
+from DV.riscv.trees.instruction_tree import ALU_Int32_All_map
 from DV.riscv.trees.instruction_tree import ALU_Float_Double_map
 
 class MainSequence(Sequence):
@@ -72,7 +73,7 @@ class MainSequence(Sequence):
             if self.getGlobalState('AppRegisterWidth') == 32:
                 random_itree = {  LDST32_All_map:10,
                                   ALU_Float_Double_map:10,
-                                  ALU_Int_All_map:10 }
+                                  ALU_Int32_All_map:10 }
                 
             picked_instr = self.pickWeighted(random_itree)
             self.genInstruction(picked_instr)

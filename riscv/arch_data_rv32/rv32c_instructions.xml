@@ -27,4 +27,12 @@
     <O name="shamt" type="Immediate" bits="12,6-2" class="ImmediateExcludeOperand" exclude="0"/>
     <asm format="C.SRLI %s, %s" op1="rd'" op2="shamt"/>
   </I>
+  <I name="C.JAL" isa="RISCV" class="BranchInstruction" group="General" extension="RV32C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
+    <O name="Branch-simm11" type="Branch" class="PcRelativeBranchOperand" offset="simm11" offset-scale="1">
+      <O name="simm11" type="Immediate" bits="12,8,10-9,6,7,2,11,5-3" class="SignedImmediateOperand"/>
+    </O>
+    <O name="x1" type="GPR" access="Write" class="ImpliedRegisterOperand"/>
+    <asm format="C.JAL %s" op1="simm11"/>
+  </I>
 </instruction_file>

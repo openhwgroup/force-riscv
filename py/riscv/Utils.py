@@ -55,7 +55,9 @@ class LoadGPR64(Sequence):
     #  @param aValue A 64-bit value.
     def _loadValue(self, aValue):
         if self.getGlobalState('AppRegisterWidth') == 32:
+            reg_val = aValue & 0xFFFFFFFF
             self._load32BitValue(aValue)
+            self.writeRegister('x%d' % self._mRegisterIndex, reg_val, '', True)
             return
 
         if (aValue & 0xFFFFFFFFFFFFF800) == 0xFFFFFFFFFFFFF800:
