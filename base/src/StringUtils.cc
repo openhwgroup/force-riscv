@@ -87,7 +87,7 @@ namespace Force {
     try {
       ret_val = stof(rStr);
     }
-    catch (invalid_argument) {
+    catch (invalid_argument&) {
       if (pErrorStatus) {
         LOG(debug) << "{parse_float} Error parsing \'" << rStr << "\', invalid argument." << endl;
         *pErrorStatus = true;
@@ -96,7 +96,7 @@ namespace Force {
         FAIL("parse-error-float-invalid");
       }
     }
-    catch (out_of_range) {
+    catch (out_of_range&) {
       if (pErrorStatus) {
         LOG(debug) << "{parse_float} Error parsing \'" << rStr << "\', invalid argument" << endl;
         *pErrorStatus = true;
