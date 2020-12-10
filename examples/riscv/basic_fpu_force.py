@@ -54,12 +54,14 @@ class MainSequence(Sequence):
         # instruction_group = RV_A_instructions
 
         # or can merge instruction groups 
-        instruction_group = Merge(RV64F_instructions,RV32F_instructions)
+        #instruction_group = Merge(RV64F_instructions,RV32F_instructions)
 
         # 3 - If you want to specify a specific instruction, set the_instruction2 to the appropriate string here
         # and replace the argument in the genInstruction call to the_instruction2.  For the string values to 
         # use for a given instruction, search for that instruction in force/py/DV/riscv/trees/instruction_tree.py.
         # the_instruction2 = "ADD##RISCV"
+
+        instruction_group = RV32F_instructions if self.getGlobalState('AppRegisterWidth') == 32 else RV64F_instructions
 
         for _ in range(instruction_count):
             # select a specific instruction from the instruction group

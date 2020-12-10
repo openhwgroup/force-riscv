@@ -52,12 +52,15 @@ class MainSequence(Sequence):
 
         self.modifyVariable("Inter-Dependency Window", "1-5:10, 6-10:1", "Choice")
 
+        alu_instrs = ALU_Int32_All_instructions if self.getGlobalState("AppRegisterWidth") == 32 else ALU_Int_All_instructions
+        g_instrs = RV32_G_instructions if self.getGlobalState("AppRegisterWidth") == 32 else RV_G_instructions 
+
         for i in range(10):
-            random_instr = self.pickWeighted(ALU_Int_All_instructions)
+            random_instr = self.pickWeighted(alu_instrs)
             self.genInstruction(random_instr)
         
         for i in range(10):
-            random_instr = self.pickWeighted(RV_G_instructions)
+            random_instr = self.pickWeighted(g_instrs)
             self.genInstruction(random_instr)
     
         my_choices_mod.revert()

@@ -18,6 +18,7 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.ChoicesModifier import *
 from DV.riscv.trees.instruction_tree import ALU_Int_All_instructions
+from DV.riscv.trees.instruction_tree import ALU_Int32_All_instructions
 
 ## My Operand Choices Modifier class
 #  the sub ChoicesModifier class for an example
@@ -43,8 +44,10 @@ class MainSequence(Sequence):
         self.notice("Applied choices modifications")
         self.dumpPythonObject(my_choices_mod.getChoicesTreeInfo('GPRs', 'OperandChoices'))
 
+        instrs = ALU_Int32_All_instructions if self.getGlobalState('AppRegisterWidth') == 32 else ALU_Int_All_instructions
+
         for _ in range(50):
-            instr = self.pickWeighted(ALU_Int_All_instructions)
+            instr = self.pickWeighted(instrs)
             self.genInstruction('ADD##RISCV')
 
         my_choices_mod.revert(apply_id1)
@@ -53,7 +56,7 @@ class MainSequence(Sequence):
         self.dumpPythonObject(my_choices_mod.getChoicesTreeInfo('GPRs', 'OperandChoices'))
 
         for _ in range(50):
-            instr = self.pickWeighted(ALU_Int_All_instructions)
+            instr = self.pickWeighted(instrs)
             self.genInstruction('ADD##RISCV')
 
 
