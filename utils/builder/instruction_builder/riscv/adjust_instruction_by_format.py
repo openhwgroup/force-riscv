@@ -496,10 +496,7 @@ def adjust_aq_rs2(instr):
     opr_adjustor.set_rd_int()
     #TODO setup aq/rl bit fields appropriately
 
-    instr.iclass = "LoadStoreInstruction"
-
     instr_full_ID = instr.get_full_ID()
-
     if ".W" in instr_full_ID:
         size = 4
     elif ".D" in instr_full_ID:
@@ -516,12 +513,14 @@ def adjust_aq_rs2(instr):
     attr_dict["element-size"] = size
 
     if instr_full_ID.startswith("AMO"):
+        instr.iclass = "LoadStoreInstruction"
         rs1_opr = instr.find_operand("rs1")
         rs1_opr.access = "ReadWrite"
         attr_dict["sorder"] = "AtomicRW"
         attr_dict["lorder"] = "AtomicRW"
         attr_dict["mem-access"] = "ReadWrite"
     elif instr_full_ID.startswith("SC"):
+        instr.iclass = "UnpredictStoreInstruction"
         order = "Ordered"
         attr_dict["sorder"] = order
         attr_dict["mem-access"] = "Write"
