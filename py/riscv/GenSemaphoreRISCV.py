@@ -21,6 +21,9 @@ class GenSemaphoreRISCV(GenSemaphore):
     def __init__(self, aGenThread, aName, aCounter, aSize):
         super().__init__(aGenThread, aName, aCounter, 'Unpredictable', aSize=aSize)
 
+        self._mCounterReg = None
+        self._mStatusReg = None
+
         with self.threadLockingContext():
             self.mAddrReg = self.getRandomGPR(exclude='0', no_skip=True)
             self.reserveRegister('x%d' % self.mAddrReg)
@@ -42,14 +45,15 @@ class GenSemaphoreRISCV(GenSemaphore):
         # TODO(Noah): Adjust for the possibility of different threads having different endianness if
         # and when this becomes necessary.
 
-        (counter_reg, status_reg) = self.getRandomGPRs(2, exclude='0')
+        (self._mCounterReg, self._mStatusReg) = self.getRandomGPRs(2, exclude='0')
+
         block_id = self.beginLinearBlock()
 
-        self.genInstruction(self._getLoadReservedInstruction(), {'rd': counter_reg, 'rs1': self.mAddrReg, 'NoRestriction': 1})  # Load the counter
-        self.genInstruction('BEQ##RISCV', {'rs1': counter_reg, 'rs2': 0, 'simm12': (-2 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry if the counter is 0
-        self.genInstruction('ADDI##RISCV', {'rd': counter_reg, 'rs1': counter_reg, 'simm12': (-1 & 0xFFF)})  # Decrement the counter
-        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': status_reg, 'rs1': self.mAddrReg, 'rs2': counter_reg, 'NoRestriction': 1})  # Store the counter
-        self.genInstruction('BNE##RISCV', {'rs1': status_reg, 'rs2': 0, 'simm12': (-8 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry the whole sequence if the store fails
+        self.genInstruction(self._getLoadReservedInstruction(), {'rd': self._mCounterReg, 'rs1': self.mAddrReg, 'NoRestriction': 1})  # Load the counter
+        self.genInstruction('BEQ##RISCV', {'rs1': self._mCounterReg, 'rs2': 0, 'simm12': (-2 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry if the counter is 0
+        self.genInstruction('ADDI##RISCV', {'rd': self._mCounterReg, 'rs1': self._mCounterReg, 'simm12': (-1 & 0xFFF)})  # Decrement the counter
+        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': self._mStatusReg, 'rs1': self.mAddrReg, 'rs2': self._mCounterReg, 'NoRestriction': 1})  # Store the counter
+        self.genInstruction('BNE##RISCV', {'rs1': self._mStatusReg, 'rs2': 0, 'simm12': (-8 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry the whole sequence if the store fails
 
         self.endLinearBlock(block_id)
 
@@ -59,10 +63,15 @@ class GenSemaphoreRISCV(GenSemaphore):
 
         block_id = self.beginLinearBlock()
 
-        self.genInstruction(self._getLoadReservedInstruction(), {'rd': counter_reg, 'rs1': self.mAddrReg, 'NoRestriction': 1})  # Load the counter
-        self.genInstruction('ADDI##RISCV', {'rd': counter_reg, 'rs1': counter_reg, 'simm12': 1})  # Increment the counter
-        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': status_reg, 'rs1': self.mAddrReg, 'rs2': counter_reg, 'NoRestriction': 1})  # Store the counter
-        self.genInstruction('BNE##RISCV', {'rs1': status_reg, 'rs2': 0, 'simm12': (-6 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry the whole sequence if the store fails
+        self.genInstruction(self._getLoadReservedInstruction(), {'rd': self._mCounterReg, 'rs1': self.mAddrReg, 'NoRestriction': 1})  # Load the counter
+        self.genInstruction('ADDI##RISCV', {'rd': self._mCounterReg, 'rs1': self._mCounterReg, 'simm12': 1})  # Increment the counter
+        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': self._mStatusReg, 'rs1': self.mAddrReg, 'rs2': self._mCounterReg, 'NoRestriction': 1})  # Store the counter
+        self.genInstruction('BNE##RISCV', {'rs1': self._mStatusReg, 'rs2': 0, 'simm12': (-6 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry the whole sequence if the store fails
+
+        self.endLinearBlock(block_id)
+
+        self._mCounterReg = None
+        self._mStatusReg = None
 
     def _loadAddressRegister(self):
         load_gpr64_seq = LoadGPR64(self.genThread)

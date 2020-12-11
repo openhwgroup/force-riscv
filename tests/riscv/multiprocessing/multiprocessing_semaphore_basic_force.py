@@ -78,7 +78,9 @@ class MainSequence(Sequence):
             (dest_reg_val, valid) = self.readRegister(dest_reg_name)
             self._assertValidRegisterValue(dest_reg_name, valid)
 
-            if dest_reg_val != test_val:
+            gen_mode = self.getPEstate("GenMode")
+            no_iss = gen_mode & 0x1
+            if (no_iss != 1) and (dest_reg_val != test_val):
                 self.error('Unexpected destination register value; Expected=0x%x, Actual=0x%x' % (test_val, dest_reg_val))
 
     ## Fail if the valid flag is false.
