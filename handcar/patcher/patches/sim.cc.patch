@@ -87,11 +87,12 @@
 < 
 <   debug_module.add_device(&bus);
 < 
-79,90c75
+79,80c75
 <     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted,
 <                                log_file.get());
-<   }
-< 
+---
+>     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted);
+83,100c78,86
 <   make_dtb();
 < 
 <   clint.reset(new clint_t(procs, CPU_HZ / INSNS_PER_RTC_TICK, real_time_clint));
@@ -100,9 +101,8 @@
 <     bus.add_device(CLINT_BASE, clint.get());
 <   } else {
 <     bus.add_device(clint_base, clint.get());
----
->     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted);
-93,100c78,86
+<   }
+< 
 <   for (size_t i = 0; i < nprocs; i++) {
 <     reg_t pmp_num = 0, pmp_granularity = 0;
 <     fdt_parse_pmp_num((void *)dtb.c_str(), &pmp_num, "riscv");
@@ -125,28 +125,27 @@
 < sim_t::~sim_t()
 ---
 > simlib_t::~simlib_t()
-110,115c96
+110c96
 < void sim_thread_main(void* arg)
-< {
-<   ((sim_t*)arg)->main();
-< }
-< 
-< void sim_t::main()
 ---
 > int simlib_t::step_simulator(int target_id, int num_steps, int stx_failed)
-117,118c98,105
-<   if (!debug && log)
-<     set_procs_debug(true);
+112,113c98,104
+<   ((sim_t*)arg)->main();
+< }
 ---
 >   procs[target_id]->step(num_steps);
->   procs[target_id]->get_mmu()->yield_load_reservation();
 >   const char pc_name[] = "PC\0";
 >   const uint64_t pc_mask = 0xFFFFFFFFFFFFFFFF;
 >   uint64_t pc_value = 0x0;
 >   const char pc_update_access_type[] = "write\0";
 >   get_pc_api(target_id, reinterpret_cast<uint8_t*>(&pc_value), pc_name, sizeof(uint64_t));
 >   update_generator_register(target_id, pc_name, pc_value, pc_mask, pc_update_access_type);       
-120,129c107
+115,129c106
+< void sim_t::main()
+< {
+<   if (!debug && log)
+<     set_procs_debug(true);
+< 
 <   while (!done())
 <   {
 <     if (debug || ctrlc_pressed)
@@ -159,21 +158,21 @@
 <   }
 ---
 >   return 0; 
-132c110
+132c109
 < int sim_t::run()
 ---
 > void simlib_t::set_debug(bool value)
-134,136c112
+134,136c111
 <   host = context_t::current();
 <   target.init(sim_thread_main, this);
 <   return htif_t::run();
 ---
 >   debug = value;
-139c115
+139c114
 < void sim_t::step(size_t n)
 ---
 > int simlib_t::get_disassembly(const uint64_t* pc, char** opcode, char** disassembly)
-141,144c117,119
+141,144c116,118
 <   for (size_t i = 0, steps = 0; i < n; i += steps)
 <   {
 <     steps = std::min(n - i, INTERLEAVE - current_step);
@@ -182,7 +181,7 @@
 >   std::string opcode_temp;
 >   std::string disassembly_temp;
 >   uint64_t opcode_num = 0ull;
-146,154c121,124
+146,154c120,123
 <     current_step += steps;
 <     if (current_step == INTERLEAVE)
 <     {
@@ -197,7 +196,7 @@
 >   {
 >     try {
 >     const disassembler_t* disassembler = procs[0]->get_disassembler(); // should be OK to get processor's disassembler, using it should be idempotent
-156c126,137
+156c125,136
 <       host->switch_to();
 ---
 >     // currently this fails a check in the Spike code if the pc isn't found so the code does not have the opportunity to return 1.
@@ -212,7 +211,7 @@
 >       strcpy(*opcode,"00000000");
 >       strcpy(*disassembly,"?");
 >       return 1; // there may not be an instruction at the PC (example: page fault on branch)
-158a140,164
+158a139,163
 >   else
 >   {
 >     return 2; // No processors, therefore no configured disassembler for us to use
@@ -238,19 +237,19 @@
 >   (*disassembly)[disassembly_temp.size()]='\0';
 > 
 >   return 0;
-161c167
+161c166
 < void sim_t::set_debug(bool value)
 ---
 > void simlib_t::set_log(bool value)
-163c169
+163c168
 <   debug = value;
 ---
 >   log = value;
-166c172
+166c171
 < void sim_t::set_histogram(bool value)
 ---
 > void simlib_t::set_histogram(bool value)
-174,194c180
+174,194c179
 < void sim_t::configure_log(bool enable_log, bool enable_commitlog)
 < {
 <   log = enable_log;
@@ -274,7 +273,7 @@
 < void sim_t::set_procs_debug(bool value)
 ---
 > void simlib_t::set_procs_debug(bool value)
-200,205c186
+200,205c185
 < static bool paddr_ok(reg_t addr)
 < {
 <   return (addr >> MAX_PADDR_BITS) == 0;
@@ -283,7 +282,7 @@
 < bool sim_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
 > std::map<std::string, uint64_t> simlib_t::load_elf(const char* fn, reg_t* entry)
-207,209c188,259
+207,209c187,258
 <   if (addr + len < addr || !paddr_ok(addr + len - 1))
 <     return false;
 <   return bus.load(addr, len, bytes);
@@ -360,16 +359,16 @@
 > 
 >   munmap(buf, size);
 >   return symbols;
-212c262,263
+212c261,262
 < bool sim_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
 ---
 > //TODO: Michael use the dedicated function for initializing
 > void simlib_t::make_dtb()
-214,216d264
+214,216d263
 <   if (addr + len < addr || !paddr_ok(addr + len - 1))
 <     return false;
 <   return bus.store(addr, len, bytes);
-219,238c267
+219,238c266
 < void sim_t::make_dtb()
 < {
 <   if (!dtb_file.empty()) {
@@ -392,7 +391,7 @@
 < void sim_t::set_rom()
 ---
 > void simlib_t::set_rom()
-243a273,283
+243a272,282
 >   processor_t* usable_proc_ptr = nullptr;
 >   for(uint32_t id = 0; id < 0xffffffffu; ++id)
 >   {
@@ -404,11 +403,11 @@
 >   }
 >   assert(usable_proc_ptr != nullptr);
 > 
-248c288
+248c287
 <     get_core(0)->get_xlen() == 32 ?
 ---
 >     usable_proc_ptr->get_xlen() == 32 ?
-261,267c301,302
+261,267c300,301
 <   std::string dtb;
 <   if (!dtb_file.empty()) {
 <     std::ifstream fin(dtb_file.c_str(), std::ios::binary);
@@ -419,7 +418,7 @@
 ---
 >   const int align = 0x1000;
 >   rom.resize((rom.size() + align - 1) / align * align);
-269,270c304,318
+269,270c303,317
 <     std::stringstream strstream;
 <     strstream << fin.rdbuf();
 ---
@@ -438,7 +437,7 @@
 >     }
 >   } 
 > }
-272,275c320,330
+272,275c319,329
 <     dtb = strstream.str();
 <   } else {
 <     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, procs, mems);
@@ -455,21 +454,21 @@
 >   {
 >     std::cerr << "could not open " << elfPath << " (did you misspell it? If VCS, did you forget +permissive/+permissive-off?)" << std::endl;
 >     return 1;
-276a332,333
+276a331,332
 >    
 >   std::map<std::string, uint64_t> symbols = load_elf(path.c_str(), &entry);
-278,280c335
+278,280c334
 <   rom.insert(rom.end(), dtb.begin(), dtb.end());
 <   const int align = 0x1000;
 <   rom.resize((rom.size() + align - 1) / align * align);
 ---
 >   reset();
-282,283c337
+282,283c336
 <   boot_rom.reset(new rom_device_t(rom));
 <   bus.add_device(DEFAULT_RSTVEC, boot_rom.get());
 ---
 >   return 0; 
-286,293c340,342
+286,293c339,341
 < char* sim_t::addr_to_mem(reg_t addr) {
 <   if (!paddr_ok(addr))
 <     return NULL;
@@ -482,18 +481,18 @@
 > uint64_t simlib_t::sparse_read(reg_t paddr, size_t len)
 > {
 >   return _ForceSparseMemoryModel.Read(paddr, len);
-296c345,348
+296c344,347
 < // htif
 ---
 > void simlib_t::sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes)
 > {
 >   _ForceSparseMemoryModel.ReadPartiallyInitialized(paddr, len, bytes);   
 > }
-298c350
+298c349
 < void sim_t::reset()
 ---
 > void simlib_t::sparse_write(reg_t paddr, const uint8_t* bytes, size_t len)
-300,301c352,367
+300,301c351,391
 <   if (dtb_enabled)
 <     set_rom();
 ---
@@ -513,24 +512,38 @@
 > void simlib_t::sparse_initialize_pa(reg_t paddr, const uint8_t* data, const uint8_t* attrs, uint32_t nBytes, Force::EMemDataType type)
 > {
 >   _ForceSparseMemoryModel.Initialize(paddr, data, attrs, nBytes, type);
-304c370
-< void sim_t::idle()
----
+> }
+> 
 > void simlib_t::sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type)
-306c372
-<   target.switch_to();
----
+> {
 >   _ForceSparseMemoryModel.Initialize(paddr, value, numBytes, type);
-309c375,404
-< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
----
+> }
+> 
 > void simlib_t::sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes)
 > {
 >   _ForceSparseMemoryModel.Initialize(paddr, value, numBytes, Force::EMemDataType::Both);
 > }
 > 
-> bool simlib_t::doesCoreWithIdExist(size_t i)
+> void simlib_t::sparse_reserve(reg_t paddr, size_t numBytes)
 > {
+>   _ForceSparseMemoryModel.Reserve(paddr, numBytes);
+> }
+> 
+> void simlib_t::sparse_unreserve(reg_t paddr, size_t numBytes)
+> {
+>   _ForceSparseMemoryModel.Unreserve(paddr, numBytes);
+> }
+> 
+> bool simlib_t::sparse_is_reserved(reg_t paddr, size_t numBytes)
+> {
+>   return _ForceSparseMemoryModel.IsReserved(paddr, numBytes);
+304c394
+< void sim_t::idle()
+---
+> bool simlib_t::doesCoreWithIdExist(size_t i)
+306c396,415
+<   target.switch_to();
+---
 >   for(processor_t* proc_ptr: procs)
 >   {
 >     if(proc_ptr != nullptr && proc_ptr->get_state() != nullptr && proc_ptr->get_state()->pid == i)
@@ -551,14 +564,15 @@
 > {
 >   if (dtb_enabled)
 >     set_rom();
-> }
-> 
+309c418
+< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
+---
 > void simlib_t::read_chunk_partially_initialized(reg_t taddr, size_t len, void* dst)
-312c407
+312c421
 <   auto data = to_le(debug_mmu->load_uint64(taddr));
 ---
 >   auto data = to_le(debug_mmu->load_partially_initialized_uint64(taddr));
-316c411,464
+316c425,478
 < void sim_t::write_chunk(addr_t taddr, size_t len, const void* src)
 ---
 > void simlib_t::clear_chunk(reg_t taddr, size_t len)
@@ -615,7 +629,7 @@
 > }
 > 
 > void simlib_t::write_chunk(reg_t taddr, size_t len, const void* src)
-324c472,833
+324c486,491
 < void sim_t::proc_reset(unsigned id)
 ---
 > void simlib_t::proc_reset(unsigned id)
@@ -624,7 +638,9 @@
 > }
 > 
 > processor_t *simlib_t::get_core(const std::string& i)
-> {
+326c493,1279
+<   debug_module.proc_reset(id);
+---
 >   char *ptr;
 >   unsigned long p = strtoul(i.c_str(), &ptr, 10);
 >   //if (*ptr || p >= procs.size())
@@ -980,9 +996,7 @@
 > }
 > 
 > int simlib_t::partial_read_vecr(uint32_t procid, uint64_t index, uint8_t* pValue, uint32_t length, uint32_t offset)
-326c835,1265
-<   debug_module.proc_reset(id);
----
+> {
 >   //Check that the pointers point to something
 >   if(pValue == nullptr)
 >     return 1;
