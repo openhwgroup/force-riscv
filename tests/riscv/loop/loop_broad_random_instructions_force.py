@@ -142,7 +142,7 @@ class MainSequence(LoopTestSequence):
                 #'SW##RISCV': 10,
                 'XOR##RISCV': 10,
                 'XORI##RISCV': 10,
-            }
+        }
         
     ## Return a dictionary of names of instructions to generate in the loop body with their
     # corresponding weights.

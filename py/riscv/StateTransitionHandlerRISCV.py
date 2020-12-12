@@ -473,10 +473,17 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
         # TODO(Noah): Handle Q regisers when the Q extension is supported.
         load_gpr64_seq = LoadGPR64(self.genThread)
         load_gpr64_seq.load(reg_val_gpr_index, aStateElem.getValues()[0])
-        if self.getGlobalState('AppRegisterWidth') == 32:
-            self.genInstruction('FMV.W.X##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': reg_val_gpr_index})
-        else:
-            self.genInstruction('FMV.D.X##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': reg_val_gpr_index})
+
+        (mem_block_ptr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
+        self.initializeMemoryBlock(mem_block_ptr_index, [aStateElem])
+        fp_load_instr = 'FLW##RISCV' if aStateElem.getName().startswith('S') else 'FLD##RISCV'
+        self.genInstruction(fp_load_instr, {'rd': aStateElem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': 0, 'NoRestriction': 1})
+
+        #if self.getGlobalState('AppRegisterWidth') == 32:
+        #if aStateElem.getName().startswith('S'):
+        #    self.genInstruction('FMV.W.X##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': reg_val_gpr_index})
+        #else:
+        #    self.genInstruction('FMV.D.X##RISCV', {'rd': aStateElem.getRegisterIndex(), 'rs1': reg_val_gpr_index})
 
         self._mHelperGprSet.releaseHelperGprs()
 
@@ -501,11 +508,11 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
 
         (mem_block_ptr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
         self.initializeMemoryBlock(mem_block_ptr_index, aStateElems)
-
         offset = 0
         for state_elem in aStateElems:
             # TODO(Noah): Handle Q regisers when the Q extension is supported.
-            self.genInstruction('FLD##RISCV', {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+            fp_load_instr = 'FLW##RISCV' if state_elem.getName().startswith('S') else 'FLD##RISCV'
+            self.genInstruction(fp_load_instr, {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
             offset += 8
 
         self._mHelperGprSet.releaseHelperGprs()

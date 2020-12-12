@@ -30,6 +30,7 @@
     <instruction_file file="riscv/arch_data/riscv_instructions_int64.xml"/>
     <instruction_file file="riscv/arch_data/riscv_instructions_compressed_rv64.xml"/>
     <instruction_file file="riscv/arch_data/riscv_instructions_vector.xml"/>
+    <instruction_file file="riscv/arch_data/c_instructions_rv64only.xml"/>
     <instruction_file file="riscv/arch_data/priv_instructions.xml"/>
   </instruction_files>
   <default_classes>
@@ -65,7 +66,7 @@
   </default_classes>
   <register_files>
     <register_file file="riscv/arch_data/new/app_registers_rv64.xml"/>
-    <register_file file="riscv/arch_data/new/system_registers_rv64..xml"/>
+    <register_file file="riscv/arch_data/new/system_registers_rv64.xml"/>
   </register_files>
   <choices_files>
     <choices_file file="riscv/arch_data/operand_choices.xml"/>

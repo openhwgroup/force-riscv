@@ -10,20 +10,27 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         self.systemCall({'PrivilegeLevel': 1})
 
+        instr = 'LD##RISCV'
+        size = 8
+
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            instr = 'LW##RISCV'
+            size = 4
+
         # Generate a target address for a U Mode instruction from S Mode
-        target_addr = self.genVA(Size=8, Align=8, Type='D', PrivilegeLevel=0)
+        target_addr = self.genVA(Size=size, Align=size, Type='I', PrivilegeLevel=0)
 
         self.systemCall({'PrivilegeLevel': 0})
 
-        self.genInstruction('LD##RISCV', {'LSTarget': target_addr})
+        self.genInstruction(instr, {'LSTarget': target_addr})
         self._assertNoPageFault(target_addr)
 
         # Generate a target address for an S Mode instruction from U Mode
-        target_addr = self.genVA(Size=8, Align=8, Type='D', PrivilegeLevel=1)
+        target_addr = self.genVA(Size=size, Align=size, Type='D', PrivilegeLevel=1)
 
         self.systemCall({'PrivilegeLevel': 1})
 
-        self.genInstruction('LD##RISCV', {'LSTarget': target_addr})
+        self.genInstruction(instr, {'LSTarget': target_addr})
         self._assertNoPageFault(target_addr)
 
     ## Fail if a load page fault occurred.

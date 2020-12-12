@@ -43,7 +43,7 @@ class MainSequence(Sequence):
 
             # define a multilevel instruction tree and choose an instruction
             random_iset2 = { "ADD##RISCV":10,
-                             "SD##RISCV":10,
+                             #"SD##RISCV":10,
                              "BEQ##RISCV":10,
                              "FMADD.D#Double-precision#RISCV":10 }
 

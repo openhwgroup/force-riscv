@@ -88,7 +88,11 @@ class MainSequence(Sequence):
             self.initializeMemory(addr=gpr_entry_addr, bank=0, size=8, data=gpr_val, is_instr=False, is_virtual=True)
             self.initializeRegister(('x%d' % gpr_index), gpr_val)
 
-        instructions = ('ADD##RISCV', 'ADDW##RISCV', 'LD##RISCV', 'LUI##RISCV', 'SD##RISCV', 'SLLI#RV64I#RISCV', 'SRLI#RV64I#RISCV')
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            instructions = ('ADD##RISCV', 'LW##RISCV', 'LUI##RISCV', 'SW##RISCV', 'SLLI#RV32I#RISCV', 'SRLI#RV32I#RISCV')
+        else:
+            instructions = ('ADD##RISCV', 'ADDW##RISCV', 'LD##RISCV', 'LUI##RISCV', 'SD##RISCV', 'SLLI#RV64I#RISCV', 'SRLI#RV64I#RISCV')
+
         for _ in range(RandomUtils.random32(100, 200)):
             self.genInstruction(self.choice(instructions))
 

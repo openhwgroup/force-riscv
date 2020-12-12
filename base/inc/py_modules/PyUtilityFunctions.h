@@ -31,6 +31,7 @@ namespace Force {
       .def("getAlignMask", &get_align_mask, py::call_guard<ThreadContext>())
       .def("getAlignedValue", &get_aligned_value, py::call_guard<ThreadContext>())
       .def("lowestBitSet", &lowest_bit_set, py::call_guard<ThreadContext>())
+      .def("signExtend64", &sign_extend64, py::call_guard<ThreadContext>())
       ;
   }
 

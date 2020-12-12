@@ -21,7 +21,10 @@ from base.Sequence import Sequence
 class MainSequence(Sequence):
 
    def generate(self, **kargs):
-        random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            random_instructions = ['ADD##RISCV', 'SRLI#RV32I#RISCV', 'ADDI##RISCV', 'SLLI#RV32I#RISCV', 'LUI##RISCV']
+        else:
+            random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
         ret_instructions = ['MRET##RISCV'] #, 'SRET##RISCV' ] TODO enable support for SRET once legal generation works correctly
 
         for _ in range(10):

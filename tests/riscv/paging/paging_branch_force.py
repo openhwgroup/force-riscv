@@ -20,7 +20,15 @@ from base.Sequence import Sequence
 class MainSequence(Sequence):
 
     def generate(self, **kargs):
-        random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
+        if self.getGlobalState('AppRegisterWidth') == 32:
+            random_instructions = ['ADD##RISCV', 'SRLI#RV32I#RISCV', 'ADDI##RISCV', 'SLLI#RV32I#RISCV', 'LUI##RISCV']
+            align = 4
+            size = 32
+        else:
+            random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
+            align = 8
+            size = 48
+
         branch_instr = 'JALR##RISCV'
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
@@ -30,9 +38,9 @@ class MainSequence(Sequence):
 
             rand_VA = 0
             if opt_valid:
-                rand_VA = self.genVA(Size=48, Align=8, Type="I", Bank=0, FlatMap=opt_value)
+                rand_VA = self.genVA(Size=size, Align=align, Type="I", Bank=0, FlatMap=opt_value)
             else:
-                rand_VA = self.genVA(Size=48, Align=8, Type="I", Bank=0)
+                rand_VA = self.genVA(Size=size, Align=align, Type="I", Bank=0)
 
             self.notice("gen target VA={:#x}".format(rand_VA))
             self.genInstruction(branch_instr, {'BRTarget':rand_VA})

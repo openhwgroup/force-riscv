@@ -110,11 +110,11 @@ def addRandomFloatingPointRegisterStateElements(aSequence, aState, aStateElemCou
     
     for fp_reg_index in fp_reg_indices:
         # NOTE: utility used to move gpr reg values to fp regs doesn't work with double precision in 32-bit mode...
-        fp_reg_name_prefix = aSequence.choice(('S')) if aSequence.getGlobalState('AppRegisterWidth') == 32 else aSequence.choice(('S', 'D'))
+        fp_reg_name_prefix = aSequence.choice(('S', 'D'))
         fp_reg_name = '%s%d' % (fp_reg_name_prefix, fp_reg_index)
 
         if fp_reg_name_prefix == 'S':
-            fp_reg_val = RandomUtils.random32()
+            fp_reg_val = UtilityFunctions.signExtend64(RandomUtils.random32(), 64)
         else:
             fp_reg_val = RandomUtils.random64()
 

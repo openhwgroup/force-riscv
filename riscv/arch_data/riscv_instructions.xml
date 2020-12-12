@@ -317,42 +317,42 @@
   </I>
   <I name="CSRRC" form="register" isa="RISCV" group="System" extension="Zicsr">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="0111110011"/>
-    <O name="csr" type="SysReg" bits="31-20" access="Write" choices="System registers"/>
+    <O name="csr" type="SysReg" bits="31-20" access="ReadWrite" choices="System registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="CSRRC %s, %s, %s" op1="csr" op2="rs1" op3="rd"/>
   </I>
   <I name="CSRRCI" form="immediate" isa="RISCV" group="System" extension="Zicsr">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="1111110011"/>
-    <O name="csr" type="SysReg" bits="31-20" access="Write" choices="System registers"/>
+    <O name="csr" type="SysReg" bits="31-20" access="ReadWrite" choices="System registers"/>
     <O name="imm4" type="Immediate" bits="19-15"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="CSRRCI %s, %s, %s" op1="csr" op2="imm4" op3="rd"/>
   </I>
   <I name="CSRRS" form="register" isa="RISCV" group="System" extension="Zicsr">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="0101110011"/>
-    <O name="csr" type="SysReg" bits="31-20" access="Write" choices="System registers"/>
+    <O name="csr" type="SysReg" bits="31-20" access="ReadWrite" choices="System registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="CSRRS %s, %s, %s" op1="csr" op2="rs1" op3="rd"/>
   </I>
   <I name="CSRRSI" form="immediate" isa="RISCV" group="System" extension="Zicsr">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="1101110011"/>
-    <O name="csr" type="SysReg" bits="31-20" access="Write" choices="System registers"/>
+    <O name="csr" type="SysReg" bits="31-20" access="ReadWrite" choices="System registers"/>
     <O name="imm4" type="Immediate" bits="19-15"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="CSRRSI %s, %s, %s" op1="csr" op2="imm4" op3="rd"/>
   </I>
   <I name="CSRRW" form="register" isa="RISCV" group="System" extension="Zicsr">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="0011110011"/>
-    <O name="csr" type="SysReg" bits="31-20" access="Write" choices="System registers"/>
+    <O name="csr" type="SysReg" bits="31-20" access="ReadWrite" choices="System registers"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="CSRRW %s, %s, %s" op1="csr" op2="rs1" op3="rd"/>
   </I>
   <I name="CSRRWI" form="immediate" isa="RISCV" group="System" extension="Zicsr">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="1011110011"/>
-    <O name="csr" type="SysReg" bits="31-20" access="Write" choices="System registers"/>
+    <O name="csr" type="SysReg" bits="31-20" access="ReadWrite" choices="System registers"/>
     <O name="imm4" type="Immediate" bits="19-15"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="CSRRWI %s, %s, %s" op1="csr" op2="imm4" op3="rd"/>
