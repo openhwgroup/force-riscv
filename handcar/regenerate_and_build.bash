@@ -90,8 +90,19 @@ cat ./riscv/dts.cc | grep -B9 -A10 -e"if (dtb_pid == 0) {" -e"waitpid(dts_pid, &
 echo "^^^^^ End auto-edit output ^^^^^"
 pause "Please review edit(s) above"
 
-pause "===== Preparing to build spike"
+pause "===== Preparing to configure"
 ./configure
+
+# NOTE: Compile runs twice due to failure from this flag, so disabling it
+echo "===== Preparing to edit makefile"
+sed -i  '/^default-CFLAGS/ s/$/ -fno-var-tracking-assignments/'  Makefile
+echo
+echo "vvvvv Begin auto-edit output vvvvv"
+cat Makefile | grep -B10 -A7 "^default-CFLAGS"
+echo "^^^^^ End auto-edit output ^^^^^"
+pause "===== Please review edit(s) above"
+
+echo "===== Preparing to run makefile"
 make -j
 cd ..
 
@@ -103,8 +114,12 @@ mkdir -p spike_mod/insns
 mkdir -p so_build/cosim/src
 mkdir bin
 
-pause "===== Preparing to patch and build handcar"
+pause "===== Preparing to create handcar files"
 ./create_handcar_files.bash
+pause "===== Preparing to run filesurgeon"
 ./filesurgeon.py
+pause "===== Preparing to run handcar make"
 make -j
+pause "===== Preparing to copy handcaar_cosim.so"
 cp bin/handcar_cosim.so ../utils/handcar
+
