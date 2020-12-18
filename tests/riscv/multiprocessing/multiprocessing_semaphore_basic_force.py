@@ -60,11 +60,15 @@ class MainSequence(Sequence):
     #
     #  @param aTargetAddr The target address for the store and load instructions.
     def _testExclusiveStoreLoad(self, aTargetAddr):
-        load_gpr64_seq = LoadGPR64(self.genThread)
         src_reg_index = self.getRandomGPR(exclude='0')
+        self.reserveRegister('x%d' % src_reg_index)
+
+        load_gpr64_seq = LoadGPR64(self.genThread)
         test_val = RandomUtils.random64()
         load_gpr64_seq.load(src_reg_index, test_val)
         self.genInstruction('SD##RISCV', {'rs2': src_reg_index, 'LSTarget': aTargetAddr})
+
+        self.unreserveRegister('x%d' % src_reg_index)
 
         for _ in range(RandomUtils.random32(5, 10)):
             instr = RV_G_map.pick(self.genThread)

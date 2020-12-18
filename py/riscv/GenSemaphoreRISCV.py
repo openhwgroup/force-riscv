@@ -49,13 +49,17 @@ class GenSemaphoreRISCV(GenSemaphore):
 
         block_id = self.beginLinearBlock()
 
-        self.genInstruction(self._getLoadReservedInstruction(), {'rd': self._mCounterReg, 'rs1': self.mAddrReg, 'NoRestriction': 1})  # Load the counter
+        self.genInstruction(self._getLoadReservedInstruction(), {'rd': self._mCounterReg, 'rs1': self.mAddrReg, 'LSTarget': self.mSemaVA, 'NoRestriction': 1})  # Load the counter
         self.genInstruction('BEQ##RISCV', {'rs1': self._mCounterReg, 'rs2': 0, 'simm12': (-2 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry if the counter is 0
         self.genInstruction('ADDI##RISCV', {'rd': self._mCounterReg, 'rs1': self._mCounterReg, 'simm12': (-1 & 0xFFF)})  # Decrement the counter
-        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': self._mStatusReg, 'rs1': self.mAddrReg, 'rs2': self._mCounterReg, 'NoRestriction': 1})  # Store the counter
+        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': self._mStatusReg, 'rs1': self.mAddrReg, 'rs2': self._mCounterReg, 'LSTarget': self.mSemaVA, 'NoRestriction': 1})  # Store the counter
         self.genInstruction('BNE##RISCV', {'rs1': self._mStatusReg, 'rs2': 0, 'simm12': (-8 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry the whole sequence if the store fails
 
-        self.endLinearBlock(block_id)
+        # Set the maximum numer of instructions to re-execute such that the whole sequence could be
+        # executed from the start no matter where in the sequence the thread resumes execution; i.e.
+        # if the thread resumes on the second instruction, it could execute until it loops back to
+        # the start and then execute the entire sequence.
+        self.endLinearBlock(block_id, max_re_execution_instructions=9)
 
     def _releaseSemaphore(self):
         # TODO(Noah): Adjust for the possibility of different threads having different endianness if
@@ -63,12 +67,16 @@ class GenSemaphoreRISCV(GenSemaphore):
 
         block_id = self.beginLinearBlock()
 
-        self.genInstruction(self._getLoadReservedInstruction(), {'rd': self._mCounterReg, 'rs1': self.mAddrReg, 'NoRestriction': 1})  # Load the counter
+        self.genInstruction(self._getLoadReservedInstruction(), {'rd': self._mCounterReg, 'rs1': self.mAddrReg, 'LSTarget': self.mSemaVA, 'NoRestriction': 1})  # Load the counter
         self.genInstruction('ADDI##RISCV', {'rd': self._mCounterReg, 'rs1': self._mCounterReg, 'simm12': 1})  # Increment the counter
-        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': self._mStatusReg, 'rs1': self.mAddrReg, 'rs2': self._mCounterReg, 'NoRestriction': 1})  # Store the counter
+        self.genInstruction(self._getStoreConditionalInstruction(), {'rd': self._mStatusReg, 'rs1': self.mAddrReg, 'rs2': self._mCounterReg, 'LSTarget': self.mSemaVA, 'NoRestriction': 1})  # Store the counter
         self.genInstruction('BNE##RISCV', {'rs1': self._mStatusReg, 'rs2': 0, 'simm12': (-6 & 0xFFF), 'NoBnt': 1, 'NoRestriction': 1})  # Retry the whole sequence if the store fails
 
-        self.endLinearBlock(block_id)
+        # Set the maximum numer of instructions to re-execute such that the whole sequence could be
+        # executed from the start no matter where in the sequence the thread resumes execution; i.e.
+        # if the thread resumes on the second instruction, it could execute until it loops back to
+        # the start and then execute the entire sequence.
+        self.endLinearBlock(block_id, max_re_execution_instructions=7)
 
         self._mCounterReg = None
         self._mStatusReg = None

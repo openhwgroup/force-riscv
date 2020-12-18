@@ -306,7 +306,7 @@ class GenThread(object):
             pc_val = block_start_addr
 
             while pc_val != block_end_addr:
-                self.interface.genSequence(self.genThreadID, "ReExecution", {"Address":block_start_addr, "MaxReExecutionInstructions":max_re_execution_instructions})
+                self.interface.genSequence(self.genThreadID, "ReExecution", {"Address":pc_val, "MaxReExecutionInstructions":max_re_execution_instructions})
                 pc_val = self.getPEstate("PC")
 
     # Page related API
