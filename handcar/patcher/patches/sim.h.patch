@@ -52,7 +52,7 @@
 >   int step_simulator(int target_id, int num_steps, int stx_failed);
 > 
 >   // fetch the instruction at the given pc using the debug_mmu and return the opcode and disassembly
->   int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly);
+>   int get_disassembly(int target_id,const uint64_t* pc, char** opcode, char** disassembly);
 38a39
 >   void set_log(bool value);
 49a51,53

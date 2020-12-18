@@ -264,7 +264,7 @@
 >     const char arg2[] = "no_elf\0";
 >     memcpy(_stored_argv[0], arg1, strlen(arg1)+1);
 >     memcpy(_stored_argv[_stored_argc-1], arg2, strlen(arg2)+1);
-178,180c95,472
+178,180c95,473
 <   merge_overlapping_memory_regions(res);
 <   return res;
 < }
@@ -647,10 +647,10 @@
 >   {
 >     return _stored_argc;
 >   } 
-182c474,483
+> 
+182c475,483
 < int main(int argc, char** argv)
 ---
-> 
 >   // These can't be methods of OptionsStorage, but they need access to OptionsStorage private that ought not be more widely exposed.
 >   friend void initialize_simulator(const char* options);
 >   friend int set_simulator_parameter(const char* name, const uint64_t* pValue, const char* path);
@@ -880,7 +880,7 @@
 >     hartids);
 >   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
 >  
-375,377c604,910
+375,377c604,804
 <     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
 <     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
 <     if (extension) s.get_core(i)->register_extension(extension());
@@ -1065,7 +1065,13 @@
 > 
 > int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly)
 > {
->   return _pSimulatorTopLevel->get_disassembly(pc, opcode, disassembly);
+>   return _pSimulatorTopLevel->get_disassembly(0, pc, opcode, disassembly);
+> }
+> 
+> 
+> int get_disassembly_for_target(int target_id, const uint64_t* pc, char** opcode, char** disassembly)
+> {
+>   return _pSimulatorTopLevel->get_disassembly(target_id, pc, opcode, disassembly);
 > }
 > 
 > 
@@ -1080,13 +1086,21 @@
 >   {
 >     printf("#### handcar_cosim::get_simulator_version, not enough room in 'version' string buffer");
 >     return 1;
->   }
-> 
+380,382c807
+<   s.set_debug(debug);
+<   s.configure_log(log, log_commits);
+<   s.set_histogram(histogram);
+---
 >   strcpy(version, version_string);   
-> 
+384c809,810
+<   auto return_code = s.run();
+---
 >   return 0;
 > }
-> 
+386,387c812,819
+<   for (auto& mem : mems)
+<     delete mem.second;
+---
 > //TODO NEW DEBUG
 > int read_simulator_register(int target_id, const char* pRegName, uint8_t* pValue, int length)
 > {
@@ -1095,13 +1109,18 @@
 >   {
 >     return 1;
 >   }
-> 
+389,390c821,825
+<   for (auto& plugin_device : plugin_devices)
+<     delete plugin_device.second;
+---
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 0; // Four is not one of the admissible categories
 >   uint64_t index = _pSimulatorTopLevel->get_csr_number(std::string(pRegName));
 >   std::string temp_name = _pSimulatorTopLevel->get_csr_name(index);
-> 
+392c827,981
+<   return return_code;
+---
 >   // Check if this is any of the other types of register
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
@@ -1192,11 +1211,8 @@
 >   if(pRegName == nullptr || pValue == nullptr || _pSimulatorTopLevel == nullptr)
 >   {
 >     return 1;
-380,382c913,948
-<   s.set_debug(debug);
-<   s.configure_log(log, log_commits);
-<   s.set_histogram(histogram);
----
+>   }
+> 
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 3; // Four is not one of the admissible categories
@@ -1233,28 +1249,20 @@
 >   {
 >     return 1;
 >   }
-384c950,954
-<   auto return_code = s.run();
----
+> 
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 3; // Four is not one of the admissible categories
 >   uint64_t index = _pSimulatorTopLevel->get_vecr_number(std::string(pRegName));
 >   std::string temp_name = _pSimulatorTopLevel->get_vecr_name(index);
-386,387c956,961
-<   for (auto& mem : mems)
-<     delete mem.second;
----
+> 
 >   // Check if this is any of the other types of register
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
 >     category = 4; //fail category
 >     status = 3;
 >   }
-389,390c963,973
-<   for (auto& plugin_device : plugin_devices)
-<     delete plugin_device.second;
----
+> 
 >   // Check the category of the register and try to obtain the name
 >   switch(category)
 >   {
@@ -1266,11 +1274,9 @@
 >     default:
 >       status = 3; // failure
 >   }
-392c975
-<   return return_code;
----
+> 
 >   return status;
-393a977,1247
+393a983,1253
 > 
 > 
 > int write_simulator_register(int target_id, const char* pRegName, const uint8_t* data, int length)

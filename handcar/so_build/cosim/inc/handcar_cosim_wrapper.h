@@ -65,21 +65,21 @@ void initialize_simulator(const char* options);
 
 // terminate_simulator function: free simulator resources.
 //
-// warning: 
+// warning:
 //     must be called manually when through with functional simulation
 //
 void terminate_simulator();
 
 // simulator_load_elf function: load the contents of an elf file into the memory model, target_id is ignored for now
 //
-// warning: 
+// warning:
 //     MUST be called after simulator is initialized and before any calls step the simulator.
 //
-//     target_id is ignored. PMA / PMP per hart and interaction with memory model needs to be looked into especially before MP use. 
+//     target_id is ignored. PMA / PMP per hart and interaction with memory model needs to be looked into especially before MP use.
 //
 //     Underlying Spike code will throw a runtime exception if elf_path cannot be resolved and opened.
 //
-// inputs: 
+// inputs:
 //     int target_id, inert, placeholder for future functionality
 //     const char* elf_path, host filepath where ELF file to load may be found
 //
@@ -109,7 +109,7 @@ int step_simulator(int target_id, int num_steps, int stx_failed);
 
 // get_disassembly function: for the given pc address, populates the information in the preallocated opcode and disassemby string buffers.
 //
-// warning: 
+// warning:
 //     the caller has responsibility over allocating and managing the memory for the strings.
 //
 // inputs:
@@ -124,7 +124,7 @@ int step_simulator(int target_id, int num_steps, int stx_failed);
 //  returns:
 //      0 success,
 //      2 could not complete because either no processors were instantiated or no allocated opcode or disassembly string buffers were provided
-//      
+//
 int get_disassembly(const uint64_t* pPc, char** pOpcode, char** pDisassembly);
 int get_disassembly_for_target(int target_id, const uint64_t* pPc, char** pOpcode, char** pDisassembly);
 
@@ -176,10 +176,10 @@ int initialize_simulator_memory(int target_id, const uint64_t* addr, int length,
 //      int length -- the length of the buffer the user provides to the API
 //
 //  outputs:
-//      uint8_t* value -- value is written with the numeric data stored in the requested register 
+//      uint8_t* value -- value is written with the numeric data stored in the requested register
 //
 //  returns:
-//      0 -- success 
+//      0 -- success
 //      1 -- one or more of the pointer arguments is null
 //      2 -- target_id was outside the the expected range given the number of processors being simulated
 //      3 -- the register category and index combination could not be mapped to a register
@@ -194,7 +194,7 @@ int read_simulator_register(int target_id, const char* pRegName, uint8_t* value,
 //  outputs:
 //
 //  returns:
-//      0 
+//      0
 int partial_read_large_register(int target_id, const char* pRegName, uint8_t* pValue, uint32_t length, uint32_t offset);
 
 //TODO large register read
@@ -204,23 +204,23 @@ int partial_read_large_register(int target_id, const char* pRegName, uint8_t* pV
 //  outputs:
 //
 //  returns:
-//      0 
+//      0
 int partial_write_large_register(int target_id, const char* pRegName, const uint8_t* pValue, uint32_t length, uint32_t offset);
 
 // read_simulator_register_fpix function: for the given target_id, register name supply the value and bit mask
 //
 //  inputs:
 //      int target_id -- the processor id
-//      const char* registerName -- name of the register for lookup in the simulator 
-//      uint64_t* value -- the buffer for byte string representing the numeric value of the requested register. 
-//      uint64_t* mask -- high bits are relevant parts of the returned value 
+//      const char* registerName -- name of the register for lookup in the simulator
+//      uint64_t* value -- the buffer for byte string representing the numeric value of the requested register.
+//      uint64_t* mask -- high bits are relevant parts of the returned value
 //
 //  outputs:
 //      uint64_t* value -- the data contents fo the register
 //      uint64_t* mask -- indicates which bits to pay attention to in the returned value result
 //
 //  returns:
-//      0 -- success 
+//      0 -- success
 //      1 -- one or more of the pointer arguments is null
 //      2 -- the provided register name could not be mapped to a register in the simulator
 //      3 -- other failure
@@ -246,15 +246,15 @@ int read_simulator_register_fpix(uint32_t target_id, const char* registerName, u
 //      4 -- the advertised length of the data buffer did not match the length of the target register
 //      5 -- readback with 'getter' method after write with 'setter' method shows a mismatch
 //
-int write_simulator_register(int target_id, const char* pRegName, const uint8_t* data, int length); 
+int write_simulator_register(int target_id, const char* pRegName, const uint8_t* data, int length);
 
 // write_simulator_register_fpix function: for the given target_id, pRegName write the supplied reg_data of length num bytes into the corresponding simulator register
 //
 //  inputs:
 //      int target_id -- refers to the processor id
 //      const char* registerName -- refers to the register's name as in Spike code, usually the programmer name
-//      uint64_t value -- the buffer for byte string representing the numeric value of the requested register. 
-//      uint64_t mask -- high bits are relevant parts of the supplied value 
+//      uint64_t value -- the buffer for byte string representing the numeric value of the requested register.
+//      uint64_t mask -- high bits are relevant parts of the supplied value
 //
 //  side effects:
 //      modifies the value of the speficied register in the simulator
@@ -265,7 +265,7 @@ int write_simulator_register(int target_id, const char* pRegName, const uint8_t*
 //      2 -- the provided register name could not be mapped to a register in the simulator
 //      3 -- other failure
 //
-int write_simulator_register_fpix( uint32_t target_id, const char* registerName, uint64_t value, uint64_t mask); 
+int write_simulator_register_fpix( uint32_t target_id, const char* registerName, uint64_t value, uint64_t mask);
 
 bool inject_simulator_events(uint32_t cpuid, uint32_t events){return false;} //!< inject events into simulator
 
