@@ -77,7 +77,8 @@ def addRandomGprStateElements(aSequence, aState, aStateElemCount, aPriorityMin=1
     gpr_indices = aSequence.getRandomGPRs(aStateElemCount, exclude='0')
     for gpr_index in gpr_indices:
         gpr_name = 'x%d' % gpr_index
-        gpr_val = RandomUtils.random32() if aSequence.getGlobalState('AppRegisterWidth') == 32 else RandomUtils.random64()
+        max_rand = 0xFFFFFFFF if aSequence.getGlobalState('AppRegisterWidth') == 32 else 0xFFFFFFFFFFFFFFFF
+        gpr_val = RandomUtils.random64(0, max_rand)
         aState.addRegisterStateElement(gpr_name, (gpr_val,), aPriority=RandomUtils.random32(aPriorityMin, aPriorityMax))
         expected_gpr_state_data.append((gpr_name, gpr_val))
 

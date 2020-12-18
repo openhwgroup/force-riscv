@@ -379,6 +379,8 @@ namespace Force {
   {
     auto reg_file = mpGenerator->GetRegisterFile();
 
+    mpGenerator->SetPrivilegeLevel(0x3);
+
     auto misa_reg = reg_file->RegisterLookup("misa");
     uint64 misa_reg_val = misa_reg->InitialValue();
     misa_reg->SetValue(misa_reg_val);

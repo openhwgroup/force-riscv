@@ -273,20 +273,15 @@ class GprStateTransitionHandlerRISCV(StateTransitionHandler):
         mem_block_ptr_index = aStateElems[-1].getRegisterIndex()
         self.initializeMemoryBlock(mem_block_ptr_index, aStateElems)
 
+        ld_instr = 'LW##RISCV' if self.getGlobalState('AppRegisterWidth') == 32 else 'LD##RISCV'
+
         offset = 0
         for state_elem in aStateElems[:-1]:
-            if self.getGlobalState('AppRegisterWidth') == 32:
-                self.genInstruction('LW##RISCV', {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
-                offset += 4
-            else:
-                self.genInstruction('LD##RISCV', {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
-                offset += 8
+            self.genInstruction(ld_instr, {'rd': state_elem.getRegisterIndex(), 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+            offset += 8
 
         # Load the last StateElement value into the memory block pointer register as the last step
-        if self.getGlobalState('AppRegisterWidth') == 32:
-            self.genInstruction('LW##RISCV', {'rd': mem_block_ptr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
-        else:
-            self.genInstruction('LD##RISCV', {'rd': mem_block_ptr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
+        self.genInstruction(ld_instr, {'rd': mem_block_ptr_index, 'rs1': mem_block_ptr_index, 'simm12': offset, 'NoRestriction': 1})
 
 
 ## This class generates instructions to update the system State according to the VM context
