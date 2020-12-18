@@ -80,8 +80,8 @@ class Sequence(object):
     def beginLinearBlock(self):
         return self.genThread.beginLinearBlock()
 
-    def endLinearBlock(self, block_id, execute=True):
-        self.genThread.endLinearBlock(block_id, execute)
+    def endLinearBlock(self, block_id, execute=True, max_re_execution_instructions=0):
+        self.genThread.endLinearBlock(block_id, execute, max_re_execution_instructions)
         
     def genMacro(self, item, param):
         return self.genInstrOrSequence(Macro(item, param))

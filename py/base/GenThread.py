@@ -300,10 +300,14 @@ class GenThread(object):
     def beginLinearBlock(self):
         return self.interface.stateRequest(self.genThreadID, "Push", "LinearBlock", 0, {})
 
-    def endLinearBlock(self, block_id, execute):
-        (block_start_addr,empty) = self.interface.stateRequest(self.genThreadID, "Pop", "LinearBlock", 0, {"BlockId":block_id, "Execute":execute})
+    def endLinearBlock(self, block_id, execute, max_re_execution_instructions):
+        (block_start_addr,block_end_addr,empty) = self.interface.stateRequest(self.genThreadID, "Pop", "LinearBlock", 0, {"BlockId":block_id, "Execute":execute})
         if execute and not empty:
-            self.interface.genSequence(self.genThreadID, "ReExecution", {"Address":block_start_addr})
+            pc_val = block_start_addr
+
+            while pc_val != block_end_addr:
+                self.interface.genSequence(self.genThreadID, "ReExecution", {"Address":block_start_addr, "MaxReExecutionInstructions":max_re_execution_instructions})
+                pc_val = self.getPEstate("PC")
 
     # Page related API
     def genPA(self, kwargs):

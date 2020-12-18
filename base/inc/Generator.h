@@ -195,7 +195,7 @@ namespace Force {
     void ExecuteHandler(); //!< Excecute exception handler.
     void SleepOnLowPower(); //!< Sleep on low power status
     void ExceptionReturn(); //!< Handle exception return.
-    void ReExecute(uint64 addr); //!< Handle re-execution request.
+    void ReExecute(cuint64 addr, cuint32 maxReExeInstr); //!< Handle re-execution request.
 
     // Forwarded Register related APIs
     bool GetRandomRegisters(cuint32 number, const ERegisterType regType, const std::string& rExcludes, std::vector<uint64>& rRegIndices) const; //!< Get random registers that are not reserved.

@@ -468,10 +468,13 @@ namespace Force {
     void AddDetail(const std::string& attrName, uint64 value) override; //!< Add request detail, with integer value parameter.
     bool DelayHandle() const override { return false; } //!< Indicates whether the GenRequest can be insert by other request.
     uint64 ReExecutionAddress() const { return mReExecutionAddress; } //!< Return re-execution address.
+    uint32 MaxReExecutionInstructions() const { return mMaxReExecutionInstructions; } //!< Return maximum number of instructions to step.
   protected:
     GenReExecutionRequest(const GenReExecutionRequest& rOther); //!< Copy constructor.
   protected:
     uint64 mReExecutionAddress; //!< Re-execution address.
+  private:
+    uint32 mMaxReExecutionInstructions; //!< Maximum number of instructions to step.
   };
 
   /*!
@@ -990,6 +993,7 @@ namespace Force {
     void AddDetail(const std::string& attrName, uint64 value) override; //!< Add request detail, with integer value parameter.
     void SetBlockId(uint32 loopId) { mBlockId = loopId; } //!< Set linear block ID.
     void SetEmpty() {mEmpty = true;}
+    void SetBlockEndAddress(cuint64 blockEndAddr) { mBlockEndAddr = blockEndAddr; } //!< Set end address for the linear block.
     uint32 BlockId() const { return mBlockId; } //!< Return linear block ID.
     bool Execute() const { return mExecute; } //!< Return whether to execute after finished generating the linear block.
     void GetResults(py::object& rPyObject) const override; //!< Return request results in the passed in rPyObject if applicable.
@@ -999,6 +1003,8 @@ namespace Force {
     uint32 mBlockId; //!< linear block ID.
     bool mExecute; //!< Whether to execute after finished generating the linear block.
     mutable bool mEmpty; //!< If start and end address are same for the linear block.
+  private:
+    uint64 mBlockEndAddr; //!< End address for the linear block.
   };
 
   /*!

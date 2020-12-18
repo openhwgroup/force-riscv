@@ -910,10 +910,10 @@ namespace Force {
     LOG(info) << "Generator sleep on low power" << endl;
   }
 
-  void Generator::ReExecute(uint64 addr)
+  void Generator::ReExecute(cuint64 addr, cuint32 maxReExeInstr)
   {
     auto instr_agent = static_cast<GenInstructionAgent*>(mAgents[int(EGenAgentType::GenInstructionAgent)]);
-    instr_agent->ReExecute(addr);
+    instr_agent->ReExecute(addr, maxReExeInstr);
   }
 
   bool Generator::VerifyVirtualAddress(uint64 va, uint64 size, bool isInstr) const

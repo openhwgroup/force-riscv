@@ -583,7 +583,7 @@ namespace Force {
     }
   }
 
-  void GenInstructionAgent::ReExecute(uint64 addr)
+  void GenInstructionAgent::ReExecute(cuint64 addr, cuint32 maxReExeInstr)
   {
     LOG(notice) << "{GenInstructionAgent::ReExecute} starting address 0x" << hex << addr << endl;
     mpGenerator->SetPC(addr);
@@ -633,6 +633,9 @@ namespace Force {
           }
         }
         // TODO detect conditional branch in loop and re-converge back.
+        break;
+      }
+      else if (re_exe_length >= maxReExeInstr) {
         break;
       }
     }
