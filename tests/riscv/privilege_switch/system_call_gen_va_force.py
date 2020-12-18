@@ -18,7 +18,7 @@ class MainSequence(Sequence):
             size = 4
 
         # Generate a target address for a U Mode instruction from S Mode
-        target_addr = self.genVA(Size=size, Align=size, Type='I', PrivilegeLevel=0)
+        target_addr = self.genVA(Size=size, Align=size, Type='D', PrivilegeLevel=0)
 
         self.systemCall({'PrivilegeLevel': 0})
 
