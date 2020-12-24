@@ -61,7 +61,7 @@ if [ -z "${NO_GIT}" ]; then
     pause "Preparing to clone spike"
     rm -rf standalone
     git clone https://github.com/riscv/riscv-isa-sim standalone
-    cd standalone
+    cd standalone || exit 3
     git checkout 61f0dab33f7e529cc709908840311a8a7dcb23ce
 else
     echo
@@ -70,7 +70,7 @@ else
     echo "a clone of https://github.com/riscv/riscv-isa-sim, and a checkout"
     echo "of hash 61f0dab33f7e529cc709908840311a8a7dcb23ce"
     echo
-    cd standalone
+    cd standalone || exit 3
 fi
 
 echo "===== Preparing to remove DTC dependencies"
@@ -90,8 +90,19 @@ cat ./riscv/dts.cc | grep -B9 -A10 -e"if (dtb_pid == 0) {" -e"waitpid(dts_pid, &
 echo "^^^^^ End auto-edit output ^^^^^"
 pause "Please review edit(s) above"
 
-pause "===== Preparing to build spike"
+pause "===== Preparing to configure"
 ./configure
+
+# NOTE: Compile runs twice due to failure from this flag, so disabling it
+echo "===== Preparing to edit makefile"
+sed -i  '/^default-CFLAGS/ s/$/ -fno-var-tracking-assignments/'  Makefile
+echo
+echo "vvvvv Begin auto-edit output vvvvv"
+cat Makefile | grep -B10 -A7 "^default-CFLAGS"
+echo "^^^^^ End auto-edit output ^^^^^"
+pause "===== Please review edit(s) above"
+
+echo "===== Preparing to run makefile"
 make -j
 cd ..
 
@@ -102,15 +113,13 @@ mkdir src
 mkdir -p spike_mod/insns
 mkdir -p so_build/cosim/src
 mkdir bin
-./create_handcar_files.bash  
+
+pause "===== Preparing to create handcar files"
+./create_handcar_files.bash
+pause "===== Preparing to run filesurgeon"
 ./filesurgeon.py
-make -j8
+pause "===== Preparing to run handcar make"
+make -j
+pause "===== Preparing to copy handcaar_cosim.so"
 cp bin/handcar_cosim.so ../utils/handcar
 
-pause "===== Preparing to patch and build handcar"
-
-cd ./patcher
-./step_1_create_patches.bash
-./step_2_apply_patches.bash
-./step_3_stage_patched.bash
-cd ..
