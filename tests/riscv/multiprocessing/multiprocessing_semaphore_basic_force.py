@@ -19,7 +19,7 @@ from base.Sequence import Sequence
 from riscv.GenSemaphoreRISCV import GenSemaphore32RISCV
 from riscv.GenSemaphoreRISCV import GenSemaphore64RISCV
 from riscv.Utils import LoadGPR64
-from DV.riscv.trees.instruction_tree import RV_G_map
+from DV.riscv.trees.instruction_tree import BranchJump_map, RV_G_map
 import RandomUtils
 
 ## This test is intended to be run with mulitple threads to verify basic functionality of
@@ -70,8 +70,12 @@ class MainSequence(Sequence):
 
         self.unreserveRegister('x%d' % src_reg_index)
 
+        # TODO(Noah): Include branch and jump instructions when the issue with linear blocks
+        # overlapping previously generated instructions is resolved.
+        instr_map = RV_G_map - BranchJump_map
+
         for _ in range(RandomUtils.random32(5, 10)):
-            instr = RV_G_map.pick(self.genThread)
+            instr = instr_map.pick(self.genThread)
             self.genInstruction(instr)
 
         instr_id = self.genInstruction('LD##RISCV', {'LSTarget': aTargetAddr})
