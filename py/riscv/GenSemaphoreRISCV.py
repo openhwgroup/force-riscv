@@ -19,7 +19,7 @@ from riscv.Utils import LoadGPR64
 class GenSemaphoreRISCV(GenSemaphore):
 
     def __init__(self, aGenThread, aName, aCounter, aSize):
-        super().__init__(aGenThread, aName, aCounter, 'Unpredictable', aSize=aSize)
+        super().__init__(aGenThread, aName, aCounter, '', aSize=aSize)
 
         self._mCounterReg = None
         self._mStatusReg = None
