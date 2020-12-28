@@ -195,7 +195,7 @@ namespace Force {
 
   //!< obtain the opcode and dissassembly that corresponds to a given PC address
   
-  void SimApiHANDCAR::GetDisassembly(const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly)
+  void SimApiHANDCAR::GetDisassembly(uint32 CpuID, const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly)
   {
     char* op = new char[128];
     char* dis = new char[128];
@@ -206,7 +206,7 @@ namespace Force {
     char** opp = &op;
     char** disp = &dis;
 
-    int rcode = mpSimDllAPI->get_disassembly(pPc, opp, disp);
+    int rcode = mpSimDllAPI->get_disassembly_for_target(CpuID, pPc, opp, disp);
 
     if (rcode == 1) {
       // A page fault on a branch could result in an exception. The disassembly call in the simulator
@@ -458,7 +458,7 @@ namespace Force {
     uint64_t orval = rval;
     std::string opcode;
     std::string disassembly;
-    GetDisassembly(&orval, opcode, disassembly);
+    GetDisassembly(cpuid, &orval, opcode, disassembly);
 
     ReadRegister(cpuid, "PC", &rval, &rmask);
 

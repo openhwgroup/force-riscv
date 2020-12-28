@@ -57,6 +57,10 @@ int open_sim_dll(const char *sim_dll_path,struct SimDllApi *api_ptrs) {
    if ( CheckSimOp("get_disassembly") )
      return -1;
 
+   (*api_ptrs).get_disassembly_for_target = (int (*)(int, const uint64_t*, char**, char**)) dlsym(my_sim_lib,"get_disassembly_for_target");
+   if ( CheckSimOp("get_disassembly_for_target") )
+     return -1;
+
    (*api_ptrs).read_simulator_memory = (int (*)(int, const uint64_t*, int, uint8_t*)) dlsym(my_sim_lib,"read_simulator_memory");
    if ( CheckSimOp("read_simulator_memory") )
      return -1;

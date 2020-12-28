@@ -43,7 +43,7 @@ namespace Force {
     void GetSimulatorVersion(std::string &sim_version) override;
 
     //!< obtain the opcode and dissassembly that corresponds to a given PC address
-    void GetDisassembly(const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly);
+    void GetDisassembly(uint32 CpuID, const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly);
 
     //!< read simulator physical memory. Return 0 if no errors...
     void ReadPhysicalMemory(uint32 mem_bank, uint64 address, uint32 size, unsigned char *pBytes) override;
