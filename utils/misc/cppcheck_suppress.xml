@@ -82,7 +82,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/GenSequenceAgent.cc</fileName>
-        <lineNumber>536</lineNumber>
+        <lineNumber>537</lineNumber>
     </suppress>
 
 <!-- GenVirtualMemoryAgent module -->
