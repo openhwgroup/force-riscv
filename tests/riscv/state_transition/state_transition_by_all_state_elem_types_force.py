@@ -61,7 +61,7 @@ class MainSequence(Sequence):
         self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
 
         expected_vm_context_state_data = []
-        mode_val = self.choice((0, 1)) if self.getGlobalState('AppRegisterWidth') == 32 else self.choice((0, 1, 8, 9))
+        mode_val = self.choice((0, 1)) if self.getGlobalState('AppRegisterWidth') == 32 else self.choice((0, 8, 9))
         state.addVmContextStateElement('satp', 'MODE', mode_val)
         expected_vm_context_state_data.append(('satp', 'MODE', mode_val))
         mpp_val = self.choice((0, 1, 3))
