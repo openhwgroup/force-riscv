@@ -608,19 +608,19 @@ namespace Force {
   }
 
   GenReExecutionRequest::GenReExecutionRequest(uint64 pc)
-    : GenSequenceRequest(ESequenceType::ReExecution), mReExecutionAddress(pc)
+    : GenSequenceRequest(ESequenceType::ReExecution), mReExecutionAddress(pc), mMaxReExecutionInstructions(MAX_UINT32)
   {
 
   }
 
   GenReExecutionRequest::GenReExecutionRequest()
-    : GenSequenceRequest(ESequenceType::ReExecution), mReExecutionAddress(0)
+    : GenSequenceRequest(ESequenceType::ReExecution), mReExecutionAddress(0), mMaxReExecutionInstructions(MAX_UINT32)
   {
 
   }
 
   GenReExecutionRequest::GenReExecutionRequest(const GenReExecutionRequest& rOther)
-    : GenSequenceRequest(rOther), mReExecutionAddress(0)
+    : GenSequenceRequest(rOther), mReExecutionAddress(0), mMaxReExecutionInstructions(rOther.mMaxReExecutionInstructions)
   {
 
   }
@@ -634,6 +634,11 @@ namespace Force {
   {
     if (attrName == "Address") {
       mReExecutionAddress = value;
+    }
+    else if (attrName == "MaxReExecutionInstructions") {
+      if (value != 0) {
+        mMaxReExecutionInstructions = value;
+      }
     }
     else {
       UnsupportedRequestDetailAttribute(attrName);
@@ -1785,13 +1790,13 @@ namespace Force {
   }
 
   GenLinearBlockRequest::GenLinearBlockRequest()
-    : GenStateRequest(EGenStateType::LinearBlock), mBlockId(0), mExecute(false), mEmpty(false)
+    : GenStateRequest(EGenStateType::LinearBlock), mBlockId(0), mExecute(false), mEmpty(false), mBlockEndAddr(0)
   {
 
   }
 
   GenLinearBlockRequest::GenLinearBlockRequest(const GenLinearBlockRequest& rOther)
-    : GenStateRequest(rOther), mBlockId(rOther.mBlockId), mExecute(rOther.mExecute),mEmpty(rOther.mEmpty)
+    : GenStateRequest(rOther), mBlockId(rOther.mBlockId), mExecute(rOther.mExecute), mEmpty(rOther.mEmpty), mBlockEndAddr(rOther.mBlockEndAddr)
   {
 
   }

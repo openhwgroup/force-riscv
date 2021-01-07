@@ -40,6 +40,7 @@ namespace Force
     AddInitPolicy(new VlInitPolicy());
     AddInitPolicy(new VstartInitPolicy());
     AddInitPolicy(new VtypeInitPolicy());
+    AddInitPolicy(new VlmulInitPolicy());
 #endif
   }
 

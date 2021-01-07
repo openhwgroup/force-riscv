@@ -155,8 +155,8 @@ namespace Force {
     void AddLoadRegisterAmbleRequests(const std::string& regName, uint64 loadValue); //!< Add pre post amble requests when loading a register.
     void AddLoadSysRegistersAmbleRequests(const std::map<std::string, uint64>& rRegisters); //!< Add pre post amble requests when loading system registers.
     void AddLoadLargeRegisterAmbleRequests(const std::string& regName, std::vector<uint64>& loadValues); //!< Add pre post amble requests when loading a large register.
-    void AddPreambleRequest(GenRequest* request); //!< add request to preamble request list
-    void AddSpeculativeRequest(GenRequest* request); //!< add reqeust to speculative request list
+    void AddPreambleRequest(GenRequest* request); //!< Add request to preamble request list.
+    void AddPostInstructionStepRequest(GenRequest* request); //!< Add request to be processed after stepping an instruction.
     bool SimulationEnabled() const; //!< Indicate if simulation is enabled with test generation.
     bool HasISS() const; //!< Indicate if the ISS is available during test generation.
     void MapPC(); //!< Map the PC of the current PE.
@@ -195,7 +195,7 @@ namespace Force {
     void ExecuteHandler(); //!< Excecute exception handler.
     void SleepOnLowPower(); //!< Sleep on low power status
     void ExceptionReturn(); //!< Handle exception return.
-    void ReExecute(uint64 addr); //!< Handle re-execution request.
+    void ReExecute(cuint64 addr, cuint32 maxReExeInstr); //!< Handle re-execution request.
 
     // Forwarded Register related APIs
     bool GetRandomRegisters(cuint32 number, const ERegisterType regType, const std::string& rExcludes, std::vector<uint64>& rRegIndices) const; //!< Get random registers that are not reserved.
@@ -245,7 +245,7 @@ namespace Force {
     void ProcessGenRequest(GenRequest* genRequest); //!< Process GenRequest transaction.
     void ReserveMemory(MemoryReservation* pMemReserv); //!< Reserve memory using a MemoryReservation object.
     void UnreserveMemory(MemoryReservation* pMemReserv); //!< Unreserve memory using a MemoryReservation object.
-    void ProcessSpeculativeRequests(); //!< Process speculative requests if applied
+    void ProcessPostInstructionStepRequests(); //!< Process post instruction step requests.
   protected:
     uint32 mThreadId; //!< Thread ID of the generator.
     uint64 mMaxInstructions; //!< Maximum instructions allowed.
@@ -280,7 +280,7 @@ namespace Force {
     std::map<EGenStateType, std::string> mGenStateStrings; //!< String type generator states.
     std::vector<GenRequest* > mPreAmbleRequests; //!< Pre amble requests for instruction.
     std::vector<GenRequest* > mPostAmbleRequests; //!< Post amble requests for instruction.
-    std::vector<GenRequest* > mSpeculativeRequests; //!< speucluative requests for an instruction.
+    std::vector<GenRequest* > mPostInstrStepRequests; //!< Post instruction step requests for an instruction.
     std::vector<VariableModerator* > mVariableModerators; //!< Various VariableModerator classes
     friend class ArchInfoBase;
   };

@@ -33,4 +33,5 @@
   <variable name="No data page fault allowed" value="0" type="Value"/>
   <variable name="No instruction page fault allowed" value="0" type="Value"/>
   <variable name="Semaphore Physical Address Range" value="0x0-0xffffffffff" type="String" />
+  <variable name="Initial Vector Strided Preamble Address Block Size" value="0x8000" type="Value" />  <!-- All target addresses must be in the block. Larger block sizes allow for a wider range of stride values, but may decrease generation performance. -->
 </variable_file>

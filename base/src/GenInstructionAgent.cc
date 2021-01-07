@@ -145,7 +145,7 @@ namespace Force {
         if (bnt_node != nullptr) {
           LOG(info) << "{GenInstructionAgent::StepInstruction} Request to execute Bnt node: " << bnt_node->ToString() << endl;
           auto bnt_req = new GenSpeculativeBntRequest(bnt_node, ESpeculativeBntActionType::Execute);
-          mpGenerator->AddSpeculativeRequest(bnt_req);
+          mpGenerator->AddPostInstructionStepRequest(bnt_req);
         }
       }
     }
@@ -578,7 +578,7 @@ namespace Force {
     }
   }
 
-  void GenInstructionAgent::ReExecute(uint64 addr)
+  void GenInstructionAgent::ReExecute(cuint64 addr, cuint32 maxReExeInstr)
   {
     LOG(notice) << "{GenInstructionAgent::ReExecute} starting address 0x" << hex << addr << endl;
     mpGenerator->SetPC(addr);
@@ -628,6 +628,9 @@ namespace Force {
           }
         }
         // TODO detect conditional branch in loop and re-converge back.
+        break;
+      }
+      else if (re_exe_length >= maxReExeInstr) {
         break;
       }
     }

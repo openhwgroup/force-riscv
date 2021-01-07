@@ -281,7 +281,7 @@ struct Arg: public option::Arg
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::THREADS_PER_CPU_OPT)].last();
       unsigned int nval = parse_uint64(my_opt->arg);
-      //arCfg.SetThreadsPerCpu(nval);
+      arCfg.SetThreadsPerCpu(nval);
       LOG(info) << "      'threads_per_cpu' : " << nval << endl;
       cerr << "NOTE: Ignoring 'threads_per_cpu' cmdline arg for now. NOT supported by current Handcar libraries..." << endl;
     }

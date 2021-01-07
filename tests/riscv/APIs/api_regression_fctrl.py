@@ -18,7 +18,7 @@ control_items = [
     # {"fname":"api_genVA_02_force.py",                    "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000}},
     # {"fname":"api_genPA_01_force.py",                    "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
     # {"fname":"api_genVAforPA_01_force.py",               "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-    # {"fname":"api_getPageInfo.py",                       "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
+    {"fname":"api_getPageInfo_01_force.py",                "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
     {"fname":"GenData_test_force.py",                      "generator" : {"--cfg" : "config/riscv.config"}},
     # {"fname":"api_verifyVirtualAddress_01_force.py",       "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
     # {"fname":"api_genFreePagesRange_01_force.py",        "generator" : {"--cfg" : "config/riscv.config", "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},        # fails if page size is specified

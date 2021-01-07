@@ -18,7 +18,6 @@
 
 #include <Defines.h>
 #include <Enums.h>
-#include ARCH_ENUM_HEADER
 
 namespace Force {
 
@@ -29,7 +28,7 @@ namespace Force {
   class AddressReuseMode {
   public:
     AddressReuseMode(); //!< Default constructor
-    COPY_CONSTRUCTOR_ABSENT(AddressReuseMode);
+    AddressReuseMode(const AddressReuseMode& rOther);
     DESTRUCTOR_DEFAULT(AddressReuseMode); //!< Destructor
     ASSIGNMENT_OPERATOR_ABSENT(AddressReuseMode);
 

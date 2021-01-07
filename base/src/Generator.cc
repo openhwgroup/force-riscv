@@ -66,7 +66,7 @@ namespace Force {
     : Object(), mThreadId(0), mMaxInstructions(0), mMaxPhysicalVectorLen(0), mpArchInfo(nullptr), mpInstructionSet(nullptr), mpPagingInfo(nullptr), mpMemoryManager(nullptr), mpSimAPI(nullptr), mpVirtualMemoryInitializer(nullptr), mpRegisterFile(nullptr), mpVmManager(nullptr), mpRequestQueue(nullptr),
       mpThreadInstructionResults(nullptr), mpRecordArchive(nullptr), mpBootOrder(nullptr), mpGenMode(nullptr), mpGenPC(nullptr), mpReExecutionManager(nullptr), mpDependence(nullptr), mpRegisteredSetModifier(nullptr), mpExceptionRecordManager(nullptr), mpChoicesModerators(nullptr),
       mpConditionSet(nullptr), mpPageRequestRegulator(nullptr), mpAddressFilteringRegulator(nullptr), mpBntHookManager(nullptr), mpBntNodeManager(nullptr), mpAddressTableManager(nullptr), mAgents(), mGenStateValues(), mGenStateStrings(), mPreAmbleRequests(), mPostAmbleRequests(),
-      mSpeculativeRequests(), mVariableModerators()
+      mPostInstrStepRequests(), mVariableModerators()
   {
     mpRequestQueue = new GenRequestQueue();
 
@@ -88,7 +88,7 @@ namespace Force {
     : Object(), mThreadId(0), mMaxInstructions(0), mMaxPhysicalVectorLen(0), mpArchInfo(nullptr), mpInstructionSet(nullptr), mpPagingInfo(nullptr), mpMemoryManager(nullptr), mpSimAPI(nullptr), mpVirtualMemoryInitializer(nullptr), mpRegisterFile(nullptr), mpVmManager(nullptr), mpRequestQueue(nullptr),
       mpThreadInstructionResults(nullptr), mpRecordArchive(nullptr), mpBootOrder(nullptr), mpGenMode(nullptr), mpGenPC(nullptr), mpReExecutionManager(nullptr), mpDependence(nullptr), mpRegisteredSetModifier(nullptr), mpExceptionRecordManager(nullptr), mpChoicesModerators(nullptr),
       mpConditionSet(nullptr), mpPageRequestRegulator(nullptr), mpAddressFilteringRegulator(nullptr), mpBntHookManager(nullptr), mpBntNodeManager(nullptr), mpAddressTableManager(nullptr), mAgents(), mGenStateValues(), mGenStateStrings(), mPreAmbleRequests(), mPostAmbleRequests(),
-      mSpeculativeRequests(), mVariableModerators()
+      mPostInstrStepRequests(), mVariableModerators()
   {
     mpRequestQueue = new GenRequestQueue();
 
@@ -110,7 +110,7 @@ namespace Force {
     : Object(rOther), mThreadId(0), mMaxInstructions(rOther.mMaxInstructions), mMaxPhysicalVectorLen(rOther.mMaxPhysicalVectorLen), mpArchInfo(rOther.mpArchInfo), mpInstructionSet(rOther.mpInstructionSet), mpPagingInfo(rOther.mpPagingInfo), mpMemoryManager(rOther.mpMemoryManager), mpSimAPI(rOther.mpSimAPI),
       mpVirtualMemoryInitializer(nullptr), mpRegisterFile(nullptr), mpVmManager(nullptr), mpRequestQueue(nullptr), mpThreadInstructionResults(nullptr), mpRecordArchive(nullptr), mpBootOrder(nullptr), mpGenMode(nullptr), mpGenPC(nullptr), mpReExecutionManager(nullptr), mpDependence(nullptr),
       mpRegisteredSetModifier(nullptr), mpExceptionRecordManager(nullptr), mpChoicesModerators(nullptr), mpConditionSet(nullptr), mpPageRequestRegulator(nullptr), mpAddressFilteringRegulator(nullptr), mpBntHookManager(nullptr), mpBntNodeManager(), mpAddressTableManager(nullptr),
-      mAgents(), mGenStateValues(), mGenStateStrings(), mPreAmbleRequests(), mPostAmbleRequests(), mSpeculativeRequests(), mVariableModerators()
+      mAgents(), mGenStateValues(), mGenStateStrings(), mPreAmbleRequests(), mPostAmbleRequests(), mPostInstrStepRequests(), mVariableModerators()
   {
     if (rOther.mpRequestQueue) {
       mpRequestQueue = dynamic_cast<GenRequestQueue* >(rOther.mpRequestQueue->Clone());
@@ -254,9 +254,9 @@ namespace Force {
       FAIL("post-requests-not-empty");
     }
 
-    if (not mSpeculativeRequests.empty()) {
-      LOG(fail) << "{Generator::~Generator} speculative requests vector not empty." << endl;
-      FAIL("speculative-requests-not-empty");
+    if (not mPostInstrStepRequests.empty()) {
+      LOG(fail) << "{Generator::~Generator} post instruction step requests vector not empty." << endl;
+      FAIL("post-step-requests-not-empty");
     }
   }
 
@@ -352,16 +352,16 @@ namespace Force {
 
     mpThreadInstructionResults->GetCurrentInstructionRecordId (rec_id);
 
-    ProcessSpeculativeRequests();
+    ProcessPostInstructionStepRequests();
   }
 
-  void Generator::ProcessSpeculativeRequests()
+  void Generator::ProcessPostInstructionStepRequests()
   {
-    if (mSpeculativeRequests.empty())
+    if (mPostInstrStepRequests.empty())
       return;
 
     auto round_id = mpRequestQueue->StartRound();
-    mpRequestQueue->PrependRequests(mSpeculativeRequests);
+    mpRequestQueue->PrependRequests(mPostInstrStepRequests);
 
     while ( !mpRequestQueue->RoundFinished(round_id) )
     {
@@ -910,10 +910,10 @@ namespace Force {
     LOG(info) << "Generator sleep on low power" << endl;
   }
 
-  void Generator::ReExecute(uint64 addr)
+  void Generator::ReExecute(cuint64 addr, cuint32 maxReExeInstr)
   {
     auto instr_agent = static_cast<GenInstructionAgent*>(mAgents[int(EGenAgentType::GenInstructionAgent)]);
-    instr_agent->ReExecute(addr);
+    instr_agent->ReExecute(addr, maxReExeInstr);
   }
 
   bool Generator::VerifyVirtualAddress(uint64 va, uint64 size, bool isInstr) const
@@ -1063,9 +1063,9 @@ namespace Force {
     mPreAmbleRequests.push_back(request);
   }
 
-  void Generator::AddSpeculativeRequest(GenRequest* request)
+  void Generator::AddPostInstructionStepRequest(GenRequest* request)
   {
-    mSpeculativeRequests.push_back(request);
+    mPostInstrStepRequests.push_back(request);
   }
 
   bool Generator::SimulationEnabled() const

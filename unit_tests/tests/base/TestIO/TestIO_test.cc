@@ -22,6 +22,7 @@
 #include <Defines.h>
 #include <Memory.h>
 #include <TestIO.h>
+#include <SymbolManager.h>
 #include <Enums.h>
 
 using text = std::string;
@@ -33,6 +34,7 @@ CASE( "Basic Test TestIO Write ELF" ) {
      using namespace Force;
 
      Memory mem(EMemBankType::Default);
+     SymbolManager sym_manager(EMemBankType::Default);
 
     // instruction sequence for ending emulation
      mem.Initialize(0xffff0028, 0x090080d2ull, 4, EMemDataType::Instruction);  // mov x9, #0x0
@@ -48,7 +50,7 @@ CASE( "Basic Test TestIO Write ELF" ) {
      
      mem.Dump(std::cout);
 
-     TestIO testio(0, mem);
+     TestIO testio(0, &mem, &sym_manager);
 
      SECTION ("Test write image to generate ELF file") {
        testio.WriteTestElf("./test.ELF", false, 0xffff0020, 0xF3);  
@@ -64,8 +66,9 @@ CASE( "Test TestIO Read ELF" ) {
      using namespace Force;
 
      Memory mem(EMemBankType::Default);
-
-     TestIO testio(1, mem, false);
+     SymbolManager sym_manager(EMemBankType::Default);
+     
+     TestIO testio(1, &mem, &sym_manager, false);
 
      SECTION ("Test read elf ") {
        bool bigEndian;

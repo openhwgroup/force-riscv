@@ -73,7 +73,7 @@ namespace Force {
 
   bool PageTable::UnconstructedTableLevel(const Page* pageObj, uint64& rLevel)
   {
-    uint32 level_gap = (pageObj->Level() - TableLevel());
+    uint32 level_gap = (TableLevel() - pageObj->Level());
     if (level_gap > MAX_PAGE_TABLE_LEVEL)
     {
       LOG(fail) << "{VmAddressSpace::PageTableWalk} level gap too large: " << dec << level_gap << " page level " << pageObj->Level() << " table level " << TableLevel() << endl;
@@ -99,7 +99,7 @@ namespace Force {
 
   const TablePte* PageTable::PageTableWalk(const Page* pageObj, const VmAddressSpace* pVmas, PageTableInfoRec& page_table_rec) const
   {
-    uint32 level_gap = (pageObj->Level() - TableLevel());
+    uint32 level_gap = (TableLevel() - pageObj->Level());
     if (level_gap > MAX_PAGE_TABLE_LEVEL) {
       LOG(fail) << "{VmAddressSpace::PageTableWalk} level gap too large: " << dec << level_gap << " page level " << pageObj->Level() << " table level " << TableLevel() << endl;
       FAIL("table-level-gap-too-large");
@@ -127,7 +127,6 @@ namespace Force {
 
   void PageTable::ConstructPageTableWalk(uint64 VA, Page* pageObj, VmAddressSpace* pVmas, const GenPageRequest& pPageReq)
   {
-    //uint32 level_gap = (pageObj->Level() - TableLevel());
     uint32 level_gap = (TableLevel() - pageObj->Level());
     if (level_gap > MAX_PAGE_TABLE_LEVEL) {
       LOG(fail) << "{VmAddressSpace::ConstructPageTableWalk} level gap too large: " << dec << level_gap << " page level " << pageObj->Level() << " table level " << TableLevel() << endl;

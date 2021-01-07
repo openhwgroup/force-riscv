@@ -30,6 +30,7 @@
 #include <PageRequestRegulator.h>
 #include <VmManager.h>
 #include <VmMapper.h>
+#include <AddressReuseMode.h>
 #include <Log.h>
 
 #include <memory>
@@ -363,12 +364,12 @@ namespace Force {
   }
 
   AddressingOperandConstraint::AddressingOperandConstraint()
-    : GroupOperandConstraint(), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints()
+    : GroupOperandConstraint(), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints(), mpAddrReuseMode(new AddressReuseMode())
   {
   }
 
   AddressingOperandConstraint::AddressingOperandConstraint(const AddressingOperandConstraint& rOther)
-    : GroupOperandConstraint(rOther), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints()
+    : GroupOperandConstraint(rOther), mPC(0), mUsePreamble(false), mNoPreamble(false), mpPageRequest(nullptr), mpTargetConstraint(nullptr), mpVmMapper(nullptr), mDataConstraints(), mpAddrReuseMode(new AddressReuseMode(*(rOther.mpAddrReuseMode)))
   {
   }
 
@@ -405,6 +406,8 @@ namespace Force {
     }
     SetupVmMapper(rGen);
     // << "instruction " << rInstr.Name() << " use preamble? " << mUsePreamble << " no preamble? " << mNoPreamble << endl;
+
+    SetupAddressReuseMode(rGen);
   }
 
   AddressingOperandConstraint::~AddressingOperandConstraint()
@@ -412,6 +415,7 @@ namespace Force {
     delete mpPageRequest;
     delete mpTargetConstraint;
     mpVmMapper = nullptr;
+    delete mpAddrReuseMode;
   }
 
   bool AddressingOperandConstraint::TargetConstraintForced() const
@@ -458,6 +462,37 @@ namespace Force {
     for (auto reg_opr : reg_vec) {
       reg_opr->AddWriteConstraint(rGen);
     }
+  }
+
+  void AddressingOperandConstraint::SetupAddressReuseMode(const Generator& rGen)
+  {
+    if (IsInstruction() or HasDataConstraints()) {
+      return;
+    }
+
+    const ChoicesModerator* choices_mod = rGen.GetChoicesModerator(EChoicesType::OperandChoices);
+    if (ChooseAddressReuseEnabled(*choices_mod, "Read after read address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterRead);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Read after write address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterWrite);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Write after read address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterRead);
+    }
+
+    if (ChooseAddressReuseEnabled(*choices_mod, "Write after write address reuse")) {
+      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterWrite);
+    }
+  }
+
+  bool AddressingOperandConstraint::ChooseAddressReuseEnabled(const ChoicesModerator& rChoicesMod, const string& rChoiceTreeName)
+  {
+    unique_ptr<ChoiceTree> reuse_choices(rChoicesMod.CloneChoiceTree(rChoiceTreeName));
+    const Choice* reuse_choice = reuse_choices->Choose();
+    return (reuse_choice->Value() == 1);
   }
 
   void BranchOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)

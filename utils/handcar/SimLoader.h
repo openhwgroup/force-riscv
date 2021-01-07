@@ -27,6 +27,7 @@ struct SimDllApi {
   void (*terminate_simulator)(void);
   int  (*get_simulator_version)(char *);
   int  (*get_disassembly)(const uint64_t* pPc, char** pOpcode, char** pDisassembly);
+  int  (*get_disassembly_for_target)(int target_id, const uint64_t* pPc, char** pOpcode, char** pDisassembly);
   int  (*read_simulator_memory)(int target_id, const uint64_t* addr, int length, uint8_t* data);
   int  (*write_simulator_memory)(int target_id, const uint64_t* addr, int length, const uint8_t* data);
   int  (*read_simulator_register)(uint32_t target_id, const char* registerName, uint64_t* value, uint64_t* mask);
@@ -37,7 +38,7 @@ struct SimDllApi {
   bool (*inject_simulator_events)(uint32_t, uint32_t);
 
   SimDllApi() : sim_lib(NULL),initialize_simulator(NULL),terminate_simulator(NULL),
-       get_simulator_version(NULL),get_disassembly(NULL),read_simulator_memory(NULL),write_simulator_memory(NULL),
+       get_simulator_version(NULL),get_disassembly(NULL),get_disassembly_for_target(NULL),read_simulator_memory(NULL),write_simulator_memory(NULL),
        read_simulator_register(NULL),partial_read_large_register(NULL),partial_write_large_register(NULL),write_simulator_register(NULL), step_simulator(NULL), inject_simulator_events(NULL) {};
 
   

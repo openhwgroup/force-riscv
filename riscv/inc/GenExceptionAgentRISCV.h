@@ -55,6 +55,7 @@ namespace Force {
     //ExceptionContext* ExceptionContextInstance(EExceptionClassType exceptClass) const override; //!< Return an ExceptionContext object.
   private:
     //void DiagnoseUnknownReasonException(std::string& rMsgStr) const; //!< Diagnose unknown reason exception.
+    void AddPostExceptionRequests() override; //!< Add necessary requests following the exception, if any.
   private:
     std::vector<uint32> mArgRegIndices; //!< handler argument regsiters
     bool mFastMode; //!< flag indicating fast mode

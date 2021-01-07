@@ -50,7 +50,7 @@ namespace Force {
 
   AddressSolvingShared::AddressSolvingShared()
     : mpGenerator(nullptr), mpInstruction(nullptr), mpAddressingOperand(nullptr), mpAddressingOperandConstraint(nullptr), mpVmMapper(nullptr), mpAddressTagging(nullptr), mpTargetConstraint(nullptr), mpPcConstraint(nullptr), mAlignMask(0), mFreeTarget(0), mAlignment(0), mAlignShift(0),
-      mSize(0), mVmTimeStamp(0), mIsInstruction(false), mMemDataType(EMemDataType::Data), mMemAccessType(EMemAccessType::Unknown), mpAddrReuseMode(nullptr), mFreeTried(false), mFreeValid(false), mHardVmConstraints(), mIntraAllocations(), mpTargetListConstraint()
+      mSize(0), mVmTimeStamp(0), mIsInstruction(false), mMemDataType(EMemDataType::Data), mMemAccessType(EMemAccessType::Unknown), mFreeTried(false), mFreeValid(false), mHardVmConstraints(), mIntraAllocations(), mpTargetListConstraint()
   {
   }
 
@@ -94,7 +94,6 @@ namespace Force {
     mpTargetConstraint = mpAddressingOperandConstraint->TargetConstraint();
     mpPcConstraint = GetPcSpaceConstraint();
     mpGenerator->GetAddressFilteringRegulator()->GetVmConstraints(*(mpAddressingOperandConstraint->GetPageRequest()), *mpVmMapper, mHardVmConstraints);
-    ChooseDataReuse();
     return true;
   }
 
@@ -102,44 +101,6 @@ namespace Force {
   {
     auto pc_spacing = PcSpacing::Instance();
     return pc_spacing->GetPcSpaceConstraint();
-  }
-
-  void AddressSolvingShared::ChooseDataReuse()
-  {
-    if (mpAddrReuseMode != nullptr) {
-      mpAddrReuseMode->DisableAllReuseTypes();
-    }
-    else {
-      mpAddrReuseMode = new AddressReuseMode();
-    }
-
-    if ((mMemDataType != EMemDataType::Data) or mpAddressingOperandConstraint->HasDataConstraints())
-      return;
-
-    const ChoicesModerator* choices_mod = mpGenerator->GetChoicesModerator(EChoicesType::OperandChoices);
-    unique_ptr<ChoiceTree> read_after_read_choices(choices_mod->CloneChoiceTree("Read after read address reuse"));
-    const Choice* read_after_read_choice = read_after_read_choices->Choose();
-    if (read_after_read_choice->Value() == 1) {
-      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterRead);
-    }
-
-    unique_ptr<ChoiceTree> read_after_write_choices(choices_mod->CloneChoiceTree("Read after write address reuse"));
-    const Choice* read_after_write_choice = read_after_write_choices->Choose();
-    if (read_after_write_choice->Value() == 1) {
-      mpAddrReuseMode->EnableReuseType(EAddressReuseType::ReadAfterWrite);
-    }
-
-    unique_ptr<ChoiceTree> write_after_read_choices(choices_mod->CloneChoiceTree("Write after read address reuse"));
-    const Choice* write_after_read_choice = write_after_read_choices->Choose();
-    if (write_after_read_choice->Value() == 1) {
-      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterRead);
-    }
-
-    unique_ptr<ChoiceTree> write_after_write_choices(choices_mod->CloneChoiceTree("Write after write address reuse"));
-    const Choice* write_after_write_choice = write_after_write_choices->Choose();
-    if (write_after_write_choice->Value() == 1) {
-      mpAddrReuseMode->EnableReuseType(EAddressReuseType::WriteAfterWrite);
-    }
   }
 
   void AddressSolvingShared::ApplyVirtualUsableConstraint(ConstraintSet* constrSet, uint32& rTimeStamp) const
@@ -156,7 +117,7 @@ namespace Force {
       }
     }
 
-    mpVmMapper->ApplyVirtualUsableConstraint(mMemDataType, mMemAccessType, *mpAddrReuseMode, constrSet);
+    mpVmMapper->ApplyVirtualUsableConstraint(mMemDataType, mMemAccessType, *(mpAddressingOperandConstraint->GetAddressReuseMode()), constrSet);
 
   }
 

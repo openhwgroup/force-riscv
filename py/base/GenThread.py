@@ -156,7 +156,7 @@ class GenThread(object):
             if name in GenThread.sharedThreadObjects:
                 return GenThread.sharedThreadObjects[name]
             else:
-                self.error("[getSharedThreadObject] shared object not found name=%s" % (name))
+                Log.fail("[getSharedThreadObject] shared object not found name=%s" % (name))
 
     def hasSharedThreadObject(self, name):
         with ThreadRequestContextManager():
@@ -300,10 +300,14 @@ class GenThread(object):
     def beginLinearBlock(self):
         return self.interface.stateRequest(self.genThreadID, "Push", "LinearBlock", 0, {})
 
-    def endLinearBlock(self, block_id, execute):
-        (block_start_addr,empty) = self.interface.stateRequest(self.genThreadID, "Pop", "LinearBlock", 0, {"BlockId":block_id, "Execute":execute})
+    def endLinearBlock(self, block_id, execute, max_re_execution_instructions):
+        (block_start_addr,block_end_addr,empty) = self.interface.stateRequest(self.genThreadID, "Pop", "LinearBlock", 0, {"BlockId":block_id, "Execute":execute})
         if execute and not empty:
-            self.interface.genSequence(self.genThreadID, "ReExecution", {"Address":block_start_addr})
+            pc_val = block_start_addr
+
+            while pc_val != block_end_addr:
+                self.interface.genSequence(self.genThreadID, "ReExecution", {"Address":pc_val, "MaxReExecutionInstructions":max_re_execution_instructions})
+                pc_val = self.getPEstate("PC")
 
     # Page related API
     def genPA(self, kwargs):
@@ -515,7 +519,7 @@ class GenThread(object):
 
             picked_value -= weight
         else:
-            self.error("Error picking item from weighted dict")
+            Log.fail("Error picking item from weighted dict")
     
     def pickWeightedValue(self, weighted_dict):
         picked_val = self.pickWeighted(weighted_dict);
@@ -534,7 +538,7 @@ class GenThread(object):
         try:
             self.bntSequenceObject.setBntCallback(getattr(self.bntSequenceObject, function))
         except AttributeError:
-            self.error("unknown bnt function:%s" % function)
+            Log.fail("unknown bnt function:%s" % function)
 
         if 'BntInstructionNumber' in param_dict.keys():
             instr_num = param_dict['BntInstructionNumber']
@@ -593,6 +597,15 @@ class GenThread(object):
 
     def setThreadGroup(self, aId, aJob, aThreads):
         self.interface.setThreadGroup(aId, aJob, aThreads)
+
+    def numberOfChips(self):
+        return self.interface.numberOfChips()
+
+    def numberOfCores(self):
+        return self.interface.numberOfCores()
+
+    def numberOfThreads(self):
+        return self.interface.numberOfThreads()
 
     def lockThreadScheduler(self):
         self.interface.lockThreadScheduler(self.genThreadID)

@@ -43,7 +43,7 @@ namespace Force {
   void VectorLayoutSetupRISCV::SetUpVectorLayoutFixedElementSize(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
   {
     uint32 sew = GetSew();
-    uint32 lmul = GetLmul();
+    float lmul = GetLmul();
 
     // EMUL = (EEW / SEW) * LMUL. EEW is the element width for the instruction. Register operands
     // must be aligned to EMUL.

@@ -30,7 +30,6 @@
 #include <VectorLayoutSetupRISCV.h>
 
 #include <algorithm>
-#include <cmath>
 
 using namespace std;
 
@@ -338,7 +337,7 @@ namespace Force {
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    uint32 reg_count = lround(vec_layout->GetRegisterCount() * mLayoutMultiple);
+    uint32 reg_count = vec_layout->GetRegisterCount(mLayoutMultiple);
     if (reg_count == 0) {
       reg_count = 1;
     }
@@ -347,7 +346,7 @@ namespace Force {
     // TODO (Chris): Handle this case when implementing generic generation control option later
     uint32 illegal_reg_limit = reg_count;
     if (reg_count > 8) {
-      LOG(notice) << "{VectorRegisterOperandConstraintRISCV::Setup} EMUL * NFIELDS = " << dec << vec_layout->GetRegisterCount() << " > 8" << endl;
+      LOG(notice) << "{VectorRegisterOperandConstraintRISCV::Setup} EMUL * NFIELDS = " << reg_count << " > 8" << endl;
       illegal_reg_limit = 8;
     }
 
@@ -356,7 +355,7 @@ namespace Force {
       SubConstraintValue(32 - i, operandStruct);
     }
 
-    uint32 reg_index_alignment = lround(vec_layout->GetRegisterIndexAlignment() * mLayoutMultiple);
+    uint32 reg_index_alignment = vec_layout->GetRegisterIndexAlignment(mLayoutMultiple);
     if (reg_index_alignment == 0) {
       reg_index_alignment = 1;
     }
@@ -376,7 +375,7 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
 
-    uint32 reg_count = lround(vec_layout->GetRegisterCount() * mLayoutMultiple);
+    uint32 reg_count = vec_layout->GetRegisterCount(mLayoutMultiple);
     if (reg_count == 0) {
       reg_count = 1;
     }
@@ -387,7 +386,7 @@ namespace Force {
     }
 
     auto vec_reg_opr_constr = rDifferOprConstr.CastInstance<const VectorRegisterOperandConstraintRISCV>();
-    uint32 differ_reg_count = lround(vec_layout->GetRegisterCount() * vec_reg_opr_constr->mLayoutMultiple);
+    uint32 differ_reg_count = vec_layout->GetRegisterCount(vec_reg_opr_constr->mLayoutMultiple);
     if (differ_reg_count == 0) {
       differ_reg_count = 1;
     }

@@ -158,7 +158,7 @@
 >     USED = true,
 >     UNUSED = false
 >   };
-105,175c60,92
+105,175c60,135
 < void merge_overlapping_memory_regions(std::vector<std::pair<reg_t, mem_t*>>& mems)
 < {
 <   // check the user specified memory regions and merge the overlapping or
@@ -264,11 +264,8 @@
 >     const char arg2[] = "no_elf\0";
 >     memcpy(_stored_argv[0], arg1, strlen(arg1)+1);
 >     memcpy(_stored_argv[_stored_argc-1], arg2, strlen(arg2)+1);
-178,180c95,483
-<   merge_overlapping_memory_regions(res);
-<   return res;
-< }
----
+>   }
+> 
 >   
 >   // _unpackFlatOptions function: takes a space separated options string, formatted as it would be for command line arguments for the Spike original executable, 
 >   //    and recomposes it into an argument vector so that spike argument parsing code can work exactly as it was designed to work. 
@@ -310,9 +307,13 @@
 >     {
 >       _token_vector.push_back(flat_options_temp);
 >     }
->   }
-> 
-> 
+178,180d137
+<   merge_overlapping_memory_regions(res);
+<   return res;
+< }
+182c139,485
+< int main(int argc, char** argv)
+---
 >   // _rejectOrEnroll function: looks up an option by name from the _options_map and determines if the right types of arguments have been provided. If so, the option is enabled and the argument is stored.
 >   //
 >   // inputs:
@@ -658,9 +659,7 @@
 > 
 > bool isa_rv32;  // true if simulator configured (via isa cmdline option) as 32-bits (RV32)
 > bool isa_D;     // true if double-precision floating pt extension configured in
-182c485
-< int main(int argc, char** argv)
----
+> 
 > void initialize_simulator(const char* options)
 183a487,538
 >   // Hopefully the user has called set_simulator_parameter a number of times before calling initialize_simulator, but handle the contingency if they didn't.
@@ -884,14 +883,14 @@
 >     hartids);
 >   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
 >  
-375,377c610,611
+375,377c610,663
 <     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
 <     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
 <     if (extension) s.get_core(i)->register_extension(extension());
 ---
 >   if (ic) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*ic);
 >   if (dc) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*dc);
-378a613,619
+>   }
 >  
 >   _pSimulatorTopLevel->set_log(log);
 >   _pSimulatorTopLevel->set_histogram(histogram);
@@ -899,13 +898,8 @@
 >   argc=0;
 >   argv=nullptr;
 > }
-380,382d620
-<   s.set_debug(debug);
-<   s.configure_log(log, log_commits);
-<   s.set_histogram(histogram);
-384c622,629
-<   auto return_code = s.run();
----
+> 
+> 
 > void terminate_simulator()
 > {
 >   // NOTE: the if guards around all the delete statements are needed because it is possible that some of these are not allocated when terminate_simulator is called, since it is an external API function.
@@ -914,28 +908,20 @@
 >     delete _pSimulatorTopLevel;
 >     _pSimulatorTopLevel = nullptr;
 >   }
-386,387c631,635
-<   for (auto& mem : mems)
-<     delete mem.second;
----
+> 
 >   if(_pOptionsStorage != nullptr)
 >   { 
 >     delete _pOptionsStorage;
 >     _pOptionsStorage = nullptr;
 >   }
-389,390c637,642
-<   for (auto& plugin_device : plugin_devices)
-<     delete plugin_device.second;
----
+> 
 >   // originally handled by smart pointers, but we have to delete these manually now.
 >   if(ic != nullptr)
 >   {
 >     delete ic;
 >     ic = nullptr;
 >   }
-392c644,654
-<   return return_code;
----
+> 
 >   if(dc != nullptr)
 >   {
 >     delete dc;
@@ -947,7 +933,7 @@
 >     delete l2;
 >     l2 = nullptr;
 >   }
-393a656,1296
+> }
 > 
 > 
 > void clearSimulatorLeaveOptions()
@@ -956,8 +942,11 @@
 >   {
 >     delete _pSimulatorTopLevel;
 >     _pSimulatorTopLevel = nullptr;
->   }
-> 
+380,382c666,735
+<   s.set_debug(debug);
+<   s.configure_log(log, log_commits);
+<   s.set_histogram(histogram);
+---
 >   // originally handled by smart pointers, but we have to delete these manually now.
 >   if(ic != nullptr)
 >   {
@@ -1028,8 +1017,12 @@
 > 
 >   return rcode;
 > }
-> 
-> 
+384d736
+<   auto return_code = s.run();
+386,387c738,779
+<   for (auto& mem : mems)
+<     delete mem.second;
+---
 > void dump_memory(const char* file_to_create)
 > {
 >   //if(_pMemories != nullptr)
@@ -1072,17 +1065,27 @@
 >     _pSimulatorTopLevel->dump_sparse_memory(dump2);    
 >   //}
 > }
-> 
-> 
+389,390d780
+<   for (auto& plugin_device : plugin_devices)
+<     delete plugin_device.second;
+392c782,784
+<   return return_code;
+---
 > int step_simulator(int target_id, int num_steps, int stx_failed)
 > {
 >   return _pSimulatorTopLevel->step_simulator(target_id, num_steps, stx_failed);
-> }
+393a786,1302
 > 
 > 
 > int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly)
 > {
->   return _pSimulatorTopLevel->get_disassembly(pc, opcode, disassembly);
+>   return _pSimulatorTopLevel->get_disassembly(0, pc, opcode, disassembly);
+> }
+> 
+> 
+> int get_disassembly_for_target(int target_id, const uint64_t* pc, char** opcode, char** disassembly)
+> {
+>   return _pSimulatorTopLevel->get_disassembly(target_id, pc, opcode, disassembly);
 > }
 > 
 > 

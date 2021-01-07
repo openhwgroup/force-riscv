@@ -139,6 +139,7 @@ def add_layout_operand(aInstruction):
             elem_width = ints[1]
         else:
             elem_width = ints[0]
+
         operand_adjustor.add_custom_layout_operand(aRegCount=reg_count, aElemWidth=elem_width)
     else:
         operand_adjustor.add_vtype_layout_operand()

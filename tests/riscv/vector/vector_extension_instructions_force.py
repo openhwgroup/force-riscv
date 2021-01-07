@@ -58,10 +58,10 @@ class MainSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrRecord A record of the generated instruction.
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
-        vs2_val = aInstrRecord['Srcs']['vs2']
+        eew_denominator = int(aInstr[8])
         vd_val = aInstrRecord['Dests']['vd']
-        if vs2_val == vd_val:
-            self.error('Instruction %s used overlapping source and destination registers' % aInstr)
+        vs2_val = aInstrRecord['Srcs']['vs2']
+        self.assertNoRegisterOverlap(aInstr, vd_val, vs2_val, aRegCountMultipleB=(1 / eew_denominator))
 
         vm_val = aInstrRecord['Imms']['vm']
         if (vm_val == 0) and (vd_val == 0):

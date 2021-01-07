@@ -30,6 +30,7 @@
 #include <MemoryConstraintUpdate.h>
 #include <AddressReuseMode.h>
 #include <ImageIO.h>
+#include <SymbolManager.h>
 #include <Log.h>
 
 #include <algorithm>
@@ -40,13 +41,14 @@ using namespace std;
 namespace Force {
 
   MemoryBank::MemoryBank(EMemBankType bankType)
-    : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr)
+    : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr)
   {
     mpMemory = new Memory(bankType);
     mpBaseConstraint = new ConstraintSet();
 
     Config* config = Config::Instance();
     mpUsable = new MultiThreadMemoryConstraint(config->NumChips() * config->NumCores() * config->NumThreads());
+    mpSymbolManager = new SymbolManager(bankType);
   }
 
   MemoryBank::~MemoryBank()
@@ -57,6 +59,7 @@ namespace Force {
     delete mpUsable;
     delete mpPhysicalPageManager;
     delete mpPageTableManager;
+    delete mpSymbolManager;
   }
 
   EMemBankType MemoryBank::MemoryBankType() const
@@ -455,7 +458,7 @@ namespace Force {
       string output_name_base = file_base + "." + mem_bank_str;
       string output_name_elf = output_name_base + ".ELF";
       string output_name_asm = output_name_base + ".S";
-      TestIO output_instance(uint32(output_mem->MemoryBankType()), *output_mem);
+      TestIO output_instance(uint32(output_mem->MemoryBankType()), output_mem, mem_bank->GetSymbolManager());
       output_instance.WriteTestElf(output_name_elf, false, resetPC, machineType);
       if (cfg_handle->OutputAssembly()) {
         output_instance.WriteTestAssembly(generators, output_name_asm);

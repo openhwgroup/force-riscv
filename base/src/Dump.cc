@@ -134,13 +134,14 @@ namespace Force {
     auto const memManager = MemoryManager::Instance();
     uint32 num_banks = memManager->NumberBanks();
     for ( unsigned bank = 0 ; bank < num_banks; bank ++) {
-      Memory* output_mem = memManager->GetMemoryBank(bank)->MemoryInstance();
+      auto mem_bank = memManager->GetMemoryBank(bank);
+      Memory* output_mem = mem_bank->MemoryInstance();
       if (output_mem->IsEmpty()) continue;
 
       string mem_bank_str = EMemBankType_to_string(output_mem->MemoryBankType());
       string output_name_base = mBaseName + "_Partial." + mem_bank_str;
       string output_name_elf = output_name_base + ".ELF";
-      TestIO output_instance(uint32(output_mem->MemoryBankType()), *output_mem);
+      TestIO output_instance(uint32(output_mem->MemoryBankType()), output_mem, mem_bank->GetSymbolManager());
       output_instance.WriteTestElf(output_name_elf, false, resetPC, machine_type);
     }
   }
@@ -150,11 +151,12 @@ namespace Force {
     auto const memManager = MemoryManager::Instance();
     uint32 num_banks = memManager->NumberBanks();
     for ( unsigned bank = 0 ; bank < num_banks; bank ++) {
-      Memory* output_mem = memManager->GetMemoryBank(bank)->MemoryInstance();
+      auto mem_bank = memManager->GetMemoryBank(bank);
+      Memory* output_mem = mem_bank->MemoryInstance();
       string mem_bank_str = EMemBankType_to_string(output_mem->MemoryBankType());
       string output_name_base = mBaseName + "_Partial." + mem_bank_str;
       string output_name_asm = output_name_base + ".S";
-      TestIO output_instance(uint32(output_mem->MemoryBankType()), *output_mem);
+      TestIO output_instance(uint32(output_mem->MemoryBankType()), output_mem, mem_bank->GetSymbolManager());
       output_instance.WriteTestAssembly(mpScheduler->GetGenerators(), output_name_asm);
     }
   }

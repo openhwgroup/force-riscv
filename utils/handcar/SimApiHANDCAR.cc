@@ -162,24 +162,8 @@ namespace Force {
 
     SetVectorRegisterWidth(rConfig.mVectorRegLen);
 
-    stringstream varch;
-    varch << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mMaxVectorElemWidth;
-    string varch_str = varch.str();
-
-    std::cout << "XXX varch_str: '" << varch_str << "' mSimConfigString: '" << rConfig.mSimConfigString << "'" << std::endl;
-
-    if (rConfig.mSimConfigString.size() > 0) {
-      varch_str += " " + rConfig.mSimConfigString;
-
-      if (rConfig.mSimConfigString.find("RV32") != std::string::npos) {
-	isa_rv32 = 1;
-	std::cout << "XXX RV32!" << std::endl;
-      }
-    }
-
-    std::cout << "XXX '" << varch_str << "'" << std::endl;
-
-    mpSimDllAPI->initialize_simulator(varch_str.c_str());
+    string config_str = BuildHandcarConfigurationString(rConfig);
+    mpSimDllAPI->initialize_simulator(config_str.c_str());
   }
 
   //!< write out simulation trace file (if any), send 'terminate' directive to simulator, close sim dll...
@@ -220,7 +204,7 @@ namespace Force {
 
   //!< obtain the opcode and dissassembly that corresponds to a given PC address
   
-  void SimApiHANDCAR::GetDisassembly(const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly)
+  void SimApiHANDCAR::GetDisassembly(uint32 CpuID, const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly)
   {
     char* op = new char[128];
     char* dis = new char[128];
@@ -231,7 +215,7 @@ namespace Force {
     char** opp = &op;
     char** disp = &dis;
 
-    int rcode = mpSimDllAPI->get_disassembly(pPc, opp, disp);
+    int rcode = mpSimDllAPI->get_disassembly_for_target(CpuID, pPc, opp, disp);
 
     if (rcode == 1) {
       // A page fault on a branch could result in an exception. The disassembly call in the simulator
@@ -485,7 +469,7 @@ namespace Force {
     uint64_t orval = rval;
     std::string opcode;
     std::string disassembly;
-    GetDisassembly(&orval, opcode, disassembly);
+    GetDisassembly(cpuid, &orval, opcode, disassembly);
 
     ReadRegister(cpuid, "PC", &rval, &rmask);
 
@@ -538,5 +522,28 @@ namespace Force {
   {
     mInSpeculativeMode[cpuId] = uint32(0);
   }
-  
+
+  string SimApiHANDCAR::BuildHandcarConfigurationString(const ApiSimConfig& rConfig)
+  {
+    stringstream config_stream;
+
+    config_stream << "-p" << (rConfig.mChipNum * rConfig.mCoreNum * rConfig.mThreadNum) << " ";
+
+    config_stream << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mMaxVectorElemWidth;
+
+    if (rConfig.mSimConfigString.size() > 0) {
+      config_stream << " " << rConfig.mSimConfigString;
+
+      if (rConfig.mSimConfigString.find("RV32") != string::npos) {
+        isa_rv32 = 1;
+        cout << "XXX RV32!" << endl;
+      }
+    }
+
+    string config_str = config_stream.str();
+    cout << "XXX '" << config_str << "'" << endl;
+
+    return config_str;
+  }
+
 }

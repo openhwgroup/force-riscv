@@ -35,7 +35,6 @@
 #include <OperandConstraintRISCV.h>
 #include <VectorLayoutSetupRISCV.h>
 
-#include <cmath>
 #include <memory>
 #include <sstream>
 
@@ -422,10 +421,17 @@ namespace Force {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto vec_reg_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
-    mRegCount = lround(vec_layout->GetRegisterCount() * vec_reg_opr_constr->GetLayoutMultiple());
-    if (mRegCount == 0) {
-      mRegCount = 1;
+    mRegCount = vec_layout->GetRegisterCount(vec_reg_opr_constr->GetLayoutMultiple());
+    if (mRegCount < GetMinimumRegisterCount(rInstr)) {
+        mRegCount = GetMinimumRegisterCount(rInstr);
     }
+  }
+
+  const uint32 VectorDataRegisterOperand::GetMinimumRegisterCount(const Instruction& rInstr)
+  {
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    return vec_layout->mFieldCount;
   }
 
   OperandConstraint* VectorIndexedDataRegisterOperand::InstantiateOperandConstraint() const

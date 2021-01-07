@@ -120,7 +120,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vs3_ls_source(self):
         vs3_opr = self.mInstr.find_operand('vs3')
-        vs3_opr.oclass = 'MultiVectorRegisterOperandRISCV'
+        vs3_opr.oclass = 'VectorDataRegisterOperand'
         self.set_vs3()
 
     def set_vs3_ls_indexed_source(self):
@@ -151,7 +151,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
     def set_vd_ls_dest(self):
         vd_opr = self.mInstr.find_operand('vd')
-        vd_opr.oclass = 'MultiVectorRegisterOperandRISCV'
+        vd_opr.oclass = 'VectorDataRegisterOperand'
         self.set_vd()
 
     def set_vd_ls_indexed_dest(self):

@@ -512,9 +512,10 @@ namespace Force {
     if (mpGenerator->SimulationEnabled()) {
       auto re_exe_req = mpSequenceRequest->CastInstance<GenReExecutionRequest>();
       uint64 re_exe_addr = re_exe_req->ReExecutionAddress();
+      uint32 max_re_exe_instr = re_exe_req->MaxReExecutionInstructions();
       delete mpSequenceRequest;
       mpSequenceRequest = nullptr;
-      mpGenerator->ReExecute(re_exe_addr);
+      mpGenerator->ReExecute(re_exe_addr, max_re_exe_instr);
     }
   }
 

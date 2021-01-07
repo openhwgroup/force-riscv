@@ -19,27 +19,25 @@
 from base.Sequence import Sequence
 
 class GenSemaphore(Sequence):
-    def __init__(self, aGenThread, aName, aCounter, **kwargs):
+    def __init__(self, aGenThread, aName, aCounter, aMemAttrImpl, aBank=0, aSize=8):
         super().__init__(aGenThread)
         self.mAddrReg = None  # register for address
-        self.mCounterReg = None # register for counter
-        self.mStatusReg = None # register for status
         self.mSemaVA = None # semaphore virtual address
-        self.mVaAttr = kwargs.get('MemAttrImpl', 'Normal_WBWA')  # semaphore va attribute
+        self.mVaAttr = aMemAttrImpl  # semaphore va attribute
         self.mName = aName  # semaphore name
         self.mCounter = aCounter # semaphore initial value
-        self.mBank = kwargs.get('Bank', 0)  # which bank to allocate semaphore
-        self.mSize = kwargs.get('Size', 8)  # semaphore size
+        self.mBank = aBank  # which bank to allocate semaphore
+        self.mSize = aSize  # semaphore size
         self.mSharePA = None # physical address allocated  
         self.mReverseEndian = None  # Whether or not Reverse data endian 
 
         self.setup()
     
     def _acquireSemaphore(self):
-        pass
+        raise NotImplementedError
     
     def _releaseSemaphore(self):
-        pass          
+        raise NotImplementedError
     
     def _reloadSemaphore(self):
         (self.mSharedPA, self.mReverseEndian, valid) = self.genThread.genSemaphore(self.mName, self.mCounter, self.mBank, self.mSize) # Shared PA has been initialized with the counter
@@ -50,12 +48,17 @@ class GenSemaphore(Sequence):
                                            PA = self.mSharedPA, Bank=self.mBank, MemAttrImpl=self.mVaAttr, CanAlias=1) 
         if (self.mSemaVA & 0x00ffffffffff0000) == 0:
             self.error("ERROR VA=%x is invalid"%self.mSemaVA)
+
+        # TODO(Noah): Implement a better mechanism for checking whether paging is enabled than
+        # checking whether the page info object is empty when such a mechanism can be devised. There
+        # may be error conditions when paging is enabled that also yield an empty page info object.
         shared_va_page_info = self.getPageInfo(self.mSemaVA, "VA", self.mBank)
-        if not shared_va_page_info["Page"]["MemoryAttr"] == self.mVaAttr:
+        if shared_va_page_info and (shared_va_page_info["Page"]["MemoryAttr"] != self.mVaAttr):
             self.error("ERROR VA=%x is set to %s instead of %s"%(self.mSemaVA,shared_va_page_info["Page"]["MemoryAttr"],self.mVaAttr))
+
         self.notice("Thread %d map va 0x%x to [%d] pa 0x%x" % (self._threadId(), self.mSemaVA, self.mBank, self.mSharedPA))
-        load_gpr = LoadGPR64(self.genThread)
-        load_gpr.load(self.mAddrReg, self.mSemaVA)       
+
+        self._loadAddressRegister()
 
     def _threadId(self):
         return self.genThread.genThreadID
@@ -68,3 +71,6 @@ class GenSemaphore(Sequence):
             self.setPEstate("GenMode", gen_mode)
             self.genSequence("ReExecution", {"Address" : restart_pc})
             gen_mode = self.getPEstate("GenMode")
+
+    def _loadAddressRegister(self):
+        raise NotImplementedError

@@ -38,7 +38,7 @@
 > extern "C" {
 > // update_generator_register function: for the given cpuid, this callback function is called by the simulator to notify the user that a register has been accessed.
 > //
-> //  inputs: 
+> //  inputs:
 > //      uint32_t cpuid -- refers to the processor ID
 > //      const char* registerName -- the name of the reigster (programmer's name)
 > //      uint64_t value -- the data stored in the register after update
@@ -87,11 +87,12 @@
 < 
 <   debug_module.add_device(&bus);
 < 
-79,90c75
+79,80c75
 <     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted,
 <                                log_file.get());
-<   }
-< 
+---
+>     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted);
+83,100c78,86
 <   make_dtb();
 < 
 <   clint.reset(new clint_t(procs, CPU_HZ / INSNS_PER_RTC_TICK, real_time_clint));
@@ -100,9 +101,8 @@
 <     bus.add_device(CLINT_BASE, clint.get());
 <   } else {
 <     bus.add_device(clint_base, clint.get());
----
->     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted);
-93,100c78,86
+<   }
+< 
 <   for (size_t i = 0; i < nprocs; i++) {
 <     reg_t pmp_num = 0, pmp_granularity = 0;
 <     fdt_parse_pmp_num((void *)dtb.c_str(), &pmp_num, "riscv");
@@ -117,7 +117,7 @@
 >   //  //fdt_parse_pmp_num((void *)dtb.c_str(), &pmp_num, "riscv");
 >   //  //fdt_parse_pmp_alignment((void *)dtb.c_str(), &pmp_granularity, "riscv");
 > 
->   //  //TODO these inputs will have to be hard coded unled dtb fdt are added as dependencies. 
+>   //  //TODO these inputs will have to be hard coded unled dtb fdt are added as dependencies.
 >   //  procs[i]->set_pmp_num(pmp_num);
 >   //  procs[i]->set_pmp_granularity(pmp_granularity);
 >   //}
@@ -125,64 +125,105 @@
 < sim_t::~sim_t()
 ---
 > simlib_t::~simlib_t()
-110,115c96
+110c96,112
 < void sim_thread_main(void* arg)
-< {
-<   ((sim_t*)arg)->main();
-< }
-< 
-< void sim_t::main()
 ---
 > int simlib_t::step_simulator(int target_id, int num_steps, int stx_failed)
-117,118c98,105
-<   if (!debug && log)
-<     set_procs_debug(true);
----
->   procs[target_id]->step(num_steps);
->   procs[target_id]->get_mmu()->yield_load_reservation();
+> {
+>   processor_t* proc_ptr = get_core(target_id);
+>   if (proc_ptr == nullptr)
+>     return 1;
+>   proc_ptr->step(num_steps);
 >   const char pc_name[] = "PC\0";
 >   const uint64_t pc_mask = 0xFFFFFFFFFFFFFFFF;
 >   uint64_t pc_value = 0x0;
 >   const char pc_update_access_type[] = "write\0";
 >   get_pc_api(target_id, reinterpret_cast<uint8_t*>(&pc_value), pc_name, sizeof(uint64_t));
->   update_generator_register(target_id, pc_name, pc_value, pc_mask, pc_update_access_type);       
-120,129c107
+>   update_generator_register(target_id, pc_name, pc_value, pc_mask, pc_update_access_type);
+> 
+>   return 0;
+> }
+> 
+> void simlib_t::set_debug(bool value)
+112c114
+<   ((sim_t*)arg)->main();
+---
+>   debug = value;
+115c117
+< void sim_t::main()
+---
+> int simlib_t::get_disassembly(int target_id, const uint64_t* pc, char** opcode, char** disassembly)
+117,118c119,121
+<   if (!debug && log)
+<     set_procs_debug(true);
+---
+>   std::string opcode_temp;
+>   std::string disassembly_temp;
+>   uint64_t opcode_num = 0ull;
+120c123
 <   while (!done())
-<   {
+---
+>   if(procs.size() > 0)
+122,127c125,142
 <     if (debug || ctrlc_pressed)
 <       interactive();
 <     else
 <       step(INTERLEAVE);
 <     if (remote_bitbang) {
 <       remote_bitbang->tick();
-<     }
-<   }
 ---
->   return 0; 
-132c110
+>     processor_t* proc_ptr = get_core(target_id);
+>     if (proc_ptr == nullptr)
+>       return 1;
+>     try {
+>       const disassembler_t* disassembler = proc_ptr->get_disassembler(); // should be OK to get processor's disassembler, using it should be idempotent
+> 
+>       // currently this fails a check in the Spike code if the pc isn't found so the code does not have the opportunity to return 1.
+>       insn_fetch_t fetched = proc_ptr->get_mmu()->load_insn(*pc);
+>       opcode_num = fetched.insn.bits() & ((1ull << (8 * insn_length(fetched.insn.bits()))) - 1); //This is the conversion the processor_t::disasm(...) uses to format the opcode for output.
+>       disassembly_temp = disassembler->disassemble(fetched.insn);
+>       // format the string interpretation of the opcode as a hex number.
+>       std::stringstream stream;
+>       stream << "0x" << std::hex << opcode_num;
+>       opcode_temp = stream.str();
+>     } catch(...) {
+>       strcpy(*opcode,"00000000");
+>       strcpy(*disassembly,"?");
+>       return 1; // there may not be an instruction at the PC (example: page fault on branch)
+130,137c145,148
+< }
+< 
 < int sim_t::run()
----
-> void simlib_t::set_debug(bool value)
-134,136c112
+< {
 <   host = context_t::current();
 <   target.init(sim_thread_main, this);
 <   return htif_t::run();
+< }
 ---
->   debug = value;
-139c115
+>   else
+>   {
+>     return 2; // No processors, therefore no configured disassembler for us to use
+>   }
+139,141c150,151
 < void sim_t::step(size_t n)
----
-> int simlib_t::get_disassembly(const uint64_t* pc, char** opcode, char** disassembly)
-141,144c117,119
+< {
 <   for (size_t i = 0, steps = 0; i < n; i += steps)
-<   {
+---
+>   // At this point disassembly proceeded correctly. Now check the output buffers
+>   if(opcode == nullptr || disassembly == nullptr)
+143,144c153,160
 <     steps = std::min(n - i, INTERLEAVE - current_step);
 <     procs[current_proc]->step(steps);
 ---
->   std::string opcode_temp;
->   std::string disassembly_temp;
->   uint64_t opcode_num = 0ull;
-146,154c121,124
+>     return 2;
+>   }
+>   size_t opcode_buffer_length = opcode != nullptr ? strlen(*opcode) : 0;
+>   size_t disassembly_buffer_length = disassembly != nullptr ? strlen(*disassembly) : 0;
+>   if((opcode_buffer_length < (opcode_temp.size()+1)) || (disassembly_buffer_length < (disassembly_temp.size()+1))) // check for enough size to place the null termination character
+>   {
+>     return 2; // The user didn't give us room to put the answers
+>   }
+146,154c162,167
 <     current_step += steps;
 <     if (current_step == INTERLEAVE)
 <     {
@@ -193,64 +234,31 @@
 <         clint->increment(INTERLEAVE / INSNS_PER_RTC_TICK);
 <       }
 ---
->   if(procs.size() > 0)
->   {
->     try {
->     const disassembler_t* disassembler = procs[0]->get_disassembler(); // should be OK to get processor's disassembler, using it should be idempotent
-156c126,137
-<       host->switch_to();
----
->     // currently this fails a check in the Spike code if the pc isn't found so the code does not have the opportunity to return 1.
->     insn_fetch_t fetched = procs[0]->get_mmu()->load_insn(*pc); 
->     opcode_num = fetched.insn.bits() & ((1ull << (8 * insn_length(fetched.insn.bits()))) - 1); //This is the conversion the processor_t::disasm(...) uses to format the opcode for output.
->     disassembly_temp = disassembler->disassemble(fetched.insn); 
->     // format the string interpretation of the opcode as a hex number.
->     std::stringstream stream;
->     stream << "0x" << std::hex << opcode_num;
->     opcode_temp = stream.str();
->     } catch(...) {
->       strcpy(*opcode,"00000000");
->       strcpy(*disassembly,"?");
->       return 1; // there may not be an instruction at the PC (example: page fault on branch)
-158a140,164
->   else
->   {
->     return 2; // No processors, therefore no configured disassembler for us to use
->   }
-> 
->   // At this point disassembly proceeded correctly. Now check the output buffers
->   if(opcode == nullptr || disassembly == nullptr)
->   {
->     return 2;
->   }
->   size_t opcode_buffer_length = opcode != nullptr ? strlen(*opcode) : 0;
->   size_t disassembly_buffer_length = disassembly != nullptr ? strlen(*disassembly) : 0;
->   if((opcode_buffer_length < (opcode_temp.size()+1)) || (disassembly_buffer_length < (disassembly_temp.size()+1))) // check for enough size to place the null termination character
->   {
->     return 2; // The user didn't give us room to put the answers
->   }
->   
->   // Warning: the 'insn't' null and string length tests above can fail to uncover a corner case of bad input, where a pointer to a string literal is aliased by a char* pointer. 
+>   // Warning: the 'insn't' null and string length tests above can fail to uncover a corner case of bad input, where a pointer to a string literal is aliased by a char* pointer.
 >   // The compiler will accept this, but it will fail when you try to copy as in below, basically be sure your string buffer was correctly allocated.
 >   opcode_temp.copy(*opcode, opcode_temp.size(), 0);
 >   (*opcode)[opcode_temp.size()]='\0'; // No idea how the user is initializing these strings, so just null terminate the relevant part.
 >   disassembly_temp.copy(*disassembly, disassembly_temp.size(), 0);
 >   (*disassembly)[disassembly_temp.size()]='\0';
-> 
+156,158c169
+<       host->switch_to();
+<     }
+<   }
+---
 >   return 0;
-161c167
+161c172
 < void sim_t::set_debug(bool value)
 ---
 > void simlib_t::set_log(bool value)
-163c169
+163c174
 <   debug = value;
 ---
 >   log = value;
-166c172
+166c177
 < void sim_t::set_histogram(bool value)
 ---
 > void simlib_t::set_histogram(bool value)
-174,194c180
+174,194c185
 < void sim_t::configure_log(bool enable_log, bool enable_commitlog)
 < {
 <   log = enable_log;
@@ -274,19 +282,12 @@
 < void sim_t::set_procs_debug(bool value)
 ---
 > void simlib_t::set_procs_debug(bool value)
-200,205c186
+200c191
 < static bool paddr_ok(reg_t addr)
-< {
-<   return (addr >> MAX_PADDR_BITS) == 0;
-< }
-< 
-< bool sim_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
 > std::map<std::string, uint64_t> simlib_t::load_elf(const char* fn, reg_t* entry)
-207,209c188,259
-<   if (addr + len < addr || !paddr_ok(addr + len - 1))
-<     return false;
-<   return bus.load(addr, len, bytes);
+202c193,264
+<   return (addr >> MAX_PADDR_BITS) == 0;
 ---
 >   int fd = open(fn, O_RDONLY);
 >   struct stat s;
@@ -360,16 +361,23 @@
 > 
 >   munmap(buf, size);
 >   return symbols;
-212c262,263
-< bool sim_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
+205c267,268
+< bool sim_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
 > //TODO: Michael use the dedicated function for initializing
 > void simlib_t::make_dtb()
-214,216d264
+207,216d269
+<   if (addr + len < addr || !paddr_ok(addr + len - 1))
+<     return false;
+<   return bus.load(addr, len, bytes);
+< }
+< 
+< bool sim_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
+< {
 <   if (addr + len < addr || !paddr_ok(addr + len - 1))
 <     return false;
 <   return bus.store(addr, len, bytes);
-219,238c267
+219,238c272
 < void sim_t::make_dtb()
 < {
 <   if (!dtb_file.empty()) {
@@ -392,7 +400,7 @@
 < void sim_t::set_rom()
 ---
 > void simlib_t::set_rom()
-243a273,283
+243a278,288
 >   processor_t* usable_proc_ptr = nullptr;
 >   for(uint32_t id = 0; id < 0xffffffffu; ++id)
 >   {
@@ -404,25 +412,21 @@
 >   }
 >   assert(usable_proc_ptr != nullptr);
 > 
-248c288
+248c293
 <     get_core(0)->get_xlen() == 32 ?
 ---
 >     usable_proc_ptr->get_xlen() == 32 ?
-261,267c301,302
+261,266c306,316
 <   std::string dtb;
 <   if (!dtb_file.empty()) {
 <     std::ifstream fin(dtb_file.c_str(), std::ios::binary);
 <     if (!fin.good()) {
 <       std::cerr << "can't find dtb file: " << dtb_file << std::endl;
 <       exit(-1);
-<     }
 ---
 >   const int align = 0x1000;
 >   rom.resize((rom.size() + align - 1) / align * align);
-269,270c304,318
-<     std::stringstream strstream;
-<     strstream << fin.rdbuf();
----
+> 
 >   //write the rom code to the sparse memory model instead
 >   std::vector<char> attrVec(rom.size(), 0x0);
 >   for( size_t _index = 0; _index < rom.size(); ++_index)
@@ -430,46 +434,58 @@
 >     if(sparse_is_pa_initialized(DEFAULT_RSTVEC + _index, 1))
 >     {
 >       std::cerr << "### Warning something already initialized the memory for VA: " << std::hex << DEFAULT_RSTVEC + _index << " with contents: " << std::hex << sparse_read(DEFAULT_RSTVEC + _index, 1) << std::endl;
->       sparse_write(DEFAULT_RSTVEC + _index, reinterpret_cast<uint8_t*>(rom.data() + _index), 1);  
->     }
+>       sparse_write(DEFAULT_RSTVEC + _index, reinterpret_cast<uint8_t*>(rom.data() + _index), 1);
+267a318,323
 >     else
 >     {
 >       sparse_initialize_pa(DEFAULT_RSTVEC + _index, reinterpret_cast<const uint8_t*>(rom.data()+_index), reinterpret_cast<const uint8_t*>(attrVec.data()+_index), 1, Force::EMemDataType::Both);
 >     }
->   } 
+>   }
 > }
-272,275c320,330
-<     dtb = strstream.str();
-<   } else {
-<     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, procs, mems);
-<     dtb = dts_compile(dts);
+269,270c325,330
+<     std::stringstream strstream;
+<     strstream << fin.rdbuf();
 ---
-> // Not only loads the elf file in the specified path into the memory model but readies the simulator for stepping. 
+> // Not only loads the elf file in the specified path into the memory model but readies the simulator for stepping.
 > int simlib_t::load_program_now(const char* elfPath)
 > {
 >   std::string path;
 >   if (access(elfPath, F_OK) == 0)
 >     path = elfPath;
->  
+272,275c332,335
+<     dtb = strstream.str();
+<   } else {
+<     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, procs, mems);
+<     dtb = dts_compile(dts);
+---
 >   if (path.empty())
 >   {
 >     std::cerr << "could not open " << elfPath << " (did you misspell it? If VCS, did you forget +permissive/+permissive-off?)" << std::endl;
 >     return 1;
-276a332,333
->    
->   std::map<std::string, uint64_t> symbols = load_elf(path.c_str(), &entry);
-278,280c335
+278,280c338,348
 <   rom.insert(rom.end(), dtb.begin(), dtb.end());
 <   const int align = 0x1000;
 <   rom.resize((rom.size() + align - 1) / align * align);
 ---
+>   std::map<std::string, uint64_t> symbols = load_elf(path.c_str(), &entry);
+> 
 >   reset();
-282,283c337
+> 
+>   return 0;
+> }
+> 
+> uint64_t simlib_t::sparse_read(reg_t paddr, size_t len)
+> {
+>   return _ForceSparseMemoryModel.Read(paddr, len);
+> }
+282,283c350,352
 <   boot_rom.reset(new rom_device_t(rom));
 <   bus.add_device(DEFAULT_RSTVEC, boot_rom.get());
 ---
->   return 0; 
-286,293c340,342
+> void simlib_t::sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes)
+> {
+>   _ForceSparseMemoryModel.ReadPartiallyInitialized(paddr, len, bytes);
+286,293c355,357
 < char* sim_t::addr_to_mem(reg_t addr) {
 <   if (!paddr_ok(addr))
 <     return NULL;
@@ -479,64 +495,68 @@
 <       return mem->contents() + (addr - desc.first);
 <   return NULL;
 ---
-> uint64_t simlib_t::sparse_read(reg_t paddr, size_t len)
+> void simlib_t::sparse_write(reg_t paddr, const uint8_t* bytes, size_t len)
 > {
->   return _ForceSparseMemoryModel.Read(paddr, len);
-296c345,348
+>   _ForceSparseMemoryModel.Write(paddr, bytes, len);
+296c360,363
 < // htif
 ---
-> void simlib_t::sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes)
+> void simlib_t::sparse_write(reg_t paddr, uint64_t value, size_t len)
 > {
->   _ForceSparseMemoryModel.ReadPartiallyInitialized(paddr, len, bytes);   
+>   _ForceSparseMemoryModel.Write(paddr, value, len);
 > }
-298c350
+298c365
 < void sim_t::reset()
 ---
-> void simlib_t::sparse_write(reg_t paddr, const uint8_t* bytes, size_t len)
-300,301c352,367
+> bool simlib_t::sparse_is_pa_initialized(reg_t paddr, size_t len)
+300,301c367,397
 <   if (dtb_enabled)
 <     set_rom();
 ---
->   _ForceSparseMemoryModel.Write(paddr, bytes, len);    
-> }
-> 
-> void simlib_t::sparse_write(reg_t paddr, uint64_t value, size_t len)
-> {
->   _ForceSparseMemoryModel.Write(paddr, value, len);    
-> }
-> 
-> bool simlib_t::sparse_is_pa_initialized(reg_t paddr, size_t len)
-> {
 >   return  _ForceSparseMemoryModel.IsInitialized(paddr, len);
 > }
 > 
 > void simlib_t::sparse_initialize_pa(reg_t paddr, const uint8_t* data, const uint8_t* attrs, uint32_t nBytes, Force::EMemDataType type)
 > {
 >   _ForceSparseMemoryModel.Initialize(paddr, data, attrs, nBytes, type);
-304c370
-< void sim_t::idle()
----
+> }
+> 
 > void simlib_t::sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type)
-306c372
-<   target.switch_to();
----
+> {
 >   _ForceSparseMemoryModel.Initialize(paddr, value, numBytes, type);
-309c375,404
-< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
----
+> }
+> 
 > void simlib_t::sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes)
 > {
 >   _ForceSparseMemoryModel.Initialize(paddr, value, numBytes, Force::EMemDataType::Both);
 > }
 > 
-> bool simlib_t::doesCoreWithIdExist(size_t i)
+> void simlib_t::sparse_reserve(reg_t paddr, size_t numBytes)
 > {
+>   _ForceSparseMemoryModel.Reserve(paddr, numBytes);
+> }
+> 
+> void simlib_t::sparse_unreserve(reg_t paddr, size_t numBytes)
+> {
+>   _ForceSparseMemoryModel.Unreserve(paddr, numBytes);
+> }
+> 
+> bool simlib_t::sparse_is_reserved(reg_t paddr, size_t numBytes)
+> {
+>   return _ForceSparseMemoryModel.IsReserved(paddr, numBytes);
+304c400
+< void sim_t::idle()
+---
+> bool simlib_t::doesCoreWithIdExist(size_t i)
+306c402,421
+<   target.switch_to();
+---
 >   for(processor_t* proc_ptr: procs)
 >   {
 >     if(proc_ptr != nullptr && proc_ptr->get_state() != nullptr && proc_ptr->get_state()->pid == i)
 >     {
 >       return true;
->     } 
+>     }
 >   }
 > 
 >   return false;
@@ -551,14 +571,15 @@
 > {
 >   if (dtb_enabled)
 >     set_rom();
-> }
-> 
+309c424
+< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
+---
 > void simlib_t::read_chunk_partially_initialized(reg_t taddr, size_t len, void* dst)
-312c407
+312c427
 <   auto data = to_le(debug_mmu->load_uint64(taddr));
 ---
 >   auto data = to_le(debug_mmu->load_partially_initialized_uint64(taddr));
-316c411,464
+316c431,484
 < void sim_t::write_chunk(addr_t taddr, size_t len, const void* src)
 ---
 > void simlib_t::clear_chunk(reg_t taddr, size_t len)
@@ -574,40 +595,40 @@
 > {
 >   size_t align = chunk_align();
 >   if (len && (addr & (align-1)))
->   { 
+>   {
 >     size_t this_len = std::min(len, align - size_t(addr & (align-1)));
 >     uint8_t chunk[align];
->     
+> 
 >     read_chunk_partially_initialized(addr & ~(align-1), align, chunk);
 >     memcpy(chunk + (addr & (align-1)), bytes, this_len);
 >     write_chunk(addr & ~(align-1), align, chunk);
->     
+> 
 >     bytes = (char*)bytes + this_len;
 >     addr += this_len;
 >     len -= this_len;
 >   }
->   
+> 
 >   if (len & (align-1))
->   { 
+>   {
 >     size_t this_len = len & (align-1);
 >     size_t start = len - this_len;
 >     uint8_t chunk[align];
->     
+> 
 >     read_chunk_partially_initialized(addr + start, align, chunk);
 >     memcpy(chunk, (char*)bytes + start, this_len);
 >     write_chunk(addr + start, align, chunk);
->     
+> 
 >     len -= this_len;
 >   }
->   
+> 
 >   // now we're aligned
 >   bool all_zero = len != 0;
 >   for (size_t i = 0; i < len; i++)
 >     all_zero &= ((const char*)bytes)[i] == 0;
->   
+> 
 >   if (all_zero) {
 >     clear_chunk(addr, len);
->   } else { 
+>   } else {
 >     size_t max_chunk = chunk_max_size();
 >     for (size_t pos = 0; pos < len; pos += max_chunk)
 >       write_chunk(addr + pos, std::min(max_chunk, len - pos), (char*)bytes + pos);
@@ -615,7 +636,7 @@
 > }
 > 
 > void simlib_t::write_chunk(reg_t taddr, size_t len, const void* src)
-324c472,833
+324c492,1071
 < void sim_t::proc_reset(unsigned id)
 ---
 > void simlib_t::proc_reset(unsigned id)
@@ -646,7 +667,7 @@
 >     addr_str = args[1];
 >   }
 > 
->   reg_t addr = strtol(addr_str.c_str(),NULL,16), val; 
+>   reg_t addr = strtol(addr_str.c_str(),NULL,16), val;
 >   if(addr == LONG_MAX)
 >     addr = strtoul(addr_str.c_str(),NULL,16);
 > 
@@ -696,7 +717,7 @@
 > std::string simlib_t::get_csr_name(uint64_t index)
 > {
 >   if(index < NCSR)
->     return csr_name(index); 
+>     return csr_name(index);
 >   else
 >     return "unknown-csr";
 > }
@@ -729,7 +750,7 @@
 > {
 >   //Check if the pointers point to something
 >   if(value == nullptr || length == nullptr)
->     return 1; 
+>     return 1;
 > 
 >   //Check if the procid AKA hart id is valid
 >   if(not doesCoreWithIdExist(procid))
@@ -746,7 +767,7 @@
 >   if(unknown != std::string::npos)
 >     return 3;
 > 
->   //All checks pass, so go ahead and load the value buffer and set the length to indicate the used bytes in the value buffer 
+>   //All checks pass, so go ahead and load the value buffer and set the length to indicate the used bytes in the value buffer
 >   *value = get_core(procid)->get_csr_api(index);
 >   *length = get_core(procid)->get_xlen() / 8;
 > 
@@ -757,7 +778,7 @@
 > {
 >   //Check if the pointers point to something
 >   if(value == nullptr || length == nullptr)
->     return 1; 
+>     return 1;
 > 
 >   //Check if the procid AKA hart id is valid
 >   if(not doesCoreWithIdExist(procid))
@@ -765,12 +786,12 @@
 > 
 >   //Check if the name is valid
 >   uint64_t index = get_csr_number(input_name);
->   if(index >= NCSR) 
->     return 3; 
->    
+>   if(index >= NCSR)
+>     return 3;
+> 
 >   //All checks pass, so go ahead and load the value buffer and set the length to indicate the used bytes in the value buffer
->   *value = get_core(procid)->get_csr_api(index);       
->   *length = get_core(procid)->get_xlen() / 8; 
+>   *value = get_core(procid)->get_csr_api(index);
+>   *length = get_core(procid)->get_xlen() / 8;
 > 
 >   return 0;
 > }
@@ -794,7 +815,7 @@
 >   *value = get_core(procid)->get_state()->XPR.readNoCallback(index);
 >   *length = get_core(procid)->get_xlen() / 8;
 > 
->   return 0;  
+>   return 0;
 > }
 > 
 > int simlib_t::read_xpr(uint32_t procid, uint64_t index, uint64_t* value, uint32_t* length)
@@ -844,7 +865,7 @@
 >   memcpy(value, &temp_fpr_val, sizeof(freg_t));
 >   *length = sizeof(freg_t);
 > 
->   return 0;  
+>   return 0;
 > }
 > 
 > int simlib_t::read_fpr(uint32_t procid, uint64_t index, uint8_t* value, uint32_t* length)
@@ -862,14 +883,14 @@
 >     return 3;
 > 
 >   if(*length < sizeof(freg_t))
->     return 4; 
+>     return 4;
 > 
 >   //All checks have passed
 >   freg_t temp_fpr_val = get_core(procid)->get_state()->FPR.readNoCallback(index);
 >   memcpy(value, &temp_fpr_val, sizeof(freg_t));
 >   *length = sizeof(freg_t);
 > 
->   return 0;  
+>   return 0;
 > }
 > 
 > int simlib_t::read_vecr(uint32_t procid, const std::string& input_name, uint8_t* value, uint32_t* length)
@@ -890,7 +911,7 @@
 >   //Check that the advertised length of the buffer in bytes can hold the requested data
 >   size_t vlen = get_core(procid)->VU.get_vlen() / 8;
 >   if(vlen > *length){
->     return 4; 
+>     return 4;
 >   }
 > 
 >   //All checks passed
@@ -943,7 +964,7 @@
 >   //Check that the advertised length of the buffer in bytes can hold the requested data
 >   size_t vlen = get_core(procid)->VU.get_vlen() / 8;
 >   if(vlen > *length){
->     return 4; 
+>     return 4;
 >   }
 > 
 >   //All checks passed
@@ -980,9 +1001,7 @@
 > }
 > 
 > int simlib_t::partial_read_vecr(uint32_t procid, uint64_t index, uint8_t* pValue, uint32_t length, uint32_t offset)
-326c835,1265
-<   debug_module.proc_reset(id);
----
+> {
 >   //Check that the pointers point to something
 >   if(pValue == nullptr)
 >     return 1;
@@ -998,7 +1017,7 @@
 >   //Check that the advertised length of the buffer in bytes can hold the requested data
 >   size_t vlen = get_core(procid)->VU.get_vlen() / 8;
 >   if(vlen < (offset + length)){
->     return 4; 
+>     return 4;
 >   }
 > 
 >   //All checks passed; write the elements into the value buffer
@@ -1029,7 +1048,7 @@
 >   //Check that the advertised length of the buffer in bytes can hold the requested data
 >   size_t vlen = get_core(procid)->VU.get_vlen() / 8;
 >   if(vlen < (offset + length)){
->     return 4; 
+>     return 4;
 >   }
 > 
 >   //All checks passed; write the elements into the value buffer
@@ -1047,7 +1066,7 @@
 > {
 >   //Check if the pointers point to something
 >   if(value == nullptr)
->     return 1; 
+>     return 1;
 > 
 >   //Check if the procid AKA hart id is valid
 >   if(not doesCoreWithIdExist(procid))
@@ -1061,7 +1080,7 @@
 >   if(length != (get_core(procid)->get_xlen() / 8))
 >     return 4;
 > 
->   //All checks pass, so go ahead and and write to the csr 
+>   //All checks pass, so go ahead and and write to the csr
 >   get_core(procid)->set_csr_api(index, *value);
 > 
 >   return 0;
@@ -1071,7 +1090,7 @@
 > {
 >   //Check if the pointers point to something
 >   if(value == nullptr)
->     return 1; 
+>     return 1;
 > 
 >   //Check if the procid AKA hart id is valid
 >   if(not doesCoreWithIdExist(procid))
@@ -1079,14 +1098,14 @@
 > 
 >   //Check if the name is valid
 >   uint64_t index = get_csr_number(input_name);
->   if(index >= NCSR) 
->     return 3; 
+>   if(index >= NCSR)
+>     return 3;
 > 
 >   //Is the indended write length matching the xlen value?
 >   if(length != (get_core(procid)->get_xlen() / 8))
 >     return 4;
 > 
->   //All checks pass, so go ahead and and write to the csr 
+>   //All checks pass, so go ahead and and write to the csr
 >   get_core(procid)->set_csr_api(index, *value);
 > 
 >   return 0;
@@ -1114,7 +1133,7 @@
 >   //All checks pass, so go ahead and load the value buffer and set the length to indicate the used bytes in the value buffer
 >   get_core(procid)->get_state()->XPR.writeNoCallback(index, *value);
 > 
->   return 0;  
+>   return 0;
 > }
 > 
 > int simlib_t::write_xpr(uint32_t procid, uint64_t index, const uint64_t* value, uint32_t length)
@@ -1167,7 +1186,7 @@
 >   memcpy(&temp_fpr_val, value, length);
 >   get_core(procid)->get_state()->FPR.writeNoCallback(index, temp_fpr_val);
 > 
->   return 0;  
+>   return 0;
 > }
 > 
 > int simlib_t::write_fpr(uint32_t procid, uint64_t index, const uint8_t* value, uint32_t length)
@@ -1195,12 +1214,14 @@
 >   memcpy(&temp_fpr_val, value, length);
 >   get_core(procid)->get_state()->FPR.writeNoCallback(index, temp_fpr_val);
 > 
->   return 0;  
+>   return 0;
 > }
 > 
 > //TODO this and beyond, will probably have to cast differently here and other places to the get the pointer types the same and compatible with the function.
 > int simlib_t::write_vecr(uint32_t procid, const std::string& input_name, const uint8_t* value, uint32_t length)
-> {
+326c1073,1185
+<   debug_module.proc_reset(id);
+---
 >   //Check that the pointers point to something
 >   if(value == nullptr)
 >     return 1;
@@ -1214,10 +1235,10 @@
 >   if(index >= NVPR)
 >     return 3;
 > 
->   //Check that the advertised length of the buffer in bytes equals the size of the vector register 
+>   //Check that the advertised length of the buffer in bytes equals the size of the vector register
 >   size_t vlen = get_core(procid)->VU.get_vlen() / 8;
 >   if(vlen != length)
->     return 4; 
+>     return 4;
 > 
 >   //All checks passed
 >   size_t elen = get_core(procid)->VU.get_elen() / 8;
@@ -1275,7 +1296,7 @@
 >   //Check that the advertised length of the buffer in bytes can hold the requested data
 >   size_t vlen = get_core(procid)->VU.get_vlen() / 8;
 >   if(vlen != length)
->     return 4; 
+>     return 4;
 > 
 >   //All checks passed
 >   size_t elen = get_core(procid)->VU.get_elen() / 8;
@@ -1314,7 +1335,7 @@
 >   }
 > 
 >   return 0;
-> }
+327a1187,1287
 > 
 > int simlib_t::translate_virtual_address_api(int procid, const uint64_t* vaddr, int intent, uint64_t* paddr, uint64_t* memattrs)
 > {
@@ -1346,8 +1367,8 @@
 >   {
 >     return 0;
 >   }
->   
->   return status + 2; 
+> 
+>   return status + 2;
 > }
 > 
 > bool simlib_t::set_pc_api(int procid, const std::string& name, const uint8_t* bytes, size_t len)
@@ -1367,7 +1388,7 @@
 >     return false;
 >   }
 > 
->   return get_core(procid)->set_pc_api(name, bytes, len);  
+>   return get_core(procid)->set_pc_api(name, bytes, len);
 > }
 > 
 > bool simlib_t::get_pc_api(int procid, uint8_t* bytes, const std::string& name, size_t len)
@@ -1387,7 +1408,7 @@
 >     return false;
 >   }
 > 
->   return get_core(procid)->retrieve_pc_api(bytes, name, len); // The method called in processor_t will validate the name and length.  
+>   return get_core(procid)->retrieve_pc_api(bytes, name, len); // The method called in processor_t will validate the name and length.
 > }
 > 
 > bool simlib_t::set_privilege_api(int procid, const uint64_t* val)
@@ -1400,7 +1421,7 @@
 > 
 >   //assert in legalize_privilege should catch invalid values
 >   //register field is only 2 bits so shouldn't be able to pass invalid case from force
->   proc_ptr->set_privilege_api(*val); 
+>   proc_ptr->set_privilege_api(*val);
 >   return true;
 > }
 > 
@@ -1414,3 +1435,5 @@
 > 
 >   proc_ptr->retrieve_privilege_api(val);
 >   return true;
+> }
+> 

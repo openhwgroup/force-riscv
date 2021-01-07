@@ -17,6 +17,7 @@
 #ifndef Force_Memory_H
 #define Force_Memory_H
 
+#include <list>
 #include <map>
 #include <iosfwd>
 #include <vector>
@@ -34,11 +35,17 @@ namespace Force {
     \brief a continous address range with the same type
   */
   struct Section {
-    uint64 mAddress;  //!< base address on memorybytes.
-    uint32 mSize;     //!< range size in bytes, multiple 8-bytes.
-    EMemDataType mType;
-
-    Section(uint64 address, uint32 size, EMemDataType type) : mAddress(address), mSize(size), mType(type) { }
+    public:
+      Section(uint64 address, uint32 size, EMemDataType type) : mAddress(address), mSize(size), mType(type) { }
+      bool Intersects(const Section& rOther) const; //!< Return true if the memory range of the other Section overlaps the memory range of this Section.
+      bool Contains(const Section& rOther) const; //!< Return true if the memory range of the other Section is entirely contained within the memory range of this Section.
+      bool operator<(const Section& rOther) const; //!< Return true if this Section has a smaller base address than the other Section.
+    public:
+      uint64 mAddress;  //!< base address on memorybytes.
+      uint32 mSize;     //!< range size in bytes.
+      EMemDataType mType;
+    private:
+      uint64 GetEndAddress() const; //!< Return the last address of the memory range.
   };
 
   /*!
@@ -54,6 +61,9 @@ namespace Force {
     void Write(uint64 address, uint64 value, uint32 nBytes); //!< write data in big-endian
     void Write(uint64 address, cuint8* data, uint32 nBytes);  //!< write data in the buffer
     uint64 ReadInitialValue(uint64 address, uint32 nBytes) const;  //!< read initial value in big-endian, failed if some byte not initialized
+    void Reserve(uint64 address, uint32 nBytes); //!< Reserve a memory range. Unreserve any overlapping reserved ranges. Any write to any part of the reserved range causes the range to become unreserved.
+    void Unreserve(uint64 address, uint32 nBytes); //!< Unreserve all reserved memory ranges that overlap with the specified memory range.
+    bool IsReserved(uint64 address, uint32 nBytes); //!< Return true if the specified memory range lies entirely within a reserved memory range.
     void GetMemoryAttributes(cuint64 address, cuint32 nBytes, uint8* memAttrs) const; //!< Get memory attributes for the specified number of bytes starting at the specified address.
     uint8 GetByteMemoryAttributes(cuint64 address) const; //!< Get memory attributes of the byte at the specified address.
 
@@ -71,15 +81,16 @@ namespace Force {
 //    static void InitializeFillPattern(); //!< initialize fill pattern
 //#endif
   private:
-    EMemBankType mBankType;
-    std::map<uint64, MemoryBytes *> mContent;  //!< map containing all memory content, increasing order by the key
-
     void InitializeMemoryBytes(const MetaAccess& rMetaAccess, EMemDataType type); //!< initialize the memory bytes on meta access
     bool IsInitializedMemoryBytes(const MetaAccess& rMetaAccess) const; //!< check memory bytes are initialized or not
     void ReadMemoryBytes(MetaAccess& rMetaAccess) const;                //!< read memory bytes on meta access
     void WriteMemoryBytes(const MetaAccess& rMetaAccess);         //!< write memory bytes on meta access
     void ReadInitialValue(MetaAccess& rMetaAccess) const;         //!< read initial value on meta access
     void DumpTitle(std::ostream& out_str) const; //!< dump title
+  private:
+    EMemBankType mBankType;
+    std::map<uint64, MemoryBytes *> mContent;  //!< map containing all memory content, increasing order by the key
+    std::list<Section> mReservedRanges; //!< List of reserved memory ranges sorted by start address
     static bool msRandomPattern; //!< memory fill rondom pattern
     static uint64 msValuePattern;  //!< memory fill value pattern in big endian
  };

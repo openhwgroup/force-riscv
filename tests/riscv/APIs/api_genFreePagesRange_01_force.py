@@ -20,7 +20,6 @@ from base.InstructionMap import InstructionMap
 from DV.riscv.trees.instruction_tree import *
 from base.ChoicesModifier import ChoicesModifier
 from DV.riscv.trees.instruction_tree import *
-import random
 
 class MainSequence(Sequence):
     """
@@ -43,10 +42,10 @@ class MainSequence(Sequence):
     def generate(self, **kwargs):
 
         if self.getGlobalState('AppRegisterWidth') == 32:
-            available_page_sizes = { '4K', '4M' }
+            available_page_sizes = ( '4K', '4M' )
             page_size_dict = { '4K': 0x1000, '4M': 0x400000 }            
         else:
-            available_page_sizes = { '4K', '2M', '1G', '512G' }
+            available_page_sizes = ( '4K', '2M', '1G', '512G')
             page_size_dict = { '4K': 0x1000, '2M': 0x200000, '1G': 0x40000000, '512G': 0x8000000000 }
 
         for number_of_pages in range(2,20):
@@ -55,7 +54,7 @@ class MainSequence(Sequence):
             total_page_bytes = 0
 
             for i in range(number_of_pages):
-                page_size_list = (random.sample(available_page_sizes, 1))
+                page_size_list = (self.sample(available_page_sizes, 1))
                 total_page_bytes += page_size_dict[page_size_list[0]]
                 requested_page_sizes_string += (page_size_list[0] + ',')
 
