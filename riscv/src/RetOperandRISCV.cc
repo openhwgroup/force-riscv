@@ -283,7 +283,7 @@ namespace Force {
     RetOperandConstraint* ret_constr = mpOperandConstraint->CastInstance<RetOperandConstraint>();
 
     // update pe state.
-    if (ret_constr->PEUpdateId() == 0 && ret_constr->TargetAddressConstraint() == nullptr) {
+    if (ret_constr->PEUpdateId() == 0) {
       PeStateUpdate* pe_state = new PeStateUpdate();
       if (not gen.HasISS()) {
         pe_state->UpdateState("PrivilegeLevel", "Set", (uint64)(ret_constr->TargetPrivilege()));
