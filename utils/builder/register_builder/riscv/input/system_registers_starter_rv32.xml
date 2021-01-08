@@ -110,7 +110,7 @@ Add RISCV system registers starter information in this file.
       <bit_field shift="0" size="2"/>
     </register_field>
   </register>
-  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="32" type="SysReg">
+  <register description="Vector start position." index="0x8" name="vstart" physical_register="vstart" privilege="URW" size="32" type="SysReg" init_policy="VstartInitPolicy">
     <register_field name="VSTART" size="32">
       <bit_field shift="0" size="32"/>
     </register_field>
@@ -1388,13 +1388,17 @@ Add RISCV system registers starter information in this file.
     <register_field name="RESERVED (WRITE 0)" size="23" init_policy="VtypeInitPolicy">
       <bit_field shift="8" size="23"/>
     </register_field>
-    <register_field name="VMA" size="1" init_policy="VtypeInitPolicy">
+    <register_field name="VMA" size="1">
       <bit_field shift="7" size="1"/>
+      <choice description="Inactive elements remain undisturbed" value="0x0" weight="10"/>
+      <choice description="Inactive elements may be overwritten" value="0x1" weight="10"/>
     </register_field>
-    <register_field name="VTA" size="1" init_policy="VtypeInitPolicy">
+    <register_field name="VTA" size="1">
       <bit_field shift="6" size="1"/>
+      <choice description="Tail elements remain undisturbed" value="0x0" weight="10"/>
+      <choice description="Tail elements may be overwritten" value="0x1" weight="10"/>
     </register_field>
-    <register_field name="VLMUL" size="3">
+    <register_field name="VLMUL" size="3" init_policy="VlmulInitPolicy">
       <bit_field shift="5" size="1"/>
       <bit_field shift="0" size="2"/>
       <choice description="32 register groups" value="0x0" weight="10"/>

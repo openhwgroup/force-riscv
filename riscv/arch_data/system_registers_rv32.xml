@@ -362,7 +362,7 @@
         <bit_field shift="0" size="2"/>
       </register_field>
     </register>
-    <register boot="1" index="0x8" name="vstart" size="32" type="SysReg">
+    <register boot="1" index="0x8" init_policy="VstartInitPolicy" name="vstart" size="32" type="SysReg">
       <register_field name="VSTART" physical_register="vstart" size="32">
         <bit_field shift="0" size="32"/>
       </register_field>
@@ -1535,13 +1535,13 @@
       <register_field init_policy="VtypeInitPolicy" name="RESERVED (WRITE 0)" physical_register="vtype" size="23">
         <bit_field shift="8" size="23"/>
       </register_field>
-      <register_field init_policy="VtypeInitPolicy" name="VMA" physical_register="vtype" size="1">
+      <register_field name="VMA" physical_register="vtype" size="1">
         <bit_field shift="7" size="1"/>
       </register_field>
-      <register_field init_policy="VtypeInitPolicy" name="VTA" physical_register="vtype" size="1">
+      <register_field name="VTA" physical_register="vtype" size="1">
         <bit_field shift="6" size="1"/>
       </register_field>
-      <register_field name="VLMUL" physical_register="vtype" size="3">
+      <register_field init_policy="VlmulInitPolicy" name="VLMUL" physical_register="vtype" size="3">
         <bit_field shift="5" size="1"/>
         <bit_field shift="0" size="2"/>
       </register_field>
