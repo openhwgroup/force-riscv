@@ -48,11 +48,6 @@ using namespace std;
 
 namespace Force {
 
-  Object* GenSequenceAgent::Clone() const
-  {
-    return new GenSequenceAgent(*this);
-  }
-
   void  GenSequenceAgent::SetGenRequest(GenRequest* genRequest)
   {
     mpSequenceRequest = dynamic_cast<GenSequenceRequest* >(genRequest);
@@ -218,6 +213,15 @@ namespace Force {
   {
     auto lower_bound_iter = std::lower_bound(registerList.begin(), registerList.end(), element, boot_comparator);
     registerList.insert(lower_bound_iter, element);    //reg_set_by_boot holding
+  }
+
+  void GenSequenceAgent::EndOfTest()
+  {
+    vector<GenRequest*> req_seq;
+    GetEndOfTestSequence(req_seq);
+    mpGenerator->PrependRequests(req_seq);
+
+    mHasGenEndOfTest = true;
   }
 
   void GenSequenceAgent::BootLoading()
@@ -513,6 +517,13 @@ namespace Force {
       auto re_exe_req = mpSequenceRequest->CastInstance<GenReExecutionRequest>();
       uint64 re_exe_addr = re_exe_req->ReExecutionAddress();
       uint32 max_re_exe_instr = re_exe_req->MaxReExecutionInstructions();
+      if (mHasGenEndOfTest) {
+        // We limit the number of re-execution steps to avoid the possibility of infinitely
+        // repeating the end of test instructions, particularly in the branch to self case. This
+        // could happen if an instruction in the end of test sequence triggers an exception.
+        max_re_exe_instr = GetEndOfTestInstructionCount();
+      }
+
       delete mpSequenceRequest;
       mpSequenceRequest = nullptr;
       mpGenerator->ReExecute(re_exe_addr, max_re_exe_instr);

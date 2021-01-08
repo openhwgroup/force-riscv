@@ -300,7 +300,7 @@ namespace Force {
     reqSeq.push_back(str_req);
   }
 
-  void GenSequenceAgentRISCV::GetBranchToSelfSequence(vector<GenRequest* >& req_seq)
+  void GenSequenceAgentRISCV::GetBranchToSelfSequence(vector<GenRequest* >& req_seq) const
   {
     const char* j_instr = "JAL##RISCV";
     auto j_req = new GenInstructionRequest(j_instr);
@@ -309,13 +309,6 @@ namespace Force {
     j_req->AddOperandRequest("rd", 0);
     j_req->AddOperandRequest("simm20", 0);
     req_seq.push_back(j_req);
-  }
-
-  void GenSequenceAgentRISCV::EndOfTest()
-  {
-    vector<GenRequest* > req_seq;
-    GetBranchToSelfSequence(req_seq);
-    mpGenerator->PrependRequests(req_seq);
   }
 
   void GenSequenceAgentRISCV::BranchToTarget()
@@ -600,6 +593,16 @@ namespace Force {
 
   void GenSequenceAgentRISCV::RegulateInitRegisters(std::list<Register*>& registers) const
   {
+  }
+
+  void GenSequenceAgentRISCV::GetEndOfTestSequence(vector<GenRequest*>& rReqSeq) const
+  {
+    GetBranchToSelfSequence(rReqSeq);
+  }
+
+  uint32 GenSequenceAgentRISCV::GetEndOfTestInstructionCount() const
+  {
+    return 1;
   }
 
   void GenSequenceAgentRISCV::GetLoadGPRTop53BitsSetSequence(const Register* regPtr, uint32 loadValue, std::vector<GenRequest* >& reqSeq)

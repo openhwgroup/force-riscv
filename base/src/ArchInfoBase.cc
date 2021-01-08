@@ -183,8 +183,6 @@ namespace Force {
     switch (agentType) {
     case EGenAgentType::GenInstructionAgent:
       return new GenInstructionAgent();
-    case EGenAgentType::GenSequenceAgent:
-      return new GenSequenceAgent();
     case EGenAgentType::GenVirtualMemoryAgent:
       return new GenVirtualMemoryAgent();
     case EGenAgentType::GenQueryAgent:
