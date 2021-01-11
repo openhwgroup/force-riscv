@@ -509,7 +509,7 @@
         <bit_field shift="0" size="63"/>
       </register_field>
     </register>
-    <register boot="0" index="0x143" name="stval" size="64" type="SysReg">
+    <register boot="1" index="0x143" name="stval" size="64" type="SysReg">
       <register_field name="STVAL" physical_register="stval" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
@@ -904,7 +904,7 @@
         <bit_field shift="15" size="1"/>
       </register_field>
     </register>
-    <register boot="0" index="0x303" name="mideleg" size="64" type="SysReg">
+    <register boot="1" index="0x303" name="mideleg" size="64" type="SysReg">
       <register_field name="MIDELEG" physical_register="mideleg" size="64">
         <bit_field shift="0" size="64"/>
       </register_field>
