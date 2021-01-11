@@ -448,7 +448,7 @@ namespace Force {
 
     bool any_bnt = false;
     vector<GenRequest*> bnt_requests;
-    EGenModeTypeBaseType gen_mode_change = EGenModeTypeBaseType(EGenModeType::SimOff) | EGenModeTypeBaseType(EGenModeType::NoEscape);
+    EGenModeTypeBaseType gen_mode_change = EGenModeTypeBaseType(EGenModeType::SimOff);
     bnt_requests.push_back(new GenStateRequest(EGenStateActionType::Push, EGenStateType::GenMode, gen_mode_change));
 
     for (auto bnt_node : bnt_nodes) {
