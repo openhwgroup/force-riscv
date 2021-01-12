@@ -502,8 +502,7 @@ namespace Force {
 
     LOG(notice) << "{GenSequenceAgent::ProcessBntNode} generating not-taken-path starting from 0x" << hex << not_taken_path << "=>[" << bank << "]0x" << pa << " intersection start 0x" << inter_start << " size " << dec << inter_size << endl;
 
-    auto bnt_min_space = mpGenerator->BntMinSpace();
-    if (pa >= inter_start && inter_size >= bnt_min_space + pa - inter_start ) {
+    if ((pa == inter_start) && (inter_size >= mpGenerator->BntMinSpace())) {
       mpGenerator->SetPC(not_taken_path);
       auto bnt_branch = new GenBranchToTarget(bnt_node->TakenPath(), false, true); // NoBnt
       mpGenerator->PrependRequest(bnt_branch);

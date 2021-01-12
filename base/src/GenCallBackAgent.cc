@@ -90,7 +90,7 @@ namespace Force {
 
     LOG(notice) << "{GenCallBackAgent::HandleRequest} generating not-taken-path starting from 0x" << hex << not_taken_path << " intersection start 0x" << inter_start << " size " << dec << inter_size << endl;
 
-    if (inter_size && not_taken_path >= inter_start) {
+    if ((not_taken_path == inter_start) && (inter_size >= mpGenerator->BntMinSpace())) {
       auto gen_pc = mpGenerator->GetGenPC();
       uint32 saved_ispace = gen_pc->InstructionSpace();
       gen_pc->SetInstructionSpace(mpGenerator->DefaultInstructionSize()); // TODO temporary solution for filler type BNT.
