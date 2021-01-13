@@ -107,7 +107,7 @@ namespace Force
     return false;
   }
 
-  void DAPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void DAPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     GetDefaultConstraint(rTriggerConstr);
     auto mem_access = rPagingReq.MemoryAccessType();
@@ -172,7 +172,7 @@ namespace Force
     return false;
   }
 
-  void UPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void UPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     uint32 sum_value = 0;
     bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
@@ -250,7 +250,7 @@ namespace Force
     return false;
   }
 
-  void XPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void XPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
     if (is_instr)
@@ -333,7 +333,7 @@ namespace Force
     return false;
   }
 
-  void WRPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void WRPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     auto mem_access = rPagingReq.MemoryAccessType();
     rTriggerConstr.AddValue(0x2); // W=1 R=0 always invalid (reserved by specification)
@@ -353,6 +353,17 @@ namespace Force
         LOG(fail) << "{WRPteAttributeRISCV::ExceptionTriggeringConstraint} invalid or unsupported mem access type=" << EMemAccessType_to_string(mem_access) << endl;
         FAIL("wr_pte_invalid_mem_access");
         break;
+    }
+
+    // TODO(Noah): Implement a better solution for this issue when one can be devised. The problem
+    // is that if the X, W and R bits are all 0, it indicates a non-leaf page table entry. We want
+    // to avoid unintentionally generating such entries when are are attempting to set the
+    // attributes of a leaf page table entry to trigger a fault. We can allow X, W and R to be 0 at
+    // Level 0 because the page table walk will not attempt to progress to a level beyond Level 0.
+    bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
+    if (is_instr && (pteLevel > 0))
+    {
+      rTriggerConstr.SubValue(0x0);
     }
   }
 
@@ -439,7 +450,7 @@ namespace Force
     return false;
   }
 
-  void VPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void VPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     rTriggerConstr.AddValue(0x0);
   }

@@ -54,7 +54,7 @@ namespace Force {
   protected:
     DAPteAttributeRISCV(const DAPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
     EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
-    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
     void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
     void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
     bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
@@ -92,7 +92,7 @@ namespace Force {
   protected:
     UPteAttributeRISCV(const UPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
     EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
-    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
     void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
     void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
     bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
@@ -113,7 +113,7 @@ namespace Force {
   protected:
     XPteAttributeRISCV(const XPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
     EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
-    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
     void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
     void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
     bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
@@ -134,7 +134,7 @@ namespace Force {
   protected:
     WRPteAttributeRISCV(const WRPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
     EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
-    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
     void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
     void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
     bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
@@ -155,7 +155,7 @@ namespace Force {
   protected:
     VPteAttributeRISCV(const VPteAttributeRISCV& rOther) : ExceptionConstraintPteAttribute(rOther) { } //!< Copy Constructor
     EPagingExceptionType GetExceptionType(const GenPageRequest& rPagingReq) const override; //!< Get exception type.
-    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
+    void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const override; //!< Return constraint that will trigger the exception.
     void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
     void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
     bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
