@@ -619,6 +619,8 @@ namespace Force {
     AddrSizeFault = 2,
     DataAccessPermission = 3,
     InstrAccessPermission = 4,
+    Accessed = 5,
+    Dirty = 6,
   };
   extern unsigned char EPageGenAttributeTypeSize;
   extern const std::string EPageGenAttributeType_to_string(EPageGenAttributeType in_enum); //!< Get string name for enum.

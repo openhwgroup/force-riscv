@@ -136,6 +136,23 @@ namespace Force
 
   void DAPteAttributeRISCV::SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const
   {
+    switch(mValue) {
+    case 0:
+      break;
+    case 1:
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Accessed, 1);
+      break;
+    case 2:
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Dirty, 1);
+      break;
+    case 3:
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Accessed, 1);
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Dirty, 1);
+      break;
+    default:
+        LOG(fail) << "{DAPteAttributeRISCV::SetPteGenAttribute} invalid generated value, can't set pte attribute" << endl;
+        FAIL("da-pte-invalid");
+    }
   }
 
   bool GPteAttributeRISCV::GetValueConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte, ConstraintSet& rValueConstr) const

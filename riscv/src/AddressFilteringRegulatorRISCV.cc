@@ -219,7 +219,26 @@ namespace Force {
             {
               rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::ReadOnly, ro_constr));
             }
+
+            const ConstraintSet* not_dirty_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NotDirty);
+            if (not_dirty_constr != nullptr)
+            {
+              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NotDirty, not_dirty_constr));
+            }
           }
+
+          const ConstraintSet* not_accessed_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NotAccessed);
+          if (not_accessed_constr != nullptr)
+          {
+            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NotAccessed, not_accessed_constr));
+          }
+
+          const ConstraintSet* no_data_access_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NoDataAccess);
+          if (no_data_access_constr != nullptr)
+          {
+            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NoDataAccess, no_data_access_constr));
+          }
+
           const ConstraintSet* pf_constr = rVmMapper.GetVmConstraint(EVmConstraintType::PageFault);
           if (pf_constr != nullptr)
           {

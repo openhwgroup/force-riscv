@@ -112,7 +112,7 @@ enum_classes_details = [
       [("VA", 0), ("IPA", 1), ("PA", 2), ("PageSize", 3), ("MemAttrArch", 4), ("MemAttrImpl", 5), ("AliasPageId", 6)]
       ],
      ["PageGenAttributeType", "unsigned char", "Paging attribute of generated page that is useful in later test generation.",
-      [("MemAttrImpl", 0), ("Invalid", 1), ("AddrSizeFault", 2), ("DataAccessPermission", 3), ("InstrAccessPermission", 4)]
+      [("MemAttrImpl", 0), ("Invalid", 1), ("AddrSizeFault", 2), ("DataAccessPermission", 3), ("InstrAccessPermission", 4), ("Accessed", 5), ("Dirty", 6)]
       ],
      ["DataAccessPermissionType", "unsigned char", "Data access permission types.",
       [("NoAccess", 0), ("ReadWrite", 1), ("ReadOnly", 2), ("ReadWriteNoUser", 3), ("ReadOnlyNoUser", 4), ("ReadWriteUserOnly", 5), ("ReadOnlyUserOnly", 6)]

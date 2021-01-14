@@ -3291,7 +3291,7 @@ namespace Force {
   }
 
 
-  unsigned char EPageGenAttributeTypeSize = 5;
+  unsigned char EPageGenAttributeTypeSize = 7;
 
   const string EPageGenAttributeType_to_string(EPageGenAttributeType in_enum)
   {
@@ -3301,6 +3301,8 @@ namespace Force {
     case EPageGenAttributeType::AddrSizeFault: return "AddrSizeFault";
     case EPageGenAttributeType::DataAccessPermission: return "DataAccessPermission";
     case EPageGenAttributeType::InstrAccessPermission: return "InstrAccessPermission";
+    case EPageGenAttributeType::Accessed: return "Accessed";
+    case EPageGenAttributeType::Dirty: return "Dirty";
     default:
       unknown_enum_value("EPageGenAttributeType", (unsigned char)(in_enum));
     }
@@ -3314,12 +3316,18 @@ namespace Force {
     char hash_value = in_str.at(2 < size ? 2 : 2 % size);
 
     switch (hash_value) {
+    case 99:
+      validate(in_str, "Accessed", enum_type_name);
+      return EPageGenAttributeType::Accessed;
     case 100:
       validate(in_str, "AddrSizeFault", enum_type_name);
       return EPageGenAttributeType::AddrSizeFault;
     case 109:
       validate(in_str, "MemAttrImpl", enum_type_name);
       return EPageGenAttributeType::MemAttrImpl;
+    case 114:
+      validate(in_str, "Dirty", enum_type_name);
+      return EPageGenAttributeType::Dirty;
     case 115:
       validate(in_str, "InstrAccessPermission", enum_type_name);
       return EPageGenAttributeType::InstrAccessPermission;
@@ -3342,12 +3350,18 @@ namespace Force {
     char hash_value = in_str.at(2 < size ? 2 : 2 % size);
 
     switch (hash_value) {
+    case 99:
+      okay = (in_str == "Accessed");
+      return EPageGenAttributeType::Accessed;
     case 100:
       okay = (in_str == "AddrSizeFault");
       return EPageGenAttributeType::AddrSizeFault;
     case 109:
       okay = (in_str == "MemAttrImpl");
       return EPageGenAttributeType::MemAttrImpl;
+    case 114:
+      okay = (in_str == "Dirty");
+      return EPageGenAttributeType::Dirty;
     case 115:
       okay = (in_str == "InstrAccessPermission");
       return EPageGenAttributeType::InstrAccessPermission;
