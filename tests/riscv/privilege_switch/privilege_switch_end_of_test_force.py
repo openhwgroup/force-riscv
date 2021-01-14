@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from DV.riscv.trees.instruction_tree import RV_G_map
+from DV.riscv.trees.instruction_tree import RV32_G_map
 import RandomUtils
 
 ## This test intentionally returns to an address that will generate a page fault on instruction
@@ -25,13 +26,19 @@ class MainSequence(Sequence):
 
    def generate(self, **kargs):
         for _ in range(RandomUtils.random32(5, 10)):
-            instr = RV_G_map.pick(self.genThread)
+            if (self.getGlobalState('AppRegisterWidth') == 32):
+                instr = RV32_G_map.pick(self.genThread)
+            else:
+                instr = RV_G_map.pick(self.genThread)
             self.genInstruction(instr)
 
         self.genInstruction('MRET##RISCV', {'NoSkip': 1, 'priv': 1})
 
         for _ in range(RandomUtils.random32(5, 10)):
-            instr = RV_G_map.pick(self.genThread)
+            if (self.getGlobalState('AppRegisterWidth') == 32):
+                instr = RV32_G_map.pick(self.genThread)
+            else:
+                instr = RV_G_map.pick(self.genThread)
             self.genInstruction(instr)
 
         target_addr = self.genVA(Size=4, Align=4, Type='I')
