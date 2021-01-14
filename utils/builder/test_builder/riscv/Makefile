@@ -34,14 +34,20 @@ output:
 $(XML_INPUT_DIR):
 	@mkdir $(XML_INPUT_DIR)
 
-$(XML_INPUT_DIR)riscv_instructions.xml:
-	@cp -f $(ARCH_DATA_DIR)riscv_instructions.xml $(XML_INPUT_DIR)
+$(XML_INPUT_DIR)g_instructions.xml:
+	@cp -f $(ARCH_DATA_DIR)g_instructions.xml $(XML_INPUT_DIR)
+
+$(XML_INPUT_DIR)g_instructions_rv64.xml:
+	@cp -f $(ARCH_DATA_DIR)g_instructions_rv64.xml $(XML_INPUT_DIR)
 
 $(XML_INPUT_DIR)c_instructions.xml:
 	@cp -f $(ARCH_DATA_DIR)c_instructions.xml $(XML_INPUT_DIR)
 
-$(XML_INPUT_DIR)c_instructions_rv64only.xml:
-	@cp -f $(ARCH_DATA_DIR)c_instructions_rv64only.xml $(XML_INPUT_DIR)
+$(XML_INPUT_DIR)c_instructions_rv64.xml:
+	@cp -f $(ARCH_DATA_DIR)c_instructions_rv64.xml $(XML_INPUT_DIR)
+
+$(XML_INPUT_DIR)c_instructions_rv32.xml:
+	@cp -f $(ARCH_DATA_DIR)c_instructions_rv32.xml $(XML_INPUT_DIR)
 
 $(XML_INPUT_DIR)v_instructions.xml:
 	@cp -f $(ARCH_DATA_DIR)v_instructions.xml $(XML_INPUT_DIR)
@@ -55,12 +61,11 @@ $(INSTALL_DIR):
 .PHONY: setup
 setup: input output $(XML_INPUT_DIR)
 	@cp -f $(ARCH_DATA_DIR)*_instructions.xml $(XML_INPUT_DIR)
-	@cp -f $(ARCH_DATA_DIR)c_instructions_rv64only.xml $(XML_INPUT_DIR)
 
 .PHONY: riscv_tests
-riscv_tests: $(TEST_BUILDER) $(XML_INPUT_DIR)riscv_instructions.xml $(XML_INPUT_DIR)c_instructions.xml\
-            $(XML_INPUT_DIR)v_instructions.xml $(XML_INPUT_DIR)priv_instructions.xml \
-            $(XML_INPUT_DIR)c_instructions_rv64only.xml
+riscv_tests: $(TEST_BUILDER) $(XML_INPUT_DIR)g_instructions.xml $(XML_INPUT_DIR)g_instructions_rv64.xml \
+            $(XML_INPUT_DIR)c_instructions.xml $(XML_INPUT_DIR)c_instructions_rv64.xml $(XML_INPUT_DIR)c_instructions_rv32.xml \
+            $(XML_INPUT_DIR)v_instructions.xml $(XML_INPUT_DIR)priv_instructions.xml 
 	@$(TEST_BUILDER)
 
 .PHONY: install

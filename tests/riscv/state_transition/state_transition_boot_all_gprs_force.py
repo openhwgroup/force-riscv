@@ -33,7 +33,11 @@ class MainSequence(Sequence):
             self.randomInitializeRegister('D%d' % reg_index)
             self.initializeRegister('x%d' % reg_index, RandomUtils.random64(0x0, 0x7FFFFFFFFFFF))
 
-        instructions = ('LD##RISCV', 'SD##RISCV')
+        if (self.getGlobalState('AppRegisterWidth') == 32):
+            instructions = ('LW##RISCV', 'SW##RISCV')
+        else:
+            instructions = ('LD##RISCV', 'SD##RISCV')
+
         for _ in range(RandomUtils.random32(100, 200)):
             self.genInstruction(self.choice(instructions), {'NoPreamble': 1})
 

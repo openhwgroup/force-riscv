@@ -28,7 +28,11 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         for i in range(2):
-            instruction_group = RV_A_instructions
+
+            if self.getGlobalState('AppRegisterWidth') != 32:
+                instruction_group = RV_A_instructions
+            else:
+                instruction_group = RV32A_instructions
             
             for _ in range( RandomUtils.random32(1,10) ):
                 the_instruction = self.pickWeighted(instruction_group)

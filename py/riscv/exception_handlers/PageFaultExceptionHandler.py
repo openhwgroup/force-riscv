@@ -155,10 +155,13 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
     #*****************************************************************************************
     # tell sequence generator about subroutine(s) this handler needs...
     #*****************************************************************************************
-    
+    # mtv 01/05/2021 - add switch to exclude CheckFaultAddress if RV32 
     def getPrerequisiteRoutineNames(self, aRoutineName):
         if aRoutineName == 'Handler':
-            return ( [ 'CheckFaultAddress', 'ClearPageFault' ] )
+            if self.getGlobalState('AppRegisterWidth') == 32:
+                return ( [ 'ClearPageFault' ] )
+            else:
+                return ( [ 'CheckFaultAddress', 'ClearPageFault' ] )
         else:
             return tuple()
 

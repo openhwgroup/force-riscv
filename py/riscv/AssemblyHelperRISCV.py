@@ -106,7 +106,8 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       if the destination register is also the source register.
     def genShiftLeftImmediate(self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None):
         src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        self.mSequence.genInstruction('SLLI#RV64I#RISCV', {'rd': aDestRegIndex, 'rs1': src_reg_index, 'shamt': aShiftAmount})
+        instr = "SLLI#%s#RISCV" % (self.getInstrForm())
+        self.mSequence.genInstruction( instr , {'rd': aDestRegIndex, 'rs1': src_reg_index, 'shamt': aShiftAmount})
 
     ## Generate an instruction to shift the specified register to the right.
     #
@@ -116,7 +117,11 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       if the destination register is also the source register.
     def genShiftRightImmediate(self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None):
         src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        self.mSequence.genInstruction('SRLI#RV64I#RISCV', {'rd': aDestRegIndex, 'rs1': src_reg_index, 'shamt': aShiftAmount})
+        instr = "SRLI#%s#RISCV" % (self.getInstrForm())
+        self.mSequence.genInstruction( instr , {'rd': aDestRegIndex, 'rs1': src_reg_index, 'shamt': aShiftAmount})
+
+    def getInstrForm(self):
+        return "RV32I" if (self.mSequence.getGlobalState("AppRegisterWidth") == 32)  else  "RV64I"
 
     ## Generate an instruction to AND a specified register with an immediate value.
     #

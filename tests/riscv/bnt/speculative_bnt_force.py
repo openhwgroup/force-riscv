@@ -13,21 +13,32 @@ class MyBntSequence(BntSequence):
     def BntSequence_IntegerArithmetic(self):
         self.notice("Speculative Generate Bnt Sequence for Arithmetic instructions")
 
-        math_instr_dict = {'ADD##RISCV' : 10,
-                           'ADDW##RISCV' : 10,
-                           'ADDI##RISCV' : 10,
-                           'ADDIW##RISCV' : 10,
-                           'SUB##RISCV' : 10,
-                           'SUBW##RISCV' : 10,
-                           'MUL##RISCV' : 10,
-                           'MULH##RISCV' : 10,
-                           'MULHSU##RISCV' : 10,
-                           'MULHU##RISCV' : 10,
-                           'MULW##RISCV' : 10,
-                           'DIV##RISCV' : 10,
-                           'DIVU##RISCV' : 10,
-                           'DIVUW##RISCV' : 10,
-                           'DIVW##RISCV' : 10,}
+        if (self.getGlobalState('AppRegisterWidth') == 32):
+	        math_instr_dict = {'ADD##RISCV' : 10,
+	                           'ADDI##RISCV' : 10,
+	                           'SUB##RISCV' : 10,
+	                           'MUL##RISCV' : 10,
+	                           'MULH##RISCV' : 10,
+	                           'MULHSU##RISCV' : 10,
+	                           'MULHU##RISCV' : 10,
+	                           'DIV##RISCV' : 10,
+	                           'DIVU##RISCV' : 10 }
+        else:
+	        math_instr_dict = {'ADD##RISCV' : 10,
+	                           'ADDW##RISCV' : 10,
+	                           'ADDI##RISCV' : 10,
+	                           'ADDIW##RISCV' : 10,
+	                           'SUB##RISCV' : 10,
+	                           'SUBW##RISCV' : 10,
+	                           'MUL##RISCV' : 10,
+	                           'MULH##RISCV' : 10,
+	                           'MULHSU##RISCV' : 10,
+	                           'MULHU##RISCV' : 10,
+	                           'MULW##RISCV' : 10,
+	                           'DIV##RISCV' : 10,
+	                           'DIVU##RISCV' : 10,
+	                           'DIVUW##RISCV' : 10,
+	                           'DIVW##RISCV' : 10 }
 
         for i in range(self.instr_num):
             instr_chosen = self.pickWeighted(math_instr_dict)
@@ -48,22 +59,35 @@ class MyBntSequence(BntSequence):
     def BntSequence_L(self):
         self.notice("Speculative Generate Bnt Sequence for L")
 
-        ls_dict = {'LR.D##RISCV' : 10,
-                   'LR.W##RISCV' : 10,
-                   'LUI##RISCV' : 10,
-                   'LW##RISCV' : 10,
-                   'LWU##RISCV' : 10,
-                   'LB##RISCV' : 10,
-                   'LBU##RISCV' : 10,
-                   'LH##RISCV' : 10,
-                   'LHU##RISCV' : 10,
-                   'LD##RISCV' : 10,
-                   'SC.D##RISCV' : 10,
-                   'SC.W##RISCV' : 10,
-                   'SW##RISCV' : 10,
-                   'SD##RISCV' : 10,
-                   'SH##RISCV' : 10,
-                   'SB##RISCV' : 10}
+        if (self.getGlobalState('AppRegisterWidth') == 32):
+	        ls_dict = {'LR.W##RISCV' : 10,
+	                   'LUI##RISCV' : 10,
+	                   'LW##RISCV' : 10,
+	                   'LB##RISCV' : 10,
+	                   'LBU##RISCV' : 10,
+	                   'LH##RISCV' : 10,
+	                   'LHU##RISCV' : 10,
+	                   'SC.W##RISCV' : 10,
+	                   'SW##RISCV' : 10,
+	                   'SH##RISCV' : 10,
+	                   'SB##RISCV' : 10}
+        else:
+	        ls_dict = {'LR.D##RISCV' : 10,
+	                   'LR.W##RISCV' : 10,
+	                   'LUI##RISCV' : 10,
+	                   'LW##RISCV' : 10,
+	                   'LWU##RISCV' : 10,
+	                   'LB##RISCV' : 10,
+	                   'LBU##RISCV' : 10,
+	                   'LH##RISCV' : 10,
+	                   'LHU##RISCV' : 10,
+	                   'LD##RISCV' : 10,
+	                   'SC.D##RISCV' : 10,
+	                   'SC.W##RISCV' : 10,
+	                   'SW##RISCV' : 10,
+	                   'SD##RISCV' : 10,
+	                   'SH##RISCV' : 10,
+	                   'SB##RISCV' : 10}
 
         for i in range(self.instr_num):
             instr_chosen = self.pickWeighted(ls_dict)

@@ -46,7 +46,9 @@ class MainSequence(Sequence):
                     instr_id = self.genInstruction(self.choice(ldstr_byte_ops), {'LSTarget':rand_VA})
                     if theAlign % 2 == 0: instr_id = self.genInstruction(self.choice(ldstr_half_ops), {'LSTarget':rand_VA})
                     if theAlign % 4 == 0: instr_id = self.genInstruction(self.choice(ldstr_word_ops), {'LSTarget':rand_VA})
-                    if theAlign % 8 == 0: instr_id = self.genInstruction(self.choice(ldstr_double_ops), {'LSTarget':rand_VA})
+                    if self.getGlobalState('AppRegisterWidth') != 32:
+                        if theAlign % 8 == 0: instr_id = self.genInstruction(self.choice(ldstr_double_ops), {'LSTarget':rand_VA})
+                    
 
 
         # Iterate through Size and Align values.  Force requires Align to be a power of 2.
@@ -65,7 +67,8 @@ class MainSequence(Sequence):
                     instr_id = self.genInstruction(self.choice(ldstr_byte_ops), {'LSTarget':rand_VA})
                     if theAlign % 2 == 0: instr_id = self.genInstruction(self.choice(ldstr_half_ops), {'LSTarget':rand_VA})
                     if theAlign % 4 == 0: instr_id = self.genInstruction(self.choice(ldstr_word_ops), {'LSTarget':rand_VA})
-                    if theAlign % 8 == 0: instr_id = self.genInstruction(self.choice(ldstr_double_ops), {'LSTarget':rand_VA})
+                    if self.getGlobalState('AppRegisterWidth') != 32:
+                        if theAlign % 8 == 0: instr_id = self.genInstruction(self.choice(ldstr_double_ops), {'LSTarget':rand_VA})
 
 
 

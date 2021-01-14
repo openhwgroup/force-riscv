@@ -26,8 +26,9 @@
     <limit name="MaxVectorElementWidth" value = "64"/>
   </limits>
   <instruction_files>
-    <instruction_file file="riscv/arch_data/riscv_instructions.xml"/>
+    <instruction_file file="riscv/arch_data/g_instructions.xml"/>
     <instruction_file file="riscv/arch_data/c_instructions.xml"/>
+    <instruction_file file="riscv/arch_data/c_instructions_rv32.xml"/>
     <instruction_file file="riscv/arch_data/v_instructions.xml"/>
     <instruction_file file="riscv/arch_data/priv_instructions.xml"/>
   </instruction_files>

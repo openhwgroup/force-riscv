@@ -55,7 +55,10 @@ class GprBootStateTransitionHandlerTest(StateTransitionHandler):
 
         gpr_index = aStateElem.getRegisterIndex()
         if gpr_index in self.mGprIndices:
-            self.genInstruction('LD##RISCV', {'rd': gpr_index, 'rs1': self.mMemBlockPtrIndex, 'simm12': (gpr_index * 8), 'NoRestriction': 1})
+            if self.getGlobalState("AppRegisterWidth") == 32:
+                self.genInstruction('LW##RISCV', {'rd': gpr_index, 'rs1': self.mMemBlockPtrIndex, 'simm12': (gpr_index * 8), 'NoRestriction': 1})
+            else:
+                self.genInstruction('LD##RISCV', {'rd': gpr_index, 'rs1': self.mMemBlockPtrIndex, 'simm12': (gpr_index * 8), 'NoRestriction': 1})
         elif gpr_index != self.mMemBlockPtrIndex:
             load_gpr64_seq = LoadGPR64(self.genThread)
             load_gpr64_seq.load(gpr_index, aStateElem.getValues()[0])

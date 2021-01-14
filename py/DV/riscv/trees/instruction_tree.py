@@ -429,7 +429,6 @@ RV_G_map = InstructionMap('RV_G_instructions', RV_G_instructions)
 
 RV32_G_instructions = Merge( RV32I_instructions,
                            RV32F_instructions,
-                           RV64F_instructions,
                            RV32D_instructions,
                            RV32M_instructions,
                            RV32A_instructions,
@@ -458,8 +457,7 @@ LD_Int32_instructions = {
     'LBU##RISCV':10,
     'LH##RISCV':10,
     'LHU##RISCV':10,
-    'LW##RISCV':10,
-    'LWU##RISCV':10
+    'LW##RISCV':10
     }
 
 LD_Int32_map = InstructionMap('LD_Int32_instructions', LD_Int32_instructions)

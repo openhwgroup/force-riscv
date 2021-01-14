@@ -18,6 +18,7 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.ChoicesModifier import ChoicesModifier
 from DV.riscv.trees.instruction_tree import RV_G_instructions
+from DV.riscv.trees.instruction_tree import RV32_G_instructions
 
 
 class MyMainSequence(Sequence):
@@ -34,7 +35,11 @@ class MyMainSequence(Sequence):
             # the selection of GPRs to use for generateion will be 
             # affected by the fact that the weightings were changed
             # in the gen_thread_initialization function.
-            instr = self.pickWeighted(RV_G_instructions)
+            if (self.getGlobalState('AppRegisterWidth') == 32):
+                instr = self.pickWeighted(RV32_G_instructions)
+            else:
+                instr = self.pickWeighted(RV_G_instructions)
+
             instr_rec_id = self.genInstruction(instr)
 
             # get the indexes for the GPRs that were used.

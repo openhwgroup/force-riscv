@@ -2,7 +2,6 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from DV.riscv.trees.instruction_tree import ALU_Int32_instructions
-from DV.riscv.trees.instruction_tree import ALU_Int64_instructions
 
 
 class MyMainSequence(Sequence):
@@ -15,7 +14,7 @@ class MyMainSequence(Sequence):
 
         # build a list that corresponds to the key words in the dictionary
         instr_list = []
-        for instr, weight in ALU_Int64_instructions.items():
+        for instr, weight in ALU_Int32_instructions.items():
             instr_list.append(instr)
 
         sublist = self.sample(instr_list, 5)
