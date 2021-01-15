@@ -15,7 +15,7 @@
 #
 INSTR_BUILDER=./instruction_builder.py
 GVIMDIFF=/usr/bin/gvimdiff
-INSTALL_DIR=../../../../riscv/arch_data
+INSTALL_DIR=../../../../riscv/arch_data/instr
 
 .PHONY: all
 all:

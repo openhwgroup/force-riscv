@@ -16,7 +16,7 @@
 TEST_BUILDER=./riscv_test_builder.py
 XML_INPUT_DIR=input/xml/
 INSTALL_DIR=../../../../tests/riscv/instructions/
-ARCH_DATA_DIR=../../../../riscv/arch_data/
+ARCH_DATA_DIR=../../../../riscv/arch_data/instr/
 
 .PHONY: all
 all:
