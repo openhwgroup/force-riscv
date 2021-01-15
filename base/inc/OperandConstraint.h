@@ -262,7 +262,7 @@ namespace Force {
     uint64 PC() const { return mPC; } //!< Return PC value.
     bool UsePreamble() const { return mUsePreamble; } //!< Return whether preamble sequence is needed.
     bool NoPreamble() const { return mNoPreamble; } //!< Return whether no-preamble is an abosolute requirement.
-    void SetUsePreamble(Generator& rGen); //!< Set mUsePreamble attribute to true.
+    void SetUsePreamble(cbool usePreamble, const Generator& rGen); //!< Set whether preamble sequence is needed.
     void GetBaseConstraint(uint64 baseValue, uint64 maxAddress, uint32 accessSize, ConstraintSet& rResultConstr) const; //!< Return a ConstraintSet object via reference from the base and access size parameters.
     virtual RegisterOperand* BaseOperand() const { return nullptr; } //!< Return pointer to base operand if applicable.
     virtual RegisterOperand* IndexOperand() const { return nullptr; } //!< Return pointer to register index operand if applicable.
