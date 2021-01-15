@@ -277,7 +277,7 @@ RV64D_instructions = {
 
 RV64D_map = InstructionMap('RV64D_instructions', RV64D_instructions)
 
-ZFH_instructions = {
+ZFH32_instructions = {
     'FLH##RISCV':10,
     'FSH##RISCV':10,    
     'FADD.H#Half-precision#RISCV':10,
@@ -292,13 +292,9 @@ ZFH_instructions = {
     'FMSUB.H#Half-precision#RISCV':10,
     'FNMSUB.H#Half-precision#RISCV':10,
     'FCVT.W.H##RISCV':10,
-    'FCVT.L.H##RISCV':10,
     'FCVT.H.W##RISCV':10,
-    'FCVT.H.L##RISCV':10,
     'FCVT.WU.H##RISCV':10,
-    'FCVT.LU.H##RISCV':10,
     'FCVT.H.WU##RISCV':10,
-    'FCVT.H.LU##RISCV':10,
     'FCVT.S.H##RISCV':10,
     'FCVT.H.S##RISCV':10,
     'FCVT.D.H##RISCV':10,
@@ -316,7 +312,20 @@ ZFH_instructions = {
     'FSGNJX.H##RISCV':10
 }
 
+ZFH32_map = InstructionMap('ZFH32_instructions', ZFH32_instructions)
+
+ZFH64_instructions = {
+    'FCVT.L.H##RISCV':10,
+    'FCVT.H.L##RISCV':10,
+    'FCVT.LU.H##RISCV':10,
+    'FCVT.H.LU##RISCV':10
+}
+
+ZFH64_map = InstructionMap('ZFH64_instructions', ZFH64_instructions)
+
+ZFH_instructions = Merge(ZFH32_instructions, ZFH64_instructions)
 ZFH_map = InstructionMap('ZFH_instructions', ZFH_instructions)
+
 
 RV32M_instructions = {
     'DIV##RISCV':10,

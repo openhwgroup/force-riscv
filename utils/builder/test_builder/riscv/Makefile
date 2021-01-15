@@ -55,6 +55,12 @@ $(XML_INPUT_DIR)v_instructions.xml:
 $(XML_INPUT_DIR)priv_instructions.xml:
 	@cp -f $(ARCH_DATA_DIR)priv_instructions.xml $(XML_INPUT_DIR)
 
+$(XML_INPUT_DIR)zfh_instructions.xml:
+	@cp -f $(ARCH_DATA_DIR)zfh_instructions.xml $(XML_INPUT_DIR)
+
+$(XML_INPUT_DIR)zfh_instructions_rv64.xml:
+	@cp -f $(ARCH_DATA_DIR)zfh_instructions_rv64.xml $(XML_INPUT_DIR)
+
 $(INSTALL_DIR):
 	@mkdir $(INSTALL_DIR)
 
@@ -65,7 +71,8 @@ setup: input output $(XML_INPUT_DIR)
 .PHONY: riscv_tests
 riscv_tests: $(TEST_BUILDER) $(XML_INPUT_DIR)g_instructions.xml $(XML_INPUT_DIR)g_instructions_rv64.xml \
             $(XML_INPUT_DIR)c_instructions.xml $(XML_INPUT_DIR)c_instructions_rv64.xml $(XML_INPUT_DIR)c_instructions_rv32.xml \
-            $(XML_INPUT_DIR)v_instructions.xml $(XML_INPUT_DIR)priv_instructions.xml 
+            $(XML_INPUT_DIR)v_instructions.xml $(XML_INPUT_DIR)priv_instructions.xml \
+            $(XML_INPUT_DIR)zfh_instructions.xml $(XML_INPUT_DIR)zfh_instructions_rv64.xml
 	@$(TEST_BUILDER)
 
 .PHONY: install
