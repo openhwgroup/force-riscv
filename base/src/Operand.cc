@@ -1630,8 +1630,9 @@ namespace Force {
       base_val = baseAddr;
     }
     else {
-      uint64 end_addr = baseAddr + addrRangeSize - 1;
-      base_val = end_addr & get_align_mask(alignment);
+      auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
+      uint64 max_addr = baseAddr + addrRangeSize - lsop_struct->ElementSize();
+      base_val = max_addr & get_align_mask(alignment);
     }
 
     return base_val;
