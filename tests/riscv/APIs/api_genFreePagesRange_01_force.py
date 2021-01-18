@@ -17,9 +17,8 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.InstructionMap import InstructionMap
-from DV.riscv.trees.instruction_tree import *
+from DV.riscv.trees.instruction_tree import LDST_All_instructions, LDST32_All_instructions
 from base.ChoicesModifier import ChoicesModifier
-from DV.riscv.trees.instruction_tree import *
 
 class MainSequence(Sequence):
     """

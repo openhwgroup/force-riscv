@@ -17,8 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.ChoicesModifier import *
-from DV.riscv.trees.instruction_tree import ALU_Int_All_instructions
-from DV.riscv.trees.instruction_tree import ALU_Int32_All_instructions
+from DV.riscv.trees.instruction_tree import ALU_Int_All_instructions, ALU_Int32_All_instructions
 
 ## My Operand Choices Modifier class
 #  the sub ChoicesModifier class for an example

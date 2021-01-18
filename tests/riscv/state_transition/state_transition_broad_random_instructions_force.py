@@ -16,8 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.trees.instruction_tree import RV_G_map
-from DV.riscv.trees.instruction_tree import RV32_G_map
+from DV.riscv.trees.instruction_tree import RV_G_map, RV32_G_map
 import state_transition_test_utils
 from Enums import EStateElementType
 from State import State

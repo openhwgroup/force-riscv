@@ -16,8 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.trees.instruction_tree import ALU_Int_All_instructions
-from DV.riscv.trees.instruction_tree import ALU_Int32_All_instructions
+from DV.riscv.trees.instruction_tree import ALU_Int_All_instructions, ALU_Int32_All_instructions
 
 from riscv.Utils import LoopControl
 

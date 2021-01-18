@@ -16,8 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from DV.riscv.counter.depdenceSequence import depSequence
-from DV.riscv.trees.instruction_tree import LDST_All_instructions
-from DV.riscv.trees.instruction_tree import LDST32_All_instructions
+from DV.riscv.trees.instruction_tree import LDST_All_instructions, LDST32_All_instructions
 import sys
 
 

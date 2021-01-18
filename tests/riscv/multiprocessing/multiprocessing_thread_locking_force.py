@@ -48,9 +48,10 @@ class MainSequence(Sequence):
     def _genSharedLoadInstruction(self, aSharedPhysAddr):
         target_addr = self.genVAforPA(Size=8, Align=8, Type='D', PA=aSharedPhysAddr)
         if (self.getGlobalState('AppRegisterWidth') == 32):
-            instr_id = self.genInstruction('LW##RISCV', {'LSTarget': target_addr})
+            instr = 'LW##RISCV'
         else:
-            instr_id = self.genInstruction('LD##RISCV', {'LSTarget': target_addr})
+            instr = 'LD##RISCV'
+        instr_id = self.genInstruction(instr, {'LSTarget': target_addr})
 
         instr_record = self.queryInstructionRecord(instr_id)
         dest_reg_index = instr_record['Dests']['rd']

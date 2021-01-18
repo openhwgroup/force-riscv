@@ -25,10 +25,10 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         for _ in range(RandomUtils.random32(250, 300)):
-            if (self.getGlobalState('AppRegisterWidth') == 64):
-                instr = RV64I_map.pick(self.genThread)
-            else:
+            if (self.getGlobalState('AppRegisterWidth') == 32):
                 instr = RV32I_map.pick(self.genThread)
+            else:
+                instr = RV64I_map.pick(self.genThread)
             self.genInstruction(instr)
 
 

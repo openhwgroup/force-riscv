@@ -16,8 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.trees.instruction_tree import RV_G_map
-from DV.riscv.trees.instruction_tree import RV32_G_map
+from DV.riscv.trees.instruction_tree import RV_G_map, RV32_G_map
 import RandomUtils
 
 ## This test intentionally returns to an address that will generate a page fault on instruction

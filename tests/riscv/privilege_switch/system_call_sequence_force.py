@@ -17,8 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.ChoicesModifier import ChoicesModifier
-from DV.riscv.trees.instruction_tree import RV_G_instructions
-from DV.riscv.trees.instruction_tree import RV32_G_instructions
+from DV.riscv.trees.instruction_tree import RV_G_instructions, RV32_G_instructions
 import RandomUtils
 
 ## This test evaluates invoking the privilege level switching function of the system call sequence

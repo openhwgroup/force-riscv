@@ -73,12 +73,13 @@ class MainSequence(Sequence):
             load_gpr64_seq = LoadGPR64(self.genThread)
             test_val = RandomUtils.random64()
             load_gpr64_seq.load(src_reg_index, test_val)
-            self.genInstruction('SD##RISCV', {'rs2': src_reg_index, 'LSTarget': aTargetAddr})
+            instr = 'SD##RISCV'
         else:
             load_gpr32_seq = LoadGPR64(self.genThread)
             test_val = RandomUtils.random32()
             load_gpr32_seq.load(src_reg_index, test_val)
-            self.genInstruction('SW##RISCV', {'rs2': src_reg_index, 'LSTarget': aTargetAddr})
+            instr = 'SW##RISCV'
+        self.genInstruction(instr, {'rs2': src_reg_index, 'LSTarget': aTargetAddr})
 
         self.unreserveRegister('x%d' % src_reg_index)
 
@@ -94,9 +95,10 @@ class MainSequence(Sequence):
             self.genInstruction(instr)
 
         if (self.getGlobalState('AppRegisterWidth') == 32):
-            instr_id = self.genInstruction('LW##RISCV', {'LSTarget': aTargetAddr})
+            instr = 'LW##RISCV'
         else:
-            instr_id = self.genInstruction('LD##RISCV', {'LSTarget': aTargetAddr})
+            instr = 'LD##RISCV'
+        instr_id = self.genInstruction(instr, {'LSTarget': aTargetAddr})
 
         instr_record = self.queryInstructionRecord(instr_id)
         dest_reg_index = instr_record['Dests']['rd']

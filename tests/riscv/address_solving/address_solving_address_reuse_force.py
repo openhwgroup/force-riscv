@@ -36,10 +36,10 @@ class MainSequence(Sequence):
             else:
                 instr_params['UsePreamble'] = 1
 
-            if (self.getGlobalState('AppRegisterWidth') == 64):
-                instr_id = self.genInstruction(self.choice(('LD##RISCV', 'SD##RISCV')), instr_params)
-            else:
+            if (self.getGlobalState('AppRegisterWidth') == 32):
                 instr_id = self.genInstruction(self.choice(('LW##RISCV', 'SW##RISCV')), instr_params)
+            else:
+                instr_id = self.genInstruction(self.choice(('LD##RISCV', 'SD##RISCV')), instr_params)
 
             instr_record = self.queryInstructionRecord(instr_id)
             if not addr_constr.containsValue(instr_record['LSTarget']):
