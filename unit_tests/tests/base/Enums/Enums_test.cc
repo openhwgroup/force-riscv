@@ -1785,6 +1785,8 @@ CASE( "tests for EPageGenAttributeType" ) {
       EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::AddrSizeFault) == "AddrSizeFault");
       EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::DataAccessPermission) == "DataAccessPermission");
       EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::InstrAccessPermission) == "InstrAccessPermission");
+      EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::Accessed) == "Accessed");
+      EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::Dirty) == "Dirty");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -1793,6 +1795,8 @@ CASE( "tests for EPageGenAttributeType" ) {
       EXPECT(string_to_EPageGenAttributeType("AddrSizeFault") == EPageGenAttributeType::AddrSizeFault);
       EXPECT(string_to_EPageGenAttributeType("DataAccessPermission") == EPageGenAttributeType::DataAccessPermission);
       EXPECT(string_to_EPageGenAttributeType("InstrAccessPermission") == EPageGenAttributeType::InstrAccessPermission);
+      EXPECT(string_to_EPageGenAttributeType("Accessed") == EPageGenAttributeType::Accessed);
+      EXPECT(string_to_EPageGenAttributeType("Dirty") == EPageGenAttributeType::Dirty);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -1810,6 +1814,10 @@ CASE( "tests for EPageGenAttributeType" ) {
       EXPECT(try_string_to_EPageGenAttributeType("DataAccessPermission", okay) == EPageGenAttributeType::DataAccessPermission);
       EXPECT(okay);
       EXPECT(try_string_to_EPageGenAttributeType("InstrAccessPermission", okay) == EPageGenAttributeType::InstrAccessPermission);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPageGenAttributeType("Accessed", okay) == EPageGenAttributeType::Accessed);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPageGenAttributeType("Dirty", okay) == EPageGenAttributeType::Dirty);
       EXPECT(okay);
     }
 

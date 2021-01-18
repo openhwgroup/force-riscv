@@ -296,7 +296,7 @@ namespace Force {
     case EExceptionConstraintType::TriggerHard:
       hard_constr = true; // fall through
     case EExceptionConstraintType::Trigger:
-      ExceptionTriggeringConstraint(rPagingReq, rVmas, rExceptConstr);
+      ExceptionTriggeringConstraint(rPagingReq, rVmas, rPte.Level(), rExceptConstr);
       break;
     case EExceptionConstraintType::PreventHard:
       hard_constr = true;
@@ -307,7 +307,7 @@ namespace Force {
       break;
     case EExceptionConstraintType::Prevent:
       if (hard_fault_choice) {
-        ExceptionTriggeringConstraint(rPagingReq, rVmas, rExceptConstr);
+        ExceptionTriggeringConstraint(rPagingReq, rVmas, rPte.Level(), rExceptConstr);
       }
       else {
         ExceptionPreventingConstraint(rPagingReq, rVmas, rExceptConstr);
@@ -315,7 +315,7 @@ namespace Force {
       break;
     case EExceptionConstraintType::Allow:
       if (fault_choice) {
-        ExceptionTriggeringConstraint(rPagingReq, rVmas, rExceptConstr);
+        ExceptionTriggeringConstraint(rPagingReq, rVmas, rPte.Level(), rExceptConstr);
       }
       else {
         GetDefaultConstraint(rExceptConstr);
