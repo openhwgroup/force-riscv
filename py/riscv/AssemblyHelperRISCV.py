@@ -121,6 +121,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
         self.mSequence.genInstruction( instr , {'rd': aDestRegIndex, 'rs1': src_reg_index, 'shamt': aShiftAmount})
 
     def getInstrForm(self):
+        self.mSequence.notice(">>>>>>>  AppRegisterWidth is:  {}".format(self.mSequence.getGlobalState('AppRegisterWidth')))
         return "RV32I" if (self.mSequence.getGlobalState("AppRegisterWidth") == 32)  else  "RV64I"
 
     ## Generate an instruction to AND a specified register with an immediate value.

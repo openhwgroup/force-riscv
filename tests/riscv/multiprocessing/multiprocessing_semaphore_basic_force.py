@@ -19,7 +19,7 @@ from base.Sequence import Sequence
 from riscv.GenSemaphoreRISCV import GenSemaphore32RISCV
 from riscv.GenSemaphoreRISCV import GenSemaphore64RISCV
 from riscv.Utils import LoadGPR64
-from DV.riscv.trees.instruction_tree import BranchJump_map, RV_G_map
+from DV.riscv.trees.instruction_tree import BranchJump_map, RV_G_map, RV32_G_map
 import RandomUtils
 
 ## This test is intended to be run with mulitple threads to verify basic functionality of
@@ -30,14 +30,20 @@ class MainSequence(Sequence):
         target_addr_32 = self._genSharedVa('Shared Address 32')
         target_addr_64 = self._genSharedVa('Shared Address 64')
         sema32 = GenSemaphore32RISCV(self.genThread, '32-bit Semaphore', 1)
-        sema64 = GenSemaphore64RISCV(self.genThread, '64-bit Semaphore', 1)
+        if (self.getGlobalState('AppRegisterWidth') == 64):
+            sema64 = GenSemaphore64RISCV(self.genThread, '64-bit Semaphore', 1)
+
         for _ in range(3):
-            (sema, target_addr) = self.choice(((sema32, target_addr_32), (sema64, target_addr_64)))
+            if (self.getGlobalState('AppRegisterWidth') == 64):
+                (sema, target_addr) = self.choice(((sema32, target_addr_32), (sema64, target_addr_64)))
+            else:
+                (sema, target_addr) = (sema32, target_addr_32)
 
             with sema:
                 self._testExclusiveStoreLoad(target_addr)
 
-        sema64.cleanUp()
+        if (self.getGlobalState('AppRegisterWidth') == 64):
+            sema64.cleanUp()
         sema32.cleanUp()
 
     ## Generate a shared PA if one has not already been generated. Then, generate a VA from the
@@ -63,22 +69,35 @@ class MainSequence(Sequence):
         src_reg_index = self.getRandomGPR(exclude='0')
         self.reserveRegister('x%d' % src_reg_index)
 
-        load_gpr64_seq = LoadGPR64(self.genThread)
-        test_val = RandomUtils.random64()
-        load_gpr64_seq.load(src_reg_index, test_val)
-        self.genInstruction('SD##RISCV', {'rs2': src_reg_index, 'LSTarget': aTargetAddr})
+        if (self.getGlobalState('AppRegisterWidth') == 64):
+            load_gpr64_seq = LoadGPR64(self.genThread)
+            test_val = RandomUtils.random64()
+            load_gpr64_seq.load(src_reg_index, test_val)
+            self.genInstruction('SD##RISCV', {'rs2': src_reg_index, 'LSTarget': aTargetAddr})
+        else:
+            load_gpr32_seq = LoadGPR64(self.genThread)
+            test_val = RandomUtils.random32()
+            load_gpr32_seq.load(src_reg_index, test_val)
+            self.genInstruction('SW##RISCV', {'rs2': src_reg_index, 'LSTarget': aTargetAddr})
 
         self.unreserveRegister('x%d' % src_reg_index)
 
         # TODO(Noah): Include branch and jump instructions when the issue with linear blocks
         # overlapping previously generated instructions is resolved.
-        instr_map = RV_G_map - BranchJump_map
+        if (self.getGlobalState('AppRegisterWidth') == 32):
+            instr_map = RV32_G_map - BranchJump_map
+        else:
+            instr_map = RV_G_map - BranchJump_map
 
         for _ in range(RandomUtils.random32(5, 10)):
             instr = instr_map.pick(self.genThread)
             self.genInstruction(instr)
 
-        instr_id = self.genInstruction('LD##RISCV', {'LSTarget': aTargetAddr})
+        if (self.getGlobalState('AppRegisterWidth') == 32):
+            instr_id = self.genInstruction('LW##RISCV', {'LSTarget': aTargetAddr})
+        else:
+            instr_id = self.genInstruction('LD##RISCV', {'LSTarget': aTargetAddr})
+
         instr_record = self.queryInstructionRecord(instr_id)
         dest_reg_index = instr_record['Dests']['rd']
         if dest_reg_index != 0:

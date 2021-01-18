@@ -16,7 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.trees.instruction_tree import RV64I_map
+from DV.riscv.trees.instruction_tree import RV64I_map, RV32I_map
 import RandomUtils
 
 ## This test is intended to be run with mulitple threads to verify that multiprocess generation and
@@ -25,7 +25,10 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         for _ in range(RandomUtils.random32(250, 300)):
-            instr = RV64I_map.pick(self.genThread)
+            if (self.getGlobalState('AppRegisterWidth') == 64):
+                instr = RV64I_map.pick(self.genThread)
+            else:
+                instr = RV32I_map.pick(self.genThread)
             self.genInstruction(instr)
 
 

@@ -31,6 +31,7 @@ control_items = [ {"fname":"rv32/_def_fctrl.py",     "generator" : {"--cfg" : "c
                   {"fname":"instructions/v_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"instructions/priv_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"instructions/priv_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"instructions/zfh_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"paging/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"paging/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"privilege_switch/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
@@ -39,4 +40,10 @@ control_items = [ {"fname":"rv32/_def_fctrl.py",     "generator" : {"--cfg" : "c
                   {"fname":"vector/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"../../examples/riscv/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"bnt/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"register/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"register/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"multiprocessing/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"multiprocessing/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"thread_group/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"thread_group/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                 ]

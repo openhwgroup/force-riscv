@@ -16,7 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-from DV.riscv.trees.instruction_tree import RV_G_map
+from DV.riscv.trees.instruction_tree import RV_G_map, RV32_G_map
 import RandomUtils
 
 ## This test performs some basic checks with thread locking and shared memory.
@@ -47,7 +47,10 @@ class MainSequence(Sequence):
     #  @param aSharedPhysAddr A shared physical address to target with the load instruction.
     def _genSharedLoadInstruction(self, aSharedPhysAddr):
         target_addr = self.genVAforPA(Size=8, Align=8, Type='D', PA=aSharedPhysAddr)
-        instr_id = self.genInstruction('LD##RISCV', {'LSTarget': target_addr})
+        if (self.getGlobalState('AppRegisterWidth') == 32):
+            instr_id = self.genInstruction('LW##RISCV', {'LSTarget': target_addr})
+        else:
+            instr_id = self.genInstruction('LD##RISCV', {'LSTarget': target_addr})
 
         instr_record = self.queryInstructionRecord(instr_id)
         dest_reg_index = instr_record['Dests']['rd']
@@ -58,7 +61,10 @@ class MainSequence(Sequence):
     ## Generate a random number of a wide variety of instructions.
     def _genRandomInstructions(self):
         for _ in range(RandomUtils.random32(0, 10)):
-            instr = RV_G_map.pick(self.genThread)
+            if (self.getGlobalState('AppRegisterWidth') == 32):
+                instr = RV32_G_map.pick(self.genThread)
+            else:
+                instr = RV_G_map.pick(self.genThread)
             self.genInstruction(instr)
 
 

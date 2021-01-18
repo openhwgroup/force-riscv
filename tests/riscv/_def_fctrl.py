@@ -33,6 +33,8 @@ control_items = [ {"fname":"APIs/_def_fctrl.py",     "generator" : {"--cfg" : "c
                   {"fname":"instructions/v_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"instructions/priv_instructions/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"instructions/priv_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
+                  {"fname":"instructions/zfh_instructions/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
+                  {"fname":"instructions/zfh_instructions_rv64/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config32", }},
                   {"fname":"paging/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"paging/_noiss_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
                   {"fname":"privilege_switch/_def_fctrl.py", "generator" : {"--cfg" : "config/riscv.config", }},
