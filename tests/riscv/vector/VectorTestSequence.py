@@ -213,7 +213,7 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrRecord A record of the generated instruction.
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
-        if (self._mTargetAddrConstr is not None) and (not self._mTargetAddrConstr.containsValue(aInstrRecord['LSTarget'])):
+        if (self._mTargetAddrConstr is not None) and (0x2 not in self._getAllowedExceptionCodes(aInstr)) and (not self._mTargetAddrConstr.containsValue(aInstrRecord['LSTarget'])):
             self.error('Target address 0x%x was outside of the specified constraint %s' % (aInstrRecord['LSTarget'], self._mTargetAddrConstr))
 
     ## Get allowed exception codes.

@@ -305,7 +305,7 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
     attr_dict['element-size'] = width
     attr_dict['mem-access'] = 'Write'
 
-    add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorStridedLoadStoreOperand', subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorStridedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
     operand_adjustor.set_vm()
     return True
@@ -426,7 +426,7 @@ def adjust_vd_rs1_rs2_vm(aInstruction):
     attr_dict['element-size'] = width
     attr_dict['mem-access'] = 'Read'
 
-    add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorStridedLoadStoreOperand', subop_dict, attr_dict)
+    add_addressing_operand(aInstruction, None, 'LoadStore', 'VectorStridedLoadStoreOperandRISCV', subop_dict, attr_dict)
 
     operand_adjustor.set_vm()
     return True

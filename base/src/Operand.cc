@@ -459,7 +459,7 @@ namespace Force {
     return clear_register_value(reg_ptr, clear_it);
   }
 
-  void RegisterOperand::AddWriteConstraint(Generator& gen) const
+  void RegisterOperand::AddWriteConstraint(const Generator& gen) const
   {
     auto reg_constr = mpOperandConstraint->CastInstance<RegisterOperandConstraint>();
     reg_constr->AddWriteConstraint(gen, *mpStructure);
@@ -659,15 +659,21 @@ namespace Force {
 
   void AddressingOperand::Generate(Generator& gen, Instruction& instr)
   {
-    if (instr.NoRestriction()) {
-      // front end has setup the details, no need to generate target address etc.
-      BaseGenerate(gen, instr, true);
+    auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
+    bool no_restrict = instr.NoRestriction();
+    if (no_restrict or IsIllegal(instr)) {
+      // TODO(Noah): Implement a choices mechanism that allows for skipping illegal instruction
+      // generation altogether when there is time to do so.
+      // If no restriction is set, then the front end should have set up the details, and there is
+      // no need to generate an address solution. There is also no need to generate an address
+      // solution if all possible results are known to be illegal.
+      addr_constr->SetUsePreamble(false, gen);
+      BaseGenerate(gen, instr, no_restrict);
       return;
     }
 
     AdjustMemoryElementLayout(gen, instr);
 
-    auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     if (not MustGeneratePreamble(gen)) {
       if (GenerateNoPreamble(gen, instr)) {
         LOG(info) << "{AddressingOperand::Generate} generated without preamble" << endl;
@@ -683,7 +689,7 @@ namespace Force {
       }
     }
 
-    addr_constr->SetUsePreamble(gen);
+    addr_constr->SetUsePreamble(true, gen);
     GenerateWithPreamble(gen, instr);
     LOG(info) << "{AddressingOperand::Generate} generated with preamble" << endl;
   }
@@ -988,7 +994,9 @@ namespace Force {
     uint64 untagged_target_address = addr_tagging->UntagAddress(mTargetAddress, false);
 
     vector<uint64> target_addresses;
-    GetTargetAddresses(instr, untagged_target_address, target_addresses);
+    if (not IsIllegal(instr)) {
+      GetTargetAddresses(instr, untagged_target_address, target_addresses);
+    }
 
     bool no_init = false;
     if (instr.NoRestriction() and (not addr_constr->HasDataConstraints())) {
@@ -1622,8 +1630,9 @@ namespace Force {
       base_val = baseAddr;
     }
     else {
-      uint64 end_addr = baseAddr + addrRangeSize - 1;
-      base_val = end_addr & get_align_mask(alignment);
+      auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
+      uint64 max_addr = baseAddr + addrRangeSize - lsop_struct->ElementSize();
+      base_val = max_addr & get_align_mask(alignment);
     }
 
     return base_val;

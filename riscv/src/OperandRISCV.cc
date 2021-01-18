@@ -308,6 +308,48 @@ namespace Force {
     instr_constr->SetVectorLayout(vec_layout);
   }
 
+  bool VectorStridedLoadStoreOperandRISCV::IsIllegal(const Instruction& rInstr)
+  {
+    auto data_opr = dynamic_cast<MultiRegisterOperand*>(GetDataOperand(rInstr));
+    if (data_opr->NumberRegisters() > 8) {
+      return true;
+    }
+
+    return false;
+  }
+
+  Operand* VectorStridedLoadStoreOperandRISCV::GetDataOperand(const Instruction& rInstr) const
+  {
+    Operand* data_opr = nullptr;
+
+    vector<Operand*> operands = rInstr.GetOperands();
+
+    auto itr = find_if(operands.cbegin(), operands.cend(),
+      [](const Operand* pOpr) { return (pOpr->OperandType() == EOperandType::VECREG); });
+
+    if (itr != operands.end()) {
+      data_opr = *itr;
+    }
+    else {
+      LOG(fail) << "{VectorStridedLoadStoreOperandRISCV::GetDataOperand} data operand not found" << endl;
+      FAIL("no-data-operand");
+    }
+
+    return data_opr;
+  }
+
+  bool VectorIndexedLoadStoreOperandRISCV::IsIllegal(const Instruction& rInstr)
+  {
+    auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
+    auto index_opr = dynamic_cast<MultiRegisterOperand*>(indexed_opr_constr->IndexOperand());
+    auto data_opr = dynamic_cast<MultiRegisterOperand*>(GetDataOperand(rInstr));
+    if ((index_opr->NumberRegisters()) > 8 or (data_opr->NumberRegisters() > 8)) {
+      return true;
+    }
+
+    return false;
+  }
+
   void VectorIndexedLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
   {
     Operand* data_opr = GetDataOperand(rInstr);

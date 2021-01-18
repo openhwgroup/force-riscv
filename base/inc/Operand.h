@@ -264,7 +264,7 @@ namespace Force {
 
     bool IsImmediateOperand() const override { return false; }  //!< Indicate if it is an immediate operand
     bool IsRegisterOperand() const override { return true; }   //!< indicate if it is a register operand
-    void AddWriteConstraint(Generator& gen) const; //!< Add write related constraint.
+    void AddWriteConstraint(const Generator& gen) const; //!< Add write related constraint.
     virtual void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
     virtual void GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const; //!< Return the chosen register indices in a ConstraintSet.
     void SetChoiceResultDirect(Generator& gen, Instruction& instr, const std::string& choiceText) override; //!< Set choice result direct overrided.
@@ -486,6 +486,7 @@ namespace Force {
     bool VerifyVirtualAddress(uint64 va, uint64 size, bool isInstr) const; //!< Verify if the virtual address range is usable.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for AddressingOperand.
     virtual uint64 GetAddressingAlignment(uint64 alignment, uint64 dataSize = 0) const { return alignment; } //!< Get addressing alignment.
+    virtual bool IsIllegal(const Instruction& rInstr) { return false; } //!< Return true if the result will yield an illegal instruction regardless of the operands chosen.
   protected:
     uint64 mTargetAddress; //!< Recording the target virtual address,
   private:

@@ -170,8 +170,5 @@ There is a placeholder target directory: [cv32e40p](target/riscvOVPsim_cv32e40p)
 # Near term FORCE_RISCV roadmap
 * Finish support for paging exceptions and control (90%)
 * Support Vector extension 1.0 when the official spec is released.
-* Support for 32-bit RISC-V ISS and ISG (We hope there is some help coming in for this from the open source community).
-* Advanced resource dependency generation.
-* MP/MT support.
 
 
