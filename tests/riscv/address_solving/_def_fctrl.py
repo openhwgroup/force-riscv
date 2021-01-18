@@ -15,4 +15,5 @@
 #
 control_items = [
     {"fname": "*_force.py"},
+    {"fname": "address_solving_basic_load_store_force.py", "generator": {"--options": "\"PrivilegeLevel=1\""}},
 ]

@@ -246,6 +246,7 @@ namespace Force {
       rVmConstraints[uint32(EVmConstraintType::UserAccess)]->AddRange(pPage->Lower(), pPage->Upper());
       break;
     case EDataAccessPermissionType::NoAccess:
+      rVmConstraints[uint32(EVmConstraintType::NoDataAccess)]->AddRange(pPage->Lower(), pPage->Upper());
       break;
     default:
       LOG(fail) << "{VmasControlBlock::CommitPage} unexpected data access permission type: " << EDataAccessPermissionType_to_string(dap_type) << endl;
@@ -273,6 +274,14 @@ namespace Force {
     if (pPage->Lower() == pPage->PhysicalLower())
     {
       rVmConstraints[uint32(EVmConstraintType::FlatMap)]->AddRange(pPage->Lower(), pPage->Upper());
+    }
+
+    if (not pPage->PageGenAttributeDefaultZero(EPageGenAttributeType::Accessed)) {
+      rVmConstraints[uint32(EVmConstraintType::NotAccessed)]->AddRange(pPage->Lower(), pPage->Upper());
+    }
+
+    if(not pPage->PageGenAttributeDefaultZero(EPageGenAttributeType::Dirty)) {
+      rVmConstraints[uint32(EVmConstraintType::NotDirty)]->AddRange(pPage->Lower(), pPage->Upper());
     }
   }
 
