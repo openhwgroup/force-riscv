@@ -20,6 +20,7 @@ PICKY_IGNORE_BLOCK_START
 #include <SimLoader.h>
 PICKY_IGNORE_BLOCK_END
 
+#include <cctype>
 #include <cstring>
 #include <iostream>
 
@@ -36,6 +37,36 @@ namespace Force {
 
 }
 
+namespace {
+
+  using namespace Force;
+
+  uint32 sXlen = 64;  // Integer register width
+  uint32 sFlen = 32;  // Floating-point register width
+
+  uint64 mask_register_to_size(const string& rRegName, cuint64 regVal)
+  {
+    // TODO(Noah): Implement a better way to control logging of register values when there is time
+    // to do so. Handcar always stores sign-extended 64-bit register values even when operating in
+    // 32-bit mode, which causes strange-looking log output. The logic below eliminates the
+    // sign-extension.
+    uint64 masked_reg_val = regVal;
+    if (rRegName[0] == 'f' and isdigit(rRegName[1])) {
+      uint64 mask =  MAX_UINT64 >> (64 - sFlen);
+      masked_reg_val &= mask;
+    }
+    else if (rRegName[0] == 'v' and isdigit(rRegName[1])) {
+      // No need to mask vector registers values
+    }
+    else {
+      uint64 mask =  MAX_UINT64 >> (64 - sXlen);
+      masked_reg_val &= mask;
+    }
+
+    return masked_reg_val;
+  }
+
+}
 
 //!< simulator calls these C functions:
 extern "C" {
@@ -45,24 +76,19 @@ extern "C" {
     return new Force::SimApiHANDCAR();
   }
 
-  int isa_rv32 = 0;
-  
   void update_generator_register(uint32_t cpuid, const char *pRegName, uint64_t rval_in, uint64_t mask, const char *pAccessType)
   {
+    std::string reg_name_copy(pRegName);
+    uint64_t rval = mask_register_to_size(reg_name_copy, rval_in);
+
     //Force demands that fp register names contain implementation specific physical register suffixes. So, just tack on '_0' to fp register names
     //if we can assume that the current design is limited to a max precision of double precision floating point instructions.
-    std::string reg_name_copy(pRegName);
     if(pRegName[0] == 'f' && pRegName[1] < (char)(58))
     {
       reg_name_copy += std::string("_0");
     }
 
-    uint64_t rval = rval_in;
-
-    if ( (reg_name_copy == "PC") && isa_rv32 )             // restrict PC to 32-bits
-      rval &= 0xffffffff;  //  in Rv32 config
-
-    //std::cout << "[update_generator_register] isa_rv32: " << isa_rv32 << " " << reg_name_copy << ": 0x" << std::hex << rval << std::dec << std::endl;
+    //std::cout << "[update_generator_register] reg_name_copy: " << reg_name_copy << ": 0x" << std::hex << rval << std::dec << std::endl;
 
     Force::spSimApiHandle->RecordRegisterUpdate(cpuid, reg_name_copy.c_str(), rval, mask, pAccessType);
   }
@@ -472,13 +498,7 @@ namespace Force {
     GetDisassembly(cpuid, &orval, opcode, disassembly);
 
     ReadRegister(cpuid, "PC", &rval, &rmask);
-
-    // TODO(Noah): Implement a better way to control logging of the PC and other register and memory
-    // values when there is time to do so. For some reason, many values are returned from Handcar
-    // sign-extended to 64 bits when we are operating in 32-bit mode.
-    if (isa_rv32) {
-      rval &= 0xffffffff;
-    }
+    rval = mask_register_to_size("PC", rval);
 
     // step the simulator; simulator returns after all updates recorded...
     if (0 != mpSimDllAPI->step_simulator((int) cpuid, 1, 0)) {
@@ -542,8 +562,12 @@ namespace Force {
       config_stream << " " << rConfig.mSimConfigString;
 
       if (rConfig.mSimConfigString.find("RV32") != string::npos) {
-        isa_rv32 = 1;
+        sXlen = 32;
         cout << "XXX RV32!" << endl;
+      }
+
+      if (rConfig.mSimConfigString.find("D") != string::npos) {
+        sFlen = 64;
       }
     }
 
