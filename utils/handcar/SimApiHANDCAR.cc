@@ -473,6 +473,13 @@ namespace Force {
 
     ReadRegister(cpuid, "PC", &rval, &rmask);
 
+    // TODO(Noah): Implement a better way to control logging of the PC and other register and memory
+    // values when there is time to do so. For some reason, many values are returned from Handcar
+    // sign-extended to 64 bits when we are operating in 32-bit mode.
+    if (isa_rv32) {
+      rval &= 0xffffffff;
+    }
+
     // step the simulator; simulator returns after all updates recorded...
     if (0 != mpSimDllAPI->step_simulator((int) cpuid, 1, 0)) {
       stringstream err_stream;
