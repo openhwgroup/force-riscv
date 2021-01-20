@@ -44,26 +44,72 @@ namespace {
   uint32 sXlen = 64;  // Integer register width
   uint32 sFlen = 32;  // Floating-point register width
 
+  void validate_mask(cuint64 val, cuint32 maskSize)
+  {
+    // Signal error if the bits to be removed by the mask don't represent a sign-extension
+    if (maskSize < 64) {
+      uint64 sign_bits = static_cast<uint64>(static_cast<int64>(val) >> maskSize);
+
+      if ((sign_bits != 0) and (sign_bits != MAX_UINT64)) {
+        stringstream err_stream;
+        err_stream << "Bits above Bit " << dec << (maskSize - 1) << " contain unexpected data in value 0x" << hex << val << "\n";
+        throw SimulationError(err_stream.str());
+      }
+    }
+  }
+
+  uint64 mask_address_to_size(cuint64 addr)
+  {
+    // TODO(Noah): Implement a better way to control logging of address values when there is time to
+    // do so. Handcar always reports sign-extended 64-bit address values even when operating in
+    // 32-bit mode, which causes strange-looking log output. The logic below eliminates the
+    // sign-extension.
+    uint64 mask_size = 64;
+    if (sXlen == 32) {
+      mask_size = 32;
+    }
+
+    // TODO(Noah): Enable validation when the issue with vector indexed address calculations is
+    // resolved. Currently, the entire value of a 64-bit index element is used in the address
+    // calculation, but the spec indicates only the first XLEN bits should be used. The upper bits
+    // get effectively ignored in the mapping, but the VA value still contains those upper bits when
+    // it shouldn't.
+    //validate_mask(addr, mask_size);
+
+    uint64 mask = MAX_UINT64 >> (64 - mask_size);
+
+    return (addr & mask);
+  }
+
   uint64 mask_register_to_size(const string& rRegName, cuint64 regVal)
   {
     // TODO(Noah): Implement a better way to control logging of register values when there is time
     // to do so. Handcar always stores sign-extended 64-bit register values even when operating in
     // 32-bit mode, which causes strange-looking log output. The logic below eliminates the
     // sign-extension.
-    uint64 masked_reg_val = regVal;
+    uint32 mask_size = 64;
     if (rRegName[0] == 'f' and isdigit(rRegName[1])) {
-      uint64 mask =  MAX_UINT64 >> (64 - sFlen);
-      masked_reg_val &= mask;
+      mask_size = sFlen;
     }
     else if (rRegName[0] == 'v' and isdigit(rRegName[1])) {
-      // No need to mask vector registers values
+      // Vector register values can always use full 64-bit mask
     }
     else {
-      uint64 mask =  MAX_UINT64 >> (64 - sXlen);
-      masked_reg_val &= mask;
+      mask_size = sXlen;
     }
 
-    return masked_reg_val;
+    // Handcar sets the xstatus SXL and UXL fields in 32-bit mode even though those fields don't
+    // exist, so we skip validating xstatus because the validation will always fail in 32-bit mode.
+    // Handcar sometimes loads xtval with addresses larger than 32-bits for some vector
+    // instructions, so we skip validating xtval as well.
+    string reg_name_tail = rRegName.substr(1);
+    if ((reg_name_tail != "status") and (reg_name_tail != "tval")) {
+      validate_mask(regVal, mask_size);
+    }
+
+    uint64 mask = MAX_UINT64 >> (64 - mask_size);
+
+    return (regVal & mask);
   }
 
 }
@@ -95,11 +141,13 @@ extern "C" {
 
   void update_generator_memory(uint32_t cpuid, uint64_t virtualAddress, uint32_t memBank, uint64_t physicalAddress, uint32_t size, const char *pBytes, const char *pAccessType)
   {
-    Force::spSimApiHandle->RecordMemoryUpdate(cpuid, virtualAddress, memBank, physicalAddress, size, pBytes, pAccessType);
+    Force::spSimApiHandle->RecordMemoryUpdate(cpuid, mask_address_to_size(virtualAddress), memBank, mask_address_to_size(physicalAddress), size, pBytes, pAccessType);
   }
 
   void update_mmu_event(Force::MmuEvent *event)
   {
+    event->va = mask_address_to_size(event->va);
+    event->pa = mask_address_to_size(event->pa);
     Force::spSimApiHandle->RecordMmuEvent(event);
   }
 
