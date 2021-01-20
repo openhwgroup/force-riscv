@@ -33,9 +33,10 @@ class IGroupByName(object):
         self.instructions.sort(key = lambda x: x.get_full_ID())
         extra_instrs = list()
         for instr in self.instructions:
-            instr_adjustor.adjust_instruction(instr, extra_instrs)
-        for extra_i in extra_instrs:
-            self.add_instruction(extra_i)
+            #instr_adjustor.adjust_instruction(instr, extra_instrs)
+            instr_adjustor.adjust_instruction(instr)
+        #for extra_i in extra_instrs:
+            #self.add_instruction(extra_i)
 
     def sort_instructions(self):
         self.instructions.sort(key=lambda x: x.get_full_ID())

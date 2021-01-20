@@ -13,13 +13,116 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from shared.instruction import Operand
+from shared.instruction import Operand, add_addressing_operand
+
+def adjust_gpr_operand(aOpr, aAccess, aType, aSize):
+    aOpr.access = aAccess
+    aOpr.type = aType
+    if aType == 'GPR':
+        aOpr.choices = 'GPRs'
+    elif aType == 'FPR':
+        set_fpr_choices(aOpr, aSize)
+
+def adjust_imm_operand(aOpr, aSigned, aSize, aBits=None):
+    if aSigned:
+        aOpr.set_attribute('class', 'SignedImmediateOperand')
+        aOpr.name = '{}{}'.format('simm', aSize)
+    else:
+        aOpr.name = '{}{}'.format('imm', aSize)
+    
+    if aBits is not None:
+        aOpr.bits = aBits
+
+def adjust_rm_operand(aOpr):
+    aOpr.type = 'Choices'
+    aOpr.choices = 'Rounding mode'
+
+def adjust_csr_operand(aOpr):
+    aOpr.type = 'SysReg'
+    aOpr.access = 'ReadWrite'
+    aOpr.choices = 'System registers'
+
+def set_fpr_choices(aOpr, aSize):
+    if aSize == 2:
+        aOpr.choices = '16-bit SIMD/FP registers'
+    elif aSize == 4:
+        aOpr.choices = '32-bit SIMD/FP registers'
+    elif aSize == 8:
+        aOpr.choices = '64-bit SIMD/FP registers'
+    elif aSize == 16:
+        aOpr.choices = '128-bit SIMD/FP registers'
+
+def gen_asm_operand(aInstr):
+    for opr in aInstr.operands:
+        aInstr.asm.format += ' %s,'
+        aInstr.asm.ops.append(opr.name)
+
+    aInstr.asm.format = aInstr.asm.format[:-1] #remove trailing comma
+
+def fp_operand_size(aSize):
+    if 'H' in aSize:
+        return 2
+    elif 'S' in aSize:
+        return 4
+    elif 'D' in aSize:
+        return 8
+    elif 'Q' in aSize:
+        return 16
+
+    return 0 #error case, should fail
+
+def int_ldst_size(aSize):
+    if 'B' in aSize:
+        return 1
+    elif 'H' in aSize:
+        return 2
+    elif 'W' in aSize:
+        return 4
+    elif 'D' in aSize:
+        return 8
+
+    return 0 #error case, should fail
+
+def int_ldst_access(aAccess):
+    if 'L' in aAccess:
+        return 'Read'
+    elif 'S' in aAccess:
+        return 'Write'
+    
+    return '' #error case, should fail
+
+#returns size of reg, and whether the char passed represents an int or gpr reg
+def src_dst_size_regtype(aInstr, aSize):
+    if 'H' in aSize:
+        return (2, True) 
+    elif 'W' in aSize:
+        if aInstr.name.startswith('FMV'):
+            return (4, True)
+        elif aInstr.name.startswith('FCVT'):
+            return (4, False)
+    elif 'S' in aSize:
+        return (4, True)
+    elif 'D' in aSize:
+        return (8, True)
+    elif 'Q' in aSize:
+        return (16, True)
+    elif aSize in ['X', 'L']:
+        return (8, False)
+    
+    return (0, False) #error case, should fail
+
+#TODO determine if we need other reg/imm than rs1 simm12
+def add_bols_addressing_operand(aInstr, aOpr, aAccess, aSize):
+    attr_dict = {'offset_scale': '0', 'alignment': aSize, 'base': 'rs1', 'data-size': aSize, 'element-size': aSize, 'mem-access': aAccess}
+    subop_dict = {'base': 'rs1', 'offset': 'simm12'}
+    add_addressing_operand(aInstr, None, 'LoadStore', None, subop_dict, attr_dict)
 
 class OperandAdjustor(object):
 
     def __init__(self, instr):
         self.mInstr = instr
         self.mAsmOpCount = 0
+
 
     def adjust_reg_opr(self, oprName, regType, size, access):
         opr = self.mInstr.find_operand(oprName)
@@ -79,7 +182,7 @@ class OperandAdjustor(object):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Nonzero GPRs"
         self.add_asm_op(aSrcOpr)
-        
+
     def set_rs2_int(self):
         rs2_opr = self.mInstr.find_operand("rs2")
         rs2_opr.access = "Read"
@@ -218,7 +321,7 @@ class OperandAdjustor(object):
         const_bits.merge_operand(aOtherConst)
         const_bits.update_bits_value()
         self.mInstr.operands.remove(aOtherConst)
-        
+
     ########################################
     # C extension operands
     #
@@ -237,7 +340,7 @@ class OperandAdjustor(object):
         reg_opr = self.mInstr.find_operand("rd'")
         reg_opr.access = "Write"
         self.set_reg_prime_dp(reg_opr)
-        
+
     def set_rs2p_int(self):
         reg_opr = self.mInstr.find_operand("rs2'")
         reg_opr.access = "Read"
@@ -247,12 +350,12 @@ class OperandAdjustor(object):
         reg_opr = self.mInstr.find_operand("rs2'")
         reg_opr.access = "Read"
         self.set_reg_prime_dp(reg_opr)
-        
+
     def set_rs1p_int(self):
         reg_opr = self.mInstr.find_operand("rs1'")
         reg_opr.access = "Read"
         self.set_reg_prime_int(reg_opr)
-        
+
     def set_reg_prime_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Prime GPRs"
@@ -263,12 +366,12 @@ class OperandAdjustor(object):
         aSrcOpr.type = "FPR"
         aSrcOpr.choices = "Prime 64-bit SIMD/FP registers"
         self.add_asm_op(aSrcOpr)
-    
+
     def set_reg_not02_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "GPRs not x0, x2"
         self.add_asm_op(aSrcOpr)
-        
+
     def merge_imm_5_4_0(self):
         self.mInstr.remove_operand("imm[5]")
         imm_4_0 = self.mInstr.find_operand("imm[4:0]")
@@ -293,13 +396,13 @@ class OperandAdjustor(object):
         reg_opr.name = "rs1"
         reg_opr.access = "Read"
         self.set_reg_nonzero_int(reg_opr)
-        
+
     def set_rs2_nonzero_int(self):
         reg_opr = self.mInstr.find_operand("rs2$\\neq$0")
         reg_opr.name = "rs2"
         reg_opr.access = "Read"
         self.set_reg_nonzero_int(reg_opr)
-        
+
     def set_rd_not02_int(self):
         reg_opr = self.mInstr.find_operand("rd$\\neq$$\\{0,2\\}$")
         reg_opr.name = "rd"
@@ -310,7 +413,7 @@ class OperandAdjustor(object):
         aSrcOpr.oclass = "ImmediateExcludeOperand"
         aSrcOpr.exclude = "0"
         self.add_asm_op(aSrcOpr)
-        
+
     def merge_nzimm_17_16_12(self):
         self.mInstr.remove_operand("nzimm[17]")
         imm_16_12 = self.mInstr.find_operand("nzimm[16:12]")
