@@ -347,6 +347,8 @@ namespace Force {
       auto usable_constr = mem_man->GetMemoryBank(mem_bank)->Usable();
       auto pa_var = mpGenerator->GetVariable("System Physical Address Range", EVariableType::String);
       ConstraintSet min_ps_constr(pa_var);
+      min_ps_constr.ApplyConstraintSet(*(hm_req->MemoryRangesConstraint()));
+
       PaGenerator pa_gen(usable_constr);
       ret_pa = pa_gen.GenerateAddress(hm_req->Align(), size, is_instr, &min_ps_constr);
     }

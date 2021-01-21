@@ -16,6 +16,7 @@
 from base.Env import Env, GlobalInitSequence
 from riscv.ThreadSplitterSequence import ThreadSplitterSequence
 import riscv.PcConfig as PcConfig
+from Constraint import ConstraintSet
 
 ## GlobalInitSeqRISCV class
 # Return arch specific information to base GlobalInitSequence class
@@ -34,8 +35,12 @@ class GlobalInitSeqRISCV(GlobalInitSequence):
             self.setGlobalState("ResetPC", PcConfig.get_base_initial_pc())
 
     def allocateHandlerSetMemory(self):
+        # Need to ensure the handler memory doesn't intersect the boot region
+        handler_memory_constr = ConstraintSet(0, 0xFFFFFFFFFFFFFFFF)
+        handler_memory_constr.subRange(PcConfig.get_base_boot_pc(), (PcConfig.get_base_boot_pc() + PcConfig.get_boot_region_size() - 1))
+
         handler_memory_size = self.getHandlerMemorySize()
-        self.virtualMemoryRequest("PhysicalRegion", {"RegionType":"HandlerMemory", "Size":handler_memory_size, "Align":0x10000, "Type":'I', "Bank":0})
+        self.virtualMemoryRequest("PhysicalRegion", {"RegionType":"HandlerMemory", "Size":handler_memory_size, "Align":0x10000, "Type":'I', "Bank":0, "Range":str(handler_memory_constr)})
 
     def setupMemoryFillPattern(self):
         fill_pattern, valid = self.genThread.getOption("MemoryFillPattern")
