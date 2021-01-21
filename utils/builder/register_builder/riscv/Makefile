@@ -16,7 +16,7 @@
 REGISTER_BUILDER=./register_builder.py
 CSR_TREES_BUILDER=./csr_trees_builder.py
 
-INSTALL_DIR=../../../../riscv/arch_data
+INSTALL_DIR=../../../../riscv/arch_data/reg
 TREES_INSTALL_DIR=../../../../py/DV/riscv/trees
 
 .PHONY: all
