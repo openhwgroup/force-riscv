@@ -21,7 +21,7 @@ def force_root():
         # split the path into a head and a tail
         my_head, my_tail = os.path.split( my_path )
         # was the app path found, return the head which will be the app root
-        if os.path.exists( my_head + "/config/force.config" ):
+        if os.path.exists( my_head + "/config/riscv_rv64.config" ):
             return str( my_head )
         # not found has the root been reached?
         if my_head == "/":

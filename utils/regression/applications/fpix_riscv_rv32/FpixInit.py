@@ -34,10 +34,10 @@ class FpixCmdLineOptions(object):
                                       "- Specify Fpix ISS .so path.  When present, overrides the default simulator path\nIf not present then the \"ISS_SO_PATH\" environmental variable is used.\nIf the environmental variable does not exist then the default is used.\nIf a relative path is specified that path is calculated in the same manner as the default above",  \
                                       None, "ISS_SO_PATH"),
                  AppPathCmdLineOption('fpix_path',  "../../fpix/bin/fpix_riscv", 1, None, \
-                                      "- Specify Fpix executable path.  When present, overrides the default Fpix executable path ../../fpix/bin/fpix_riscv",  \
+                                      "- Specify Fpix executable path.  When present, overrides the default Fpix executable path",  \
                                       None, None),
-                 AppPathCmdLineOption('cfg',  "../../fpix/config/riscv.config32", 1, None, \
-                                      "- Specify Fpix additional config path.  When present, overrides the default Fpix executable path ../../fpix/config/riscv.config",  \
+                 AppPathCmdLineOption('cfg',  "../../fpix/config/riscv_rv32.config", 1, None, \
+                                      "- Specify Fpix additional config path.",  \
                                       None, None),
                 AppCmdLineOption(    'skip',     '',                 0, {"action":"store_true"}, "- When present, the Fpix simulator driver does not run even though it may be an included module"),
                  ]

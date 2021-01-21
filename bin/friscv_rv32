@@ -5,6 +5,4 @@ SCRIPTPATH=$(readlink -f "$0")
 FORCE_BIN=$(dirname "$SCRIPTPATH")
 FORCE_HOME=$(dirname $FORCE_BIN)
 
-$FORCE_BIN/friscv --cfg $FORCE_HOME/config/riscv.config32 $*
-
-
+$FORCE_BIN/friscv --cfg $FORCE_HOME/config/riscv_rv32.config $*

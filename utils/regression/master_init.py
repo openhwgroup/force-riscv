@@ -67,13 +67,13 @@ class CommandLineParameters(object):
                                                                                  "  option can   be a full path or a relative path from the master run directory.\n"
                                                                                  "  If a path was specified as part of the control file name on the command line this\n"
                                                                                  "  option is ignored."],
-        ["-c"            , "--config="      , 1, {"metavar":""}                , "- When present, overrides the default config file name, \"_def_fcfg.py\", located\n"
-                                                                                 "  in the config directory   which is found in the module directory which equates\n"
-                                                                                 "  to the location of Master Run. A custom config file   may be substituted by\n"
+        ["-c"            , "--config="      , 1, {"metavar":""}                , "- When present, overrides the default config file name, \"_riscv_rv64_fcfg.py\",\n"
+                                                                                 "  located in the config directory which is found in the module directory which\n"
+                                                                                 "  equates to the location of Master Run. A custom config file may be substituted by\n"
                                                                                  "  specifying a new file name or providing a full path to the desired config file.\n"
-                                                                                 "  If a   config file is not located then the default config file is used. If that\n"
-                                                                                 "  file does not exist then default   values are used.   NOTE: Due to the complex\n"
-                                                                                 "  configurations possible relative paths are not supported at this time."],
+                                                                                 "  If a config file is not located, then the default config file is used. If that\n"
+                                                                                 "  file does not exist, then default values are used. NOTE: Due to the complex\n"
+                                                                                 "  configurations possible, relative paths are not supported at this time."],
         ["-r"            , "--num-runs="    , 1, {"default":1, "metavar":""}   , "- Number of times to repeat the entire process control file or a control\n"
                                                                                  "  template, this cannot be specified   in the control file, to repeat a control\n"
                                                                                  "  item line specify iterations in the options tag"],
@@ -264,7 +264,7 @@ class Defaults(object):
     process = "write-only"
     fctrl_name = "_def_fctrl.py"      # default control file
     fctrl_dir = "../../tests"         # location of the default control file relative to master run
-    fcfg_name = "_def_riscv_fcfg.py"  # default config file
+    fcfg_name = "_riscv_rv64_fcfg.py" # default config file
     run_name = "forrest_run.py"       # default processing client
     run_dir = "."                     # default processing client location
     run_launcher = "local"            # default launch mode for the client processor
