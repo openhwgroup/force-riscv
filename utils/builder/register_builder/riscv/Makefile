@@ -62,10 +62,10 @@ register_field_choices: $(REGISTER_BUILDER)
 .PHONY: install
 install:
 	@echo 'Building Registers: installing register files'
-	@cp -f output/app_registers_rv64.xml $(INSTALL_DIR)/app_registers.xml
-	@cp -f output/system_registers_rv64.xml $(INSTALL_DIR)/system_registers.xml
-	@cp -f output/system_register_choices_rv64.xml $(INSTALL_DIR)/system_register_choices.xml
-	@cp -f output/register_field_choices_rv64.xml $(INSTALL_DIR)/register_field_choices.xml
+	@cp -f output/app_registers_rv64.xml $(INSTALL_DIR)/app_registers_rv64.xml
+	@cp -f output/system_registers_rv64.xml $(INSTALL_DIR)/system_registers_rv64.xml
+	@cp -f output/system_register_choices_rv64.xml $(INSTALL_DIR)/system_register_choices_rv64.xml
+	@cp -f output/register_field_choices_rv64.xml $(INSTALL_DIR)/register_field_choices_rv64.xml
 	@cp -f output/app_registers_rv32.xml $(INSTALL_DIR)/app_registers_rv32.xml
 	@cp -f output/system_registers_rv32.xml $(INSTALL_DIR)/system_registers_rv32.xml
 	@cp -f output/system_register_choices_rv32.xml $(INSTALL_DIR)/system_register_choices_rv32.xml
