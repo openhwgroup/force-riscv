@@ -15,12 +15,14 @@
 #
 from shared.instruction import Operand, add_addressing_operand
 
-def adjust_gpr_operand(aOpr, aAccess, aType, aSize):
+def adjust_gpr_operand(aOpr, aAccess, aType, aSize, aChoices=None):
     aOpr.access = aAccess
     aOpr.type = aType
-    if aType == 'GPR':
+    if aChoices is not None:
+        aOpr.choices = aChoices;
+    elif 'GPR' in aType:
         aOpr.choices = 'GPRs'
-    elif aType == 'FPR':
+    elif 'FPR' in aType:
         set_fpr_choices(aOpr, aSize)
 
 def adjust_imm_operand(aOpr, aSigned, aSize, aBits=None):
@@ -29,7 +31,7 @@ def adjust_imm_operand(aOpr, aSigned, aSize, aBits=None):
         aOpr.name = '{}{}'.format('simm', aSize)
     else:
         aOpr.name = '{}{}'.format('imm', aSize)
-    
+
     if aBits is not None:
         aOpr.bits = aBits
 
@@ -53,11 +55,12 @@ def set_fpr_choices(aOpr, aSize):
         aOpr.choices = '128-bit SIMD/FP registers'
 
 def gen_asm_operand(aInstr):
-    for opr in aInstr.operands:
-        aInstr.asm.format += ' %s,'
-        aInstr.asm.ops.append(opr.name)
+    if aInstr.operands:
+        for opr in aInstr.operands:
+            aInstr.asm.format += ' %s,'
+            aInstr.asm.ops.append(opr.name)
 
-    aInstr.asm.format = aInstr.asm.format[:-1] #remove trailing comma
+        aInstr.asm.format = aInstr.asm.format[:-1] #remove trailing comma
 
 def fp_operand_size(aSize):
     if 'H' in aSize:
@@ -88,13 +91,13 @@ def int_ldst_access(aAccess):
         return 'Read'
     elif 'S' in aAccess:
         return 'Write'
-    
+
     return '' #error case, should fail
 
 #returns size of reg, and whether the char passed represents an int or gpr reg
 def src_dst_size_regtype(aInstr, aSize):
     if 'H' in aSize:
-        return (2, True) 
+        return (2, True)
     elif 'W' in aSize:
         if aInstr.name.startswith('FMV'):
             return (4, True)
@@ -108,14 +111,37 @@ def src_dst_size_regtype(aInstr, aSize):
         return (16, True)
     elif aSize in ['X', 'L']:
         return (8, False)
-    
+
     return (0, False) #error case, should fail
 
-#TODO determine if we need other reg/imm than rs1 simm12
-def add_bols_addressing_operand(aInstr, aOpr, aAccess, aSize):
-    attr_dict = {'offset_scale': '0', 'alignment': aSize, 'base': 'rs1', 'data-size': aSize, 'element-size': aSize, 'mem-access': aAccess}
-    subop_dict = {'base': 'rs1', 'offset': 'simm12'}
+def add_bols_addr_operand(aInstr, aOprName, aOffsetName, aAccess, aSize, aScale):
+    attr_dict = {'offset-scale': aScale, 'alignment': aSize, 'base': aOprName, 'data-size': aSize, 'element-size': aSize, 'mem-access': aAccess}
+    subop_dict = {'base': aOprName, 'offset': aOffsetName}
     add_addressing_operand(aInstr, None, 'LoadStore', None, subop_dict, attr_dict)
+
+def add_amo_addr_operand(aInstr, aOprName, aAccess, aSize, aOrder):
+    attr_dict = {'alignment': aSize, 'base': aOprName, 'data-size': aSize, 'element-size': aSize, 'mem-access': aAccess}
+    if 'Read' in aAccess:
+        attr_dict['lorder'] = aOrder
+    if 'Write' in aAccess:
+        attr_dict['sorder'] = aOrder
+    subop_dict = {'base': aOprName}
+    add_addressing_operand(aInstr, None, 'LoadStore', None, subop_dict, attr_dict)
+
+def add_pc_rel_branch_operand(aInstr, aOprName, aScale):
+    attr_dict = {'offset-scale': aScale}
+    subop_dict = {'offset': aOprName}
+    add_addressing_operand(aInstr, None, 'Branch', 'PcRelativeBranchOperand', subop_dict, attr_dict)
+
+def add_bo_branch_operand(aInstr, aOprName, aOffsetName, aScale):
+    attr_dict = {'base': aOprName, 'offset-scale': aScale}
+    subop_dict = {'base': aOprName, 'offset': aOffsetName}
+    add_addressing_operand(aInstr, None, 'Branch', 'BaseOffsetBranchOperand', subop_dict, attr_dict)
+
+def add_cond_branch_operand(aInstr, aOprName, aScale):
+    attr_dict = {'offset-scale': aScale, 'condition': aInstr.name}
+    subop_dict = {'offset': aOprName}
+    add_addressing_operand(aInstr, None, 'Branch', 'ConditionalBranchOperandRISCV', subop_dict, attr_dict)
 
 class OperandAdjustor(object):
 
