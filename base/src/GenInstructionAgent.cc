@@ -393,10 +393,10 @@ namespace Force {
     for (auto const update : regUpdates) {
       if (update.access_type == "write") {
         if (update.regname == "PC") {
-	  LOG(info) << "{GenInstructionAgent::UpdateRegisterFromSimulation} PC: 0x" << std::hex << update.rval << std::dec << std::endl;
           auto gen_pc = mpGenerator->GetGenPC();
           gen_pc->SetAligned(update.rval);
           targetPC = update.rval;
+
           if (mpGenerator->InLoop()) {
             SendNotification(ENotificationType::PCUpdate);
           }
