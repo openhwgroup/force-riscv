@@ -26,7 +26,12 @@
 #                                                                             #
 ###############################################################################
 
-import sys, traceback, os, signal, argparse
+# Make third-party modules available for import
+import sys
+from common.path_utils import PathUtils
+sys.path.append(PathUtils.real_path('../../3rd_party/py'))
+
+import traceback, os, signal, argparse
 from force_init import the_force_root
 
 from forrest_init import Modes, CmdLine, Defaults, CommandLineParameters
@@ -36,7 +41,6 @@ from forrest_init import Modes, CmdLine, Defaults, CommandLineParameters
 
 from classes.module_run import ModuleRun
 
-from common.path_utils import PathUtils
 from common.msg_utils import Msg
 from common.sys_utils import SysUtils
 
