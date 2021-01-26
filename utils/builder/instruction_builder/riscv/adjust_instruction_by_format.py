@@ -573,7 +573,7 @@ def adjust_csr_rs1(instr):
 
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
-    csr_opr.access = "Write"
+    csr_opr.access = "ReadWrite"
     csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 
@@ -595,7 +595,7 @@ def adjust_csr_imm(instr):
 
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
-    csr_opr.access = "Write"
+    csr_opr.access = "ReadWrite"
     csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 

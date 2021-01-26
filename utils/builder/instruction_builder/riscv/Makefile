@@ -48,6 +48,11 @@ v_instructions: $(INSTR_BUILDER) input/v_instructions_starter.xml
 	@echo 'Building Instructions: v-ext'
 	@$(INSTR_BUILDER) --v-ext
 
+.PHONY: zfh_instructions
+zfh_instructions: $(INSTR_BUILDER) input/zfh_instructions_starter.xml input/rv64zfh_instructions_starter.xml
+	@echo 'Building Instructions: zfh-ext'
+	@$(INSTR_BUILDER) --zfh-ext
+
 .PHONY: priv_instructions
 priv_instructions: $(INSTR_BUILDER) input/priv_instructions_starter.xml
 	@echo 'Building Instructions: priv'
@@ -56,10 +61,14 @@ priv_instructions: $(INSTR_BUILDER) input/priv_instructions_starter.xml
 .PHONY: install
 install:
 	@echo 'Building Instructions: installing instruction files'
-	@cp -f output/supported_riscv_instructions.xml $(INSTALL_DIR)/riscv_instructions.xml
+	@cp -f output/supported_riscv_instructions.xml $(INSTALL_DIR)/g_instructions.xml
+	@cp -f output/rv64i_supported_instructions.xml $(INSTALL_DIR)/g_instructions_rv64.xml
 	@cp -f output/supported_c_instructions.xml $(INSTALL_DIR)/c_instructions.xml
-	@cp -f output/supported_rv64only_c_instructions.xml $(INSTALL_DIR)/c_instructions_rv64only.xml
+	@cp -f output/rv32c_supported_instructions.xml $(INSTALL_DIR)/c_instructions_rv32.xml
+	@cp -f output/supported_rv64only_c_instructions.xml $(INSTALL_DIR)/c_instructions_rv64.xml
 	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
+	@cp -f output/supported_zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions.xml
+	@cp -f output/supported_rv64zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions_rv64.xml
 	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
 
 .PHONY: diff

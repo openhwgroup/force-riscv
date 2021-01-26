@@ -25,6 +25,7 @@ def usage():
   --main     output the main instruction file.
   --c-ext    output the c-extension instruction file.
   --v-ext    output the v-extension instruction file.
+  --zfh-ext  output the zfh-extension instruction file.
   --priv     output the privileged instruction file.
   -h, --help print this help message
 Example:
@@ -73,7 +74,7 @@ def process_instruction_file(aInputFile, aOutputFile, aSupportedFile, aAdjustByF
 
 def build_instructions():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "main", "c-ext", "v-ext", "priv"])
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "main", "c-ext", "v-ext", "zfh-ext", "priv"])
     except getopt.GetoptError as err:
         print (err)
         usage()
@@ -83,6 +84,7 @@ def build_instructions():
     c_ext_only = False
     main_only = False
     v_ext_only = False
+    zfh_ext_only = False
     priv_only = False
 
     for o, a in opts:
@@ -94,6 +96,9 @@ def build_instructions():
             output_all = False
         elif o == "--v-ext":
             v_ext_only = True
+            output_all = False
+        elif o == "--zfh-ext":
+            zfh_ext_only = False
             output_all = False
         elif o == "--priv":
             priv_only = True
@@ -127,6 +132,10 @@ def build_instructions():
 
     if output_all or v_ext_only:
         process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
+
+    if output_all or zfh_ext_only:
+        process_instruction_file("input/zfh_instructions_starter.xml", "output/zfh_instructions.xml", "output/supported_zfh_instructions.xml", adjust_instruction_by_format)
+        process_instruction_file("input/rv64zfh_instructions_starter.xml", "output/rv64zfh_instructions.xml", "output/supported_rv64zfh_instructions.xml", adjust_instruction_by_format)
 
     if output_all or priv_only:
         process_instruction_file("input/priv_instructions_starter.xml", "output/priv_instructions.xml", "output/supported_priv_instructions.xml", priv_adjust_instruction_by_format)

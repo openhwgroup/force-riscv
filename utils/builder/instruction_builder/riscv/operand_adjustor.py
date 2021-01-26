@@ -233,6 +233,11 @@ class OperandAdjustor(object):
         reg_opr.access = "Write"
         self.set_reg_prime_int(reg_opr)
 
+    def set_rdp_sp(self):
+        reg_opr = self.mInstr.find_operand("rd'")
+        reg_opr.access = "Write"
+        self.set_reg_prime_sp(reg_opr)
+
     def set_rdp_dp(self):
         reg_opr = self.mInstr.find_operand("rd'")
         reg_opr.access = "Write"
@@ -242,6 +247,11 @@ class OperandAdjustor(object):
         reg_opr = self.mInstr.find_operand("rs2'")
         reg_opr.access = "Read"
         self.set_reg_prime_int(reg_opr)
+
+    def set_rs2p_sp(self):
+        reg_opr = self.mInstr.find_operand("rs2'")
+        reg_opr.access = "Read"
+        self.set_reg_prime_sp(reg_opr)
 
     def set_rs2p_dp(self):
         reg_opr = self.mInstr.find_operand("rs2'")
@@ -257,6 +267,11 @@ class OperandAdjustor(object):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Prime GPRs"
         aSrcOpr.oclass = "CompressedRegisterOperandRISCV"
+        self.add_asm_op(aSrcOpr)
+
+    def set_reg_prime_sp(self, aSrcOpr):
+        aSrcOpr.type = "FPR"
+        aSrcOpr.choices = "Prime 32-bit SIMD/FP registers"
         self.add_asm_op(aSrcOpr)
 
     def set_reg_prime_dp(self, aSrcOpr):

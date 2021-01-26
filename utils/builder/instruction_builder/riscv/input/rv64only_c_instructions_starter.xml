@@ -18,6 +18,19 @@
 Starter information for RISCV C extension instructions that decode correctly ONLY in 64 bit configurations.
 -->
 <instruction_file>
+  <I name="C.ADDIW" isa="RISCV" group="General" extension="RV64C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
+    <O name="imm[5]" type="Immediate" bits="12-12"/>
+    <O name="rs1/rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="imm[4:0]" type="Immediate" bits="6-2"/>
+    <asm format="C.ADDIW"/>
+  </I>
+  <I name="C.ADDW" isa="RISCV" group="General" extension="RV64C">
+    <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110101"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
+    <asm format="C.ADDW"/>
+  </I>
   <I name="C.LD" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01100"/>
     <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
@@ -75,5 +88,11 @@ Starter information for RISCV C extension instructions that decode correctly ONL
     <O name="uimm[5:4|9:6]" type="Immediate" bits="12-7"/>
     <O name="rs2" type="Register" bits="6-2"/>
     <asm format="C.SQSP"/>
+  </I>
+  <I name="C.SUBW" isa="RISCV" group="General" extension="RV64C">
+    <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110001"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
+    <asm format="C.SUBW"/>
   </I>
 </instruction_file>

@@ -817,7 +817,7 @@
     </O>
     <asm format="SB %s, %s, %s" op1="rs2" op2="rs1" op3="simm12"/>
   </I>
-  <I name="SC.W" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV32A">
+  <I name="SC.W" isa="RISCV" class="UnpredictStoreInstruction" group="General" extension="RV32A">
     <O name="const_bits" type="Constant" bits="31-27,14-12,6-0" value="000110100101111"/>
     <O name="aq" type="Immediate" bits="26-26"/>
     <O name="rl" type="Immediate" bits="25-25"/>

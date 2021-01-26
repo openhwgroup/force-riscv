@@ -54,20 +54,4 @@
     <asm format="C.JAL"/>
   </I>
   
-<I name="C.SRAI" isa="RISCV" group="General" extension="RV32C">
-    <O name="const_bits" type="Constant" bits="15-13,11-10,1-0" value="1000101"/>
-    <O name="nzuimm[5]" type="Immediate" bits="12-12"/>
-    <O name="rs1'/rd'" type="Register" bits="9-7"/>
-    <O name="nzuimm[4:0]" type="Immediate" bits="6-2"/>
-    <asm format="C.SRAI"/>
-  </I>
-  
-<I name="C.SRLI" isa="RISCV" group="General" extension="RV32C">
-    <O name="const_bits" type="Constant" bits="15-13,11-10,1-0" value="1000001"/>
-    <O name="nzuimm[5]" type="Immediate" bits="12-12"/>
-    <O name="rs1'/rd'" type="Register" bits="9-7"/>
-    <O name="nzuimm[4:0]" type="Immediate" bits="6-2"/>
-    <asm format="C.SRLI"/>
-  </I>
-  
 </instruction_file>
