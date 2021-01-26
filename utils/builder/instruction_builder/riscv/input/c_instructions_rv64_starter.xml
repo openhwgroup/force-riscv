@@ -17,56 +17,46 @@
 <instruction_file>
   <I name="C.ADDIW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
-    <O name="rd" type="GPR" bits="11-7" access="ReadWrite" choices="Nonzero GPRs"/>
+    <O name="rd" type="GPR" bits="11-7"/>
     <O name="imm6" type="Immediate" bits="12,6-2"/>
     <asm format="C.ADDIW %s, %s" op1="rd" op2="imm6"/>
   </I>
   <I name="C.ADDW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110101"/>
-    <O name="rd'" type="GPR" bits="9-7" access="ReadWrite" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-    <O name="rs2'" type="GPR" bits="4-2" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
+    <O name="rd'" type="GPR" bits="9-7"/>
+    <O name="rs2'" type="GPR" bits="4-2"/>
     <asm format="C.ADDW %s, %s" op1="rd'" op2="rs2'"/>
   </I>
   <I name="C.LD" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01100"/>
-    <O name="rd'" type="GPR" bits="4-2" access="Write" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-    <O name="LoadStore-rs1'-imm5" type="LoadStore" alignment="8" base="rs1'" data-size="8" element-size="8" mem-access="Read" offset="imm5" offset-scale="3">
-      <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-      <O name="imm5" type="Immediate" bits="6-5,12-10"/>
-    </O>
+    <O name="rd'" type="GPR" bits="4-2"/>
+    <O name="rs1'" type="GPR" bits="9-7"/>
+    <O name="imm5" type="Immediate" bits="6-5,12-10"/>
     <asm format="C.LD %s, %s" op1="rs1'" op2="rd'"/>
   </I>
   <I name="C.LDSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01110"/>
-    <O name="rd" type="GPR" bits="11-7" access="Write" choices="Nonzero GPRs"/>
-    <O name="LoadStore-x2-imm6" type="LoadStore" alignment="8" base="x2" data-size="8" element-size="8" mem-access="Read" offset="imm6" offset-scale="3">
-      <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
-      <O name="imm6" type="Immediate" bits="4-2,12,6-5"/>
-    </O>
+    <O name="rd" type="GPR" bits="11-7"/>
+    <O name="imm6" type="Immediate" bits="4-2,12,6-5"/>
     <asm format="C.LDSP %s" op1="rd"/>
   </I>
   <I name="C.SD" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11100"/>
-    <O name="rs2'" type="GPR" bits="4-2" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-    <O name="LoadStore-rs1'-imm5" type="LoadStore" alignment="8" base="rs1'" data-size="8" element-size="8" mem-access="Write" offset="imm5" offset-scale="3">
-      <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-      <O name="imm5" type="Immediate" bits="6-5,12-10"/>
-    </O>
+    <O name="rs2'" type="GPR" bits="4-2"/>
+    <O name="rs1'" type="GPR" bits="9-7"/>
+    <O name="imm5" type="Immediate" bits="6-5,12-10"/>
     <asm format="C.SD %s, %s" op1="rs1'" op2="rs2'"/>
   </I>
   <I name="C.SDSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11110"/>
-    <O name="rs2" type="GPR" bits="6-2" access="Read" choices="GPRs"/>
-    <O name="LoadStore-x2-imm6" type="LoadStore" alignment="8" base="x2" data-size="8" element-size="8" mem-access="Write" offset="imm6" offset-scale="3">
-      <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
-      <O name="imm6" type="Immediate" bits="9-7,12-10"/>
-    </O>
+    <O name="rs2" type="GPR" bits="6-2"/>
+    <O name="imm6" type="Immediate" bits="9-7,12-10"/>
     <asm format="C.SDSP %s" op1="rs2"/>
   </I>
   <I name="C.SUBW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110001"/>
-    <O name="rd'" type="GPR" bits="9-7" access="ReadWrite" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-    <O name="rs2'" type="GPR" bits="4-2" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
+    <O name="rd'" type="GPR" bits="9-7"/>
+    <O name="rs2'" type="GPR" bits="4-2"/>
     <asm format="C.SUBW %s, %s" op1="rd'" op2="rs2'"/>
   </I>
 </instruction_file>

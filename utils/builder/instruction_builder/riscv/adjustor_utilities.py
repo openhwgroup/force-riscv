@@ -20,6 +20,8 @@ def adjust_gpr_operand(aOpr, aAccess, aType, aSize, aChoices=None):
     aOpr.type = aType
     if aChoices is not None:
         aOpr.choices = aChoices;
+        if aChoices == 'Prime GPRs':
+            aOpr.oclass = 'CompressedRegisterOperandRISCV'
     elif 'GPR' in aType:
         aOpr.choices = 'GPRs'
     elif 'FPR' in aType:
@@ -34,6 +36,16 @@ def adjust_imm_operand(aOpr, aSigned, aSize, aBits=None):
 
     if aBits is not None:
         aOpr.bits = aBits
+
+def adjust_imm_operandNew(aOpr, aSigned=False, aClass=None, aExclude=None):
+    if aSigned:
+        aOpr.set_attribute('class', 'SignedImmediateOperand')
+
+    if aClass is not None:
+        aOpr.set_attribute('class', aClass)
+
+    if aExclude is not None:
+        aOpr.exlude = aExclude
 
 def adjust_rm_operand(aOpr):
     aOpr.type = 'Choices'
@@ -138,10 +150,15 @@ def add_bo_branch_operand(aInstr, aOprName, aOffsetName, aScale):
     subop_dict = {'base': aOprName, 'offset': aOffsetName}
     add_addressing_operand(aInstr, None, 'Branch', 'BaseOffsetBranchOperand', subop_dict, attr_dict)
 
-def add_cond_branch_operand(aInstr, aOprName, aScale):
+def add_reg_branch_operand(aInstr, aOprName, aScale):
+    attr_dict = {'base': aOprName}
+    subop_dict = {'base': aOprName}
+    add_addressing_operand(aInstr, None, 'Branch', 'RegisterBranchOperand', subop_dict, attr_dict)
+
+def add_cond_branch_operand(aInstr, aOprName, aScale, aClass='ConditionalBranchOperandRISCV'):
     attr_dict = {'offset-scale': aScale, 'condition': aInstr.name}
     subop_dict = {'offset': aOprName}
-    add_addressing_operand(aInstr, None, 'Branch', 'ConditionalBranchOperandRISCV', subop_dict, attr_dict)
+    add_addressing_operand(aInstr, None, 'Branch', aClass, subop_dict, attr_dict)
 
 class OperandAdjustor(object):
 

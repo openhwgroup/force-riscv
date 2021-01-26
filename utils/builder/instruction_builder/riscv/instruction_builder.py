@@ -19,6 +19,7 @@ import getopt, sys
 sys.path.insert(0, '../..')
 
 from instruction_adjustor import G_InstructionAdjustor
+from instruction_adjustor2 import C_InstructionAdjustor
 
 def usage():
     usage_str = """%s
@@ -111,11 +112,10 @@ def build_instructions():
         process_instruction_file("input/zfh_instructions_starter.xml", "output/zfh_instructions.xml", "output/supported_zfh_instructions.xml", G_InstructionAdjustor())
         process_instruction_file("input/zfh_instructions_rv64_starter.xml", "output/zfh_instructions_rv64.xml", "output/supported_zfh_instructions_rv64.xml", G_InstructionAdjustor())
 
-    #if output_all or c_ext_only:
-        #process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", c_ext_adjust_instruction_by_format)
-        #process_instruction_file("input/rv64only_c_instructions_starter.xml", "output/rv64only_c_instructions.xml", "output/supported_rv64only_c_instructions.xml", c_ext_adjust_instruction_by_format)
-        #process_instruction_file("input/rv32c_instructions_starter.xml", "output/rv32c_instructions.xml", "output/rv32c_supported_instructions.xml", c_ext_adjust_instruction_by_format)
-        #process_instruction_file("input/rv64c_instructions_starter.xml", "output/rv64c_instructions.xml", "output/rv64c_supported_instructions.xml", c_ext_adjust_instruction_by_format)
+    if output_all or c_ext_only:
+        process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", C_InstructionAdjustor())
+        process_instruction_file("input/c_instructions_rv64_starter.xml", "output/c_instructions_rv64.xml", "output/supported_c_instructions_rv64.xml", C_InstructionAdjustor())
+        process_instruction_file("input/c_instructions_rv32_starter.xml", "output/c_instructions_rv32.xml", "output/supported_c_instructions_rv32.xml", C_InstructionAdjustor())
 
     #if output_all or v_ext_only:
         #process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)

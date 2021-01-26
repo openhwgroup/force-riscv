@@ -34,12 +34,12 @@ instructions: g_instructions c_instructions v_instructions priv_instructions
 	@$(INSTR_BUILDER)
 
 .PHONY: g_instructions
-g_instructions: $(INSTR_BUILDER) input/g_instructions_starter.xml
+g_instructions: $(INSTR_BUILDER) input/g_instructions_starter.xml input/g_instructions_rv64_starter.xml
 	@echo 'Building Instructions: g-ext'
 	@$(INSTR_BUILDER) --g-ext
 
 .PHONY: c_instructions
-c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/rv64only_c_instructions_starter.xml
+c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/c_instructions_rv64_starter.xml input/c_instructions_rv32_starter.xml
 	@echo 'Building Instructions: c-ext'
 	@$(INSTR_BUILDER) --c-ext
 
@@ -56,9 +56,11 @@ priv_instructions: $(INSTR_BUILDER) input/priv_instructions_starter.xml
 .PHONY: install
 install:
 	@echo 'Building Instructions: installing instruction files'
-	@cp -f output/supported_riscv_instructions.xml $(INSTALL_DIR)/riscv_instructions.xml
+	@cp -f output/supported_g_instructions.xml $(INSTALL_DIR)/g_instructions.xml
+	@cp -f output/supported_g_instructions_rv64.xml $(INSTALL_DIR)/g_instructions_rv64.xml
 	@cp -f output/supported_c_instructions.xml $(INSTALL_DIR)/c_instructions.xml
-	@cp -f output/supported_rv64only_c_instructions.xml $(INSTALL_DIR)/c_instructions_rv64only.xml
+	@cp -f output/supported_c_instructions_rv64.xml $(INSTALL_DIR)/c_instructions_rv64.xml
+	@cp -f output/supported_c_instructions_rv32.xml $(INSTALL_DIR)/c_instructions_rv32.xml
 	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
 	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
 

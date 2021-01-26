@@ -26,7 +26,7 @@
   </I>
   <I name="C.FLWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01110"/>
-    <O name="rd" type="FPR" bits="11-7" access="Write" choices="Prime 32-bit SIMD/FP registers"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
     <O name="LoadStore-x2-imm6" type="LoadStore" alignment="4" base="x2" data-size="4" element-size="4" mem-access="Read" offset="imm6" offset-scale="2">
       <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
       <O name="imm6" type="Immediate" bits="3-2,12,6-4"/>
