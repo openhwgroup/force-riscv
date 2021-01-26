@@ -117,18 +117,12 @@ def build_instructions():
 
     if output_all or main_only:
         process_instruction_file("input/riscv_instructions_starter.xml", "output/riscv_instructions.xml", "output/supported_riscv_instructions.xml", adjust_instruction_by_format)
-        process_instruction_file("input/rv32i_instructions_starter.xml", "output/rv32i_instructions.xml", "output/rv32i_supported_instructions.xml", adjust_instruction_by_format)
         process_instruction_file("input/rv64i_instructions_starter.xml", "output/rv64i_instructions.xml", "output/rv64i_supported_instructions.xml", adjust_instruction_by_format)
-        process_instruction_file("input/f_instructions_starter.xml", "output/f_instructions.xml", "output/f_supported_instructions.xml", adjust_instruction_by_format)
-        process_instruction_file("input/d_instructions_starter.xml", "output/d_instructions.xml", "output/d_supported_instructions.xml", adjust_instruction_by_format)
-        process_instruction_file("input/q_instructions_starter.xml", "output/q_instructions.xml", "output/q_supported_instructions.xml", adjust_instruction_by_format)
-        
 
     if output_all or c_ext_only:
         process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", c_ext_adjust_instruction_by_format)
         process_instruction_file("input/rv64only_c_instructions_starter.xml", "output/rv64only_c_instructions.xml", "output/supported_rv64only_c_instructions.xml", c_ext_adjust_instruction_by_format)
         process_instruction_file("input/rv32c_instructions_starter.xml", "output/rv32c_instructions.xml", "output/rv32c_supported_instructions.xml", c_ext_adjust_instruction_by_format)
-        process_instruction_file("input/rv64c_instructions_starter.xml", "output/rv64c_instructions.xml", "output/rv64c_supported_instructions.xml", c_ext_adjust_instruction_by_format)
 
     if output_all or v_ext_only:
         process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
