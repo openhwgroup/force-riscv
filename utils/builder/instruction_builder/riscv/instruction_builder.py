@@ -22,14 +22,14 @@ import instruction_adjustor
 
 def usage():
     usage_str = """%s
-  --main     output the main instruction file.
+  --g-ext    output the g-extension instruction file.
   --c-ext    output the c-extension instruction file.
   --v-ext    output the v-extension instruction file.
   --zfh-ext  output the zfh-extension instruction file.
   --priv     output the privileged instruction file.
   -h, --help print this help message
 Example:
-%s --main
+%s --g-ext
 """ % (sys.argv[0], sys.argv[0])
     print(usage_str)
 
@@ -74,7 +74,7 @@ def process_instruction_file(aInputFile, aOutputFile, aSupportedFile, aAdjustByF
 
 def build_instructions():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "main", "c-ext", "v-ext", "zfh-ext", "priv"])
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "g-ext", "c-ext", "v-ext", "zfh-ext", "priv"])
     except getopt.GetoptError as err:
         print (err)
         usage()
@@ -82,7 +82,7 @@ def build_instructions():
 
     output_all = True
     c_ext_only = False
-    main_only = False
+    g_ext_only = False
     v_ext_only = False
     zfh_ext_only = False
     priv_only = False
@@ -103,8 +103,8 @@ def build_instructions():
         elif o == "--priv":
             priv_only = True
             output_all = False
-        elif o == "--main":
-            main_only = True
+        elif o == "--g-ext":
+            g_ext_only = True
             output_all = False
         else:
             print("unsupported option: %s" % o)
@@ -115,21 +115,21 @@ def build_instructions():
     from v_ext_adjust_instruction_by_format import v_ext_adjust_instruction_by_format
     from priv_adjust_instruction_by_format import priv_adjust_instruction_by_format
 
-    if output_all or main_only:
-        process_instruction_file("input/riscv_instructions_starter.xml", "output/riscv_instructions.xml", "output/supported_riscv_instructions.xml", adjust_instruction_by_format)
-        process_instruction_file("input/rv64i_instructions_starter.xml", "output/rv64i_instructions.xml", "output/rv64i_supported_instructions.xml", adjust_instruction_by_format)
+    if output_all or g_ext_only:
+        process_instruction_file("input/g_instructions_starter.xml", "output/g_instructions.xml", "output/supported_g_instructions.xml", adjust_instruction_by_format)
+        process_instruction_file("input/g_instructions_rv64_starter.xml", "output/g_instructions_rv64.xml", "output/supported_g_instructions_rv64.xml", adjust_instruction_by_format)
 
     if output_all or c_ext_only:
         process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", c_ext_adjust_instruction_by_format)
-        process_instruction_file("input/rv64only_c_instructions_starter.xml", "output/rv64only_c_instructions.xml", "output/supported_rv64only_c_instructions.xml", c_ext_adjust_instruction_by_format)
-        process_instruction_file("input/rv32c_instructions_starter.xml", "output/rv32c_instructions.xml", "output/rv32c_supported_instructions.xml", c_ext_adjust_instruction_by_format)
+        process_instruction_file("input/c_instructions_rv32_starter.xml", "output/c_instructions_rv32.xml", "output/supported_c_instructions_rv32.xml", c_ext_adjust_instruction_by_format)
+        process_instruction_file("input/c_instructions_rv64_starter.xml", "output/c_instructions_rv64.xml", "output/supported_c_instructions_rv64.xml", c_ext_adjust_instruction_by_format)
 
     if output_all or v_ext_only:
         process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
 
     if output_all or zfh_ext_only:
         process_instruction_file("input/zfh_instructions_starter.xml", "output/zfh_instructions.xml", "output/supported_zfh_instructions.xml", adjust_instruction_by_format)
-        process_instruction_file("input/rv64zfh_instructions_starter.xml", "output/rv64zfh_instructions.xml", "output/supported_rv64zfh_instructions.xml", adjust_instruction_by_format)
+        process_instruction_file("input/zfh_instructions_rv64_starter.xml", "output/zfh_instructions_rv64.xml", "output/supported_zfh_instructions_rv64.xml", adjust_instruction_by_format)
 
     if output_all or priv_only:
         process_instruction_file("input/priv_instructions_starter.xml", "output/priv_instructions.xml", "output/supported_priv_instructions.xml", priv_adjust_instruction_by_format)

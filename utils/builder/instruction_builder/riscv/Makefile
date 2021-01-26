@@ -29,17 +29,17 @@ make_dir:
 	@mkdir -p output
 
 .PHONY: instructions
-instructions: main_instructions c_instructions v_instructions priv_instructions
+instructions: g_instructions c_instructions v_instructions zfh_instructions priv_instructions
 	@echo 'Building Instructions: all'
 	@$(INSTR_BUILDER)
 
-.PHONY: main_instructions
-main_instructions: $(INSTR_BUILDER) input/riscv_instructions_starter.xml
-	@echo 'Building Instructions: main'
-	@$(INSTR_BUILDER) --main
+.PHONY: g_instructions
+g_instructions: $(INSTR_BUILDER) input/g_instructions_starter.xml input/g_instructions_rv64_starter.xml
+	@echo 'Building Instructions: g-ext'
+	@$(INSTR_BUILDER) --g-ext
 
 .PHONY: c_instructions
-c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/rv64only_c_instructions_starter.xml
+c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/c_instructions_rv32_starter.xml input/c_instructions_rv64_starter.xml
 	@echo 'Building Instructions: c-ext'
 	@$(INSTR_BUILDER) --c-ext
 
@@ -49,7 +49,7 @@ v_instructions: $(INSTR_BUILDER) input/v_instructions_starter.xml
 	@$(INSTR_BUILDER) --v-ext
 
 .PHONY: zfh_instructions
-zfh_instructions: $(INSTR_BUILDER) input/zfh_instructions_starter.xml input/rv64zfh_instructions_starter.xml
+zfh_instructions: $(INSTR_BUILDER) input/zfh_instructions_starter.xml input/zfh_instructions_rv64_starter.xml
 	@echo 'Building Instructions: zfh-ext'
 	@$(INSTR_BUILDER) --zfh-ext
 
@@ -61,19 +61,19 @@ priv_instructions: $(INSTR_BUILDER) input/priv_instructions_starter.xml
 .PHONY: install
 install:
 	@echo 'Building Instructions: installing instruction files'
-	@cp -f output/supported_riscv_instructions.xml $(INSTALL_DIR)/g_instructions.xml
-	@cp -f output/rv64i_supported_instructions.xml $(INSTALL_DIR)/g_instructions_rv64.xml
+	@cp -f output/supported_g_instructions.xml $(INSTALL_DIR)/g_instructions.xml
+	@cp -f output/supported_g_instructions_rv64.xml $(INSTALL_DIR)/g_instructions_rv64.xml
 	@cp -f output/supported_c_instructions.xml $(INSTALL_DIR)/c_instructions.xml
-	@cp -f output/rv32c_supported_instructions.xml $(INSTALL_DIR)/c_instructions_rv32.xml
-	@cp -f output/supported_rv64only_c_instructions.xml $(INSTALL_DIR)/c_instructions_rv64.xml
+	@cp -f output/supported_c_instructions_rv32.xml $(INSTALL_DIR)/c_instructions_rv32.xml
+	@cp -f output/supported_c_instructions_rv64.xml $(INSTALL_DIR)/c_instructions_rv64.xml
 	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
 	@cp -f output/supported_zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions.xml
-	@cp -f output/supported_rv64zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions_rv64.xml
+	@cp -f output/supported_zfh_instructions_rv64.xml $(INSTALL_DIR)/zfh_instructions_rv64.xml
 	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
 
 .PHONY: diff
 diff:
-	@$(GVIMDIFF) output/supported_riscv_instructions.xml $(INSTALL_DIR)/riscv_instructions.xml
+	@$(GVIMDIFF) output/supported_g_instructions.xml $(INSTALL_DIR)/g_instructions.xml
 
 .PHONY: clean
 clean:
