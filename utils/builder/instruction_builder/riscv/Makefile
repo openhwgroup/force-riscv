@@ -29,14 +29,14 @@ make_dir:
 	@mkdir -p output
 
 .PHONY: instructions
-instructions: g_instructions c_instructions v_instructions priv_instructions
+instructions: main_instructions c_instructions v_instructions priv_instructions
 	@echo 'Building Instructions: all'
 	@$(INSTR_BUILDER)
 
-.PHONY: g_instructions
-g_instructions: $(INSTR_BUILDER) input/g_instructions_starter.xml
-	@echo 'Building Instructions: g-ext'
-	@$(INSTR_BUILDER) --g-ext
+.PHONY: main_instructions
+main_instructions: $(INSTR_BUILDER) input/riscv_instructions_starter.xml
+	@echo 'Building Instructions: main'
+	@$(INSTR_BUILDER) --main
 
 .PHONY: c_instructions
 c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/rv64only_c_instructions_starter.xml

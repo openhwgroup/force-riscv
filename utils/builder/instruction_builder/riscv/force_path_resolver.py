@@ -29,7 +29,7 @@ def locate_force_path():
     print ("My path: %s" % my_path)
     while True:
         head, tail = os.path.split(my_path)
-        if os.path.exists( head + "/config/riscv_rv64.config" ):
+        if os.path.exists( head + "/config/force.config" ):
             return str( head )
         # not found has the root been reached?
         if head == "/":
