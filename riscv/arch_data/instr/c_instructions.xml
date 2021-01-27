@@ -56,7 +56,7 @@
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11001"/>
     <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
     <O name="x0" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
-    <O name="Branch-simm8" type="Branch" class="CompressedConditionalBranchOperandRISCV" condition="C.BEQZ" offset="simm8" offset-scale="1">
+    <O name="Branch-simm8" type="Branch" class="CompressedConditionalBranchOperandRISCV" condition="CBEQZ" offset="simm8" offset-scale="1">
       <O name="simm8" type="Immediate" bits="12,6-5,2,11-10,4-3" class="SignedImmediateOperand"/>
     </O>
     <asm format="C.BEQZ %s, %s" op1="simm8" op2="rs1'"/>
@@ -65,7 +65,7 @@
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11101"/>
     <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
     <O name="x0" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
-    <O name="Branch-simm8" type="Branch" class="CompressedConditionalBranchOperandRISCV" condition="C.BNEZ" offset="simm8" offset-scale="1">
+    <O name="Branch-simm8" type="Branch" class="CompressedConditionalBranchOperandRISCV" condition="CBNEZ" offset="simm8" offset-scale="1">
       <O name="simm8" type="Immediate" bits="12,6-5,2,11-10,4-3" class="SignedImmediateOperand"/>
     </O>
     <asm format="C.BNEZ %s, %s" op1="simm8" op2="rs1'"/>
