@@ -26,20 +26,20 @@ class MainSequence(PageFaultSequence):
         super().__init__(gen_thread,name)
 
         # just a couple of load/stores...
-        
+
         self._mInstrList = (
             'LD##RISCV',
             'SD##RISCV',
             )
         if self.getGlobalState('AppRegisterWidth') == 32:
-        self._mInstrList = (
-            'LW##RISCV',
-            'SW##RISCV',
-            )
-    
+            self._mInstrList = (
+                'LW##RISCV',
+                'SW##RISCV',
+                )
+
         self._mExceptionCodes = ( 5, 7 ) # for risc-v, access exception - load: 5, store: 7
         self._mExceptionSubCodes = { } # for now, riscv does not support exception sub-codes
-        
+
         def createPageFaultModifier(self):
             return AccessFaultModifier(self.genThread)
 
@@ -48,7 +48,7 @@ class MainSequence(PageFaultSequence):
 
         def getExceptionCodes(self):
             return self._mExceptionCodes
-        
+
         def getPageFaultResolutionType(self,aFaultLevels, aFastHandlers):
             resolution_type = PageFaultResolutionType.SKIP_INSTRUCTION
             if any([x in aFaultLevels for x in (0, 1, 2, 3)]) and (not aFastHandlers):
@@ -56,7 +56,7 @@ class MainSequence(PageFaultSequence):
 
             return resolution_type
 
-        
+
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV
 EnvClass = EnvRISCV
