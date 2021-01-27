@@ -29,8 +29,8 @@ make_dir:
 	@mkdir -p output
 
 .PHONY: instructions
-#instructions: g_instructions c_instructions v_instructions priv_instructions
-instructions: g_instructions c_instructions 
+#instructions: g_instructions c_instructions v_instructions priv_instructions zfh_instructions
+instructions: g_instructions c_instructions zfh_instructions
 	@echo 'Building Instructions: all'
 	@$(INSTR_BUILDER)
 
@@ -54,6 +54,11 @@ priv_instructions: $(INSTR_BUILDER) input/priv_instructions_starter.xml
 	@echo 'Building Instructions: priv'
 	@$(INSTR_BUILDER) --priv
 
+.PHONY: zfh_instructions
+zfh_instructions: $(INSTR_BUILDER) input/zfh_instructions_starter.xml input/zfh_instructions_rv64_starter.xml
+	@echo 'Building Instructions: zfh'
+	@$(INSTR_BUILDER) --zfh-ext
+
 .PHONY: install
 install:
 	@echo 'Building Instructions: installing instruction files'
@@ -64,6 +69,8 @@ install:
 	@cp -f output/supported_c_instructions_rv32.xml $(INSTALL_DIR)/c_instructions_rv32.xml
 #	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
 #	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
+	@cp -f output/supported_zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions.xml
+	@cp -f output/supported_zfh_instructions_rv64.xml $(INSTALL_DIR)/zfh_instructions_rv64.xml
 
 .PHONY: diff
 diff:

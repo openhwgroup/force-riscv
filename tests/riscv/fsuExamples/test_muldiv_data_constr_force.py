@@ -28,9 +28,9 @@ class MainSequence(Sequence):
     VALID_PRECISIONS = ['H', 'S', 'D']
     VALID_DATA_TYPES = ['FP', 'INT']
     VALID_DATA_SIZES = [16, 32, 64]
-    INSTRUCTIONS = { 'H': ['FMUL.H#Half-precision#RISCV', 'FDIV.H#Half-precision#RISCV',],
-                     'S': ['FMUL.S#Single-precision#RISCV', 'FDIV.S#Single-precision#RISCV',],
-                     'D': ['FMUL.D#Double-precision#RISCV', 'FDIV.D#Double-precision#RISCV',], }
+    INSTRUCTIONS = { 'H': ['FMUL.H##RISCV', 'FDIV.H##RISCV',],
+                     'S': ['FMUL.S##RISCV', 'FDIV.S##RISCV',],
+                     'D': ['FMUL.D##RISCV', 'FDIV.D##RISCV',], }
 
     #TODO add assert method to check instr record for rs1/rs2 indices and verify sources reg value within constraints passed in
 

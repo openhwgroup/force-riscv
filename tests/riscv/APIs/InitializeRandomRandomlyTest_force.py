@@ -22,7 +22,7 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         self.randomInitializeRegister("S22") 
  
-        for instr in ["ADD##RISCV", "FADD.D#Double-precision#RISCV"]:
+        for instr in ["ADD##RISCV", "FADD.D##RISCV"]:
             self.genInstruction(instr)
 
 

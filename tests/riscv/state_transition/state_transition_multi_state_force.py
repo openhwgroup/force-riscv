@@ -59,7 +59,7 @@ class MainSequence(Sequence):
         state_transition_test_utils.verifyState(self, self._mExpectedStateData)
 
         for _ in range(RandomUtils.random32(200, 500)):
-            self.genInstruction('FMUL.D#Double-precision#RISCV')
+            self.genInstruction('FMUL.D##RISCV')
 
     ## Create a State in M privilege level configured to trigger a timer interrupt.
     def _createStateA(self):

@@ -73,7 +73,7 @@ def process_instruction_file(aInputFile, aOutputFile, aSupportedFile, aAdjustor)
 
 def build_instructions():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "g-ext", "c-ext", "v-ext", "priv"])
+        opts, args = getopt.getopt(sys.argv[1:], "h", ["help", "g-ext", "c-ext", "v-ext", "priv", "zfh-ext"])
     except getopt.GetoptError as err:
         print (err)
         usage()
@@ -84,6 +84,7 @@ def build_instructions():
     g_ext_only = False
     v_ext_only = False
     priv_only = False
+    zfh_ext_only = False
 
     for o, a in opts:
         if o in ("-h", "--help"):
@@ -100,6 +101,9 @@ def build_instructions():
             output_all = False
         elif o == "--g-ext":
             g_ext_only = True
+            output_all = False
+        elif o == "--zfh-ext":
+            zfh_ext_only = True
             output_all = False
         else:
             print("unsupported option: %s" % o)
@@ -122,6 +126,10 @@ def build_instructions():
 
     #if output_all or priv_only:
         #process_instruction_file("input/priv_instructions_starter.xml", "output/priv_instructions.xml", "output/supported_priv_instructions.xml", priv_adjust_instruction_by_format)
+
+    if output_all or zfh_ext_only:
+        process_instruction_file("input/zfh_instructions_starter.xml", "output/zfh_instructions.xml", "output/supported_zfh_instructions.xml", G_InstructionAdjustor())
+        process_instruction_file("input/zfh_instructions_rv64_starter.xml", "output/zfh_instructions_rv64.xml", "output/supported_zfh_instructions_rv64.xml", G_InstructionAdjustor())
 
 #temp class/unit test for instruction parsing utility
 if __name__ == "__main__":

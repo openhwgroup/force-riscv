@@ -40,18 +40,18 @@ class MainSequence(Sequence):
         # in the <force checkout base dir>/Force/riscv/arch_data/riscv_instruction.xml file.
 
         instrType = "ALL"
-        #instrType = "FMUL.D#Double-precision#RISCV"
+        #instrType = "FMUL.D##RISCV"
 
         # if you specify instrType="ALL", instructions will be generated from this set of instructions
         instructionSubset = {
-                'FMUL.D#Double-precision#RISCV' : 20,
-                'FMUL.S#Single-precision#RISCV' : 20,
-                'FDIV.D#Double-precision#RISCV' : 20,
-                'FDIV.S#Single-precision#RISCV' : 20,
-                'FMADD.D#Double-precision#RISCV' : 20,
-                'FMADD.S#Single-precision#RISCV' : 20,
-                'FADD.D#Double-precision#RISCV' : 20,
-                'FADD.S#Single-precision#RISCV' : 20
+                'FMUL.D##RISCV' : 20,
+                'FMUL.S##RISCV' : 20,
+                'FDIV.D##RISCV' : 20,
+                'FDIV.S##RISCV' : 20,
+                'FMADD.D##RISCV' : 20,
+                'FMADD.S##RISCV' : 20,
+                'FADD.D##RISCV' : 20,
+                'FADD.S##RISCV' : 20
         }
 
         # gen each instruction

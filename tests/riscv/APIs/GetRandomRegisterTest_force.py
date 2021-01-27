@@ -45,7 +45,7 @@ class MainSequence(Sequence):
 
 
         for rs1 in free_regs_float:
-            record_id = self.genInstruction("FADD.D#Double-precision#RISCV", {"rs1":rs1})
+            record_id = self.genInstruction("FADD.D##RISCV", {"rs1":rs1})
             instr_obj = self.queryInstructionRecord(record_id)
             source_regs = instr_obj["Srcs"]
 

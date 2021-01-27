@@ -22,10 +22,10 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
 
         instructions = [
-                'FMUL.S#Single-precision#RISCV',
-                'FDIV.S#Single-precision#RISCV',
-                'FMUL.H#Half-precision#RISCV',
-                'FDIV.H#Half-precision#RISCV',
+                'FMUL.S##RISCV',
+                'FDIV.S##RISCV',
+                'FMUL.H##RISCV',
+                'FDIV.H##RISCV',
         ]
 
         for instr in instructions:
