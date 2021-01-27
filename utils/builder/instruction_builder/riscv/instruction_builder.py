@@ -19,7 +19,7 @@ import getopt, sys
 sys.path.insert(0, '../..')
 
 from instruction_adjustor import G_InstructionAdjustor
-from instruction_adjustor2 import C_InstructionAdjustor
+from c_instruction_adjustor import C_InstructionAdjustor
 
 def usage():
     usage_str = """%s

@@ -20,30 +20,30 @@
     <O name="rd'" type="Register" bits="4-2"/>
     <O name="rs1'" type="Register" bits="9-7"/>
     <O name="imm5" type="Immediate" bits="5,12-10,6"/>
-    <asm format="C.FLW %s, %s" op1="rs1'" op2="rd'"/>
+    <asm format="C.FLW"/>
   </I>
   <I name="C.FLWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01110"/>
     <O name="rd" type="Register" bits="11-7"/>
     <O name="imm6" type="Immediate" bits="3-2,12,6-4"/>
-    <asm format="C.FLWSP %s" op1="rd"/>
+    <asm format="C.FLWSP"/>
   </I>
   <I name="C.FSW" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11100"/>
     <O name="rs2'" type="FPR" bits="4-2"/>
     <O name="rs1'" type="GPR" bits="9-7"/>
     <O name="imm5" type="Immediate" bits="5,12-10,6"/>
-    <asm format="C.FSW %s, %s" op1="rs1'" op2="rs2'"/>
+    <asm format="C.FSW"/>
   </I>
   <I name="C.FSWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11110"/>
     <O name="rs2" type="FPR" bits="6-2"/>
     <O name="imm6" type="Immediate" bits="9-7,12-10"/>
-    <asm format="C.FSWSP %s" op1="rs2"/>
+    <asm format="C.FSWSP"/>
   </I>
   <I name="C.JAL" isa="RISCV" class="BranchInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
     <O name="simm11" type="Immediate" bits="12,8,10-9,6,7,2,11,5-3"/>
-    <asm format="C.JAL %s" op1="simm11"/>
+    <asm format="C.JAL"/>
   </I>
 </instruction_file>

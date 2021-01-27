@@ -156,7 +156,11 @@ def add_reg_branch_operand(aInstr, aOprName, aScale):
     add_addressing_operand(aInstr, None, 'Branch', 'RegisterBranchOperand', subop_dict, attr_dict)
 
 def add_cond_branch_operand(aInstr, aOprName, aScale, aClass='ConditionalBranchOperandRISCV'):
-    attr_dict = {'offset-scale': aScale, 'condition': aInstr.name}
+    if aClass == 'CompressedConditionalBranchOperandRISCV':      # C.BEQZ or C.BNEZ
+        theCondition = aInstr.name.replace(".","")               # remove the "." in the mnemonic
+    else:
+        theCondition = aInstr.name
+    attr_dict = {'offset-scale': aScale, 'condition': theCondition}
     subop_dict = {'offset': aOprName}
     add_addressing_operand(aInstr, None, 'Branch', aClass, subop_dict, attr_dict)
 
