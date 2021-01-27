@@ -29,7 +29,8 @@ make_dir:
 	@mkdir -p output
 
 .PHONY: instructions
-instructions: g_instructions c_instructions v_instructions priv_instructions
+#instructions: g_instructions c_instructions v_instructions priv_instructions
+instructions: g_instructions c_instructions 
 	@echo 'Building Instructions: all'
 	@$(INSTR_BUILDER)
 
@@ -61,12 +62,12 @@ install:
 	@cp -f output/supported_c_instructions.xml $(INSTALL_DIR)/c_instructions.xml
 	@cp -f output/supported_c_instructions_rv64.xml $(INSTALL_DIR)/c_instructions_rv64.xml
 	@cp -f output/supported_c_instructions_rv32.xml $(INSTALL_DIR)/c_instructions_rv32.xml
-	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
-	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
+#	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
+#	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
 
 .PHONY: diff
 diff:
-	@$(GVIMDIFF) output/supported_riscv_instructions.xml $(INSTALL_DIR)/riscv_instructions.xml
+	@$(GVIMDIFF) output/supported_g_instructions.xml $(INSTALL_DIR)/g_instructions.xml
 
 .PHONY: clean
 clean:
