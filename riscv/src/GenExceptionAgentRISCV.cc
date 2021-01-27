@@ -278,7 +278,6 @@ namespace Force {
     dataBlock.AddUnit(table_ptr->GetCurrentAddress() + dsize, (uint64) dsize, big_endian);
     LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} next table address/dblock offset: 0x"
 	       << std::hex << table_ptr->GetCurrentAddress() + dsize << "/0x" << dblock_offset << std::dec << std::endl;
-    dblock_offset+= dsize;
 
     VmManager* vm_manager = mpGenerator->GetVmManager();
     unique_ptr<VmInfo> vm_info(vm_manager->VmInfoInstance());
