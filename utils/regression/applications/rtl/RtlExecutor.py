@@ -366,7 +366,7 @@ class RtlExecutor( IssExecutor ):
         return test_passed
 
     def open_log_file( self, pFileName, pOpenMode ):
-        from lib.file_read_backwards import FileReadBackwards
+        from file_read_backwards import FileReadBackwards
         return FileReadBackwards( pFileName )
 
     # used to avoid abstract method error

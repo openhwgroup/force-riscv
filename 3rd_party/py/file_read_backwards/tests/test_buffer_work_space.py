@@ -1,19 +1,4 @@
 #!/usr/bin/env python3
-#
-# Copyright (C) [2020] Futurewei Technologies, Inc.
-#
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#  http://www.apache.org/licenses/LICENSE-2.0
-#
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 # -*- coding: utf-8 -*-
 """Tests for `buffer_work_space` module."""
 
@@ -420,7 +405,7 @@ class TestBufferWorkSpace(unittest.TestCase):
     def test_has_returned_every_line_with_fully_read_in_and_unprocessed_buffer_space(self):
         """BufferWorkSpace that has been fully read with some unprocessed buffer has not returned everything.
 
-        Note: not fully read in and some unprocessed buffer is represented by read_position = 0 and read_buffer is not None
+        Note: not fully read in and some unprocessed buffer is represented by read_position = 0 and read_buffer != None
         """
         with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
             fp_mock = Mock()

@@ -134,7 +134,7 @@ class FpixExecutor(IssExecutor):
         return SysUtils.success(int(my_result[IssResult.process_retcode]))
 
     def open_log_file(self, aFileName, aOpenMode):
-        from lib.file_read_backwards import FileReadBackwards
+        from file_read_backwards import FileReadBackwards
         return FileReadBackwards(aFileName)
 
     def query_result_log(self, aHfile):
