@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.Bitstream import Bitstream
+from base.TestUtils import assert_equal
 
 class MainSequence(Sequence):
 
@@ -24,18 +25,18 @@ class MainSequence(Sequence):
         
         my_stream = Bitstream()
         my_stream.append(" X ").append("0000 xx01").prepend("1101")
-        assert (my_stream.stream() == "1101xxxx0000xx01")
-        assert (my_stream.value() == 53249)
-        assert (my_stream.mask() == 61683)
-        assert (my_stream.valueMask() == "0xd001/0xf0f3")
-        assert (my_stream["1-3, 15"] == "0xx1")
-        assert (my_stream["15, 3-1"] == "1xx0")
-        assert (my_stream["15-0"] == "1101xxxx0000xx01")
-        assert (my_stream["0-15"] == "10xx0000xxxx1011")
-        assert (my_stream["13-12, 10-8, 6-5, 1-0"] == "01xxx0001")
-        assert (my_stream["0-1, 3-5, 7-9, 12-15"] == "10x000xx1011")
-        assert (my_stream["0-2, 5"] == "10x0")
-        assert (my_stream["15-12, 8, 3-1"] == "1101xxx0")
+        assert_equal(my_stream.stream(), "1101xxxx0000xx01")
+        assert_equal(my_stream.value(), 53249)
+        assert_equal(my_stream.mask(), 61683)
+        assert_equal(my_stream.valueMask(), "0xd001/0xf0f3")
+        assert_equal(my_stream["1-3, 15"], "0xx1")
+        assert_equal(my_stream["15, 3-1"], "1xx0")
+        assert_equal(my_stream["15-0"], "1101xxxx0000xx01")
+        assert_equal(my_stream["0-15"], "10xx0000xxxx1011")
+        assert_equal(my_stream["13-12, 10-8, 6-5, 1-0"], "01xxx0001")
+        assert_equal(my_stream["0-1, 3-5, 7-9, 12-15"], "10x000xx1011")
+        assert_equal(my_stream["0-2, 5"], "10x0")
+        assert_equal(my_stream["15-12, 8, 3-1"], "1101xxx0")
  
         for instr in ["LUI##RISCV", "LUI##RISCV"]:
             instr_rec = self.genInstruction(instr)

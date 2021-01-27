@@ -56,7 +56,7 @@ def apply_patch():
         elif o in ("-t", "--test"):
             test_set = True
         else:
-            assert False, "Unhandled option."
+            raise ValueError("Unhandled option.")
 
     if not patch_file:
         usage()

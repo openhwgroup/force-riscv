@@ -43,7 +43,7 @@ def start_test():
         elif o in ("-t", "--test"):
             test_name = a
         else:
-            assert False, "Unhandled option."
+            raise ValueError("Unhandled option.")
 
     if (not test_name) or (not test_dir):
         usage()

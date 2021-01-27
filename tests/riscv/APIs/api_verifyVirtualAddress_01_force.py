@@ -17,6 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.InstructionMap import InstructionMap
+from base.TestUtils import assert_equal
 from DV.riscv.trees.instruction_tree import *
 
 class MainSequence(Sequence):
@@ -105,52 +106,52 @@ class MainSequence(Sequence):
             # Checking
             # target address should always be reserved.  Additional bytes should be reserved based on the target_size.
             if target_size == 1:
-                assert(is_address_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus01_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus02_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus03_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus04_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus05_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus06_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus07_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus08_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus16_free == True), "Unexpected byte of memory was reserved."
+                assert_equal(is_address_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus01_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus02_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus03_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus04_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus05_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus06_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus07_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus08_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus16_free, True, "Unexpected byte of memory was reserved.")
 
             if target_size == 2:
-                assert(is_address_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus01_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus02_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus03_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus04_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus05_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus06_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus07_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus08_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus16_free == True), "Unexpected byte of memory was reserved."
+                assert_equal(is_address_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus01_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus02_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus03_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus04_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus05_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus06_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus07_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus08_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus16_free, True, "Unexpected byte of memory was reserved.")
 
             if target_size == 4:
                 assert(is_address_free == False)
-                assert(is_address_plus01_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus02_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus03_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus04_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus05_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus06_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus07_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus08_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus16_free == True), "Unexpected byte of memory was reserved."
+                assert_equal(is_address_plus01_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus02_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus03_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus04_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus05_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus06_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus07_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus08_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus16_free, True, "Unexpected byte of memory was reserved.")
 
             if target_size == 8:
-                assert(is_address_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus01_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus02_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus03_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus04_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus05_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus06_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus07_free == False), "Byte of memory not reserved that should have been."
-                assert(is_address_plus08_free == True), "Unexpected byte of memory was reserved."
-                assert(is_address_plus16_free == True), "Unexpected byte of memory was reserved."
+                assert_equal(is_address_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus01_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus02_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus03_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus04_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus05_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus06_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus07_free, False, "Byte of memory not reserved that should have been.")
+                assert_equal(is_address_plus08_free, True, "Unexpected byte of memory was reserved.")
+                assert_equal(is_address_plus16_free, True, "Unexpected byte of memory was reserved.")
 
 
 

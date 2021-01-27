@@ -97,7 +97,7 @@ def simtrace_insert_symbol():
         elif o in ("-t", "--simtrace"):
             simtrace_trace = a
         else:
-            assert False, "Unhandled option."
+            raise ValueError("Unhandled option.")
 
     symbols_dict = dict()
 

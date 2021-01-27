@@ -70,7 +70,9 @@ class SingleGenThreadExecutor(GenThreadExecutor):
     def executeGenThreads(self, aGenThreads):
         # To avoid unnecessarily impairing performance for the case where there is only one GenThread, execute it on
         # the main thread
-        assert (len(aGenThreads) == 1), 'SingleGenThreadExecutor was used to execute more than one GenThread!'
+        if len(aGenThreads) != 1:
+            raise AssertionError('SingleGenThreadExecutor was used to execute more than one GenThread!')
+
         return GenThreadExecutor.executeGenThread(aGenThreads[0])
 
 ## Generator executor class for multi-thread test generation.

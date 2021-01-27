@@ -90,7 +90,7 @@ def unit_tests():
         elif o in ["-z", "--print-failures"]:
             print_fails = True
         else:
-            assert False, "Unhandled option."
+            raise ValueError("Unhandled option.")
 
     if not force_path:
         try:

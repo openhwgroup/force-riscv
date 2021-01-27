@@ -17,11 +17,11 @@
 #  Base sequence class, pass on API calls to GenThread class
 from base.Macro import Macro
 import base.UtilityFunctions as UtilityFunctions
+from base.TestUtils import get_stack_frame_string
 from Config import Config
 from Enums import EGlobalStateType, ELimitType
 import Log
 import RandomUtils
-import traceback
 import warnings
 
 class Sequence(object):
@@ -399,8 +399,7 @@ class Sequence(object):
 
     # self.error("failed to setup scenario at address 0x%x" % addr)
     def error(self, err_msg):
-        stack_frames = traceback.format_list(traceback.extract_stack())
-        stack_frame_str = ''.join(stack_frames[:-1])
+        stack_frame_str = get_stack_frame_string()
         Log.fail('%s\n%s' % (err_msg, stack_frame_str))
 
     def notice(self, msg):

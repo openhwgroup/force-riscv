@@ -16,6 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
+from base.TestUtils import assert_equal
 
 class MainSequence(Sequence):
 
@@ -41,7 +42,7 @@ class MainSequence(Sequence):
             else:
                 self.notice(">>>>>>>>>>>>   RS1 Not Found.   ")
 
-            assert(source_regs['rs1'] == rs1), "The generated instruction does not have the requested index value for rs1."
+            assert_equal(source_regs['rs1'], rs1, "The generated instruction does not have the requested index value for rs1.")
 
 
         for rs1 in free_regs_float:
@@ -54,7 +55,7 @@ class MainSequence(Sequence):
             else:
                 self.notice(">>>>>>>>>>>>   RS1 Not Found.   ")
 
-            assert(source_regs['rs1'] == rs1), "The generated instruction does not have the requested index value for rs1."
+            assert_equal(source_regs['rs1'], rs1, "The generated instruction does not have the requested index value for rs1.")
 
 
 

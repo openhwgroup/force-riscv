@@ -41,7 +41,7 @@ def start_plugin():
         elif o in ("-n", "--name"):
             plugin_name = a
         else:
-            assert False, "Unhandled option."
+            raise ValueError("Unhandled option.")
 
     if not plugin_name:
         usage()

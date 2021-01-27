@@ -57,7 +57,7 @@ def create_diff():
             compare_dir = a.rstrip("/")            
             print(compare_dir)
         else:
-            assert False, "Unhandled option."
+            raise ValueError("Unhandled option.")
 
     if not rev_str:
         usage()

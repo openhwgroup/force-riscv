@@ -243,7 +243,7 @@ if __name__ == "__main__":
         elif o in ("-o", "--outdir"):
             outputDirectory = a
         else:
-            assert False, "Unhandled option: " + o
+            raise ValueError("Unhandled option: " + o)
         
     print("\n#### Force Control File Auto Generate Script ####")
     print("current directory: ", os.getcwd(), "\nlog file name: ", genLogPath, "\noutput directory: ", outputDirectory)
