@@ -113,8 +113,6 @@ def build_instructions():
     if output_all or g_ext_only:
         process_instruction_file("input/g_instructions_starter.xml", "output/g_instructions.xml", "output/supported_g_instructions.xml", G_InstructionAdjustor())
         process_instruction_file("input/g_instructions_rv64_starter.xml", "output/g_instructions_rv64.xml", "output/supported_g_instructions_rv64.xml", G_InstructionAdjustor())
-        process_instruction_file("input/zfh_instructions_starter.xml", "output/zfh_instructions.xml", "output/supported_zfh_instructions.xml", G_InstructionAdjustor())
-        process_instruction_file("input/zfh_instructions_rv64_starter.xml", "output/zfh_instructions_rv64.xml", "output/supported_zfh_instructions_rv64.xml", G_InstructionAdjustor())
 
     if output_all or c_ext_only:
         process_instruction_file("input/c_instructions_starter.xml", "output/c_instructions.xml", "output/supported_c_instructions.xml", C_InstructionAdjustor())
