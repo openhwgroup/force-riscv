@@ -164,6 +164,15 @@ def add_cond_branch_operand(aInstr, aOprName, aScale, aClass='ConditionalBranchO
     subop_dict = {'offset': aOprName}
     add_addressing_operand(aInstr, None, 'Branch', aClass, subop_dict, attr_dict)
 
+def add_ret_operand(aInstr):
+    ret_opr = Operand()
+    ret_opr.name = 'retoperand'
+    ret_opr.type = 'Choices'
+    ret_opr.choices = 'Ret choice'
+    ret_opr.oclass = 'RetOperand'
+    aInstr.add_operand(ret_opr)
+
+
 class OperandAdjustor(object):
 
     def __init__(self, instr):

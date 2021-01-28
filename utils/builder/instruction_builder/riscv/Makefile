@@ -30,7 +30,7 @@ make_dir:
 
 .PHONY: instructions
 #instructions: g_instructions c_instructions v_instructions priv_instructions zfh_instructions
-instructions: g_instructions c_instructions zfh_instructions
+instructions: g_instructions c_instructions priv_instructions zfh_instructions
 	@echo 'Building Instructions: all'
 	@$(INSTR_BUILDER)
 
@@ -68,7 +68,7 @@ install:
 	@cp -f output/supported_c_instructions_rv64.xml $(INSTALL_DIR)/c_instructions_rv64.xml
 	@cp -f output/supported_c_instructions_rv32.xml $(INSTALL_DIR)/c_instructions_rv32.xml
 #	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
-#	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
+	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
 	@cp -f output/supported_zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions.xml
 	@cp -f output/supported_zfh_instructions_rv64.xml $(INSTALL_DIR)/zfh_instructions_rv64.xml
 

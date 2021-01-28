@@ -122,8 +122,8 @@ def build_instructions():
     #if output_all or v_ext_only:
         #process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
 
-    #if output_all or priv_only:
-        #process_instruction_file("input/priv_instructions_starter.xml", "output/priv_instructions.xml", "output/supported_priv_instructions.xml", priv_adjust_instruction_by_format)
+    if output_all or priv_only:
+        process_instruction_file("input/priv_instructions_starter.xml", "output/priv_instructions.xml", "output/supported_priv_instructions.xml", G_InstructionAdjustor())
 
     if output_all or zfh_ext_only:
         process_instruction_file("input/zfh_instructions_starter.xml", "output/zfh_instructions.xml", "output/supported_zfh_instructions.xml", G_InstructionAdjustor())

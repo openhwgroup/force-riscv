@@ -115,6 +115,16 @@ class G_InstructionAdjustor(InstructionAdjustor):
             aInstr.iclass = "LoadStoreInstruction"
             add_bols_addr_operand(aInstr, 'rs1', 'simm12', access, size, 0)
 
+        if aInstr.name in ['MRET', 'SRET']:
+            add_ret_operand(aInstr)
+            aInstr.iclass = 'RetInstruction'
+            aInstr.group = 'System'
+            aInstr.extension = 'RV64Priv'
+
+        if aInstr.name == 'SFENCE.VMA':
+            aInstr.group = 'System'
+            aInstr.extension = 'RV64Priv'
+
 
     def adjust_rs(self, aInstr, aOpr):
         if 'rs3' in aOpr.name:
@@ -126,6 +136,8 @@ class G_InstructionAdjustor(InstructionAdjustor):
                     adjust_gpr_operand(aOpr, 'Read', 'FPR', int_ldst_size(ld_st_result.group('size')))
                 else:
                     adjust_gpr_operand(aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
+            #elif aInstr.name =='SFENCE.VMA':
+            #    adjust_gpr_operand(aOpr, 'Read', 'GPR', 0, 'GPRs')
             else:
                 adjust_gpr_operand(aOpr, 'Read', 'GPR', 8)
         elif 'rs1' in aOpr.name:
@@ -146,6 +158,8 @@ class G_InstructionAdjustor(InstructionAdjustor):
                     adjust_gpr_operand(aOpr, 'Read', 'GPR', 8)
             elif aInstr.name.startswith('F') and not aInstr.name.startswith('FENCE'): #remaining fp instrs - (excluding FMV/FCVT and fp load/st)
                 adjust_gpr_operand(aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
+            #elif aInstr.name =='SFENCE.VMA':
+            #    adjust_gpr_operand(aOpr, 'Read', 'GPR', 0, 'GPRs')
             else: #remaining instrs use int gpr
                 adjust_gpr_operand(aOpr, 'Read', 'GPR', 8)
 
