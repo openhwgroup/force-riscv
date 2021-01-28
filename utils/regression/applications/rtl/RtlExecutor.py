@@ -25,8 +25,8 @@ from common.errors import *
 
 from executors.iss_executor import *
 from classes.control_item import ControlItem, CtrlItmKeys
-# import shutil
 import re
+import shutil
 
 
 class RtlDefaults(object):
@@ -247,7 +247,7 @@ class RtlExecutor( IssExecutor ):
         dofile_path = self.rtl.get("fsdb_do")
         
         if isinstance(dofile_path, str):
-            SysUtils.exec_cmd("cp %s %s/%s_waves_fsdb.do" % (dofile_path, PathUtils.current_dir(), self.task_name))
+            shutil.copyfile(dofile_path, ("%s/%s_waves_fsdb.do" % (PathUtils.current_dir(), self.task_name)))
         
     ##
     #   Provides a meaningful rerun script at the disk location expected in the gathered report, such as in gathered.xml

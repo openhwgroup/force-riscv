@@ -17,6 +17,7 @@
 
 import getopt, sys
 import os
+import shutil
 
 def usage():
     usage_str = """Starting a plugin source directory.  Run the script inside Force/fpix/plugins/template directory.
@@ -67,9 +68,9 @@ def start_plugin_with_name(plugin_name):
         sys.exit(1)
 
     os.mkdir(plugin_path)
-    os.system("cp Makefile.template %s/Makefile" % plugin_path)
-    os.system("cp plugin.cc.template %s/%s.cc" % (plugin_path, plugin_name))
-    os.system("cp Makefile.target.template %s/Makefile.target" % plugin_path)
+    shutil.copyfile("Makefile.template", ("%s/Makefile" % plugin_path))
+    shutil.copyfile("plugin.cc.template", ("%s/%s.cc" % (plugin_path, plugin_name)))
+    shutil.copyfile("Makefile.target.template", ("%s/Makefile.target" % plugin_path))
     replace_file_var("%s/Makefile.target" % plugin_path, plugin_name)
 
 def replace_file_var(file_path, varval):
@@ -83,7 +84,7 @@ def replace_file_var(file_path, varval):
 
     file_handle.close()
     bak_handle.close()
-    os.system("mv %s.bak %s" % (file_path, file_path))
+    shutil.move(("%s.bak" % file_path), file_path)
 
 if __name__ == "__main__":
     start_plugin()

@@ -13,12 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import glob
 import os
 import os.path
-import sys
-import subprocess
-import shutil
 import re
+import shlex
+import shutil
+import stat
+import subprocess
+import sys
+import tarfile
 
 def get_svn_path():
 
@@ -68,14 +72,14 @@ def create_diff_dir(ver1, ver2):
     return diff_dir
 
 def remove_dot_svn_dirs(dir_name):
-    rm_svn_dirs_cmd = "find %s -name \".svn\" -exec rm -rf {} \;" % dir_name
-    os.system(rm_svn_dirs_cmd)
+    for (root, subdir_names, file_names) in os.walk(dir_name):
+        for subdir_name in subdir_names:
+            if subdir_name == '.svn':
+                shutil.rmtree(os.path.join(root, subdir_name))
 
 def copy_code_from_dir (source_dir, base_name, ver):
     dest_dir = "%s-%d" % (base_name, ver)
-    cp_command = "cp -ar %s %s" % (source_dir, dest_dir)
-    print(cp_command)
-    os.system(cp_command)
+    shutil.copy2(source_dir, dest_dir)
     return dest_dir
 
 def check_out_revision(svn_path, ver, base_name, clean_up=False):
@@ -92,7 +96,7 @@ def check_out_revision(svn_path, ver, base_name, clean_up=False):
 
     svn_command += " %s" % dir_name
 
-    os.system(svn_command)
+    subprocess.run(shlex.split(svn_command))
 
     # remove .svn directories, to facilitate diff file making
     if clean_up:
@@ -103,7 +107,7 @@ def check_out_revision(svn_path, ver, base_name, clean_up=False):
 def create_diff_file(dir_name1, dir_name2, diff_file_name):
     diff_cmd = "diff -ruN %s %s > %s" % (dir_name1, dir_name2, diff_file_name)
     print (diff_cmd)
-    os.system(diff_cmd)
+    subprocess.run(shlex.split(diff_cmd))
     print ("Created diff file: %s." % diff_file_name)
 
 def create_merge_dir(base_name, rev):
@@ -122,7 +126,7 @@ def create_merge_dir(base_name, rev):
 def apply_patch_file(diff_file):
     patch_cmd = "patch -p1 < %s" % diff_file
     print ("Executing: %s" % patch_cmd)
-    os.system(patch_cmd)
+    subprocess.run(shlex.split(patch_cmd))
 
 def is_svn_separator_line(line):
     for char in line:
@@ -280,8 +284,7 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
             bin_handle.write(bin_file_name + "\n")
             bin_name = bin_list_name + ".binary%d" % binary_count
             binary_count += 1
-            mv_cmd = "mv %s %s" % (bin_file_to_copy, bin_name)
-            os.system(mv_cmd)
+            shutil.move(bin_file_to_copy, bin_name)
 
 
     diff_handle.close()
@@ -290,16 +293,14 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
 
 def tar_up(base_name, dir_name=None):
     tar_file = base_name + ".tar.gz"
-    tar_cmd = "tar -czvf %s %s.*" % (tar_file, base_name)
-    if dir_name:
-        tar_cmd += " " + dir_name
-    os.system(tar_cmd)
-    mv_cmd = "mv %s .." % tar_file
-    os.system(mv_cmd)
+    with tarfile.open(tar_file, "w:gz") as tar:
+        for file_name in glob.glob("%s.*" % base_name):
+            tar.add(file_name)
 
-def execute_command(cmd):
-    print ("%s" % cmd)
-    os.system(cmd)
+        if dir_name:
+            tar.add(dir_name)
+
+    shutil.move(tar_file, "..")
 
 def chmod_exe_files(exe_list):
     with open(exe_list) as list_handle:
@@ -307,8 +308,10 @@ def chmod_exe_files(exe_list):
             if len(line) == 0:
                 continue
             line = line[:-1]
-            chmod_cmd = "chmod u+x %s" % line
-            execute_command(chmod_cmd)
+
+            # Add user execute permission
+            stat_info = os.stat(line)
+            os.chmod(line, (stat_info.st_mode | stat.S.IXUSR))
 
 def copy_source_tree(from_path, to_path):
     try:
@@ -328,6 +331,5 @@ def copy_binary_files(binary_files_list):
                 continue
             line = line[:-1]
             binary_file_source = binary_files_list + ".binary%d" % binary_count
-            mv_cmd = "mv %s %s" % (binary_file_source, line)
-            execute_command(mv_cmd)
+            shutil.move(binary_file_source, line)
             binary_count += 1

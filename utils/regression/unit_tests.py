@@ -17,12 +17,13 @@
 
 import getopt
 import os
+import shlex
+import subprocess
 import sys
 import time
 from regression_utils import verify_force_path, verify_dir_writable
 
 from multiprocessing import Pool, Manager
-from subprocess import Popen, PIPE, STDOUT
 from functools import partial
 
 def usage(extra=None):
@@ -191,13 +192,11 @@ def run_one_unit_test(nopicky, clean_build, arg_tuple):
 
 
 def execute_command(cmd):
-    arg = cmd.split(" ")
     # Measure the amount of time it took to run this test
     start_time = time.time()
-    process = Popen(arg, stdout=PIPE, stderr=STDOUT)
-    result = process.communicate()
+    process = subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     end_time = time.time()
-    process_stdout = result[0].decode("utf-8")
+    process_stdout = process.stdout.decode("utf-8")
     ret_code = process.returncode
 
     trace = ExecutionTrace(process_stdout, ret_code, cmd, end_time - start_time)

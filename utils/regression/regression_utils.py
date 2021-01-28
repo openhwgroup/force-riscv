@@ -53,34 +53,6 @@ def verify_dir_writable(dir_path):
         print("This path is not writable \"%s\"." % dir_path)
         sys.exit()
 
-def execute_command(cmd, print_it=False, test_summ = None):
-    if print_it:
-        print("Executing: %s" % cmd)
-    ret_code = os.system(cmd)
-    # test_summ will exist if rumming in suite mode
-    if test_summ:
-        test_summ.add_result( ret_code )
-        # print ("Failed executing %s, Continue to Next Test" % cmd)
-
-    elif ret_code != 0:
-        print ("Failed executing %s, Terminating ..." % cmd)
-        sys.exit()
-
-def run_one_unit_test(upath, module_name):
-    cur_path = os.getcwd()
-    os.chdir(upath)
-    execute_command("make clean")
-    execute_command("make")
-    execute_command("bin/%s_test" % module_name)
-    os.chdir(cur_path)
-
-def run_unit_tests(unit_path):
-    verify_dir_writable(unit_path)
-    for sub_path in os.listdir(unit_path):
-        if sub_path != ".svn":
-            unit_test_path = unit_path + "/" + sub_path
-            run_one_unit_test(unit_test_path, sub_path)
-
 def get_unsupported_list(suite_path):
     unsupported_file = suite_path + "/unsupported_tests.txt"
     unsupported_list = list()
@@ -111,34 +83,3 @@ def adjust_ld_library_path():
         except KeyError as ke:
             new_ld_library_path = gcc_std_path
         os.environ["LD_LIBRARY_PATH"] = new_ld_library_path
-
-def run_test_suite(suite_path, force_exe, asm_output, num_instr=1000, test_summ = None ):
-    verify_dir(suite_path)
-    cur_dir = os.getcwd()
-
-    suite_path = os.path.abspath(suite_path)
-    os.chdir(suite_path)
-    unsupported_list = get_unsupported_list(suite_path)
-    for file_name in os.listdir(suite_path):
-        if file_name.endswith("_force.py"):
-            if not file_name in unsupported_list:
-                test_file = suite_path + "/" + file_name
-                force_cmd = force_exe + " -t " + test_file
-                if not asm_output:
-                    force_cmd += " --noasm"
-                gen_log_name = file_name.replace(".py", ".gen.log")
-                force_cmd += " >& " + gen_log_name
-                execute_command(force_cmd, True)
-
-    os.chdir(cur_dir)
-
-def run_direct_test(test_case, force_exe, asm_output, num_instr=1000):
-    force_cmd = force_exe + " -t " + test_case
-    if not asm_output:
-        force_cmd += " --noasm"
-    gen_log_name = test_case.replace(".py", ".gen.log")
-    force_cmd += " >& " + gen_log_name
-
-    execute_command(force_cmd)
-
-

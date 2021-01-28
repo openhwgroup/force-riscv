@@ -16,6 +16,7 @@
 #
 
 import sys, os
+import subprocess
 from common.sys_utils import SysUtils
 from common.version_ctrl_utils import VersionCtrlUtils
 from common.path_utils import PathUtils
@@ -103,7 +104,7 @@ class RunWithReport(object):
         return report_cmd
 
     def runReportCommand(self):
-        os.system(self._mReportCommand)
+        subprocess.run(shlex.split(self._mReportCommand))
 
     def _getGatherCommand(self):
         #Always XML dump regardless of command line arguments for now. Preventing slip-ups while this is still in development.
@@ -116,7 +117,7 @@ class RunWithReport(object):
         return gather_cmd
 
     def runGatherCommand(self):
-        os.system(self._mGatherCommand)
+        subprocess.run(shlex.split(self._mGatherCommand))
 
     def dump(self):
         print(vars(self))

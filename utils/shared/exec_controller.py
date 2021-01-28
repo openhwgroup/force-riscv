@@ -196,7 +196,6 @@ class ExecuteController( Controller ):
             my_log  = self.sim_log
             my_elog = self.sim_log
 
-            #my_ret_code = int( SysUtils.exec_cmd( my_cmd ) )
             my_result = SysUtils.exec_process( my_cmd, my_log, my_elog, self.ctrl_item.timeout, True )
 
             my_ret_code = int(my_result[0])

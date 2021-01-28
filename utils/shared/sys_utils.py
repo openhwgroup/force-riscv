@@ -88,10 +88,6 @@ class SysUtils:
         return ( my_hostname.find( arg_teststr ) == 0 )
 
     @classmethod
-    def exec_cmd( cls, arg_cmd ):
-        return os.system( arg_cmd )
-
-    @classmethod
     def open_output( cls, arg_fout = None, arg_ferr = None ):
 
         Msg.dbg( "arg_fout: %s, arg_ferr: %s" % ( str(arg_fout), str(arg_ferr) ))

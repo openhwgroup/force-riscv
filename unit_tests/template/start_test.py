@@ -17,6 +17,7 @@
 
 import getopt, sys
 import os
+import shutil
 
 def usage():
     usage_str = """Starting a unit test directory.  Run the script inside unit_tests directory.
@@ -69,9 +70,9 @@ def start_test_with_name(test_dir, test_name):
         sys.exit(1)
 
     os.mkdir(test_path)
-    os.system("cp template/Makefile.template %s/Makefile" % test_path)
-    os.system("cp template/test.cc.template %s/%s_test.cc" % (test_path, test_name))
-    os.system("cp template/Makefile.target.template %s/Makefile.target" % test_path)
+    shutil.copyfile("template/Makefile.template", ("%s/Makefile" % test_path))
+    shutil.copyfile("template/test.cc.template", ("%s/%s_test.cc" % (test_path, test_name)))
+    shutil.copyfile("template/Makefile.target.template", ("%s/Makefile.target" % test_path))
     replace_file_var("%s/Makefile.target" % test_path, test_name)
 
 def replace_file_var(file_path, varval):
@@ -85,7 +86,7 @@ def replace_file_var(file_path, varval):
 
     file_handle.close()
     bak_handle.close()
-    os.system("mv %s.bak %s" % (file_path, file_path))
+    shutil.move(("%s.bak" % file_path), file_path)
 
 if __name__ == "__main__":
     start_test()

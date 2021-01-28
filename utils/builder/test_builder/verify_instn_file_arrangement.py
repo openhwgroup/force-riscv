@@ -17,6 +17,7 @@
 
 import os
 import ast as arrayParser
+import subprocess
 from glob import glob
 from builder_init import the_force_path
 
@@ -202,7 +203,7 @@ class ParseFiles:
 if __name__ == "__main__":
     # Do make new
     os.chdir ( the_force_path )
-    os.system ("make tests_old")
+    subprocess.run (["make", "tests_old"])
 
     # Parse the results
     parseNew = ParseFiles( the_force_path )
@@ -210,7 +211,7 @@ if __name__ == "__main__":
 
     # Do make old
     os.chdir ( the_force_path )
-    os.system ("make tests")
+    subprocess.run (["make", "tests"])
 
     # Parse the results
     parseOld = ParseFiles( the_force_path )

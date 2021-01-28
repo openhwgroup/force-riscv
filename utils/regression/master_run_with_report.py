@@ -16,6 +16,8 @@
 #
 
 import sys, os
+import shlex
+import subprocess
 from common.sys_utils import SysUtils
 from common.version_ctrl_utils import VersionCtrlUtils
 from common.path_utils import PathUtils
@@ -162,7 +164,7 @@ class RunWithReport(object):
     def runMasterRun(self):
         self._mMasterRunCommand = self._getMasterRunCommand()
         self.printMasterRunConfig()
-        os.system(self._mMasterRunCommand)
+        subprocess.run(shlex.split(self._mMasterRunCommand))
 
     def _getReportName(self):
         report_name = "top_force_" + PathUtils.base_name(self._mTestDir)
@@ -173,7 +175,7 @@ class RunWithReport(object):
         return report_cmd
 
     def runReportCommand(self):
-        os.system(self._mReportCommand)
+        subprocess.run(shlex.split(self._mReportCommand))
 
     def _getGatherCommand(self):
         gather_cmd = self._mDirName + "/../misc/gather_force.pl -u top %s/top_regress_sim.rpt -q" % self._mTestDir
@@ -185,7 +187,7 @@ class RunWithReport(object):
         return gather_cmd
 
     def runGatherCommand(self):
-        os.system(self._mGatherCommand)
+        subprocess.run(shlex.split(self._mGatherCommand))
 
     def dump(self):
         print(vars(self))
