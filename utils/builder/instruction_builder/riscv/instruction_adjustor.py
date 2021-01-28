@@ -118,10 +118,8 @@ class G_InstructionAdjustor(InstructionAdjustor):
         if aInstr.name in ['MRET', 'SRET']:
             add_ret_operand(aInstr)
             aInstr.iclass = 'RetInstruction'
-            aInstr.group = 'System'
-            aInstr.extension = 'RV64Priv'
 
-        if aInstr.name == 'SFENCE.VMA':
+        if aInstr.name in ['SFENCE.VMA', 'WFI', 'MRET', 'SRET']:
             aInstr.group = 'System'
             aInstr.extension = 'RV64Priv'
 

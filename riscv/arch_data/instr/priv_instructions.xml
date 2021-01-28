@@ -31,4 +31,8 @@
     <O name="retoperand" type="Choices" choices="Ret choice" class="RetOperand"/>
     <asm format="SRET"/>
   </I>
+  <I name="WFI" isa="RISCV" group="System" extension="RV64Priv">
+    <O name="const_bits" type="Constant" bits="31-0" value="00010000010100000000000001110011"/>
+    <asm format="WFI"/>
+  </I>
 </instruction_file>
