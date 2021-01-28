@@ -1,10 +1,7 @@
-bin/SimApiHANDCAR.so
-fpix/plugins/bin
-fpix/riscv/make_area
-riscv/make_area
-utils/handcar/make_area
-utils/regression/seedgen/bin
-utils/regression/seedgen/make_area
-*.swp
-*~
-
+*.so
+*.sw*
+*.pyc
+__pycache__/
+make_area/
+output/
+.idea/
