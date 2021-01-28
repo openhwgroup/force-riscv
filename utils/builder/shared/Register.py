@@ -24,7 +24,7 @@ import sys
 import os
 import argparse
 import re
-import xml.etree.ElementTree as ET
+import defusedxml.defusedxml.ElementTree as ET
 #import boot_priority
 import copy
 #import registers_allow_writing as RW

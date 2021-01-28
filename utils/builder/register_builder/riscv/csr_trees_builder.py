@@ -20,8 +20,7 @@ import os
 import getopt
 import argparse
 import re
-import xml.etree.ElementTree as ET
-import xml.dom.minidom as DOM
+import defusedxml.defusedxml.ElementTree as ET
 import copy
 
 license_string = """

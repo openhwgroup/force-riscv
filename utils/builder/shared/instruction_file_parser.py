@@ -13,12 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import xml.sax
+import defusedxml.defusedxml.sax
 import sys
 from shared.instruction import Instruction, Operand, GroupOperand, Asm
 import shared.builder_utils as builder_utils
 import copy
 from shared.builder_exception import BuilderException
+
+# Needed to create class to interpret parsed XML data
+from xml.sax.handler import ContentHandler
 
 def asm_op_index(op):
     if op.find("op") == 0:
@@ -26,10 +29,10 @@ def asm_op_index(op):
     else:
         return 0
 
-class InstructionFileHandler(xml.sax.handler.ContentHandler, object):
+class InstructionFileHandler(ContentHandler, object):
 
     def __init__(self, file_path, instr_file):
-        xml.sax.ContentHandler.__init__(self)
+        super().__init__()
         self.instructionFile = instr_file
         self.filePath = file_path
         self.nameStack = list()
@@ -146,7 +149,7 @@ class InstructionFileParser(object):
         #print( "File Path: " + str( file_path ))
         #traceback.print_stack()
         try:     
-            xml.sax.parse(file_path, ifile_handler)
+            defusedxml.defusedxml.sax.parse(file_path, ifile_handler)
         except:
             e_type, e_value, e_tb = sys.exc_info()
             import traceback

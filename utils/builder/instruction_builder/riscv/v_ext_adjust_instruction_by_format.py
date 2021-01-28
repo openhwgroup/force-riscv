@@ -15,17 +15,12 @@
 #
 from shared.instruction import add_addressing_operand
 from vector_operand_adjustor import VectorOperandAdjustor
-from xml.sax.saxutils import escape
 
 import re
 
 format_map = {}
 
 def v_ext_adjust_instruction_by_format(aInstruction):
-    # escaping < and > characters
-    aInstruction.name = escape(aInstruction.name)
-    aInstruction.asm.format = escape(aInstruction.asm.format)
-
     # Get the format prior to adding the layout operand, so that it's not necessary to strip off the
     # layout operand name.
     instruction_format = aInstruction.get_format()

@@ -24,8 +24,8 @@ import sys
 import os
 import argparse
 import re
-import xml.etree.ElementTree as ET
-import xml.dom.minidom as DOM
+import defusedxml.defusedxml.ElementTree as ET
+import defusedxml.defusedxml.minidom as DOM
 import copy
 
 #import Register #shared Register definition

@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+export PYTHONPATH:=$(PYTHONPATH):../../../../3rd_party/py
+
 INSTR_BUILDER=./instruction_builder.py
 GVIMDIFF=/usr/bin/gvimdiff
 INSTALL_DIR=../../../../riscv/arch_data/instr
