@@ -16,7 +16,6 @@
 import os
 import os.path
 import sys
-import subprocess
 
 def verify_dir(dir_path):
     if not os.path.isdir(dir_path):
@@ -63,14 +62,6 @@ def get_unsupported_list(suite_path):
                 unsupported_list.append(line)
 
     return unsupported_list
-
-def is_green_zone():
-    output = subprocess.check_output(["uname", "-n"])
-    log_str = str(output, "utf-8")
-    if log_str.find("SAN") == 0:
-        print ("Running on green zone machine %s" % log_str)
-        return True
-    return False
 
 def adjust_ld_library_path():
     if True:

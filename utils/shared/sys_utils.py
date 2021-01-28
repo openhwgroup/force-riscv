@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import os
+import socket
 import subprocess, signal
 import sys
 from subprocess import Popen, PIPE, TimeoutExpired
@@ -84,7 +85,7 @@ class SysUtils:
 
     @classmethod
     def check_host( cls, arg_teststr ):
-        my_hostname = str( subprocess.check_output( [ "uname", "-n" ] ), "utf-8" )
+        my_hostname = socket.gethostname()
         return ( my_hostname.find( arg_teststr ) == 0 )
 
     @classmethod
