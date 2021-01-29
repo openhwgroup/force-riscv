@@ -17,24 +17,25 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 
-## This test verifies that basic load and store instructions can be executed successfully.
-class MainSequence(Sequence):
 
+#  This test verifies that basic load and store instructions can be
+#  executed successfully.
+class MainSequence(Sequence):
     def generate(self, **kargs):
-        instructions = ('LD##RISCV', 'SD##RISCV')
-        if self.getGlobalState('AppRegisterWidth') == 32:
-            instructions = ('LW##RISCV', 'SW##RISCV')
+        instructions = ("LD##RISCV", "SD##RISCV")
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            instructions = ("LW##RISCV", "SW##RISCV")
 
         for _ in range(1000):
             instr = self.choice(instructions)
-            self.genInstruction(instr, {'NoPreamble': 1})
+            self.genInstruction(instr, {"NoPreamble": 1})
 
             except_count = 0
             for except_code in (0x2, 0x4, 0x5, 0x6, 0x7, 0xD, 0xF):
                 except_count += self.queryExceptionRecordsCount(except_code)
 
             if except_count != 0:
-                self.error('Instruction %s did not execute correctly' % instr)
+                self.error("Instruction %s did not execute correctly" % instr)
 
 
 MainSequenceClass = MainSequence

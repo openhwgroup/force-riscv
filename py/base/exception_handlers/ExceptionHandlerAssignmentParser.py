@@ -16,14 +16,16 @@
 import json
 import os
 
-## This class parses JSON data files that map exception classes to default exception handler
-# classes.
+
+# This class parses JSON data files that map exception classes to default
+# exception handler classes.
 class ExceptionHandlerAssignmentParser(object):
 
-    ## Parse the specified file and return a map from an exception class name and optional
-    # subexception class name to a tuple consisting of the module name and class name of an
-    # exception handler. Only two levels of exception codes are currently supported; files
-    # specifying more than two levels will not parse correctly.
+    # Parse the specified file and return a map from an exception class name
+    # and optional subexception class name to a tuple consisting of the module
+    # name and class name of an exception handler. Only two levels of exception
+    # codes are currently supported; files specifying more than two levels will
+    # not parse correctly.
     #
     #  @param aAssignmentFilePath The path to the file to parse.
     def parseHandlerAssignments(self, aAssignmentFilePath):
@@ -33,17 +35,34 @@ class ExceptionHandlerAssignmentParser(object):
 
             # We skip the first element, which is the license string
             for assignment in assignments[1:]:
-                if 'ExceptionSubhandlers' in assignment:
-                    subassignment_file_path = os.path.join(os.path.dirname(aAssignmentFilePath), assignment['ExceptionSubhandlers'])
-                    handler_subassignments = self.parseHandlerAssignments(subassignment_file_path)
+                if "ExceptionSubhandlers" in assignment:
+                    subassignment_file_path = os.path.join(
+                        os.path.dirname(aAssignmentFilePath),
+                        assignment["ExceptionSubhandlers"],
+                    )
+                    handler_subassignments = self.parseHandlerAssignments(
+                        subassignment_file_path
+                    )
 
-                    exception_class_name = assignment['ExceptionCode']
-                    for ((subexception_class_name, _), (handler_module_name, handler_class_name)) in handler_subassignments.items():
-                        handler_assignments[(exception_class_name, subexception_class_name)] = (handler_module_name, handler_class_name)
+                    exception_class_name = assignment["ExceptionCode"]
+                    for (
+                        (subexception_class_name, _),
+                        (handler_module_name, handler_class_name),
+                    ) in handler_subassignments.items():
+                        handler_assignments[
+                            (exception_class_name, subexception_class_name)
+                        ] = (handler_module_name, handler_class_name)
                 else:
-                    exception_class_name = assignment['ExceptionCode']
-                    handler_module_name = assignment['ExceptionHandler']['ExceptionHandlerModule']
-                    handler_class_name = assignment['ExceptionHandler']['ExceptionHandlerClass']
-                    handler_assignments[(exception_class_name, None)] = (handler_module_name, handler_class_name)
+                    exception_class_name = assignment["ExceptionCode"]
+                    handler_module_name = assignment["ExceptionHandler"][
+                        "ExceptionHandlerModule"
+                    ]
+                    handler_class_name = assignment["ExceptionHandler"][
+                        "ExceptionHandlerClass"
+                    ]
+                    handler_assignments[(exception_class_name, None)] = (
+                        handler_module_name,
+                        handler_class_name,
+                    )
 
         return handler_assignments

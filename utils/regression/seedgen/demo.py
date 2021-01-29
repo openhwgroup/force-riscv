@@ -17,6 +17,5 @@
 from bin.seedgen import seedgen
 
 if __name__ == "__main__":
-  val = seedgen()
-  print("DEMO: ", val)
-
+    val = seedgen()
+    print("DEMO: ", val)

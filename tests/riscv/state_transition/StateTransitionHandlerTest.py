@@ -15,15 +15,17 @@
 #
 from base.StateTransitionHandler import StateTransitionHandler
 
-## A test StateTransitionHandler.
+
+# A test StateTransitionHandler.
 class StateTransitionHandlerTest(StateTransitionHandler):
 
-    ## Execute the State change represented by the StateElement. Only instances of the StateElement
-    # types for which the StateTransitionHandler has been registered will be passed to this method.
-    # Other StateTransitionHandlers will process the other StateElement types. It is important to
-    # avoid making changes to entities represented by StateElements that have already been
-    # processed. Changes to entities represented by StateElements that will be processed later are
-    # permitted.
+    # Execute the State change represented by the StateElement. Only instances
+    # of the StateElement types for which the StateTransitionHandler has been
+    # registered will be passed to this method. Other StateTransitionHandlers
+    # will process the other StateElement types. It is important to avoid
+    # making changes to entities represented by StateElements that have already
+    # been processed. Changes to entities represented by StateElements that
+    # will be processed later are permitted.
     #
     #  @param aStateElem A StateElement object.
     def processStateElement(self, aStateElem):

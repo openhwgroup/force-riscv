@@ -15,5 +15,8 @@
 #
 control_items = [
     {"fname": "*_force.py", "options": {"max-instr": 20000}},
-    {"fname": "state_transition_by_all_state_elem_types_force.py", "options": {"num-cores": 4}},
+    {
+        "fname": "state_transition_by_all_state_elem_types_force.py",
+        "options": {"num-cores": 4},
+    },
 ]

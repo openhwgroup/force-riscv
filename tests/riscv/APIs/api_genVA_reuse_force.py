@@ -19,21 +19,26 @@ from base.Sequence import Sequence
 from Constraint import ConstraintSet
 import RandomUtils
 
-## This test verifies that genVA() is capable of reusing addresses.
-class MainSequence(Sequence):
 
+# This test verifies that genVA() is capable of reusing addresses.
+class MainSequence(Sequence):
     def generate(self, **kargs):
         init_size = 256
-        init_addr = self.genVA(Size=init_size, Align=init_size, Type='D')
+        init_addr = self.genVA(Size=init_size, Align=init_size, Type="D")
         addr_constr = ConstraintSet(init_addr, (init_addr + init_size - 1))
 
         for _ in range(RandomUtils.random32(50, 100)):
             size = RandomUtils.random32(8, 32)
             alignment = self.choice((1, 2, 4, 8, 16, 32))
-            addr = self.genVA(Size=size, Align=alignment, Type='D', Range=str(addr_constr))
+            addr = self.genVA(
+                Size=size, Align=alignment, Type="D", Range=str(addr_constr)
+            )
 
             if not addr_constr.containsValue(addr):
-                self.error('Virtual address 0x%x was generated outside of the specified range %s' % (addr, addr_constr))
+                self.error(
+                    "Virtual address 0x%x was generated outside of the "
+                    "specified range %s" % (addr, addr_constr)
+                )
 
 
 MainSequenceClass = MainSequence

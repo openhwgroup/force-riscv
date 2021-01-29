@@ -16,18 +16,30 @@
 from base.exception_handlers.ReusableSequence import ReusableSequence
 from riscv.exception_handlers.ExceptionHandlerContext import RegisterCallRole
 
-class SkipInstructionHandlerRISCV(ReusableSequence):
 
+class SkipInstructionHandlerRISCV(ReusableSequence):
     def generateHandler(self, **kwargs):
         try:
-            handler_context = kwargs['handler_context']
+            handler_context = kwargs["handler_context"]
         except KeyError:
-            self.error('INTERNAL ERROR: one or more arguments to SkipInstructionHandlerRISCV generate method missing.')
+            self.error(
+                "INTERNAL ERROR: one or more arguments to "
+                "SkipInstructionHandlerRISCV generate method missing."
+            )
 
-        self.debug('[SkipInstructionHandlerRISCV] generate handler address: 0x%x' % self.getPEstate('PC'))
+        self.debug(
+            "[SkipInstructionHandlerRISCV] generate handler address: 0x%x"
+            % self.getPEstate("PC")
+        )
 
-        priv_level_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.PRIV_LEVEL_VALUE)
-        scratch_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 1)
+        priv_level_reg_index = handler_context.getScratchRegisterIndices(
+            RegisterCallRole.PRIV_LEVEL_VALUE
+        )
+        scratch_reg_index = handler_context.getScratchRegisterIndices(
+            RegisterCallRole.TEMPORARY, 1
+        )
 
-        self.mAssemblyHelper.genIncrementExceptionReturnAddress(scratch_reg_index, priv_level_reg_index)
+        self.mAssemblyHelper.genIncrementExceptionReturnAddress(
+            scratch_reg_index, priv_level_reg_index
+        )
         self.mAssemblyHelper.genReturn()

@@ -19,31 +19,38 @@ from base.Sequence import Sequence
 from Constraint import ConstraintSet
 import RandomUtils
 
-## This test verifies that load and store instructions can reuse addresses when generating with and
-# without preamble.
-class MainSequence(Sequence):
 
+# This test verifies that load and store instructions can reuse addresses
+# when generating with and without preamble.
+class MainSequence(Sequence):
     def generate(self, **kargs):
         init_size = 256
-        init_addr = self.genVA(Size=init_size, Align=init_size, Type='D')
+        init_addr = self.genVA(Size=init_size, Align=init_size, Type="D")
         addr_constr = ConstraintSet(init_addr, (init_addr + init_size - 1))
 
         for _ in range(RandomUtils.random32(50, 100)):
-            instr_params = {'LSTarget': str(addr_constr), 'NoSkip': 1}
+            instr_params = {"LSTarget": str(addr_constr), "NoSkip": 1}
 
             if RandomUtils.random32(0, 1) == 1:
-                instr_params['NoPreamble'] = 1
+                instr_params["NoPreamble"] = 1
             else:
-                instr_params['UsePreamble'] = 1
+                instr_params["UsePreamble"] = 1
 
-            if (self.getGlobalState('AppRegisterWidth') == 32):
-                instr_id = self.genInstruction(self.choice(('LW##RISCV', 'SW##RISCV')), instr_params)
+            if self.getGlobalState("AppRegisterWidth") == 32:
+                instr_id = self.genInstruction(
+                    self.choice(("LW##RISCV", "SW##RISCV")), instr_params
+                )
             else:
-                instr_id = self.genInstruction(self.choice(('LD##RISCV', 'SD##RISCV')), instr_params)
+                instr_id = self.genInstruction(
+                    self.choice(("LD##RISCV", "SD##RISCV")), instr_params
+                )
 
             instr_record = self.queryInstructionRecord(instr_id)
-            if not addr_constr.containsValue(instr_record['LSTarget']):
-                self.error('Target address 0x%x was generated outside of the specified range %s' % (addr, addr_constr))
+            if not addr_constr.containsValue(instr_record["LSTarget"]):
+                self.error(
+                    "Target address 0x%x was generated outside of the"
+                    "specified range %s" % (addr, addr_constr)
+                )
 
 
 MainSequenceClass = MainSequence

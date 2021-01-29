@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 control_items = [
-    {'fname': '*_force.py', 'options': {'max-instr': 12000}},
+    {"fname": "*_force.py", "options": {"max-instr": 12000}},
 ]

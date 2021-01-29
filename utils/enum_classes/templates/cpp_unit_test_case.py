@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-template_string="""
+template_string = """
 CASE( "tests for E${class_name}" ) {
 
   SETUP ( "setup E${class_name}" )  {
@@ -36,7 +36,8 @@ ${to_enum_fail_tests}
 ${try_to_enum_tests}
     }
 
-    SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
+    SECTION( 
+    "test non-throwing string-to-enum conversion with unmatched string" ) {
       bool okay = false;
 ${try_to_enum_fail_tests}
     }

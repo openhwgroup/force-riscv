@@ -14,5 +14,15 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname": "*_force.py", "options": {"num-chips": 2, "num-cores": 4, "num-threads": 2}, "generator": {"--noiss": None}},
+    {
+        "fname": "*_force.py",
+        "options": {
+            "num-chips": 2,
+            "num-cores": 4,
+            "num-threads": 2,
+        },
+        "generator": {
+            "--noiss": None,
+        },
+    },
 ]

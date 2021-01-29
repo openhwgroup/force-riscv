@@ -16,28 +16,36 @@
 def get_reset_pc():
     return 0x50000000
 
+
 def get_initial_pc(thread_id):
     # TODO randomize
-    return (get_base_initial_pc() + thread_id * get_initial_pc_offset())
+    return get_base_initial_pc() + thread_id * get_initial_pc_offset()
+
 
 def get_boot_pc(thread_id):
-    return (get_base_boot_pc() + thread_id * get_boot_pc_offset())
+    return get_base_boot_pc() + thread_id * get_boot_pc_offset()
+
 
 def get_reset_region_size():
     return 0x40
 
+
 def get_boot_region_size():
     return 0x1000
 
+
 def get_base_initial_pc():
-    return 0x80011000 # Temporary to work on spike default memory model
+    return 0x80011000  # Temporary to work on spike default memory model
     # return 0x80001000
+
 
 def get_base_boot_pc():
     return 0x80000000
 
+
 def get_initial_pc_offset():
     return 0x1000000
+
 
 def get_boot_pc_offset():
     return 0x100000

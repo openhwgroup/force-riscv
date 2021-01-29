@@ -13,20 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# classes, code related to Branch not taken. 
+# classes, code related to Branch not taken.
 
 from base.Sequence import Sequence
 
-#-------------------------------------------------------------------------------------------------------
-# BntSequence to provide base class for bnt squence 
-#-------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------
+# BntSequence to provide base class for bnt squence
+# -------------------------------------------------------------------------------------------------------
+
 
 class BntSequence(Sequence):
-    def __init__(self, gen_thread, instr_num = 10):
+    def __init__(self, gen_thread, instr_num=10):
         super().__init__(gen_thread)
         self.instr_num = instr_num
         self.bntCallback = None
-        
+
     def setup(self, **kargs):
         super().setup(**kargs)
         self.genThread.modifyGenMode("Filler")
@@ -43,7 +44,7 @@ class BntSequence(Sequence):
 
     def setBntCallback(self, callback):
         self.bntCallback = callback
-    
+
     def cleanUp(self, **kargs):
         super().cleanUp(**kargs)
         self.genThread.revertGenMode("Filler")

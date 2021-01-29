@@ -19,6 +19,6 @@ from .LsfInit import LsfCmdLineOptions, LsfParametersProcessor
 CmdLineOptions = LsfCmdLineOptions
 
 # Tag for the application
-Tag = 'lsf'
+Tag = "lsf"
 
 ParametersProcessorClass = LsfParametersProcessor

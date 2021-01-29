@@ -13,34 +13,58 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from base.exception_handlers.PrivilegeLevelHandlerSet import PrivilegeLevelHandlerSet
+from base.exception_handlers.PrivilegeLevelHandlerSet import (
+    PrivilegeLevelHandlerSet,
+)
 from riscv.SecurityState import SecurityStateRISCV
 from riscv.exception_handlers.ExceptionClass import ExceptionClassRISCV
-from riscv.exception_handlers.ExceptionHandlerContext import ExceptionHandlerContext, ComprehensiveExceptionHandlerContext
+from riscv.exception_handlers.ExceptionHandlerContext import (
+    ExceptionHandlerContext,
+    ComprehensiveExceptionHandlerContext,
+)
+
 
 class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
-
-    def __init__(self, gen_thread, privLevel, memBankHandlerRegistryRepo, factory, exceptionsStack):
-        super().__init__(gen_thread, privLevel, memBankHandlerRegistryRepo, factory, exceptionsStack)
+    def __init__(
+        self,
+        gen_thread,
+        privLevel,
+        memBankHandlerRegistryRepo,
+        factory,
+        exceptionsStack,
+    ):
+        super().__init__(
+            gen_thread,
+            privLevel,
+            memBankHandlerRegistryRepo,
+            factory,
+            exceptionsStack,
+        )
 
         self.handlersBoundaries = []
 
-    #------------------------------------------------------------------------
     # pick scratch registers to use in exception handlers
-    #------------------------------------------------------------------------
     def setupScratchRegisters(self):
         if len(self.scratchRegs) > 0:
             return
 
-        # Exclude the zero register, implied register operands, the stack pointer and the address
-        # table pointer
-        excluded_regs = '0,1,2,%d' % self.address_table.tableIndex()
+        # Exclude the zero register, implied register operands, the stack
+        # pointer and the address table pointer
+        excluded_regs = "0,1,2,%d" % self.address_table.tableIndex()
         if not self.fastMode():
-            excluded_regs = '%d,%s' % (self.exceptions_stack.pointerIndex(), excluded_regs)
+            excluded_regs = "%d,%s" % (
+                self.exceptions_stack.pointerIndex(),
+                excluded_regs,
+            )
 
-        self.scratchRegs = self.getRandomGPRs(self._scratchRegisterCount(), exclude=excluded_regs)
+        self.scratchRegs = self.getRandomGPRs(
+            self._scratchRegisterCount(), exclude=excluded_regs
+        )
         if not self.scratchRegs:
-            raise RuntimeError('Unable to allocate scratch registers required by exception handlers.')
+            raise RuntimeError(
+                "Unable to allocate scratch registers required by exception "
+                "handlers."
+            )
 
     def generateHandlerSubroutines(self, aSecurityState):
         if not self.fastMode():
@@ -50,9 +74,20 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
             start_addr = self.nextCodeAddresses[default_mem_bank]
             self.setPEstate("PC", start_addr)
 
-            mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(default_mem_bank)
-            handler_context = self.createExceptionHandlerContext(0, default_mem_bank)
-            mem_bank_handler_registry.mHandlerSubroutineGenerator.generateRoutine('TableWalk', handler_context=handler_context)
+            mem_bank_handler_registry = (
+                self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+                    default_mem_bank
+                )
+            )
+            handler_context = self.createExceptionHandlerContext(
+                0, default_mem_bank
+            )
+
+            registry = mem_bank_handler_registry
+            generator = registry.mHandlerSubroutineGenerator
+            generator.generateRoutine(
+                "TableWalk", handler_context=handler_context
+            )
 
             end_addr = self.getPEstate("PC")
             self.setPEstate("PC", save_pc)
@@ -67,7 +102,9 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
     def getExceptionCodeClass(self):
         return ExceptionClassRISCV
 
-    def recordSpecificHandlerBoundary(self, mem_bank, handler_name, start_addr, end_addr):
+    def recordSpecificHandlerBoundary(
+        self, mem_bank, handler_name, start_addr, end_addr
+    ):
         self.handlersBoundaries.append((handler_name, start_addr, end_addr))
 
     def getAsynchronousHandlerErrorCode(self):
@@ -77,11 +114,29 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
         return 64
 
     def createExceptionHandlerContext(self, err_code, mem_bank):
-        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(mem_bank)
+        mem_bank_handler_registry = (
+            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+                mem_bank
+            )
+        )
         if self.fastMode():
-            handler_context = ExceptionHandlerContext(err_code, self.scratchRegs, self.privLevel.name, self.exceptions_stack, self.address_table, mem_bank_handler_registry)
+            handler_context = ExceptionHandlerContext(
+                err_code,
+                self.scratchRegs,
+                self.privLevel.name,
+                self.exceptions_stack,
+                self.address_table,
+                mem_bank_handler_registry,
+            )
         else:
-            handler_context = ComprehensiveExceptionHandlerContext(err_code, self.scratchRegs, self.privLevel.name, self.exceptions_stack, self.address_table, mem_bank_handler_registry)
+            handler_context = ComprehensiveExceptionHandlerContext(
+                err_code,
+                self.scratchRegs,
+                self.privLevel.name,
+                self.exceptions_stack,
+                self.address_table,
+                mem_bank_handler_registry,
+            )
 
         return handler_context
 

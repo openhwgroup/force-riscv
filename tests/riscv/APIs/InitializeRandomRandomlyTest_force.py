@@ -17,21 +17,20 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 
-class MainSequence(Sequence):
 
+class MainSequence(Sequence):
     def generate(self, **kargs):
-        self.randomInitializeRegister("S22") 
- 
+        self.randomInitializeRegister("S22")
+
         for instr in ["ADD##RISCV", "FADD.D#Double-precision#RISCV"]:
             self.genInstruction(instr)
 
 
-## Points to the MainSequence defined in this file
+# Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+# Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+# Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-

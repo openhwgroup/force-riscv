@@ -23,7 +23,6 @@ from DV.riscv.trees.instruction_tree import LDST32_All_instructions
 
 
 class Bunch_of_ALU_Int(Sequence):
-
     def generate(self, **kwargs):
         self.notice("Generating in 'Bunch_of_ALU_Int'")
         for _ in range(self.random32(5, 20)):
@@ -32,27 +31,24 @@ class Bunch_of_ALU_Int(Sequence):
 
 
 class Bunch_of_ALU_Int32(Sequence):
-
     def generate(self, **kwargs):
         self.notice("Generating in 'Bunch_of_ALU_Int32'")
         for _ in range(self.random32(5, 20)):
             instr = self.pickWeighted(ALU_Int32_All_instructions)
             self.genInstruction(instr)
 
-class Bunch_of_LDST(Sequence):
 
+class Bunch_of_LDST(Sequence):
     def generate(self, **kwargs):
         self.notice('Generating in "Bunch_of_LDST"')
         for _ in range(self.random32(5, 20)):
             instr = self.pickWeighted(LDST_All_instructions)
             instr_rec_id = self.genInstruction(instr)
 
-class Bunch_of_LDST32(Sequence):
 
+class Bunch_of_LDST32(Sequence):
     def generate(self, **kwargs):
         self.notice('Generating in "Bunch_of_LDST32"')
         for _ in range(self.random32(5, 20)):
             instr = self.pickWeighted(LDST32_All_instructions)
             instr_rec_id = self.genInstruction(instr)
-
-

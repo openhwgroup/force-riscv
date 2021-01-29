@@ -18,8 +18,8 @@ from riscv.AssemblyHelperRISCV import AssemblyHelperRISCV
 from riscv.Utils import LoadGPR64
 import riscv.PcConfig as PcConfig
 
-class ThreadSplitterSequence(Sequence):
 
+class ThreadSplitterSequence(Sequence):
     def __init__(self, genThread, numberCores, numberThreads):
         super().__init__(genThread)
 
@@ -29,22 +29,50 @@ class ThreadSplitterSequence(Sequence):
     def generate(self, **kwargs):
         with ThreadSplitterContextManager(self):
             pc = PcConfig.get_base_boot_pc()
-            (skip_boot, skip_boot_valid) = self.getOption("SkipBootCode") #TODO allow for granular control of skip boot code/skip thread splitter code
+            (skip_boot, skip_boot_valid) = self.getOption("SkipBootCode")
+            # TODO allow for granular control of skip boot code/skip thread
+            # splitter code
             if skip_boot_valid and skip_boot == 1:
                 pc = PcConfig.get_base_initial_pc()
 
-            (boot_pc_reg_index, thread_id_reg_index, pc_offset_reg_index) = self.getRandomGPRs(3, exclude='0')
+            (
+                boot_pc_reg_index,
+                thread_id_reg_index,
+                pc_offset_reg_index,
+            ) = self.getRandomGPRs(3, exclude="0")
             assembly_helper = AssemblyHelperRISCV(self)
-            assembly_helper.genReadSystemRegister(thread_id_reg_index, 'mhartid')  # Get the thread ID
+            assembly_helper.genReadSystemRegister(
+                thread_id_reg_index, "mhartid"
+            )  # Get the thread ID
 
             load_gpr64_seq = LoadGPR64(self.genThread)
-            load_gpr64_seq.load(pc_offset_reg_index, PcConfig.get_boot_pc_offset())
-            self.genInstruction('MUL##RISCV', {'rd': pc_offset_reg_index, 'rs1': thread_id_reg_index, 'rs2': pc_offset_reg_index})  # Multiply the base PC offset by the thread ID
+            load_gpr64_seq.load(
+                pc_offset_reg_index, PcConfig.get_boot_pc_offset()
+            )
+            self.genInstruction(
+                "MUL##RISCV",
+                {
+                    "rd": pc_offset_reg_index,
+                    "rs1": thread_id_reg_index,
+                    "rs2": pc_offset_reg_index,
+                },
+            )  # Multiply the base PC offset by the thread ID
 
             load_gpr64_seq.load(boot_pc_reg_index, PcConfig.get_base_boot_pc())
-            assembly_helper.genAddRegister(boot_pc_reg_index, pc_offset_reg_index)  # Add the thread PC offset to the base initial PC
+            assembly_helper.genAddRegister(
+                boot_pc_reg_index, pc_offset_reg_index
+            )  # Add the thread PC offset to the base initial PC
 
-            self.genInstruction('JALR##RISCV', {'rd': 0, 'rs1': boot_pc_reg_index, 'simm12': 0, 'NoBnt': 1, 'NoRestriction': 1})  # Branch to calculated address
+            self.genInstruction(
+                "JALR##RISCV",
+                {
+                    "rd": 0,
+                    "rs1": boot_pc_reg_index,
+                    "simm12": 0,
+                    "NoBnt": 1,
+                    "NoRestriction": 1,
+                },
+            )  # Branch to calculated address
 
 
 class ThreadSplitterContextManager:
@@ -53,12 +81,12 @@ class ThreadSplitterContextManager:
         self.origPc = None
 
     def __enter__(self):
-        self.sequence.genThread.modifyGenMode('NoEscape,SimOff')
-        self.origPc = self.sequence.getPEstate('PC')
-        self.sequence.setPEstate('PC', PcConfig.get_reset_pc())
+        self.sequence.genThread.modifyGenMode("NoEscape,SimOff")
+        self.origPc = self.sequence.getPEstate("PC")
+        self.sequence.setPEstate("PC", PcConfig.get_reset_pc())
         return self
 
     def __exit__(self, *unused):
-        self.sequence.setPEstate('PC', self.origPc)
-        self.sequence.genThread.revertGenMode('NoEscape,SimOff')
+        self.sequence.setPEstate("PC", self.origPc)
+        self.sequence.genThread.revertGenMode("NoEscape,SimOff")
         return False

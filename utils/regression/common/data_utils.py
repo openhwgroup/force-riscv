@@ -17,7 +17,7 @@ import sys
 from io import StringIO
 
 
-## Outputs obj representation into a readable format.
+#  Outputs obj representation into a readable format.
 #
 def dump_repr(obj, lvl=0, file=sys.stdout):
     """Outputs obj representation into a readable format.
@@ -26,39 +26,40 @@ def dump_repr(obj, lvl=0, file=sys.stdout):
     :param int lvl: Level of indention.  Mostly used internally.
     :param io.TextIOWrapper file: FileHandle for output
     """
-    indent = '   '
+    indent = "   "
     if isinstance(obj, dict):
-        print('%s{' % (lvl * indent), file=file)
+        print("%s{" % (lvl * indent), file=file)
         for key, val in obj.items():
-            if hasattr(val, '__iter__') and not isinstance(val, str):
-                print('%s%s:' % ((lvl + 1) * indent, repr(key)), file=file)
+            if hasattr(val, "__iter__") and not isinstance(val, str):
+                print("%s%s:" % ((lvl + 1) * indent, repr(key)), file=file)
                 dump_repr(val, lvl + 1, file=file)
             else:
-                print('%s%s: %s,' %
-                      ((lvl + 1) * indent, repr(key), repr(val)), file=file)
-        print('%s},' % (lvl * indent), file=file)
+                print(
+                    "%s%s: %s," % ((lvl + 1) * indent, repr(key), repr(val)),
+                    file=file,
+                )
+        print("%s}," % (lvl * indent), file=file)
     elif isinstance(obj, list):
         complex_data = False
         for val in obj:
-            if hasattr(val, '__iter__'):
+            if hasattr(val, "__iter__"):
                 complex_data = True
                 break
         if complex_data:
-            print('%s[' % (lvl * indent), file=file)
+            print("%s[" % (lvl * indent), file=file)
             for val in obj:
-                if hasattr(val, '__iter__'):
+                if hasattr(val, "__iter__"):
                     dump_repr(val, lvl + 1, file)
                 else:
-                    print('%s%s,' % (
-                        (lvl + 1) * indent, repr(val)), file=file)
-            print('%s],' % (lvl * indent), file=file)
+                    print("%s%s," % ((lvl + 1) * indent, repr(val)), file=file)
+            print("%s]," % (lvl * indent), file=file)
         else:
-            print('%s%s' % ((lvl + 1) * indent, obj), file=file)
+            print("%s%s" % ((lvl + 1) * indent, obj), file=file)
     else:
-        print('%s%s,' % (lvl * indent, repr(obj)), file=file)
+        print("%s%s," % (lvl * indent, repr(obj)), file=file)
 
 
-## Return a str with output from dump_repr()
+#  Return a str with output from dump_repr()
 #
 def dump_str(obj):
     """Return a str with output from dump_repr()
@@ -72,7 +73,7 @@ def dump_str(obj):
         return buf.getvalue()
 
 
-## Returns a list containing the indices of val in the list.
+#  Returns a list containing the indices of val in the list.
 #
 def indices(a_list, val):
     """Returns a list containing the indices of val in the list.

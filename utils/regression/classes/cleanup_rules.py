@@ -20,45 +20,45 @@ from common.path_utils import PathUtils
 # True: keep everything
 # False: don't keep anything
 # A string, it will specify what type of files to keep only
- 
-class CleanUpRules( object ):
-    
-    def __init__( self, keepRequest ):
+
+
+class CleanUpRules(object):
+    def __init__(self, keepRequest):
         self.keepAll = False
         self.keepNone = False
         self.baseNamesToKeep = []
         self.typesToKeep = None
         self.fileBaseName = None
 
-        if keepRequest == 'all':
+        if keepRequest == "all":
             self.keepAll = True
         elif len(keepRequest) == 0:
             self.keepNone = True
         else:
-            self.typesToKeep = keepRequest.split(',')
+            self.typesToKeep = keepRequest.split(",")
 
     def shouldKeepAll(self):
-        return (self.keepAll == True)
+        return self.keepAll
 
-    def shouldKeepFile( self, fileName ):
-        self.fileBaseName = PathUtils.base_name( fileName )
+    def shouldKeepFile(self, fileName):
+        self.fileBaseName = PathUtils.base_name(fileName)
 
         if self.fileBaseName in self.baseNamesToKeep:
             return True
 
         if self.keepNone:
-            return False # keep none of the rest
+            return False  # keep none of the rest
 
         if self.keepAll:
             return True
-        
+
         for typeToKeep in self.typesToKeep:
             if self.fileBaseName.endswith(typeToKeep):
                 return True
 
         return False
 
-    def setBaseNamesToKeep( self, baseNames ):
+    def setBaseNamesToKeep(self, baseNames):
         self.baseNamesToKeep = baseNames
 
     def lastBaseName(self):

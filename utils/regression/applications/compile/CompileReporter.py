@@ -16,4 +16,3 @@
 class CompileReporter(object):
     def report(self, aAppsInfo, aMyTag):
         pass
-

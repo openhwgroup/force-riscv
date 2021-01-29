@@ -16,17 +16,23 @@
 from operand_adjustor import OperandAdjustor
 from shared.instruction import Operand
 
+
 class VectorOperandAdjustor(OperandAdjustor):
     def __init__(self, aInstruction):
         super().__init__(aInstruction)
 
-        # dictionary for instructions that use rd instead of vd where vd/rd is defined
-        self.rd_dictionary = {#'VSETVLI', #TODO: VSETVLI and VSETVL are not arithmetic instructions and will be taken care of after arithmetic instructions are done
-                         #'VSETVL',
-                         'VPOPC',
-                         'VFIRST',
-                         'VMV.X.S',
-                         'VFMV.F.S'}
+        # dictionary for instructions that use rd instead of vd where vd/rd is
+        # defined
+
+        # TODO: VSETVLI and VSETVL are not arithmetic instructions and will be
+        #  taken care of after arithmetic instructions are done
+        self.rd_dictionary = {
+            # 'VSETVLI',
+            # 'VSETVL',
+            'VPOPC',
+            'VFIRST',
+            'VMV.X.S',
+            'VFMV.F.S'}
 
     def add_vtype_layout_operand(self):
         layout_opr = Operand()
@@ -44,7 +50,8 @@ class VectorOperandAdjustor(OperandAdjustor):
         layout_opr.elemWidth = aElemWidth
         self.mInstr.insert_operand(0, layout_opr)
 
-    def add_whole_register_layout_operand(self, aRegCount=1, aRegIndexAlignment=1):
+    def add_whole_register_layout_operand(self, aRegCount=1,
+                                          aRegIndexAlignment=1):
         layout_opr = Operand()
         layout_opr.name = "whole"
         layout_opr.type = "VectorLayout"

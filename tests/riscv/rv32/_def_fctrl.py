@@ -14,6 +14,24 @@
 # limitations under the License.
 #
 control_items = [
-    { "fname": "rv32i_force.py", "options" : { "max-instr":500 }, "generator" : { "--max-instr" : 500,  "--options":"\"PagingDisabled=1\"" } },
-    { "fname": "rv32i_force.py", "options" : { "max-instr":500 }, "generator" : { "--max-instr" : 500,  "--options":"\"PrivilegeLevel=1\"" } },
+    {
+        "fname": "rv32i_force.py",
+        "options": {
+            "max-instr": 500,
+        },
+        "generator": {
+            "--max-instr": 500,
+            "--options": '"PagingDisabled=1"',
+        },
+    },
+    {
+        "fname": "rv32i_force.py",
+        "options": {
+            "max-instr": 500,
+        },
+        "generator": {
+            "--max-instr": 500,
+            "--options": '"PrivilegeLevel=1"',
+        },
+    },
 ]

@@ -15,9 +15,10 @@
 #
 from ThreadDispatcher import ThreadDispatcher
 
-## A context manager to ensure the dispatcher lock acquire and release happen reliably.
-class ThreadRequestContextManager:
 
+#  A context manager to ensure the dispatcher lock acquire and release happen
+#  reliably.
+class ThreadRequestContextManager:
     def __init__(self):
         self.mDispatcher = ThreadDispatcher.getCurrentDispatcher()
 

@@ -16,14 +16,14 @@
 # classes, code related to pc/stack alignment aborts...
 from base.exception_handlers.ReusableSequence import ReusableSequence
 
-#-------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------
 # AsynchronousHandlerRISCV - service asynchronous exceptions, ie, interrupts...
-#-------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------
+
 
 class AsynchronousHandlerRISCV(ReusableSequence):
-
     def __init__(self, aGenThread, aFactory, aStack):
         super().__init__(aGenThread, aFactory, aStack)
 
     def generateHandler(self, **kwargs):
-        pass # TODO
+        pass  # TODO

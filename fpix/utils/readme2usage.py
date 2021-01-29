@@ -15,12 +15,12 @@
 # limitations under the License.
 #
 
-## PYTHON3 UP /software/public/python/3.4.1/bin/python3
+#  PYTHON3 UP /software/public/python/3.4.1/bin/python3
 import sys
 
-print("const char *fpixUsage = R\"(")
+print('const char *fpixUsage = R"(')
 
 for line in sys.stdin:
-    print(line,end='')
+    print(line, end="")
 
-print(")\";")
+print(')";')

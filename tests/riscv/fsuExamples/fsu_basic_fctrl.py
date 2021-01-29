@@ -15,5 +15,14 @@
 #
 
 control_items = [
-	 {"fname":"./fsu_basic_force.py","options":{"max-instr":50000,"iterations":1},"generator":{"--cfg" : "config/riscv.config","--noiss":None,"--options":"MMU=1,all_cacheable=1","--outputwithseed":None}} 
-                ]
+    {
+        "fname": "./fsu_basic_force.py",
+        "options": {"max-instr": 50000, "iterations": 1},
+        "generator": {
+            "--cfg": "config/riscv.config",
+            "--noiss": None,
+            "--options": "MMU=1,all_cacheable=1",
+            "--outputwithseed": None,
+        },
+    }
+]

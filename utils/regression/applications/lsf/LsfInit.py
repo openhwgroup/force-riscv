@@ -15,26 +15,36 @@
 #
 from classes.ApplicationOption import AppCmdLineOption, ParameterProcessor
 
-## Define additional LSF specific command line parameters
+
+# Define additional LSF specific command line parameters
 #
 class LsfCmdLineOptions(object):
-
     cGroupName = "LSF related options"
     cGroupDescription = "Useful LSF options to control LSF usage"
 
-    #                               "number of value arguments"
-    #                         "option name"               | "additional arguments"
-    #                               |    "default value"  |    |   "help text"
-    #                               |           |         |    |       |
-    cOptions = [ AppCmdLineOption('sla',   "trg-dvClass", 1, None, "- Specify LSF serice class for scheduling polcy"),
-                 AppCmdLineOption('group', "trg",         1, None, "- Specify LSF service group"),
-                 AppCmdLineOption('queue', "normal",      1, None, "- Specify LSF queue to use")
-                 ]
+    #         "number of value arguments"
+    #   "option name"               | "additional arguments"
+    #         |    "default value"  |    |   "help text"
+    #         |           |         |    |       |
+    cOptions = [
+        AppCmdLineOption(
+            "sla",
+            "trg-dvClass",
+            1,
+            None,
+            "- Specify LSF serice class for scheduling polcy",
+        ),
+        AppCmdLineOption(
+            "group", "trg", 1, None, "- Specify LSF service group"
+        ),
+        AppCmdLineOption(
+            "queue", "normal", 1, None, "- Specify LSF queue to use"
+        ),
+    ]
 
-## Used to process application specific parameters
+
+# Used to process application specific parameters
 #
 class LsfParametersProcessor(ParameterProcessor):
-
     def __init__(self, aCmdLineOptions):
         super().__init__(LsfCmdLineOptions.cOptions, aCmdLineOptions)
-

@@ -13,36 +13,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from PageFaultSequence import PageFaultSequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from PageFaultSequence import PageFaultSequence
-from PageFaultSequence import PageFaultResolutionType
 from riscv.ModifierUtils import PageFaultModifier
+
 
 # This test verifies recovery from a page fault on a branch operation.
 class MainSequence(PageFaultSequence):
-
     def __init__(self, gen_thread, name=None):
         super().__init__(gen_thread, name)
-        self._mInstrList = ( 'JAL##RISCV', 'JALR##RISCV', 
-                             'LD##RISCV', 'SD##RISCV', 
-                             'LW##RISCV', 'SW##RISCV', 
-                             'LH##RISCV', 'SH##RISCV', 
-                             'LB##RISCV', 'SB##RISCV' )
-        self._mExceptionCodes = [ 12, 13, 15 ] #exception code for instr, load, storeamo page fault
-        self._mExceptionSubCodes = {} #N/A
+        self._mInstrList = (
+            "JAL##RISCV",
+            "JALR##RISCV",
+            "LD##RISCV",
+            "SD##RISCV",
+            "LW##RISCV",
+            "SW##RISCV",
+            "LH##RISCV",
+            "SH##RISCV",
+            "LB##RISCV",
+            "SB##RISCV",
+        )
+        self._mExceptionCodes = [
+            12,
+            13,
+            15,
+        ]  # exception code for instr, load, storeamo page fault
+        self._mExceptionSubCodes = {}  # N/A
 
-    ## Create an instance of the appropriate page fault modifier.
+    # Create an instance of the appropriate page fault modifier.
     def createPageFaultModifier(self):
         return PageFaultModifier(self.genThread)
-    
-    ## Return the tuple of instructions to choose from to trigger a page fault.
+
+    # Return the tuple of instructions to choose from to trigger a page fault.
     def getInstructionList(self):
         return self._mInstrList
 
-    ## Return exception codes that can be generated from faulting instructions.
+    # Return exception codes that can be generated from faulting instructions.
     def getExceptionCodes(self):
         return self._mExceptionCodes
+
 
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV

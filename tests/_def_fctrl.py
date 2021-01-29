@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname":"riscv/_def_fctrl.py"},
+    {"fname": "riscv/_def_fctrl.py"},
 ]

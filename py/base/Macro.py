@@ -15,6 +15,7 @@
 #
 from base.SortableObject import SortableObject
 
+
 #
 # Provide a Macro to wrap a non-hashable object (dictionary for example)
 # so it can be hashable and comparable (eq, lt, and gt) with other object
@@ -25,17 +26,17 @@ class Macro(SortableObject):
         self.objName = objName
         self.objVal = objVal
         self.sortableName = self.serialize()
-    
+
     def obj(self):
         return self.objName
-        
+
     def value(self):
         return self.objVal
-        
+
     def serialize(self):
         tmp_str = str(self.objName)
         if isinstance(self.objVal, dict):
-            for k,v in sorted(self.objVal.items()):
+            for k, v in sorted(self.objVal.items()):
                 if isinstance(k, str):
                     tmp_str += k
                 elif isinstance(k, int):
@@ -50,4 +51,4 @@ class Macro(SortableObject):
             tmp_str += self.objVal
         else:
             raise TypeError
-        return tmp_str        
+        return tmp_str

@@ -20,22 +20,20 @@
 # need to source ./scripts/project.cshrc before running master run with rtl
 # RTL command : "%s/verif/top/sim/%s/build/%s/%s" % (root, regr, cfg, exe)
 master_config = {
-    'rtl': {
-        #                         , "regr": "logs"         # override the default regr setting, defaults to logs, optional, can be changed using ENV(RTL_REGR) as well
-        #                         , "cfg" : "target_config"          # override the default configuration name, defaults to target_config, optional, can be changed using ENV(RTL_CFG) as well
-        #                         , "exe": "uvm_simv_opt"          # override the default executable name, by default it is "uvm_simv_opt", can be changed using ENV(RTL_EXE) as well
-        #                         , "meta_args":"" # override the default meta_args, by default set to "tc_mode=force railhouse=on prefetch_drop_int=10 no_commit_cycles=6000"
-        "add_meta_args":"inject_rand_interrupt=on rand_int_type=1 int_deassert_high=100 int_deassert_low=50 int_assert_high=200 int_assert_low=100", # Add more meta args to default meta args
-        "filter":True, 
+    "rtl": {
+        "add_meta_args": "inject_rand_interrupt=on rand_int_type=1 "
+        "int_deassert_high=100 int_deassert_low=50 "
+        "int_assert_high=200 int_assert_low=100",
+        "filter": True,
     },
-    'generate': {},
-    'iss': {}
+    "generate": {},
+    "iss": {},
 }
 
-sequence_app_opts = [("force", {}),
-        ("rtl", {}),
-        ("fruntoctrl", {}),
-        ]
+sequence_app_opts = [
+    ("force", {}),
+    ("rtl", {}),
+    ("fruntoctrl", {}),
+]
 
 single_run_app_opts = [("compile", {})]
-

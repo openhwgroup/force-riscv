@@ -15,7 +15,8 @@
 #
 from enum import Enum
 
-## This class defines the available privilege levels in the RISC-V architecture.
+
+#  defines the available privilege levels in the RISC-V architecture
 class PrivilegeLevelRISCV(Enum):
     U = 0
     S = 1

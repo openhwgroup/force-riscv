@@ -13,29 +13,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from VectorTestSequence import VectorLoadStoreTestSequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from VectorTestSequence import VectorLoadStoreTestSequence
 
-## This test verifies that strided load and store instructions can be generated and executed
-# successfully.
+
+#  This test verifies that strided load and store instructions can be generated
+#  and executed successfully.
 class MainSequence(VectorLoadStoreTestSequence):
-
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
         self._mInstrList = (
-            'VLSE16.V##RISCV',
-            'VLSE32.V##RISCV',
-            'VLSE64.V##RISCV',
-            'VLSE8.V##RISCV',
-            'VSSE16.V##RISCV',
-            'VSSE32.V##RISCV',
-            'VSSE64.V##RISCV',
-            'VSSE8.V##RISCV',
+            "VLSE16.V##RISCV",
+            "VLSE32.V##RISCV",
+            "VLSE64.V##RISCV",
+            "VLSE8.V##RISCV",
+            "VSSE16.V##RISCV",
+            "VSSE32.V##RISCV",
+            "VSSE64.V##RISCV",
+            "VSSE8.V##RISCV",
         )
 
-    ## Return a list of test instructions to randomly choose from.
+    # Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
         return self._mInstrList
 

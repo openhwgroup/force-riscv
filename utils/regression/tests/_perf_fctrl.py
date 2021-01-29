@@ -14,9 +14,23 @@
 # limitations under the License.
 #
 
-control_items = [ {"fname":"_perf_fctrl.py","options":{"control-dir":"tests/instructions"}}   
-                , {"fname":"_perf_fctrl.py","options":{"control-dir":"tests/instructions"}} 
-                , {"fname":"_perf_fctrl.py","options":{"control-dir":"tests/instructions"}} 
-                ]
-                 
-
+control_items = [
+    {
+        "fname": "_perf_fctrl.py",
+        "options": {
+            "control-dir": "tests/instructions",
+        },
+    },
+    {
+        "fname": "_perf_fctrl.py",
+        "options": {
+            "control-dir": "tests/instructions",
+        },
+    },
+    {
+        "fname": "_perf_fctrl.py",
+        "options": {
+            "control-dir": "tests/instructions",
+        },
+    },
+]

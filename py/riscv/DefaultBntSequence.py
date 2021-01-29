@@ -15,9 +15,10 @@
 #
 from base.BntSequence import BntSequence
 
-## This class provides default instructions to generate on not taken branch paths.
-class DefaultBntSequence(BntSequence):
 
+# This class provides default instructions to generate on not taken
+# branch paths.
+class DefaultBntSequence(BntSequence):
     def defaultFunction(self):
         self.notice("Generate default Bnt Instruction Sequence")
         self.genInstruction("ADD##RISCV")

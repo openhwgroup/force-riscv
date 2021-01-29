@@ -13,7 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .FpixInit import FpixCmdLineOptions, FpixParametersProcessor, processFpixControlData
+from .FpixInit import (
+    FpixCmdLineOptions,
+    FpixParametersProcessor,
+    processFpixControlData,
+)
 from .FpixExecutor import FpixExecutor
 from .FpixReporter import FpixReporter
 
@@ -21,7 +25,7 @@ from .FpixReporter import FpixReporter
 CmdLineOptions = FpixCmdLineOptions
 
 # Tag for the application
-Tag = 'fpix_riscv'
+Tag = "fpix_riscv"
 
 ParametersProcessorClass = FpixParametersProcessor
 

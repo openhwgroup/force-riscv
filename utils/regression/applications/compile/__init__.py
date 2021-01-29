@@ -13,7 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .CompileInit import CompileCmdLineOptions, CompileParametersProcessor, processCompileControlData
+from .CompileInit import (
+    CompileCmdLineOptions,
+    CompileParametersProcessor,
+    processCompileControlData,
+)
 from .CompileExecutor import CompileExecutor
 from .CompileReporter import CompileReporter
 
@@ -21,7 +25,7 @@ from .CompileReporter import CompileReporter
 CmdLineOptions = CompileCmdLineOptions
 
 # Tag for the application
-Tag = 'compile'
+Tag = "compile"
 
 ParametersProcessorClass = CompileParametersProcessor
 
@@ -30,4 +34,3 @@ ProcessControlData = processCompileControlData
 ExecutorClass = CompileExecutor
 
 ReporterClass = CompileReporter
-

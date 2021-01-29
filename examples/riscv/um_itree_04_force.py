@@ -19,13 +19,15 @@ from base.Sequence import Sequence
 from base.InstructionMap import InstructionMap
 from DV.riscv.trees.vector_tree import vinteger_instructions
 
+
 class I100Sequence(Sequence):
     """
-    This test template is a simple example which generates 100 instructions relying on 
-    FORCE-RISCV's capabilities to randomly choose instructions, operands and operand
-    values.  The set of instructions and the weighting (for frequency of selection) is
-    defined in the ALU_Int32_instructions instruction tree dictionary - which is coded
-    in py/DV/riscv/trees/instruction_tree.py.
+    This test template is a simple example which generates 100 instructions
+    relying on FORCE-RISCV's capabilities to randomly choose instructions,
+    operands and operand values.  The set of instructions and the weighting
+    (for frequency of selection) is defined in the ALU_Int32_instructions
+    instruction tree dictionary - which is coded in
+    py/DV/riscv/trees/instruction_tree.py.
     """
 
     def generate(self, **kargs):
@@ -33,17 +35,9 @@ class I100Sequence(Sequence):
         for _ in range(100):
             the_instruction = self.pickWeighted(vinteger_instructions)
             self.notice(">>>>>  The winner is:  {}".format(the_instruction))
-            #self.genInstruction(the_instruction)
+            # self.genInstruction(the_instruction)
 
 
-
-
-## Points to the MainSequence defined in this file
 MainSequenceClass = I100Sequence
-
-## Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
-
-## Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-

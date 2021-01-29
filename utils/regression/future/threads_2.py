@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 class TempEvent(object):
-
     def __init__(self):
         self.queue = None
         self.is_set = False

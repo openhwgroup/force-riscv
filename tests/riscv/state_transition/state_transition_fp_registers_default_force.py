@@ -13,19 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from riscv.EnvRISCV import EnvRISCV
-from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
-import state_transition_test_utils
-from Enums import EStateElementType
-from State import State
 import RandomUtils
 import StateTransition
+from Enums import EStateElementType
+from State import State
 
-## This test verifies that the default floating point register StateTransitionHandler alters the
-# floating point register State as expected.
+import state_transition_test_utils
+from base.Sequence import Sequence
+from riscv.EnvRISCV import EnvRISCV
+from riscv.GenThreadRISCV import GenThreadRISCV
+
+
+# This test verifies that the default floating point register
+# StateTransitionHandler alters the floating point register State as expected.
 class MainSequence(Sequence):
-
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
@@ -36,14 +37,18 @@ class MainSequence(Sequence):
         StateTransition.transitionToState(state)
         state_transition_test_utils.verifyState(self, self._mExpectedStateData)
 
-    ## Create a simple State to test an explicit StateTransition.
+    # Create a simple State to test an explicit StateTransition.
     def _createState(self):
         state = State()
-        self._mExpectedStateData[EStateElementType.FloatingPointRegister] = state_transition_test_utils.addRandomFloatingPointRegisterStateElements(self, state, RandomUtils.random32(0, 15))
+        test_utils = state_transition_test_utils
+        self._mExpectedStateData[
+            EStateElementType.FloatingPointRegister
+        ] = test_utils.addRandomFloatingPointRegisterStateElements(
+            self, state, RandomUtils.random32(0, 15)
+        )
         return state
 
 
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV
 EnvClass = EnvRISCV
-

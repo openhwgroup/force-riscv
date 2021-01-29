@@ -24,24 +24,23 @@ import subprocess
 import sys
 import tarfile
 
-def get_svn_path():
 
-    if not "FORCE_SVN_PATH" in os.environ:
+def get_svn_path():
+    if "FORCE_SVN_PATH" not in os.environ:
         print("ERROR: FORCE_SVN_PATH environment variable not specified.")
         sys.exit(1)
 
     svn_path = os.environ["FORCE_SVN_PATH"]
-    print ("FORCE SVN path is: %s" % svn_path)
+    print("FORCE SVN path is: %s" % svn_path)
     return svn_path
+
 
 def get_versions(rev_str):
     vers = rev_str.split(":")
-    #ver1 = int(vers[0])
-    #ver2 = int(vers[1])
-    #return (ver1, ver2)
     return (vers[0], vers[1])
 
-def validate_versions (ver1_str, ver2_str, latest_ver):
+
+def validate_versions(ver1_str, ver2_str, latest_ver):
     ver1, ver2 = 0, 0
     try:
         if ver2_str == "top":
@@ -50,47 +49,51 @@ def validate_versions (ver1_str, ver2_str, latest_ver):
             ver2 = int(ver2_str)
         ver1 = int(ver1_str)
     except ValueError:
-        print ("ERROR: Invalid version inputs")
-        print ("-r usage: num1:num2 or num1:top")
+        print("ERROR: Invalid version inputs")
+        print("-r usage: num1:num2 or num1:top")
         sys.exit()
 
     return ver1, ver2
 
-def get_latest_version (svn_path):
+
+def get_latest_version(svn_path):
     version = None
-    result = subprocess.check_output(["svn", "info", svn_path]).decode('utf-8')
+    result = subprocess.check_output(["svn", "info", svn_path]).decode("utf-8")
     for result_line in result.split("\n"):
         if "Revision" in line:
             version = line.split(":")[1]
 
     return int(version)
 
+
 def create_diff_dir(ver1, ver2):
     diff_dir = "diff-%d-%d" % (ver1, ver2)
     if os.path.exists(diff_dir):
-        print ("Diff directory %s already exists." % diff_dir)
+        print("Diff directory %s already exists." % diff_dir)
         sys.exit()
 
     os.mkdir(diff_dir)
 
     return diff_dir
 
+
 def remove_dot_svn_dirs(dir_name):
     for (root, subdir_names, file_names) in os.walk(dir_name):
         for subdir_name in subdir_names:
-            if subdir_name == '.svn':
+            if subdir_name == ".svn":
                 shutil.rmtree(os.path.join(root, subdir_name))
 
-def copy_code_from_dir (source_dir, base_name, ver):
+
+def copy_code_from_dir(source_dir, base_name, ver):
     dest_dir = "%s-%d" % (base_name, ver)
     shutil.copy2(source_dir, dest_dir)
     return dest_dir
 
-def check_out_revision(svn_path, ver, base_name, clean_up=False):
 
+def check_out_revision(svn_path, ver, base_name, clean_up=False):
     svn_command = "svn co " + svn_path
     if ver:
-        svn_command +=  " -r %d" % ver
+        svn_command += " -r %d" % ver
         if clean_up:
             dir_name = "%s-%d" % (base_name, ver)
         else:
@@ -108,11 +111,13 @@ def check_out_revision(svn_path, ver, base_name, clean_up=False):
 
     return dir_name
 
+
 def create_diff_file(dir_name1, dir_name2, diff_file_name):
     diff_cmd = "diff -ruN %s %s > %s" % (dir_name1, dir_name2, diff_file_name)
-    print (diff_cmd)
+    print(diff_cmd)
     subprocess.run(shlex.split(diff_cmd))
-    print ("Created diff file: %s." % diff_file_name)
+    print("Created diff file: %s." % diff_file_name)
+
 
 def create_merge_dir(base_name, rev):
     merge_dir = "%s-merge" % (base_name)
@@ -120,21 +125,23 @@ def create_merge_dir(base_name, rev):
         merge_dir += "-%d" % rev
 
     if os.path.exists(merge_dir):
-        print ("Merge directory %s already exists." % merge_dir)
+        print("Merge directory %s already exists." % merge_dir)
         sys.exit()
 
     os.mkdir(merge_dir)
 
     return merge_dir
 
+
 def apply_patch_file(diff_file):
     patch_cmd = "patch -p1 < %s" % diff_file
-    print ("Executing: %s" % patch_cmd)
+    print("Executing: %s" % patch_cmd)
     subprocess.run(shlex.split(patch_cmd))
+
 
 def is_svn_separator_line(line):
     for char in line:
-        if char != '-':
+        if char != "-":
             return False
 
     if len(line) < 3:
@@ -142,17 +149,21 @@ def is_svn_separator_line(line):
 
     return True
 
+
 def parse_svn_author_line(line):
     parts = line.split("|")
     if len(parts) != 4:
-        print ("Not auther line: %s" % line)
+        print("Not auther line: %s" % line)
         sys.exit(1)
 
     # parse out svn version
     version_raw = parts[0].strip()
-    match = re.match(r'r([0-9]+)', version_raw)
+    match = re.match(r"r([0-9]+)", version_raw)
     if match is None:
-        print("svn authro line mal-formed: %s, not finding version in \"%s\"" % (line, version_raw))
+        print(
+            'svn authro line mal-formed: %s, not finding version in "%s"'
+            % (line, version_raw)
+        )
         sys.exit()
     svn_version = int(match.group(1))
 
@@ -163,17 +174,21 @@ def parse_svn_author_line(line):
     time_str = time_pieces[0]
     return svn_version, author, time_str
 
+
 def get_svn_log(ver1, ver2, svn_path, log_file_name):
     log_file_handle = open(log_file_name, "w")
     log_file_handle.write("[MERGE] versions %d:%d\n" % (ver1, ver2))
     log_cmd = ["svn", "log", svn_path, ("-r%d:%d" % (ver2, ver1))]
-    ps = subprocess.Popen(log_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    ps = subprocess.Popen(
+        log_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+    )
     output = ps.communicate()[0]
     log_str = str(output, "utf-8")
     lines = log_str.split("\n")
     last_is_separator = False
 
     from collections import OrderedDict
+
     log_dict = OrderedDict()
     tmp_key = ""
     tmp_line = ""
@@ -198,8 +213,8 @@ def get_svn_log(ver1, ver2, svn_path, log_file_name):
             svn_version, author, time = parse_svn_author_line(line)
             last_is_separator = False
             if svn_version <= ver1:
-                break # svn log done
-            item = author + '@' + time
+                break  # svn log done
+            item = author + "@" + time
             tmp_key = item
             continue
         if not tmp_line:
@@ -212,30 +227,35 @@ def get_svn_log(ver1, ver2, svn_path, log_file_name):
 
     log_file_handle.close()
 
+
 def separate_path_top(full_file_name):
     slash_pos = full_file_name.find("/")
     if slash_pos == -1:
-        print ("File name in diff file not in expected format: \"%s\"." % full_file_name)
+        print(
+            'File name in diff file not in expected format: "%s".'
+            % full_file_name
+        )
         sys.exit()
 
     dir_name = full_file_name[:slash_pos]
-    file_name = full_file_name[slash_pos+1:]
+    file_name = full_file_name[slash_pos + 1 :]
 
     return dir_name, file_name
 
+
 def parse_diff_minus_plus_line(line):
-    line_parts = line.split(' ')
+    line_parts = line.split(" ")
     full_file_name = line_parts[1]
-    tab_pos = full_file_name.find('\t')
+    tab_pos = full_file_name.find("\t")
     full_file_name = full_file_name[:tab_pos]
     full_file_name = full_file_name.strip()
 
     return separate_path_top(full_file_name)
 
+
 def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
-    #import codecs
-    #diff_handle = codecs.open(diff_file_name, "r", encoding='utf-8',errors='ignore')
-    diff_handle = open(diff_file_name, "r", encoding='utf-8')
+    # import codecs
+    diff_handle = open(diff_file_name, "r", encoding="utf-8")
     exe_handle = open(exe_list_name, "w")
     bin_handle = open(bin_list_name, "w")
 
@@ -249,7 +269,7 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
     line_num = 0
 
     for line in diff_handle:
-        #print ("gotten line %d" % line_num)
+        # print ("gotten line %d" % line_num)
         line_num += 1
         line = line[:-1]
         if line.find("--- ") == 0:
@@ -259,18 +279,28 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
         if last_line_minus:
             last_line_minus = False
             if line.find("+++ ") != 0:
-                print ("Expecting to see plus line after minus line in diff file, but getting \"%s\"." % line)
+                print(
+                    "Expecting to see plus line after minus line in "
+                    'diff file, but getting "%s".' % line
+                )
                 sys.exit()
             plus_dir_name, plus_file_name = parse_diff_minus_plus_line(line)
             if plus_file_name != minus_file_name:
-                print ("Expecting minus and plus line has the same file name, but getting \"%s\" and \"%s\"." % (minus_file_name, plus_file_name))
+                print(
+                    "Expecting minus and plus line has the same file name, "
+                    'but getting "%s" and "%s".'
+                    % (minus_file_name, plus_file_name)
+                )
                 sys.exit()
             last_line_plus = True
             continue
         if last_line_plus:
             last_line_plus = False
             if line.find("@@") != 0:
-                print ("Expect line count difference after plus line in diff file, but getting \"%s\"." % line)
+                print(
+                    "Expect line count difference after plus line in diff "
+                    'file, but getting "%s".' % line
+                )
                 sys.exit()
             if line.find("@@ -0,0 ") == 0:
                 # new file
@@ -281,7 +311,10 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
         if line.find("Binary files ") == 0:
             bin_line_parts = line.split(" ")
             if len(bin_line_parts) != 6:
-                print ("Expecting binary file diff line to have 6 parts, the line is \"%s\"." % line)
+                print(
+                    "Expecting binary file diff line to have 6 parts, the "
+                    'line is "%s".' % line
+                )
                 sys.exit()
             bin_file_to_copy = bin_line_parts[-2]
             bin_dir, bin_file_name = separate_path_top(bin_file_to_copy)
@@ -290,10 +323,10 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
             binary_count += 1
             shutil.move(bin_file_to_copy, bin_name)
 
-
     diff_handle.close()
     exe_handle.close()
     bin_handle.close()
+
 
 def tar_up(base_name, dir_name=None):
     tar_file = base_name + ".tar.gz"
@@ -306,6 +339,7 @@ def tar_up(base_name, dir_name=None):
 
     shutil.move(tar_file, "..")
 
+
 def chmod_exe_files(exe_list):
     with open(exe_list) as list_handle:
         for line in list_handle:
@@ -317,13 +351,18 @@ def chmod_exe_files(exe_list):
             stat_info = os.stat(line)
             os.chmod(line, (stat_info.st_mode | stat.S.IXUSR))
 
+
 def copy_source_tree(from_path, to_path):
     try:
         if os.path.exists(to_path):
             shutil.rmtree(to_path)
         shutil.copytree(from_path, to_path)
-    except:
-        print( "ERROR - Copy Failed, source[%s], Remove the dest[%s], and confirm source then retry ....", (from_path, to_path))
+    except BaseException:
+        print(
+            "ERROR - Copy Failed, source[%s], Remove the dest[%s], and "
+            "confirm source then retry ....",
+            (from_path, to_path),
+        )
         sys.exit()
 
 

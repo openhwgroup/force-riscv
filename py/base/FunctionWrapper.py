@@ -15,12 +15,11 @@
 #
 from base.SortableObject import SortableObject
 
-#
-# Provide a FunctionWrapper to wrap a non-sortable object 
-# so it can be sortable 
-#
+
+# Provide a FunctionWrapper to wrap a non-sortable object
+# so it can be sortable
 class FunctionWrapper(SortableObject):
-    def __init__(self,function):
+    def __init__(self, function):
         super().__init__()
         self.function = function
         self.sortableName = str(function)
@@ -29,5 +28,4 @@ class FunctionWrapper(SortableObject):
         return self.function
 
     def display(self):
-        print ("function name=%s"%self.sortableName)
-
+        print("function name=%s" % self.sortableName)

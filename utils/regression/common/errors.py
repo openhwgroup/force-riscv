@@ -14,11 +14,11 @@
 # limitations under the License.
 #
 
-class HiError( Exception ): pass
+
+class HiError(Exception):
+    pass
+
 
 # runtime errors
-class AbstractionError( RuntimeError ): pass
-
-
-
-
+class AbstractionError(RuntimeError):
+    pass

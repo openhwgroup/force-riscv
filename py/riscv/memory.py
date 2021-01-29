@@ -14,5 +14,6 @@
 # limitations under the License.
 #
 
+
 def configure_memory(interface):
-    interface.addMemoryRange(0, 0, 0xffffffffffff)
+    interface.addMemoryRange(0, 0, 0xFFFFFFFFFFFF)

@@ -18,31 +18,39 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 
 from base.Sequence import Sequence
 
+
 class MainSequence(Sequence):
-
-   def generate(self, **kargs):
-        if self.getGlobalState('AppRegisterWidth') == 32:
-            random_instructions = ['ADD##RISCV', 'SRLI#RV32I#RISCV', 'ADDI##RISCV', 'SLLI#RV32I#RISCV', 'LUI##RISCV']
+    def generate(self, **kargs):
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            random_instructions = [
+                "ADD##RISCV",
+                "SRLI#RV32I#RISCV",
+                "ADDI##RISCV",
+                "SLLI#RV32I#RISCV",
+                "LUI##RISCV",
+            ]
         else:
-            random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
-        ret_instructions = ['MRET##RISCV'] #, 'SRET##RISCV' ] TODO enable support for SRET once legal generation works correctly
+            random_instructions = [
+                "ADDW##RISCV",
+                "SRLI#RV64I#RISCV",
+                "ADDI##RISCV",
+                "SLLI#RV64I#RISCV",
+                "LUI##RISCV",
+            ]
+        ret_instructions = ["MRET##RISCV"]  # , 'SRET##RISCV' ]
+        # TODO enable support for SRET once legal generation works correctly
 
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
                 self.genInstruction(self.choice(random_instructions))
 
-        self.genInstruction(self.choice(ret_instructions), {"NoSkip":1})
+        self.genInstruction(self.choice(ret_instructions), {"NoSkip": 1})
 
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
                 self.genInstruction(self.choice(random_instructions))
 
-## Points to the MainSequence defined in this file
+
 MainSequenceClass = MainSequence
-
-## Using GenThreadRISC by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
-
-## Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-

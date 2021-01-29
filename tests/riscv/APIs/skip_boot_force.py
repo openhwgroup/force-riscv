@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from base.Sequence import Sequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from base.Sequence import Sequence
 
-#test case to verify skipping of boot and thread splitter code
+
+# test case to verify skipping of boot and thread splitter code
 class MainSequence(Sequence):
-
     def generate(self, **kargs):
-        self.genInstruction('LUI##RISCV')
+        self.genInstruction("LUI##RISCV")
+
 
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV
 EnvClass = EnvRISCV
-

@@ -15,18 +15,21 @@
 #
 
 
-## A minimal object to hold the application parameters
+#  A minimal object to hold the application parameters
 #
 class ApplicationParameters(object):
-
     def __init__(self):
         self._mParameters = dict()
 
     def resolveParameters(self, aAppOptions, aCmdLineOptions):
         for app_option in aAppOptions:
-            opt_value, opt_specified = app_option.resolveParameter(aCmdLineOptions)
+            opt_value, opt_specified = app_option.resolveParameter(
+                aCmdLineOptions
+            )
             self._mParameters[app_option.name()] = opt_value
-            self._mParameters[app_option.name() + " from cmdline"] = opt_specified
+            self._mParameters[
+                app_option.name() + " from cmdline"
+            ] = opt_specified
 
     def parameter(self, aParmName):
         return self._mParameters[aParmName]
@@ -38,66 +41,65 @@ class ApplicationParameters(object):
         return self._mParameters[aParmName + " from cmdline"]
 
 
-## Configuration information for individual application
+#  Configuration information for individual application
 #
 class ApplicationConfig(object):
-
     def __init__(self, aName, aAppModule):
-        self._mName = aName
-        self._mModule = aAppModule
-        if hasattr(self._mModule, 'Tag'):
-            self._mTag = self._mModule.Tag
+        self.mName = aName
+        self.mModule = aAppModule
+        if hasattr(self.mModule, "Tag"):
+            self._mTag = self.mModule.Tag
         else:
-            self._mTag = self._mName
+            self._mTag = self.mName
 
         self.mAppParameters = None
 
-    ## Return application name
+    # Return application name
     #
     def name(self):
-        return self._mName
+        return self.mName
 
-    ## Return application config's tag
+    # Return application config's tag
     #
     def tag(self):
         return self._mTag
 
-    ## Return application specific command line options if any.
+    # Return application specific command line options if any.
     #
     def getCmdLineOptions(self):
-        return self._mModule.CmdLineOptions
+        return self.mModule.CmdLineOptions
 
-    ## Return application specific parameters processor if any.
+    # Return application specific parameters processor if any.
     #
     def getParametersProcessorClass(self):
-        return self._mModule.ParametersProcessorClass
+        return self.mModule.ParametersProcessorClass
 
-    ## Return certain application parameter value.
+    # Return certain application parameter value.
     #
     def parameter(self, aParmName):
         return self.mAppParameters.parameter(aParmName)
 
-    ## Call upon application specific facility to process control data
+    # Call upon application specific facility to process control data
     #
     def processControlData(self, aControlData):
-        self._mModule.ProcessControlData(aControlData, self.mAppParameters)
+        self.mModule.ProcessControlData(aControlData, self.mAppParameters)
 
-    ## Create executor
+    # Create executor
     #
     def createExecutor(self):
-        return self._mModule.ExecutorClass()
+        return self.mModule.ExecutorClass()
 
-    ## Create reporter
+    # Create reporter
     #
     def createReporter(self):
-        return self._mModule.ReporterClass()
+        return self.mModule.ReporterClass()
 
 
-## Container of all application components.
+#  Container of all application components.
 #
 class ApplicationsInfo(object):
 
-    ## Init with LSF info passed in.
+    # Init with LSF info passed in.
     #
     def __init__(self, aLsfInfo):
         self.mLsfInfo = aLsfInfo
@@ -118,42 +120,47 @@ class ApplicationsInfo(object):
         self.mTagToReportInfo = dict()
         self.mConfigPath = None
 
-    ## Add single run application
+    # Add single run application
     #
     def addSingleRunApplication(self, aSingleRunApp):
         self.mSingleRunApps.append(aSingleRunApp)
         self._addApplication(aSingleRunApp)
 
-    ## Add application
+    # Add application
     def _addApplication(self, aApp):
         self.mAllAppsOrder.append(aApp)
         self._registerTag(aApp)
 
-    ## Add sequence application.
+    # Add sequence application.
     #
     def addSequenceApplication(self, aSeqApp):
         self.mSequenceApps.append(aSeqApp)
         self._addApplication(aSeqApp)
 
-    ## Register the applications' tag.
+    # Register the applications' tag.
     def _registerTag(self, aAppCfg):
         if aAppCfg.tag() in self.mTagToApp.keys():
-            raise Exception("Registering application %s with tag %s that already exist......" % (aAppCfg.name(), aAppCfg.tag()))
+            raise Exception(
+                "Registering application %s with tag %s that already exists."
+                % (aAppCfg.name(), aAppCfg.tag())
+            )
         self.mTagToApp[aAppCfg.tag()] = aAppCfg
 
-    ## Look up an application config by using tag.
+    # Look up an application config by using tag.
     #
     def getAppConfig(self, aAppTag):
         return self.mTagToApp[aAppTag]
 
-    ## Increment the test count for use with count mode
+    # Increment the test count for use with count mode
     #
-    #  Note, this is not an atomic add because we stay single threaded in count mode
+    #  Note, this is not an atomic add because we stay single threaded in
+    #  count mode
     #
     def incrementTestCount(self):
         self.mNumTestsCount += 1
 
-    ## Mainly used in creating indices for sub-tasks, but somewhat generalized to handle names with index.
+    # Mainly used in creating indices for sub-tasks, but somewhat generalized
+    # to handle names with index.
     #
     def getNextIndex(self, aName):
         next_index = 0
@@ -163,4 +170,3 @@ class ApplicationsInfo(object):
         # update saved index.
         self._mNamesWithIndex[aName] = next_index
         return next_index
-            

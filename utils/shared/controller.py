@@ -17,29 +17,31 @@
 
 # import sys, traceback
 
-# since there will be a significant amount of directory manipulation import the path utils
-from shared.path_utils import PathUtils
-from shared.sys_utils import SysUtils
+# since there will be a significant amount of directory manipulation import
+# the path utils
 from shared.msg_utils import Msg
-from shared.control_item import ControlItem
+
 
 # class forwards
-class Controller(object): pass
-class TaskController(Controller): pass
-class FileController(Controller): pass
+class Controller(object):
+    pass
+
+
+class TaskController(Controller):
+    pass
+
+
+class FileController(Controller):
+    pass
+
 
 class Controller(object):
-
-    def __init__( self):
-
-        Msg.dbg( "Controller::__init__()" )
+    def __init__(self):
+        Msg.dbg("Controller::__init__()")
         self.ctrl_item = None
 
-
-    def load( self, arg_ctrl_item ):
+    def load(self, arg_ctrl_item):
         self.ctrl_item = arg_ctrl_item
 
     def process(self):
         pass
-
-

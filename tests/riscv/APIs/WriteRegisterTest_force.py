@@ -17,8 +17,8 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 
-class MainSequence(Sequence):
 
+class MainSequence(Sequence):
     def generate(self, **kargs):
         self.initializeRegister("mscratch", 0x123)
         readValue, validCheck = self.readRegister("mscratch")
@@ -27,12 +27,11 @@ class MainSequence(Sequence):
         readValue, validCheck = self.readRegister("mscratch")
 
 
-## Points to the MainSequence defined in this file
+# Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+# Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+# Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-

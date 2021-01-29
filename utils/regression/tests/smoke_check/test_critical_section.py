@@ -25,13 +25,9 @@ from shared.kernel_objs import HiCriticalSection
 from shared.threads import HiThread
 
 
-class UnitTest_HiCriticalSection( UnitTest ):
+class UnitTest_HiCriticalSection(UnitTest):
+    def run_test(self):
+        Msg.info("HiCriticalSection: Start Unit Test ...")
 
-    def run_test( self ):
-        Msg.info( "HiCriticalSection: Start Unit Test ..." )
-
-    def process_result( self ):
-        Msg.info( "HiCriticalSection: Process Test Result ..." )
-
-
-
+    def process_result(self):
+        Msg.info("HiCriticalSection: Process Test Result ...")

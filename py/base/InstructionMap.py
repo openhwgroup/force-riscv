@@ -15,10 +15,10 @@
 #
 from base.ItemMap import ItemMap
 
-## A thin wrapper around an instruction dict, so that it can be used as a dict key
+
+#  A thin wrapper around an instruction dict, so it can be used as a dict key
 #
 class InstructionMap(ItemMap):
-    
     def __init__(self, aName, aItemDict):
         super().__init__(aName, aItemDict)
 

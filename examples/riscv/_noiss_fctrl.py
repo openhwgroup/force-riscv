@@ -14,5 +14,13 @@
 # limitations under the License.
 #
 control_items = [
-        {"fname":"basic_random_01_force.py", "generator":{"--cfg":"config/riscv.config", "--max-instr":50000, "--noiss":None, "--options":"\"instruction_count=5000\"",}},
-                ]
+    {
+        "fname": "basic_random_01_force.py",
+        "generator": {
+            "--cfg": "config/riscv.config",
+            "--max-instr": 50000,
+            "--noiss": None,
+            "--options": '"instruction_count=5000"',
+        },
+    },
+]

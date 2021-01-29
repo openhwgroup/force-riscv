@@ -14,12 +14,14 @@
 # limitations under the License.
 #
 from enum import Enum
+
 from riscv.MemoryBank import MemoryBankRISCV
 
-## This class defines the available security states in the RISCV architecture.
+
+#  This class defines the available security states in the RISCV architecture.
 class SecurityStateRISCV(Enum):
     DEFAULT = 0
 
-    ## Return the default memory bank for this security state.
+    # Return the default memory bank for this security state.
     def getDefaultMemoryBank(self):
         return MemoryBankRISCV.DEFAULT

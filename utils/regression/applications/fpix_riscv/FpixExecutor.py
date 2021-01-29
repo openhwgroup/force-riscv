@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# file: 
+# file:
 # comment: implements FpixExecutor which serves as a Class Wrapper for
 #          for executing the simulator family in client processing apps
 
@@ -24,24 +24,26 @@ import re
 
 class FpixExecutor(IssExecutor):
 
-    cInstrNumPattern = re.compile(r'Executed (\d+) instructions, exit status \(([\w: ]+)\)')
+    cInstrNumPattern = re.compile(
+        r"Executed (\d+) instructions, exit status \(([\w: ]+)\)"
+    )
 
-    ## The default options that will be appended to the command line if they haven't been specified already.
-    #
+    # The default options that will be appended to the command line if they
+    # haven't been specified already.
     cDefaultOptions = [
         # Preferred option name to use
-        #                   |  Connector char to use between the option and its parameter
-        #                   |              | The other option name, if exist
-        #                   |              |        |  Connector char for the other option name
-        #                   |              |        |          |  Default value
-        #                   |              |        |          |    |
-        ControlItemOption(('-w',          ' '), ('--wfx_nop', ' '), 1),
-        ControlItemOption(('--exit_loop', '='), ('-X',        ' '), 1)
+        #   |  Connector char to use between the option and its parameter
+        #   |    | The other option name, if exist
+        #   |    |    |  Connector char for the other option name
+        #   |    |    |     |  Default value
+        #   |    |    |     |    |
+        ControlItemOption(("-w", " "), ("--wfx_nop", " "), 1),
+        ControlItemOption(("--exit_loop", "="), ("-X", " "), 1),
     ]
-                        
+
     def __init__(self):
         super().__init__()
-        self.mIssSoPath = None 
+        self.mIssSoPath = None
         self.mFpixPath = None
         self.GEN_LOG_FILENAME = "gen.log"
         self.MY_RAILHOUSE_LOG = "fpix_riscv.railhouse"
@@ -60,13 +62,18 @@ class FpixExecutor(IssExecutor):
             Msg.user("[FpixExecutor::skip] skipping due to no-sim")
             return True
 
-        if 'skip' in self.ctrl_item.fpix_riscv.keys():
-            if self.ctrl_item.fpix_riscv['skip']:
-                Msg.user("[FpixExecutor::skip] skipping due to --fpix_riscv.skip specified")
+        if "skip" in self.ctrl_item.fpix_riscv.keys():
+            if self.ctrl_item.fpix_riscv["skip"]:
+                Msg.user(
+                    "[FpixExecutor::skip] skipping due to "
+                    "--fpix_riscv.skip specified"
+                )
             return True
 
-        if 'fpix_path' not in self.ctrl_item.fpix_riscv.keys():
-            Msg.user("[FpixExecutor::skip] skipping due to no fpix_path specified")
+        if "fpix_path" not in self.ctrl_item.fpix_riscv.keys():
+            Msg.user(
+                "[FpixExecutor::skip] skipping due to no fpix_path specified"
+            )
             return True
 
         return False
@@ -75,7 +82,9 @@ class FpixExecutor(IssExecutor):
         my_result = None
         try:
             if self.ctrl_item.suffix is not None:
-                my_task_name = self.task_name.replace("_force", "_%s_force" % (str(self.ctrl_item.suffix)))
+                my_task_name = self.task_name.replace(
+                    "_force", "_%s_force" % (str(self.ctrl_item.suffix))
+                )
             else:
                 my_task_name = self.task_name
 
@@ -84,48 +93,66 @@ class FpixExecutor(IssExecutor):
             my_log = self.sim_log
             my_elog = self.sim_log
 
-            if 'cfg' not in self.ctrl_item.fpix_riscv.keys():
-                Msg.err("Fpix_ISS did not properly execute, Reason: Fpix config was not specified")
+            if "cfg" not in self.ctrl_item.fpix_riscv.keys():
+                Msg.err(
+                    "Fpix_ISS did not properly execute, "
+                    "Reason: Fpix config was not specified"
+                )
                 return False
 
-            if 'fpix_path' not in self.ctrl_item.fpix_riscv.keys():
-                Msg.err("FpixExecutor::execute: did not recieve a path to Fpix application fpix_path.")
+            if "fpix_path" not in self.ctrl_item.fpix_riscv.keys():
+                Msg.err(
+                    "FpixExecutor::execute: did not recieve a path to Fpix "
+                    "application fpix_path."
+                )
                 raise
             else:
-                self.mFpixPath = self.ctrl_item.fpix_riscv['fpix_path']
+                self.mFpixPath = self.ctrl_item.fpix_riscv["fpix_path"]
 
             # build the sim_cmd now that we have full information available
-            self.sim_cmd = "%s --railhouse %s --cluster_num %d --core_num %d --threads_per_cpu %d -i %d --cfg %s" % (
-                self.mFpixPath,
-                self.MY_RAILHOUSE_LOG,
-                self.ctrl_item.num_chips,
-                self.ctrl_item.num_cores,
-                self.ctrl_item.num_threads,
-                self.ctrl_item.max_instr,
-                self.ctrl_item.fpix_riscv['cfg'])
+            self.sim_cmd = (
+                "%s --railhouse %s --cluster_num %d "
+                "--core_num %d --threads_per_cpu %d -i %d "
+                "--cfg %s"
+                % (
+                    self.mFpixPath,
+                    self.MY_RAILHOUSE_LOG,
+                    self.ctrl_item.num_chips,
+                    self.ctrl_item.num_cores,
+                    self.ctrl_item.num_threads,
+                    self.ctrl_item.max_instr,
+                    self.ctrl_item.fpix_riscv["cfg"],
+                )
+            )
 
             self.sim_cmd += " %s"
-            
+
             # initalize the iss summary
             my_cmd = self.sim_cmd % my_elf
 
             # report the command line
             Msg.info("ISSCommand = " + str({"command": my_cmd}))
             # execute the simulation
-            my_result = SysUtils.exec_process(my_cmd, my_log, my_elog, self.ctrl_item.timeout, True)
+            my_result = SysUtils.exec_process(
+                my_cmd, my_log, my_elog, self.ctrl_item.timeout, True
+            )
 
-            my_extract_results = self.extract_results(my_result,  my_log, my_elog)
+            my_extract_results = self.extract_results(
+                my_result, my_log, my_elog
+            )
 
             # report the results
             Msg.info("ISSResult = " + str(my_extract_results))
 
-            # Fpix riscv is not made to provide the sort of information that the message system expects. 
-            # Almost anything here will cause the next app not to run.
-            # Msg.info("Fpix_ISSResult = ")
+            # Fpix riscv is not made to provide the sort of information that
+            # the message system expects. Almost anything here will cause the
+            # next app not to run.
 
         except Exception as arg_ex:
             Msg.error_trace("Fpix_ISS Execute Failure")
-            Msg.err("Fpix_ISS did not properly execute, Reason: %s" % (str(arg_ex)))
+            Msg.err(
+                "Fpix_ISS did not properly execute, Reason: %s" % (str(arg_ex))
+            )
             return False
 
         finally:
@@ -135,6 +162,7 @@ class FpixExecutor(IssExecutor):
 
     def open_log_file(self, aFileName, aOpenMode):
         from file_read_backwards import FileReadBackwards
+
         return FileReadBackwards(aFileName)
 
     def query_result_log(self, aHfile):
@@ -152,7 +180,9 @@ class FpixExecutor(IssExecutor):
         if instr_count is None:
             return 0, "Simulator terminated before completion"
 
-        Msg.user("InstructionCount: %d, Message: %s" % (instr_count, my_message), "ISS-LOG")
+        Msg.user(
+            "InstructionCount: %d, Message: %s" % (instr_count, my_message),
+            "ISS-LOG",
+        )
 
         return instr_count, my_message
-

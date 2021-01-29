@@ -14,8 +14,48 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname": "*_force.py", "options": {"num-cores": 4}, "generator": {"--noiss": None}},
-    {"fname": "*_force.py", "options": {"num-chips": 4, "num-cores": 2, "num-threads": 2, "max-instr": 50000}, "generator": {"--noiss": None}},
-    {"fname": "*_force.py", "options": {"num-cores": 4}, "generator": {"--options": "\"PrivilegeLevel=1\"", "--noiss": None}},
-    {"fname": "*_force.py", "options": {"num-chips": 4, "num-cores": 2, "num-threads": 2, "max-instr": 50000}, "generator": {"--options": "\"PrivilegeLevel=1\"", "--noiss": None}},
+    {
+        "fname": "*_force.py",
+        "options": {
+            "num-cores": 4,
+        },
+        "generator": {
+            "--noiss": None,
+        },
+    },
+    {
+        "fname": "*_force.py",
+        "options": {
+            "num-chips": 4,
+            "num-cores": 2,
+            "num-threads": 2,
+            "max-instr": 50000,
+        },
+        "generator": {
+            "--noiss": None,
+        },
+    },
+    {
+        "fname": "*_force.py",
+        "options": {
+            "num-cores": 4,
+        },
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+            "--noiss": None,
+        },
+    },
+    {
+        "fname": "*_force.py",
+        "options": {
+            "num-chips": 4,
+            "num-cores": 2,
+            "num-threads": 2,
+            "max-instr": 50000,
+        },
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+            "--noiss": None,
+        },
+    },
 ]

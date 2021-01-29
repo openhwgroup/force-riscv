@@ -17,24 +17,41 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 
-## This test verifies instructions with implied base register operands can be generated without
-# preamble.
+
+# This test verifies instructions with implied base register operands
+# can be generated without preamble.
 class MainSequence(Sequence):
-
     def generate(self, **kargs):
-        instructions = ('C.FLDSP##RISCV', 'C.FSDSP##RISCV', 'C.LDSP##RISCV', 'C.LWSP##RISCV', 'C.SDSP##RISCV', 'C.SWSP##RISCV')
+        instructions = (
+            "C.FLDSP##RISCV",
+            "C.FSDSP##RISCV",
+            "C.LDSP##RISCV",
+            "C.LWSP##RISCV",
+            "C.SDSP##RISCV",
+            "C.SWSP##RISCV",
+        )
 
-        if self.getGlobalState('AppRegisterWidth') == 32:
-            instructions = ('C.FLDSP##RISCV', 'C.FSDSP##RISCV', 'C.LWSP##RISCV', 'C.SWSP##RISCV')
-            
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            instructions = (
+                "C.FLDSP##RISCV",
+                "C.FSDSP##RISCV",
+                "C.LWSP##RISCV",
+                "C.SWSP##RISCV",
+            )
+
         for _ in range(100):
-            instr_id = self.genInstruction(self.choice(instructions), {'NoPreamble': 1})
+            instr_id = self.genInstruction(
+                self.choice(instructions), {"NoPreamble": 1}
+            )
 
             if instr_id:
                 instr_record = self.queryInstructionRecord(instr_id)
 
-                if instr_record['Addressing']['Base'][0] != 2:
-                    self.error('Unexpected base register; Expected=x2, Actual=x%d' % instr_record['Addressing']['Base'][0])
+                if instr_record["Addressing"]["Base"][0] != 2:
+                    self.error(
+                        "Unexpected base register; Expected=x2, Actual=x%d"
+                        % instr_record["Addressing"]["Base"][0]
+                    )
 
 
 MainSequenceClass = MainSequence

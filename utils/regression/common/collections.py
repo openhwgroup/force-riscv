@@ -17,24 +17,27 @@ import threading
 from common.kernel_objs import HiCriticalSection, HiMutex
 
 
-class HiCollection( list ): pass
+class HiCollection(list):
+    pass
 
-class HiCollectionItem( object ):
-    def __init__( self, arg_owner ):
-        self.owner = arg_owner;
 
-class HiCollection( list ):
+class HiCollectionItem(object):
+    def __init__(self, arg_owner):
+        self.owner = arg_owner
 
+
+class HiCollection(list):
     def empty(self):
         return self == []
 
     def size(self):
-        if self.empty(): return 0
+        if self.empty():
+            return 0
         return len(self)
 
 
 # LIFO Collection
-class HiStack( HiCollection ):
+class HiStack(HiCollection):
 
     # pushes an item on the stack
     def push(self, item):
@@ -42,48 +45,50 @@ class HiStack( HiCollection ):
 
     # pops and returns the top item of the stack
     def pop(self):
-        if self.empty(): return None
+        if self.empty():
+            return None
         return super().pop()
 
     # returns the top item of the stack
     def peek(self):
-        if self.empty(): return None
-        return self[ -1 ]
+        if self.empty():
+            return None
+        return self[-1]
 
 
-class HiQueue( HiCollection ):
-    def __init__( self ):
-        pass
+class HiQueue(HiCollection):
+    def __init__(self):
+        super().__init__()
 
 
-
-class HiThreadList( HiCollection ):
-
-    def __init__( self ):
+class HiThreadList(HiCollection):
+    def __init__(self):
+        super().__init__()
         self.mutex = HiMutex()
 
-    def append( self, arg_thread ):
+    def append(self, arg_thread):
         with self.mutex:
-            self.append( arg_thread )
+            self.append(arg_thread)
 
-    def remove( self, arg_thread ):
+    def remove(self, arg_thread):
         with self.mutex:
-            self.remove( arg_thread )
+            self.remove(arg_thread)
 
 
-class HiAtomicInteger ( HiCollection ):
-    def __init__( self, initial_value ):
+class HiAtomicInteger(HiCollection):
+    def __init__(self, initial_value):
+        super().__init__()
         self.val = initial_value
         self.mutex = threading.Lock()
 
-    def add( self, amount ):
+    def add(self, amount):
         try:
             self.mutex.acquire()
             self.val += amount
         finally:
             self.mutex.release()
 
-    def value( self ):
+    def value(self):
         internal = None
         try:
             self.mutex.acquire()
@@ -93,7 +98,7 @@ class HiAtomicInteger ( HiCollection ):
         return internal
 
 
-class HiVkThreadedQueue( HiQueue ):
+class HiVkThreadedQueue(HiQueue):
     def __init__(self):
         super().__init__()
         self.listLock = threading.Lock()
@@ -101,7 +106,7 @@ class HiVkThreadedQueue( HiQueue ):
     def enqueue(self, item):
         try:
             self.listLock.acquire()
-            self.append( item )
+            self.append(item)
         finally:
             self.listLock.release()
 
@@ -114,34 +119,34 @@ class HiVkThreadedQueue( HiQueue ):
 
         return item
 
-class HiThreadedProducerConsumerQueue( HiVkThreadedQueue ):
-    def __init__( self, blocking = False ):
+
+class HiThreadedProducerConsumerQueue(HiVkThreadedQueue):
+    def __init__(self, blocking=False):
         self.produceAval = threading.Semaphore(0)
         super().__init__()
 
     def blockUntilAvailable(self, timeout):
-        success = self.produceAval.acquire(blocking=True, timeout = timeout)
+        success = self.produceAval.acquire(blocking=True, timeout=timeout)
         return success
 
-    # Returns True if the item was able to be successfully enqueued. Returns False otherwise.
-    def enqueue( self, item):
+    # Returns True if the item was able to be successfully enqueued.
+    # Returns False otherwise.
+    def enqueue(self, item):
         success = super().enqueue(item)
 
         self.produceAval.release()
 
         return success
 
-    # Returns True if the queue is not empty and the item was successfully dequeued. Returns
-    # False otherwise. Raises a timeout error if the queue isn't given an element within the
-    # timeout specified; default is 1 second.
-    def dequeue( self, timeout = 1 ):
+    # Returns True if the queue is not empty and the item was successfully
+    # dequeued. Returns False otherwise. Raises a timeout error if the queue
+    # isn't given an element within the timeout specified; default is 1 second.
+    def dequeue(self, timeout=1):
         success = self.blockUntilAvailable(timeout)
 
-        if (success == False):
+        if not success:
             raise TimeoutError
 
         result = super().dequeue()
 
         return result
-
-

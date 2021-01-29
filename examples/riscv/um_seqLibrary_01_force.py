@@ -18,14 +18,14 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.SequenceLibrary import SequenceLibrary
 
-class MainSequence(Sequence):
 
+class MainSequence(Sequence):
     def generate(self, **kargs):
-        if self.getGlobalState('AppRegisterWidth') == 32:
+        if self.getGlobalState("AppRegisterWidth") == 32:
             seq_library = MySequenceLibrary32(self.genThread)
         else:
             seq_library = MySequenceLibrary(self.genThread)
-            
+
         # 4 iterations of selecting a sequence randomly from the list
         for _ in range(4):
             current_sequence = seq_library.chooseOne()
@@ -37,22 +37,46 @@ class MainSequence(Sequence):
 
 
 class MySequenceLibrary(SequenceLibrary):
+    def createSequenceList(self):
+        self.seqList = [
+            (
+                "Bunch_of_ALU_Int",
+                "DV.riscv.sequences.BasicSequences",
+                "Your Description",
+                20,
+            ),
+            (
+                "Bunch_of_LDST",
+                "DV.riscv.sequences.BasicSequences",
+                "Your Description",
+                20,
+            ),
+        ]
 
-    def createSequenceList (self):
-        self.seqList = [("Bunch_of_ALU_Int", "DV.riscv.sequences.BasicSequences", "Your Description", 20),
-                        ("Bunch_of_LDST", "DV.riscv.sequences.BasicSequences", "Your Description", 20),]
 
 class MySequenceLibrary32(SequenceLibrary):
+    def createSequenceList(self):
+        self.seqList = [
+            (
+                "Bunch_of_ALU_Int32",
+                "DV.riscv.sequences.BasicSequences",
+                "Your Description",
+                20,
+            ),
+            (
+                "Bunch_of_LDST32",
+                "DV.riscv.sequences.BasicSequences",
+                "Your Description",
+                20,
+            ),
+        ]
 
-    def createSequenceList (self):
-        self.seqList = [("Bunch_of_ALU_Int32", "DV.riscv.sequences.BasicSequences", "Your Description", 20),
-                        ("Bunch_of_LDST32", "DV.riscv.sequences.BasicSequences", "Your Description", 20),]
 
-## Points to the MainSequence defined in this file
+#  Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+#  Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+#  Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV

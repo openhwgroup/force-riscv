@@ -13,37 +13,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from VectorTestSequence import VectorTestSequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from VectorTestSequence import VectorTestSequence
 
-## This test verifies that whole register load and store instructions can be generated and executed
+
+#  This test verifies that whole register load and store instructions can be
+#  generated and executed
 # successfully.
 class MainSequence(VectorTestSequence):
-
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
-        # TODO(Noah): Add additional load/store whole register instructions when they are supported
-        # by Handcar.
+        # TODO(Noah): Add additional load/store whole register instructions
+        #  when they are supported by Handcar.
         self._mInstrList = (
-            'VL1R.V##RISCV',
-            'VS1R.V##RISCV',
+            "VL1R.V##RISCV",
+            "VS1R.V##RISCV",
         )
 
-    ## Return a list of test instructions to randomly choose from.
+    # Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
         return self._mInstrList
 
-    ## Get allowed exception codes.
+    # Get allowed exception codes.
     #
     #  @param aInstr The name of the instruction.
     def _getAllowedExceptionCodes(self, aInstr):
         allowed_except_codes = set()
 
-        # TODO(Noah): Remove the line below permitting store page fault exceptions when the page
-        # descriptor generation is improved. Currently, we are generating read-only pages for load
-        # instructions, which is causing subsequent store instructions to the same page to fault.
+        # TODO(Noah): Remove the line below permitting store page fault
+        #  exceptions when the page descriptor generation is improved.
+        #  Currently, we are generating read-only pages for load instructions,
+        #  which is causing subsequent store instructions to the same page to
+        #  fault.
         allowed_except_codes.add(0xF)
 
         return allowed_except_codes

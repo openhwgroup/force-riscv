@@ -13,7 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .RtlInit import RtlCmdLineOptions, RtlParametersProcessor, processRtlControlData
+from .RtlInit import (
+    RtlCmdLineOptions,
+    RtlParametersProcessor,
+    processRtlControlData,
+)
 from .RtlExecutor import RtlExecutor
 from .RtlReporter import RtlReporter
 
@@ -21,7 +25,7 @@ from .RtlReporter import RtlReporter
 CmdLineOptions = RtlCmdLineOptions
 
 # Tag for the application
-Tag = 'rtl'
+Tag = "rtl"
 
 ParametersProcessorClass = RtlParametersProcessor
 

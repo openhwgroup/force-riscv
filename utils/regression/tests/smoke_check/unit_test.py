@@ -17,22 +17,22 @@
 
 from shared.msg_utils import Msg
 
-class UnitTest( object ): pass
+
+class UnitTest(object):
+    pass
+
 
 # base unit test class
-class UnitTest( object ):
-
-    def run_test( self ):
+class UnitTest(object):
+    def run_test(self):
         pass
 
-    def process_result( self ):
+    def process_result(self):
         pass
 
-    def __enter__( self ):
+    def __enter__(self):
         self.run_test()
 
-    def __exit__( self, type, value, traceback ):
+    def __exit__(self, type, value, traceback):
         self.process_result()
         Msg.blank()
-
-

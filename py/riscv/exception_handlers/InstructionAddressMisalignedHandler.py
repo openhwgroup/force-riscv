@@ -17,24 +17,35 @@ from base.exception_handlers.ReusableSequence import ReusableSequence
 from riscv.exception_handlers.ExceptionHandlerContext import RegisterCallRole
 from riscv.PrivilegeLevel import PrivilegeLevelRISCV
 
-class InstructionAddressMisalignedHandlerRISCV(ReusableSequence):
 
+class InstructionAddressMisalignedHandlerRISCV(ReusableSequence):
     def generateHandler(self, **kwargs):
         try:
-            handler_context = kwargs['handler_context']
+            handler_context = kwargs["handler_context"]
         except KeyError:
-            self.error('INTERNAL ERROR: one or more arguments to InstructionAddressMisalignedHandlerRISCV generate method missing.')
+            self.error(
+                "INTERNAL ERROR: one or more arguments to "
+                "InstructionAddressMisalignedHandlerRISCV generate method "
+                "missing."
+            )
 
-        self.debug('[InstructionAddressMisalignedHandlerRISCV] generate handler address: 0x%x' % self.getPEstate('PC'))
-        
+        self.debug(
+            "[InstructionAddressMisalignedHandlerRISCV] generate handler "
+            "address: 0x%x" % self.getPEstate("PC")
+        )
+
         self.privilegeLevel = handler_context.mPrivLevel
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
 
-        stval_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 1)
+        stval_reg_index = handler_context.getScratchRegisterIndices(
+            RegisterCallRole.TEMPORARY, 1
+        )
 
         # retreive misaligned instruction address...
-        
-        self.mAssemblyHelper.genReadSystemRegister(stval_reg_index, ('%stval' % priv_level.name.lower()) )
+
+        self.mAssemblyHelper.genReadSystemRegister(
+            stval_reg_index, ("%stval" % priv_level.name.lower())
+        )
 
         # mask off low order 2 bits to yield word-aligned address...
 
@@ -42,8 +53,10 @@ class InstructionAddressMisalignedHandlerRISCV(ReusableSequence):
         self.mAssemblyHelper.genXorImmediate(stval_reg_index, 0x3)
 
         # write the aligned branch target as the exception return address...
-        
-        self.mAssemblyHelper.genWriteSystemRegister( ('%sepc' % priv_level.name.lower()), stval_reg_index )
+
+        self.mAssemblyHelper.genWriteSystemRegister(
+            ("%sepc" % priv_level.name.lower()), stval_reg_index
+        )
 
         # done.
         self.mAssemblyHelper.genReturn()

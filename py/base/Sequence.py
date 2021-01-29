@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-## Sequence class
+#  Sequence class
 #  Base sequence class, pass on API calls to GenThread class
 from base.Macro import Macro
 import base.UtilityFunctions as UtilityFunctions
@@ -24,13 +24,13 @@ import Log
 import RandomUtils
 import warnings
 
-class Sequence(object):
 
+class Sequence(object):
     def __init__(self, gen_thread, name=None):
         self.genThread = gen_thread
         self.name = name
         self.entryFunction = None
-        
+
     def setup(self, **kargs):
         pass
 
@@ -47,15 +47,18 @@ class Sequence(object):
             self.cleanUp(**kargs)
         else:
             from inspect import signature
+
             entry_args = []
             for param in signature(self.entryFunction).parameters.values():
                 if param.kind == param.POSITIONAL_ONLY:
-                    try: 
+                    try:
                         entry_args.append(kargs[param.name])
                     except KeyError:
-                        self.notice("missing entry point argument %s" % (param.name))
+                        self.notice(
+                            "missing entry point argument %s" % (param.name)
+                        )
             self.entryFunction(*entry_args, **kargs)
-        
+
     def getResult(self):
         return None
 
@@ -76,42 +79,48 @@ class Sequence(object):
 
     def reportPostLoopAddress(self, loop_id, address):
         self.genThread.reportPostLoopAddress(loop_id, address)
-        
+
     def beginLinearBlock(self):
         return self.genThread.beginLinearBlock()
 
-    def endLinearBlock(self, block_id, execute=True, max_re_execution_instructions=0):
-        self.genThread.endLinearBlock(block_id, execute, max_re_execution_instructions)
-        
+    def endLinearBlock(
+        self, block_id, execute=True, max_re_execution_instructions=0
+    ):
+        self.genThread.endLinearBlock(
+            block_id, execute, max_re_execution_instructions
+        )
+
     def genMacro(self, item, param):
         return self.genInstrOrSequence(Macro(item, param))
 
     def genInstrOrSequence(self, item, kargs=dict()):
         try:
-            if isinstance (item, str):
+            if isinstance(item, str):
                 return self.genInstruction(item, kargs)
-            elif isinstance (item, Macro):
+            elif isinstance(item, Macro):
                 objName = item.obj()
                 objVal = item.value()
-                if issubclass (objName, Sequence):
+                if issubclass(objName, Sequence):
                     myInstance = objName(self.genThread)
                     args = {}
-                    if isinstance (objVal, str):    
-                        args = dict(e.split('=') for e in objVal.split(','))
-                    elif isinstance (objVal, dict):
+                    if isinstance(objVal, str):
+                        args = dict(e.split("=") for e in objVal.split(","))
+                    elif isinstance(objVal, dict):
                         args = objVal
                     myInstance.run(**args)
                     return myInstance
-            elif isinstance (item, Sequence):
+            elif isinstance(item, Sequence):
                 item.run(**kargs)
                 return item
             elif issubclass(item, Sequence):
-                #self.notice("genInstrOrSequence: sequence class is given")
+                # self.notice("genInstrOrSequence: sequence class is given")
                 myInstance = item(self.genThread)
-                myInstance.run(**kargs)                
+                myInstance.run(**kargs)
                 return myInstance
         except TypeError:
-            self.error("genInstrOrSequence: given item type or format is incorrect")        
+            self.error(
+                "genInstrOrSequence: given item type or format is incorrect"
+            )
         return None
 
     def genInstruction(self, instr_name, kargs=dict()):
@@ -119,14 +128,14 @@ class Sequence(object):
 
     def genMetaInstruction(self, instr_name, kargs=dict()):
         # enable speculative bnt by default
-        sp_key = 'SpeculativeBnt'
+        sp_key = "SpeculativeBnt"
         if sp_key not in kargs:
             kargs[sp_key] = True
         return self.genThread.genMetaInstruction(instr_name, kargs)
 
     def queryInstructionRecord(self, rec_id):
         return self.genThread.queryInstructionRecord(rec_id)
-    
+
     def queryExceptionRecordsCount(self, exception_id):
         return self.genThread.queryExceptionRecordsCount(exception_id)
 
@@ -179,7 +188,9 @@ class Sequence(object):
         return self.genThread.getPEstate(state_name)
 
     def initializeMemory(self, addr, bank, size, data, is_instr, is_virtual):
-        self.genThread.initializeMemory(addr, bank, size, data, is_instr, is_virtual)
+        self.genThread.initializeMemory(
+            addr, bank, size, data, is_instr, is_virtual
+        )
 
     # Page related API
     def genPA(self, **kargs):
@@ -196,19 +207,31 @@ class Sequence(object):
 
     # Random module API
     # val = self.random32(min_v=0, max_v=MAX_UINT32)
-    def random32(self, min_v=0, max_v=0xffffffff):
-        warnings.warn("Sequence.random32() is deprecated; please use RandomUtils.random32()", DeprecationWarning)
+    def random32(self, min_v=0, max_v=0xFFFFFFFF):
+        warnings.warn(
+            "Sequence.random32() is deprecated; "
+            "please use RandomUtils.random32()",
+            DeprecationWarning,
+        )
 
         return RandomUtils.random32(min_v, max_v)
 
     # val = self.random64(min_v=0, max_v=MAX_UINT64)
-    def random64(self, min_v=0, max_v=0xffffffffffffffff):
-        warnings.warn("Sequence.random64() is deprecated; please use RandomUtils.random64()", DeprecationWarning)
+    def random64(self, min_v=0, max_v=0xFFFFFFFFFFFFFFFF):
+        warnings.warn(
+            "Sequence.random64() is deprecated; "
+            "please use RandomUtils.random64()",
+            DeprecationWarning,
+        )
 
         return RandomUtils.random64(min_v, max_v)
 
     def shuffleList(self, myList):
-        warnings.warn("Sequence.shuffleList() is deprecated; please use UtilityFunctions.shuffle_list()", DeprecationWarning)
+        warnings.warn(
+            "Sequence.shuffleList() is deprecated; "
+            "please use UtilityFunctions.shuffle_list()",
+            DeprecationWarning,
+        )
 
         return UtilityFunctions.shuffle_list(myList)
 
@@ -237,7 +260,7 @@ class Sequence(object):
         else:
             item_list = items
             for i, item in enumerate(items):
-                #item_list.append(item)
+                # item_list.append(item)
                 index_list.append(i)
         shuffled_index_list = self.shuffleList(index_list)
 
@@ -249,18 +272,31 @@ class Sequence(object):
                 yield item
 
     # Register module API
-    # (reg1, reg2, reg3) = self.getRandomRegisters(Number=3, Type="GPR", Exclude="31"), Exclude is optional, default is empty string ""
+    # (reg1, reg2, reg3) = self.getRandomRegisters(Number=3, Type="GPR",
+    # Exclude="31"), Exclude is optional, default is empty string ""
     def getRandomRegisters(self, number, reg_type, exclude="", no_skip=False):
-        reg_indices = self.genThread.getRandomRegisters(number, reg_type, exclude)
+        reg_indices = self.genThread.getRandomRegisters(
+            number, reg_type, exclude
+        )
         if no_skip and (reg_indices is None):
-            self.error('Failed to obtain %d random %s register(s)' % (number, reg_type))
+            self.error(
+                "Failed to obtain %d random %s register(s)"
+                % (number, reg_type)
+            )
 
         return reg_indices
 
-    def getRandomRegistersForAccess(self, number, reg_type, access, exclude="", no_skip=False):
-        reg_indices = self.genThread.getRandomRegistersForAccess(number, reg_type, access, exclude)
+    def getRandomRegistersForAccess(
+        self, number, reg_type, access, exclude="", no_skip=False
+    ):
+        reg_indices = self.genThread.getRandomRegistersForAccess(
+            number, reg_type, access, exclude
+        )
         if no_skip and (reg_indices is None):
-            self.error('Failed to obtain %d random %s register(s)' % (number, reg_type))
+            self.error(
+                "Failed to obtain %d random %s register(s)"
+                % (number, reg_type)
+            )
 
         return reg_indices
 
@@ -272,13 +308,17 @@ class Sequence(object):
 
         return self.getRandomRegisters(number, "GPR", exclude, no_skip)
 
-    def getRandomGPRsForAccess(self, number, access, exclude="", no_skip=False):
+    def getRandomGPRsForAccess(
+        self, number, access, exclude="", no_skip=False
+    ):
         if len(exclude):
             exclude += ",31"
         else:
             exclude = "31"
 
-        return self.getRandomRegistersForAccess(number, "GPR", access, exclude, no_skip)
+        return self.getRandomRegistersForAccess(
+            number, "GPR", access, exclude, no_skip
+        )
 
     def getRandomGPR(self, exclude="", no_skip=False):
         return self.getRandomGPRs(1, exclude, no_skip)[0]
@@ -287,22 +327,23 @@ class Sequence(object):
         return self.getRandomGPRsForAccess(1, access, exclude, no_skip)[0]
 
     def isRegisterReserved(self, name, access="Write", resv_type="User"):
-      return self.genThread.isRegisterReserved(name, access, resv_type)
+        return self.genThread.isRegisterReserved(name, access, resv_type)
 
-    # self.reserveRegisterByIndex(size=64, index=reg1, reg_ype="GPR", access="Write")
     def reserveRegisterByIndex(self, size, index, reg_type, access="Write"):
-      self.genThread.reserveRegisterByIndex(size, index, reg_type, access) #input name
-    
-    def reserveRegister(self, name, access="Write"):
-      self.genThread.reserveRegister(name, access)
- 
-    # self.unreserveRegisterByIndex(size=64, index=reg1, Type="GPR", access="Write")
-    def unreserveRegisterByIndex(self, size, index, type, access="Write"):
-      self.genThread.unreserveRegisterByIndex(size, index, type, access) #input index
+        self.genThread.reserveRegisterByIndex(
+            size, index, reg_type, access
+        )  # input name
 
-    # self.unreserveRegister(name="SP", access="Write")
+    def reserveRegister(self, name, access="Write"):
+        self.genThread.reserveRegister(name, access)
+
+    def unreserveRegisterByIndex(self, size, index, type, access="Write"):
+        self.genThread.unreserveRegisterByIndex(
+            size, index, type, access
+        )  # input index
+
     def unreserveRegister(self, name, access="Write", reserve_type="User"):
-      self.genThread.unreserveRegister(name, access, reserve_type)
+        self.genThread.unreserveRegister(name, access, reserve_type)
 
     def readRegister(self, name, field=""):
         return self.genThread.readRegister(name, field)
@@ -310,29 +351,27 @@ class Sequence(object):
     def writeRegister(self, name, value, field="", update=False):
         self.genThread.writeRegister(name, field, value, update)
 
-    # self.initializeRegister(Name="FPSCR", Field="OFE", Value=1)
     def initializeRegister(self, name, value, field=""):
         self.genThread.initializeRegister(name, field, value)
 
-    # self.initializeRegisterFields(Name="FPSCR", {"OFE":1})
-    def initializeRegisterFields(self, register_name,field_value_map):
+    def initializeRegisterFields(self, register_name, field_value_map):
         self.genThread.initializeRegisterFields(register_name, field_value_map)
 
-    # self.randomInitializeRegister(Name="FPSCR", Field="UFE")
     def randomInitializeRegister(self, name, field=""):
         self.genThread.randomInitializeRegister(name, field)
- 
-    # self.randomInitializeRegisterFields(Name="FPSCR", ["UFE","OtherFields"])
+
     def randomInitializeRegisterFields(self, register_name, field_list):
-        self.genThread.randomInitializeRegisterFields(register_name, field_list)
- 
+        self.genThread.randomInitializeRegisterFields(
+            register_name, field_list
+        )
+
     def getRegisterFieldMask(self, register_name, field_list):
         return self.genThread.getRegisterFieldMask(register_name, field_list)
-        
+
     # self.genSequence()
     def genSequence(self, type, kargs={}):
         self.genThread.genSequence(type, kargs)
-        
+
     # get register information
     def getRegisterInfo(self, name, index):
         return self.genThread.getRegisterInfo(name, index)
@@ -343,11 +382,11 @@ class Sequence(object):
 
     # get max physical address
     def getMaxPhysicalAddress(self):
-        return self.genThread.getMaxAddress("Physical");
+        return self.genThread.getMaxAddress("Physical")
 
     # get max virtual address
     def getMaxVirtualAddress(self):
-        return self.genThread.getMaxAddress("Virtual");
+        return self.genThread.getMaxAddress("Virtual")
 
     # get max address
     def getMaxAddress(self, addr_type="Virtual"):
@@ -355,18 +394,22 @@ class Sequence(object):
 
     # get branch offset
     def getBranchOffset(self, br_addr, target_addr, offset_size, shift):
-        return self.genThread.getBranchOffset(br_addr, target_addr, offset_size, shift)
+        return self.genThread.getBranchOffset(
+            br_addr, target_addr, offset_size, shift
+        )
 
     def validAddressMask(self, addr, is_instr):
         # Tuple of (is_instr, addr)
-        return self.genThread.validAddressMask("ValidAddressMask", addr, is_instr)
+        return self.genThread.validAddressMask(
+            "ValidAddressMask", addr, is_instr
+        )
 
     # random_item = self.pickWeighted(weighted_dict)
     def pickWeighted(self, weighted_dict):
         return self.genThread.pickWeighted(weighted_dict)
-    
+
     def pickWeightedValue(self, weighted_dict):
-        return self.genThread.pickWeightedValue(weighted_dict);
+        return self.genThread.pickWeightedValue(weighted_dict)
 
     # get permuted item
     def getPermutated(self, weighted_dict, skip_weight_check=False):
@@ -378,7 +421,7 @@ class Sequence(object):
         ori_index_list = []
         i = 0
         for item, weight in sorted(weighted_dict.items()):
-            if skip_weight_check == True or weight > 0:
+            if skip_weight_check or weight > 0:
                 permuted_list.append(item)
                 ori_index_list.append(i)
                 i += 1
@@ -387,43 +430,60 @@ class Sequence(object):
         # iterate the shuffled list
         for index in shuffled_index_list:
             item = permuted_list[index]
-            if isinstance (item, str):
+            if isinstance(item, str):
                 yield item
-            elif isinstance (item, ItemMap):
+            elif isinstance(item, ItemMap):
                 for j in item.getPermutated(self, skip_weight_check):
                     yield j
-            elif isinstance (item, Macro):
+            elif isinstance(item, Macro):
                 yield item
             else:
-                raise TestException("Picked unsupported object in getPermuated.")
+                raise TestException(
+                    "Picked unsupported object in getPermuated."
+                )
 
     # self.error("failed to setup scenario at address 0x%x" % addr)
     def error(self, err_msg):
         stack_frame_str = get_stack_frame_string()
-        Log.fail('%s\n%s' % (err_msg, stack_frame_str))
+        Log.fail("%s\n%s" % (err_msg, stack_frame_str))
 
     def notice(self, msg):
-        warnings.warn("Sequence.notice() is deprecated; please use Log.notice()", DeprecationWarning)
+        warnings.warn(
+            "Sequence.notice() is deprecated; please use Log.notice()",
+            DeprecationWarning,
+        )
 
         Log.notice(msg)
 
     def warn(self, msg):
-        warnings.warn("Sequence.warn() is deprecated; please use Log.warn()", DeprecationWarning)
+        warnings.warn(
+            "Sequence.warn() is deprecated; please use Log.warn()",
+            DeprecationWarning,
+        )
 
         Log.warn(msg)
 
     def debug(self, msg):
-        warnings.warn("Sequence.debug() is deprecated; please use Log.debug()", DeprecationWarning)
+        warnings.warn(
+            "Sequence.debug() is deprecated; please use Log.debug()",
+            DeprecationWarning,
+        )
 
         Log.debug(msg)
 
     def info(self, msg):
-        warnings.warn("Sequence.info() is deprecated; please use Log.info()", DeprecationWarning)
+        warnings.warn(
+            "Sequence.info() is deprecated; please use Log.info()",
+            DeprecationWarning,
+        )
 
         Log.info(msg)
 
     def trace(self, msg):
-        warnings.warn("Sequence.trace() is deprecated; please use Log.trace()", DeprecationWarning)
+        warnings.warn(
+            "Sequence.trace() is deprecated; please use Log.trace()",
+            DeprecationWarning,
+        )
 
         Log.trace(msg)
 
@@ -434,46 +494,45 @@ class Sequence(object):
     # self.getRegisterIndex(registerName)
     def getRegisterIndex(self, registerName):
         return self.genThread.getRegisterIndex(registerName)
-           
+
     # self.getRegisterReloadValue(registerName, fieldConstraints)
-    def getRegisterReloadValue(self, registerName, fieldConstraints={}): 
-        return self.genThread.getRegisterReloadValue(registerName, fieldConstraints)
-        
+    def getRegisterReloadValue(self, registerName, fieldConstraints={}):
+        return self.genThread.getRegisterReloadValue(
+            registerName, fieldConstraints
+        )
+
     # self.genRegisterFieldInfo(registerName, fieldConstraints)
     def genRegisterFieldInfo(self, registerName, fieldConstraints):
-        return self.genThread.getRegisterFieldInfo(registerName, fieldConstraints)
+        return self.genThread.getRegisterFieldInfo(
+            registerName, fieldConstraints
+        )
 
     # self.virtualMemoryRequest(requestName, parameters)
     def virtualMemoryRequest(self, requestName, parameters={}):
         return self.genThread.virtualMemoryRequest(requestName, parameters)
-    
+
     # self.systemCall(params)
     def systemCall(self, callDetails):
         self.genThread.systemCall(callDetails)
-        
+
     def selfHostedDebug(self, params):
         return self.genThread.selfHostedDebug(params)
 
     def exceptionRequest(self, requestName, kargs):
         return self.genThread.exceptionRequest(requestName, kargs)
 
-    # self.reserveMemory(Name="xyz", Range="0-0xfff", Bank=0, IsVirtual=False)
     def reserveMemory(self, Name, Range, Bank, IsVirtual=False):
         self.genThread.reserveMemory(Name, Range, Bank, IsVirtual)
 
-    # self.reserveMemoryRange(Name="xyz", Start=0, Size=0x1000, Bank=0, IsVirtual=False)
     def reserveMemoryRange(self, Name, Start, Size, Bank, IsVirtual=False):
         self.genThread.reserveMemoryRange(Name, Start, Size, Bank, IsVirtual)
 
-    # self.unreserveMemory(Name="xyz", Range="0-0xfff", Bank=0, IsVirtual=False)
     def unreserveMemory(self, Name, Range="", Bank=0, IsVirtual=False):
         self.genThread.unreserveMemory(Name, Range, Bank, IsVirtual)
 
-    # self.unreserveMemoryRange(Name="xyz", Start=0, Size=0x1000, Bank=0, IsVirtual=False)
     def unreserveMemoryRange(self, Name, Start, Size, Bank, IsVirtual=False):
         self.genThread.unreserveMemoryRange(Name, Start, Size, Bank, IsVirtual)
 
-    # self.modifyVariable(name="dependence window", value="1-5:9,6-10:1", type="Chocie")
     def modifyVariable(self, name, value, var_type):
         self.genThread.modifyVariable(name, value, var_type)
 
@@ -481,28 +540,28 @@ class Sequence(object):
         return self.genThread.getVariable(name, var_type)
 
     def dumpPythonObject(self, object, hex=False):
-        if isinstance(object,dict):
+        if isinstance(object, dict):
             for (key, value) in sorted(object.items()):
-                if (isinstance(value,int)):
-                     if hex == True: 
-                         self.notice('%s:%x' %(key,value))
-                     else:
-                         self.notice("%s:%d" %(key,value))
-                elif isinstance(value,(dict,list)):
-                     self.dumpPythonObject(value, hex)
+                if isinstance(value, int):
+                    if hex:
+                        self.notice("%s:%x" % (key, value))
+                    else:
+                        self.notice("%s:%d" % (key, value))
+                elif isinstance(value, (dict, list)):
+                    self.dumpPythonObject(value, hex)
                 else:
-                     self.notice('%s:%s' %(key,value))
-        elif isinstance(object,list):
+                    self.notice("%s:%s" % (key, value))
+        elif isinstance(object, list):
             for i in range(len(object)):
-                if (isinstance(object[i],int)):
-                     if hex == True: 
-                         self.notice('%s:%x' %(i,object[i]))
-                     else:
-                         self.notice("%s:%d" %(i,object[i]))
-                elif isinstance(object[i],(dict,list)):
-                     self.dumpPythonObject(object[i], hex)
+                if isinstance(object[i], int):
+                    if hex:
+                        self.notice("%s:%x" % (i, object[i]))
+                    else:
+                        self.notice("%s:%d" % (i, object[i]))
+                elif isinstance(object[i], (dict, list)):
+                    self.dumpPythonObject(object[i], hex)
                 else:
-                     self.notice('%s:%s' %(i,object[i]))
+                    self.notice("%s:%s" % (i, object[i]))
         else:
             self.error("dumpPythonObject: object not dict or list")
 
@@ -510,19 +569,25 @@ class Sequence(object):
     def setBntHook(self, **kargs):
         return self.genThread.setBntHook(**kargs)
 
-    # revert bnt sequence 
-    def revertBntHook(self, bnt_id = 0):
+    # revert bnt sequence
+    def revertBntHook(self, bnt_id=0):
         return self.genThread.revertBntHook(bnt_id)
-    
-    def setEretPreambleSequence(self, eretSequence, eretGlobal = True):
-        self.modifyVariable("Eret Preamble Sequence Class", eretSequence, "String")
+
+    def setEretPreambleSequence(self, eretSequence, eretGlobal=True):
+        self.modifyVariable(
+            "Eret Preamble Sequence Class", eretSequence, "String"
+        )
         if eretGlobal:
             self.globalEretPreambleSequence = eretSequence
 
-    def revertEretPreambleSequence(self, eretGlobal = True):
+    def revertEretPreambleSequence(self, eretGlobal=True):
         if eretGlobal:
             self.globalEretPreambleSequence = "default"
-        self.modifyVariable("Eret Preamble Sequence Class", self.globalEretPreambleSequence, "String")
+        self.modifyVariable(
+            "Eret Preamble Sequence Class",
+            self.globalEretPreambleSequence,
+            "String",
+        )
 
     def verifyVirtualAddress(self, vaddr, size, is_instr):
         return self.genThread.verifyVirtualAddress(vaddr, size, is_instr)
@@ -530,12 +595,13 @@ class Sequence(object):
     def confirmSpace(self, size):
         self.genThread.confirmSpace(size)
 
-    # query thread group info by group id. If group id is none, return all thread group info
-    def queryThreadGroup(self, aGroupId = None):
+    # query thread group info by group id. If group id is none, return all
+    # thread group info
+    def queryThreadGroup(self, aGroupId=None):
         return self.genThread.queryThreadGroup(aGroupId)
 
-    #get main thread group ID the thread belongs to. 
-    def getThreadGroupId(self, aThreadId = None):
+    # get main thread group ID the thread belongs to.
+    def getThreadGroupId(self, aThreadId=None):
         if aThreadId is None:
             aThreadId = self.genThread.genThreadID
 
@@ -546,12 +612,16 @@ class Sequence(object):
 
     def partitionThreadGroup(self, aPolicy, **kargs):
         self.genThread.partitionThreadGroup(aPolicy, kargs)
-    
+
     def setThreadGroup(self, aId, aJob, aThreads):
         self.genThread.setThreadGroup(aId, aJob, aThreads)
 
     def getThreadNumber(self):
-        return (self.genThread.numberOfChips() * self.genThread.numberOfCores() * self.genThread.numberOfThreads())
+        return (
+            self.genThread.numberOfChips()
+            * self.genThread.numberOfCores()
+            * self.genThread.numberOfThreads()
+        )
 
     def lockThreadScheduler(self):
         self.genThread.lockThreadScheduler()
@@ -569,10 +639,10 @@ class Sequence(object):
         return self.genThread.hasSharedThreadObject(name)
 
     def threadLockingContext(self):
-        ## A nested thread locking context manager class to ensure the locking and unlocking happen as a balanced pair.
+        # A nested thread locking context manager class to ensure the locking
+        # and unlocking happen as a balanced pair.
         #
         class ThreadLockingContext:
-
             def __init__(self, aGenThread):
                 self.mGenThread = aGenThread
 
@@ -599,6 +669,9 @@ class Sequence(object):
         try:
             enum_val = aEnumClass.__members__[aString]
         except KeyError:
-            self.error('%s is not a valid value of %s' % (aString, aEnumClass.__name__))
+            self.error(
+                "%s is not a valid value of %s"
+                % (aString, aEnumClass.__name__)
+            )
 
         return enum_val

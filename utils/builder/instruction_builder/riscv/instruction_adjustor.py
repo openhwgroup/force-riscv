@@ -13,16 +13,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from abc import ABC, abstractmethod
-from shared.instruction_file import InstructionFile
-from adjustor_utilities import *
 import copy
 import re
+from abc import ABC, abstractmethod
+
+from shared.instruction_file import InstructionFile
+
+from adjustor_utilities import *
+
 
 class InstructionAdjustor(ABC):
 
     def __init__(self):
-        self._mSupportedInstrFile = InstructionFile()
+        self.mSupportedInstrFile = InstructionFile()
 
     @abstractmethod
     def adjust_instruction_by_format(self, aInstr):
@@ -30,9 +33,7 @@ class InstructionAdjustor(ABC):
 
     def adjust_instruction(self, aInstr):
         self.adjust_instruction_by_format(aInstr)
-        self._mSupportedInstrFile.add_instruction(copy.deepcopy(aInstr))
-        #else:
-        #    print('unsupported instr: {} using format: {}'.format(instr.get_full_ID(), instr.get_format()))
+        self.mSupportedInstrFile.add_instruction(copy.deepcopy(aInstr))
 
 
 class G_InstructionAdjustor(InstructionAdjustor):
@@ -41,8 +42,10 @@ class G_InstructionAdjustor(InstructionAdjustor):
         super().__init__()
         self._mFpRdGprPattern = re.compile(r'FLT|FLE|FEQ|FCLASS')
         self._mFpSizePattern = re.compile(r'^F[A-Z]*.(?P<size>\w*)$')
-        self._mFpSrcDstPattern = re.compile(r'^F[A-Z]*.(?P<dst>\w*).(?P<src>\w*)$')
-        self._mLdStPattern = re.compile(r'^F{0,1}(?P<access>[LS])(?P<size>[A-Z])U{0,1}$')
+        self._mFpSrcDstPattern = re.compile(r'^F[A-Z]*.(?P<dst>\w*).'
+                                            r'(?P<src>\w*)$')
+        self._mLdStPattern = re.compile(r'^F{0,1}(?P<access>[LS])'
+                                        r'(?P<size>[A-Z])U{0,1}$')
 
     def adjust_instruction_by_format(self, aInstr):
         for opr in aInstr.operands:
@@ -64,7 +67,6 @@ class G_InstructionAdjustor(InstructionAdjustor):
                 self.adjust_barrier(aInstr, opr)
             else:
                 pass
-                #print('operand not parsed for {}, operand: {}'.format(aInstr.name, opr.name))
 
         gen_asm_operand(aInstr)
 
@@ -100,13 +102,16 @@ class G_InstructionAdjustor(InstructionAdjustor):
         atomic_size = 4 if aInstr.name.endswith('W') else 8
         if aInstr.name.startswith('AMO'):
             aInstr.iclass = 'LoadStoreInstruction'
-            add_amo_addr_operand(aInstr, 'rs1', 'ReadWrite', atomic_size, 'AtomicRW')
+            add_amo_addr_operand(aInstr, 'rs1', 'ReadWrite', atomic_size,
+                                 'AtomicRW')
         if aInstr.name.startswith('LR'):
             aInstr.iclass = 'LoadStoreInstruction'
-            add_amo_addr_operand(aInstr, 'rs1', 'Read', atomic_size, 'Ordered')
+            add_amo_addr_operand(aInstr, 'rs1', 'Read', atomic_size,
+                                 'Ordered')
         if aInstr.name.startswith('SC'):
             aInstr.iclass = 'UnpredictStoreInstruction'
-            add_amo_addr_operand(aInstr, 'rs1', 'Write', atomic_size, 'Ordered')
+            add_amo_addr_operand(aInstr, 'rs1', 'Write', atomic_size,
+                                 'Ordered')
 
         ld_st_result = self._mLdStPattern.match(aInstr.name)
         if ld_st_result is not None:
@@ -115,40 +120,46 @@ class G_InstructionAdjustor(InstructionAdjustor):
             aInstr.iclass = "LoadStoreInstruction"
             add_bols_addr_operand(aInstr, 'rs1', 'simm12', access, size, 0)
 
-
     def adjust_rs(self, aInstr, aOpr):
         if 'rs3' in aOpr.name:
-            adjust_gpr_operand(aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
+            adjust_gpr_operand(
+                aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
         elif 'rs2' in aOpr.name:
             if aInstr.name.startswith('F'):
                 ld_st_result = self._mLdStPattern.match(aInstr.name)
                 if ld_st_result is not None:
-                    adjust_gpr_operand(aOpr, 'Read', 'FPR', int_ldst_size(ld_st_result.group('size')))
+                    adjust_gpr_operand(
+                        aOpr, 'Read', 'FPR', int_ldst_size(
+                            ld_st_result.group('size')))
                 else:
-                    adjust_gpr_operand(aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
+                    adjust_gpr_operand(
+                        aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
             else:
                 adjust_gpr_operand(aOpr, 'Read', 'GPR', 8)
         elif 'rs1' in aOpr.name:
             ld_st_result = self._mLdStPattern.match(aInstr.name)
-            if ld_st_result is not None: #rs1 - int gpr bols addressing opr
+            if ld_st_result is not None:  # rs1 - int gpr bols addressing opr
                 adjust_gpr_operand(aOpr, 'Read', 'GPR', 8, 'Nonzero GPRs')
-            elif aInstr.name.startswith('AMO'): #AMO*
+            elif aInstr.name.startswith('AMO'):  # AMO*
                 adjust_gpr_operand(aOpr, 'ReadWrite', 'GPR', 8, 'Nonzero GPRs')
-            elif aInstr.name.startswith('LR'): #Load Reserved
+            elif aInstr.name.startswith('LR'):  # Load Reserved
                 adjust_gpr_operand(aOpr, 'Read', 'GPR', 8, 'Nonzero GPRs')
-            elif aInstr.name.startswith('SC'): #Store Conditional
+            elif aInstr.name.startswith('SC'):  # Store Conditional
                 adjust_gpr_operand(aOpr, 'Write', 'GPR', 8, 'Nonzero GPRs')
-            elif aInstr.name.startswith('FMV') or aInstr.name.startswith('FCVT'): #FMV/FCVT rs1 op
+            elif aInstr.name.startswith('FMV') or \
+                    aInstr.name.startswith('FCVT'):  # FMV/FCVT rs1 op
                 src_size, src_is_fp = self._FpSrcDstSizeType(aInstr, 'src')
                 if src_is_fp:
                     adjust_gpr_operand(aOpr, 'Read', 'FPR', src_size)
                 else:
                     adjust_gpr_operand(aOpr, 'Read', 'GPR', 8)
-            elif aInstr.name.startswith('F') and not aInstr.name.startswith('FENCE'): #remaining fp instrs - (excluding FMV/FCVT and fp load/st)
-                adjust_gpr_operand(aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
-            else: #remaining instrs use int gpr
+            elif aInstr.name.startswith('F') and not \
+                    aInstr.name.startswith('FENCE'):
+                # remaining fp instrs - (excluding FMV/FCVT and fp load/st)
+                adjust_gpr_operand(
+                    aOpr, 'Read', 'FPR', self._FpInstrSize(aInstr.name))
+            else:  # remaining instrs use int gpr
                 adjust_gpr_operand(aOpr, 'Read', 'GPR', 8)
-
 
     def adjust_rm(self, aInstr, aOpr):
         adjust_rm_operand(aOpr)
@@ -157,18 +168,24 @@ class G_InstructionAdjustor(InstructionAdjustor):
         if aInstr.name.startswith('F') and not aInstr.name.startswith('FENCE'):
             fp_rd_gpr_result = self._mFpRdGprPattern.match(aInstr.name)
             ld_st_result = self._mLdStPattern.match(aInstr.name)
-            if fp_rd_gpr_result is not None: #fp instrs with gpr target
+            if fp_rd_gpr_result is not None:  # fp instrs with gpr target
                 adjust_gpr_operand(aOpr, 'Write', 'GPR', 8)
-            elif ld_st_result is not None: #fp ld instrs - different naming convention (no .<size> which needed for catchall)
-                adjust_gpr_operand(aOpr, 'Write', 'FPR', int_ldst_size(ld_st_result.group('size'))) 
-            elif aInstr.name.startswith("FMV") or aInstr.name.startswith("FCVT"): #FMV/FCVT rd op
+            elif ld_st_result is not None:
+                # fp ld instrs - different naming convention
+                # (no .<size> which needed for catchall)
+                adjust_gpr_operand(
+                    aOpr, 'Write', 'FPR', int_ldst_size(
+                        ld_st_result.group('size')))
+            elif aInstr.name.startswith("FMV") or \
+                    aInstr.name.startswith("FCVT"):  # FMV/FCVT rd op
                 dst_size, dst_is_fp = self._FpSrcDstSizeType(aInstr, 'dst')
                 if dst_is_fp:
                     adjust_gpr_operand(aOpr, 'Write', 'FPR', dst_size)
                 else:
                     adjust_gpr_operand(aOpr, 'Write', 'GPR', 8)
-            else: #parse size for catchall FP case
-                adjust_gpr_operand(aOpr, 'Write', 'FPR', self._FpInstrSize(aInstr.name))
+            else:  # parse size for catchall FP case
+                adjust_gpr_operand(
+                    aOpr, 'Write', 'FPR', self._FpInstrSize(aInstr.name))
         else:
             adjust_gpr_operand(aOpr, 'Write', 'GPR', 8)
 
@@ -180,17 +197,18 @@ class G_InstructionAdjustor(InstructionAdjustor):
                 adjust_imm_operand(aOpr, True, 12, '31-20')
             else:
                 adjust_imm_operand(aOpr, True, 12)
-        elif aInstr.name in 'JAL': # imm[20|10:1|11|19:12]
+        elif aInstr.name in 'JAL':  # imm[20|10:1|11|19:12]
             adjust_imm_operand(aOpr, True, 20, '31,19-12,20,30-21')
-        elif aInstr.name.startswith('B'): #branch instrs imm[12|10:5]-...-imm[4:1|11]
+        elif aInstr.name.startswith('B'):
+            # branch instrs imm[12|10:5]-...-imm[4:1|11]
             if '[12|10:5]' in aOpr.name:
                 adjust_imm_operand(aOpr, True, 12, '31,7,30-25,11-8')
-            else: #imm[4:1|11]
+            else:  # imm[4:1|11]
                 aInstr.operands.remove(aOpr)
-        else: #should be stores imm[11:5]-...-imm[4:0]
+        else:  # should be stores imm[11:5]-...-imm[4:0]
             if '[11:5]' in aOpr.name:
                 adjust_imm_operand(aOpr, True, 12, '31-25,11-7')
-            else: #imm[4:0]
+            else:  # imm[4:0]
                 aInstr.operands.remove(aOpr)
 
     def adjust_shamt(self, aInstr, aOpr):

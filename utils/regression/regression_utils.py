@@ -17,10 +17,12 @@ import os
 import os.path
 import sys
 
+
 def verify_dir(dir_path):
     if not os.path.isdir(dir_path):
-        print("Expecting \"%s\" to be a directory." % dir_path)
+        print('Expecting "%s" to be a directory.' % dir_path)
         sys.exit()
+
 
 def verify_file(file_path):
     if not os.path.exists(file_path):
@@ -28,14 +30,16 @@ def verify_file(file_path):
         sys.exit()
 
     if not os.path.isfile(file_path):
-        print("This is not a file \"%s\"." % file_path)
+        print('This is not a file "%s".' % file_path)
         sys.exit()
+
 
 def verify_executable(exe_file):
     verify_file(exe_file)
     if not os.access(exe_file, os.X_OK):
-        print("This is not an executable \"%s\"." % file_path)
+        print('This is not an executable "%s".' % file_path)
         sys.exit()
+
 
 def verify_force_path(force_path):
     verify_dir(force_path)
@@ -47,10 +51,12 @@ def verify_force_path(force_path):
     verify_dir(unit_path)
     return force_exe, unit_path
 
+
 def verify_dir_writable(dir_path):
     if not os.access(dir_path, os.W_OK):
-        print("This path is not writable \"%s\"." % dir_path)
+        print('This path is not writable "%s".' % dir_path)
         sys.exit()
+
 
 def get_unsupported_list(suite_path):
     unsupported_file = suite_path + "/unsupported_tests.txt"
@@ -62,6 +68,7 @@ def get_unsupported_list(suite_path):
                 unsupported_list.append(line)
 
     return unsupported_list
+
 
 def adjust_ld_library_path():
     if True:

@@ -14,22 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#PYTHON3 UP# /software/public/python/3.4.1/bin/python3
+# PYTHON3 UP# /software/public/python/3.4.1/bin/python3
 
-#insert parent dir to access base test builder class
+# insert parent dir to access base test builder class
 import sys
+
 sys.path.insert(0, '..')
 sys.path.insert(0, '../..')
 
 from base_test_builder import BaseTestBuilder
 
+
 class RiscVTestBuilder(BaseTestBuilder):
 
     def __init__(self):
         super().__init__("RISCV", True, 10, "", "", "debug_output.txt")
-        self.mXmlFiles = ["g_instructions.xml", "g_instructions_rv64.xml", "c_instructions.xml", "c_instructions_rv64.xml", "c_instructions_rv32.xml", \
-                          "v_instructions.xml", "priv_instructions.xml", "zfh_instructions.xml", "zfh_instructions_rv64.xml"]
+        self.mXmlFiles = ["g_instructions.xml", "g_instructions_rv64.xml",
+                          "c_instructions.xml", "c_instructions_rv64.xml",
+                          "c_instructions_rv32.xml",
+                          "v_instructions.xml", "priv_instructions.xml",
+                          "zfh_instructions.xml", "zfh_instructions_rv64.xml"]
         self.mTxtFiles = ["genonly.txt", "unsupported.txt"]
+
 
 if __name__ == "__main__":
     riscv_test_builder = RiscVTestBuilder()

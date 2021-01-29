@@ -16,14 +16,15 @@
 import Log
 import traceback
 
+
 def assert_equal(first, second, msg=None):
     if first != second:
-        err_msg = '%s != %s. %s' % (str(first), str(second), msg)
+        err_msg = "%s != %s. %s" % (str(first), str(second), msg)
         stack_frame_str = get_stack_frame_string()
-        Log.fail('%s\n%s' % (err_msg, stack_frame_str))
+        Log.fail("%s\n%s" % (err_msg, stack_frame_str))
 
 
 def get_stack_frame_string():
     stack_frames = traceback.format_list(traceback.extract_stack())
-    stack_frame_str = ''.join(stack_frames[:-1])
+    stack_frame_str = "".join(stack_frames[:-1])
     return stack_frame_str

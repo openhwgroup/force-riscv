@@ -21,23 +21,31 @@ import shlex
 import subprocess
 import sys
 import time
+from functools import partial
+from multiprocessing import Pool, Manager
+
 from regression_utils import verify_force_path, verify_dir_writable
 
-from multiprocessing import Pool, Manager
-from functools import partial
 
 def usage(extra=None):
-    usage_str = """Run quick regression
-  -h, --help print this help message
-  --clean Run "make clean" in each unit test directory before running "make".
-  --force-path point to force path.
-  --nopicky disable -Weffc++ compiler flag.
-  -x, --process-max The maximum number of concurrent execution threads.
-  -z, --print-failures Print the stdout and stderr of each failing test case to the console.
-
+    usage_str = (
+        """
+Run quick regression
+  -h, --help            print this help message
+  --clean               Run "make clean" in each unit test directory before 
+                        running "make".
+  --force-path          point to force path.
+  --nopicky             disable -Weffc++ compiler flag.
+  -x, --process-max     The maximum number of concurrent execution threads.
+  -z, --print-failures  Print the stdout and stderr of each failing test case 
+                        to the console.
+    
 Example:
-%s --force-path force-gen-path
-""" % sys.argv[0]
+    %s --force-path force-gen-path
+"""
+        % sys.argv[0]
+    )
+
     print(usage_str)
     if extra:
         print(extra)
@@ -52,7 +60,6 @@ class ExecutionTrace:
 
 
 def unit_tests():
-
     try:
         my_oplist = [
             "help",
@@ -66,8 +73,12 @@ def unit_tests():
         (opts, args) = getopt.getopt(sys.argv[1:], "hx:z", my_oplist)
 
     except getopt.GetoptError as err:
-        print ("\nERROR: " + str(err) + "\n")
-        print ( "Please Run \"" + sys.argv[0] + " -h or --help\" for usage information\n")
+        print("\nERROR: " + str(err) + "\n")
+        print(
+            'Please Run "'
+            + sys.argv[0]
+            + ' -h or --help" for usage information\n'
+        )
         sys.exit(1)
 
     clean_build = False
@@ -98,17 +109,21 @@ def unit_tests():
             force_path = os.environ["FORCE_PATH"]
         except KeyError as ke:
             force_path = "."
-            print("Default FORCE_PATH=\".\".")
+            print('Default FORCE_PATH=".".')
 
     force_path = os.path.abspath(force_path)
     (_, unit_tests_path) = verify_force_path(force_path)
 
-    run_unit_tests(unit_tests_path, process_max, print_fails, nopicky, clean_build)
+    run_unit_tests(
+        unit_tests_path, process_max, print_fails, nopicky, clean_build
+    )
 
     sys.exit(0)
 
 
-def run_unit_tests(unit_tests_path, num_parallel_workers, print_fails, nopicky, clean_build):
+def run_unit_tests(
+    unit_tests_path, num_parallel_workers, print_fails, nopicky, clean_build
+):
     verify_dir_writable(unit_tests_path)
 
     p = Pool(num_parallel_workers)
@@ -135,22 +150,30 @@ def run_unit_tests(unit_tests_path, num_parallel_workers, print_fails, nopicky, 
 
     num_fails = 0
     bufp = list()
-    bufp.append ("The following tests have failed: \n")
+    bufp.append("The following tests have failed: \n")
     for (test_dirname, process_return) in job_output_queue:
-        if (process_return.retcode != 0):
-          num_fails += 1
-          bufp.append("[%s]: Test: %s. Command: %s. Duration: %s seconds." % (str(num_fails), test_dirname, process_return.cmd, str(process_return.execution_duration)))
-          if (print_fails):
-            bufp.append(process_return.stdout)
-            bufp.append("\n=======\n")
+        if process_return.retcode != 0:
+            num_fails += 1
+            bufp.append(
+                "[%s]: Test: %s. Command: %s. Duration: %s seconds."
+                % (
+                    str(num_fails),
+                    test_dirname,
+                    process_return.cmd,
+                    str(process_return.execution_duration),
+                )
+            )
+            if print_fails:
+                bufp.append(process_return.stdout)
+                bufp.append("\n=======\n")
 
-    if (num_fails == 0):
-        print ("=====ALL SUCCESS!=====")
+    if num_fails == 0:
+        print("=====ALL SUCCESS!=====")
     else:
-        print ("\n=====FAILURES:=====")
+        print("\n=====FAILURES:=====")
         for output in bufp:
-            print (output)
-        print ("%s failures.\n" % (num_fails))
+            print(output)
+        print("%s failures.\n" % (num_fails))
 
 
 def run_one_unit_test(nopicky, clean_build, arg_tuple):
@@ -162,7 +185,7 @@ def run_one_unit_test(nopicky, clean_build, arg_tuple):
     if clean_build:
         cmd = "make clean"
         process_return = execute_command(cmd)
-        success = (process_return.retcode == 0)
+        success = process_return.retcode == 0
 
     make_duration = 0.0
     if success:
@@ -170,7 +193,7 @@ def run_one_unit_test(nopicky, clean_build, arg_tuple):
         if nopicky:
             cmd += " PICKY="
         process_return = execute_command(cmd)
-        success = (process_return.retcode == 0)
+        success = process_return.retcode == 0
         make_duration = process_return.execution_duration
         log_output(process_return.stdout, test_path, "make.log")
 
@@ -178,15 +201,19 @@ def run_one_unit_test(nopicky, clean_build, arg_tuple):
     if success:
         cmd = "bin/%s_test" % test_dirname
         process_return = execute_command(cmd)
-        success = (process_return.retcode == 0)
+        success = process_return.retcode == 0
         run_duration = process_return.execution_duration
         log_output(process_return.stdout, test_path, "run.log")
 
     result_string = "SUCCESS." if success else "FAILED."
 
-    print ("%s: %s (Make Duration: %0.4f sec; Run Duration: %0.4f sec)" % (test_dirname, result_string, make_duration, run_duration))
+    print(
+        "%s: %s (Make Duration: %0.4f sec; Run Duration: %0.4f sec)"
+        % (test_dirname, result_string, make_duration, run_duration)
+    )
 
-    # Whole append call is done in one GIL lock; list appends are thread safe, no need for special threaded queues
+    # Whole append call is done in one GIL lock; list appends are thread safe,
+    # no need for special threaded queues
     execution_queue.append((test_dirname, process_return))
     os.chdir(cur_path)
 
@@ -194,12 +221,16 @@ def run_one_unit_test(nopicky, clean_build, arg_tuple):
 def execute_command(cmd):
     # Measure the amount of time it took to run this test
     start_time = time.time()
-    process = subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.run(
+        shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+    )
     end_time = time.time()
     process_stdout = process.stdout.decode("utf-8")
     ret_code = process.returncode
 
-    trace = ExecutionTrace(process_stdout, ret_code, cmd, end_time - start_time)
+    trace = ExecutionTrace(
+        process_stdout, ret_code, cmd, end_time - start_time
+    )
     return trace
 
 

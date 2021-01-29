@@ -21,41 +21,48 @@ from DV.riscv.trees.instruction_tree import ALU_Int32_All_instructions
 
 from riscv.Utils import LoopControl
 
+
 class MainSequence(Sequence):
 
-  # Utility function to create a new loop that generates instrNum instructions from instrList
-  def genInstructionLoop(self, loopGpr, loopCount, instrNum, instrList):
-    loop_ctrl_seq = LoopControl(self.genThread)
-    loop_ctrl_seq.start(LoopReg=loopGpr, LoopCount=loopCount)
+    # Utility function to create a new loop that generates instrNum
+    # instructions from instrList
+    def genInstructionLoop(self, loopGpr, loopCount, instrNum, instrList):
+        loop_ctrl_seq = LoopControl(self.genThread)
+        loop_ctrl_seq.start(LoopReg=loopGpr, LoopCount=loopCount)
 
-    for i in range(instrNum):
-      random_instr = self.pickWeighted(instrList)
-      self.genInstruction(random_instr)
+        for i in range(instrNum):
+            random_instr = self.pickWeighted(instrList)
+            self.genInstruction(random_instr)
 
-    loop_ctrl_seq.end()
+        loop_ctrl_seq.end()
 
-  def generate(self, **kargs):
-    # Choose registers to serve as loop counters for test sequence
-    (loop_gpr, inner_loop_gpr) = self.getRandomRegisters(2, "GPR", "0")
+    def generate(self, **kargs):
+        # Choose registers to serve as loop counters for test sequence
+        (loop_gpr, inner_loop_gpr) = self.getRandomRegisters(2, "GPR", "0")
 
-    instrs = ALU_Int32_All_instructions if self.getGlobalState('AppRegisterWidth') == 32 else ALU_Int_All_instructions
+        instrs = (
+            ALU_Int32_All_instructions
+            if self.getGlobalState("AppRegisterWidth") == 32
+            else ALU_Int_All_instructions
+        )
 
-    # Any generated instructions after start() and before end() will be looped through twice
-    loop_ctrl_seq = LoopControl(self.genThread)
-    loop_ctrl_seq.start(LoopReg=loop_gpr, LoopCount=2)
+        # Any generated instructions after start() and before end() will be
+        # looped through twice
+        loop_ctrl_seq = LoopControl(self.genThread)
+        loop_ctrl_seq.start(LoopReg=loop_gpr, LoopCount=2)
 
-    # Use genInstructionLoop sequence to create varying nested inner loops
-    self.genInstructionLoop(inner_loop_gpr, 3, 10, instrs)
-    self.genInstructionLoop(inner_loop_gpr, 5, 20, instrs)
+        # Use genInstructionLoop sequence to create varying nested inner loops
+        self.genInstructionLoop(inner_loop_gpr, 3, 10, instrs)
+        self.genInstructionLoop(inner_loop_gpr, 5, 20, instrs)
 
-    loop_ctrl_seq.end()
+        loop_ctrl_seq.end()
 
-## Points to the MainSequence defined in this file
+
+#  Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+#  Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+#  Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-

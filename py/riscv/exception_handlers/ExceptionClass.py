@@ -15,6 +15,7 @@
 #
 from enum import Enum
 
+
 class ExceptionClassRISCV(Enum):
     INSTRUCTION_ADDRESS_MISALIGNED = 0x0
     INSTRUCTION_ACCESS_FAULT = 0x1

@@ -16,17 +16,14 @@
 # std_launcher.py
 # implements the standard process launcher
 
-from common.sys_utils import SysUtils
-from common.path_utils import PathUtils
+from classes.launcher import Launcher
 from common.msg_utils import Msg
-from common.datetime_utils import DateTime
-from common.errors import *
+from common.sys_utils import SysUtils
 
-from classes.launcher  import Launcher
 
-class StdLauncher( Launcher ):
-    def __init__( self, aSequenceRunner ):
-        super().__init__( aSequenceRunner )
+class StdLauncher(Launcher):
+    def __init__(self, aSequenceRunner):
+        super().__init__(aSequenceRunner)
 
         self.process = None
 
@@ -36,32 +33,47 @@ class StdLauncher( Launcher ):
     #     Msg.error_trace( )
     #
 
-    def launch( self ):
-        Msg.user( "Timeout: %s" % ( str( self.timeout )), "STD-LAUNCHER" )
+    def launch(self):
+        Msg.user("Timeout: %s" % (str(self.timeout)), "STD-LAUNCHER")
         self.process_cmd, self.process_log = self.build()
-        Msg.user( "Process Cmd: %s, Process Log: %s" % ( str( self.process_cmd ), str( self.process_log )), "STD-LAUNCHER" )
-        Msg.user( "Launcher Id 1: %s" % ( str( id( self ))), "STD-LAUNCHER" )
+        Msg.user(
+            "Process Cmd: %s, Process Log: %s"
+            % (str(self.process_cmd), str(self.process_log)),
+            "STD-LAUNCHER",
+        )
+        Msg.user("Launcher Id 1: %s" % (str(id(self))), "STD-LAUNCHER")
 
-        # enable timeout but only trigger shutdown of spawned process allow that process to kill the child processes.
-        self.process_result = SysUtils.exec_process( self.process_cmd, self.process_log, self.process_log, self.timeout, False, self.set_process )
-        Msg.user( "Launcher Id 2: %s" % ( str( id( self ))), "STD-LAUNCHER" )
-        Msg.user( "Process Results: %s" % ( str( self.process_result  )), "STD-LAUNCHER" )
+        # enable timeout but only trigger shutdown of spawned process allow
+        # that process to kill the child processes.
+        self.process_result = SysUtils.exec_process(
+            self.process_cmd,
+            self.process_log,
+            self.process_log,
+            self.timeout,
+            False,
+            self.set_process,
+        )
+        Msg.user("Launcher Id 2: %s" % (str(id(self))), "STD-LAUNCHER")
+        Msg.user(
+            "Process Results: %s" % (str(self.process_result)), "STD-LAUNCHER"
+        )
 
-    def validate( self ):
+    def validate(self):
         pass
 
-    def set_process( self, arg_process ):
-        Msg.user( "Setting Process: %s" % ( str( arg_process )), "STD-LAUNCHER" )
-        Msg.user( "Launcher Id 3: %s" % ( str( id( self ))), "STD-LAUNCHER" )
+    def set_process(self, arg_process):
+        Msg.user("Setting Process: %s" % (str(arg_process)), "STD-LAUNCHER")
+        Msg.user("Launcher Id 3: %s" % (str(id(self))), "STD-LAUNCHER")
         self.process = arg_process
-        Msg.user( "Launcher Id 4: %s" % ( str( id( self ))), "STD-LAUNCHER" )
-        Msg.user( "Saved Process: %s" % ( str( self.process )), "STD-LAUNCHER" )
+        Msg.user("Launcher Id 4: %s" % (str(id(self))), "STD-LAUNCHER")
+        Msg.user("Saved Process: %s" % (str(self.process)), "STD-LAUNCHER")
 
-    def terminate( self ):
-        Msg.user( "Terminating Process: %s" % ( str( self.process )), "STD-LAUNCHER" )
+    def terminate(self):
+        Msg.user(
+            "Terminating Process: %s" % (str(self.process)), "STD-LAUNCHER"
+        )
         if self.process is not None:
             self.process.kill()
 
-    def status( self ):
+    def status(self):
         pass
-

@@ -14,5 +14,11 @@
 # limitations under the License.
 #
 control_items = [
-                {"fname":"optionsTest_force.py",      "generator":{"--cfg":"config/riscv.config", "--options":"\"loopCount=50\""}},
-                ]
+    {
+        "fname": "optionsTest_force.py",
+        "generator": {
+            "--cfg": "config/riscv.config",
+            "--options": '"loopCount=50"',
+        },
+    },
+]

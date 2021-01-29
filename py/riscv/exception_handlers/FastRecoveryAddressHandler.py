@@ -17,23 +17,38 @@ from base.exception_handlers.ReusableSequence import ReusableSequence
 from riscv.exception_handlers.ExceptionHandlerContext import RegisterCallRole
 from riscv.PrivilegeLevel import PrivilegeLevelRISCV
 
-class FastRecoveryAddressHandler(ReusableSequence):
 
+class FastRecoveryAddressHandler(ReusableSequence):
     def generateHandler(self, **kwargs):
         try:
-            handler_context = kwargs['handler_context']
+            handler_context = kwargs["handler_context"]
         except KeyError:
-            self.error('INTERNAL ERROR: one or more arguments to FastRecoveryAddresshandler generate method missing.')
+            self.error(
+                "INTERNAL ERROR: one or more arguments to "
+                "FastRecoveryAddresshandler generate method missing."
+            )
 
-        self.debug('[FastRecoveryAddressHandler] generate handler address: 0x%x' % self.getPEstate('PC'))
+        self.debug(
+            "[FastRecoveryAddressHandler] generate handler address: 0x%x"
+            % self.getPEstate("PC")
+        )
 
-        priv_level_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.PRIV_LEVEL_VALUE)
-        (scratch_reg_index, recovery_reg_index) = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 2)
+        priv_level_reg_index = handler_context.getScratchRegisterIndices(
+            RegisterCallRole.PRIV_LEVEL_VALUE
+        )
+        (
+            scratch_reg_index,
+            recovery_reg_index,
+        ) = handler_context.getScratchRegisterIndices(
+            RegisterCallRole.TEMPORARY, 2
+        )
 
-        handler_context.mAddrTable.getAddress(recovery_reg_index, scratch_reg_index)
+        handler_context.mAddrTable.getAddress(
+            recovery_reg_index, scratch_reg_index
+        )
 
-        self.mAssemblyHelper.genProvidedExceptionReturnAddress(scratch_reg_index, recovery_reg_index, priv_level_reg_index)
+        self.mAssemblyHelper.genProvidedExceptionReturnAddress(
+            scratch_reg_index, recovery_reg_index, priv_level_reg_index
+        )
         priv_level = PrivilegeLevelRISCV[handler_context.mPrivLevel]
         self.mAssemblyHelper.genExceptionReturn(priv_level)
-
-

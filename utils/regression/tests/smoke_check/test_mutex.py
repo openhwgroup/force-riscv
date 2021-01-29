@@ -15,92 +15,75 @@
 #
 # mutex_tests.py
 
-from unit_test import UnitTest
+from shared.errors import *
 from shared.kernel_objs import HiMutex
 
-from shared.path_utils import PathUtils
-from shared.sys_utils import SysUtils
-from shared.msg_utils import Msg
-
-from shared.errors import *
 from test_classes import *
+from unit_test import UnitTest
+
 
 # need two threads to test mutex.
 
-class MutexWrapper( object ):
 
-    def run_test( self ):
+class MutexWrapper(object):
+    def run_test(self):
+        Msg.info("HiThread(NoLoop): Start Unit Test ... ")
 
-        Msg.info( "HiThread(NoLoop): Start Unit Test ... " )
+        myMutex = HiMutex("wrapper_mutex")
 
-        myMutex = HiMutex( "wrapper_mutex" )
+        myThreadProcs = {
+            # start thread sequence (outside thread space)
+            "on-start": self.thread_start,
+            # thread termination handler (inside thread space)
+            "on-execute": self.thread_execute,
+            # thread before finished handler (inside thread space)
+            "on-finished": self.thread_finished,
+            # thread terminated handler (outside thread space)
+            "on-done": self.thread_done,
+        }
 
-        myThreadProcs = { "on-start"   : self.thread_start          # start thread sequence (outside thread space)
-                        , "on-execute" : self.thread_execute        # thread termination handler (inside thread space)
-                        , "on-finished": self.thread_finished           # thread before finished handler (inside thread space)
-                        , "on-done"    : self.thread_done           # thread terminated handler (outside thread space)
-                        }
+        Msg.info("UnitTest_NoLoopThread >> Creating NoLoop Thread ... ")
+        myThread = ThreadFactory("NoLoopThread", True, myThreadProcs)
 
-        Msg.info( "UnitTest_NoLoopThread >> Creating NoLoop Thread ... " )
-        myThread = ThreadFactory( "NoLoopThread", True, myThreadProcs )
-
-        Msg.info( "UnitTest_NoLoopThread >> Initializing Thread ... " )
+        Msg.info("UnitTest_NoLoopThread >> Initializing Thread ... ")
         myThread.start_thread()
-
-
-
 
         # wait for thread to terminate
         myThread.wait_for()
-        Msg.info( "UnitTest_NoLoopThread >> Thread Completed ... " )
+        Msg.info("UnitTest_NoLoopThread >> Thread Completed ... ")
+
+    def process_result(self):
+        Msg.info("HiThread(NoLoop): Process Test Results... ")
+
+    def thread_start(self):
+        Msg.info("UnitTest_NoLoopThread >> Started .... ")
+
+    def thread_execute(self):
+        Msg.info("UnitTest_NoLoopThread << Executing .... ")
+
+    def thread_done(self):
+        Msg.info("UnitTest_NoLoopThread << Execute Done .... ")
+
+    def thread_finished(self):
+        Msg.info("UnitTest_NoLoopThread >> Exiting .... ")
 
 
-    def process_result( self ):
-        Msg.info( "HiThread(NoLoop): Process Test Results... " )
-
-
-    def thread_start( self ):
-        Msg.info( "UnitTest_NoLoopThread >> Started .... " )
-
-
-    def thread_execute( self ):
-        Msg.info( "UnitTest_NoLoopThread << Executing .... " )
-
-    def thread_done ( self ):
-        Msg.info( "UnitTest_NoLoopThread << Execute Done .... " )
-
-    def thread_finished( self ):
-        Msg.info( "UnitTest_NoLoopThread >> Exiting .... " )
-
-
-
-
-
-
-class UnitTest_HiMutex( UnitTest ):
-
-    def run_test( self ):
-        Msg.info( "HiMutex: Start Unit Test ..." )
+class UnitTest_HiMutex(UnitTest):
+    def run_test(self):
+        Msg.info("HiMutex: Start Unit Test ...")
 
         # test with construct!
         self.with_test()
 
+    def process_result(self):
+        Msg.info("HiMutex: Process Test Result ...")
 
-    def process_result( self ):
-        Msg.info( "HiMutex: Process Test Result ..." )
-
-
-    def with_test( self ):
-
+    def with_test(self):
         # create a mutex
-        my_mutex = HiMutex( "with_mutex" )
-        # Msg.info( "Before With: Mutex[%s] is %s" % ( my_mutex.name, SysUtils.ifthen( my_mutex.locked(), "Locked", "Unlocked" )))
-        Msg.info( "Before With: Mutex[%s]" % ( my_mutex.name ))
+        my_mutex = HiMutex("with_mutex")
+        Msg.info("Before With: Mutex[%s]" % (my_mutex.name))
 
-        with my_mutex :
-            Msg.info( "In With: Mutex[%s]" % ( my_mutex.name ))
-            # Msg.info( "In With: Mutex[%s] is %s" % ( my_mutex.name, SysUtils.ifthen( my_mutex.locked(), "Locked", "Unlocked" )))
+        with my_mutex:
+            Msg.info("In With: Mutex[%s]" % (my_mutex.name))
 
-        Msg.info( "After With: Mutex[%s]" % ( my_mutex.name ))
-        # Msg.info( "After With: Mutex[%s] is %s" % ( my_mutex.name, SysUtils.ifthen( my_mutex.locked(), "Locked", "Unlocked" )))
-
+        Msg.info("After With: Mutex[%s]" % (my_mutex.name))

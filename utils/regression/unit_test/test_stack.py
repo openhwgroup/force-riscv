@@ -25,12 +25,9 @@ from shared.msg_utils import Msg
 from shared.threads import HiThread
 
 
-class UnitTest_HiStack( UnitTest ):
+class UnitTest_HiStack(UnitTest):
+    def run_test(self):
+        Msg.info("HiStack: Start Unit Test ...")
 
-    def run_test( self ):
-        Msg.info( "HiStack: Start Unit Test ..." )
-
-    def process_result( self ):
-        Msg.info( "HiStack: Process Test Result ..." )
-
-
+    def process_result(self):
+        Msg.info("HiStack: Process Test Result ...")

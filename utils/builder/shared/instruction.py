@@ -14,23 +14,29 @@
 # limitations under the License.
 #
 from shared.builder_exception import BuilderException
-from shared.builder_utils import update_bits_value, merge_imm_value, bit_string_to_list, bit_list_to_string, update_bits
+from shared.builder_utils import (
+    update_bits_value,
+    merge_imm_value,
+    bit_string_to_list,
+    bit_list_to_string,
+    update_bits,
+)
 import copy
 import types
 
-class Asm(object):
 
+class Asm(object):
     def __init__(self):
         self.format = None
         self.ops = list()
         self.attributes = dict()
 
     def to_string(self, indent):
-        ret_str = indent + "<asm format=\"%s\"" % self.format
+        ret_str = indent + '<asm format="%s"' % self.format
 
         op_index = 1
         for op in self.ops:
-            ret_str += " op%d=\"%s\"" % (op_index, op)
+            ret_str += ' op%d="%s"' % (op_index, op)
             op_index += 1
 
         ret_str += "/>\n"
@@ -52,14 +58,16 @@ class Asm(object):
                     found_any = True
         else:
             if not found_any:
-                raise BuilderException("Asm.rename_op: old op \"%s\" not found, ops are: %s." % (old_name, self.show_ops()))
+                raise BuilderException(
+                    'Asm.rename_op: old op "%s" not found, ops are: %s.'
+                    % (old_name, self.show_ops())
+                )
 
     def show_ops(self):
         return "-".join(self.ops)
 
 
 class Operand(object):
-
     def __init__(self):
         super(Operand, self).__init__()
         self.name = None
@@ -86,8 +94,11 @@ class Operand(object):
 
     def update_type(self):
         if self.value:
-            # print("opr %s len of value %d, width %d" % (self.name, len(self.value), self.width))
-            if (len(self.value) == self.width) and (self.value.find("x") == -1) and (self.value.find("N") == -1):
+            if (
+                (len(self.value) == self.width)
+                and (self.value.find("x") == -1)
+                and (self.value.find("N") == -1)
+            ):
                 self.type = "Constant"
             elif self.value.find("(1)") != -1:
                 self.name = "RES1" + self.name
@@ -95,7 +106,7 @@ class Operand(object):
                 if self.value == "(1)(1)(1)(1)(1)":
                     pass
                 else:
-                    print ("Unhandled RES1 %s" % self.value)
+                    print("Unhandled RES1 %s" % self.value)
                     sys.exit(1)
                 self.value = None
 
@@ -105,47 +116,47 @@ class Operand(object):
     def to_string(self, indent):
         ret_str = "<O"
         if self.name:
-            ret_str += " name=\"%s\"" % self.name
+            ret_str += ' name="%s"' % self.name
         if self.type:
-            ret_str += " type=\"%s\"" % self.type
+            ret_str += ' type="%s"' % self.type
         if self.bits:
-            ret_str += " bits=\"%s\"" % self.bits
+            ret_str += ' bits="%s"' % self.bits
         if self.value:
-            ret_str += " value=\"%s\"" % self.value
+            ret_str += ' value="%s"' % self.value
         if self.reserved:
-            ret_str += " reserved=\"%s\"" % self.reserved
+            ret_str += ' reserved="%s"' % self.reserved
         if self.access:
-            ret_str += " access=\"%s\"" % self.access
+            ret_str += ' access="%s"' % self.access
         if self.choices:
-            ret_str += " choices=\"%s\"" % self.choices
+            ret_str += ' choices="%s"' % self.choices
         if self.choices2:
-            ret_str += " choices2=\"%s\"" % self.choices2
+            ret_str += ' choices2="%s"' % self.choices2
         if self.choices3:
-            ret_str += " choices3=\"%s\"" % self.choices3
+            ret_str += ' choices3="%s"' % self.choices3
         if self.differ:
-            ret_str += " differ=\"%s\"" % self.differ
+            ret_str += ' differ="%s"' % self.differ
         if self.oclass:
-            ret_str += " class=\"%s\"" % self.oclass
+            ret_str += ' class="%s"' % self.oclass
         if self.slave:
-            ret_str += " slave=\"%s\"" % self.slave
+            ret_str += ' slave="%s"' % self.slave
         if self.layoutMultiple:
-            ret_str += " layout-multiple=\"%s\"" % self.layoutMultiple
+            ret_str += ' layout-multiple="%s"' % self.layoutMultiple
         if self.regCount:
-            ret_str += " reg-count=\"%s\"" % self.regCount
+            ret_str += ' reg-count="%s"' % self.regCount
         if self.regIndexAlignment:
-            ret_str += " reg-index-alignment=\"%s\"" % self.regIndexAlignment
+            ret_str += ' reg-index-alignment="%s"' % self.regIndexAlignment
         if self.elemWidth:
-            ret_str += " elem-width=\"%s\"" % self.elemWidth
+            ret_str += ' elem-width="%s"' % self.elemWidth
         if self.uop_param_type:
-            ret_str += " uop-param-type=\"%s\"" % self.uop_param_type
+            ret_str += ' uop-param-type="%s"' % self.uop_param_type
         if self.exclude:
-            ret_str += " exclude=\"%s\"" % self.exclude
+            ret_str += ' exclude="%s"' % self.exclude
         if self.sizeType:
-            ret_str += " sizeType=\"%s\"" % self.sizeType
+            ret_str += ' sizeType="%s"' % self.sizeType
         if ret_str != "<O":
-           ret_str = indent + ret_str + self.element_close()
-        else :
-           ret_str = ''
+            ret_str = indent + ret_str + self.element_close()
+        else:
+            ret_str = ""
         return ret_str
 
     def add_value(self, val):
@@ -156,7 +167,10 @@ class Operand(object):
 
     def merge_operand(self, opr, update_bits=False):
         if self.type != opr.type:
-            raise BuilderException("Merging different types of operand \"%s\"=>\"%s\" and \"%s\"=>\"%s\"." % (self.name, self.type, opr.name, opr.type))
+            raise BuilderException(
+                'Merging different types of operand "%s"=>"%s" and "%s"=>"%s".'
+                % (self.name, self.type, opr.name, opr.type)
+            )
 
         self.bits += "," + opr.bits
         if self.value:
@@ -173,9 +187,15 @@ class Operand(object):
 
     def merge_value(self, opr):
         if self.width != opr.width:
-            raise BuilderException("Changing operand \"%s\" but width don't match: %d and %d." % (opr.name, self.width, opr.width))
+            raise BuilderException(
+                'Changing operand "%s" but width don\'t match: %d and %d.'
+                % (opr.name, self.width, opr.width)
+            )
         if self.type != opr.type:
-            raise BuilderException("Changing operand \"%s\" but type don't match: %s and %s." % (opr.name, self.type, opr.type))
+            raise BuilderException(
+                'Changing operand "%s" but type don\'t match: %s and %s.'
+                % (opr.name, self.type, opr.type)
+            )
 
         self.value = merge_imm_value(self.value, opr.value)
 
@@ -183,7 +203,9 @@ class Operand(object):
         split_const = copy.deepcopy(self)
         bit_list = bit_string_to_list(self.bits)
         if len(bit_list) != self.width:
-            raise BuilderException("Expecting bit list to be the same size as operand width.")
+            raise BuilderException(
+                "Expecting bit list to be the same size as operand width."
+            )
 
         const_bit_list = list()
         const_value = ""
@@ -208,7 +230,10 @@ class Operand(object):
         if (self.value is None) or (len(self.value) == 0):
             self.value = "x" * self.width
         if bit_loc >= self.width:
-            raise BuilderException("set_constatnt_bit: bit location %d larger than operand width %d" % (bit_loc, self.width))
+            raise BuilderException(
+                "set_constatnt_bit: bit location %d larger than operand "
+                "width %d" % (bit_loc, self.width)
+            )
         new_value = ""
         str_loc = self.width - bit_loc - 1
         for i in range(len(self.value)):
@@ -219,11 +244,30 @@ class Operand(object):
         self.value = new_value
 
     def set_extra_attribute(self, name, value):
-        print ("WARNING: not handled operand attribute: %s=\"%s\"." % (name, value))
+        print(
+            'WARNING: not handled operand attribute: %s="%s".' % (name, value)
+        )
         raise Error
 
     def set_attribute(self, name, value):
-        if name in ["name", "type", "bits", "value", "reserved", "access", "choices", "choices2", "choices3", "exclude", "differ", "ext", "slave", "layoutMultiple", "regCount", "regIndexAlignment"]:
+        if name in [
+            "name",
+            "type",
+            "bits",
+            "value",
+            "reserved",
+            "access",
+            "choices",
+            "choices2",
+            "choices3",
+            "exclude",
+            "differ",
+            "ext",
+            "slave",
+            "layoutMultiple",
+            "regCount",
+            "regIndexAlignment",
+        ]:
             setattr(self, name, value)
         elif name == "uop-param-type":
             self.uop_param_type = value
@@ -236,8 +280,8 @@ class Operand(object):
         else:
             self.set_extra_attribute(name, value)
 
-class GroupOperand(Operand):
 
+class GroupOperand(Operand):
     def __init__(self):
         super(GroupOperand, self).__init__()
 
@@ -251,7 +295,7 @@ class GroupOperand(Operand):
         ret_str = super(GroupOperand, self).to_string(indent)
 
         for key, value in sorted(self.extra_attributes.items()):
-            ret_str += " %s=\"%s\"" % (key, value)
+            ret_str += ' %s="%s"' % (key, value)
 
         ret_str += ">\n"
 
@@ -274,13 +318,15 @@ class GroupOperand(Operand):
                 return opr
 
         if fail_not_found:
-            raise BuilderException("Operand \"%s\" not found in instruction \"%s\"." % (name, self.get_full_ID()))
+            raise BuilderException(
+                'Operand "%s" not found in instruction "%s".'
+                % (name, self.get_full_ID())
+            )
         else:
             return None
 
 
 class Instruction(object):
-
     def __init__(self):
         super(Instruction, self).__init__()
 
@@ -317,15 +363,22 @@ class Instruction(object):
     def insert_operand(self, index, opr):
         self.operands.insert(index, opr)
 
-    def find_operand(self, name, fail_not_found = True):
+    def find_operand(self, name, fail_not_found=True):
         for opr in self.operands:
             if opr.name == name:
                 return opr
-            if name == "const_bits" and self.constOp and self.constOp.name == name:
+            if (
+                name == "const_bits"
+                and self.constOp
+                and self.constOp.name == name
+            ):
                 return self.constOp
 
         if fail_not_found:
-            raise BuilderException("Operand \"%s\" not found in instruction \"%s\"." % (name, self.get_full_ID()))
+            raise BuilderException(
+                'Operand "%s" not found in instruction "%s".'
+                % (name, self.get_full_ID())
+            )
         else:
             return None
 
@@ -336,7 +389,7 @@ class Instruction(object):
         self.operands.remove(opr)
         self.operands.insert(new_index, opr)
 
-   # Move an operand to the bottom in the operand list
+    # Move an operand to the bottom in the operand list
     def move_bottom_operand(self, opr):
         self.operands.remove(opr)
         self.operands.append(opr)
@@ -344,23 +397,30 @@ class Instruction(object):
     def remove_operand(self, aOprName):
         opr = self.find_operand(aOprName)
         self.operands.remove(opr)
-        
+
     def change_operand(self, opr, update_const=False):
         if opr.type == "Constant":
             existing_opr = self.find_operand(opr.name)
             if existing_opr.width != opr.width:
-                raise BuilderException("Changing operand \"%s\" but width don't match: %d and %d." % (opr.name, existing_opr.width, opr.width))
+                raise BuilderException(
+                    'Changing operand "%s" but width don\'t match: %d and %d.'
+                    % (opr.name, existing_opr.width, opr.width)
+                )
             self.operands.remove(existing_opr)
             self.constOp.merge_operand(opr)
         elif opr.type in ["Immediate", "Choices"]:
             existing_opr = self.find_operand(opr.name)
             if existing_opr.value and existing_opr.value.find("!=") == 0:
-                print ("WARNING: need special handling of this instruction with constraint \"%s\" on operand \"%s\"." % (existing_opr.value, opr.name))
+                print(
+                    "WARNING: need special handling of this instruction with "
+                    'constraint "%s" on operand "%s".'
+                    % (existing_opr.value, opr.name)
+                )
                 return
             existing_opr.merge_value(opr)
             existing_opr.update_type()
             if existing_opr.type != "Constant":
-                #print ("Spliting operand \"%s\"" % opr.name)
+                # print ("Spliting operand \"%s\"" % opr.name)
                 split_const = existing_opr.split_operand()
                 self.constOp.merge_operand(split_const)
             else:
@@ -371,9 +431,14 @@ class Instruction(object):
                 # the value field is a series of "N"s
                 pass
             else:
-                raise BuilderException("Unexpected change_operand on Register type with value=\"%s\"." % (opr.value))
+                raise BuilderException(
+                    "Unexpected change_operand on Register type with "
+                    'value="%s".' % (opr.value)
+                )
         else:
-            raise BuilderException("Unexpected change_operand type \"%s\"." % (opr.type))
+            raise BuilderException(
+                'Unexpected change_operand type "%s".' % (opr.type)
+            )
 
         if update_const:
             self.update_constant()
@@ -387,19 +452,19 @@ class Instruction(object):
     def to_string(self):
         ret_str = "  <I"
         if self.name:
-            ret_str += " name=\"%s\"" % self.name
+            ret_str += ' name="%s"' % self.name
         if self.form:
-            ret_str += " form=\"%s\"" % self.form
+            ret_str += ' form="%s"' % self.form
         if self.isa:
-            ret_str += " isa=\"%s\"" % self.isa
+            ret_str += ' isa="%s"' % self.isa
         if self.aliasing:
-            ret_str += " aliasing=\"%s\"" % self.aliasing
+            ret_str += ' aliasing="%s"' % self.aliasing
         if self.iclass:
-            ret_str += " class=\"%s\"" % self.iclass
+            ret_str += ' class="%s"' % self.iclass
         if self.group:
-            ret_str += " group=\"%s\"" % self.group.capitalize()
+            ret_str += ' group="%s"' % self.group.capitalize()
         if self.extension:
-            ret_str += " extension=\"%s\"" % self.extension
+            ret_str += ' extension="%s"' % self.extension
         ret_str += ">\n"
 
         if self.constOp:
@@ -422,14 +487,15 @@ class Instruction(object):
         return "-".join(opr_names)
 
     def merge_remove_operand(self, name_a, name_b):
-        #merge operand name_b with the operand name_a and remove operand name_b
+        # merge operand name_b with the operand name_a and remove operand
+        # name_b
         name_a_opr = self.find_operand(name_a)
         name_b_opr = self.find_operand(name_b)
         name_a_opr.merge_operand(name_b_opr)
         self.operands.remove(name_b_opr)
 
     def rename_operand(self, name_a, name_b):
-        #rename the operand name_a to name_b
+        # rename the operand name_a to name_b
         name_a_opr = self.find_operand(name_a)
         name_a_opr.name = name_b
 
@@ -454,7 +520,11 @@ class Instruction(object):
         for opr in self.operands:
             if opr.name == name:
                 return opr
-            if name == "const_bits" and self.constOp and self.constOp.name == name:
+            if (
+                name == "const_bits"
+                and self.constOp
+                and self.constOp.name == name
+            ):
                 return self.constOp
             if isinstance(opr, GroupOperand):
                 opr_tmp = opr.find_operand(name, False)
@@ -464,31 +534,32 @@ class Instruction(object):
                     return opr_tmp
 
         if fail_not_found:
-            raise BuilderException("Operand \"%s\" not found in instruction \"%s\"." % (name, self.get_full_ID()))
+            raise BuilderException(
+                'Operand "%s" not found in instruction "%s".'
+                % (name, self.get_full_ID())
+            )
         else:
             return None
-
 
     def set_operand_attribute(self, opr_name, name, value):
         opr = self.search_operand(opr_name, value)
         if opr is not None:
             opr.set_attribute(name, value)
 
-
     def append_asm_op(self, value):
         self.asm.ops.append(value)
 
     def rename_asm_attribute(self, name, value):
-        if name == 'format':
+        if name == "format":
             self.asm.format = value
             return True
-        elif name.startswith('op'):
+        elif name.startswith("op"):
             idx_str = name[2:]
             idx = int(idx_str) - 1
             if len(self.asm.ops) > idx:
-                if value != '':
+                if value != "":
                     self.asm.ops[idx] = value
-                else :
+                else:
                     self.asm.ops.pop(idx)
                 return True
             else:
@@ -504,13 +575,18 @@ class Instruction(object):
 # create an addressing operand
 # Parameters:
 # instr      => instruction object to operand on
-# opr_name   => name of the operand, can be None and created out of sub operand names
+# opr_name   => name of the operand, can be None and created out of sub
+#               operand names
 # opr_type   => operand type, Branch or LoadStore
 # class_name => operand class name
-# subop_dict => a dict of sub operand types and names will be moved from under the instruction into under the addressing operand
+# subop_dict => a dict of sub operand types and names will be moved from under
+#               the instruction into under the addressing operand
 # attr_dict  => additional addressing operand attributes
 
-def add_addressing_operand(instr, opr_name, opr_type, class_name, subop_dict, attr_dict=None):
+
+def add_addressing_operand(
+    instr, opr_name, opr_type, class_name, subop_dict, attr_dict=None
+):
     addr_opr = GroupOperand()
     addr_opr.type = opr_type
     if class_name is not None:

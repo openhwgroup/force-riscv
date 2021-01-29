@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import sys, os
+import os
+import sys
+
 
 def get_force_path():
     try:
@@ -24,18 +26,20 @@ def get_force_path():
 
     return force_path
 
+
 def locate_force_path():
     my_path = os.path.realpath(__file__)
-    print ("My path: %s" % my_path)
+    print("My path: %s" % my_path)
     while True:
         head, tail = os.path.split(my_path)
-        if os.path.exists( head + "/config/riscv_rv64.config" ):
-            return str( head )
+        if os.path.exists(head + "/config/riscv_rv64.config"):
+            return str(head)
         # not found has the root been reached?
         if head == "/":
-            raise Exception( "Reached the system root, force root not found" )
+            raise Exception("Reached the system root, force root not found")
         # not found and not at root move to the next directory up the chain
         my_path = head
+
 
 def add_force_relative_path(relative_path):
     force_path = get_force_path()
@@ -44,6 +48,6 @@ def add_force_relative_path(relative_path):
     force_relative_path = force_path + "/" + relative_path
     print("Relative path: %s" % force_relative_path)
 
-    sys.path.append( force_relative_path )
+    sys.path.append(force_relative_path)
 
-    print ("sys path: %s" % sys.path)
+    print("sys path: %s" % sys.path)

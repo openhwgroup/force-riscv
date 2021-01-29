@@ -15,18 +15,19 @@
 #
 import RandomUtils
 
-# Python integers can be arbitrarily large, so mask_to_size removes the upper bits to keep the value
-# within a certain range.
+
+# Python integers can be arbitrarily large, so mask_to_size removes the upper
+# bits to keep the value within a certain range.
 def mask_to_size(aValue, aSize):
-    return (aValue & (2**aSize - 1))
+    return aValue & (2 ** aSize - 1)
 
 
 def shuffle_list(aList):
-    # The random module is used here to provide the shuffling algorithm using the back end
-    # RandomUtils module to handle the random number generation. The random module itself should not
-    # be used for random number generation!
+    # The random module is used here to provide the shuffling algorithm using
+    # the back end RandomUtils module to handle the random number generation.
+    # The random module itself should not be used for random number generation!
     import random
 
     list_copy = list(aList)
-    random.shuffle(list_copy, lambda : RandomUtils.randomReal(0.0, 1.0))
+    random.shuffle(list_copy, lambda: RandomUtils.randomReal(0.0, 1.0))
     return list_copy

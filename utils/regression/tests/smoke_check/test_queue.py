@@ -25,12 +25,11 @@ from shared.msg_utils import Msg
 from shared.threads import HiThread
 
 
-class UnitTest_HiQueues( UnitTest ):
+class UnitTest_HiQueues(UnitTest):
+    def run_test(self):
+        Msg.info("HiQueue: Start Unit Test ...")
 
-    def run_test( self ):
-        Msg.info( "HiQueue: Start Unit Test ..." )
+    def process_result(self):
+        Msg.info("HiQueue: Process Test Result ...")
 
-    def process_result( self ):
-        Msg.info( "HiQueue: Process Test Result ..." )
-
-                                                                  # tests HiQueue, HiThreadQueue
+        # tests HiQueue, HiThreadQueue

@@ -25,13 +25,9 @@ from shared.msg_utils import Msg
 from shared.threads import HiThread
 
 
-class UnitTest_HiSemaphore( UnitTest ):
+class UnitTest_HiSemaphore(UnitTest):
+    def run_test(self):
+        Msg.info("HiSemaphore: Start Unit Test ...")
 
-    def run_test( self ):
-        Msg.info( "HiSemaphore: Start Unit Test ..." )
-
-    def process_result( self ):
-        Msg.info( "HiSemaphore: Process Test Result ..." )
-
-
-
+    def process_result(self):
+        Msg.info("HiSemaphore: Process Test Result ...")

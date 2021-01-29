@@ -24,14 +24,12 @@ class MyMainSequence(Sequence):
 
     # Main sequence which calls the other sequences.
     def generate(self, **kwargs):
-        
+
         i100_seq = I100Sequence(self.genThread)
         i100_seq.run()
 
         f100_seq = F100Sequence(self.genThread)
         f100_seq.run()
-
-
 
 
 class I100Sequence(Sequence):
@@ -56,16 +54,11 @@ class F100Sequence(Sequence):
             self.notice(">>>>>  The instruction:  {}".format(the_instruction))
 
 
-
-
-
-
-## Points to the MainSequence defined in this file
+#  Points to the MainSequence defined in this file
 MainSequenceClass = MyMainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+#  Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+#  Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-

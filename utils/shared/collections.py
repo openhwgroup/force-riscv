@@ -16,18 +16,18 @@
 import threading
 
 
-class HiCollection( list ):
-
+class HiCollection(list):
     def empty(self):
         return self == []
 
     def size(self):
-        if self.empty(): return 0
+        if self.empty():
+            return 0
         return len(self)
 
 
 # LIFO Collection
-class HiStack( HiCollection ):
+class HiStack(HiCollection):
 
     # pushes an item on the stack
     def push(self, item):
@@ -35,27 +35,31 @@ class HiStack( HiCollection ):
 
     # pops and returns the top item of the stack
     def pop(self):
-        if self.empty(): return None
+        if self.empty():
+            return None
         return super().pop()
 
     # returns the top item of the stack
     def peek(self):
-        if self.empty(): return None
-        return self[ -1 ]
+        if self.empty():
+            return None
+        return self[-1]
 
-class HiAtomicInteger ( HiCollection ):
-    def __init__( self, initial_value ):
+
+class HiAtomicInteger(HiCollection):
+    def __init__(self, initial_value):
+        super().__init__()
         self.val = initial_value
         self.mutex = threading.Lock()
 
-    def add( self, amount ):
+    def add(self, amount):
         try:
             self.mutex.acquire()
             self.val += amount
         finally:
             self.mutex.release()
 
-    def value( self ):
+    def value(self):
         internal = None
         try:
             self.mutex.acquire()
@@ -64,11 +68,13 @@ class HiAtomicInteger ( HiCollection ):
             self.mutex.release()
         return internal
 
-class HiQueue( HiCollection ):
-    def __init__( self ):
-        pass
 
-class HiThreadedQueue( HiQueue ):
+class HiQueue(HiCollection):
+    def __init__(self):
+        super().__init__()
+
+
+class HiThreadedQueue(HiQueue):
     def __init__(self):
         super().__init__()
         self.listLock = threading.Lock()
@@ -76,10 +82,9 @@ class HiThreadedQueue( HiQueue ):
     def enqueue(self, item):
         try:
             self.listLock.acquire()
-            self.append( item )
+            self.append(item)
         finally:
             self.listLock.release()
-
 
     def dequeue(self):
         try:
@@ -90,34 +95,34 @@ class HiThreadedQueue( HiQueue ):
 
         return item
 
-class HiThreadedProducerConsumerQueue( HiThreadedQueue ):
-    def __init__( self, blocking = False ):
+
+class HiThreadedProducerConsumerQueue(HiThreadedQueue):
+    def __init__(self, blocking=False):
         self.produceAval = threading.Semaphore(0)
         super().__init__()
 
     def blockUntilAvailable(self, timeout):
-        success = self.produceAval.acquire(blocking=True, timeout = timeout)
+        success = self.produceAval.acquire(blocking=True, timeout=timeout)
         return success
 
-    # Returns True if the item was able to be successfully enqueued. Returns False otherwise.
-    def enqueue( self, item):
+    # Returns True if the item was able to be successfully enqueued.
+    # Returns False otherwise.
+    def enqueue(self, item):
         success = super().enqueue(item)
 
         self.produceAval.release()
 
         return success
 
-    # Returns True if the queue is not empty and the item was successfully dequeued. Returns 
-    # False otherwise. Raises a timeout error if the queue isn't given an element within the
-    # timeout specified; default is 1 second.
-    def dequeue( self, timeout = 1 ):
+    # Returns True if the queue is not empty and the item was successfully
+    # dequeued. Returns False otherwise. Raises a timeout error if the queue
+    # isn't given an element within the timeout specified; default is 1 second.
+    def dequeue(self, timeout=1):
         success = self.blockUntilAvailable(timeout)
 
-        if (success == False):
+        if not success:
             raise TimeoutError
 
         result = super().dequeue()
 
         return result
-
-

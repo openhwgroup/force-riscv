@@ -14,19 +14,45 @@
 # limitations under the License.
 #
 control_items = [
-                #{"fname":"api_genVA_01_force.py",                    "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000}},
-                #{"fname":"api_genVA_02_force.py",                    "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000}},
-                #{"fname":"api_genVA_01_force.py",                    "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-                #{"fname":"api_genVA_02_force.py",                    "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-                #{"fname":"api_genPA_01_force.py",                    "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-                #{"fname":"api_genVAforPA_01_force.py",               "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-                {"fname":"api_getPageInfo_01_force.py",               "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-                #{"fname":"api_verifyVirtualAddress_01_force.py",     "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-                #{"fname":"api_genFreePagesRange_01_force.py",        "options":{"max-instr":50000,}, "generator" : {"--noiss":None, "--max-instr" : 50000, "--options":"\"PrivilegeLevel=1\""}},
-                {"fname":"Constraint_force.py",                      "generator" : {"--noiss":None,}},
-                {"fname":"InitializeRegisterTest_force.py",          "generator" : {"--noiss":None,}},
-                {"fname":"LoadImmediate_force.py",                   "generator" : {"--noiss":None,}},
-                {"fname":"State_force.py",                           "generator" : {"--noiss":None,}},
-                {"fname":"WriteRegisterTest_force.py",               "generator" : {"--noiss":None,}},
-                #{ "fname":"*_force.py", "options":{"max-instr":50000,}, "generator":{,"--noiss":None,"--max-instr":50000,} },
-                ]
+    {
+        "fname": "api_getPageInfo_01_force.py",
+        "options": {
+            "max-instr": 50000,
+        },
+        "generator": {
+            "--noiss": None,
+            "--max-instr": 50000,
+            "--options": '"PrivilegeLevel=1"',
+        },
+    },
+    {
+        "fname": "Constraint_force.py",
+        "generator": {
+            "--noiss": None,
+        },
+    },
+    {
+        "fname": "InitializeRegisterTest_force.py",
+        "generator": {
+            "--noiss": None,
+        },
+    },
+    {
+        "fname": "LoadImmediate_force.py",
+        "generator": {
+            "--noiss": None,
+        },
+    },
+    {
+        "fname": "State_force.py",
+        "generator": {
+            "--noiss": None,
+        },
+    },
+    {
+        "fname": "WriteRegisterTest_force.py",
+        "generator": {
+            "--noiss": None,
+        },
+    },
+]

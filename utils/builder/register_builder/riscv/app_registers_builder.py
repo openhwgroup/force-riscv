@@ -15,17 +15,19 @@
 # limitations under the License.
 #
 
-import copy
 import sys
 sys.path.insert(0, '../../shared/')
 from Register import *
 
-def create_app_register(aName, aSize, aIndex, aType, aClass, aBoot, aAltPhysReg=None):
-    new_reg = Register(**{'name':aName, 'length':aSize, 'index':aIndex, 'type':aType, 'class':aClass, 'boot':aBoot})
+
+def create_app_register(aName, aSize, aIndex, aType, aClass, aBoot,
+                        aAltPhysReg=None):
+    new_reg = Register(**{'name':aName, 'length':aSize, 'index':aIndex,
+                          'type':aType, 'class':aClass, 'boot':aBoot})
     new_field = RegisterField(aName)
 
     if aAltPhysReg is not None:
-        new_field.mPhysicalRegister = aAltPhysReg # Alternative physical register specified.
+        new_field.mPhysicalRegister = aAltPhysReg
     else:
         new_field.mPhysicalRegister = aName
 
@@ -34,9 +36,11 @@ def create_app_register(aName, aSize, aIndex, aType, aClass, aBoot, aAltPhysReg=
     new_reg.addRegisterFieldInOrder(new_field)
     return new_reg
 
+
 def create_double_precision_app_register(aIndex, aRegSize):
     
-    d_reg = Register(**{'name':"D%d" % aIndex, 'length':64, 'index':aIndex, 'type':"FPR", 'class':None, 'boot':0x3000})
+    d_reg = Register(**{'name':"D%d" % aIndex, 'length':64, 'index':aIndex,
+                        'type':"FPR", 'class':None, 'boot':0x3000})
     numberOfReg = 64 // aRegSize
     for i in range(0, numberOfReg):
         if numberOfReg > 1:
@@ -50,8 +54,10 @@ def create_double_precision_app_register(aIndex, aRegSize):
     
     return d_reg
 
+
 def create_quad_precision_app_register(aIndex, aRegSize):
-    q_reg = Register(**{'name':"Q%d" % aIndex, 'length':128, 'index':aIndex, 'type':"FPR", 'class':"LargeRegister", 'boot':0})
+    q_reg = Register(**{'name':"Q%d" % aIndex, 'length':128, 'index':aIndex,
+                        'type':"FPR", 'class':"LargeRegister", 'boot':0})
     numberOfReg = 128 // aRegSize
     for i in range(0, numberOfReg):
         q_field = RegisterField("Q%d_%d" % (aIndex, i))
@@ -62,8 +68,11 @@ def create_quad_precision_app_register(aIndex, aRegSize):
 
     return q_reg
 
+
 def create_vector_app_register(aIndex, aRegSize):
-    v_reg = Register(**{'name':"v%d" % aIndex, 'length':512, 'index':aIndex, 'type':"VECREG", 'class':"LargeRegister", 'boot':0x3000})
+    v_reg = Register(**{'name':"v%d" % aIndex, 'length':512, 'index':aIndex,
+                        'type':"VECREG", 'class':"LargeRegister",
+                        'boot':0x3000})
     numberOfReg = 512 // aRegSize
     for i in range(0, numberOfReg):
         v_field = RegisterField("v%d_%d" % (aIndex, i))
@@ -74,6 +83,7 @@ def create_vector_app_register(aIndex, aRegSize):
 
     return v_reg
 
+
 def build_app_registers(app_registers_file, xlen):
 
     for size in (32, 64):
@@ -81,16 +91,26 @@ def build_app_registers(app_registers_file, xlen):
 
         # Add x1-x31 registers
         for i in range(1, 32):
-            app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("x%d" % i, size, i, "GPR"))
-            app_register_doc.addRegister(create_app_register("x%d" % i, size, i, "GPR", None, 0x1000))
+            app_register_doc.addPhysicalRegister(
+                PhysicalRegister.createPhysicalRegister("x%d" % i, size,
+                                                        i, "GPR"))
+            app_register_doc.addRegister(
+                create_app_register("x%d" % i, size, i, "GPR", None, 0x1000))
 
         # Add zero register
-        app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("x0", size, 0, "GPR", "PhysicalRegisterRazwi", 0))
-        app_register_doc.addRegister(create_app_register("x0", size, 0, "ZR", "ReadOnlyZeroRegister", 0, "x0"))
+        app_register_doc.addPhysicalRegister(
+            PhysicalRegister.createPhysicalRegister("x0", size, 0, "GPR",
+                                                    "PhysicalRegisterRazwi",
+                                                    0))
+        app_register_doc.addRegister(
+            create_app_register("x0", size, 0, "ZR", "ReadOnlyZeroRegister",
+                                0, "x0"))
 
         # Add PC register
-        app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("PC", size, 32, "PC"))
-        app_register_doc.addRegister(create_app_register("PC", size, 32, "PC", None, 0))
+        app_register_doc.addPhysicalRegister(
+            PhysicalRegister.createPhysicalRegister("PC", size, 32, "PC"))
+        app_register_doc.addRegister(create_app_register("PC", size, 32, "PC",
+                                                         None, 0))
 
         # number of sub-registers needed for quad FP 128-bit registers
         numberOfFpSubReg = 2
@@ -98,21 +118,30 @@ def build_app_registers(app_registers_file, xlen):
         # Add f0-f31 and S0-S31
         for i in range(0, 32):
             for subIndex in range(numberOfFpSubReg):
-                app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("f%d_%d" % (i, subIndex), 64, i, "FPR", aSubIndex=subIndex))
+                app_register_doc.addPhysicalRegister(
+                    PhysicalRegister.createPhysicalRegister(
+                        "f%d_%d" % (i, subIndex), 64, i, "FPR",
+                        aSubIndex=subIndex))
             
-            app_register_doc.addRegister(create_app_register("S%d" % i, 32, i, "FPR", None, 0, "f%d_0" % i))
+            app_register_doc.addRegister(
+                create_app_register(
+                    "S%d" % i, 32, i, "FPR", None, 0, "f%d_0" % i))
 
         # Add H0-H31
         for i in range(0, 32):
-            app_register_doc.addRegister(create_app_register("H%d" % i, 16, i, "FPR", None, 0, "f%d_0" % i))
+            app_register_doc.addRegister(
+                create_app_register(
+                    "H%d" % i, 16, i, "FPR", None, 0, "f%d_0" % i))
 
         # Add D0-D31
         for i in range(0, 32):
-            app_register_doc.addRegister(create_double_precision_app_register(i, 64))
+            app_register_doc.addRegister(
+                create_double_precision_app_register(i, 64))
 
         # Add Q0-Q31
         for i in range(0, 32):
-            app_register_doc.addRegister(create_quad_precision_app_register(i, 64))
+            app_register_doc.addRegister(
+                create_quad_precision_app_register(i, 64))
 
         # number of sub-registers needed for vector 512-bit registers
         numberOfVecSubReg = 8
@@ -120,11 +149,15 @@ def build_app_registers(app_registers_file, xlen):
         # add vector registers V0-V31
         for i in range(0, 32):
             for subIndex in range(numberOfVecSubReg):
-                app_register_doc.addPhysicalRegister(PhysicalRegister.createPhysicalRegister("v%d_%d" % (i, subIndex), 64, i, "VECREG", aSubIndex=subIndex))
+                app_register_doc.addPhysicalRegister(
+                    PhysicalRegister.createPhysicalRegister(
+                        "v%d_%d" % (i, subIndex), 64, i, "VECREG",
+                        aSubIndex=subIndex))
             
             app_register_doc.addRegister(create_vector_app_register(i, 64))
         
         app_register_doc.writeXmlFile('output/app_registers_rv%s.xml' % size)
+
 
 if __name__ == "__main__":
     app_registers_file = 'output/app_registers.xml'
@@ -134,7 +167,7 @@ if __name__ == "__main__":
         if (sys.argv[1] == '--xlen'):
             try:
                 xlen = int(sys.argv[2])
-            except:
+            except BaseException:
                 print("ERROR: 'xlen' option value should be integer")
                 sys.exit(1)
             if xlen == 32:
@@ -145,7 +178,8 @@ if __name__ == "__main__":
                 print("ERROR: Only valid 'xlen' values are 32 or 64")
                 sys.exit(1)
         else:
-            print("Only valid option is '--xlen N', where N is either 32 or 64")
+            print("Only valid option is '--xlen N', where N is "
+                  "either 32 or 64")
             sys.exit(1)
 
     print("\tApp registers file: %s, xlen: %d" % (app_registers_file,xlen))

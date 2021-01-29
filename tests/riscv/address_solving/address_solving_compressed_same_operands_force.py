@@ -17,25 +17,44 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 
-## This test verifies that generating compressed load and store instructions without preamble with
-# uninitialized registers doesn't fail.
+
+# This test verifies that generating compressed load and store
+# instructions without preamble with uninitialized registers doesn't fail.
 class MainSequence(Sequence):
-
     def generate(self, **kargs):
-        
-        instructions = ('C.FLD##RISCV', 'C.FSD##RISCV', 'C.LD##RISCV', 'C.LW##RISCV', 'C.SD##RISCV', 'C.SW##RISCV')
 
-        if self.getGlobalState('AppRegisterWidth') == 32:
-            instructions = ('C.FLD##RISCV', 'C.FSD##RISCV', 'C.LW##RISCV', 'C.SW##RISCV')
-            
+        instructions = (
+            "C.FLD##RISCV",
+            "C.FSD##RISCV",
+            "C.LD##RISCV",
+            "C.LW##RISCV",
+            "C.SD##RISCV",
+            "C.SW##RISCV",
+        )
+
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            instructions = (
+                "C.FLD##RISCV",
+                "C.FSD##RISCV",
+                "C.LW##RISCV",
+                "C.SW##RISCV",
+            )
+
         for _ in range(50):
-            instr_id = self.genInstruction(self.choice(instructions), {'NoPreamble': 1})
+            instr_id = self.genInstruction(
+                self.choice(instructions), {"NoPreamble": 1}
+            )
 
             if instr_id:
                 instr_record = self.queryInstructionRecord(instr_id)
 
-                if (instr_record['Addressing']['Base'][0] < 8) or (instr_record['Addressing']['Base'][0] > 15):
-                    self.error('Expected a base register index between 8 and 15; Actual=%d' % instr_record['Addressing']['Base'][0])
+                if (instr_record["Addressing"]["Base"][0] < 8) or (
+                    instr_record["Addressing"]["Base"][0] > 15
+                ):
+                    self.error(
+                        "Expected a base register index between 8 and 15; "
+                        "Actual=%d" % instr_record["Addressing"]["Base"][0]
+                    )
 
 
 MainSequenceClass = MainSequence

@@ -13,13 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# classes, code related to Eret preamble sequence. 
+# classes, code related to Eret preamble sequence.
 
 from base.Sequence import Sequence
 
-#-------------------------------------------------------------------------------------------------------
-# EretPreambleSequence to provide base class for eret preamble sequence. 
-#-------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------
+# EretPreambleSequence to provide base class for eret preamble sequence.
+# -------------------------------------------------------------------------------------------------------
+
 
 class EretPreambleSequence(Sequence):
     def __init__(self, gen_thread):
@@ -27,4 +28,3 @@ class EretPreambleSequence(Sequence):
 
     def generate(self, **kargs):
         pass
-

@@ -14,17 +14,80 @@
 # limitations under the License.
 #
 
-control_items = [ {"fname":"test_muldiv_nan_boxing_force.py",},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=H,data_type=FP,size=16\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=H,data_type=INT,size=16\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=S,data_type=FP,size=32\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=S,data_type=INT,size=32\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=S,data_type=FP,size=16\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=S,data_type=INT,size=16\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=D,data_type=FP,size=64\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=D,data_type=INT,size=64\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=D,data_type=FP,size=32\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=D,data_type=INT,size=32\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=D,data_type=FP,size=16\"",}},
-                  {"fname":"test_muldiv_data_constr_force.py", "generator":{"--options":"\"precision=D,data_type=INT,size=16\"",}},
-                ]
+control_items = [
+    {
+        "fname": "test_muldiv_nan_boxing_force.py",
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=H,data_type=FP,size=16"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=H,data_type=INT,size=16"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=S,data_type=FP,size=32"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=S,data_type=INT,size=32"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=S,data_type=FP,size=16"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=S,data_type=INT,size=16"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=D,data_type=FP,size=64"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=D,data_type=INT,size=64"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=D,data_type=FP,size=32"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=D,data_type=INT,size=32"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=D,data_type=FP,size=16"',
+        },
+    },
+    {
+        "fname": "test_muldiv_data_constr_force.py",
+        "generator": {
+            "--options": '"precision=D,data_type=INT,size=16"',
+        },
+    },
+]

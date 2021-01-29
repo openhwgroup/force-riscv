@@ -13,37 +13,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from VectorTestSequence import VectorTestSequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from VectorTestSequence import VectorTestSequence
 
-## This test verifies that add-with-carry and subtract-with-borrow instructions don't use v0 as the
-# destination register.
+
+#  This test verifies that add-with-carry and subtract-with-borrow instructions
+#  don't use v0 as the destination register.
 class MainSequence(VectorTestSequence):
-
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
         self._mInstrList = (
-            'VADC.VIM##RISCV',
-            'VADC.VVM##RISCV',
-            'VADC.VXM##RISCV',
-            'VSBC.VVM##RISCV',
-            'VSBC.VXM##RISCV',
+            "VADC.VIM##RISCV",
+            "VADC.VVM##RISCV",
+            "VADC.VXM##RISCV",
+            "VSBC.VVM##RISCV",
+            "VSBC.VXM##RISCV",
         )
 
-    ## Return a list of test instructions to randomly choose from.
+    # Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
         return self._mInstrList
 
-    ## Verify additional aspects of the instruction generation and execution.
+    # Verify additional aspects of the instruction generation and execution.
     #
     #  @param aInstr The name of the instruction.
     #  @param aInstrRecord A record of the generated instruction.
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
-        vd_val = aInstrRecord['Dests']['vd']
+        vd_val = aInstrRecord["Dests"]["vd"]
         if vd_val == 0:
-            self.error('Instruction %s was generated with v0 as the destination register' % aInstr)
+            self.error(
+                "Instruction %s was generated with v0 as the destination "
+                "register" % aInstr
+            )
 
 
 MainSequenceClass = MainSequence

@@ -14,5 +14,8 @@
 # limitations under the License.
 #
 control_items = [
-                {"fname":"optionsTest_force.py",      "generator":{"--cfg":"config/riscv.config"}},
-                ]
+    {
+        "fname": "optionsTest_force.py",
+        "generator": {"--cfg": "config/riscv.config"},
+    },
+]

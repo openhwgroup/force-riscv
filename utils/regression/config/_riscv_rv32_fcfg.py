@@ -20,17 +20,13 @@
 # need to source ./scripts/project.cshrc before running master run with rtl
 # RTL command : "%s/verif/top/sim/%s/build/%s/%s" % (root, regr, cfg, exe)
 
-master_config = {
-    'rtl': {},
-    'generate': {},
-    'iss': {}
-}
+master_config = {"rtl": {}, "generate": {}, "iss": {}}
 
-sequence_app_opts = [("force", {"path":"../../bin/friscv_rv32"}),
-        ("fpix_riscv_rv32", {}),
-        ("rtl", {}),
-        ("fruntoctrl", {}),
-        ]
+sequence_app_opts = [
+    ("force", {"path": "../../bin/friscv_rv32"}),
+    ("fpix_riscv_rv32", {}),
+    ("rtl", {}),
+    ("fruntoctrl", {}),
+]
 
 single_run_app_opts = [("compile", {})]
-

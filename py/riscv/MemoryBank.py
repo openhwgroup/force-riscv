@@ -15,7 +15,8 @@
 #
 from enum import Enum
 
-## This class defines the available memory banks in the RISC-V architecture.
+#  This class defines the available memory banks in the RISC-V architecture.
+
 
 class MemoryBankRISCV(Enum):
 

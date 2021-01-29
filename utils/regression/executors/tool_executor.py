@@ -27,21 +27,21 @@ from executors.app_executor import *
 from classes.control_item import ControlItem
 
 
-class ToolResult( ProcessResult ):
-    tool_msg       = 0
+class ToolResult(ProcessResult):
+    tool_msg = 0
 
 
-class ToolKeys( object ):
-    tool_retcode   = "retcode"
-    tool_stdout    = "stdout"
-    tool_stderr    = "stderr"
-    tool_start     = "start"
-    tool_end       = "end"
-    tool_msg       = "msg"
-    tool_log       = "log"
+class ToolKeys(object):
+    tool_retcode = "retcode"
+    tool_stdout = "stdout"
+    tool_stderr = "stderr"
+    tool_start = "start"
+    tool_end = "end"
+    tool_msg = "msg"
+    tool_log = "log"
 
 
-class ToolExecutor( AppExecutor ):
+class ToolExecutor(AppExecutor):
 
     # def __init__( self ):
     #     super().__init__()
@@ -52,21 +52,20 @@ class ToolExecutor( AppExecutor ):
     # def execute( self ):
     #     super().execute()
     #
-    def extract_results( self, arg_result, arg_log, arg_elog ):
+    def extract_results(self, arg_result, arg_log, arg_elog):
 
         # extract information from the result log
-        my_result = self.query_logs( arg_log, arg_elog  )
-        my_res_dict = { "trace-cmp-retcode": int(arg_result[ToolResult.process_retcode ])
-                      , "trace-cmp-stdout" : str(arg_result[ToolResult.process_stdout  ])
-                      , "trace-cmp-stderr" : str(arg_result[ToolResult.process_stderr  ])
-                      , "trace-cmp-start"  : str(arg_result[ToolResult.process_start   ])
-                      , "trace-cmp-end"    : str(arg_result[ToolResult.process_end     ])
-                      , "trace-cmp-log"    : arg_log
-                      , "trace-cmp-msg"    : my_result
-                      }
+        my_result = self.query_logs(arg_log, arg_elog)
+        my_res_dict = {
+            "trace-cmp-retcode": int(arg_result[ToolResult.process_retcode]),
+            "trace-cmp-stdout": str(arg_result[ToolResult.process_stdout]),
+            "trace-cmp-stderr": str(arg_result[ToolResult.process_stderr]),
+            "trace-cmp-start": str(arg_result[ToolResult.process_start]),
+            "trace-cmp-end": str(arg_result[ToolResult.process_end]),
+            "trace-cmp-log": arg_log,
+            "trace-cmp-msg": my_result,
+        }
         return my_res_dict
 
-
-    def query_errors( self, arg_hfile ):
+    def query_errors(self, arg_hfile):
         return None
-

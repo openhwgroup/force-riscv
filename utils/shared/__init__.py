@@ -13,24 +13,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .ForceInit import (
-    ForceCmdLineOptions,
-    ForceParametersProcessor,
-    processForceControlData,
-)
-from .ForceExecutor import ForceExecutor
-from .ForceReporter import ForceReporter
-
-# Command line options for the module
-CmdLineOptions = ForceCmdLineOptions
-
-# Tag for the application
-Tag = "generator"
-
-ParametersProcessorClass = ForceParametersProcessor
-
-ProcessControlData = processForceControlData
-
-ExecutorClass = ForceExecutor
-
-ReporterClass = ForceReporter

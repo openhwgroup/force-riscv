@@ -13,7 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .FrunToCtrlInit import FrunToCtrlCmdLineOptions, FrunToCtrlParametersProcessor, processFrunToCtrlControlData
+from .FrunToCtrlInit import (
+    FrunToCtrlCmdLineOptions,
+    FrunToCtrlParametersProcessor,
+    processFrunToCtrlControlData,
+)
 from .FrunToCtrlExecutor import FrunToCtrlExecutor
 from .FrunToCtrlReporter import FrunToCtrlReporter
 
@@ -21,7 +25,7 @@ from .FrunToCtrlReporter import FrunToCtrlReporter
 CmdLineOptions = FrunToCtrlCmdLineOptions
 
 # Tag for the application
-Tag = 'fruntoctrl'
+Tag = "fruntoctrl"
 
 ParametersProcessorClass = FrunToCtrlParametersProcessor
 

@@ -13,47 +13,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from LoopTestSequence import LoopTestSequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from LoopTestSequence import LoopTestSequence
 
-## This test verifies that a standard loop will automatically reconverge to the loop control
-# instructions when taking a different execution path from the prior iteration.
+
+# This test verifies that a standard loop will automatically reconverge to
+# the loop control instructions when taking a different execution path from
+# the prior iteration.
 class MainSequence(LoopTestSequence):
-
     def __init__(self, gen_thread, name=None):
         super().__init__(gen_thread, name)
 
         self._mInstructionWeights = {
-            'ADDI##RISCV': 10,
-            'ADDW##RISCV': 10,
-            'BEQ##RISCV': 2,
-            'BGE##RISCV': 2,
-            'BGEU##RISCV': 2,
-            'BLT##RISCV': 2,
-            'BLTU##RISCV': 2,
-            'BNE##RISCV': 2,
-            'LUI##RISCV': 10,
-            'SLLI#RV64I#RISCV': 10,
-            'SRLI#RV64I#RISCV': 10,
+            "ADDI##RISCV": 10,
+            "ADDW##RISCV": 10,
+            "BEQ##RISCV": 2,
+            "BGE##RISCV": 2,
+            "BGEU##RISCV": 2,
+            "BLT##RISCV": 2,
+            "BLTU##RISCV": 2,
+            "BNE##RISCV": 2,
+            "LUI##RISCV": 10,
+            "SLLI#RV64I#RISCV": 10,
+            "SRLI#RV64I#RISCV": 10,
         }
 
-        if self.getGlobalState('AppRegisterWidth') == 32:
+        if self.getGlobalState("AppRegisterWidth") == 32:
             self._mInstructionWeights = {
-                'ADDI##RISCV': 10,
-                'BEQ##RISCV': 2,
-                'BGE##RISCV': 2,
-                'BGEU##RISCV': 2,
-                'BLT##RISCV': 2,
-                'BLTU##RISCV': 2,
-                'BNE##RISCV': 2,
-                'LUI##RISCV': 10,
-                'SLLI#RV32I#RISCV': 10,
-                'SRLI#RV32I#RISCV': 10,
-        }
-            
-    ## Return a dictionary of names of instructions to generate in the loop body with their
-    # corresponding weights.
+                "ADDI##RISCV": 10,
+                "BEQ##RISCV": 2,
+                "BGE##RISCV": 2,
+                "BGEU##RISCV": 2,
+                "BLT##RISCV": 2,
+                "BLTU##RISCV": 2,
+                "BNE##RISCV": 2,
+                "LUI##RISCV": 10,
+                "SLLI#RV32I#RISCV": 10,
+                "SRLI#RV32I#RISCV": 10,
+            }
+
+    # Return a dictionary of names of instructions to generate in the loop
+    # body with their corresponding weights.
     def getInstructionWeights(self):
         return self._mInstructionWeights
 
@@ -61,4 +62,3 @@ class MainSequence(LoopTestSequence):
 MainSequenceClass = MainSequence
 GenThreadClass = GenThreadRISCV
 EnvClass = EnvRISCV
-

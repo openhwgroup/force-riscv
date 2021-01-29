@@ -13,7 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .TracediffRiscVInit import TracediffRiscVCmdLineOptions, TracediffRiscVParametersProcessor, processTracediffRiscVControlData
+from .TracediffRiscVInit import (
+    TracediffRiscVCmdLineOptions,
+    TracediffRiscVParametersProcessor,
+    processTracediffRiscVControlData,
+)
 from .TracediffRiscVExecutor import TracediffRiscVExecutor
 from .TracediffRiscVReporter import TracediffRiscVReporter
 
@@ -21,7 +25,7 @@ from .TracediffRiscVReporter import TracediffRiscVReporter
 CmdLineOptions = TracediffRiscVCmdLineOptions
 
 # Tag for the application
-Tag = 'tracediff_riscv'
+Tag = "tracediff_riscv"
 
 ParametersProcessorClass = TracediffRiscVParametersProcessor
 

@@ -13,33 +13,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from VectorTestSequence import VectorVsetvlTestSequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
-from VectorTestSequence import VectorVsetvlTestSequence
 from riscv.Utils import LoadGPR64
 
-## This test verifies the VSETVLI instruction sets the vl and vtype registers as expected.
-class MainSequence(VectorVsetvlTestSequence):
 
+#  This test verifies the VSETVLI instruction sets the vl and vtype registers
+#  as expected.
+class MainSequence(VectorVsetvlTestSequence):
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
-        self._mInstrList = ('VSETVLI##RISCV',)
+        self._mInstrList = ("VSETVLI##RISCV",)
 
-    ## Return a list of test instructions to randomly choose from.
+    # Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
         return self._mInstrList
 
-    ## Generate parameters to be passed to Sequence.genInstruction() and load register operands.
+    # Generate parameters to be passed to Sequence.genInstruction() and load
+    # register operands.
     def _generateInstructionParameters(self):
         instr_params = {}
 
         load_gpr64_seq = LoadGPR64(self.genThread)
-        avl_reg_index = self.getRandomGPR(exclude='0')
+        avl_reg_index = self.getRandomGPR(exclude="0")
         load_gpr64_seq.load(avl_reg_index, self.mAvl)
-        instr_params['rs1'] = avl_reg_index
-        avl_reg_index = self.getRandomGPR(exclude='0')
-        instr_params['zimm10'] = self.mVtype
+        instr_params["rs1"] = avl_reg_index
+        avl_reg_index = self.getRandomGPR(exclude="0")
+        instr_params["zimm10"] = self.mVtype
 
         return instr_params
 

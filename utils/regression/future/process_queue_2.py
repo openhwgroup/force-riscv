@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-################################################################################
-# file: process_queue                                                          #
-# summary: Implemennts a Thread Safe Queue that us used as a marshall for      #
-#          the ExecuteProcess workers                                          #
-#                                                                              #
-################################################################################
+#
+# file: process_queue
+# summary: Implemennts a Thread Safe Queue that us used as a marshall for
+#          the ExecuteProcess workers
+#
+#
 
 from common.path_utils import PathUtils
 from common.msg_utils import Msg
@@ -31,9 +31,9 @@ from launchers.std_launcher import StdLauncher
 
 import concurrent.futures
 
-class ProcessQueueItem(object):
 
-    def __init__(self, arg_frun_path, arg_ctrl_item, arg_content ):
+class ProcessQueueItem(object):
+    def __init__(self, arg_frun_path, arg_ctrl_item, arg_content):
         self.frun_path = arg_frun_path
         self.ctrl_item = arg_ctrl_item
         self.content = arg_content
@@ -50,12 +50,18 @@ class ProcessQueueItem(object):
             my_sum_qitem = SummaryQueueItem(my_launcher.extract_results())
         except Exception as arg_ex:
             Msg.error_trace(str(arg_ex))
-            Msg.err("Message: %s, Control File Path: %s" % (str(arg_ex), PathUtils.current_dir()))
-            my_sum_qitem = SummaryErrorQueueItem( { "error"  : arg_ex
-                                                  , "message": "Error Processing Task ..."
-                                                  , "path"   : self.ctrl_item.file_path()
-                                                  , "type"   : str(type(arg_ex))
-                                                  } )
+            Msg.err(
+                "Message: %s, Control File Path: %s"
+                % (str(arg_ex), PathUtils.current_dir())
+            )
+            my_sum_qitem = SummaryErrorQueueItem(
+                {
+                    "error": arg_ex,
+                    "message": "Error Processing Task ...",
+                    "path": self.ctrl_item.file_path(),
+                    "type": str(type(arg_ex)),
+                }
+            )
         finally:
             return my_sum_qitem
 
@@ -63,8 +69,10 @@ class ProcessQueueItem(object):
     def create_launcher(self):
         my_launcher = None
         if self.process_queue.use_lsf():
-            my_launcher = LsfLauncher();
-            my_launcher.shell_log = "%s.lsf" % str(self.process_queue.processor_name)
+            my_launcher = LsfLauncher()
+            my_launcher.shell_log = "%s.lsf" % str(
+                self.process_queue.processor_name
+            )
             my_launcher.lsf_log = "lsf.%P"
         else:
             my_launcher = StdLauncher()
@@ -76,15 +84,16 @@ class ProcessQueueItem(object):
         my_launcher.fctrl_item = self.fctrl_item
         my_launcher.item_group = self.item_group
 
-        my_launcher.frun_dir = self.frun_path.replace("_def_frun.py","")
-        my_launcher.process_log = "%s.log" % str(self.process_queue.processor_name)
+        my_launcher.frun_dir = self.frun_path.replace("_def_frun.py", "")
+        my_launcher.process_log = "%s.log" % str(
+            self.process_queue.processor_name
+        )
         my_launcher.process_cmd = self.process_queue.process_cmd
 
         return my_launcher
 
 
 class ProcessQueue(object):
-
     def __init__(self):
         self.process_cmd = None
         self.processor_name = None
@@ -107,15 +116,19 @@ class ProcessQueue(object):
 
     def enqueue(self, arg_item):
         arg_item.process_queue = self
-        my_future = self.executor.submit(ProcessQueue.execute_item, arg_item, self.summary.queue)
+        my_future = self.executor.submit(
+            ProcessQueue.execute_item, arg_item, self.summary.queue
+        )
         self.futures.append(my_future)
         return True
 
     def open_queue(self):
-        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=self.process_max)
+        self.executor = concurrent.futures.ThreadPoolExecutor(
+            max_workers=self.process_max
+        )
 
     def wait_for_completion(self):
-        #self.executor.shutdown()
+        # self.executor.shutdown()
         for my_future in self.futures:
             my_future.result()
 

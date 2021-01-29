@@ -18,36 +18,48 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 
 from base.Sequence import Sequence
 
+
 class MainSequence(Sequence):
-
-   def generate(self, **kargs):
-        if self.getGlobalState('AppRegisterWidth') == 32:
-            random_instructions = ['ADD##RISCV', 'SRLI#RV32I#RISCV', 'ADDI##RISCV', 'SLLI#RV32I#RISCV', 'LUI##RISCV']
+    def generate(self, **kargs):
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            random_instructions = [
+                "ADD##RISCV",
+                "SRLI#RV32I#RISCV",
+                "ADDI##RISCV",
+                "SLLI#RV32I#RISCV",
+                "LUI##RISCV",
+            ]
         else:
-            random_instructions = ['ADDW##RISCV', 'SRLI#RV64I#RISCV', 'ADDI##RISCV', 'SLLI#RV64I#RISCV', 'LUI##RISCV']
+            random_instructions = [
+                "ADDW##RISCV",
+                "SRLI#RV64I#RISCV",
+                "ADDI##RISCV",
+                "SLLI#RV64I#RISCV",
+                "LUI##RISCV",
+            ]
 
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
                 self.genInstruction(self.choice(random_instructions))
 
-        self.genInstruction("MRET##RISCV", {"NoSkip":1, "priv":1})
+        self.genInstruction("MRET##RISCV", {"NoSkip": 1, "priv": 1})
 
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
                 self.genInstruction(self.choice(random_instructions))
 
-        self.genInstruction("SRET##RISCV", {"NoSkip":1, "priv":0})
+        self.genInstruction("SRET##RISCV", {"NoSkip": 1, "priv": 0})
 
         for _ in range(10):
             for _ in range(self.random32(0, 5)):
                 self.genInstruction(self.choice(random_instructions))
 
-## Points to the MainSequence defined in this file
+
+# Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+# Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+# Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
-

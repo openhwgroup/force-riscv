@@ -15,14 +15,16 @@
 # limitations under the License.
 #
 
-#insert parent directory to access shared builder files
+# insert parent directory to access shared builder files
 import sys
 sys.path.insert(0, '..')
 
+
 class BaseTestBuilder:
 
-    def __init__(self, archName, groupByNum, groupSize, additionalImport, postMainSeq, debugOutputPath):
-        #input and output paths and filenames
+    def __init__(self, archName, groupByNum, groupSize, additionalImport,
+                 postMainSeq, debugOutputPath):
+        # input and output paths and filenames
         self.mInputPath = "input/"
         self.mOutputPath = "output/"
 
@@ -31,26 +33,32 @@ class BaseTestBuilder:
         self.mXmlFiles = []
         self.mTxtFiles = []
 
-        #architecture name
         self.mArchName = archName
 
-        #additional hook strings into template to allow for custom imports/post sequence specifiers (such as gen thread init)
+        # additional hook strings into template to allow for custom
+        # imports/post sequence specifiers (such as gen thread init)
         self.mAdditionalImport = additionalImport
         self.mPostMainSeq = postMainSeq
 
-        #data structures for reading input data, key=filename w/o suffix val=data (either instr file obj/list of strings)
+        # data structures for reading input data, key=filename w/o suffix
+        # val=data (either instr file obj/list of strings)
         self.mInstrFiles = {}
 
-        #data structures to manage subgrouping inside of instruction files, contains input from txt files
+        # data structures to manage subgrouping inside of instruction files,
+        # contains input from txt files
         self.mUnsupportedInstructions = []
         self.mSubgroupInstructions = {}
 
-        #instruction grouping switches
+        # instruction grouping switches
         self.mGroupByNum = groupByNum
         self.mGroupSize = groupSize
 
-        #if debugOutputPath is defined, messages will be printed to outfile instead of stdout
-        self.fDebugOutput = open(debugOutputPath, 'w') if (debugOutputPath != "") else None
+        # if debugOutputPath is defined, messages will be printed to outfile
+        # instead of stdout
+        if debugOutputPath != "":
+            self.fDebugOutput = open(debugOutputPath, 'w')
+        else:
+            self.fDebugOutput = None
 
     def debug(self, s):
         print('DEBUG: {}'.format(s), file=self.fDebugOutput)
@@ -68,7 +76,8 @@ class BaseTestBuilder:
         except FileExistsError:
             pass
         except OSError:
-            self.debug("Error creating directory {}{}, exiting".format(self.mOutputPath, dir_name))
+            self.debug("Error creating directory {}{}, exiting"
+                       .format(self.mOutputPath, dir_name))
             sys.exit(1)
 
         return self.mOutputPath + dir_name + "/"
@@ -78,7 +87,8 @@ class BaseTestBuilder:
         try:
             os.rmdir(dir_name)
         except OSError:
-            self.debug("Error removing directory {}, exiting".format(dir_name))
+            self.debug("Error removing directory {}, exiting"
+                       .format(dir_name))
             sys.exit(1)
 
     def read_inputs(self):
@@ -100,13 +110,20 @@ class BaseTestBuilder:
                 else:
                     self.mSubgroupInstructions[instr_subgroup_name] = txt_lines
 
-    def process_instr_group(self, instrFile, instrFileName, testOutputDir, subgroupPrefix, skipInstructions, validInstructions):
-        instr_grp = self.gen_grouped_instr_file(instrFile, testOutputDir, subgroupPrefix, skipInstructions, validInstructions)
+    def process_instr_group(self, instrFile, instrFileName, testOutputDir,
+                            subgroupPrefix, skipInstructions,
+                            validInstructions):
+        instr_grp = self.gen_grouped_instr_file(instrFile, testOutputDir,
+                                                subgroupPrefix,
+                                                skipInstructions,
+                                                validInstructions)
         if instr_grp.has_any_instructions():
-            with open(testOutputDir + "instruction_grouping.txt", "w") as group_handle:
+            with open(testOutputDir + "instruction_grouping.txt", "w")\
+                    as group_handle:
                 instr_grp.write(group_handle)
 
-            with open(testOutputDir + instrFileName + ".txt", "w") as test_handle:
+            with open(testOutputDir + instrFileName + ".txt", "w")\
+                    as test_handle:
                 instr_grp.print_tests(test_handle)
 
             return True
@@ -115,14 +132,32 @@ class BaseTestBuilder:
 
         return False
 
-    def gen_grouped_instr_file(self, instrFile, testOutputDir, subgroupPrefix, skipInstructions, validInstructions):
+    def gen_grouped_instr_file(self, instrFile, testOutputDir, subgroupPrefix,
+                               skipInstructions, validInstructions):
         instr_grp = None
         if self.mGroupByNum:
-            from shared.instruction_file_grouping import NumGroupedInstructionFile
-            instr_grp = NumGroupedInstructionFile(instrFile, self.mArchName, testOutputDir, self.mGroupSize, self.mAdditionalImport, self.mPostMainSeq, skipInstructions, validInstructions, subgroupPrefix)
+            from shared.instruction_file_grouping \
+                import NumGroupedInstructionFile
+            instr_grp = NumGroupedInstructionFile(instrFile,
+                                                  self.mArchName,
+                                                  testOutputDir,
+                                                  self.mGroupSize,
+                                                  self.mAdditionalImport,
+                                                  self.mPostMainSeq,
+                                                  skipInstructions,
+                                                  validInstructions,
+                                                  subgroupPrefix)
         else:
-            from shared.instruction_file_grouping import FormatGroupedInstructionFile
-            instr_grp = FormatGroupedInstructionFile(instrFile, self.mArchName, testOutputDir, self.mAdditionalImport, self.mPostMainSeq, skipInstructions, validInstructions, subgroupPrefix)
+            from shared.instruction_file_grouping \
+                import FormatGroupedInstructionFile
+            instr_grp = FormatGroupedInstructionFile(instrFile,
+                                                     self.mArchName,
+                                                     testOutputDir,
+                                                     self.mAdditionalImport,
+                                                     self.mPostMainSeq,
+                                                     skipInstructions,
+                                                     validInstructions,
+                                                     subgroupPrefix)
         return instr_grp
 
     def write_tests(self):
@@ -131,18 +166,26 @@ class BaseTestBuilder:
             test_output_dir = self.make_output_test_dir(instr_file_name)
             import copy
             default_skip_instrs = copy.deepcopy(self.mUnsupportedInstructions)
-            for subgroup_name, subgroup_instrs in self.mSubgroupInstructions.items():
+            for subgroup_name, subgroup_instrs in \
+                    self.mSubgroupInstructions.items():
                 default_skip_instrs += subgroup_instrs
-                subgroup_output_dir = self.make_output_test_dir(instr_file_name + "/" + subgroup_name)
-                valid_subgroup = self.process_instr_group(instr_file, instr_file_name + "_" + subgroup_name, subgroup_output_dir, subgroup_name + "_", self.mUnsupportedInstructions, subgroup_instrs)
+                subgroup_output_dir = self.make_output_test_dir(
+                    instr_file_name + "/" + subgroup_name)
+                valid_subgroup = self.process_instr_group(
+                    instr_file, instr_file_name + "_" + subgroup_name,
+                    subgroup_output_dir, subgroup_name + "_",
+                    self.mUnsupportedInstructions, subgroup_instrs)
                 if valid_subgroup:
                     valid_subgroups.append(subgroup_name)
-            self.process_instr_group(instr_file, instr_file_name, test_output_dir, "", default_skip_instrs, None)
+            self.process_instr_group(
+                instr_file, instr_file_name, test_output_dir, "",
+                default_skip_instrs, None)
             self.write_ctrl_files(valid_subgroups, test_output_dir)
 
     def write_ctrl_files(self, subgroupNames, outputDir):
         from shared.ctrl_file_builder import CtrlFileBuilder
-        ctrl_file_builder = CtrlFileBuilder(self.mArchName.lower(), subgroupNames)
+        ctrl_file_builder = CtrlFileBuilder(
+            self.mArchName.lower(), subgroupNames)
         ctrl_file_builder.gen_ctrl_files(outputDir)
 
     def run(self):

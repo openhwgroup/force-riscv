@@ -13,6 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-config={
-    "alt_exe_subpath" : "bin/force"
-}
+config = {"alt_exe_subpath": "bin/force"}

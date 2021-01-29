@@ -26,91 +26,104 @@ from shared.msg_utils import Msg
 # == unit test classes ========================================================
 # =============================================================================
 
-class UnitTest_NoLoopThread( UnitTest ):
 
-    def run_test( self ):
-        Msg.info( "HiThread(NoLoop): Start Unit Test ... " )
+class UnitTest_NoLoopThread(UnitTest):
+    def run_test(self):
+        Msg.info("HiThread(NoLoop): Start Unit Test ... ")
 
-        myThreadProcs = { "on-start"   : self.thread_start          # start thread sequence (outside thread space)
-                        , "on-execute" : self.thread_execute        # thread termination handler (inside thread space)
-                        , "on-finished": self.thread_finished           # thread before finished handler (inside thread space)
-                        , "on-done"    : self.thread_done           # thread terminated handler (outside thread space)
-                        }
+        myThreadProcs = {
+            # start thread sequence (outside thread space)
+            "on-start": self.thread_start,
+            # thread termination handler (inside thread space)
+            "on-execute": self.thread_execute,
+            # thread before finished handler (inside thread space)
+            "on-finished": self.thread_finished,
+            # thread terminated handler (outside thread space)
+            "on-done": self.thread_done,
+        }
 
-        Msg.info( "UnitTest_NoLoopThread >> Creating NoLoop Thread ... " )
-        myThread = ThreadFactory( "NoLoopThread", True, myThreadProcs )
+        Msg.info("UnitTest_NoLoopThread >> Creating NoLoop Thread ... ")
+        myThread = ThreadFactory("NoLoopThread", True, myThreadProcs)
 
-        Msg.info( "UnitTest_NoLoopThread >> Initializing Thread ... " )
+        Msg.info("UnitTest_NoLoopThread >> Initializing Thread ... ")
         myThread.start_thread()
 
         # wait for thread to terminate
         myThread.wait_for()
-        Msg.info( "UnitTest_NoLoopThread >> Thread Completed ... " )
+        Msg.info("UnitTest_NoLoopThread >> Thread Completed ... ")
 
-    def process_result( self ):
-        Msg.info( "HiThread(NoLoop): Process Test Results... " )
+    def process_result(self):
+        Msg.info("HiThread(NoLoop): Process Test Results... ")
 
-    def thread_start( self ):
-        Msg.info( "UnitTest_NoLoopThread >> Started .... " )
+    def thread_start(self):
+        Msg.info("UnitTest_NoLoopThread >> Started .... ")
 
-    def thread_execute( self ):
-        Msg.info( "UnitTest_NoLoopThread << Executing .... " )
+    def thread_execute(self):
+        Msg.info("UnitTest_NoLoopThread << Executing .... ")
 
-    def thread_done ( self ):
-        Msg.info( "UnitTest_NoLoopThread << Execute Done .... " )
+    def thread_done(self):
+        Msg.info("UnitTest_NoLoopThread << Execute Done .... ")
 
-    def thread_finished( self ):
-        Msg.info( "UnitTest_NoLoopThread >> Exiting .... " )
+    def thread_finished(self):
+        Msg.info("UnitTest_NoLoopThread >> Exiting .... ")
 
 
-class UnitTest_LoopThread( UnitTest ):
+class UnitTest_LoopThread(UnitTest):
+    def run_test(self):
+        Msg.info("HiThread(Loop): Start Unit Test ... ")
+        myThreadProcs = {
+            # start thread sequence (outside thread space)
+            "on-start": self.thread_start,
+            # thread termination handler (inside thread space)
+            "on-execute": self.thread_execute,
+            # thread before finished handler (inside thread space)
+            "on-finished": self.thread_finished,
+            # thread terminated handler (outside thread space)
+            "on-done": self.thread_done,
+        }
 
-    def run_test( self ):
-        Msg.info( "HiThread(Loop): Start Unit Test ... " )
-        myThreadProcs = { "on-start"  : self.thread_start          # start thread sequence (outside thread space)
-                        , "on-execute": self.thread_execute        # thread termination handler (inside thread space)
-                        , "on-finished"   : self.thread_finished           # thread before finished handler (inside thread space)
-                        , "on-done"   : self.thread_done           # thread terminated handler (outside thread space)
-                        }
+        myThreadOpts = {
+            "heartbeat-rate": 2,
+            "sleep-period": 100,
+            "daemon": False,  # run once threads should not be daemons
+            "active": False,  # do not start the thread until ready
+        }
+        Msg.info("UnitTest_LoopThread << Creating Thread With Loop... ")
+        myThread = ThreadFactory(
+            "LoopThread", False, myThreadProcs, myThreadOpts
+        )
 
-        myThreadOpts = { "heartbeat-rate": 2
-                       , "sleep-period"  : 100
-                       , "daemon": False                          # run once threads should not be daemons
-                       , "active": False                          # do not start the thread until ready
-                       }
-        Msg.info( "UnitTest_LoopThread << Creating Thread With Loop... " )
-        myThread = ThreadFactory( "LoopThread", False, myThreadProcs, myThreadOpts )
-
-        Msg.info( "UnitTest_LoopThread << Initializing Thread ... " )
+        Msg.info("UnitTest_LoopThread << Initializing Thread ... ")
         myThread.start_thread()
 
         # wait for thread to terminate
         myThread.wait_for()
-        Msg.info( "UnitTest_LoopThread >> Thread Completed ... " )
+        Msg.info("UnitTest_LoopThread >> Thread Completed ... ")
 
-    def process_result( self ):
-        Msg.info( "HiThread(Loop): Process Test Results... " )
+    def process_result(self):
+        Msg.info("HiThread(Loop): Process Test Results... ")
 
-    def thread_start( self ):
-        Msg.info( "UnitTest_LoopThread >> Started .... " )
+    def thread_start(self):
+        Msg.info("UnitTest_LoopThread >> Started .... ")
 
-    def thread_execute( self ):
-        Msg.info( "UnitTest_LoopThread << Executing .... " )
+    def thread_execute(self):
+        Msg.info("UnitTest_LoopThread << Executing .... ")
 
-    def thread_done ( self ):
-        Msg.info( "UnitTest_LoopThread << Execute Done .... " )
+    def thread_done(self):
+        Msg.info("UnitTest_LoopThread << Execute Done .... ")
         Msg.blank()
 
-    def thread_finished( self ):
-        Msg.info( "UnitTest_LoopThread >> Exiting .... " )
+    def thread_finished(self):
+        Msg.info("UnitTest_LoopThread >> Exiting .... ")
 
 
-class UnitTest_HiThread( UnitTest ):
+class UnitTest_HiThread(UnitTest):
+    def run_test(self):
+        Msg.info("HiThread: Start all Thread Unit Tests ... ")
+        with UnitTest_NoLoopThread():
+            pass
+        with UnitTest_LoopThread():
+            pass
 
-    def run_test( self ):
-        Msg.info( "HiThread: Start all Thread Unit Tests ... " )
-        with UnitTest_NoLoopThread(): pass
-        with UnitTest_LoopThread(): pass
-
-    def process_result( self ):
-        Msg.info( "HiThread: Process All Thread Test Results ... " )
+    def process_result(self):
+        Msg.info("HiThread: Process All Thread Test Results ... ")

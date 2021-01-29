@@ -13,22 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#**************************************************************************************************
 # BootPriority.py
 #
 # This file defines the BootPriority helper class.
-#**************************************************************************************************
 
-#**************************************************************************************************
 # The boot priority class defines helper methods associated with boot priority.
-#**************************************************************************************************
 class BootPriority:
-    ## Returns the appropriate boot priority based on the name and type of register provided along
-    #  with if the register is write only
-    def getBootPriority(aName = None, aType = None, aWriteOnly = 0):
-        #if aType is this_particular_type:
-            #return a_particular_boot_priority
-        #if aName is this_particular_name:
-            #return a_particular_boot_priority
+    # Returns the appropriate boot priority based on the name and type of
+    # register provided along with if the register is write only
+    def getBootPriority(aName=None, aType=None, aWriteOnly=0):
         return 1
-
