@@ -242,50 +242,6 @@ class SysUtils:
             )
 
     @classmethod
-    def exec_content(cls, arg_content, arg_suppress=False):
-
-        # control_items = None
-        my_glb = {}
-        my_loc = {}
-
-        try:
-            exec(str(arg_content), my_glb, my_loc)
-            return my_glb, my_loc
-
-        except SyntaxError as arg_ex:
-            if not arg_suppress:
-                my_exc_type, my_exc_val, my_exc_tb = sys.exc_info()
-                Msg.err("Syntax Error...")
-                Msg.err(
-                    "FileName: %s"
-                    % (str(my_exc_tb.tb_frame.f_code.co_filename))
-                )
-                Msg.err("Line: %d" % (int(my_exc_tb.tb_lineno)))
-                Msg.err("Name: %s" % (str(my_exc_tb.tb_frame.f_code.co_name)))
-                Msg.err("Type: %s" % (str(my_exc_type)))
-                Msg.err("Message: %s" % (str(my_exc_val)))
-                Msg.error_trace(my_exc_tb)
-            raise
-
-        except Exception as arg_ex:
-            Msg.err(str(arg_ex) + ", " + str(type(arg_ex)))
-
-        except BaseException:
-
-            my_exc_type, my_exc_val, my_exc_tb = sys.exc_info()
-            Msg.err("Unable to process contents of Control File...")
-            Msg.err(
-                "FileName: %s" % (str(my_exc_tb.tb_frame.f_code.co_filename))
-            )
-            Msg.err("Line:    %d" % (int(my_exc_tb.tb_lineno)))
-            Msg.err("Name:    %s" % (str(my_exc_tb.tb_frame.f_code.co_name)))
-            Msg.err("Type:    %s" % (str(my_exc_type.name)))
-            Msg.err("Message: %s" % (str(my_exc_val.message)))
-            Msg.error_trace(my_exc_tb)
-
-        return None
-
-    @classmethod
     def is_numeric(cls, arg_var, arg_no_complex=True):
         if arg_no_complex:
             return isinstance(arg_var, int) or isinstance(arg_var, float)

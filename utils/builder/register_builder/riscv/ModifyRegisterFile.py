@@ -115,35 +115,9 @@ class Files:
         self.mInput[aInput] = aFile
         return (aFile, flag)
 
-    # Initializes the use of the register change file (by importing it as the
-    # provided name)
-    def useModification(self):
-        if ".py" in self.mRegisterChangeFile:
-            self.mRegisterChangeFile = self.mRegisterChangeFile.replace(
-                ".py", ""
-            )
-
-        head_tail = os.path.split(self.mRegisterChangeFile)
-
-        if len(head_tail) == 1:
-            exec(
-                "import register_changes."
-                + self.mRegisterChangeFile
-                + " as data",
-                globals(),
-            )
-        else:
-            sys.path.insert(0, head_tail[0])
-            exec(
-                "import register_changes." + head_tail[1] + " as data",
-                globals(),
-            )
-
     # Propagates (unsaved) modifications throughout the register files and
     # validates register field size after propagation
     def modify(self):
-        self.useModification()
-
         if hasattr(data, "new_registers"):
             for register in data.new_registers:
                 self.mRegisterFile.addRegisterFromFile(register)
