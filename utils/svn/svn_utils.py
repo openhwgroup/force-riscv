@@ -59,7 +59,7 @@ def validate_versions(ver1_str, ver2_str, latest_ver):
 def get_latest_version(svn_path):
     version = None
     result = subprocess.check_output(["svn", "info", svn_path]).decode("utf-8")
-    for result_line in result.split("\n"):
+    for line in result.splitlines():
         if "Revision" in line:
             version = line.split(":")[1]
 

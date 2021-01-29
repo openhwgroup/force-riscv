@@ -19,7 +19,6 @@ from unit_test import UnitTest
 from shared.collections import HiStack
 
 from shared.path_utils import PathUtils
-from shared.sys_utils import SysUtils
 from shared.msg_utils import Msg
 
 from shared.threads import HiThread

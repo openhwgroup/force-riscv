@@ -43,8 +43,6 @@ import os
 import shutil
 import subprocess
 import sys
-from subprocess import call
-
 
 def usage():
     usage_str = (
@@ -347,7 +345,7 @@ if __name__ == "__main__":
                 elif "Revision:" in decoded:
                     url_string += "@" + decoded.split(" ")[1]
 
-            call(
+            subprocess.call(
                 ["svn", "checkout", url_string, reproduce_directory + "/Force"]
             )
 

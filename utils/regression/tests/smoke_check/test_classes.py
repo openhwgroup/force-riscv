@@ -18,7 +18,6 @@
 
 from shared.module_run import ModuleRun
 from shared.path_utils import PathUtils
-from shared.sys_utils import SysUtils
 from shared.msg_utils import Msg
 
 # =============================================================================

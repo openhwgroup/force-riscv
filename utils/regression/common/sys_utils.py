@@ -20,7 +20,6 @@ import socket
 import subprocess
 import sys
 import time
-from subprocess import PIPE, TimeoutExpired
 
 from common.msg_utils import Msg
 
@@ -99,21 +98,21 @@ class SysUtils:
         Msg.dbg("arg_fout: %s, arg_ferr: %s" % (str(arg_fout), str(arg_ferr)))
         try:
             my_fout = SysUtils.ifthen(
-                arg_fout is None, PIPE, open(arg_fout, "w")
+                arg_fout is None, subprocess.PIPE, open(arg_fout, "w")
             )
 
         except Exception as arg_ex:
             Msg.err("stdout: " + str(arg_ex))
-            my_fout = PIPE  # SysUtils.ifthen( my_fout is None, my_fout )
+            my_fout = subprocess.PIPE  # SysUtils.ifthen( my_fout is None, my_fout )
 
         try:
             my_ferr = SysUtils.ifthen(
-                arg_ferr is None, PIPE, open(arg_ferr, "w")
+                arg_ferr is None, subprocess.PIPE, open(arg_ferr, "w")
             )
 
         except Exception as arg_ex:
             Msg.err("stderr: " + str(arg_ex))
-            my_ferr = PIPE  # SysUtils.ifthen( my_ferr is None, my_ferr )
+            my_ferr = subprocess.PIPE  # SysUtils.ifthen( my_ferr is None, my_ferr )
         return (my_fout, my_ferr)
 
     @classmethod
@@ -164,7 +163,7 @@ class SysUtils:
 
                     my_result = my_process.communicate(timeout=arg_timeout)
 
-                except TimeoutExpired:
+                except subprocess.TimeoutExpired:
                     try:
                         Msg.err(
                             "Timeout after %d seconds, terminating process: %s"
@@ -233,9 +232,9 @@ class SysUtils:
 
         finally:
 
-            if not (my_fout == PIPE or my_fout.closed):
+            if not (my_fout == subprocess.PIPE or my_fout.closed):
                 my_fout.close()
-            if not (my_ferr == PIPE or my_ferr.closed):
+            if not (my_ferr == subprocess.PIPE or my_ferr.closed):
                 my_ferr.close()
 
         return (
@@ -332,8 +331,6 @@ class SysUtils:
     @classmethod
     def get_command_output(cls, arg_command, arg_cwd=None):
         ret_okay = True
-        import subprocess
-
         try:
             output = subprocess.check_output(
                 shlex.split(arg_command), cwd=arg_cwd

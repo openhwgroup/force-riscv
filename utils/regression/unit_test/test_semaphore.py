@@ -19,7 +19,6 @@ from unit_test import UnitTest
 from common.threads import HiSemaphore
 
 from shared.path_utils import PathUtils
-from shared.sys_utils import SysUtils
 from shared.msg_utils import Msg
 
 from shared.threads import HiThread

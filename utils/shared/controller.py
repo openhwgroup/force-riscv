@@ -17,8 +17,6 @@
 
 # import sys, traceback
 
-# since there will be a significant amount of directory manipulation import
-# the path utils
 from shared.msg_utils import Msg
 
 
