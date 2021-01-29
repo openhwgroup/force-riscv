@@ -280,22 +280,22 @@ class RtlExecutor( IssExecutor ):
             with open(str(rerun_script_path), "w+") as out_file:
                 rerun_cmd_string = base_rerun_cmd 
                 out_file.write(rerun_cmd_string)    
-            PathUtils.chmod(rerun_script_path, 0o755) #The numeric argument here is an octal literal 
+            PathUtils.chmod(rerun_script_path, 0o744)
 
             with open(str(rerun_dump_script_path), "w+") as out_file:
                 rerun_cmd_string = rerun_dump_cmd
                 out_file.write(rerun_cmd_string)    
-            PathUtils.chmod(rerun_dump_script_path, 0o755) #The numeric argument here is an octal literal 
+            PathUtils.chmod(rerun_dump_script_path, 0o744)
 
             with open(str(bsub_rerun_script_path), "w+") as out_file:
                 rerun_cmd_string = bsub_prepend + " \"" + base_rerun_cmd + "\""
                 out_file.write(rerun_cmd_string)    
-            PathUtils.chmod(bsub_rerun_script_path, 0o755) #The numeric argument here is an octal literal 
+            PathUtils.chmod(bsub_rerun_script_path, 0o744)
 
             with open(str(bsub_rerun_dump_script_path), "w+") as out_file:
                 rerun_cmd_string = bsub_prepend + " \"" + rerun_dump_cmd + "\""
                 out_file.write(rerun_cmd_string)    
-            PathUtils.chmod(bsub_rerun_dump_script_path, 0o755) #The numeric argument here is an octal literal 
+            PathUtils.chmod(bsub_rerun_dump_script_path, 0o744)
 
         except IOError as e:
             print("IO error({0}): {1}".format(e.errno, e.strerror))
