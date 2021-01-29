@@ -27,15 +27,9 @@ class MainSequence(PageFaultSequence):
 
         # just a couple of load/stores...
 
-        self._mInstrList = (
-            'LD##RISCV',
-            'SD##RISCV',
-            )
+        self._mInstrList = ['LD##RISCV', 'SD##RISCV']
         if self.getGlobalState('AppRegisterWidth') == 32:
-            self._mInstrList = (
-                'LW##RISCV',
-                'SW##RISCV',
-                )
+            self._mInstrList = ['LW##RISCV', 'SW##RISCV']
 
         self._mExceptionCodes = ( 5, 7 ) # for risc-v, access exception - load: 5, store: 7
         self._mExceptionSubCodes = { } # for now, riscv does not support exception sub-codes
