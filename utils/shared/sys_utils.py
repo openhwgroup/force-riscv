@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import os
+import shlex
 import socket
 import subprocess, signal
 import sys
@@ -123,7 +124,7 @@ class SysUtils:
 
         try:
             from common.datetime_utils import DateTime
-            my_process = subprocess.Popen( my_process_cmd, stdout=my_fout, stderr=my_ferr, shell=True )
+            my_process = subprocess.Popen( shlex.split(my_process_cmd), stdout=my_fout, stderr=my_ferr )
             my_start_time = DateTime.Time()
             my_pid = my_process.pid
             if arg_timeout is None or not SysUtils.is_numeric( arg_timeout ) :

@@ -57,9 +57,13 @@ def validate_versions (ver1_str, ver2_str, latest_ver):
     return ver1, ver2
 
 def get_latest_version (svn_path):
-    get_ver_command = "svn info %s | grep 'Revision'" % (svn_path)
-    result = subprocess.check_output (get_ver_command, shell=True).decode('utf-8').split(":")
-    return int(result[1])
+    version = None
+    result = subprocess.check_output(["svn", "info", svn_path]).decode('utf-8')
+    for result_line in result.split("\n"):
+        if "Revision" in line:
+            version = line.split(":")[1]
+
+    return int(version)
 
 def create_diff_dir(ver1, ver2):
     diff_dir = "diff-%d-%d" % (ver1, ver2)
@@ -162,8 +166,8 @@ def parse_svn_author_line(line):
 def get_svn_log(ver1, ver2, svn_path, log_file_name):
     log_file_handle = open(log_file_name, "w")
     log_file_handle.write("[MERGE] versions %d:%d\n" % (ver1, ver2))
-    log_cmd = "svn log %s -r%d:%d" % (svn_path, ver2, ver1)
-    ps = subprocess.Popen(log_cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    log_cmd = ["svn", "log", svn_path, ("-r%d:%d" % (ver2, ver1))]
+    ps = subprocess.Popen(log_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = ps.communicate()[0]
     log_str = str(output, "utf-8")
     lines = log_str.split("\n")

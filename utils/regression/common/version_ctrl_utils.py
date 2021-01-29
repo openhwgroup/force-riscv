@@ -29,7 +29,7 @@ class VersionCtrlUtils(object):
     ## Returns an initialized data structure to hold SCM version data.
     #
     @classmethod
-    def get_scm_data(cls, scm_type, a_path, a_cmd):
+    def get_scm_data(cls, scm_type, a_path, a_cmd, a_cwd=None):
         """Returns an initialized data structure to hold SCM version data.
 
         :param str scm_type: 'svn' or 'git'
@@ -43,7 +43,7 @@ class VersionCtrlUtils(object):
                         'error_msg': None,
                         'folder': a_path,
                         'url': ''}
-        cmd_output, valid = SysUtils.get_command_output(a_cmd)
+        cmd_output, valid = SysUtils.get_command_output(a_cmd, arg_cwd=a_path)
 
         if not valid:
             version_info['error_msg'] = "Command error: %s" % cmd_output
@@ -113,8 +113,8 @@ class VersionCtrlUtils(object):
         :return: Data structure holding git data
         :rtype: dict
         """
-        status_cmd = "cd %s; git log --oneline -n1 --decorate " % a_path
-        version_info, cmd_output = cls.get_scm_data('git', a_path, status_cmd)
+        status_cmd = "git log --oneline -n1 --decorate "
+        version_info, cmd_output = cls.get_scm_data('git', a_path, status_cmd, a_cwd=a_path)
         if version_info['error_msg']:
             return version_info
 
@@ -131,7 +131,7 @@ class VersionCtrlUtils(object):
         version_info['status'] = True
 
         # get origin URL
-        cmd_output, valid = SysUtils.get_command_output("cd %s; git remote get-url origin" % a_path)
+        cmd_output, valid = SysUtils.get_command_output("git remote get-url origin", arg_cwd=a_path)
 
         if not valid:
             version_info['error_msg'] = "Command error: %s" % cmd_output

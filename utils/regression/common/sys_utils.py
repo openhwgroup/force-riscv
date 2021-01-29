@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 import os
+import shlex
 import socket
 import subprocess, signal
 import sys
@@ -126,7 +127,7 @@ class SysUtils:
 
         try:
             from common.datetime_utils import DateTime
-            my_process = subprocess.Popen( my_process_cmd, stdout=my_fout, stderr=my_ferr, shell=True )
+            my_process = subprocess.Popen( shlex.split(my_process_cmd), stdout=my_fout, stderr=my_ferr )
             my_start_time = DateTime.Time()
             my_pid = my_process.pid
             if arg_timeout is None or not SysUtils.is_numeric( arg_timeout ) :
@@ -286,11 +287,11 @@ class SysUtils:
 
     # Return shell command output using Pyton subprocess module
     @classmethod
-    def get_command_output( cls, arg_command ):
+    def get_command_output( cls, arg_command, arg_cwd=None ):
         ret_okay = True
         import subprocess
         try:
-            output = subprocess.check_output(arg_command, shell=True)
+            output = subprocess.check_output(shlex.split(arg_command), cwd=arg_cwd)
         except subprocess.CalledProcessError as ex:
             output = ex.output
             ret_okay = False
