@@ -714,22 +714,11 @@ def main():
         Msg.err( str(arg_ex) )
         Msg.blank()
 
-    except Exception as arg_ex:
-
-        from force_init import force_usage
-
+    except:
         Msg.err( "[ERROR] - An Unhandled Error has Occurred during run of " + str( sys.argv[0] ))
         traceback.print_exc( file=sys.stdout )
 
-    except:
-        # traceback.print_exc( file=sys.stdout )
-        # print( "An Unhandled Exception Occurred ..." )
-        pass
-
     finally:
-        # TODO
-        # change back to original directory
-
         if my_pwd is not None:
             # Msg.dbg( "Restoring Original Directory: " + my_pwd )
             PathUtils.chdir( my_pwd )
@@ -737,4 +726,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
