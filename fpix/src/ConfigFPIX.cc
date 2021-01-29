@@ -45,7 +45,7 @@ namespace Force
 class ConfigParserFPIX : public pugi::xml_tree_walker 
 {
     public:
-        ConfigParserFPIX(ConfigFPIX* cfg) //!< Constructor, pass in pointer to Config object.
+        explicit ConfigParserFPIX(ConfigFPIX* cfg) //!< Constructor, pass in pointer to Config object.
           : _mpConfig(cfg)
         {
         }

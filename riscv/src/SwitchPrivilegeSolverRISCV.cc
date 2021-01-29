@@ -96,7 +96,6 @@ namespace Force {
 
         if (not priv_level_parsed) {
           mResult.mTargetPrivLevel = parse_uint32(param.second);
-          priv_level_parsed = true;
         }
 
         if (mResult.mTargetPrivLevel > 4) {

@@ -29,7 +29,7 @@
 
 using namespace std;
 
-namespace Force 
+namespace Force
 {
 struct Arg: public option::Arg
 {
@@ -37,39 +37,39 @@ struct Arg: public option::Arg
     {
         std::cerr << apMsg1 << arOpt.name << apMsg2 << endl;
     }
-  
+
     static option::ArgStatus Unknown(const option::Option& arOption, bool aMsg)
     {
         if (aMsg) printError("Unknown option '", arOption, "'.");
         return option::ARG_ILLEGAL;
     }
-  
+
     static option::ArgStatus Required(const option::Option& arOption, bool aMsg)
     {
         if (arOption.arg != 0)
             return option::ARG_OK;
-  
+
         if (aMsg) printError("Option '", arOption, "' requires an argument.");
             return option::ARG_ILLEGAL;
     }
-  
+
     static option::ArgStatus NonEmpty(const option::Option& arOption, bool aMsg)
     {
         if (arOption.arg != 0 && arOption.arg[0] != 0)
             return option::ARG_OK;
-  
+
         if (aMsg) printError("Option '", arOption, "' requires a non-empty argument.");
             return option::ARG_ILLEGAL;
     }
-  
+
     static option::ArgStatus Numeric(const option::Option& arOption, bool aMsg)
     {
         bool error_status = false;
-  
+
         parse_uint64(arOption.arg, &error_status);
         if (!error_status)
             return option::ARG_OK;
-  
+
         if (aMsg) printError("Option '", arOption, "' requires a numeric argument.");
         return option::ARG_ILLEGAL;
     }
@@ -88,7 +88,7 @@ struct Arg: public option::Arg
       {EOptionIndexBaseType(EOptionIndex::SEED), 0, "", "seed", Arg::Numeric, "  --seed \tSeed."},
       {EOptionIndexBaseType(EOptionIndex::PLUGIN), 0, "", "plugin", Arg::NonEmpty, "  --plugin \tPath to plugin shared object."},
       {EOptionIndexBaseType(EOptionIndex::PLUGINS_OPTIONS), 0, "", "plugins_options", Arg::NonEmpty, "  --plugins_options \tComma separated list of plugin options. Example: --plugins_options plug1.opt1=45,all_plugins_work,plug2.enable_mode2"},
- 
+
       {EOptionIndexBaseType(EOptionIndex::MAX_INSTS_OPT), 0, "i", "max_insts", Arg::Numeric, "  --max_insts, -i \tNumber of instructions to run til exiting simulator"},
       {EOptionIndexBaseType(EOptionIndex::RAILHOUSE_OPT), 0, "T", "railhouse", Arg::NonEmpty, "  --railhouse, -T \tWrite RAILHOUSE trace to this file name"},
       {EOptionIndexBaseType(EOptionIndex::DECODING_OPT), 0, "d", "decoding", Arg::Numeric, "  --decoding, -d \tPrint instruction decoding during execution"},
@@ -105,15 +105,15 @@ struct Arg: public option::Arg
       {0,0,0,0,0,0}
     };
 
-  void load_program_options(ConfigFPIX &arCfg, vector<string> &arTestFiles, vector<string> &plugins_cl_args, int argc, char *argv[], const string& rDefaultConfig) 
+  void load_program_options(ConfigFPIX &arCfg, vector<string> &arTestFiles, vector<string> &plugins_cl_args, int argc, char *argv[], const string& rDefaultConfig)
   {
     Logger::Initialize();
     Random::Initialize();
-    
+
     string program_name = argv[0];
     argc-=(argc>0); argv+=(argc>0); // skip program name argv[0] if present
     stringstream parameters; // collect command line arguments to form a command for rerun.
-    for (int i = 0; i < argc; ++ i) 
+    for (int i = 0; i < argc; ++ i)
     {
        parameters << " " << argv[i];
     }
@@ -124,27 +124,27 @@ struct Arg: public option::Arg
 
     option::Parser parse(usage, argc, argv, &options[0], &buffer[0]);
 
-    if (parse.error()) 
+    if (parse.error())
     {
       //FAIL("argument-error");
       LOG(fail) << "One or more command line options failed to parse.." << endl;
       exit(-1);
     }
 
-    if (parse.nonOptionsCount()) 
+    if (parse.nonOptionsCount())
     {
       const char** options = parse.nonOptions();
-      for (EOptionIndexBaseType i = 0; options[i] != 0; i++) 
+      for (EOptionIndexBaseType i = 0; options[i] != 0; i++)
       {
         string opt_str = options[i];
         string lower_case;
-        transform(opt_str.begin(), opt_str.end(), lower_case.begin(), ::tolower);  
-        if (lower_case.find(".elf") != string::npos) 
+        transform(opt_str.begin(), opt_str.end(), lower_case.begin(), ::tolower);
+        if (lower_case.find(".elf") != string::npos)
         {
           arTestFiles.push_back(opt_str);
           continue;
         }
-        else if (lower_case.find("riscv") != string::npos) 
+        else if (lower_case.find("riscv") != string::npos)
         {
           arTestFiles.push_back(opt_str);
           continue;
@@ -161,14 +161,14 @@ struct Arg: public option::Arg
       }
     }
 
-    if (options[EOptionIndexBaseType(EOptionIndex::HELP)] || argc == 0) 
+    if (options[EOptionIndexBaseType(EOptionIndex::HELP)] || argc == 0)
     {
       //option::printUsage(std::cout, usage);
       std::cout << fpixUsage << std::endl;
       exit(0);
     }
 
-    if (options[EOptionIndexBaseType(EOptionIndex::LOGLEVEL)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::LOGLEVEL)])
     {
       option::Option* log_level = options[EOptionIndexBaseType(EOptionIndex::LOGLEVEL)].last();
       SET_LOG_LEVEL(log_level->arg);
@@ -176,14 +176,14 @@ struct Arg: public option::Arg
 
     LOG(info) << "   Command line:\n" << "      " << program_name << parameters.str() << endl;
 
-    if (options[EOptionIndexBaseType(EOptionIndex::SEED)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::SEED)])
     {
       option::Option* seed_opt = options[EOptionIndexBaseType(EOptionIndex::SEED)].last();
       uint64 test_seed = parse_uint64(seed_opt->arg);
       Random::Instance()->Seed(test_seed);
       LOG(trace) << "User specified seed 0x" << hex << test_seed << dec << endl;
-    } 
-    else 
+    }
+    else
     {
       uint64 test_seed = Random::Instance()->RandomSeed();
       LOG(trace) << "Picked random seed 0x" << hex << test_seed << dec << endl;
@@ -194,30 +194,30 @@ struct Arg: public option::Arg
     string config_file = rDefaultConfig;
     arCfg.LoadConfigFile(config_file, program_name);
 
-    if (options[EOptionIndexBaseType(EOptionIndex::CFG)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::CFG)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::CFG)].last();
       config_file = my_opt->arg;
       LOG(info) << "      'cfg' (custom) : " << config_file << endl;
       arCfg.LoadConfigFile(config_file, program_name);
-    } 
-    else 
+    }
+    else
     {
       LOG(info) << "      'cfg' (default) : " << config_file << endl;
     }
 
-    if (options[EOptionIndexBaseType(EOptionIndex::PLUGIN)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::PLUGIN)])
     {
-      for (option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::PLUGIN)]; my_opt; my_opt = my_opt->next()) 
+      for (option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::PLUGIN)]; my_opt; my_opt = my_opt->next())
     {
          string plugin_name = my_opt->arg;
          string plugin_file_path;
-         if (arCfg.PluginExists(plugin_name,plugin_file_path)) 
+         if (arCfg.PluginExists(plugin_name,plugin_file_path))
         {
            // a plugin with this name already exists...
            LOG(info) << "A plugin with name '" << plugin_name << "' is already in the config for this project. Cmdline option ignored..." << endl;
-         } 
-         else 
+         }
+         else
         {
            // assume the plugin-name is in fact the path to a plugin file...
            plugin_file_path = arCfg.LookUpFile(plugin_name);
@@ -227,9 +227,9 @@ struct Arg: public option::Arg
       }
     }
 
-    if (options[EOptionIndexBaseType(EOptionIndex::PLUGINS_OPTIONS)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::PLUGINS_OPTIONS)])
     {
-      for (option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::PLUGINS_OPTIONS)]; my_opt; my_opt = my_opt->next()) 
+      for (option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::PLUGINS_OPTIONS)]; my_opt; my_opt = my_opt->next())
     {
         string options_string = my_opt->arg;
         arCfg.appendPluginsOptions(options_string);
@@ -239,7 +239,7 @@ struct Arg: public option::Arg
 
     // process all options that represent strings...
 
-    if (options[EOptionIndexBaseType(EOptionIndex::RAILHOUSE_OPT)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::RAILHOUSE_OPT)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::RAILHOUSE_OPT)].last();
       string railhouse_file = my_opt->arg;
@@ -249,28 +249,28 @@ struct Arg: public option::Arg
 
     // all other options are processed as ints...
 
-    if (options[EOptionIndexBaseType(EOptionIndex::MAX_INSTS_OPT)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::MAX_INSTS_OPT)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::MAX_INSTS_OPT)].last();
       unsigned int nval = parse_uint64(my_opt->arg);
       arCfg.SetMaxInsts(nval);
       LOG(info) << "      'max_insts' : " << nval << endl;
     }
-    if (options[EOptionIndexBaseType(EOptionIndex::DECODING_OPT)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::DECODING_OPT)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::DECODING_OPT)].last();
       unsigned int nval = parse_uint64(my_opt->arg);
       arCfg.SetEnableDecoding(nval);
       LOG(info) << "      'decoding' : " << nval << endl;
     }
-    if (options[EOptionIndexBaseType(EOptionIndex::CLUSTER_NUM_OPT)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::CLUSTER_NUM_OPT)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::CLUSTER_NUM_OPT)].last();
       unsigned int nval = parse_uint64(my_opt->arg);
       arCfg.SetClusterCount(nval);
       LOG(info) << "      'cluster_num' : " << nval << endl;
     }
-    if (options[EOptionIndexBaseType(EOptionIndex::CORE_NUM_OPT)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::CORE_NUM_OPT)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::CORE_NUM_OPT)].last();
       unsigned int nval = parse_uint64(my_opt->arg);
@@ -288,17 +288,17 @@ struct Arg: public option::Arg
 
     uint32_t total_PE_count = arCfg.ClusterCount() * arCfg.NumberOfCores() * arCfg.ThreadsPerCpu();
 
-    if (options[EOptionIndexBaseType(EOptionIndex::EXIT_LOOP_OPT)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::EXIT_LOOP_OPT)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::EXIT_LOOP_OPT)].last();
       uint32_t nval = parse_uint64(my_opt->arg);
       LOG(info) << "      'exit_loop' : " << nval << endl;
-      if (nval > total_PE_count) 
+      if (nval > total_PE_count)
         {
         LOG(fail) << "exit_loop count specified (" << nval << ") exceeds the core/thread count (" << total_PE_count << ")" << endl;
         exit(-1);
-      } 
-      else if (nval == 0) 
+      }
+      else if (nval == 0)
         {
         LOG(fail) << "Disabling exit_loop is currently not supported." << endl;
         exit(-1);
@@ -306,7 +306,7 @@ struct Arg: public option::Arg
       arCfg.SetExitOnBranchToSelf(nval);
     }
 
-    if (options[EOptionIndexBaseType(EOptionIndex::PA_SIZE_OPT)]) 
+    if (options[EOptionIndexBaseType(EOptionIndex::PA_SIZE_OPT)])
     {
       option::Option* my_opt = options[EOptionIndexBaseType(EOptionIndex::PA_SIZE_OPT)].last();
       unsigned int nval = parse_uint64(my_opt->arg);
@@ -315,7 +315,7 @@ struct Arg: public option::Arg
     }
 
     LOG(info) << "   Test files:\n     ";
-    for (vector<string>::iterator i = arTestFiles.begin(); i != arTestFiles.end(); i++) 
+    for (vector<string>::iterator i = arTestFiles.begin(); i != arTestFiles.end(); ++i)
     {
        LOG(info) << " " << *i;
     }

@@ -58,8 +58,10 @@ namespace Force {
     {	
 	LOG(notice) << "Can't cast privilege"<< endl;
     }
-
-    conf_ptr->SignUp(this);
+    else
+    {
+      conf_ptr->SignUp(this);
+    }
   }
 
   void AddressTableManagerRISCV::GetReloadRegisters(cuint32 targetMemBank, cuint32 targetEl, map<string, uint64>& rReloadMap) const

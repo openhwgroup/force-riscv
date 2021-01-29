@@ -143,12 +143,13 @@ namespace Force {
       instr_text = instr->FullName();
     }
 
-    fault = false;
+    //TODO: identify why this is forced here.
+    //fault = false;
 
-    if (fault) {
-      LOG(notice) << "{ThreadInstructionResults::Commit} Fault committing instruction \"" << instr_text << "\" at 0x" << hex << gen_pc->Value() << " as address error." << endl;
-      return false;
-    }
+    //if (fault) {
+      //LOG(notice) << "{ThreadInstructionResults::Commit} Fault committing instruction \"" << instr_text << "\" at 0x" << hex << gen_pc->Value() << " as address error." << endl;
+      //return false;
+    //}
     LOG(notice) << "Committing instruction \"" << instr_text << "\" at 0x" << hex << gen_pc->Value() << "=>["<< bank <<"]0x" << pa << " (0x" << instr->Opcode() <<") gen("<< gen->ThreadId() << ")" << endl;
     AddInstruction(bank, pa, instr);
     uint32 instr_size = instr->ByteSize();
