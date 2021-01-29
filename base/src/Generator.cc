@@ -510,7 +510,6 @@ namespace Force {
 
   void Generator::InitializeMemory(uint64 addr, uint32 bank, uint32 size, uint64 data, bool isInstr, bool isVirtual)
   {
-    // TODO isVirtual not supported
     if (isVirtual)
     {
       auto vm_mapper = GetVmManager()->CurrentVmMapper();
