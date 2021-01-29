@@ -94,13 +94,11 @@ class C_InstructionAdjustor(InstructionAdjustor):
         # - Create implied register operands
         # - Create addressing operands (ld/st and branch/jump)
         # - set the 'class' attribute for the instruction 
-        opr_adjustor = OperandAdjustor(aInstr)
-
         if aInstr.name in ['C.BEQZ', 'C.BNEZ']:
             aInstr.iclass = 'BranchInstruction'
             # Adding addressing operands: simm8, x0 which is implicitly read
             add_cond_branch_operand(aInstr, 'simm8', 1, 'CompressedConditionalBranchOperandRISCV')
-            opr_adjustor.add_implied_register("x0", "GPR", "Read", 1)
+            add_implied_register(aInstr, "x0", "GPR", "Read", 1)
 
         if aInstr.name in ['C.J', 'C.JAL']:
             aInstr.iclass = 'BranchInstruction'
@@ -114,13 +112,13 @@ class C_InstructionAdjustor(InstructionAdjustor):
 
         if aInstr.name in ['C.JAL', 'C.JALR']:
             # Adding implicit write of the link register
-            opr_adjustor.add_implied_register("x1", "GPR", "Write", 1)
+            add_implied_register(aInstr, "x1", "GPR", "Write", 1)
 
         if aInstr.name in ['C.ADDI4SPN']:
-            opr_adjustor.add_implied_register("x2", "GPR", "Read", 2)
+            add_implied_register(aInstr, "x2", "GPR", "Read", 2)
 
         if aInstr.name in ['C.ADDI16SP']:
-            opr_adjustor.add_implied_register("x2", "GPR", "ReadWrite", 2)
+            add_implied_register(aInstr, "x2", "GPR", "ReadWrite", 2)
 
         if self.isLoadStoreOp:
             aInstr.iclass = 'LoadStoreInstruction'
@@ -130,7 +128,7 @@ class C_InstructionAdjustor(InstructionAdjustor):
                 add_bols_addr_operand(aInstr, "rs1'", "imm5", mem_access, self.size, self.scale)
             # Stack-pointer loads/stores
             else:
-                opr_adjustor.add_implied_register("x2", "GPR", "Read", 1)
+                add_implied_register(aInstr, "x2", "GPR", "Read", 1)
                 add_bols_addr_operand(aInstr, "x2", "imm6", mem_access, self.size, self.scale)
 
 

@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 from shared.instruction import Operand, add_addressing_operand
+import re
 
 def adjust_gpr_operand(aOpr, aAccess, aType, aSize, aChoices=None):
     aOpr.access = aAccess
@@ -56,6 +57,21 @@ def adjust_csr_operand(aOpr):
     aOpr.access = 'ReadWrite'
     aOpr.choices = 'System registers'
 
+def adjust_vecreg_operand(aOpr, aAccess, aChoices=None):
+    aOpr.type = "VECREG"
+    aOpr.access = aAccess
+    if aChoices is not None:
+        aOpr.choices = aChoices
+    else:
+        aOpr.choices = "Vector registers"
+
+def adjust_vm_operand(aInstr, aOpr):
+    aOpr.type = 'Choices'
+    aOpr.choices = 'Vector mask'
+    aOpr.oclass = 'VectorMaskOperand'
+    if aInstr.find_operand('vd', fail_not_found=False):
+        aOpr.differ = 'vd'
+
 def set_fpr_choices(aOpr, aSize):
     if aSize == 2:
         aOpr.choices = '16-bit SIMD/FP registers'
@@ -69,8 +85,9 @@ def set_fpr_choices(aOpr, aSize):
 def gen_asm_operand(aInstr):
     if aInstr.operands:
         for opr in aInstr.operands:
-            aInstr.asm.format += ' %s,'
-            aInstr.asm.ops.append(opr.name)
+            if opr.type not in 'VectorLayout':
+                aInstr.asm.format += ' %s,'
+                aInstr.asm.ops.append(opr.name)
 
         aInstr.asm.format = aInstr.asm.format[:-1] #remove trailing comma
 
@@ -98,7 +115,7 @@ def int_ldst_size(aSize):
 
     return 0 #error case, should fail
 
-def int_ldst_access(aAccess):
+def ldst_access(aAccess):
     if 'L' in aAccess:
         return 'Read'
     elif 'S' in aAccess:
@@ -164,6 +181,25 @@ def add_cond_branch_operand(aInstr, aOprName, aScale, aClass='ConditionalBranchO
     subop_dict = {'offset': aOprName}
     add_addressing_operand(aInstr, None, 'Branch', aClass, subop_dict, attr_dict)
 
+def add_vec_bols_addr_operand(aInstr, aOprName, aAccess):
+    width = get_element_size(aInstr.find_operand('const_bits'))
+    attr_dict = {'alignment': width, 'base': aOprName, 'data-size': width, 'element-size': width, 'mem-access': aAccess}
+    subop_dict = {'base': aOprName}
+    add_addressing_operand(aInstr, None, 'LoadStore', 'VectorBaseOffsetLoadStoreOperand', subop_dict, attr_dict)
+
+def add_vec_indexed_addr_operand(aInstr, aOprName, aIndexName, aAccess):
+    attr_dict = {'base': aOprName, 'mem-access': aAccess}
+    subop_dict = {'base': aOprName, 'index': aIndexName}
+    add_addressing_operand(aInstr, None, 'LoadStore', 'VectorIndexedLoadStoreOperandRISCV', subop_dict, attr_dict)
+
+def add_vec_strided_addr_operand(aInstr, aOprName, aIndexName, aAccess):
+    reg_count = int(aInstr.find_operand('custom').regCount) if 'SEG' in aInstr.name else 1
+    width = get_element_size(aInstr.find_operand('const_bits'))
+
+    attr_dict = {'alignment': width, 'base': aOprName, 'data-size': width * reg_count, 'element-size': width, 'mem-access': aAccess}
+    subop_dict = {'base': aOprName, 'index': aIndexName}
+    add_addressing_operand(aInstr, None, 'LoadStore', 'VectorStridedLoadStoreOperandRISCV', subop_dict, attr_dict)
+
 def add_ret_operand(aInstr):
     ret_opr = Operand()
     ret_opr.name = 'retoperand'
@@ -172,324 +208,133 @@ def add_ret_operand(aInstr):
     ret_opr.oclass = 'RetOperand'
     aInstr.add_operand(ret_opr)
 
+def add_vtype_layout_operand(aInstr):
+    layout_opr = Operand()
+    layout_opr.name = "vtype"
+    layout_opr.type = "VectorLayout"
+    layout_opr.oclass = "VtypeLayoutOperand"
+    aInstr.insert_operand(0, layout_opr)
 
-class OperandAdjustor(object):
+def add_custom_layout_operand(aInstr, aRegCount, aElemWidth):
+    layout_opr = Operand()
+    layout_opr.name = "custom"
+    layout_opr.type = "VectorLayout"
+    layout_opr.oclass = "CustomLayoutOperand"
+    layout_opr.regCount = aRegCount
+    layout_opr.elemWidth = aElemWidth
+    aInstr.insert_operand(0, layout_opr)
 
-    def __init__(self, instr):
-        self.mInstr = instr
-        self.mAsmOpCount = 0
+def add_whole_register_layout_operand(aInstr, aRegCount=1, aRegIndexAlignment=1):
+    layout_opr = Operand()
+    layout_opr.name = "whole"
+    layout_opr.type = "VectorLayout"
+    layout_opr.oclass = "WholeRegisterLayoutOperand"
+    layout_opr.regCount = aRegCount
+    layout_opr.regIndexAlignment = aRegIndexAlignment
+    aInstr.insert_operand(0, layout_opr)
 
 
-    def adjust_reg_opr(self, oprName, regType, size, access):
-        opr = self.mInstr.find_operand(oprName)
-        if regType == "GPR":
-            opr.choices = "GPRs"
-        elif regType == "FPR":
-            self.set_fpr_choices(opr, size)
+def add_layout_operand(aInstr):
+    # TODO(Noah): Add additional load/store whole register instructions when they are supported by
+    # Handcar.
+    load_store_whole_register = ['VL1R.V', 'VS1R.V']
 
-        opr.access = access
-        self.add_asm_op(opr)
-
-    def set_fpr_choices(self, opr, size):
-        if size == 2:
-            opr.choices = "16-bit SIMD/FP registers"
-        if size == 4:
-            opr.choices = "32-bit SIMD/FP registers"
-        elif size == 8:
-            opr.choices = "64-bit SIMD/FP registers"
-        elif size == 16:
-            opr.choices = "128-bit SIMD/FP registers"
-
-    def set_rd_int(self):
-        rd_opr = self.mInstr.find_operand("rd")
-        rd_opr.access = "Write"
-        self.set_reg_int(rd_opr)
-
-    def set_rd_hp(self):
-        rd_opr = self.mInstr.find_operand("rd")
-        rd_opr.access = "Write"
-        self.set_reg_hp(rd_opr)
-
-    def set_rd_sp(self):
-        rd_opr = self.mInstr.find_operand("rd")
-        rd_opr.access = "Write"
-        self.set_reg_sp(rd_opr)
-
-    def set_rd_dp(self):
-        rd_opr = self.mInstr.find_operand("rd")
-        rd_opr.access = "Write"
-        self.set_reg_dp(rd_opr)
-
-    def set_rd_qp(self):
-        rd_opr = self.mInstr.find_operand("rd")
-        rd_opr.access = "Write"
-        self.set_reg_qp(rd_opr)
-
-    def set_rs1_int(self):
-        rs1_opr = self.mInstr.find_operand("rs1")
-        rs1_opr.access = "Read"
-        self.set_reg_int(rs1_opr)
-
-    def set_rs1_int_ls_base(self):
-        rs1_opr = self.mInstr.find_operand("rs1")
-        self.set_reg_nonzero_int(rs1_opr)
-
-    def set_reg_nonzero_int(self, aSrcOpr):
-        aSrcOpr.type = "GPR"
-        aSrcOpr.choices = "Nonzero GPRs"
-        self.add_asm_op(aSrcOpr)
-
-    def set_rs2_int(self):
-        rs2_opr = self.mInstr.find_operand("rs2")
-        rs2_opr.access = "Read"
-        self.set_reg_int(rs2_opr)
-
-    def set_rs2_int_ls_base(self):
-        rs2_opr = self.mInstr.find_operand("rs2")
-        self.set_reg_nonzero_int(rs2_opr)
-
-    def set_rs3_int(self):
-        rs3_opr = self.mInstr.find_operand("rs3")
-        rs3_opr.access = "Read"
-        self.set_reg_int(rs3_opr)
-
-    def set_rs1_hp(self):
-        rs1_opr = self.mInstr.find_operand("rs1")
-        rs1_opr.access = "Read"
-        self.set_reg_hp(rs1_opr)
-
-    def set_rs1_sp(self):
-        rs1_opr = self.mInstr.find_operand("rs1")
-        rs1_opr.access = "Read"
-        self.set_reg_sp(rs1_opr)
-
-    def set_rs2_hp(self):
-        rs2_opr = self.mInstr.find_operand("rs2")
-        rs2_opr.access = "Read"
-        self.set_reg_hp(rs2_opr)
-
-    def set_rs2_sp(self):
-        rs2_opr = self.mInstr.find_operand("rs2")
-        rs2_opr.access = "Read"
-        self.set_reg_sp(rs2_opr)
-
-    def set_rs3_hp(self):
-        rs3_opr = self.mInstr.find_operand("rs3")
-        rs3_opr.access = "Read"
-        self.set_reg_hp(rs3_opr)
-
-    def set_rs3_sp(self):
-        rs3_opr = self.mInstr.find_operand("rs3")
-        rs3_opr.access = "Read"
-        self.set_reg_sp(rs3_opr)
-
-    def set_rs1_dp(self):
-        rs1_opr = self.mInstr.find_operand("rs1")
-        rs1_opr.access = "Read"
-        self.set_reg_dp(rs1_opr)
-
-    def set_rs2_dp(self):
-        rs2_opr = self.mInstr.find_operand("rs2")
-        rs2_opr.access = "Read"
-        self.set_reg_dp(rs2_opr)
-
-    def set_rs3_dp(self):
-        rs3_opr = self.mInstr.find_operand("rs3")
-        rs3_opr.access = "Read"
-        self.set_reg_dp(rs3_opr)
-
-    def set_rs1_qp(self):
-        rs1_opr = self.mInstr.find_operand("rs1")
-        rs1_opr.access = "Read"
-        self.set_reg_qp(rs1_opr)
-
-    def set_rs2_qp(self):
-        rs2_opr = self.mInstr.find_operand("rs2")
-        rs2_opr.access = "Read"
-        self.set_reg_qp(rs2_opr)
-
-    def set_rs3_qp(self):
-        rs3_opr = self.mInstr.find_operand("rs3")
-        rs3_opr.access = "Read"
-        self.set_reg_qp(rs3_opr)
-
-    def set_reg_int(self, aSrcOpr):
-        aSrcOpr.type = "GPR"
-        aSrcOpr.choices = "GPRs"
-        self.add_asm_op(aSrcOpr)
-
-    def set_reg_hp(self, aSrcOpr):
-        aSrcOpr.type = "FPR"
-        aSrcOpr.choices = "16-bit SIMD/FP registers"
-        self.add_asm_op(aSrcOpr)
-
-    def set_reg_sp(self, aSrcOpr):
-        aSrcOpr.type = "FPR"
-        aSrcOpr.choices = "32-bit SIMD/FP registers"
-        self.add_asm_op(aSrcOpr)
-
-    def set_reg_dp(self, aSrcOpr):
-        aSrcOpr.type = "FPR"
-        aSrcOpr.choices = "64-bit SIMD/FP registers"
-        self.add_asm_op(aSrcOpr)
-
-    def set_reg_qp(self, aSrcOpr):
-        aSrcOpr.type = "FPR"
-        aSrcOpr.choices = "128-bit SIMD/FP registers"
-        self.add_asm_op(aSrcOpr)
-
-    def set_imm(self, old_name, new_name, is_signed):
-        imm_opr = self.mInstr.find_operand(old_name)
-        imm_opr.name = new_name
-        if is_signed:
-            imm_opr.set_attribute("class", "SignedImmediateOperand")
-
-        self.add_asm_op(imm_opr)
-
-    def set_rm(self):
-        rm_opr = self.mInstr.find_operand("rm")
-        rm_opr.type = "Choices"
-        rm_opr.choices = "Rounding mode"
-
-    # add operand to ASM line.
-    def add_asm_op(self, opr):
-        if self.mAsmOpCount == 0:
-            self.mInstr.asm.format += " %s"
+    if aInstr.name in load_store_whole_register:
+        reg_count = int(aInstr.name[2])
+        add_whole_register_layout_operand(aInstr, aRegCount=reg_count)
+    elif aInstr.name in ('VMV1R.V', 'VMV2R.V', 'VMV4R.V', 'VMV8R.V'):
+        reg_count = int(aInstr.name[3])
+        add_whole_register_layout_operand(aInstr, aRegCount=reg_count, aRegIndexAlignment=reg_count)
+    elif aInstr.name in ('VSETVL', 'VSETVLI'):
+        pass  # No vector layout operand required
+    elif aInstr.iclass == 'VectorLoadStoreInstruction' or aInstr.iclass == 'VectorAMOInstructionRISCV':
+        reg_count = 1
+        elem_width = None
+        ints = re.findall('\d+', aInstr.name)
+        if len(ints) > 1:
+            reg_count = ints[0]
+            elem_width = ints[1]
         else:
-            self.mInstr.asm.format += ", %s"
+            elem_width = ints[0]
 
-        self.mAsmOpCount += 1
-        self.mInstr.asm.ops.append(opr.name)
+        add_custom_layout_operand(aInstr, aRegCount=reg_count, aElemWidth=elem_width)
+    else:
+        add_vtype_layout_operand(aInstr)
 
-    # add an implied register operand to the instruction.
-    def add_implied_register(self, aOpName, aOpType, aAccessType, aInsertIndex):
-        implied_opr = Operand()
-        implied_opr.name = aOpName
-        implied_opr.type = aOpType
-        implied_opr.oclass = "ImpliedRegisterOperand"
-        if aAccessType:
-            implied_opr.access = aAccessType
-        self.mInstr.insert_operand(aInsertIndex, implied_opr)
+# Account for non-standard register layouts due to wide and narrow operands
+def adjust_register_layout(aInstr):
+    adjust_dest = False
+    dest_layout_multiple = 2
+    if aInstr.name.startswith('VW') or aInstr.name.startswith('VFW'):
+        adjust_dest = True
+    elif aInstr.name.startswith('VQMACC'):
+        adjust_dest = True
+        dest_layout_multiple = 4
 
-    # merge a const field into const_bits field and delete the passed in operand
-    def merge_into_const_bits(self, aOtherConst):
-        const_bits = self.mInstr.find_operand("const_bits")
-        const_bits.merge_operand(aOtherConst)
-        const_bits.update_bits_value()
-        self.mInstr.operands.remove(aOtherConst)
+    adjust_source = False
+    source_layout_multiple = 2
+    if '.W' in aInstr.name:
+        adjust_source = True
+    elif aInstr.name.startswith('VSEXT.VF') or aInstr.name.startswith('VZEXT.VF'):
+        adjust_source = True
+        layout_divisor = int(aInstr.name[-1])
+        source_layout_multiple = 1 / layout_divisor
 
-    ########################################
-    # C extension operands
-    #
-    def set_rs1p_or_rdp_int(self):
-        reg_opr = self.mInstr.find_operand("rs1'/rd'")
-        reg_opr.name = "rd'"
-        reg_opr.access = "ReadWrite"
-        self.set_reg_prime_int(reg_opr)
+    if adjust_dest:
+        adjust_dest_layout(aInstr, dest_layout_multiple)
+        add_differ_attribute(aInstr, 'vs1', 'vd')
 
-    def set_rdp_int(self):
-        reg_opr = self.mInstr.find_operand("rd'")
-        reg_opr.access = "Write"
-        self.set_reg_prime_int(reg_opr)
+    if adjust_source:
+        adjust_source_layout(aInstr, source_layout_multiple)
 
-    def set_rdp_dp(self):
-        reg_opr = self.mInstr.find_operand("rd'")
-        reg_opr.access = "Write"
-        self.set_reg_prime_dp(reg_opr)
+    if adjust_dest != adjust_source:
+        add_differ_attribute(aInstr, 'vs2', 'vd')
 
-    def set_rs2p_int(self):
-        reg_opr = self.mInstr.find_operand("rs2'")
-        reg_opr.access = "Read"
-        self.set_reg_prime_int(reg_opr)
+def get_element_size(aConstBitsOpr):
+    width = aConstBitsOpr.value[-10:-7]
+    mew = aConstBitsOpr.value[3]
+    if mew == '0':
+        if width == '000':
+            return 1
+        elif width == '101':
+            return 2
+        elif width == '110':
+            return 4
+        elif width == '111':
+            return 8
+    elif mew == '1':
+        if width == '000':
+            return 16
+        elif width == '101':
+            return 32
+        elif width == '110':
+            return 64
+        elif width == '111':
+            return 128
 
-    def set_rs2p_dp(self):
-        reg_opr = self.mInstr.find_operand("rs2'")
-        reg_opr.access = "Read"
-        self.set_reg_prime_dp(reg_opr)
+def add_differ_attribute(aInstr, aOprName, aDifferName):
+    opr = aInstr.find_operand(aOprName, fail_not_found=False)
+    if opr:
+        opr.differ = aDifferName
 
-    def set_rs1p_int(self):
-        reg_opr = self.mInstr.find_operand("rs1'")
-        reg_opr.access = "Read"
-        self.set_reg_prime_int(reg_opr)
+#TODO improve these - move to 1 seq if possible
+def adjust_dest_layout(aInstr, aLayoutMultiple):
+    dest_opr = aInstr.find_operand('vd', fail_not_found=False)
+    if dest_opr is None:
+        dest_opr = aInstr.find_operand('vd/rd')
 
-    def set_reg_prime_int(self, aSrcOpr):
-        aSrcOpr.type = "GPR"
-        aSrcOpr.choices = "Prime GPRs"
-        aSrcOpr.oclass = "CompressedRegisterOperandRISCV"
-        self.add_asm_op(aSrcOpr)
+    dest_opr.layoutMultiple = aLayoutMultiple
 
-    def set_reg_prime_dp(self, aSrcOpr):
-        aSrcOpr.type = "FPR"
-        aSrcOpr.choices = "Prime 64-bit SIMD/FP registers"
-        self.add_asm_op(aSrcOpr)
+def adjust_source_layout(aInstr, aLayoutMultiple):
+    vs2_opr = aInstr.find_operand('vs2')
+    vs2_opr.layoutMultiple = aLayoutMultiple
 
-    def set_reg_not02_int(self, aSrcOpr):
-        aSrcOpr.type = "GPR"
-        aSrcOpr.choices = "GPRs not x0, x2"
-        self.add_asm_op(aSrcOpr)
+def add_implied_register(aInstr, aOpName, aOpType, aAccessType, aInsertIndex):
+    implied_opr = Operand()
+    implied_opr.name = aOpName
+    implied_opr.type = aOpType
+    implied_opr.oclass = "ImpliedRegisterOperand"
+    if aAccessType:
+        implied_opr.access = aAccessType
+    aInstr.insert_operand(aInsertIndex, implied_opr)
 
-    def merge_imm_5_4_0(self):
-        self.mInstr.remove_operand("imm[5]")
-        imm_4_0 = self.mInstr.find_operand("imm[4:0]")
-        imm_4_0.name = "imm6"
-        imm_4_0.bits = "12,6-2"
-        self.add_asm_op(imm_4_0)
-
-    def set_rd_rs1_nonzero_int(self):
-        reg_opr = self.mInstr.find_operand("rs1/rd$\\neq$0")
-        reg_opr.name = "rd"
-        reg_opr.access = "ReadWrite"
-        self.set_reg_nonzero_int(reg_opr)
-
-    def set_rd_nonzero_int(self):
-        reg_opr = self.mInstr.find_operand("rd$\\neq$0")
-        reg_opr.name = "rd"
-        reg_opr.access = "Write"
-        self.set_reg_nonzero_int(reg_opr)
-
-    def set_rs1_nonzero_int(self):
-        reg_opr = self.mInstr.find_operand("rs1$\\neq$0")
-        reg_opr.name = "rs1"
-        reg_opr.access = "Read"
-        self.set_reg_nonzero_int(reg_opr)
-
-    def set_rs2_nonzero_int(self):
-        reg_opr = self.mInstr.find_operand("rs2$\\neq$0")
-        reg_opr.name = "rs2"
-        reg_opr.access = "Read"
-        self.set_reg_nonzero_int(reg_opr)
-
-    def set_rd_not02_int(self):
-        reg_opr = self.mInstr.find_operand("rd$\\neq$$\\{0,2\\}$")
-        reg_opr.name = "rd"
-        reg_opr.access = "Write"
-        self.set_reg_not02_int(reg_opr)
-
-    def set_nzimm(self, aSrcOpr):
-        aSrcOpr.oclass = "ImmediateExcludeOperand"
-        aSrcOpr.exclude = "0"
-        self.add_asm_op(aSrcOpr)
-
-    def merge_nzimm_17_16_12(self):
-        self.mInstr.remove_operand("nzimm[17]")
-        imm_16_12 = self.mInstr.find_operand("nzimm[16:12]")
-        imm_16_12.name = "imm6"
-        imm_16_12.bits = "12,6-2"
-        self.set_nzimm(imm_16_12)
-
-    def merge_nzimm_5_4_0(self):
-        self.mInstr.remove_operand("nzimm[5]")
-        imm_4_0 = self.mInstr.find_operand("nzimm[4:0]")
-        imm_4_0.name = "imm6"
-        imm_4_0.bits = "12,6-2"
-        self.set_nzimm(imm_4_0)
-
-    def merge_nzuimm_5_4_0(self, aNewName):
-        self.mInstr.remove_operand("nzuimm[5]")
-        imm_4_0 = self.mInstr.find_operand("nzuimm[4:0]")
-        imm_4_0.bits = "12,6-2"
-        if aNewName is not None:
-            imm_4_0.name = aNewName
-        else:
-            imm_4_0.name = "imm6"
-        self.set_nzimm(imm_4_0)

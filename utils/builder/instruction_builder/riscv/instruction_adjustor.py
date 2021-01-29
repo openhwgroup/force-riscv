@@ -16,6 +16,7 @@
 from abc import ABC, abstractmethod
 from shared.instruction_file import InstructionFile
 from adjustor_utilities import *
+from xml.sax.saxutils import escape
 import copy
 import re
 
@@ -111,7 +112,7 @@ class G_InstructionAdjustor(InstructionAdjustor):
         ld_st_result = self._mLdStPattern.match(aInstr.name)
         if ld_st_result is not None:
             size = int_ldst_size(ld_st_result.group('size'))
-            access = int_ldst_access(ld_st_result.group('access'))
+            access = ldst_access(ld_st_result.group('access'))
             aInstr.iclass = "LoadStoreInstruction"
             add_bols_addr_operand(aInstr, 'rs1', 'simm12', access, size, 0)
 
@@ -174,7 +175,7 @@ class G_InstructionAdjustor(InstructionAdjustor):
             if fp_rd_gpr_result is not None: #fp instrs with gpr target
                 adjust_gpr_operand(aOpr, 'Write', 'GPR', 8)
             elif ld_st_result is not None: #fp ld instrs - different naming convention (no .<size> which needed for catchall)
-                adjust_gpr_operand(aOpr, 'Write', 'FPR', int_ldst_size(ld_st_result.group('size'))) 
+                adjust_gpr_operand(aOpr, 'Write', 'FPR', int_ldst_size(ld_st_result.group('size')))
             elif aInstr.name.startswith("FMV") or aInstr.name.startswith("FCVT"): #FMV/FCVT rd op
                 dst_size, dst_is_fp = self._FpSrcDstSizeType(aInstr, 'dst')
                 if dst_is_fp:
@@ -233,3 +234,157 @@ class G_InstructionAdjustor(InstructionAdjustor):
         size, is_fp = src_dst_size_regtype(aInstr, param)
 
         return size, is_fp
+
+
+class V_InstructionAdjustor(InstructionAdjustor):
+
+    def __init__(self):
+        super().__init__()
+        self._VdrdUsesRdInstrs = ['VPOPC', 'VFIRST', 'VMV.X.S', 'VFMV.F.S']
+        self._Vs2DifferVdInstrs = ['VFSLIDE1UP.VF', 'VRGATHER.VX', 'VSLIDE1UP.VX', 'VSLIDEUP.VX',
+                                    'VMSBF.M', 'VMSIF.M', 'VMSOF.M', 'VIOTA.M', 'VRGATHER.VI',
+                                    'VSLIDEUP.VI', 'VRGATHER.VV', 'VCOMPRESS.VM']
+        self._Vs1DifferVdInstrs = ['VRGATHER.VV', 'VCOMPRESS.VM']
+        self._mLsPattern = re.compile(r'^V(?P<access>[LS])')
+
+    def adjust_instruction_by_format(self, aInstr):
+        aInstr.name = escape(aInstr.name)
+        aInstr.asm.format = escape(aInstr.asm.format)
+
+        add_layout_operand(aInstr)
+        adjust_register_layout(aInstr)
+
+        for opr in aInstr.operands:
+            if opr.name in ['vd/rd', 'vd', 'rd', 'vd$\\neq$0']:
+                self.adjust_vdrd(aInstr, opr)
+            if opr.name.startswith('vs'):
+                self.adjust_vs(aInstr, opr)
+            if opr.name.startswith('rs'):
+                self.adjust_rs(aInstr, opr)
+            if 'imm' in opr.name:
+                self.adjust_imm(aInstr, opr)
+            if opr.name == 'vm':
+                adjust_vm_operand(aInstr, opr)
+
+        gen_asm_operand(aInstr)
+
+        if aInstr.iclass == 'VectorLoadStoreInstruction':
+            addr_mode = self._MopBits(aInstr)
+            ls_result = self._mLsPattern.match(aInstr.name)
+            if addr_mode in ['11', '01']:
+                add_vec_indexed_addr_operand(aInstr, 'rs1', 'vs2', ldst_access(ls_result.group('access')))
+                if aInstr.find_operand('vs3', fail_not_found=False) is not None:
+                    add_differ_attribute(aInstr, 'vs2', 'vs3')
+                elif aInstr.find_operand('vd', fail_not_found=False) is not None:
+                    add_differ_attribute(aInstr, 'vs2', 'vd')
+            elif addr_mode in ['10']: 
+                add_vec_strided_addr_operand(aInstr, 'rs1', 'rs2', ldst_access(ls_result.group('access')))
+            elif aInstr.name.startswith('VL'):
+                add_vec_bols_addr_operand(aInstr, 'rs1', 'Read')
+            elif aInstr.name.startswith('VS'):
+                add_vec_bols_addr_operand(aInstr, 'rs1', 'Write')
+
+        if aInstr.iclass == 'VectorAMOInstructionRISCV':
+            add_vec_indexed_addr_operand(aInstr, 'rs1', 'vs2', 'ReadWrite')
+
+
+    def adjust_vdrd(self, aInstr, aOpr):
+        if aOpr.name == 'rd':
+            adjust_gpr_operand(aOpr, 'Write', 'GPR', 8)
+        elif aOpr.name == 'vd':
+            if aInstr.name.startswith('VAMO'):
+                aOpr.oclass = 'VectorIndexedDataRegisterOperand'
+                add_differ_attribute(aInstr, 'vs2', 'vd')
+            if aInstr.iclass == 'VectorLoadStoreInstruction':
+                if self._MopBits(aInstr) in ['01', '11']:
+                    aOpr.oclass = 'VectorIndexedDataRegisterOperand'
+                    add_differ_attribute(aInstr, 'vs2', 'vd')
+                else:
+                   aOpr.oclass = 'VectorDataRegisterOperand'
+
+            adjust_vecreg_operand(aOpr, 'Write')
+        elif aOpr.name == 'vd/rd':
+            if aInstr.name in self._VdrdUsesRdInstrs:
+                aOpr.name = 'rd'
+                adjust_gpr_operand(aOpr, 'Write', self._VdrdRegtype(aInstr), 4)
+            else:
+                aOpr.name = 'vd'
+                adjust_vecreg_operand(aOpr, 'Write')
+        elif 'vd$\\neq$0' in aOpr.name:
+            adjust_vecreg_operand(aOpr, 'Write', 'Nonzero vector registers')
+            aOpr.name = 'vd'
+
+    def adjust_rs(self, aInstr, aOpr):
+        if aOpr.name == 'rs1':
+            if aInstr.iclass == 'VectorLoadStoreInstruction' or aInstr.iclass == 'VectorAMOInstructionRISCV': 
+                adjust_gpr_operand(aOpr, 'Read', 'GPR', 4, 'Nonzero GPRs')
+            else:
+                if '.F' in aInstr.name:
+                    adjust_gpr_operand(aOpr, 'Read', 'FPR', 4)
+                else:
+                    adjust_gpr_operand(aOpr, 'Read', self._Rs1Regtype(aInstr), 4)
+
+            if aInstr.name.startswith('VSETVL'): #set rs1 class for both vsetvl operations
+                aOpr.oclass = 'VsetvlAvlRegisterOperand'
+        elif aOpr.name == 'rs2':
+            if aInstr.iclass == 'VectorLoadStoreInstruction':
+                adjust_gpr_operand(aOpr, 'Read', 'GPR', 4, 'Nonzero GPRs')
+            else:
+                adjust_gpr_operand(aOpr, 'Read', 'GPR', 8)
+
+            if aInstr.name == 'VSETVL': #set rs2 class for just vsetvl (replaced by zimm in vsetvli)
+                aOpr.oclass = 'VsetvlVtypeRegisterOperand'
+                aOpr.differ = 'rs1'
+
+    def adjust_vs(self, aInstr, aOpr):
+        adjust_vecreg_operand(aOpr, 'Read')
+        if aOpr.name == 'vs1':
+            if aInstr.name in self._Vs1DifferVdInstrs:
+                aOpr.differ = 'vd'
+        if aOpr.name == 'vs2':
+            if aInstr.name in self._Vs2DifferVdInstrs:
+                aOpr.differ = 'vd'
+        if aOpr.name == 'vs3':
+            if aInstr.name.startswith('VAMO'): 
+                aOpr.oclass = 'VectorIndexedDataRegisterOperand'
+                add_differ_attribute(aInstr, 'vs2', 'vs3') 
+            elif aInstr.iclass == 'VectorLoadStoreInstruction':
+                aOpr.oclass = self._Vs3OperandClass(aInstr)
+                if aOpr.oclass == 'VectorIndexedDataRegisterOperand':
+                    add_differ_attribute(aInstr, 'vs2', 'vs3')
+
+    def adjust_imm(self, aInstr, aOpr):
+        if aOpr.name.startswith('z'): #zimm11
+            aOpr.oclass = 'VsetvlVtypeImmediateOperand'
+        else: #simm5
+            aOpr.oclass = 'SignedImmediateOperand'
+
+    def _Funct3(self, aInstr):
+        return aInstr.find_operand('const_bits').value[-10:-7]
+
+    def _Opcode(self, aInstr):
+        return aInstr.find_operand('const_bits').value[-7:]
+
+    def _MopBits(self, aInstr):
+        return aInstr.find_operand('const_bits').value[4:6]
+
+    def _VdrdRegtype(self, aInstr):
+        if self._Opcode(aInstr) ==  '1010111':
+            if self._Funct3(aInstr) in ['001','101']: #OPFVV/OPFVF
+               return 'FPR'
+
+        return 'GPR'
+
+    def _Rs1Regtype(self, aInstr):
+        if self._Opcode(aInstr) == '1010111':
+            if self._Funct3(aInstr) == '101': #OPFVF
+                return 'FPR'
+
+        return 'GPR'
+
+
+    def _Vs3OperandClass(self, aInstr):
+        if self._MopBits(aInstr) in ['01', '11']:
+            return 'VectorIndexedDataRegisterOperand'
+
+        return 'VectorDataRegisterOperand'

@@ -18,7 +18,7 @@
 import getopt, sys
 sys.path.insert(0, '../..')
 
-from instruction_adjustor import G_InstructionAdjustor
+from instruction_adjustor import G_InstructionAdjustor, V_InstructionAdjustor
 from c_instruction_adjustor import C_InstructionAdjustor
 
 def usage():
@@ -119,8 +119,8 @@ def build_instructions():
         process_instruction_file("input/c_instructions_rv64_starter.xml", "output/c_instructions_rv64.xml", "output/supported_c_instructions_rv64.xml", C_InstructionAdjustor())
         process_instruction_file("input/c_instructions_rv32_starter.xml", "output/c_instructions_rv32.xml", "output/supported_c_instructions_rv32.xml", C_InstructionAdjustor())
 
-    #if output_all or v_ext_only:
-        #process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", v_ext_adjust_instruction_by_format)
+    if output_all or v_ext_only:
+        process_instruction_file("input/v_instructions_starter.xml", "output/v_instructions.xml", "output/supported_v_instructions.xml", V_InstructionAdjustor())
 
     if output_all or priv_only:
         process_instruction_file("input/priv_instructions_starter.xml", "output/priv_instructions.xml", "output/supported_priv_instructions.xml", G_InstructionAdjustor())

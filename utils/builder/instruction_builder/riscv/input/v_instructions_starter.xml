@@ -2516,7 +2516,7 @@ Add RISCV V extension instruction starter information in this file.
     <O name="const_bits" type="Constant" bits="31-31,14-12,6-0" value="01111010111"/>
     <O name="rd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <O name="zimm[10:0]" type="Immediate" bits="30-20"/>
+    <O name="zimm11" type="Immediate" bits="30-20"/>
     <asm format="VSETVLI"/>
   </I>
   <I name="VLE8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
