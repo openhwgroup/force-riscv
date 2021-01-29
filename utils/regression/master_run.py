@@ -714,7 +714,7 @@ def main():
         Msg.err( str(arg_ex) )
         Msg.blank()
 
-    except:
+    except Exception:
         Msg.err( "[ERROR] - An Unhandled Error has Occurred during run of " + str( sys.argv[0] ))
         traceback.print_exc( file=sys.stdout )
 
