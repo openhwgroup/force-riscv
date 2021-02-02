@@ -1,4 +1,4 @@
-#!/bin/tcsh
+#!/bin/sh
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #

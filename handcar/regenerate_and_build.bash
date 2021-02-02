@@ -20,12 +20,12 @@ unset NO_GIT
 pause() {
     #do things with parameters like $1 such as
     echo
-    echo $1
+    echo "$1"
     echo
 }
 
 function usage {
-    echo "Usage: $(basename $0) [-in]"
+    echo "Usage: $(basename "$0") [-in]"
     echo "    -i  interactive mode"
     echo "    -n  no-git mode"
     echo ""
@@ -39,7 +39,7 @@ while getopts ":in" opt; do
         pause() {
             #do things with parameters like $1 such as
             echo
-            read -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
+            read -r -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
             echo
         }
         ;;

@@ -25,7 +25,7 @@ ${FORCERISCV} -t ${TEST} -s 1 | tee friscv.log
 # run riscvOVPsim or risvOVPsimPlus
 # note you need riscvOVPsimPlus for trace options: --trace --tracechange --tracemode --traceshowicount
 ${RISCVOVPSIM}  \
-    --program ${STUB}.Default.ELF \
+    "--program ${STUB}.Default.ELF" \
     --controlfile ./riscvOVPsim.ic \
     --finishonopcode 0x0000006f \
     --override riscvOVPsim/cpu/simulateexceptions=T \

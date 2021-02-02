@@ -23,7 +23,7 @@ ${FORCERISCV} -t ${TEST} -s 1 | tee friscv.log
 # if using a riscvOVPsim before v20201109, then finish after a number of instructions with --finishafter 3000
 # note you need riscvOVPsimPlus for trace options: --trace --tracechange --tracemode --traceshowicount
 ${RISCVOVPSIM}  \
-    --program ${STUB}.Default.ELF \
+    "--program ${STUB}.Default.ELF" \
     --controlfile ./riscvOVPsim.ic \
     --addressbits 64 \
     --finishonopcode 0x0000006f \
