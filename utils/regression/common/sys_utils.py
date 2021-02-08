@@ -238,15 +238,15 @@ class SysUtils:
             if not (my_ferr == PIPE or my_ferr.closed):
                 my_ferr.close()
 
-            return (
-                0,
-                None,
-                "Unable to Spawn Process ....",
-                0,
-                None,
-                None,
-                SysUtils.PROCESS_UNABLE_TO_SPAWN,
-            )
+        return (
+            0,
+            None,
+            "Unable to Spawn Process ....",
+            0,
+            None,
+            None,
+            SysUtils.PROCESS_UNABLE_TO_SPAWN,
+        )
 
     @classmethod
     def exec_content(cls, arg_content, arg_suppress=False, aLocals=None):

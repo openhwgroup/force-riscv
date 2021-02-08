@@ -772,158 +772,166 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.mAssemblyHelper.addLabel("NOT_UBIT_SUPER_MODE")
 
-    # superpage table address misaligned?...
+        # superpage table address misaligned?...
 
-    # pte level > 0?...
-    self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
-    self.mAssemblyHelper.genConditionalBranchToLabel(
-        pte_level_reg_index,
-        scratch_reg_index,
-        34,
-        "EQ",
-        "NOT_SUPER_PAGE_FIXUP",
-    )
-
-    # use pte level to generate superpage address offset mask...
-
-    # Sv32:       ppn[0] is bits 19..10
-    # Sv39, Sv48: ppn[0] is bits 18..10
-    if self.getGlobalState("AppRegisterWidth") == 32:
-        self.mAssemblyHelper.genMoveImmediate(
-            scratch_reg2_index, 0x3FF
-        )  # for Sv32, each pte.ppn field is ten bits
-    else:
-        self.mAssemblyHelper.genMoveImmediate(
-            scratch_reg2_index, 0x1FF
-        )  # else each pte.ppn field is nine bits
-    self.mAssemblyHelper.genShiftLeftImmediate(
-        scratch_reg2_index, 10, scratch_reg2_index
-    )
-    self.mAssemblyHelper.genMoveRegister(scratch_reg_index, scratch_reg2_index)
-    self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 1)
-    self.mAssemblyHelper.genConditionalBranchToLabel(
-        pte_level_reg_index, scratch_reg3_index, 14, "EQ", "SUPER_PAGE_FIXUP",
-    )
-
-    # Sv39, Sv48: ppn[1] is bits 27..19
-    self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index, 9)
-    self.mAssemblyHelper.genOrRegister(
-        scratch_reg_index, scratch_reg_index, scratch_reg2_index
-    )
-    self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 2)
-    self.mAssemblyHelper.genConditionalBranchToLabel(
-        pte_level_reg_index, scratch_reg3_index, 6, "EQ", "SUPER_PAGE_FIXUP",
-    )
-
-    # Sv48: ppn[2] is bits 36..28
-    self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index, 9)
-    self.mAssemblyHelper.genOrRegister(
-        scratch_reg_index, scratch_reg_index, scratch_reg2_index
-    )
-
-    # is the (superpage) pte indeed mis-aligned?...
-    self.mAssemblyHelper.addLabel("SUPER_PAGE_FIXUP")
-    self.mAssemblyHelper.genNotRegister(
-        scratch_reg_index
-    )  # mask of all pte bits but level - 1 PPNs
-    self.mAssemblyHelper.genAndRegister(
-        scratch_reg_index, pte_reg_index, scratch_reg_index
-    )
-    self.mAssemblyHelper.genConditionalBranchToLabel(
-        pte_reg_index, scratch_reg_index, 6, "EQ", "NOT_SUPER_PAGE_FIXUP"
-    )
-    # write updated pte...
-    self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
-    self.mAssemblyHelper.genReturn()
-
-    self.mAssemblyHelper.addLabel("NOT_SUPER_PAGE_FIXUP")
-
-    # ERROR IF UNABLE TO CORRECT FAULT...
-    self.mAssemblyHelper.genReturn()
-
-
-# generate code to write PTE to memory...
-
-
-def genWritePTE(self, pte_addr_reg_index, pte_value_reg_index):
-    if self.getGlobalState("AppRegisterWidth") == 32:
-        self.genInstruction(
-            "SW##RISCV",
-            {
-                "rs1": pte_addr_reg_index,
-                "rs2": pte_value_reg_index,
-                "simm12": 0,
-                "NoRestriction": 1,
-            },
-        )
-    else:
-        self.genInstruction(
-            "SD##RISCV",
-            {
-                "rs1": pte_addr_reg_index,
-                "rs2": pte_value_reg_index,
-                "simm12": 0,
-                "NoRestriction": 1,
-            },
+        # pte level > 0?...
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
+        self.mAssemblyHelper.genConditionalBranchToLabel(
+            pte_level_reg_index,
+            scratch_reg_index,
+            34,
+            "EQ",
+            "NOT_SUPER_PAGE_FIXUP",
         )
 
+        # use pte level to generate superpage address offset mask...
 
-# generate code to setup/issue sfence.vma instruction, to in effect cause
-# a tlb flush for a faulting address. we ASSUME a leaf PTE
+        # Sv32:       ppn[0] is bits 19..10
+        # Sv39, Sv48: ppn[0] is bits 18..10
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            self.mAssemblyHelper.genMoveImmediate(
+                scratch_reg2_index, 0x3FF
+            )  # for Sv32, each pte.ppn field is ten bits
+        else:
+            self.mAssemblyHelper.genMoveImmediate(
+                scratch_reg2_index, 0x1FF
+            )  # else each pte.ppn field is nine bits
+        self.mAssemblyHelper.genShiftLeftImmediate(
+            scratch_reg2_index, 10, scratch_reg2_index
+        )
+        self.mAssemblyHelper.genMoveRegister(scratch_reg_index, scratch_reg2_index)
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 1)
+        self.mAssemblyHelper.genConditionalBranchToLabel(
+            pte_level_reg_index,
+            scratch_reg3_index,
+            14,
+            "EQ",
+            "SUPER_PAGE_FIXUP",
+        )
+
+        # Sv39, Sv48: ppn[1] is bits 27..19
+        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index, 9)
+        self.mAssemblyHelper.genOrRegister(
+            scratch_reg_index, scratch_reg_index, scratch_reg2_index
+        )
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 2)
+        self.mAssemblyHelper.genConditionalBranchToLabel(
+            pte_level_reg_index,
+            scratch_reg3_index,
+            6,
+            "EQ",
+            "SUPER_PAGE_FIXUP",
+        )
+
+        # Sv48: ppn[2] is bits 36..28
+        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index, 9)
+        self.mAssemblyHelper.genOrRegister(
+            scratch_reg_index, scratch_reg_index, scratch_reg2_index
+        )
+
+        # is the (superpage) pte indeed mis-aligned?...
+        self.mAssemblyHelper.addLabel("SUPER_PAGE_FIXUP")
+        self.mAssemblyHelper.genNotRegister(
+            scratch_reg_index
+        )  # mask of all pte bits but level - 1 PPNs
+        self.mAssemblyHelper.genAndRegister(
+            scratch_reg_index, pte_reg_index, scratch_reg_index
+        )
+        self.mAssemblyHelper.genConditionalBranchToLabel(
+            pte_reg_index, scratch_reg_index, 6, "EQ", "NOT_SUPER_PAGE_FIXUP"
+        )
+        # write updated pte...
+        self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
+        self.mAssemblyHelper.genReturn()
+
+        self.mAssemblyHelper.addLabel("NOT_SUPER_PAGE_FIXUP")
+
+        # ERROR IF UNABLE TO CORRECT FAULT...
+        self.mAssemblyHelper.genReturn()
 
 
-def genSFENCE(
-    self,
-    vaddr_reg_index,
-    pte_value_reg_index,
-    scratch_reg_index,
-    scratch_reg2_index,
-    label_prefix,
-):
-    # global bit is bit 5 of pte value...
-    self.mAssemblyHelper.genAndImmediate(
-        scratch_reg_index, 0x20, pte_value_reg_index
-    )
-    self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0x20)
-    self.mAssemblyHelper.genConditionalBranchToLabel(
+    # generate code to write PTE to memory...
+
+
+    def genWritePTE(self, pte_addr_reg_index, pte_value_reg_index):
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            self.genInstruction(
+                "SW##RISCV",
+                {
+                    "rs1": pte_addr_reg_index,
+                    "rs2": pte_value_reg_index,
+                    "simm12": 0,
+                    "NoRestriction": 1,
+                },
+            )
+        else:
+            self.genInstruction(
+                "SD##RISCV",
+                {
+                    "rs1": pte_addr_reg_index,
+                    "rs2": pte_value_reg_index,
+                    "simm12": 0,
+                    "NoRestriction": 1,
+                },
+            )
+
+
+    # generate code to setup/issue sfence.vma instruction, to in effect cause
+    # a tlb flush for a faulting address. we ASSUME a leaf PTE
+
+
+    def genSFENCE(
+        self,
+        vaddr_reg_index,
+        pte_value_reg_index,
         scratch_reg_index,
         scratch_reg2_index,
-        6,
-        "NE",
-        "%s_SFENCE_NON_GLOBAL" % label_prefix,
-    )
+        label_prefix,
+    ):
+        # global bit is bit 5 of pte value...
+        self.mAssemblyHelper.genAndImmediate(
+            scratch_reg_index, 0x20, pte_value_reg_index
+        )
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0x20)
+        self.mAssemblyHelper.genConditionalBranchToLabel(
+            scratch_reg_index,
+            scratch_reg2_index,
+            6,
+            "NE",
+            "%s_SFENCE_NON_GLOBAL" % label_prefix,
+        )
 
-    # flush tlb entry - global...
-    self.genInstruction(
-        "SFENCE.VMA##RISCV",
-        {"rs1": vaddr_reg_index, "rs2": 0, "NoRestriction": 1},
-    )
-    self.mAssemblyHelper.genRelativeBranchToLabel(
-        10, "%s_SFENCE_EXIT" % label_prefix
-    )
+        # flush tlb entry - global...
+        self.genInstruction(
+            "SFENCE.VMA##RISCV",
+            {"rs1": vaddr_reg_index, "rs2": 0, "NoRestriction": 1},
+        )
+        self.mAssemblyHelper.genRelativeBranchToLabel(
+            10, "%s_SFENCE_EXIT" % label_prefix
+        )
 
-    self.mAssemblyHelper.addLabel("%s_SFENCE_NON_GLOBAL" % label_prefix)
+        self.mAssemblyHelper.addLabel("%s_SFENCE_NON_GLOBAL" % label_prefix)
 
-    # flush tlb entry - non-global so use asid...
+        # flush tlb entry - non-global so use asid...
 
-    self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, "satp")
+        self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, "satp")
 
-    # isolate satp.asid field...
+        # isolate satp.asid field...
 
-    if self.getGlobalState("AppRegisterWidth") == 32:
-        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index, 1)
-        self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index, 23)
-    else:
-        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index, 4)
-        self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index, 48)
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index, 1)
+            self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index, 23)
+        else:
+            self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index, 4)
+            self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index, 48)
 
-    self.genInstruction(
-        "SFENCE.VMA##RISCV",
-        {
-            "rs1": vaddr_reg_index,
-            "rs2": scratch_reg_index,
-            "NoRestriction": 1,
-        },
-    )
+        self.genInstruction(
+            "SFENCE.VMA##RISCV",
+            {
+                "rs1": vaddr_reg_index,
+                "rs2": scratch_reg_index,
+                "NoRestriction": 1,
+            },
+        )
 
-    self.mAssemblyHelper.addLabel("%s_SFENCE_EXIT" % label_prefix)
+        self.mAssemblyHelper.addLabel("%s_SFENCE_EXIT" % label_prefix)

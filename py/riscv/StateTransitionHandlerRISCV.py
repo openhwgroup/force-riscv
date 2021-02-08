@@ -823,57 +823,56 @@ class StateTransitionHelperGprSet(object):
             #  expect that we only need one arbitrary GPR other than for
             #  system registers, but the system registers are always loaded
             #  before the GPRs. The last GPR in the boot sequence provides the
-            #  arbitrary GPR we need. if aValidate:
-            self._validateInsufficientArbitaryGprs(aGprCount)
+            #  arbitrary GPR we need.
+            if aValidate:
+                self._validateInsufficientArbitaryGprs(aGprCount)
 
-        self._mArbitraryGprIndices = self._mStateTransHandler.getAllArbitraryGprs(
-            aExclude=(0, 1, 2)
-        )
-        remaining_gpr_count = aGprCount - len(self._mArbitraryGprIndices)
-        excluded_regs = "0,1,2,%s" % ",".join(
-            str(index) for index in self._mArbitraryGprIndices
-        )
-        self._mNonArbitraryGprIndices = self._mStateTransHandler.getRandomGPRs(
-            remaining_gpr_count, exclude=excluded_regs, no_skip=True
-        )
+            self._mArbitraryGprIndices = (
+                self._mStateTransHandler.getAllArbitraryGprs(aExclude=(0, 1, 2))
+            )
+            remaining_gpr_count = aGprCount - len(self._mArbitraryGprIndices)
+            excluded_regs = "0,1,2,%s" % ",".join(
+                str(index) for index in self._mArbitraryGprIndices
+            )
+            self._mNonArbitraryGprIndices = self._mStateTransHandler.getRandomGPRs(
+                remaining_gpr_count, exclude=excluded_regs, no_skip=True
+            )
 
-    for non_arbitrary_gpr_index in self._mNonArbitraryGprIndices:
-        (gpr_val, _) = self._mStateTransHandler.readRegister(
-            "x%d" % non_arbitrary_gpr_index
-        )
-        self._mNonArbitraryGprOrigValues.append(gpr_val)
+        for non_arbitrary_gpr_index in self._mNonArbitraryGprIndices:
+            (gpr_val, _) = self._mStateTransHandler.readRegister(
+                "x%d" % non_arbitrary_gpr_index
+            )
+            self._mNonArbitraryGprOrigValues.append(gpr_val)
 
-    helper_gpr_indices = list(self._mArbitraryGprIndices)
-    helper_gpr_indices.extend(self._mNonArbitraryGprIndices)
-    return helper_gpr_indices
+        helper_gpr_indices = list(self._mArbitraryGprIndices)
+        helper_gpr_indices.extend(self._mNonArbitraryGprIndices)
+        return helper_gpr_indices
 
+    # Indicate any acquired helper GPRs are no longer needed. Instructions are
+    # generated to reset the values of any non-arbitrary GPRs.
+    def releaseHelperGprs(self):
+        load_gpr64_seq = LoadGPR64(self._mStateTransHandler.genThread)
+        for (i, non_arbitrary_gpr_index) in enumerate(
+            self._mNonArbitraryGprIndices
+        ):
+            load_gpr64_seq.load(
+                non_arbitrary_gpr_index, self._mNonArbitraryGprOrigValues[i]
+            )
 
-# Indicate any acquired helper GPRs are no longer needed. Instructions are
-# generated to reset the values of any non-arbitrary GPRs.
-def releaseHelperGprs(self):
-    load_gpr64_seq = LoadGPR64(self._mStateTransHandler.genThread)
-    for (i, non_arbitrary_gpr_index) in enumerate(
-        self._mNonArbitraryGprIndices
-    ):
-        load_gpr64_seq.load(
-            non_arbitrary_gpr_index, self._mNonArbitraryGprOrigValues[i]
-        )
+        self._mNonArbitraryGprOrigValues = []
+        self._mNonArbitraryGprIndices = []
+        self._mArbitraryGprIndices = []
 
-    self._mNonArbitraryGprOrigValues = []
-    self._mNonArbitraryGprIndices = []
-    self._mArbitraryGprIndices = []
-
-
-# Fail if the StateTransition type does not support proceeding without the
-# requested number arbitrary GPRs available.
-#
-#  @param aGprCount The number of GPRs requested.
-def _validateInsufficientArbitaryGprs(self, aGprCount):
-    if self._mStateTransHandler.mStateTransType == EStateTransitionType.Boot:
-        self._mStateTransHandler.error(
-            "Boot StateTransitions must have at least %d arbitary GPR(s) "
-            "available" % aGprCount
-        )
+    # Fail if the StateTransition type does not support proceeding without the
+    # requested number arbitrary GPRs available.
+    #
+    #  @param aGprCount The number of GPRs requested.
+    def _validateInsufficientArbitaryGprs(self, aGprCount):
+        if self._mStateTransHandler.mStateTransType == EStateTransitionType.Boot:
+            self._mStateTransHandler.error(
+                "Boot StateTransitions must have at least %d arbitary GPR(s) "
+                "available" % aGprCount
+            )
 
 
 #  Return the value of a register with the specified field value inserted at
