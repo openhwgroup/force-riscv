@@ -1,23 +1,21 @@
 [tool.black]
 line-length = 79
-target-version = ['py36']
+target-version = ['py36', 'py37', 'py38']
 include = '\.pyi?$'
 exclude = '''
-
-(
-  (
-      /.eggse
+/(
+      /.eggs
     | /.git
     | /.hg
     | /.mypy_cache
     | /.tox
     | /.venv
+    | /output/
     | /3rd_party
     | /bin
     | /utils/regression/output
     | _build
     | dist
-  )
-)
+)/
 '''
 
