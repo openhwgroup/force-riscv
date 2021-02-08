@@ -70,7 +70,7 @@ from classes.ApplicationsSetup import ApplicationsSetup
 from classes.launcher import LauncherType
 
 # Parallel Run imports
-from common.threads import summary_done_event
+from common.threads import workers_done_event, summary_done_event
 
 shutdown_proc = None
 
