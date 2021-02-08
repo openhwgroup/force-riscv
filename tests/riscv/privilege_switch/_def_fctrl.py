@@ -14,7 +14,5 @@
 # limitations under the License.
 #
 control_items = [
-    {
-        "fname": "*_force.py",
-    },
+    {"fname": "*_force.py",},
 ]

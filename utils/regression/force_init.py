@@ -75,9 +75,9 @@ def get_mod_root():
 
 
 # set the import paths all shared resources
-sys.path.append( get_mod_root() )
+sys.path.append(get_mod_root())
 
-sys.path.append( the_force_root + "/3rd_party/py" )
+sys.path.append(the_force_root + "/3rd_party/py")
 
 
 # if and when another utility is written that uses the same strategy then the

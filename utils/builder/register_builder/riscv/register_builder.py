@@ -19,7 +19,7 @@ import getopt
 import os
 import sys
 
-sys.path.insert(0, '../..')
+sys.path.insert(0, "../..")
 
 import defusedxml.defusedxml.ElementTree as ET
 import defusedxml.defusedxml.minidom as DOM
@@ -94,7 +94,12 @@ Examples:
           and/or system register choices and/or register field choices before
           creating output files.
 
-""" % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0])
+""" % (
+        sys.argv[0],
+        sys.argv[0],
+        sys.argv[0],
+        sys.argv[0],
+    )
     print(usage_str)
 
 
@@ -119,12 +124,12 @@ license_string = """<!--
 def output_system_registers(aTree, aOutputFile, aPrefixLicenseFile, aSize):
     # print("\t  Processing system registers...")
 
-    registers = aTree.findall('.//register')
+    registers = aTree.findall(".//register")
 
-    output_root = Element('registers')
-    physical_registers = Element('physical_registers')
-    register_file = Element('register_file')
-    register_file.set('name', 'RISC-V Registers')
+    output_root = Element("registers")
+    physical_registers = Element("physical_registers")
+    register_file = Element("register_file")
+    register_file.set("name", "RISC-V Registers")
 
     for register in registers:
         generate_register(register, physical_registers, register_file, aSize)
@@ -133,7 +138,7 @@ def output_system_registers(aTree, aOutputFile, aPrefixLicenseFile, aSize):
     output_root.append(register_file)
 
     # check system register fields before writing out xml file...
-    reg_file = RISCV.RegisterFile({'system_tree': output_root})
+    reg_file = RISCV.RegisterFile({"system_tree": output_root})
 
     reg_file.checkRegisterFieldSize()
 
@@ -145,34 +150,37 @@ def output_system_registers(aTree, aOutputFile, aPrefixLicenseFile, aSize):
 def output_system_register_choices(aTree, aOutputFile, aPrefixLicenseFile):
     # print("\t  Processing system register choices...")
 
-    registers = aTree.findall('.//register')
+    registers = aTree.findall(".//register")
 
-    output_root = Element('choices_file')
-    choices = Element('choices')
-    choices.set('description', 'RISC-V system registers')
-    choices.set('name', 'System registers')
-    choices.set('type', 'RegisterOperand')
+    output_root = Element("choices_file")
+    choices = Element("choices")
+    choices.set("description", "RISC-V system registers")
+    choices.set("name", "System registers")
+    choices.set("type", "RegisterOperand")
 
     for register in registers:
-        if register.get('choice', 'true') == 'true':
-            choice = Element('choice')
-            choice.set('description', '%s; %s' % (
-                register.get('privilege'), register.get('description')))
-            choice.set('name', register.get('name'))
-            choice.set('value', register.get('index'))
+        if register.get("choice", "true") == "true":
+            choice = Element("choice")
+            choice.set(
+                "description",
+                "%s; %s"
+                % (register.get("privilege"), register.get("description")),
+            )
+            choice.set("name", register.get("name"))
+            choice.set("value", register.get("index"))
 
-            priv = register.get('privilege')
-            if priv.endswith('RO'):
-                choice.set('weight', '0')
+            priv = register.get("privilege")
+            if priv.endswith("RO"):
+                choice.set("weight", "0")
             else:
-                choice.set('weight', register.get('choice_weight', '0'))
+                choice.set("weight", register.get("choice_weight", "0"))
 
             choices.append(choice)
 
     output_root.append(choices)
 
     # check system register fields before writing out xml file...
-    reg_file = RISCV.RegisterFile({'system_tree': output_root})
+    reg_file = RISCV.RegisterFile({"system_tree": output_root})
     reg_file.checkRegisterFieldSize()
 
     pretty_print_xml(aOutputFile, output_root, aPrefixLicenseFile)
@@ -183,32 +191,34 @@ def output_system_register_choices(aTree, aOutputFile, aPrefixLicenseFile):
 def output_register_field_choices(aTree, aOutputFile, aPrefixLicenseFile):
     # print("\t  Processing register field choices...")
 
-    registers = aTree.findall('.//register')
+    registers = aTree.findall(".//register")
 
-    output_root = Element('choices_file')
+    output_root = Element("choices_file")
 
     for register in registers:
-        fields = register.findall('.//register_field')
+        fields = register.findall(".//register_field")
         for field in fields:
-            choices = field.findall('.//choice')
+            choices = field.findall(".//choice")
             if choices:
-                choices_element = Element('choices')
-                choices_element.set('name', '%s.%s' % (
-                    register.get('name'), field.get('name')))
-                choices_element.set('type', 'RegisterFieldValue')
+                choices_element = Element("choices")
+                choices_element.set(
+                    "name", "%s.%s" % (register.get("name"), field.get("name"))
+                )
+                choices_element.set("type", "RegisterFieldValue")
 
                 for choice in choices:
-                    choice_element = Element('choice')
-                    choice_element.set('description',
-                                       choice.get('description'))
-                    choice_element.set('value', choice.get('value'))
-                    choice_element.set('weight', choice.get('weight', '10'))
+                    choice_element = Element("choice")
+                    choice_element.set(
+                        "description", choice.get("description")
+                    )
+                    choice_element.set("value", choice.get("value"))
+                    choice_element.set("weight", choice.get("weight", "10"))
                     choices_element.append(choice_element)
 
                 output_root.append(choices_element)
 
     # check system register fields before writing out xml file...
-    reg_file = RISCV.RegisterFile({'system_tree': output_root})
+    reg_file = RISCV.RegisterFile({"system_tree": output_root})
     reg_file.checkRegisterFieldSize()
 
     pretty_print_xml(aOutputFile, output_root, aPrefixLicenseFile)
@@ -218,77 +228,88 @@ def output_register_field_choices(aTree, aOutputFile, aPrefixLicenseFile):
 
 def pretty_print_xml(aOutputFile, aOutputRoot, aPrefixLicenseFile):
     xml_str = DOM.parseString(ET.tostring(aOutputRoot)).toprettyxml(
-        indent='  ')
-    with open(aOutputFile, 'w') as f:
+        indent="  "
+    )
+    with open(aOutputFile, "w") as f:
         if aPrefixLicenseFile:
             f.write(license_string)
         f.write(xml_str)
 
 
 def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
-    register = Element('register')
-    register.set('index', aRegister.get('index'))
-    register.set('name', aRegister.get('name'))
-    register.set('size',
-                 aSize if str(aRegister.get('size')) == '0' else aRegister.get(
-                     'size'))
-    register.set('type', aRegister.get('type'))
-    if aRegister.get('size') != '0':
-        register.set('boot', aRegister.get('boot', '1'))
+    register = Element("register")
+    register.set("index", aRegister.get("index"))
+    register.set("name", aRegister.get("name"))
+    register.set(
+        "size",
+        aSize if str(aRegister.get("size")) == "0" else aRegister.get("size"),
+    )
+    register.set("type", aRegister.get("type"))
+    if aRegister.get("size") != "0":
+        register.set("boot", aRegister.get("boot", "1"))
     else:
-        register.set('boot', '0')
+        register.set("boot", "0")
 
-    if aRegister.get('class') and (
-            aRegister.get('class') != 'ConfigureRegister'):
-        register.set('class', aRegister.get('class'))
+    if aRegister.get("class") and (
+        aRegister.get("class") != "ConfigureRegister"
+    ):
+        register.set("class", aRegister.get("class"))
     else:
-        priv = aRegister.get('privilege')
+        priv = aRegister.get("privilege")
 
-        if priv and priv.endswith('RO'):
-            register.set('class', 'ReadOnlyRegister')
+        if priv and priv.endswith("RO"):
+            register.set("class", "ReadOnlyRegister")
 
-    if aRegister.get('init_policy'):
-        register.set('init_policy', aRegister.get('init_policy'))
+    if aRegister.get("init_policy"):
+        register.set("init_policy", aRegister.get("init_policy"))
 
-    fields = aRegister.findall('.//register_field')
+    fields = aRegister.findall(".//register_field")
     for field in fields:
-        register_field = Element('register_field')
-        register_field.set('name', field.get('name'))
-        register_field.set('physical_register',
-                           aRegister.get('physical_register'))
-        register_field.set('size', field.get('size'))
-        if field.get('init_policy'):
-            register_field.set('init_policy', field.get('init_policy'))
+        register_field = Element("register_field")
+        register_field.set("name", field.get("name"))
+        register_field.set(
+            "physical_register", aRegister.get("physical_register")
+        )
+        register_field.set("size", field.get("size"))
+        if field.get("init_policy"):
+            register_field.set("init_policy", field.get("init_policy"))
 
-        bits = field.findall('.//bit_field')
+        bits = field.findall(".//bit_field")
         for bit in bits:
-            bit_field = Element('bit_field')
-            bit_field.set('shift', bit.get('shift'))
-            bit_field.set('size', bit.get('size'))
+            bit_field = Element("bit_field")
+            bit_field.set("shift", bit.get("shift"))
+            bit_field.set("size", bit.get("size"))
             register_field.append(bit_field)
 
         register.append(register_field)
 
-    if (aRegister.get('physical_register') and
-            aRegister.get('physical_register') == aRegister.get('name') or
-            aRegister.get('physical_register') is None):
-        physical_register = Element('physical_register')
-        physical_register.set('index', aRegister.get('index'))
-        physical_register.set('name', aRegister.get('physical_register',
-                                                    aRegister.get('name')))
-        physical_register.set('size', aSize if str(
-            aRegister.get('size')) == '0' else aRegister.get('size'))
-        physical_register.set('type', aRegister.get('type'))
-        if aRegister.get('class') == 'ConfigureRegister':
-            physical_register.set('class', aRegister.get('class'))
+    if (
+        aRegister.get("physical_register")
+        and aRegister.get("physical_register") == aRegister.get("name")
+        or aRegister.get("physical_register") is None
+    ):
+        physical_register = Element("physical_register")
+        physical_register.set("index", aRegister.get("index"))
+        physical_register.set(
+            "name", aRegister.get("physical_register", aRegister.get("name"))
+        )
+        physical_register.set(
+            "size",
+            aSize
+            if str(aRegister.get("size")) == "0"
+            else aRegister.get("size"),
+        )
+        physical_register.set("type", aRegister.get("type"))
+        if aRegister.get("class") == "ConfigureRegister":
+            physical_register.set("class", aRegister.get("class"))
 
-        if aRegister.get('reset'):
-            physical_register.set('reset', aRegister.get('reset'))
+        if aRegister.get("reset"):
+            physical_register.set("reset", aRegister.get("reset"))
         else:
-            priv = aRegister.get('privilege')
+            priv = aRegister.get("privilege")
 
-            if priv and priv.endswith('RO'):
-                physical_register.set('reset', '0')
+            if priv and priv.endswith("RO"):
+                physical_register.set("reset", "0")
 
         aPhysicalRegisters.append(physical_register)
 
@@ -297,6 +318,7 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
 
 # prefix the filename portion of a file path with a specified prefix.
 # will ASSUME the filepath is correct
+
 
 def insert_filename_prefix(aFilePath, aFilePrefix):
     head_tail = os.path.split(aFilePath)
@@ -308,11 +330,12 @@ def insert_filename_prefix(aFilePath, aFilePrefix):
 
 
 def build_registers(
-        aXmlStarterFile='input/system_registers_starter_rv64.xml',
-        aSystemRegistersFile='output/system_registers_rv64.xml',
-        aSystemRegisterChoicesFile='output/system_register_choices_rv64.xml',
-        aRegisterFieldChoicesFile='output/register_field_choices_rv64.xml',
-        aSize='64', aModificationsScript=None
+    aXmlStarterFile="input/system_registers_starter_rv64.xml",
+    aSystemRegistersFile="output/system_registers_rv64.xml",
+    aSystemRegisterChoicesFile="output/system_register_choices_rv64.xml",
+    aRegisterFieldChoicesFile="output/register_field_choices_rv64.xml",
+    aSize="64",
+    aModificationsScript=None,
 ):
     xml_starter_file = aXmlStarterFile
     system_registers_file = aSystemRegistersFile
@@ -322,15 +345,21 @@ def build_registers(
     modifications_script = aModificationsScript
 
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hSRFi:s:r:f:m:',
-                                   ['help', 'system_registers',
-                                    'system_register_choices',
-                                    'register_field_choices',
-                                    'system_registers_starter=',
-                                    'system_registers_file=',
-                                    'system_register_choices_file=',
-                                    'register_field_choices_file=',
-                                    'modifications_script='])
+        opts, args = getopt.getopt(
+            sys.argv[1:],
+            "hSRFi:s:r:f:m:",
+            [
+                "help",
+                "system_registers",
+                "system_register_choices",
+                "register_field_choices",
+                "system_registers_starter=",
+                "system_registers_file=",
+                "system_register_choices_file=",
+                "register_field_choices_file=",
+                "modifications_script=",
+            ],
+        )
     except getopt.GetoptError as error:
         print(error)
         usage()
@@ -345,47 +374,52 @@ def build_registers(
     do_mods = False
 
     for o, a in opts:
-        if o in ('-h', '--help'):
+        if o in ("-h", "--help"):
             usage()
             sys.exit()
-        if o in ['-S', '--system_registers']:
+        if o in ["-S", "--system_registers"]:
             system_registers = True
             output_all = False
-        elif o in ['-m', '--modifications_script']:
+        elif o in ["-m", "--modifications_script"]:
             modifications_script = a
             print(
                 "\tRegister/field/choices modifications script: "
-                "'%s'" % modifications_script)
+                "'%s'" % modifications_script
+            )
             prefix_license_file = False
             do_mods = True
-        elif o in ['-R', '--system_register_choices']:
+        elif o in ["-R", "--system_register_choices"]:
             system_register_choices = True
             output_all = False
-        elif o in ['-F', '--register_field_choices']:
+        elif o in ["-F", "--register_field_choices"]:
             register_field_choices = True
             output_all = False
-        elif o in ['-i', '--system_registers_starter']:
+        elif o in ["-i", "--system_registers_starter"]:
             xml_starter_file = a
             print(
                 "\tUser-specified system registers starter file: "
-                "'%s'" % xml_starter_file)
-        elif o in ['-s', '--system_registers_file']:
+                "'%s'" % xml_starter_file
+            )
+        elif o in ["-s", "--system_registers_file"]:
             system_registers_file = a
             print(
                 "\tUser-specified system registers file: "
-                "'%s'" % system_registers_file)
-        elif o in ['-r', '--system_register_choices_file']:
+                "'%s'" % system_registers_file
+            )
+        elif o in ["-r", "--system_register_choices_file"]:
             system_register_choices_file = a
             print(
                 "\tUser-specified system register choices file: "
-                "'%s'" % system_register_choices_file)
-        elif o in ['f', '--register_field_choices_file']:
+                "'%s'" % system_register_choices_file
+            )
+        elif o in ["f", "--register_field_choices_file"]:
             register_field_choices_file = a
             print(
                 "\tUser-specified register field choices file: "
-                "'%s'" % register_field_choices_file)
+                "'%s'" % register_field_choices_file
+            )
         else:
-            print('!!! Unsupported option: %s, Script aborted.' % o)
+            print("!!! Unsupported option: %s, Script aborted." % o)
             usage()
             sys.exit(1)
 
@@ -399,72 +433,92 @@ def build_registers(
     if do_mods:
         # prior to running the modifications process, set src/dest files for
         # the mods...
-        (post_mod_system_registers_file,
-         system_registers_file) = insert_filename_prefix(system_registers_file,
-                                                         'pre_edits_')
-        (post_mod_system_register_choices_file,
-         system_register_choices_file) = insert_filename_prefix(
-            system_register_choices_file, 'pre_edits_')
-        (post_mod_register_field_choices_file,
-         register_field_choices_file) = insert_filename_prefix(
-            register_field_choices_file, 'pre_edits_')
+        (
+            post_mod_system_registers_file,
+            system_registers_file,
+        ) = insert_filename_prefix(system_registers_file, "pre_edits_")
+        (
+            post_mod_system_register_choices_file,
+            system_register_choices_file,
+        ) = insert_filename_prefix(system_register_choices_file, "pre_edits_")
+        (
+            post_mod_register_field_choices_file,
+            register_field_choices_file,
+        ) = insert_filename_prefix(register_field_choices_file, "pre_edits_")
 
     try:
         if output_all or system_registers:
-            output_system_registers(systemRegisterDefinitions,
-                                    system_registers_file, prefix_license_file,
-                                    aSize)
+            output_system_registers(
+                systemRegisterDefinitions,
+                system_registers_file,
+                prefix_license_file,
+                aSize,
+            )
             if do_mods:
                 print(
                     "\tIntermediate system register definitions file: "
-                    "%s" % system_registers_file)
-                src_mod_files['system'] = system_registers_file
-                dest_mod_files['system'] = post_mod_system_registers_file
+                    "%s" % system_registers_file
+                )
+                src_mod_files["system"] = system_registers_file
+                dest_mod_files["system"] = post_mod_system_registers_file
             else:
                 print(
                     "\tSystem register definitions written to: "
-                    "%s\n" % system_registers_file)
+                    "%s\n" % system_registers_file
+                )
         if output_all or system_register_choices:
-            output_system_register_choices(systemRegisterDefinitions,
-                                           system_register_choices_file,
-                                           prefix_license_file)
+            output_system_register_choices(
+                systemRegisterDefinitions,
+                system_register_choices_file,
+                prefix_license_file,
+            )
             if do_mods:
                 print(
                     "\tIntermediate system register choices written to: "
-                    "%s" % system_register_choices_file)
+                    "%s" % system_register_choices_file
+                )
                 src_mod_files[
-                    'register_choices'] = system_register_choices_file
+                    "register_choices"
+                ] = system_register_choices_file
                 dest_mod_files[
-                    'register_choices'] = post_mod_system_register_choices_file
+                    "register_choices"
+                ] = post_mod_system_register_choices_file
             else:
                 print(
                     "\tSystem register choices written to: "
-                    "%s\n" % system_register_choices_file)
+                    "%s\n" % system_register_choices_file
+                )
         if output_all or register_field_choices:
-            output_register_field_choices(systemRegisterDefinitions,
-                                          register_field_choices_file,
-                                          prefix_license_file)
+            output_register_field_choices(
+                systemRegisterDefinitions,
+                register_field_choices_file,
+                prefix_license_file,
+            )
             if do_mods:
                 print(
                     "\tIntermediate register field choices written to: "
-                    "%s" % register_field_choices_file)
-                src_mod_files['field_choices'] = register_field_choices_file
+                    "%s" % register_field_choices_file
+                )
+                src_mod_files["field_choices"] = register_field_choices_file
                 dest_mod_files[
-                    'field_choices'] = post_mod_register_field_choices_file
+                    "field_choices"
+                ] = post_mod_register_field_choices_file
             else:
                 print(
                     "\tRegister field choices written to: "
-                    "%s\n" % register_field_choices_file)
+                    "%s\n" % register_field_choices_file
+                )
     except ValueError as ex:
         print("\nERROR:", ex)
         print(
             "\n---> Aborting register builder. Correct errors in starter "
-            "file; try again.\n")
+            "file; try again.\n"
+        )
         sys.exit(1)
 
     if do_mods:
         # run the modifications script...
-        print('')
+        print("")
         register_files = Files()
         register_files.addFiles(src_mod_files, modifications_script)
         register_files.modify()
@@ -472,12 +526,13 @@ def build_registers(
         print("\n\tFinal output files: ", dest_mod_files)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     build_registers()
     build_registers(
-        aXmlStarterFile='input/system_registers_starter_rv32.xml',
-        aSystemRegistersFile='output/system_registers_rv32.xml',
-        aSystemRegisterChoicesFile='output/system_register_choices_rv32.xml',
-        aRegisterFieldChoicesFile='output/register_field_choices_rv32.xml',
-        aSize='32', aModificationsScript=None
+        aXmlStarterFile="input/system_registers_starter_rv32.xml",
+        aSystemRegistersFile="output/system_registers_rv32.xml",
+        aSystemRegisterChoicesFile="output/system_register_choices_rv32.xml",
+        aRegisterFieldChoicesFile="output/register_field_choices_rv32.xml",
+        aSize="32",
+        aModificationsScript=None,
     )

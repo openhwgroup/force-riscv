@@ -441,8 +441,8 @@ class _CppStringToEnumFunctionGeneratorBase(abc.ABC):
         )
 
         for char_index in char_indexes[1:]:
-            char_retrieval_expression = (
-                self._generate_char_retrieval_expression(char_index, context)
+            char_retrieval_expression = self._generate_char_retrieval_expression(
+                char_index, context
             )
             hash_computation += " ^ " + char_retrieval_expression
 

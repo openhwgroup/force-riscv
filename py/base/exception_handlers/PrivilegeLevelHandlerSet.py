@@ -155,10 +155,8 @@ class PrivilegeLevelHandlerSet(Sequence):
         default_mem_bank = security_state.getDefaultMemoryBank()
 
         # generate asynchronous exception handler, indexed by exc vector offset
-        mem_bank_handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                default_mem_bank
-            )
+        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            default_mem_bank
         )
         handler = mem_bank_handler_registry.getExceptionHandler(
             self.master_async_handler_name
@@ -213,10 +211,8 @@ class PrivilegeLevelHandlerSet(Sequence):
         return self.nextCodeAddresses[aMemBank]
 
     def genJumpToAsynchronousHandler(self, aSecurityState):
-        mem_bank_handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                aSecurityState.getDefaultMemoryBank()
-            )
+        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            aSecurityState.getDefaultMemoryBank()
         )
         handler = mem_bank_handler_registry.getExceptionHandler(
             self.master_async_handler_name
@@ -229,15 +225,11 @@ class PrivilegeLevelHandlerSet(Sequence):
         ]
 
         ss_handlers = security_state_handler_set
-        handler_assignment = (
-            ss_handlers.getSynchronousExceptionHandlerAssignment(
-                exception_class
-            )
+        handler_assignment = ss_handlers.getSynchronousExceptionHandlerAssignment(
+            exception_class
         )
-        mem_bank_handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                handler_assignment.mMemBank
-            )
+        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            handler_assignment.mMemBank
         )
         handler = mem_bank_handler_registry.getExceptionHandler(
             handler_assignment.mHandlerClassName
@@ -348,10 +340,8 @@ class PrivilegeLevelHandlerSet(Sequence):
         )
 
         # generate synchronous exception handler, indexed by error code
-        mem_bank_handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                aMemBank
-            )
+        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            aMemBank
         )
         handler = mem_bank_handler_registry.getExceptionHandler(
             aHandlerClassName
@@ -410,10 +400,8 @@ class PrivilegeLevelHandlerSet(Sequence):
             self.exceptionRequest("UpdateHandlerInfo", info_set)
 
     def _genJumpToSynchronousHandler(self, aHandlerClassName, aMemBank):
-        mem_bank_handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                aMemBank
-            )
+        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            aMemBank
         )
         handler = mem_bank_handler_registry.getExceptionHandler(
             aHandlerClassName

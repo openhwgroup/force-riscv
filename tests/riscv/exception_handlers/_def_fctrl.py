@@ -14,26 +14,16 @@
 # limitations under the License.
 #
 control_items = [
-    {
-        "fname": "assembly_helper_force.py",
-    },
+    {"fname": "assembly_helper_force.py",},
     {
         "fname": "exception_counts_force.py",
-        "generator": {
-            "--options": '"handlers_set=Fast"',
-        },
+        "generator": {"--options": '"handlers_set=Fast"',},
     },
-    {
-        "fname": "exception_counts_force.py",
-    },
-    {
-        "fname": "stack_force.py",
-    },
+    {"fname": "exception_counts_force.py",},
+    {"fname": "stack_force.py",},
     {
         "fname": "instruction_misaligned_exception_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
+        "options": {"max-instr": 5000,},
         "generator": {
             "--max-instr": 5000,
             "--options": '"PrivilegeLevel=3,DelegateExceptions=0"',
@@ -41,19 +31,12 @@ control_items = [
     },
     {
         "fname": "trap_vm_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
-        "generator": {
-            "--max-instr": 5000,
-            "--options": '"PrivilegeLevel=1"',
-        },
+        "options": {"max-instr": 5000,},
+        "generator": {"--max-instr": 5000, "--options": '"PrivilegeLevel=1"',},
     },
     {
         "fname": "ecall_ebreak_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
+        "options": {"max-instr": 5000,},
         "generator": {
             "--max-instr": 5000,
             "--options": '"PrivilegeLevel=3,DelegateExceptions=1,'
@@ -62,9 +45,7 @@ control_items = [
     },
     {
         "fname": "ecall_ebreak_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
+        "options": {"max-instr": 5000,},
         "generator": {
             "--max-instr": 5000,
             "--options": '"PrivilegeLevel=1,DelegateExceptions=1,'
@@ -73,9 +54,7 @@ control_items = [
     },
     {
         "fname": "ecall_ebreak_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
+        "options": {"max-instr": 5000,},
         "generator": {
             "--max-instr": 5000,
             "--options": '"PrivilegeLevel=0,DelegateExceptions=1,'
@@ -84,9 +63,7 @@ control_items = [
     },
     {
         "fname": "ecall_ebreak_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
+        "options": {"max-instr": 5000,},
         "generator": {
             "--max-instr": 5000,
             "--options": '"PrivilegeLevel=3,RedirectTraps=1,PagingDisabled=1"',
@@ -94,9 +71,7 @@ control_items = [
     },
     {
         "fname": "ecall_ebreak_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
+        "options": {"max-instr": 5000,},
         "generator": {
             "--max-instr": 5000,
             "--options": '"PrivilegeLevel=1,RedirectTraps=1,PagingDisabled=1"',
@@ -104,9 +79,7 @@ control_items = [
     },
     {
         "fname": "ecall_ebreak_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
+        "options": {"max-instr": 5000,},
         "generator": {
             "--max-instr": 5000,
             "--options": '"PrivilegeLevel=0,RedirectTraps=1,PagingDisabled=1"',
@@ -114,32 +87,17 @@ control_items = [
     },
     {
         "fname": "access_csrs_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
-        "generator": {
-            "--max-instr": 5000,
-            "--options": '"PrivilegeLevel=3"',
-        },
+        "options": {"max-instr": 5000,},
+        "generator": {"--max-instr": 5000, "--options": '"PrivilegeLevel=3"',},
     },
     {
         "fname": "access_csrs_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
-        "generator": {
-            "--max-instr": 5000,
-            "--options": '"PrivilegeLevel=1"',
-        },
+        "options": {"max-instr": 5000,},
+        "generator": {"--max-instr": 5000, "--options": '"PrivilegeLevel=1"',},
     },
     {
         "fname": "access_csrs_force.py",
-        "options": {
-            "max-instr": 5000,
-        },
-        "generator": {
-            "--max-instr": 5000,
-            "--options": '"PrivilegeLevel=0"',
-        },
+        "options": {"max-instr": 5000,},
+        "generator": {"--max-instr": 5000, "--options": '"PrivilegeLevel=0"',},
     },
 ]

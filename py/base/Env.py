@@ -140,15 +140,11 @@ class Env(object):
         self.mGenMain.setup()
         for gen_thread in self.genThreads:
             if gen_thread is not self.mGenMain:
-                gen_thread.exceptionHandlerManager = (
-                    self.mGenMain.exceptionHandlerManager.createShallowCopy(
-                        gen_thread
-                    )
+                gen_thread.exceptionHandlerManager = self.mGenMain.exceptionHandlerManager.createShallowCopy(
+                    gen_thread
                 )
-                gen_thread.addressTableManager = (
-                    self.mGenMain.addressTableManager.createShallowCopy(
-                        gen_thread
-                    )
+                gen_thread.addressTableManager = self.mGenMain.addressTableManager.createShallowCopy(
+                    gen_thread
                 )
 
         self.executor.executeGenThreads(self.genThreads)

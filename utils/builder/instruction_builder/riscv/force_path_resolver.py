@@ -19,10 +19,10 @@ import sys
 
 def get_force_path():
     try:
-        force_path = os.environ['FORCE_PATH']
+        force_path = os.environ["FORCE_PATH"]
     except KeyError as ke:
         force_path = locate_force_path()
-        print('Default FORCE_PATH=%s' % force_path)
+        print("Default FORCE_PATH=%s" % force_path)
 
     return force_path
 

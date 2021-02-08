@@ -152,14 +152,12 @@ class ParseFiles:
                 except LookupError:
                     print(
                         "ALERT: %s was improperly formatted. Ignoring this "
-                        "file. "
-                        % (force_file)
+                        "file. " % (force_file)
                     )
                 except IOError:
                     print(
                         "ALERT: %s could not be accessed. Please check "
-                        "permissions."
-                        % (force_file)
+                        "permissions." % (force_file)
                     )
 
     def parseFileIntoArray(self, hFile):
@@ -173,7 +171,7 @@ class ParseFiles:
 
         # Skip over to the actual instn array
         instn_array_start_index = (
-                instn_array_index + self.FORCE_FILE_START_SENTINEL_LEN
+            instn_array_index + self.FORCE_FILE_START_SENTINEL_LEN
         )
 
         # Find the end of the instn array
@@ -184,7 +182,7 @@ class ParseFiles:
 
         # Get the instn array only
         instn_array_end_index = (
-                instn_array_index + self.FORCE_FILE_END_SENTINEL_LEN
+            instn_array_index + self.FORCE_FILE_END_SENTINEL_LEN
         )
         instn_array_str = file_data[:instn_array_end_index]
 
@@ -245,7 +243,7 @@ class ParseFiles:
                 )
 
             if sorted(all_instns_in_this_dir_for_this) != sorted(
-                    all_instns_in_this_dir_for_other
+                all_instns_in_this_dir_for_other
             ):
                 return False
 

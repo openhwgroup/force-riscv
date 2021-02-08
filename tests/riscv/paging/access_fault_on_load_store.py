@@ -32,31 +32,29 @@ class MainSequence(PageFaultSequence):
             self._mInstrList = ["LW##RISCV", "SW##RISCV"]
 
         # for risc-v, access exception - load: 5, store: 7
-        self._mExceptionCodes = (5, 7,)
+        self._mExceptionCodes = (
+            5,
+            7,
+        )
 
         # for now, riscv does not support exception sub-codes
-        self._mExceptionSubCodes = ({})
+        self._mExceptionSubCodes = {}
 
     def createPageFaultModifier(self):
         return AccessFaultModifier(self.genThread)
 
-
     def getInstructionList(self):
         return self.mInstrList
-
 
     def getExceptionCodes(self):
         return self._mExceptionCodes
 
-
     def getPageFaultResolutionType(self, aFaultLevels, aFastHandlers):
         resolution_type = PageFaultResolutionType.SKIP_INSTRUCTION
         if any([x in aFaultLevels for x in (0, 1, 2, 3)]) and (
-                not aFastHandlers
+            not aFastHandlers
         ):
-            resolution_type = (
-                PageFaultResolutionType.RE_EXECUTE_INSTRUCTION
-            )
+            resolution_type = PageFaultResolutionType.RE_EXECUTE_INSTRUCTION
 
         return resolution_type
 

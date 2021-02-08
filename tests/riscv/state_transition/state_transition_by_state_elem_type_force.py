@@ -80,14 +80,12 @@ class MainSequence(Sequence):
         state_transition_test_utils.assertValidRegisterValue(
             self, mcause_name, valid
         )
-        mcause_val = (
-            state_transition_test_utils.combineRegisterValueWithFieldValue(
-                self,
-                mcause_name,
-                mcause_val,
-                "EXCEPTION CODE_VAR",
-                exception_code_var_val,
-            )
+        mcause_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            self,
+            mcause_name,
+            mcause_val,
+            "EXCEPTION CODE_VAR",
+            exception_code_var_val,
         )
         expected_sys_reg_state_data.append((mcause_name, mcause_val))
 
@@ -99,10 +97,8 @@ class MainSequence(Sequence):
         state_transition_test_utils.assertValidRegisterValue(
             self, mtvec_name, valid
         )
-        mtvec_val = (
-            state_transition_test_utils.combineRegisterValueWithFieldValue(
-                self, mtvec_name, mtvec_val, "MODE", mode_val
-            )
+        mtvec_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            self, mtvec_name, mtvec_val, "MODE", mode_val
         )
         expected_sys_reg_state_data.append((mtvec_name, mtvec_val))
 

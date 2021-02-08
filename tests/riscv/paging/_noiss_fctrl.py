@@ -16,17 +16,11 @@
 control_items = [
     {
         "fname": "paging_force.py",
-        "generator": {
-            "--options": '"PrivilegeLevel=1"',
-            "--noiss": None,
-        },
+        "generator": {"--options": '"PrivilegeLevel=1"', "--noiss": None,},
     },
     {
         "fname": "paging_loadstore_force.py",
-        "generator": {
-            "--options": '"PrivilegeLevel=1"',
-            "--noiss": None,
-        },
+        "generator": {"--options": '"PrivilegeLevel=1"', "--noiss": None,},
     },
     {
         "fname": "paging_force.py",

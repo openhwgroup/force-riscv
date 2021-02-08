@@ -14,12 +14,7 @@
 # limitations under the License.
 #
 control_items = [
-    {
-        "fname": "*_force.py",
-        "options": {
-            "num-cores": 4,
-        },
-    },
+    {"fname": "*_force.py", "options": {"num-cores": 4,},},
     {
         "fname": "*_force.py",
         "options": {
@@ -31,12 +26,8 @@ control_items = [
     },
     {
         "fname": "*_force.py",
-        "options": {
-            "num-cores": 4,
-        },
-        "generator": {
-            "--options": '"PrivilegeLevel=1"',
-        },
+        "options": {"num-cores": 4,},
+        "generator": {"--options": '"PrivilegeLevel=1"',},
     },
     {
         "fname": "*_force.py",
@@ -46,8 +37,6 @@ control_items = [
             "num-threads": 2,
             "max-instr": 50000,
         },
-        "generator": {
-            "--options": '"PrivilegeLevel=1"',
-        },
+        "generator": {"--options": '"PrivilegeLevel=1"',},
     },
 ]

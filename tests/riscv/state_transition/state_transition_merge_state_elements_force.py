@@ -207,15 +207,11 @@ class MainSequence(Sequence):
             self, sys_reg_name, valid
         )
 
-        sys_reg_val = (
-            state_transition_test_utils.combineRegisterValueWithFieldValue(
-                self, sys_reg_name, sys_reg_val, "MIE", 0x0
-            )
+        sys_reg_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            self, sys_reg_name, sys_reg_val, "MIE", 0x0
         )
-        sys_reg_val = (
-            state_transition_test_utils.combineRegisterValueWithFieldValue(
-                self, sys_reg_name, sys_reg_val, "MPRV", 0x1
-            )
+        sys_reg_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            self, sys_reg_name, sys_reg_val, "MPRV", 0x1
         )
 
         return {sys_reg_name: sys_reg_val}

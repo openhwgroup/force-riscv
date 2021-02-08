@@ -45,21 +45,9 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
 
     # level bits are (mostly) same for Sv39, Sv48, but different for Sv32
     LEVEL_BITS = {
-        32: {
-            1: (31, 22),
-            0: (21, 12),
-        },
-        39: {
-            2: (38, 30),
-            1: (29, 21),
-            0: (20, 12),
-        },
-        48: {
-            3: (47, 39),
-            2: (38, 30),
-            1: (29, 21),
-            0: (20, 12),
-        },
+        32: {1: (31, 22), 0: (21, 12),},
+        39: {2: (38, 30), 1: (29, 21), 0: (20, 12),},
+        48: {3: (47, 39), 2: (38, 30), 1: (29, 21), 0: (20, 12),},
     }
     # level mask same for Sv39, Sv48, but different for Sv32
     LEVEL_MASK = {32: 0x3FF, 39: 0x1FF, 48: 0x1FF}
@@ -224,10 +212,8 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         ) = aHandlerContext.getScratchRegisterIndices(
             RegisterCallRole.TEMPORARY, 3
         )
-        self._mCalleeSavedRegIndices = (
-            aHandlerContext.getScratchRegisterIndices(
-                RegisterCallRole.CALLEE_SAVED, 3
-            )
+        self._mCalleeSavedRegIndices = aHandlerContext.getScratchRegisterIndices(
+            RegisterCallRole.CALLEE_SAVED, 3
         )
         (
             self._mWalkLevelRegIndex,

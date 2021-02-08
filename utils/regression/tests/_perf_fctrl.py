@@ -17,20 +17,14 @@
 control_items = [
     {
         "fname": "_perf_fctrl.py",
-        "options": {
-            "control-dir": "tests/instructions",
-        },
+        "options": {"control-dir": "tests/instructions",},
     },
     {
         "fname": "_perf_fctrl.py",
-        "options": {
-            "control-dir": "tests/instructions",
-        },
+        "options": {"control-dir": "tests/instructions",},
     },
     {
         "fname": "_perf_fctrl.py",
-        "options": {
-            "control-dir": "tests/instructions",
-        },
+        "options": {"control-dir": "tests/instructions",},
     },
 ]

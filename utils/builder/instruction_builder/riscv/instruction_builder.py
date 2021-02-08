@@ -18,7 +18,7 @@
 import getopt
 import sys
 
-sys.path.insert(0, '../..')
+sys.path.insert(0, "../..")
 
 from instruction_adjustor import G_InstructionAdjustor
 
@@ -32,7 +32,10 @@ def usage():
   -h, --help print this help message
 Example:
 %s --g-ext
-""" % (sys.argv[0], sys.argv[0])
+""" % (
+        sys.argv[0],
+        sys.argv[0],
+    )
     print(usage_str)
 
 
@@ -54,11 +57,9 @@ license_string = """<!--
 """
 
 
-def process_instruction_file(aInputFile,
-                             aOutputFile,
-                             aSupportedFile,
-                             aAdjustor
-                             ):
+def process_instruction_file(
+    aInputFile, aOutputFile, aSupportedFile, aAdjustor
+):
     from shared.instruction_file import InstructionFile
     from shared.instruction_file_parser import InstructionFileParser
 
@@ -82,8 +83,9 @@ def process_instruction_file(aInputFile,
 
 def build_instructions():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "h",
-                                   ["help", "g-ext", "c-ext", "v-ext", "priv"])
+        opts, args = getopt.getopt(
+            sys.argv[1:], "h", ["help", "g-ext", "c-ext", "v-ext", "priv"]
+        )
     except getopt.GetoptError as err:
         print(err)
         usage()
@@ -116,22 +118,30 @@ def build_instructions():
             sys.exit(1)
 
     if output_all or g_ext_only:
-        process_instruction_file("input/g_instructions_starter.xml",
-                                 "output/g_instructions.xml",
-                                 "output/supported_g_instructions.xml",
-                                 G_InstructionAdjustor())
-        process_instruction_file("input/g_instructions_rv64_starter.xml",
-                                 "output/g_instructions_rv64.xml",
-                                 "output/supported_g_instructions_rv64.xml",
-                                 G_InstructionAdjustor())
-        process_instruction_file("input/zfh_instructions_starter.xml",
-                                 "output/zfh_instructions.xml",
-                                 "output/supported_zfh_instructions.xml",
-                                 G_InstructionAdjustor())
-        process_instruction_file("input/zfh_instructions_rv64_starter.xml",
-                                 "output/zfh_instructions_rv64.xml",
-                                 "output/supported_zfh_instructions_rv64.xml",
-                                 G_InstructionAdjustor())
+        process_instruction_file(
+            "input/g_instructions_starter.xml",
+            "output/g_instructions.xml",
+            "output/supported_g_instructions.xml",
+            G_InstructionAdjustor(),
+        )
+        process_instruction_file(
+            "input/g_instructions_rv64_starter.xml",
+            "output/g_instructions_rv64.xml",
+            "output/supported_g_instructions_rv64.xml",
+            G_InstructionAdjustor(),
+        )
+        process_instruction_file(
+            "input/zfh_instructions_starter.xml",
+            "output/zfh_instructions.xml",
+            "output/supported_zfh_instructions.xml",
+            G_InstructionAdjustor(),
+        )
+        process_instruction_file(
+            "input/zfh_instructions_rv64_starter.xml",
+            "output/zfh_instructions_rv64.xml",
+            "output/supported_zfh_instructions_rv64.xml",
+            G_InstructionAdjustor(),
+        )
 
 
 # temp class/unit test for instruction parsing utility

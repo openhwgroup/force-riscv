@@ -29,44 +29,66 @@ class TestFindFurthestNewLine(unittest.TestCase):
     def tearDown(self):  # noqa: N802
         pass
 
-    def test_find_furthest_new_line_with_no_new_line_in_empty_byte_string(self):
+    def test_find_furthest_new_line_with_no_new_line_in_empty_byte_string(
+        self,
+    ):
         """Expect return value of -1 when empty bytestring is passed in."""
         test_string = b""
         r = _find_furthest_new_line(test_string)
         self.assertEqual(r, -1)
 
-    def test_find_furthest_new_line_with_no_new_line_in_non_empty_byte_string(self):
+    def test_find_furthest_new_line_with_no_new_line_in_non_empty_byte_string(
+        self,
+    ):
         """Expect return value of -1 when non-empty bytestrings that don't contain new line is passed in."""
         test_string = b"SomeRandomCharacters"
         r = _find_furthest_new_line(test_string)
         self.assertEqual(r, -1)
 
-    def test_find_furthest_new_line_with_bytestring_with_new_line_at_the_end(self):
+    def test_find_furthest_new_line_with_bytestring_with_new_line_at_the_end(
+        self,
+    ):
         """Expect return value of the last index of the test_string because the new line is at the end."""
         base_string = b"SomeRandomCharacters"
         for n in new_lines_bytes:
             test_string = base_string + n
             expected_value = len(test_string) - 1
             r = _find_furthest_new_line(test_string)
-            self.assertEqual(r, expected_value, msg="Test with {0} as new line".format(repr(n)))
+            self.assertEqual(
+                r,
+                expected_value,
+                msg="Test with {0} as new line".format(repr(n)),
+            )
 
-    def test_find_furthest_new_line_with_bytestring_with_new_line_in_the_middle(self):
+    def test_find_furthest_new_line_with_bytestring_with_new_line_in_the_middle(
+        self,
+    ):
         """Expect return value pointing to the middle of the test string where the newline is at."""
         base_string = b"SomeRandomCharacters"
         for n in new_lines_bytes:
             test_string = base_string + n + base_string
             expected_value = len(base_string) + len(n) - 1
             r = _find_furthest_new_line(test_string)
-            self.assertEqual(r, expected_value, msg="Test with {0} as new line".format(repr(n)))
+            self.assertEqual(
+                r,
+                expected_value,
+                msg="Test with {0} as new line".format(repr(n)),
+            )
 
-    def test_find_furthest_new_line_with_bytestring_with_new_line_in_the_middle_and_end(self):
+    def test_find_furthest_new_line_with_bytestring_with_new_line_in_the_middle_and_end(
+        self,
+    ):
         """Expect return value of the last index of the test_string because the new line is at the end."""
         base_string = b"SomeRandomCharacters"
         for n in new_lines_bytes:
             test_string = base_string + n + base_string + n
             expected_value = len(test_string) - 1
             r = _find_furthest_new_line(test_string)
-            self.assertEqual(r, expected_value, msg="Test with {0} as new line".format(repr(n)))
+            self.assertEqual(
+                r,
+                expected_value,
+                msg="Test with {0} as new line".format(repr(n)),
+            )
 
 
 class TestRemoveTrailingNewLine(unittest.TestCase):
@@ -80,14 +102,18 @@ class TestRemoveTrailingNewLine(unittest.TestCase):
         r = _remove_trailing_new_line(test_string)
         self.assertEqual(r, expected_string)
 
-    def test_remove_trailing_new_line_with_non_empty_byte_string_with_no_new_line(self):
+    def test_remove_trailing_new_line_with_non_empty_byte_string_with_no_new_line(
+        self,
+    ):
         """Expect nothing to change."""
         test_string = b"Something"
         expected_string = test_string
         r = _remove_trailing_new_line(test_string)
         self.assertEqual(r, expected_string)
 
-    def test_remove_trailing_new_line_with_non_empty_byte_string_with_variety_of_new_lines(self):
+    def test_remove_trailing_new_line_with_non_empty_byte_string_with_variety_of_new_lines(
+        self,
+    ):
         """Expect new lines to be removed at the end of the string."""
         expected_str = b"Something"
         for n in new_lines_bytes:
@@ -96,16 +122,25 @@ class TestRemoveTrailingNewLine(unittest.TestCase):
             self.assertEqual(
                 r,
                 expected_str,
-                msg="Test with {0} followed by {1} as new line at the end of str".format(repr(expected_str), repr(n)))
+                msg="Test with {0} followed by {1} as new line at the end of str".format(
+                    repr(expected_str), repr(n)
+                ),
+            )
 
-    def test_remove_trailing_new_line_with_non_empty_byte_string_with_variety_of_new_lines_in_the_middle(self):
+    def test_remove_trailing_new_line_with_non_empty_byte_string_with_variety_of_new_lines_in_the_middle(
+        self,
+    ):
         """Expect nothing to change because the new line is in the middle."""
         base_string = b"Something"
         for n in new_lines_bytes:
             test_string = base_string + n + base_string
             expected_string = test_string
             r = _remove_trailing_new_line(test_string)
-            self.assertEqual(r, expected_string, msg="Test with {0} as new line".format(repr(n)))
+            self.assertEqual(
+                r,
+                expected_string,
+                msg="Test with {0} as new line".format(repr(n)),
+            )
 
 
 class TestGetFileSize(unittest.TestCase):
@@ -156,7 +191,9 @@ class TestGetWhatToReadNext(unittest.TestCase):
             pass
         expected_result = (0, 0)
         with io.open(t.name, mode="rb") as fp:
-            r = _get_what_to_read_next(fp, previously_read_position=0, chunk_size=3)
+            r = _get_what_to_read_next(
+                fp, previously_read_position=0, chunk_size=3
+            )
             self.assertEqual(expected_result, r)
         os.unlink(t.name)
 
@@ -166,7 +203,9 @@ class TestGetWhatToReadNext(unittest.TestCase):
             t.write(b"abcdefg")
         expected_result = (4, 3)
         with io.open(t.name, mode="rb") as fp:
-            r = _get_what_to_read_next(fp, previously_read_position=7, chunk_size=3)
+            r = _get_what_to_read_next(
+                fp, previously_read_position=7, chunk_size=3
+            )
             self.assertEqual(expected_result, r)
         os.unlink(t.name)
 
@@ -178,7 +217,9 @@ class TestGetWhatToReadNext(unittest.TestCase):
             expected_result = (0, len(n))
             chunk_size = len(n) + 1  # chunk size must be greater than len(n)
             with io.open(t.name, mode="rb") as fp:
-                r = _get_what_to_read_next(fp, previously_read_position=len(n), chunk_size=chunk_size)
+                r = _get_what_to_read_next(
+                    fp, previously_read_position=len(n), chunk_size=chunk_size
+                )
                 self.assertEqual(r, expected_result)
             os.unlink(t.name)
 
@@ -188,7 +229,9 @@ class TestGetWhatToReadNext(unittest.TestCase):
             t.write(b"abcd\nfg")
         expected_result = (3, 4)
         with io.open(t.name, mode="rb") as fp:
-            r = _get_what_to_read_next(fp, previously_read_position=7, chunk_size=3)
+            r = _get_what_to_read_next(
+                fp, previously_read_position=7, chunk_size=3
+            )
             self.assertEqual(expected_result, r)
         os.unlink(t.name)
 
@@ -237,7 +280,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
     def test_add_to_empty_buffer_work_space(self):
         """Test reading last 3 bytes from a 1024 byte file."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
             b = BufferWorkSpace(fp_mock, chunk_size=io.DEFAULT_BUFFER_SIZE)
@@ -247,7 +292,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
     def test_add_to_non_empty_buffer_work_space(self):
         """Test adding to a non-empty buffer work space."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
             b = BufferWorkSpace(fp_mock, chunk_size=io.DEFAULT_BUFFER_SIZE)
@@ -267,7 +314,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
     def test_yieldable_for_unexhausted_buffer_space_with_single_new_line(self):
         """Buffer work space with a single new line (with read_position > 0) is not be yieldable."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -281,7 +330,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
     def test_yieldable_for_buffer_space_with_two_new_lines(self):
         """Buffer work space with a two new lines are yieldable."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -293,12 +344,16 @@ class TestBufferWorkSpace(unittest.TestCase):
                 r = b.yieldable()
                 self.assertEqual(r, expected_result)
 
-    def test_yieldable_for_fully_read_with_unreturned_contents_in_buffer_space(self):
+    def test_yieldable_for_fully_read_with_unreturned_contents_in_buffer_space(
+        self,
+    ):
         """Buffer work space that has been fully read in and unreturned contents is yieldable.
 
         Note: fully read in and unreturned contents is represented by read_position = 0 and read_buffer is not None.
         """
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -310,12 +365,16 @@ class TestBufferWorkSpace(unittest.TestCase):
                 r = b.yieldable()
                 self.assertEqual(r, expected_result)
 
-    def test_yieldable_for_fully_read_and_returned_contents_in_buffer_space(self):
+    def test_yieldable_for_fully_read_and_returned_contents_in_buffer_space(
+        self,
+    ):
         """BufferWorkSpace that has been fully read in and returned contents is not yieldable.
 
         Note: fully read-in and returned is represented by read_position = 0, read_buffer is None.
         """
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -328,7 +387,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
     def test_return_line_with_buffer_space_with_two_new_lines(self):
         """With two new lines as its sole contents, the buffer space is expected to return b''."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -340,9 +401,13 @@ class TestBufferWorkSpace(unittest.TestCase):
                 r = b.return_line()
                 self.assertEqual(r, expected_result)
 
-    def test_return_line_with_buffer_space_with_some_contents_between_two_new_lines(self):
+    def test_return_line_with_buffer_space_with_some_contents_between_two_new_lines(
+        self,
+    ):
         """With some bytestrings in between 2 new lines, expect to have the bytestrings in the middle."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -354,9 +419,13 @@ class TestBufferWorkSpace(unittest.TestCase):
                 r = b.return_line()
                 self.assertEqual(r, expected_result)
 
-    def test_return_line_with_buffer_space_with_fully_read_in_contents_at_its_last_line(self):
+    def test_return_line_with_buffer_space_with_fully_read_in_contents_at_its_last_line(
+        self,
+    ):
         """With some bytestrings in between 2 new lines, expect to have the bytestrings in the middle."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -370,7 +439,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
     def test_return_line_contract_violation(self):
         """BufferWorkSpace (of a completely empty file) would result in contract violation for return_line."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 0
 
@@ -380,7 +451,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
     def test_has_returned_every_line_empty_file(self):
         """With empty file (a degenerate case), it is expected to have returned everything."""
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 0
 
@@ -393,7 +466,9 @@ class TestBufferWorkSpace(unittest.TestCase):
 
         Note that: not fully read in is represented by read_position != 0
         """
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -402,12 +477,16 @@ class TestBufferWorkSpace(unittest.TestCase):
             r = b.has_returned_every_line()
             self.assertFalse(r)
 
-    def test_has_returned_every_line_with_fully_read_in_and_unprocessed_buffer_space(self):
+    def test_has_returned_every_line_with_fully_read_in_and_unprocessed_buffer_space(
+        self,
+    ):
         """BufferWorkSpace that has been fully read with some unprocessed buffer has not returned everything.
 
         Note: not fully read in and some unprocessed buffer is represented by read_position = 0 and read_buffer != None
         """
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 
@@ -417,12 +496,16 @@ class TestBufferWorkSpace(unittest.TestCase):
             r = b.has_returned_every_line()
             self.assertFalse(r)
 
-    def test_has_returned_every_line_with_fully_read_in_and_processed_buffer_space(self):
+    def test_has_returned_every_line_with_fully_read_in_and_processed_buffer_space(
+        self,
+    ):
         """BufferWorkSpace that has been fully read in and fully processed has not returned everything.
 
         Note: not fully read in and some unprocessed buffer is represented by read_position = 0 and read_buffer = None
         """
-        with patch("file_read_backwards.buffer_work_space._get_file_size") as _get_file_size_mock:
+        with patch(
+            "file_read_backwards.buffer_work_space._get_file_size"
+        ) as _get_file_size_mock:
             fp_mock = Mock()
             _get_file_size_mock.return_value = 1024
 

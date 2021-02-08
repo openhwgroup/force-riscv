@@ -17,7 +17,6 @@ from pathlib import Path
 
 
 class BuilderFactory:
-
     def get_rw_objects(self, arch, builder_type):
         return (get_reader(arch, builder_type), get_writer(arch, builder_type))
 
@@ -39,8 +38,9 @@ class BuilderFactory:
 
 
 class BaseParser:
-    def __init__(self, input_files=None, arch="", builder_type="",
-                 aggregate=False):
+    def __init__(
+        self, input_files=None, arch="", builder_type="", aggregate=False
+    ):
         # ensure input files not empty for parser class
         if input_files is None:
             raise ValueError(input_files)
@@ -51,25 +51,27 @@ class BaseParser:
         # individual output file
         self.bAggregate = aggregate
         if self.bAggregate:
-            self.sAggOutputFile = '{}_{}_out.xml'.format(arch, builder_type)
+            self.sAggOutputFile = "{}_{}_out.xml".format(arch, builder_type)
 
         # factory object to instantiate the reader/writer objects from the
         # architecture/builder_type
         builder_factory = BuilderFactory(arch, builder_type)
         try:
-            (self.mReader, self.mWriter) = \
-                builder_factory.get_rw_objets(arch, builder_type)
+            (self.mReader, self.mWriter) = builder_factory.get_rw_objets(
+                arch, builder_type
+            )
         except ValueError as err:
             print(
                 "Builder object failed to create, invalid input "
-                "specified: {}".format(err.args))
+                "specified: {}".format(err.args)
+            )
         # aggregation of output data for debug or aggregated output mode
         self.mOutputData = []
 
     def output_name(self, f_name):
         try:
             p = Path(f_name)
-            return '{}_out.xml'.format(p.stem)
+            return "{}_out.xml".format(p.stem)
         except IOError as err:
             print("Invalid input file(s) specified: {}".format(err.args))
 
@@ -90,11 +92,11 @@ class BaseParser:
 # Base classes for reader/writer objects/interfaces
 class BaseReader:
     def read_input(self, input_path):
-        with open(input_path, 'r') as f_handle:
+        with open(input_path, "r") as f_handle:
             return self.read(f_handle)
 
 
 class BaseWriter:
     def write_output(self, output_path, output_data):
-        with open(output_path, 'w') as f_handle:
+        with open(output_path, "w") as f_handle:
             self.write(f_handle, output_data)

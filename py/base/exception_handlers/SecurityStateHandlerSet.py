@@ -49,10 +49,8 @@ class SecurityStateHandlerSet(object):
         if mem_bank is None:
             mem_bank = self._mSecurityState.getDefaultMemoryBank()
 
-        mem_bank_handler_registry = (
-            self._mMemBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                mem_bank
-            )
+        mem_bank_handler_registry = self._mMemBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            mem_bank
         )
         mem_bank_handler_registry.registerExceptHandlerWithClassName(
             aAssignmentRequest.mHandlerModuleName,

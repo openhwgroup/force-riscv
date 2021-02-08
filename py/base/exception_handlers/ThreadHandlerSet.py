@@ -288,28 +288,20 @@ class ThreadHandlerSet(Sequence):
         create_dfsed = factory.createDefaultFastSynchronousExceptionDispatcher
         if self.fastMode():
             if self.user_sync_dispatcher is not None:
-                sync_dispatch_addr = (
-                    priv_level_handler_set.generateUserSyncDispatch(
-                        securityState, self.user_sync_dispatcher
-                    )
+                sync_dispatch_addr = priv_level_handler_set.generateUserSyncDispatch(
+                    securityState, self.user_sync_dispatcher
                 )
             else:
                 sync_dispatcher = create_dfsed(self.genThread)
-                sync_dispatch_addr = (
-                    priv_level_handler_set.generateSynchronousHandlers(
-                        securityState, sync_dispatcher
-                    )
-                )
-        else:
-            sync_dispatcher = (
-                self.factory.createDefaultSynchronousExceptionDispatcher(
-                    self.genThread
-                )
-            )
-            sync_dispatch_addr = (
-                priv_level_handler_set.generateSynchronousHandlers(
+                sync_dispatch_addr = priv_level_handler_set.generateSynchronousHandlers(
                     securityState, sync_dispatcher
                 )
+        else:
+            sync_dispatcher = self.factory.createDefaultSynchronousExceptionDispatcher(
+                self.genThread
+            )
+            sync_dispatch_addr = priv_level_handler_set.generateSynchronousHandlers(
+                securityState, sync_dispatcher
             )
 
         for mem_bank in self.getMemoryBanks():
@@ -409,10 +401,8 @@ class ThreadHandlerSet(Sequence):
     def _recordSpecificHandlerBoundary(
         self, memBank, handler_name, start_addr, end_addr
     ):
-        mem_bank_handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                memBank
-            )
+        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            memBank
         )
         mem_bank_handler_registry.addHandlerBoundary(
             handler_name, start_addr, end_addr

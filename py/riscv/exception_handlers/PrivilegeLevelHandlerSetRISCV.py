@@ -74,10 +74,8 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
             start_addr = self.nextCodeAddresses[default_mem_bank]
             self.setPEstate("PC", start_addr)
 
-            mem_bank_handler_registry = (
-                self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                    default_mem_bank
-                )
+            mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+                default_mem_bank
             )
             handler_context = self.createExceptionHandlerContext(
                 0, default_mem_bank
@@ -114,10 +112,8 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
         return 64
 
     def createExceptionHandlerContext(self, err_code, mem_bank):
-        mem_bank_handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                mem_bank
-            )
+        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            mem_bank
         )
         if self.fastMode():
             handler_context = ExceptionHandlerContext(

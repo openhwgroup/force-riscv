@@ -16,12 +16,8 @@
 control_items = [
     {
         "fname": "*_force.py",
-        "options": {
-            "num-cores": 4,
-        },
-        "generator": {
-            "--noiss": None,
-        },
+        "options": {"num-cores": 4,},
+        "generator": {"--noiss": None,},
     },
     {
         "fname": "*_force.py",
@@ -31,19 +27,12 @@ control_items = [
             "num-threads": 2,
             "max-instr": 50000,
         },
-        "generator": {
-            "--noiss": None,
-        },
+        "generator": {"--noiss": None,},
     },
     {
         "fname": "*_force.py",
-        "options": {
-            "num-cores": 4,
-        },
-        "generator": {
-            "--options": '"PrivilegeLevel=1"',
-            "--noiss": None,
-        },
+        "options": {"num-cores": 4,},
+        "generator": {"--options": '"PrivilegeLevel=1"', "--noiss": None,},
     },
     {
         "fname": "*_force.py",
@@ -53,9 +42,6 @@ control_items = [
             "num-threads": 2,
             "max-instr": 50000,
         },
-        "generator": {
-            "--options": '"PrivilegeLevel=1"',
-            "--noiss": None,
-        },
+        "generator": {"--options": '"PrivilegeLevel=1"', "--noiss": None,},
     },
 ]

@@ -439,13 +439,13 @@ def get_referenced_instruction(instr_file, instr_name_form_isa):
         if instr_name == instr.name:
             if instr_form and instr.form.lower() == instr_form.lower():
                 if (
-                        instr_isa and instr.isa.lower() == instr_isa.lower()
+                    instr_isa and instr.isa.lower() == instr_isa.lower()
                 ) or instr_isa is None:
                     return instr
             elif (
-                    instr_form is None
-                    and instr_isa
-                    and instr.isa.lower() == instr_isa.lower()
+                instr_form is None
+                and instr_isa
+                and instr.isa.lower() == instr_isa.lower()
             ):
                 return instr
     raise Exception("The instruction not found:", instr_name_form_isa)

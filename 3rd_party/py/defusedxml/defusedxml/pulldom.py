@@ -31,7 +31,11 @@ def parse(
 
 
 def parseString(
-    string, parser=None, forbid_dtd=False, forbid_entities=True, forbid_external=True
+    string,
+    parser=None,
+    forbid_dtd=False,
+    forbid_entities=True,
+    forbid_external=True,
 ):
     if parser is None:
         parser = make_parser()

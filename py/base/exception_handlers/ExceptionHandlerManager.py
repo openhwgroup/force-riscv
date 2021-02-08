@@ -72,10 +72,8 @@ class ExceptionHandlerManager(Sequence):
     def createShallowCopy(self, gen_thread):
         exceptionsManagerCopy = copy.copy(self)
         exceptionsManagerCopy.genThread = gen_thread
-        exceptionsManagerCopy.exceptions_stack = (
-            exceptionsManagerCopy.factory.createExceptionHandlerStack(
-                gen_thread
-            )
+        exceptionsManagerCopy.exceptions_stack = exceptionsManagerCopy.factory.createExceptionHandlerStack(
+            gen_thread
         )
         exceptionsManagerCopy.address_table = None
 
@@ -108,10 +106,8 @@ class ExceptionHandlerManager(Sequence):
         self, handler_module_name, handler_class_name
     ):
         for mem_bank in self.getMemoryBanks():
-            mem_bank_handler_registry = (
-                self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                    mem_bank
-                )
+            mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+                mem_bank
             )
             mem_bank_handler_registry.registerExceptHandlerWithClassName(
                 handler_module_name,

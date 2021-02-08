@@ -167,10 +167,8 @@ class MainSequence(Sequence):
         state_transition_test_utils.assertValidRegisterValue(
             self, fcsr_name, valid
         )
-        fcsr_val = (
-            state_transition_test_utils.combineRegisterValueWithFieldValue(
-                self, fcsr_name, fcsr_val, "FRM", 1
-            )
+        fcsr_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            self, fcsr_name, fcsr_val, "FRM", 1
         )
 
         # TODO(Noah): Enable verification of setting the fcsr register when
@@ -197,10 +195,8 @@ class MainSequence(Sequence):
         state_transition_test_utils.assertValidRegisterValue(
             self, sstatus_name, valid
         )
-        sstatus_val = (
-            state_transition_test_utils.combineRegisterValueWithFieldValue(
-                self, sstatus_name, sstatus_val, "FS", fs_val
-            )
+        sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            self, sstatus_name, sstatus_val, "FS", fs_val
         )
 
         # Adjust expected value of SD bit according to architecture rules
@@ -213,16 +209,12 @@ class MainSequence(Sequence):
             self, sstatus_name, valid
         )
         if (fs_val == 3) or (xs_val == 3) or (vs_val == 3):
-            sstatus_val = (
-                state_transition_test_utils.combineRegisterValueWithFieldValue(
-                    self, sstatus_name, sstatus_val, "SD", 1
-                )
+            sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+                self, sstatus_name, sstatus_val, "SD", 1
             )
         else:
-            sstatus_val = (
-                state_transition_test_utils.combineRegisterValueWithFieldValue(
-                    self, sstatus_name, sstatus_val, "SD", 0
-                )
+            sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+                self, sstatus_name, sstatus_val, "SD", 0
             )
 
         expected_sys_reg_state_data.append((sstatus_name, sstatus_val))

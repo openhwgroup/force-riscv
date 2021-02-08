@@ -100,21 +100,38 @@ class DefusedXMLParser(_XMLParser):
             parser.StartDoctypeDeclHandler = self.defused_start_doctype_decl
         if self.forbid_entities:
             parser.EntityDeclHandler = self.defused_entity_decl
-            parser.UnparsedEntityDeclHandler = self.defused_unparsed_entity_decl
+            parser.UnparsedEntityDeclHandler = (
+                self.defused_unparsed_entity_decl
+            )
         if self.forbid_external:
-            parser.ExternalEntityRefHandler = self.defused_external_entity_ref_handler
+            parser.ExternalEntityRefHandler = (
+                self.defused_external_entity_ref_handler
+            )
 
-    def defused_start_doctype_decl(self, name, sysid, pubid, has_internal_subset):
+    def defused_start_doctype_decl(
+        self, name, sysid, pubid, has_internal_subset
+    ):
         raise DTDForbidden(name, sysid, pubid)
 
     def defused_entity_decl(
-        self, name, is_parameter_entity, value, base, sysid, pubid, notation_name
+        self,
+        name,
+        is_parameter_entity,
+        value,
+        base,
+        sysid,
+        pubid,
+        notation_name,
     ):
         raise EntitiesForbidden(name, value, base, sysid, pubid, notation_name)
 
-    def defused_unparsed_entity_decl(self, name, base, sysid, pubid, notation_name):
+    def defused_unparsed_entity_decl(
+        self, name, base, sysid, pubid, notation_name
+    ):
         # expat 1.2
-        raise EntitiesForbidden(name, None, base, sysid, pubid, notation_name)  # pragma: no cover
+        raise EntitiesForbidden(
+            name, None, base, sysid, pubid, notation_name
+        )  # pragma: no cover
 
     def defused_external_entity_ref_handler(self, context, base, sysid, pubid):
         raise ExternalReferenceForbidden(context, base, sysid, pubid)

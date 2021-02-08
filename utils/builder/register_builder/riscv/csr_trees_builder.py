@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# 
+#
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
 # FORCE-RISCV is licensed under the Apache License, Version 2.0
@@ -60,14 +60,19 @@ All_Machine_RW_CSRs = Merge(Machine_RW_CSRs, Supervisor_RW_CSRs)
 # This file reads existing system registers (XML)file to create a CSR
 # trees file.
 
+
 class CSRTreeBuilder:
     def __init__(self, aSysRegsStarterFile=None, aCSRTreeFile=None):
         if aSysRegsStarterFile is None:
-            raise ValueError("Internal error (CSRTreeBuilder): "
-                             "No starter file specified.")
+            raise ValueError(
+                "Internal error (CSRTreeBuilder): "
+                "No starter file specified."
+            )
         if aCSRTreeFile is None:
-            raise ValueError("Internal error (CSRTreeBuilder): "
-                             "No starter file specified.")
+            raise ValueError(
+                "Internal error (CSRTreeBuilder): "
+                "No starter file specified."
+            )
 
         self.mSysRegsStarterFile = aSysRegsStarterFile
         self.mCSRTreeFile = aCSRTreeFile
@@ -92,78 +97,78 @@ class CSRTreeBuilder:
     def setupCSRIndices(self):
         self.mCSRTypesByIndex = {}
 
-        for i in range(0, 0xfff):
+        for i in range(0, 0xFFF):
             # standard user CSRs...
-            if i >= 0 and i < 0xff:
-                self.mCSRTypesByIndex[i] = ('User', 'RW')
-            elif i >= 0x400 and i < 0x4ff:
-                self.mCSRTypesByIndex[i] = ('User', 'RW')
-            elif i >= 0xc00 and i < 0xc7f:
-                self.mCSRTypesByIndex[i] = ('User', 'R')
-            elif i >= 0xc80 and i < 0xcbf:
-                self.mCSRTypesByIndex[i] = ('User', 'R')
+            if i >= 0 and i < 0xFF:
+                self.mCSRTypesByIndex[i] = ("User", "RW")
+            elif i >= 0x400 and i < 0x4FF:
+                self.mCSRTypesByIndex[i] = ("User", "RW")
+            elif i >= 0xC00 and i < 0xC7F:
+                self.mCSRTypesByIndex[i] = ("User", "R")
+            elif i >= 0xC80 and i < 0xCBF:
+                self.mCSRTypesByIndex[i] = ("User", "R")
             # standard supervisor CSRs...
-            if i >= 0x100 and i < 0x1ff:
-                self.mCSRTypesByIndex[i] = ('Supervisor', 'RW')
-            elif i >= 0x500 and i < 0x5bf:
-                self.mCSRTypesByIndex[i] = ('Supervisor', 'RW')
-            elif i >= 0x900 and i < 0x9bf:
-                self.mCSRTypesByIndex[i] = ('Supervisor', 'RW')
-            elif i >= 0xd00 and i < 0xdbf:
-                self.mCSRTypesByIndex[i] = ('Supervisor', 'R')
+            if i >= 0x100 and i < 0x1FF:
+                self.mCSRTypesByIndex[i] = ("Supervisor", "RW")
+            elif i >= 0x500 and i < 0x5BF:
+                self.mCSRTypesByIndex[i] = ("Supervisor", "RW")
+            elif i >= 0x900 and i < 0x9BF:
+                self.mCSRTypesByIndex[i] = ("Supervisor", "RW")
+            elif i >= 0xD00 and i < 0xDBF:
+                self.mCSRTypesByIndex[i] = ("Supervisor", "R")
             # standard hypervisor CSRs...
-            if i >= 0x200 and i < 0x2ff:
-                self.mCSRTypesByIndex[i] = ('Hypervisor', 'RW')
-            elif i >= 0x600 and i < 0x6bf:
-                self.mCSRTypesByIndex[i] = ('Hypervisor', 'RW')
-            elif i >= 0xa00 and i < 0xabf:
-                self.mCSRTypesByIndex[i] = ('Hypervisor', 'RW')
-            elif i >= 0xe00 and i < 0xebf:
-                self.mCSRTypesByIndex[i] = ('Hypervisor', 'R')
+            if i >= 0x200 and i < 0x2FF:
+                self.mCSRTypesByIndex[i] = ("Hypervisor", "RW")
+            elif i >= 0x600 and i < 0x6BF:
+                self.mCSRTypesByIndex[i] = ("Hypervisor", "RW")
+            elif i >= 0xA00 and i < 0xABF:
+                self.mCSRTypesByIndex[i] = ("Hypervisor", "RW")
+            elif i >= 0xE00 and i < 0xEBF:
+                self.mCSRTypesByIndex[i] = ("Hypervisor", "R")
             # standard machine CSRs...
-            if i >= 0x300 and i < 0x3ff:
-                self.mCSRTypesByIndex[i] = ('Machine', 'RW')
-            elif i >= 0x700 and i < 0x7af:
-                self.mCSRTypesByIndex[i] = ('Machine', 'RW')
-            elif i >= 0xb00 and i < 0xbbf:
-                self.mCSRTypesByIndex[i] = ('Machine', 'RW')
-            elif i >= 0xf00 and i < 0xfbf:
-                self.mCSRTypesByIndex[i] = ('Machine', 'R')
+            if i >= 0x300 and i < 0x3FF:
+                self.mCSRTypesByIndex[i] = ("Machine", "RW")
+            elif i >= 0x700 and i < 0x7AF:
+                self.mCSRTypesByIndex[i] = ("Machine", "RW")
+            elif i >= 0xB00 and i < 0xBBF:
+                self.mCSRTypesByIndex[i] = ("Machine", "RW")
+            elif i >= 0xF00 and i < 0xFBF:
+                self.mCSRTypesByIndex[i] = ("Machine", "R")
             # machine-mode Debug CSRs...
-            elif i >= 0x7b0 and i < 0x7bf:
-                self.mCSRTypesByIndex[i] = ('Debug', 'RW')
+            elif i >= 0x7B0 and i < 0x7BF:
+                self.mCSRTypesByIndex[i] = ("Debug", "RW")
             # one known custom (machine mode) CSR...
-            elif i == 0x7c0:
-                self.mCSRTypesByIndex[i] = ('Custom', 'RO')
+            elif i == 0x7C0:
+                self.mCSRTypesByIndex[i] = ("Custom", "RO")
 
     # parse system registers starter file to glean all CSR definitions.
     # Group CSRs by privilege level and access 'rights'...
     def parseSystemRegistersFile(self):
         aTree = ET.parse(self.mSysRegsStarterFile)
-        registers = aTree.findall('.//register')
+        registers = aTree.findall(".//register")
         for register in registers:
-            reg_name = register.get('name')
-            reg_index = int(register.get('index'), 0)
+            reg_name = register.get("name")
+            reg_index = int(register.get("index"), 0)
             try:
                 (mode, access) = self.mCSRTypesByIndex[reg_index]
                 # print(reg_name, reg_index, mode, access)
-                if mode == 'User':
-                    if access == 'RW':
+                if mode == "User":
+                    if access == "RW":
                         self.mUserRW_CSRs.append(reg_name)
                     else:
                         self.mUserRO_CSRs.append(reg_name)
-                if mode == 'Supervisor':
-                    if access == 'RW':
+                if mode == "Supervisor":
+                    if access == "RW":
                         self.mSupervisorRW_CSRs.append(reg_name)
                     else:
                         self.mSupervisorRO_CSRs.append(reg_name)
-                if mode == 'Hypervisor':
-                    if access == 'RW':
+                if mode == "Hypervisor":
+                    if access == "RW":
                         self.mHypervisorRW_CSRs.append(reg_name)
                     else:
                         self.mHypervisorRO_CSRs.append(reg_name)
-                if mode == 'Machine':
-                    if access == 'RW':
+                if mode == "Machine":
+                    if access == "RW":
                         self.mMachineRW_CSRs.append(reg_name)
                     else:
                         self.mMachineRO_CSRs.append(reg_name)
@@ -174,22 +179,26 @@ class CSRTreeBuilder:
 
     # write CSR trees file...
     def dumpCSRTrees(self):
-        with open(self.mCSRTreeFile, 'w') as f:
+        with open(self.mCSRTreeFile, "w") as f:
             f.write(license_string)
             f.write(tree_utility_string)
-            f.write('# CSRs, grouped by Mode and access rights...\n')
-            self.dumpOneCSRTree(f, 'User_RW_CSRs', self.mUserRW_CSRs)
-            self.dumpOneCSRTree(f, 'User_RO_CSRs', self.mUserRO_CSRs)
-            self.dumpOneCSRTree(f, 'Supervisor_RW_CSRs',
-                                self.mSupervisorRW_CSRs)
-            self.dumpOneCSRTree(f, 'Supervisor_RO_CSRs',
-                                self.mSupervisorRO_CSRs)
-            self.dumpOneCSRTree(f, 'Hypervisor_RW_CSRs',
-                                self.mHypervisorRW_CSRs)
-            self.dumpOneCSRTree(f, 'Hypervisor_RO_CSRs',
-                                self.mHypervisorRO_CSRs)
-            self.dumpOneCSRTree(f, 'Machine_RW_CSRs', self.mMachineRW_CSRs)
-            self.dumpOneCSRTree(f, 'Machine_RO_CSRs', self.mMachineRO_CSRs)
+            f.write("# CSRs, grouped by Mode and access rights...\n")
+            self.dumpOneCSRTree(f, "User_RW_CSRs", self.mUserRW_CSRs)
+            self.dumpOneCSRTree(f, "User_RO_CSRs", self.mUserRO_CSRs)
+            self.dumpOneCSRTree(
+                f, "Supervisor_RW_CSRs", self.mSupervisorRW_CSRs
+            )
+            self.dumpOneCSRTree(
+                f, "Supervisor_RO_CSRs", self.mSupervisorRO_CSRs
+            )
+            self.dumpOneCSRTree(
+                f, "Hypervisor_RW_CSRs", self.mHypervisorRW_CSRs
+            )
+            self.dumpOneCSRTree(
+                f, "Hypervisor_RO_CSRs", self.mHypervisorRO_CSRs
+            )
+            self.dumpOneCSRTree(f, "Machine_RW_CSRs", self.mMachineRW_CSRs)
+            self.dumpOneCSRTree(f, "Machine_RO_CSRs", self.mMachineRO_CSRs)
             f.write(merge_trees_string)
 
     # identify counter, event, pmp, interrupt related CSRs...
@@ -201,18 +210,42 @@ class CSRTreeBuilder:
         # interrupt related registers (at least the enable/pending regs) are
         # not yet supported...
         unsupported_csrs = [
-            'count', 'event', 'pmp', 'cycle', 'time', 'instret',
-            'utvec', 'utval', 'uip', 'uepc', 'ucause', 'uscratch', 'ustatus',
-            'uie',
-            'vtype', 'vxsat', 'vstart', 'vl', 'vxrm',
-            'sedeleg', 'sideleg',
-            'mtval2', 'mtinst', 'minstret',
-            'mip', 'mie', 'sip', 'sie',
-            'mstatus_hyp'
+            "count",
+            "event",
+            "pmp",
+            "cycle",
+            "time",
+            "instret",
+            "utvec",
+            "utval",
+            "uip",
+            "uepc",
+            "ucause",
+            "uscratch",
+            "ustatus",
+            "uie",
+            "vtype",
+            "vxsat",
+            "vstart",
+            "vl",
+            "vxrm",
+            "sedeleg",
+            "sideleg",
+            "mtval2",
+            "mtinst",
+            "minstret",
+            "mip",
+            "mie",
+            "sip",
+            "sie",
+            "mstatus_hyp",
         ]
         # skip implementation specific CSRs...
         implementation_specific_csrs = [
-            'mvendorid', 'marchid', 'mimpid', 'mhartid'
+            "mvendorid",
+            "marchid",
+            "mimpid",
+            "mhartid",
         ]
         # a CSR should be 'deselected' if it appears in one of the two lists
         # above, either by exact match or (in the case of an indexed CSR
@@ -234,10 +267,10 @@ class CSRTreeBuilder:
 
     # write a single CSR set...
     def dumpOneCSRTree(self, aFile, aTitle, aCSRs):
-        aFile.write('\n%s = {\n' % aTitle)
+        aFile.write("\n%s = {\n" % aTitle)
         for rn in aCSRs:
             aFile.write("    '%s':%d,\n" % (rn, self.csrBias(rn)))
-        aFile.write('}\n')
+        aFile.write("}\n")
 
 
 usage_str = """
@@ -257,25 +290,27 @@ starter file, as follows:
 
 """
 
-if __name__ == '__main__':
-    mSysRegsStarterFile = 'input/system_registers_starter_rv64.xml'
-    mCSRTreeFile = 'output/csr_trees.py'
+if __name__ == "__main__":
+    mSysRegsStarterFile = "input/system_registers_starter_rv64.xml"
+    mCSRTreeFile = "output/csr_trees.py"
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hi:o:',
-                                   ['help', 'system_registers_starter_file=',
-                                    'csr_trees_file='])
+        opts, args = getopt.getopt(
+            sys.argv[1:],
+            "hi:o:",
+            ["help", "system_registers_starter_file=", "csr_trees_file="],
+        )
     except getopt.GetoptError as error:
         print(error)
         print(usage_str)
         sys.exit(1)
 
     for o, a in opts:
-        if o in ('-h', '--help'):
+        if o in ("-h", "--help"):
             usage()
             sys.exit()
-        if o in ['-i', '--system_registers_starter_file']:
+        if o in ["-i", "--system_registers_starter_file"]:
             mSysRegsStarterFile = a
-        elif o in ['-o', '--csr_trees_file']:
+        elif o in ["-o", "--csr_trees_file"]:
             mCSRTreeFile = a
 
     print("\tstarter file: '%s'" % mSysRegsStarterFile)

@@ -155,10 +155,8 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
         for (
             mem_bank_handler_registry
         ) in self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistries():
-            mem_bank_handler_registry.mHandlerSubroutineGenerator = (
-                HandlerSubroutineGeneratorRISCV(
-                    self.genThread, self.factory, self.exceptions_stack
-                )
+            mem_bank_handler_registry.mHandlerSubroutineGenerator = HandlerSubroutineGeneratorRISCV(
+                self.genThread, self.factory, self.exceptions_stack
             )
 
             if self.fastMode():
@@ -190,10 +188,8 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
             % exc_memory
         )
 
-        handler_registry = (
-            self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                MemoryBankRISCV.DEFAULT
-            )
+        handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
+            MemoryBankRISCV.DEFAULT
         )
         handler_registry.mStartAddr = exc_memory
 

@@ -802,11 +802,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
     self.mAssemblyHelper.genMoveRegister(scratch_reg_index, scratch_reg2_index)
     self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 1)
     self.mAssemblyHelper.genConditionalBranchToLabel(
-        pte_level_reg_index,
-        scratch_reg3_index,
-        14,
-        "EQ",
-        "SUPER_PAGE_FIXUP",
+        pte_level_reg_index, scratch_reg3_index, 14, "EQ", "SUPER_PAGE_FIXUP",
     )
 
     # Sv39, Sv48: ppn[1] is bits 27..19
@@ -816,11 +812,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
     )
     self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 2)
     self.mAssemblyHelper.genConditionalBranchToLabel(
-        pte_level_reg_index,
-        scratch_reg3_index,
-        6,
-        "EQ",
-        "SUPER_PAGE_FIXUP",
+        pte_level_reg_index, scratch_reg3_index, 6, "EQ", "SUPER_PAGE_FIXUP",
     )
 
     # Sv48: ppn[2] is bits 36..28

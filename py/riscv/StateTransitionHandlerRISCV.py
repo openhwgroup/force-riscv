@@ -826,8 +826,8 @@ class StateTransitionHelperGprSet(object):
             #  arbitrary GPR we need. if aValidate:
             self._validateInsufficientArbitaryGprs(aGprCount)
 
-        self._mArbitraryGprIndices = (
-            self._mStateTransHandler.getAllArbitraryGprs(aExclude=(0, 1, 2))
+        self._mArbitraryGprIndices = self._mStateTransHandler.getAllArbitraryGprs(
+            aExclude=(0, 1, 2)
         )
         remaining_gpr_count = aGprCount - len(self._mArbitraryGprIndices)
         excluded_regs = "0,1,2,%s" % ",".join(
