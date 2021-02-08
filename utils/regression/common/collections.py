@@ -104,11 +104,15 @@ class HiVkThreadedQueue(HiQueue):
         self.listLock = threading.Lock()
 
     def enqueue(self, item):
+        success = False
         try:
             self.listLock.acquire()
             self.append(item)
+            success = True
         finally:
             self.listLock.release()
+
+        return success
 
     def dequeue(self):
         try:
