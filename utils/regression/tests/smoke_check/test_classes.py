@@ -16,15 +16,15 @@
 # test_classes.py
 # creates a library of common classes used in the unit test run
 
-from shared.module_run import ModuleRun
-from shared.path_utils import PathUtils
-from shared.msg_utils import Msg
+from classes.module_run import ModuleRun
+from common.path_utils import PathUtils
+from common.msg_utils import Msg
 
 # =============================================================================
 # == HiThread Test Classes ====================================================
 # =============================================================================
 
-from shared.threads import HiThread
+from common.threads import HiThread
 
 
 class NoLoopThread(HiThread):

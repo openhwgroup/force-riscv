@@ -15,15 +15,15 @@
 #
 import re
 
-from shared.datetime_utils import DateTime
-from shared.msg_utils import Msg
-from shared.path_utils import PathUtils
-from shared.summary_core import (
+from common.datetime_utils import DateTime
+from common.msg_utils import Msg
+from common.path_utils import PathUtils
+from classes.summary import (
     Summary,
     SummaryItem,
     SummaryLevel,
 )
-from shared.sys_utils import SysUtils
+from common.sys_utils import SysUtils
 
 
 class PerformanceInstructionType:

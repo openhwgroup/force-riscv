@@ -15,8 +15,8 @@
 #
 # mutex_tests.py
 
-from shared.errors import *
-from shared.kernel_objs import HiMutex
+from common.errors import *
+from common.kernel_objs import HiMutex
 
 from test_classes import *
 from unit_test import UnitTest

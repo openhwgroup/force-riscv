@@ -15,7 +15,7 @@
 #
 # test_base.py
 
-from shared.msg_utils import Msg
+from common.msg_utils import Msg
 
 
 class UnitTest(object):

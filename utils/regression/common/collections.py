@@ -98,7 +98,7 @@ class HiAtomicInteger(HiCollection):
         return internal
 
 
-class HiVkThreadedQueue(HiQueue):
+class HiThreadedQueue(HiQueue):
     def __init__(self):
         super().__init__()
         self.listLock = threading.Lock()
@@ -124,7 +124,7 @@ class HiVkThreadedQueue(HiQueue):
         return item
 
 
-class HiThreadedProducerConsumerQueue(HiVkThreadedQueue):
+class HiThreadedProducerConsumerQueue(HiThreadedQueue):
     def __init__(self, blocking=False):
         self.produceAval = threading.Semaphore(0)
         super().__init__()

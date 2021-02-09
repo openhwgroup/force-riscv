@@ -18,8 +18,8 @@
 from unit_test import UnitTest
 from test_classes import *
 
-from shared.path_utils import PathUtils
-from shared.msg_utils import Msg
+from common.path_utils import PathUtils
+from common.msg_utils import Msg
 
 # =============================================================================
 # == unit test classes ========================================================

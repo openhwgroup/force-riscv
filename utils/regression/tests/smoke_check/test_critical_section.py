@@ -15,13 +15,13 @@
 #
 # test_critical_section.py
 
-from shared.path_utils import PathUtils
-from shared.msg_utils import Msg
+from common.path_utils import PathUtils
+from common.msg_utils import Msg
 
 from unit_test import UnitTest
-from shared.kernel_objs import HiCriticalSection
+from common.kernel_objs import HiCriticalSection
 
-from shared.threads import HiThread
+from common.threads import HiThread
 
 
 class UnitTest_HiCriticalSection(UnitTest):

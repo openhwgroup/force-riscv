@@ -31,9 +31,9 @@ import sys
 import traceback
 
 from force_init import the_force_root
-from shared.module_run import ModuleRun
-from shared.msg_utils import Msg
-from shared.path_utils import PathUtils
+from classes.module_run import ModuleRun
+from common.msg_utils import Msg
+from common.path_utils import PathUtils
 from test_core import UsageStr, CmdLine, Defaults
 from test_event import UnitTest_HiEvent
 from test_mutex import UnitTest_HiMutex

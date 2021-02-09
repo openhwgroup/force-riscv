@@ -16,12 +16,12 @@
 # semaphore_tests.py
 
 from unit_test import UnitTest
-from shared.kernel_objs import HiSemaphore
+from common.kernel_objs import HiSemaphore
 
-from shared.path_utils import PathUtils
-from shared.msg_utils import Msg
+from common.path_utils import PathUtils
+from common.msg_utils import Msg
 
-from shared.threads import HiThread
+from common.threads import HiThread
 
 
 class UnitTest_HiSemaphore(UnitTest):

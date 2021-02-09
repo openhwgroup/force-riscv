@@ -16,12 +16,12 @@
 # test_queue.py
 
 from unit_test import UnitTest
-from shared.collections import HiQueue
+from common.collections import HiQueue
 
-from shared.path_utils import PathUtils
-from shared.msg_utils import Msg
+from common.path_utils import PathUtils
+from common.msg_utils import Msg
 
-from shared.threads import HiThread
+from common.threads import HiThread
 
 
 class UnitTest_HiQueues(UnitTest):

@@ -16,12 +16,12 @@
 # test_stack.py
 
 from unit_test import UnitTest
-from shared.collections import HiStack
+from common.collections import HiStack
 
-from shared.path_utils import PathUtils
-from shared.msg_utils import Msg
+from common.path_utils import PathUtils
+from common.msg_utils import Msg
 
-from shared.threads import HiThread
+from common.threads import HiThread
 
 
 class UnitTest_HiStack(UnitTest):

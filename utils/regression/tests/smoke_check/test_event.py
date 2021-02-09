@@ -15,8 +15,8 @@
 #
 # test_event.py
 
-from shared.errors import *
-from shared.kernel_objs import HiEvent
+from common.errors import *
+from common.kernel_objs import HiEvent
 
 from test_classes import *
 from unit_test import UnitTest

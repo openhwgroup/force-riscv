@@ -17,8 +17,8 @@
 import sys
 import traceback
 
-from shared.msg_utils import Msg
-from shared.path_utils import PathUtils
+from common.msg_utils import Msg
+from common.path_utils import PathUtils
 
 
 class SummaryLevel:
