@@ -124,10 +124,10 @@ struct Arg: public option::Arg
 
     if (parse.nonOptionsCount())
     {
-      const char** options = parse.nonOptions();
-      for (EOptionIndexBaseType i = 0; options[i] != 0; i++)
+      const char** options_strings = parse.nonOptions();
+      for (EOptionIndexBaseType i = 0; options_strings[i] != 0; i++)
       {
-        string opt_str = options[i];
+        string opt_str = options_strings[i];
         string lower_case;
         transform(opt_str.begin(), opt_str.end(), lower_case.begin(), ::tolower);
         if (lower_case.find(".elf") != string::npos)
@@ -141,14 +141,14 @@ struct Arg: public option::Arg
           continue;
         }
 
-        cout << "\n### Potential unknown command line option: " << options[i] << endl;
+        cout << "\n### Potential unknown command line option: " << options_strings[i] << endl;
         plugins_cl_args.push_back(opt_str);
       }
 
       if(arTestFiles.empty())
       {
-        cout << "\n### Trying first unknown string as a potential ELF file: " << options[0] << endl;
-        arTestFiles.push_back(std::string(options[0]));
+        cout << "\n### Trying first unknown string as a potential ELF file: " << options_strings[0] << endl;
+        arTestFiles.push_back(std::string(options_strings[0]));
       }
     }
 

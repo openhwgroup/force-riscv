@@ -17,7 +17,7 @@ from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
 from base.InstructionMap import InstructionMap
-from base.TestUtils import assert_equal
+from base.TestUtils import assert_equal, assert_false
 from DV.riscv.trees.instruction_tree import *
 
 
@@ -303,7 +303,7 @@ class MainSequence(Sequence):
                 )
 
             if target_size == 4:
-                assert is_address_free is False
+                assert_false(is_address_free)
                 assert_equal(
                     is_address_plus01_free,
                     False,

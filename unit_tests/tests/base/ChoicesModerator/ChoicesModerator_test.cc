@@ -237,13 +237,8 @@ CASE( "test case set 3 for Choices Moderator module" ) {
         EXPECT( 0 == strcmp("ChoicesError", dynamic_cast<const GenException*>(&e)->GenExceptionType()));
       }
 
-      try {
-        modified_tree = my_moderator.TryCloneChoiceTree("Tree3");
-        EXPECT( nullptr == modified_tree);
-      } catch (...) {
-        EXPECT( 0 == 1);   // "This line shouldn't be called");
-      }
-     
+      EXPECT_NO_THROW(modified_tree = my_moderator.TryCloneChoiceTree("Tree3"));
+      EXPECT(nullptr == modified_tree);
       }
     }
 },

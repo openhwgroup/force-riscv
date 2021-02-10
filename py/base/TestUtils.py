@@ -17,11 +17,21 @@ import Log
 import traceback
 
 
+def assert_false(expression, msg=None):
+    if expression:
+        err_msg = "%s is true. %s" % (str(expression), msg)
+        log_failure(err_msg)
+
+
 def assert_equal(first, second, msg=None):
     if first != second:
         err_msg = "%s != %s. %s" % (str(first), str(second), msg)
-        stack_frame_str = get_stack_frame_string()
-        Log.fail("%s\n%s" % (err_msg, stack_frame_str))
+        log_failure(err_msg)
+
+
+def log_failure(err_msg):
+    stack_frame_str = get_stack_frame_string()
+    Log.fail("%s\n%s" % (err_msg, stack_frame_str))
 
 
 def get_stack_frame_string():

@@ -327,7 +327,7 @@ namespace Force {
     /*!
       Dump data in big endian format
     */
-    void Dump(ostream& out_str, uint64 value) const
+    static void Dump(ostream& out_str, uint64 value) const
     {
       uint64 data;
       for (auto i = sizeof(value) - 1; i > 0; i --) {
@@ -344,7 +344,7 @@ namespace Force {
       \data:   the reference for the merged data
       \Cautious: the caller should assure value|nBytes validation.
     */
-    void MergeValue(uint32 offset, uint64 value, uint32 nBytes, uint64& data)
+    static void MergeValue(uint32 offset, uint64 value, uint32 nBytes, uint64& data)
     {
       uint32 mem_bytes = sizeof(data);
       uint32 len_in_bits = nBytes << 3;
@@ -362,7 +362,7 @@ namespace Force {
       \data: the reference for the merged data
       \Cautious: the caller should assure value|nBytes validation.
     */
-    void MergeMaskedValue (uint32 offset, uint64 value, uint64 mergeMask, uint32 nBytes, uint64& data)
+    static void MergeMaskedValue (uint32 offset, uint64 value, uint64 mergeMask, uint32 nBytes, uint64& data)
     {
       uint32 mem_bytes = sizeof(data);
       uint32 len_in_bits = nBytes << 3;
@@ -382,13 +382,10 @@ namespace Force {
         return value;
       }
 
-      uint64 random = 0ull;
-      random = valuePattern;
-
-      return (random & ~init_mask) | (value & init_mask);
+      return (valuePattern & ~init_mask) | (value & init_mask);
     }
 
-    uint64 GetInitializedMask(cuint32 offset, cuint64 attrs, cuint32 nBytes) const
+    static uint64 GetInitializedMask(cuint32 offset, cuint64 attrs, cuint32 nBytes) const
     {
       uint32 pos_in_bits = (MEM_BYTES - (offset + nBytes)) << 3;
       uint64 init_mask = BASE_INIT_MASK & (attrs << pos_in_bits); // mask to 0x00000101_01010000 as an example

@@ -60,7 +60,6 @@ struct RegAccess
     {
         return mRegisterType == other.mRegisterType and mRegisterNumber == other.mRegisterNumber and mCpuID == other.mCpuID;
     };
-  
 };
 
 
