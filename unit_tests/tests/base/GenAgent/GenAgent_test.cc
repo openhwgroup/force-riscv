@@ -38,10 +38,8 @@ namespace Force {
     const char* Type() const override { return "GenInstructionAgent"; } //!< Return type of the GenInstructionAgent object.
 
     virtual EGenAgentType GenAgentType() const { return EGenAgentType::GenInstructionAgent; } //!< Return type of the generator agent.
-    void SetGenRequest(GenRequest* genRequest) override { } //!< Set pointer to GenRequest object.
   protected:
     GenInstructionAgent(const GenInstructionAgent& other) : GenAgent(other) { } //!< Copy constructor, do not copy the request pointer.
-    virtual void HandleRequest() { }
   };
 
 }

@@ -60,11 +60,6 @@ struct RegAccess
     {
         return mRegisterType == other.mRegisterType and mRegisterNumber == other.mRegisterNumber and mCpuID == other.mCpuID;
     };
-  
-    bool is_same_access(const struct RegAccess & other) const
-    {
-        return is_same_register(other) and mAccessType == other.mAccessType;
-    };
 };
 
 
@@ -203,8 +198,6 @@ class DependencyRecord
 
         //Accessors needed for filtering on collections of DependencyRecord while protecting access to member values
         uint32_t depth() const {return _mDependencyDepth;};
-        Force::EOperandType register_type() const {return _mRegisterType;};
-        uint16_t register_number() const {return _mRegisterNumber;};
         Force::EAccessAgeType access_type() const {return _mAccessType;};
         Force::EDependencyType dependency_type() const {return _mDependencyType;};
         uint64_t count_value() const {return _mCount;};

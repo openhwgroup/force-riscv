@@ -102,11 +102,9 @@ static void setup_ResourceAccessStage(ResourceAccessStage& my_stage, const vecto
  */
 class AccessStageSequence {
 public:
-  AccessStageSequence(initializer_list<ResourceAccessStageTestData> initList) : mSequence()
+  explicit AccessStageSequence(initializer_list<ResourceAccessStageTestData> initList) : mSequence()
   {
-    for (auto init_item : initList) {
-      mSequence.push_back(ResourceAccessStageTestData(init_item));
-    }
+    copy(initList.begin(), initList.end(), back_inserter(mSequence));
   }
 
   ~AccessStageSequence(){}
@@ -272,11 +270,11 @@ CASE( "Test case 2 ResourceAccessQueue class" ) {
     setup_ResourceAccessQueue(my_queue);
     
     SECTION( "test simple case resource age updating, source removal" ) {
-      AccessStageSequence stage_sequence = {
+      AccessStageSequence stage_sequence({
 	{ {"Read", "GPR", "1"}, {"Read", "GPR", "2"}, {"Write", "GPR", "3"} }, // R3 = R1 + R2
 	{ {"Read", "GPR", "4"}, {"Read", "GPR", "5"}, {"Write", "GPR", "6"} }, // R6 = R4 + R5
 	{ {"Read", "GPR", "1"}, {"Read", "GPR", "4"}, {"Write", "GPR", "2"} }  // R2 = R1 + R4
-      };
+      });
 
       // populate resource access queue with the stage_sequence entries.
       stage_sequence.PopulateAccessQueue(my_queue);
@@ -296,11 +294,11 @@ CASE( "Test case 2 ResourceAccessQueue class" ) {
     }
 
     SECTION( "test simple case resource age updating, source and dest removal" ) {
-      AccessStageSequence stage_sequence = {
+      AccessStageSequence stage_sequence({
 	{ {"Read", "FPR", "1"}, {"Read", "FPR", "2"}, {"Write", "FPR", "3"} }, // V3 = V1 + V2
 	{ {"Read", "FPR", "4"}, {"Read", "FPR", "5"}, {"Write", "FPR", "6"} }, // V6 = V4 + V5
 	{ {"Read", "FPR", "3"}, {"Read", "FPR", "6"}, {"Write", "FPR", "4"} }  // V4 = V3 + V6
-      };
+      });
 
       // populate resource access queue with the stage_sequence entries.
       stage_sequence.PopulateAccessQueue(my_queue);
@@ -331,12 +329,12 @@ CASE( "Test case  3 ResourceAccessQueue class" ) {
     setup_ResourceAccessQueue(my_queue, 2);
     LOG(notice) << "Start test case 3" << endl;
     SECTION( "test simple case retire and resource entropy" ) {
-      AccessStageSequence stage_sequence = {
+      AccessStageSequence stage_sequence({
 	{ {"Read", "FPR", "1"}, {"Read", "FPR", "2"}, {"Write", "FPR", "3"} }, // V3 = V1 + V2
 	{ {"Read", "FPR", "4"}, {"Read", "FPR", "5"}, {"Write", "FPR", "6"} }, // V6 = V4 + V5
 	{ {"Read", "FPR", "3"}, {"Read", "FPR", "6"}, {"Write", "FPR", "4"} },  // V4 = V3 + V6
 	{ {"Read", "FPR", "6"}, {"Read", "FPR", "7"},   {"Read", "FPR", "8"}, {"Write", "FPR", "6"} } // V6 = V6 + V7 + V8
-      };
+      });
 
       // populate resource access queue with the stage_sequence entries.
       stage_sequence.PopulateAccessQueue(my_queue);
@@ -357,12 +355,12 @@ CASE( "Test case  3 ResourceAccessQueue class" ) {
     }
 
     SECTION( "test resource entropy state" ) {
-      AccessStageSequence stage_sequence = {
+      AccessStageSequence stage_sequence({
 	{ {"Read", "FPR", "1"}, {"Read", "FPR", "2"}, {"Write", "FPR", "3"} }, // V3 = V1 + V2
 	{ {"Read", "FPR", "4"}, {"Read", "FPR", "5"}, {"Write", "FPR", "6"} }, // V6 = V4 + V5
 	{ {"Read", "FPR", "3"}, {"Read", "FPR", "6"}, {"Write", "FPR", "3"} },  // V3 = V3 + V6
 	{ {"Read", "FPR", "6"}, {"Read", "FPR", "3"}, {"Write", "FPR", "6"} } // V6 = V6 + V3
-      };
+      });
 
       // set up entroy turn-on threshold and turn-off threshold
       auto fpr_entropy = my_queue.mTypeEntropies[1];
@@ -403,7 +401,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
     setup_ResourceAccessQueue(my_queue);
 
     SECTION( "test a long sequence of execution with optimal lookup" ) {
-      AccessStageSequence stage_sequence = {
+      AccessStageSequence stage_sequence({
 	{ {"Write", "GPR", "26"}, {"Read", "GPR", "12"} }, // LDR  X26, [X12{, #imm}]  1
 	{ {"Write", "GPR", "15"}, {"Read", "GPR",  "5"} }, // LDR  X15, [X5{, #imm}]   2
 	{ {"Write", "GPR",  "1"}, {"Read", "GPR", "10"} }, // LDR  X1, [X10{, #imm}]   3
@@ -437,7 +435,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
 	{ {"Write", "GPR",  "0"}, {"Read", "GPR", "16"} }, // LDR  X0, [X16{, #imm}]  31
 	{ {"Write", "GPR",  "7"}, {"Read", "GPR", "28"} }, // LDR  X7, [X28{, #imm}]  32
 	{ {"Write", "GPR",  "3"}, {"Read", "GPR", "18"} }, // LDR  X3, [X18{, #imm}]  33
-      };
+      });
 
       // populate resource access queue with the stage_sequence entries.
       stage_sequence.PopulateAccessQueue(my_queue);
@@ -453,7 +451,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
       auto src34_constr = my_queue.GetOptimalResourceConstraint(23, lookup_far, EResourceType::GPR, EDependencyType::OnTarget);
       EXPECT(src34_constr == nullptr);
 
-      AccessStageSequence instr34 = { { {"Write", "GPR", "26"}, {"Read", "GPR", "11"} } }; // LDR  X26, [X11{, #imm]  34
+      AccessStageSequence instr34({ { {"Write", "GPR", "26"}, {"Read", "GPR", "11"} } }); // LDR  X26, [X11{, #imm]  34
       instr34.PopulateAccessQueue(my_queue); // execute instruction 34
 
       // check for constraints on instruction 35
@@ -464,7 +462,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
       auto src35_constr = my_queue.GetOptimalResourceConstraint(18, lookup_far, EResourceType::GPR, EDependencyType::OnTarget);
       EXPECT(src35_constr->ToSimpleString() == "0x16");
 
-      AccessStageSequence instr35 = { { {"Write", "GPR", "19"}, {"Read", "GPR", "22"} } }; // LDR  X19, [X22{, #imm]  35
+      AccessStageSequence instr35({ { {"Write", "GPR", "19"}, {"Read", "GPR", "22"} } }); // LDR  X19, [X22{, #imm]  35
       instr35.PopulateAccessQueue(my_queue); // execute instruction 35
 
       // check for constraints on instruction 36
@@ -475,7 +473,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
       auto src36_constr = my_queue.GetOptimalResourceConstraint(18, lookup_near, EResourceType::GPR, EDependencyType::OnTarget);
       EXPECT(src36_constr->ToSimpleString() == "0x1e");
 
-      AccessStageSequence instr36 = { { {"Write", "GPR", "23"}, {"Read", "GPR", "30"} } }; // LDR  X23, [X30{, #imm]  36
+      AccessStageSequence instr36({ { {"Write", "GPR", "23"}, {"Read", "GPR", "30"} } }); // LDR  X23, [X30{, #imm]  36
       instr36.PopulateAccessQueue(my_queue); // execute instruction 36
 
       // check for constraints on instruction 37
@@ -486,7 +484,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
       auto src37_constr = my_queue.GetOptimalResourceConstraint(24, lookup_far, EResourceType::GPR, EDependencyType::OnTarget);
       EXPECT(src37_constr->ToSimpleString() == "0x8");
 
-      AccessStageSequence instr37 = { { {"Write", "GPR", "18"}, {"Read", "GPR", "8"} } };  // LDR  X18, [X8{, #imm]  37
+      AccessStageSequence instr37({ { {"Write", "GPR", "18"}, {"Read", "GPR", "8"} } });  // LDR  X18, [X8{, #imm]  37
       instr37.PopulateAccessQueue(my_queue); // execute instruction 37
 
       // check for constraints on instruction 38
@@ -497,7 +495,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
       auto src38_constr = my_queue.GetOptimalResourceConstraint(11, lookup_near, EResourceType::GPR, EDependencyType::OnTarget);
       EXPECT(src38_constr->ToSimpleString() == "0x15");
 
-      AccessStageSequence instr38 = { { {"Write", "GPR", "31"}, {"Read", "GPR", "21"} } }; // LDR  XZR, [X21{, #imm]  38
+      AccessStageSequence instr38({ { {"Write", "GPR", "31"}, {"Read", "GPR", "21"} } }); // LDR  XZR, [X21{, #imm]  38
       instr38.PopulateAccessQueue(my_queue); // execute instruction 38
 
       // check for constraints on instruction 39
@@ -508,7 +506,7 @@ CASE( "Test case 4 ResourceAccessQueue class with optiaml constraint lookup" ) {
       auto src39_constr = my_queue.GetOptimalResourceConstraint(30, lookup_far, EResourceType::GPR, EDependencyType::OnTarget);
       EXPECT(src39_constr == nullptr);
 
-      AccessStageSequence instr39 = { { {"Write", "GPR", "29"}, {"Read", "GPR", "1"} } }; // LDR  X29, [X1{, #imm]  39
+      AccessStageSequence instr39({ { {"Write", "GPR", "29"}, {"Read", "GPR", "1"} } }); // LDR  X29, [X1{, #imm]  39
       instr39.PopulateAccessQueue(my_queue); // execute instruction 39
 
       // check for constraints on instruction 40
@@ -536,7 +534,7 @@ CASE( "Test case 5 ResourceAccessQueue class with random constraint lookup" ) {
     setup_ResourceAccessQueue(my_queue);
 
     SECTION( "test a long sequence of execution with random lookup" ) {
-      AccessStageSequence stage_sequence = {
+      AccessStageSequence stage_sequence({
 	{ {"Write", "GPR",  "5"}, {"Read", "GPR",  "4"} }, // LDR  X5,  [X4{, #imm}]   1
 	{ {"Write", "GPR", "28"}, {"Read", "GPR", "24"} }, // LDR  X28, [X24{, #imm}]  2
 	{ {"Write", "GPR", "11"}, {"Read", "GPR", "19"} }, // LDR  X11, [X19{, #imm}]  3
@@ -570,7 +568,7 @@ CASE( "Test case 5 ResourceAccessQueue class with random constraint lookup" ) {
 	{ {"Write", "GPR", "22"}, {"Read", "GPR",  "4"} }, // LDR  X22, [X4{, #imm}]  31
 	{ {"Write", "GPR",  "2"}, {"Read", "GPR",  "6"} }, // LDR  X2,  [X6{, #imm}]  32
 	{ {"Write", "GPR", "24"}, {"Read", "GPR", "14"} }, // LDR  X24, [X14{, #imm}] 33
-      };
+      });
 
       // populate resource access queue with the stage_sequence entries.
       stage_sequence.PopulateAccessQueue(my_queue);
@@ -581,7 +579,7 @@ CASE( "Test case 5 ResourceAccessQueue class with random constraint lookup" ) {
       auto src34_constr = my_queue.GetRandomResourceConstraint(21, 30, EResourceType::GPR, EDependencyType::OnTarget);
       EXPECT(src34_constr == nullptr);
 
-      AccessStageSequence instr34 = { { {"Write", "GPR", "15"}, {"Read", "GPR", "15"} } }; // LDR  X15, [X15{, #imm]  34
+      AccessStageSequence instr34({ { {"Write", "GPR", "15"}, {"Read", "GPR", "15"} } }); // LDR  X15, [X15{, #imm]  34
       instr34.PopulateAccessQueue(my_queue); // execute instruction 34
 
       // check for constraints on instruction 35

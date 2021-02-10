@@ -108,7 +108,7 @@ class OperandConstraintTest : public OperandConstraint
     mpTestConstraintSet = new ConstraintSet(lower_bound, upper_bound);
   }
 
-  OperandConstraintTest(uint64 single_value)
+  explicit OperandConstraintTest(uint64 single_value)
     : OperandConstraint(), mpTestConstraintSet(nullptr)
   {
     mpTestConstraintSet = new ConstraintSet(single_value);
@@ -139,7 +139,7 @@ class OperandTest : public Operand {
     mpStructure = new OperandStructure();
   }
 
-  OperandTest(uint64 single_value) 
+  explicit OperandTest(uint64 single_value) 
   : Operand()
   {
     mpOperandConstraint =  new OperandConstraintTest(single_value);

@@ -100,9 +100,6 @@ bool SimUtils::LoadTest(uint64_t &entry_point, SimAPI *sim_ptr, vector<string> *
     if (next_test_file.find(".Secondary.ELF") != string::npos) {
       success = LoadTestFromELF(next_entry_point, sim_ptr, next_test_file, true);
     } 
-    else if (next_test_file.find(".Default.ELF") != string::npos) {
-      success = LoadTestFromELF(next_entry_point,sim_ptr, next_test_file);
-    } 
     else {
       success = LoadTestFromELF(next_entry_point,sim_ptr, next_test_file); //!< will ASSUME test is default...
     } 
@@ -266,7 +263,7 @@ void SimUtils::DumpMemoryUpdate(MemUpdate src) const {
 //!< Dump set of memory updates to stdout
                                                                 
 void SimUtils::DumpMemoryUpdates(std::vector<MemUpdate> mem_updates) const {
-  for (vector<MemUpdate>::iterator i = mem_updates.begin(); i != mem_updates.end(); i++) {
+  for (vector<MemUpdate>::iterator i = mem_updates.begin(); i != mem_updates.end(); ++i) {
     DumpMemoryUpdate(*i);
   }
 }

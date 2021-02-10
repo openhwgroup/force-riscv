@@ -165,13 +165,13 @@ namespace Force {
     virtual void GetSimulatorVersion(std::string &sim_version) = 0;
 
     //!< read simulator physical memory. Return 0 if no errors...
-    virtual void ReadPhysicalMemory(uint32 mem_bank, uint64 address, uint32 size, unsigned char *pBytes) = 0;
+    virtual void ReadPhysicalMemory(uint32 memBank, uint64 address, uint32 size, unsigned char *pBytes) = 0;
 
     //!< write simulator physical memory. Return 0 if no errors...
-    virtual void WritePhysicalMemory(uint32 mem_bank, uint64 address, uint32  size, const unsigned char *pBytes) = 0;
+    virtual void WritePhysicalMemory(uint32 memBank, uint64 address, uint32  size, const unsigned char *pBytes) = 0;
 
     //!< read register value...
-    virtual void ReadRegister(uint32 CpuID, const char *regname, uint64 *rval, uint64 *rmask) = 0;
+    virtual void ReadRegister(uint32 CpuID, const char *regname, uint64 *rval, uint64 *pRegMask) = 0;
 
     //!< read the bytes corresponding to a physical register from a large logical register without forcing the simulator to used Force's naming convention.
     virtual void PartialReadLargeRegister(uint32 CpuID, const char* pRegname, uint8_t* pBytes, uint32 length, uint32 offset) = 0;
@@ -183,10 +183,10 @@ namespace Force {
     virtual void WriteRegister(uint32 CpuID,const char *regname,uint64 rval,uint64 rmask) = 0;
 
     //!< request simulator to 'inject event(s)...
-    virtual void InjectEvents(uint32 CpuID, uint32 interrupt_sets) = 0;
+    virtual void InjectEvents(uint32 CpuID, uint32 events) = 0;
 
     //!< step instruction for specified cpu; returns after simulator step complete, with all updates.
-    virtual void Step(uint32 cpuid,std::vector<RegUpdate> &rRegUpdates,std::vector<MemUpdate> &rMemUpdates, std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptions) = 0;
+    virtual void Step(uint32 cpuid,std::vector<RegUpdate> &rRegUpdates,std::vector<MemUpdate> &rMemUpdates, std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptUpdates) = 0;
 
     virtual void WakeUp(uint32 cpuId) = 0; //!< Wake up from lower power state.
     virtual void TurnOn(uint32 cpuId) = 0; //!< Turn the Iss thread on.
