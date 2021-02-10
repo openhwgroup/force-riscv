@@ -213,7 +213,7 @@ namespace Force {
     /*!
       dump test image assembly into the file
     */
-    void DumpToAssembly(uint32 memBank, const Generator* generator, ofstream& asmFile)
+    static void DumpToAssembly(uint32 memBank, const Generator* generator, ofstream& asmFile)
     {
       const ThreadInstructionResults* inst_results = generator->GetInstructionResults();
       const std::map<uint64, Instruction* >& instructions = inst_results->GetInstructions(memBank);
@@ -239,7 +239,7 @@ namespace Force {
     /*!
       get endian for ELF header
     */
-    bool GetEndian(void)
+    bool GetEndian(void) const
     {
       return mBigEndian;
     }
@@ -255,7 +255,7 @@ namespace Force {
     /*!
       get Entry point
     */
-    uint64 GetEntry(void)
+    uint64 GetEntry(void) const
     {
       return mEntry;
     }
@@ -287,7 +287,7 @@ namespace Force {
         delete pTextSegment;
     }
   private:
-    uint64 SegmentFlagForSection(uint64 sectionFlag) const
+    static uint64 SegmentFlagForSection(uint64 sectionFlag)
     {
       uint64 flag = 0;
       if (sectionFlag & SHF_EXECINSTR)
@@ -323,7 +323,7 @@ namespace Force {
     }
 
     //!< dump segments to memory object
-    void DumpSegmentsToMem(const vector<TestSegment*>& segments, const Memory& memory)
+    static void DumpSegmentsToMem(const vector<TestSegment*>& segments, const Memory& memory)
     {
       for (auto seg : segments)
         for (auto sect: seg->mSections) {
@@ -336,7 +336,7 @@ namespace Force {
         }
     }
 
-    void DumpSegmentsToElf(const vector<TestSegment*>& segments, elfio& elf_writer)
+    static void DumpSegmentsToElf(const vector<TestSegment*>& segments, elfio& elf_writer)
     {
       for (auto seg : segments) {
         segment* pSegment = elf_writer.segments.add();

@@ -113,8 +113,8 @@ namespace Force {
     void WriteToThread(map<string, uint64>& threadInfo, RegisterFile* registerFile) const; //!< write thread info.
   private:
     ImageSegment* GetOneSegment(); //!< return the next one image Segment.
-    MemoryImageSegment* BuiltMemoryImageSegment(const string& line_str); //!< built the MemoryImageSegment.
-    ThreadImageSegment* BuiltThreadImageSegment(const string& line_str); //!< built the ThreadImageSegment.
+    MemoryImageSegment* BuildMemoryImageSegment(const string& line_str); //!< build the MemoryImageSegment.
+    ThreadImageSegment* BuildThreadImageSegment(const string& line_str); //!< build the ThreadImageSegment.
   private:
     map<uint32, vector<ThreadImageSegment* > > mThreadsSegments;  //!< the threads initial values.
     vector<MemoryImageSegment* > mMemoryImageSegments;                 //!< the memory intital values.
@@ -130,7 +130,7 @@ namespace Force {
     void PrintRegistersImage(const string& imageFile, const map<string, uint64>& threadInfo, const RegisterFile* regFile); //!< write registers initial value to an Text file.
   private:
     void PrintInitialMemorySection(EMemDataType type, uint64 address, uint32 size, const uint8* data); //!< print initial memory section.
-    void SetupThreadImageSegment(const Register* pReg, const RegisterFile* regFile, ThreadImageSegment* imageSegment); //!< built thread image segment.
+    static void SetupThreadImageSegment(const Register* pReg, const RegisterFile* regFile, ThreadImageSegment* pSegment); //!< set up thread image segment.
     void PrintThreadImageSegment(const ThreadImageSegment* pSegment); //!< print thread image segment.
     bool OpenImageFile(const string& imageFile); //!< Open image file.
     void PrintThreadInfo(const map<string, uint64>& threadInfo); //!< write thread info to the Text file.
@@ -243,7 +243,7 @@ namespace Force {
     }
   }
 
-  MemoryImageSegment* ImageLoader::BuiltMemoryImageSegment(const string& line_str)
+  MemoryImageSegment* ImageLoader::BuildMemoryImageSegment(const string& line_str)
   {
     MemoryImageSegment* segment_ptr = new MemoryImageSegment();
     StringSplitter ss(line_str, ' ');
@@ -272,7 +272,7 @@ namespace Force {
     return segment_ptr;
   }
 
-  ThreadImageSegment* ImageLoader::BuiltThreadImageSegment(const string& line_str)
+  ThreadImageSegment* ImageLoader::BuildThreadImageSegment(const string& line_str)
   {
     StringSplitter ss(line_str, ' ');
     string flag = ss.NextSubString();
@@ -310,10 +310,10 @@ namespace Force {
         case 'T':
         case 'V':
         case 'R':
-          return BuiltThreadImageSegment(line_str);
+          return BuildThreadImageSegment(line_str);
         case 'I':
         case 'D':
-          return BuiltMemoryImageSegment(line_str);
+          return BuildMemoryImageSegment(line_str);
         default: break;
         }
       }
@@ -400,21 +400,21 @@ namespace Force {
     mImageFile << endl;
   }
 
-  void ImagePrinter::SetupThreadImageSegment(const Register* pReg, const RegisterFile* regFile, ThreadImageSegment* segmentPtr)
+  void ImagePrinter::SetupThreadImageSegment(const Register* pReg, const RegisterFile* regFile, ThreadImageSegment* pSegment)
   {
     set<PhysicalRegister* > phys_regs_set;
     pReg->GetPhysicalRegisters(phys_regs_set);
-    segmentPtr->mFlag = "R";
+    pSegment->mFlag = "R";
 
     auto reg_type = pReg->RegisterType();
     switch (reg_type) {
     case ERegisterType::SIMDVR:
     case ERegisterType::VECREG:
     case ERegisterType::PREDREG:
-      segmentPtr->mName = pReg->Name();
+      pSegment->mName = pReg->Name();
       for (auto riter = phys_regs_set.rbegin(); riter != phys_regs_set.rend(); ++riter) {
         auto phys_reg_ptr = *riter;
-        segmentPtr->AddValueUnit(phys_reg_ptr->InitialValue(phys_reg_ptr->Mask()), phys_reg_ptr->Size()/8);
+        pSegment->AddValueUnit(phys_reg_ptr->InitialValue(phys_reg_ptr->Mask()), phys_reg_ptr->Size()/8);
       }
       break;
     default:
@@ -423,8 +423,8 @@ namespace Force {
         FAIL("multi-physical-registers");
       }
       for (auto phys_reg_ptr : phys_regs_set) {
-        segmentPtr->mName = phys_reg_ptr->Name();
-        segmentPtr->AddValueUnit(phys_reg_ptr->InitialValue(pReg->GetPhysicalRegisterMask(*phys_reg_ptr)), phys_reg_ptr->Size()/8);
+        pSegment->mName = phys_reg_ptr->Name();
+        pSegment->AddValueUnit(phys_reg_ptr->InitialValue(pReg->GetPhysicalRegisterMask(*phys_reg_ptr)), phys_reg_ptr->Size()/8);
       }
       break;
     }

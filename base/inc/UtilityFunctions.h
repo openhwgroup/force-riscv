@@ -45,7 +45,6 @@ namespace Force {
   const std::string get_gen_mode_string(EGenModeTypeBaseType gen_mode); //!< Get Generator mode string, by concatenating the name of all the mode bits that are set.
   const std::string get_gen_mode_name(EGenModeTypeBaseType gen_mode); //!< Return the name for a given Generator mode.
   uint64 get_mask64(uint32 size, uint32 shift = 0);  //!< Return a mask of given size, ensure size is smaller or equals to 64.
-  uint32 get_root_level_low_bit(uint32 highBit, uint32 lowBit, uint32 tableStep);
   uint64 lowest_bit_set(uint64 x); //!< return lowest bit whose value is 1, the input value should be non-zero.
   uint64 highest_bit_set(uint64 x); //!< return highest bit whose value is 1, the input value should be non-zero.
   uint64 round_up_power2(uint64 x); //!< round value up to power of 2, the value is not aligned to power of 2.
@@ -65,7 +64,6 @@ namespace Force {
   }
 
   std::string value_to_lsdata_str(uint64 value, uint32 esize, uint32 size, const std::string& delim=";"); //!< Convert values to the LSData format string.
-  std::string large_value_to_lsdata_str(const std::vector<uint64>& values, uint32 esize, uint32 size=64, const std::string& delim=";"); //!< Convert values to the LSData format string.
   void change_elementform_to_uint64(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& orignal_value_list, std::vector<uint64>& uint64_value_list); //!< Return the values in 64-bit segments given the element values.
   void change_uint64_to_elementform(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& uint64_value_list, std::vector<uint64>& result_value_list); //!< Return the element values given the values in 64-bit segments.
   uint64 change_uint64_to_elementform_at_index(cuint32 element_size, const std::vector<uint64>& uint64_value_list, cuint32 element_index); //!< Return the element value at the specified index given the values in 64-bit segments.
