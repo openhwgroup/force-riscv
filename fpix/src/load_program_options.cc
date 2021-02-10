@@ -44,15 +44,6 @@ struct Arg: public option::Arg
         return option::ARG_ILLEGAL;
     }
 
-    static option::ArgStatus Required(const option::Option& arOption, bool aMsg)
-    {
-        if (arOption.arg != 0)
-            return option::ARG_OK;
-
-        if (aMsg) printError("Option '", arOption, "' requires an argument.");
-            return option::ARG_ILLEGAL;
-    }
-
     static option::ArgStatus NonEmpty(const option::Option& arOption, bool aMsg)
     {
         if (arOption.arg != 0 && arOption.arg[0] != 0)

@@ -266,7 +266,7 @@ void SimUtils::DumpMemoryUpdate(MemUpdate src) const {
 //!< Dump set of memory updates to stdout
                                                                 
 void SimUtils::DumpMemoryUpdates(std::vector<MemUpdate> mem_updates) const {
-  for (vector<MemUpdate>::iterator i = mem_updates.begin(); i != mem_updates.end(); i++) {
+  for (vector<MemUpdate>::iterator i = mem_updates.begin(); i != mem_updates.end(); ++i) {
     DumpMemoryUpdate(*i);
   }
 }

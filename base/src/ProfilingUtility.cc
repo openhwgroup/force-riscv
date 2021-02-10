@@ -22,7 +22,7 @@ using namespace std;
 
 namespace Force {
 
-  uint64 max_memory_used()
+  uint64 max_memoryXused()
   {
     rusage my_usage;
 

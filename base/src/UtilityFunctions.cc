@@ -552,31 +552,6 @@ namespace Force {
     return ret_str;
   }
 
-  /*!
-    returns low bit in lowest 16 bit and table levels in highest 16 bit.
-  */
-  uint32 get_root_level_low_bit(uint32 highBit, uint32 lowBit, uint32 tableStep)
-  {
-    /*uint32 table_low = 0;
-    uint32 check_table_low = lowBit;
-    uint32 table_levels = 0;
-
-    uint32 levels_lowbit = 0;
-
-    do
-    {
-      table_low        = check_table_low;
-      check_table_low += tableStep;
-      table_levels++;
-    }
-    while (check_table_low <= highBit);
-
-    levels_lowbit = table_low;
-    levels_lowbit |= table_levels << 16;
-    return(levels_lowbit);*/
-    return 0x10027ul; //TODO update to switch off other high bit values
-  }
-
   uint64 round_up_power2(uint64 x)
   {
     if (is_power_of_2(x)) {
@@ -649,23 +624,6 @@ namespace Force {
     for (uint32 i = 1; i < element_num; i++) {
       uint64 element_value = (value >> (element_size * i)) & element_mask;
       ss  << delim << "0x" << fmtx0(element_value, element_width);
-    }
-    return ss.str();
-  }
-
-  std::string large_value_to_lsdata_str(const std::vector<uint64>& values, uint32 element_size, uint32 size, const std::string& delim)
-  {
-    if (values.empty()) {
-      LOG(fail) << "{large_value_to_lsdata_str} invalid values: it is empty" << endl;
-      FAIL("invalid-value-empty");
-    }
-    if (size > 64) { size = 64; }
-
-    stringstream ss;
-    ss << value_to_lsdata_str(values[0], element_size, size, delim);
-    for (uint32 i = 1; i < values.size(); ++i)
-    {
-      ss << delim << value_to_lsdata_str(values[i], element_size, size, delim);
     }
     return ss.str();
   }
