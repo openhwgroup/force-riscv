@@ -17,7 +17,7 @@
 
 echo .
 echo .
-cd utils/regression
+cd utils/regression || exit
 echo .
 echo .
 # run the directory tests
