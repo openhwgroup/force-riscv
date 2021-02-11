@@ -17,7 +17,8 @@
 #
 # This file defines the BootPriority helper class.
 
-# The boot priority class defines helper methods associated with boot priority.
+
+# The boot priority class defines helper methods associated with boot priority
 class BootPriority:
     # Returns the appropriate boot priority based on the name and type of
     # register provided along with if the register is write only

@@ -44,6 +44,7 @@ import shutil
 import subprocess
 import sys
 
+
 def usage():
     usage_str = (
         """Create a reproduce directory and control file from gen.log

@@ -18,6 +18,8 @@
 #
 #  @param aSequence The calling sequence.
 #  @param aGprCount The number of GPRs to reserve.
+
+
 def reserveRandomGprs(aSequence, aGprCount):
     orig_gpr_values = {}
     gpr_indices = aSequence.getRandomGPRs(aGprCount)

@@ -16,6 +16,8 @@
 # This class encapsulates the information required to assign an excpeption
 # handler class to handle a particular exception in a specified operating
 # state.
+
+
 class ExceptionHandlerAssignmentRequest(object):
     def __init__(
         self,
