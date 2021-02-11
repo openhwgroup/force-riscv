@@ -1655,19 +1655,7 @@ def makedir(path):
 
 def is_first_file_newer(file1, file2):
     """If file2 is older than file1, or does not exist, return True"""
-    try:
-        file1_ts = os.stat(file1).st_mtime
-    except FileNotFoundError as exc:
-        print("source file1, %s, not found" % file1)
-        raise exc
-    try:
-        file2_ts = os.stat(file2).st_mtime
-    except FileNotFoundError:
-        print("target file2, %s, not found" % file2)
-        return True
-    if file1_ts > file2_ts:
-        return True
-    return False
+    return True
 
 
 def copy(src, dest):

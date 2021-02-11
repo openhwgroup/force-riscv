@@ -327,7 +327,7 @@ namespace Force {
     /*!
       Dump data in big endian format
     */
-    static void Dump(ostream& out_str, uint64 value) const
+    static void Dump(ostream& out_str, uint64 value)
     {
       uint64 data;
       for (auto i = sizeof(value) - 1; i > 0; i --) {
@@ -385,7 +385,7 @@ namespace Force {
       return (valuePattern & ~init_mask) | (value & init_mask);
     }
 
-    static uint64 GetInitializedMask(cuint32 offset, cuint64 attrs, cuint32 nBytes) const
+    static uint64 GetInitializedMask(cuint32 offset, cuint64 attrs, cuint32 nBytes)
     {
       uint32 pos_in_bits = (MEM_BYTES - (offset + nBytes)) << 3;
       uint64 init_mask = BASE_INIT_MASK & (attrs << pos_in_bits); // mask to 0x00000101_01010000 as an example
