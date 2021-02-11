@@ -703,6 +703,16 @@ namespace Force {
 
   }
 
+  void Memory::Reserve(uint64 address, uint32 nBytes)
+  {
+    Unreserve(address, nBytes);
+
+    // Insert reserved Section in sorted position
+    Section section(address, nBytes, EMemDataType::Both);
+    auto itr = upper_bound(mReservedRanges.begin(), mReservedRanges.end(), section);
+    mReservedRanges.insert(itr, section);
+  }
+
   void Memory::Unreserve(uint64 address, uint32 nBytes)
   {
     // Remove all reserved Sections that intersect the input Section; the first Section that could
@@ -716,6 +726,22 @@ namespace Force {
     mReservedRanges.erase(remove_if(itr, mReservedRanges.end(),
       [&section](const Section& rSection) { return rSection.Intersects(section); }),
       mReservedRanges.end());
+  }
+
+  bool Memory::IsReserved(uint64 address, uint32 nBytes)
+  {
+    // Return true if a reserved Section contains the input Section; the first Section that could
+    // contain the input Section is the one immediately preceding the input Section's upper bound
+    Section section(address, nBytes, EMemDataType::Both);
+    auto itr = upper_bound(mReservedRanges.begin(), mReservedRanges.end(), section);
+    if (itr != mReservedRanges.begin()) {
+      --itr;
+    }
+
+    bool contained = any_of(itr, mReservedRanges.end(),
+      [&section](const Section& rSection) { return rSection.Contains(section); });
+
+    return contained;
   }
 
   uint64 Memory::ReadInitialValue(uint64 address, uint32 nBytes) const

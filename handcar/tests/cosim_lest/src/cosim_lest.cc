@@ -30,6 +30,31 @@
 
 std::vector<uint8_t> global_buffer(32);
 
+extern "C" {
+  void update_generator_register(uint32_t cpuid, const char *pRegName, uint64_t rval, uint64_t mask, const char *pAccessType)
+  {
+    //std::cout << "REG update: " << std::endl;
+    //std::cout << pRegName << " " << std::hex << rval << " " << pAccessType  << std::endl;
+  }
+
+  void update_generator_memory(){};
+
+void update_vector_element(uint32_t cpuid, const char *pRegName, uint32_t vRegIndex, uint32_t eltIndex, uint32_t eltByteWidth, const uint8_t* value, uint32_t  byteLength, const char* pAccessType)
+{
+   //std::cout << "Update vector element called. cpuid: " << cpuid << " regname: " << pRegName << " vRegIndex: " << vRegIndex << " eltIndex: " << eltIndex << " eltByteWidth: " << eltByteWidth << " pAccessType: " << pAccessType << std::endl;
+
+   for(uint8_t & elt : global_buffer)
+   {    
+     elt = 0;
+   }
+   for(size_t byte_number = 0; byte_number < byteLength; ++ byte_number)
+   {
+     global_buffer[byte_number] = value[byte_number];
+   }
+}
+
+}
+
 
 const lest::test specification[] = {
 
