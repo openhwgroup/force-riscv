@@ -608,26 +608,6 @@ namespace Force {
     return(r);
   }
 
-  std::string value_to_lsdata_str(uint64 value, uint32 element_size, uint32 size, const std::string& delim)
-  {
-    if ((size < element_size) or (size > 64)) {
-      LOG(fail) << "{value_to_lsdata_str} invalid element size:" << hex << element_size << " size:" << size << endl;
-      FAIL("invalid-value-out-of-range");
-    }
-
-    stringstream ss;
-    uint32 element_num = size / element_size;
-    uint64 element_mask = ((uint64)1 << element_size) - 1;
-    uint64 element_width = element_size >> 2;
-
-    ss << "0x" << fmtx0(value & element_mask, element_width);
-    for (uint32 i = 1; i < element_num; i++) {
-      uint64 element_value = (value >> (element_size * i)) & element_mask;
-      ss  << delim << "0x" << fmtx0(element_value, element_width);
-    }
-    return ss.str();
-  }
-
   void change_elementform_to_uint64(cuint32 element_size, cuint32 valid_size, const std::vector<uint64>& orignal_value_list, std::vector<uint64>& uint64_value_list)
   {
     //element_size == 64 and valid_size == 32 or 64
