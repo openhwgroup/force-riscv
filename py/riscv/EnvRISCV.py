@@ -43,17 +43,7 @@ class GlobalInitSeqRISCV(GlobalInitSequence):
             self.setGlobalState("ResetPC", PcConfig.get_base_initial_pc())
 
     def allocateHandlerSetMemory(self):
-        # Need to ensure the handler memory doesn't intersect the boot region
-        handler_memory_constr = ConstraintSet(0, 0xFFFFFFFFFFFFFFFF)
-        handler_memory_constr.subRange(
-            PcConfig.get_base_boot_pc(),
-            (
-                PcConfig.get_base_boot_pc()
-                + PcConfig.get_boot_region_size()
-                - 1
-            ),
-        )
-
+        handler_memory_constr = self._getHandlerMemoryConstraint()
         handler_memory_size = self.getHandlerMemorySize()
         self.virtualMemoryRequest(
             "PhysicalRegion",
@@ -77,6 +67,16 @@ class GlobalInitSeqRISCV(GlobalInitSequence):
 
     def setupThreadGroup(self):
         self.partitionThreadGroup("Random", group_num=1)
+
+    def _getHandlerMemoryConstraint(self):
+        # Need to ensure the handler memory doesn't intersect the boot region or initial PC of any
+        # thread
+        handler_memory_constr = ConstraintSet(0, 0xFFFFFFFFFFFFFFFF)
+        for thread_id in range(self.getThreadNumber()):
+            handler_memory_constr.subRange(PcConfig.get_boot_pc(thread_id), (PcConfig.get_boot_pc(thread_id) + PcConfig.get_boot_region_size() - 1))
+            handler_memory_constr.subValue(PcConfig.get_initial_pc(thread_id))
+
+        return handler_memory_constr
 
 
 #  EnvRISCV class

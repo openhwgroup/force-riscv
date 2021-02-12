@@ -23,8 +23,7 @@ import re
 import defusedxml.defusedxml.ElementTree as ET
 import copy
 
-license_string = """
-# Copyright (C) [2020] Futurewei Technologies, Inc.
+license_string = """# Copyright (C) [2020] Futurewei Technologies, Inc.
 #
 # FORCE-RISCV is licensed under the Apache License, Version 2.0
 #  (the "License"); you may not use this file except in compliance
@@ -47,6 +46,7 @@ def merge(*args):
     for dict1 in args:
         result.update(dict1)
     return result
+
 
 """
 
@@ -249,9 +249,12 @@ class CSRTreeBuilder:
 
     # write a single CSR set...
     def dumpOneCSRTree(self, aFile, aTitle, aCSRs):
-        aFile.write("\n%s = {\n" % aTitle)
-        for rn in aCSRs:
-            aFile.write("    '%s':%d,\n" % (rn, self.csrBias(rn)))
+        aFile.write("\n%s = {" % aTitle)
+        if aCSRs:
+            aFile.write("\n")
+            for rn in aCSRs:
+                aFile.write("    \"%s\": %d,\n" % (rn, self.csrBias(rn)))
+
         aFile.write("}\n")
 
 

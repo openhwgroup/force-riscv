@@ -2,33 +2,19 @@
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
- FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+ FORCE-RISCV is licensed under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
- THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
- FIT FOR A PARTICULAR PURPOSE.
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+ OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
 <instruction_file>
-  <I name="FCVT.L.H" isa="RISCV" group="Float" extension="RV64F">
-    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100010000101010011"/>
-    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>
-    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
-    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="FCVT.L.H %s, %s" op1="rs1" op2="rd"/>
-  </I>
-  <I name="FCVT.LU.H" isa="RISCV" group="Float" extension="RV64F">
-    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100010000111010011"/>
-    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>
-    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
-    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="FCVT.LU.H %s, %s" op1="rs1" op2="rd"/>
-  </I>
   <I name="FCVT.H.L" isa="RISCV" group="Float" extension="RV64F">
     <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101010000101010011"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
@@ -42,5 +28,19 @@
     <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
     <O name="rd" type="FPR" bits="11-7" access="Write" choices="16-bit SIMD/FP registers"/>
     <asm format="FCVT.H.LU %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.L.H" isa="RISCV" group="Float" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100010000101010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FCVT.L.H %s, %s" op1="rs1" op2="rd"/>
+  </I>
+  <I name="FCVT.LU.H" isa="RISCV" group="Float" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100010000111010011"/>
+    <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>
+    <O name="rm" type="Choices" bits="14-12" choices="Rounding mode"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
+    <asm format="FCVT.LU.H %s, %s" op1="rs1" op2="rd"/>
   </I>
 </instruction_file>

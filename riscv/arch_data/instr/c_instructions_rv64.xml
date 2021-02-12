@@ -2,19 +2,31 @@
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
- FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+ FORCE-RISCV is licensed under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
- THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
- FIT FOR A PARTICULAR PURPOSE.
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+ OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
 <instruction_file>
+  <I name="C.ADDIW" isa="RISCV" group="General" extension="RV64C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
+    <O name="rd" type="GPR" bits="11-7" access="ReadWrite" choices="Nonzero GPRs"/>
+    <O name="imm6" type="Immediate" bits="12,6-2"/>
+    <asm format="C.ADDIW %s, %s" op1="rd" op2="imm6"/>
+  </I>
+  <I name="C.ADDW" isa="RISCV" group="General" extension="RV64C">
+    <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110101"/>
+    <O name="rd'" type="GPR" bits="9-7" access="ReadWrite" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
+    <O name="rs2'" type="GPR" bits="4-2" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
+    <asm format="C.ADDW %s, %s" op1="rd'" op2="rs2'"/>
+  </I>
   <I name="C.LD" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01100"/>
     <O name="rd'" type="GPR" bits="4-2" access="Write" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
@@ -50,18 +62,6 @@
       <O name="imm6" type="Immediate" bits="9-7,12-10"/>
     </O>
     <asm format="C.SDSP %s" op1="rs2"/>
-  </I>
-  <I name="C.ADDIW" isa="RISCV" group="General" extension="RV64C">
-    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
-    <O name="rd" type="GPR" bits="11-7" access="ReadWrite" choices="Nonzero GPRs"/>
-    <O name="imm6" type="Immediate" bits="12,6-2"/>
-    <asm format="C.ADDIW %s, %s" op1="rd" op2="imm6"/>
-  </I>
-  <I name="C.ADDW" isa="RISCV" group="General" extension="RV64C">
-    <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110101"/>
-    <O name="rd'" type="GPR" bits="9-7" access="ReadWrite" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-    <O name="rs2'" type="GPR" bits="4-2" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
-    <asm format="C.ADDW %s, %s" op1="rd'" op2="rs2'"/>
   </I>
   <I name="C.SUBW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110001"/>

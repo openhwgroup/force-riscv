@@ -133,8 +133,6 @@ namespace Force {
     bool fault = false;
     uint64 pa = gen_pc->GetPA(gen, bank, fault);
 
-    LOG(debug) << "[ThreadInstructionResults::Commit] PC LA/PA: 0x" << std::hex << gen_pc->Value() << "/0x" << pa << std::dec << std::endl;
-
     string instr_text;
     if (Config::Instance()->OutputAssembly()) {
       instr_text = instr->AssemblyText();
@@ -142,14 +140,10 @@ namespace Force {
     else {
       instr_text = instr->FullName();
     }
-
-    //TODO: identify why this is forced here.
-    //fault = false;
-
-    //if (fault) {
-      //LOG(notice) << "{ThreadInstructionResults::Commit} Fault committing instruction \"" << instr_text << "\" at 0x" << hex << gen_pc->Value() << " as address error." << endl;
-      //return false;
-    //}
+    if (fault) {
+      LOG(notice) << "{ThreadInstructionResults::Commit} Fault committing instruction \"" << instr_text << "\" at 0x" << hex << gen_pc->Value() << " as address error." << endl;
+      return false;
+    }
     LOG(notice) << "Committing instruction \"" << instr_text << "\" at 0x" << hex << gen_pc->Value() << "=>["<< bank <<"]0x" << pa << " (0x" << instr->Opcode() <<") gen("<< gen->ThreadId() << ")" << endl;
     AddInstruction(bank, pa, instr);
     uint32 instr_size = instr->ByteSize();

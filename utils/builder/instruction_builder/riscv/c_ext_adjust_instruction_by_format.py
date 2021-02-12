@@ -209,7 +209,6 @@ def adjust_imm_branch(aInstr):
     if aInstr.name == "C.JAL":
         # insert after the addressing mode operand
         opr_adjustor.add_implied_register("x1", "GPR", "Write", 1)
-        return False
 
     return True
 
@@ -430,7 +429,6 @@ def adjust_store_sp(aInstr, aImmName, aImmBits, aSize, aScale):
     # C.FSWSP is RV32 only instruction whose opcode overlap with C.SDSP
     elif aInstr.name == "C.FSWSP":
         is_sp = True
-        return False
 
     elif aInstr.name != "C.FSDSP":
         return False
@@ -484,7 +482,6 @@ def adjust_load_sp(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
     # C.FLWSP is RV32 only instruction whose opcode overlap with C.LDSP
     elif aInstr.name == "C.FLWSP":
         is_sp = True
-        return False
 
     elif aInstr.name != "C.FLDSP":
         return False
@@ -537,7 +534,7 @@ def adjust_load(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
     # C.FLW is RV32 only instruction whose opcode overlap with C.LD
     elif aInstr.name == "C.FLW":
         is_sp = True
-        return False
+
     elif aInstr.name != "C.FLD":
         return False
 
@@ -590,7 +587,6 @@ def adjust_store(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
     # C.FSW is RV32 only instruction whose opcode overlap with C.SD
     elif aInstr.name == "C.FSW":
         is_sp = True
-        return False
 
     elif aInstr.name != "C.FSD":
         return False

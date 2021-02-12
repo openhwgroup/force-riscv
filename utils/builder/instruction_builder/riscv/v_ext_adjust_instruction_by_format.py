@@ -356,7 +356,7 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
         "LoadStore",
         "VectorStridedLoadStoreOperandRISCV",
         subop_dict,
-        zzzzattr_dict,
+        attr_dict,
     )
 
     operand_adjustor.set_vm()

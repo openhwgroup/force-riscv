@@ -2,20 +2,20 @@
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
- FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+ FORCE-RISCV is licensed under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
- THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
- FIT FOR A PARTICULAR PURPOSE.
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+ OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
 <instruction_file>
-  <I name="C.FLW" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.FLW" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01100"/>
     <O name="rd'" type="FPR" bits="4-2" access="Write" choices="Prime 32-bit SIMD/FP registers"/>
     <O name="LoadStore-rs1'-imm5" type="LoadStore" alignment="4" base="rs1'" data-size="4" element-size="4" mem-access="Read" offset="imm5" offset-scale="2">
@@ -24,16 +24,16 @@
     </O>
     <asm format="C.FLW %s, %s" op1="rs1'" op2="rd'"/>
   </I>
-  <I name="C.FLWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.FLWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01110"/>
-    <O name="rd" type="FPR" bits="11-7" access="Write" choices="Prime 32-bit SIMD/FP registers"/>
+    <O name="rd" type="FPR" bits="11-7" access="Write" choices="32-bit SIMD/FP registers"/>
     <O name="LoadStore-x2-imm6" type="LoadStore" alignment="4" base="x2" data-size="4" element-size="4" mem-access="Read" offset="imm6" offset-scale="2">
       <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
       <O name="imm6" type="Immediate" bits="3-2,12,6-4"/>
     </O>
     <asm format="C.FLWSP %s" op1="rd"/>
   </I>
-  <I name="C.FSW" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.FSW" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11100"/>
     <O name="rs2'" type="FPR" bits="4-2" access="Read" choices="Prime 32-bit SIMD/FP registers"/>
     <O name="LoadStore-rs1'-imm5" type="LoadStore" alignment="4" base="rs1'" data-size="4" element-size="4" mem-access="Write" offset="imm5" offset-scale="2">
@@ -42,16 +42,16 @@
     </O>
     <asm format="C.FSW %s, %s" op1="rs1'" op2="rs2'"/>
   </I>
-  <I name="C.FSWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.FSWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11110"/>
     <O name="rs2" type="FPR" bits="6-2" access="Read" choices="32-bit SIMD/FP registers"/>
     <O name="LoadStore-x2-imm6" type="LoadStore" alignment="4" base="x2" data-size="4" element-size="4" mem-access="Write" offset="imm6" offset-scale="2">
       <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
-      <O name="imm6" type="Immediate" bits="9-7,12-10"/>
+      <O name="imm6" type="Immediate" bits="8-7,12-9"/>
     </O>
     <asm format="C.FSWSP %s" op1="rs2"/>
   </I>
-  <I name="C.JAL" isa="RISCV" class="BranchInstruction" group="General" extension="RV64C">
+  <I name="C.JAL" isa="RISCV" class="BranchInstruction" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
     <O name="Branch-simm11" type="Branch" class="PcRelativeBranchOperand" offset="simm11" offset-scale="1">
       <O name="simm11" type="Immediate" bits="12,8,10-9,6,7,2,11,5-3" class="SignedImmediateOperand"/>
