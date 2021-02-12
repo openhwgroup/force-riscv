@@ -14,8 +14,8 @@
 # limitations under the License.
 #
 from base.exception_handlers.ReusableSequence import ReusableSequence
-from riscv.PrivilegeLevel import PrivilegeLevelRISCV
 from riscv.exception_handlers.ExceptionHandlerContext import RegisterCallRole
+from riscv.PrivilegeLevel import PrivilegeLevelRISCV
 
 
 # using defined subroutine register usage, setup set of registers used within
@@ -799,7 +799,9 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.mAssemblyHelper.genShiftLeftImmediate(
             scratch_reg2_index, 10, scratch_reg2_index
         )
-        self.mAssemblyHelper.genMoveRegister(scratch_reg_index, scratch_reg2_index)
+        self.mAssemblyHelper.genMoveRegister(
+            scratch_reg_index, scratch_reg2_index
+        )
         self.mAssemblyHelper.genMoveImmediate(scratch_reg3_index, 1)
         self.mAssemblyHelper.genConditionalBranchToLabel(
             pte_level_reg_index,
@@ -849,10 +851,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         # ERROR IF UNABLE TO CORRECT FAULT...
         self.mAssemblyHelper.genReturn()
 
-
     # generate code to write PTE to memory...
-
-
     def genWritePTE(self, pte_addr_reg_index, pte_value_reg_index):
         if self.getGlobalState("AppRegisterWidth") == 32:
             self.genInstruction(
@@ -875,11 +874,8 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
                 },
             )
 
-
     # generate code to setup/issue sfence.vma instruction, to in effect cause
     # a tlb flush for a faulting address. we ASSUME a leaf PTE
-
-
     def genSFENCE(
         self,
         vaddr_reg_index,
