@@ -197,8 +197,6 @@ def arrange_operand_values(names, values):
 
         const_opr_val = [const_val]
 
-        # tmp_dict = dict()
-        # tmp_dict[const_opr_name] = const_opr_val
         const_opr_name_val = dict(zip(const_opr_name, const_opr_val))
         const_opr_name_val_lst.append(const_opr_name_val)
 

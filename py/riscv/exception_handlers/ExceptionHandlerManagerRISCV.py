@@ -238,7 +238,7 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
             PrivilegeLevelRISCV, SecurityStateRISCV
         )
 
-        def filterValid(aPrivLevelSecurityStateCombo):
+        def filter_valid(aPrivLevelSecurityStateCombo):
             (priv_level, security_state) = aPrivLevelSecurityStateCombo
             valid = True
             if priv_level == PrivilegeLevelRISCV.U:
@@ -246,4 +246,4 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
 
             return valid
 
-        return filter(filterValid, combinations)
+        return filter(filter_valid, combinations)

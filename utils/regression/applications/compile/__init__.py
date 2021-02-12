@@ -16,7 +16,7 @@
 from .CompileInit import (
     CompileCmdLineOptions,
     CompileParametersProcessor,
-    processCompileControlData,
+    process_compile_control_data,
 )
 from .CompileExecutor import CompileExecutor
 from .CompileReporter import CompileReporter
@@ -29,7 +29,7 @@ Tag = "compile"
 
 ParametersProcessorClass = CompileParametersProcessor
 
-ProcessControlData = processCompileControlData
+ProcessControlData = process_compile_control_data
 
 ExecutorClass = CompileExecutor
 

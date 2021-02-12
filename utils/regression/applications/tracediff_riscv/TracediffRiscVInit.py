@@ -40,6 +40,6 @@ class TracediffRiscVParametersProcessor(ParameterProcessor):
 
 #  Process tracecmp control data
 #
-def processTracediffRiscVControlData(aControlData, aAppParameters):
+def process_tracediff_riscv_control_data(aControlData, aAppParameters):
     if aAppParameters is None:
         return  # TODO Temporary, to avoid failing in forrest run, to remove.

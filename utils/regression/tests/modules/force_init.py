@@ -44,7 +44,6 @@ def force_init():
     # check to see if "utils" path exist if not then something has really gone
     # wrong and recovery from second case is impossible raise a fatal exception
     if not (os.path.exists(my_force_path + "/utils/")):
-        # raise OSError( "\"" + my_force_path + "/utils/\" does not exists,
         # check that it exists as a sub directory of Force" )
         raise OSError(
             '"' + my_force_path + '/utils/" does not exists, '

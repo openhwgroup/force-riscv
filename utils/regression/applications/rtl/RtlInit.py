@@ -149,7 +149,7 @@ class RtlAppOptions(object):
 
 # Process rtl control data
 #
-def processRtlControlData(aControlData, aAppParameters):
+def process_rtl_control_data(aControlData, aAppParameters):
     """Process rtl control data
 
     :param object aControlData:

@@ -16,7 +16,7 @@
 from .FpixInit import (
     FpixCmdLineOptions,
     FpixParametersProcessor,
-    processFpixControlData,
+    process_fpix_control_data,
 )
 from .FpixExecutor import FpixExecutor
 from .FpixReporter import FpixReporter
@@ -29,7 +29,7 @@ Tag = "fpix_riscv"
 
 ParametersProcessorClass = FpixParametersProcessor
 
-ProcessControlData = processFpixControlData
+ProcessControlData = process_fpix_control_data
 
 ExecutorClass = FpixExecutor
 

@@ -60,7 +60,7 @@ Example:
     print(usage_str)
 
 
-def getCommandLine(genLogPath):
+def get_command_line(genLogPath):
     try:
         with open(
             os.path.join(os.path.sep, os.getcwd(), genLogPath)
@@ -78,7 +78,7 @@ def getCommandLine(genLogPath):
         exit(1)
 
 
-def createReproduceDirectory(outputDirectory):
+def create_reproduce_directory(outputDirectory):
     try:
         new_dir = os.path.join(os.path.sep, os.getcwd(), outputDirectory)
         os.mkdir(new_dir)
@@ -91,7 +91,7 @@ def createReproduceDirectory(outputDirectory):
     return new_dir
 
 
-def copyTemplates(reproduce_directory):
+def copy_templates(reproduce_directory):
     pyfiles = glob.glob("*.py")
     try:
         for item in pyfiles:
@@ -104,7 +104,7 @@ def copyTemplates(reproduce_directory):
         exit(1)
 
 
-def findDashOption(signatureSubStr, line):
+def find_dash_option(signatureSubStr, line):
     index = line.find(signatureSubStr)
     if index != -1:
         a = line[index + 1 :].split(" ")[1]
@@ -113,7 +113,7 @@ def findDashOption(signatureSubStr, line):
     return None
 
 
-def findFreeSwitch(signatureSubStr, line):
+def find_free_switch(signatureSubStr, line):
     index = line.find(signatureSubStr)
     if index != -1:
         # print("switch option: ",signatureSubStr)
@@ -121,7 +121,7 @@ def findFreeSwitch(signatureSubStr, line):
     return None
 
 
-def updateControlItem(control_item, sig, value):
+def update_control_item(control_item, sig, value):
     slot_array = sig[2].split(":")
     if len(slot_array) == 1:
         control_item.update({slot_array[0]: value})
@@ -142,18 +142,17 @@ def updateControlItem(control_item, sig, value):
     return control_item
 
 
-def formatOptionsString(control_item):
+def format_options_string(control_item):
     # close the quote mark on the --options section
-    if "generator" in control_item:
-        if "--options" in control_item["generator"]:
-            previous = control_item["generator"]["--options"]
-            control_item["generator"].update(
-                {"--options": "\\" + '"' + previous + "\\" + '"'}
-            )
+    if ("generator" in control_item) and ("--options" in control_item["generator"]):
+        previous = control_item["generator"]["--options"]
+        control_item["generator"].update(
+            {"--options": "\\" + '"' + previous + "\\" + '"'}
+        )
     return control_item
 
 
-def createControlItem(line):
+def create_control_item(line):
     # Do the parsing, iterating through the implemented signatures, assuming
     # the 'Command line' was listed in the first 20 lines of the supplied
     # log file
@@ -199,33 +198,33 @@ def createControlItem(line):
         value = None
 
         if sig[1] in ["free_option", "cluster_option"]:
-            value = findDashOption(sig[0], line)
+            value = find_dash_option(sig[0], line)
             if value is not None:
-                control_item = updateControlItem(control_item, sig, value)
+                control_item = update_control_item(control_item, sig, value)
 
         elif sig[1] == "free_switch":
-            value = findFreeSwitch(sig[0], line)
+            value = find_free_switch(sig[0], line)
             if value is not None:
                 # Even though at this point we identified a valid free_switch,
                 # subsequent logic needs the value to be 'None' so that
                 # printing works correctly
                 value = None
-                control_item = updateControlItem(control_item, sig, value)
+                control_item = update_control_item(control_item, sig, value)
 
     # Add --options to generator sub-dictionary
-    optionsString = findDashOption("--options", line)
+    optionsString = find_dash_option("--options", line)
     if optionsString != "":
         if "generator" not in control_item:
             control_item.update({"generator": dict()})
         control_item["generator"].update({"--options": optionsString})
-        control_item = formatOptionsString(control_item)
+        control_item = format_options_string(control_item)
 
     return control_item
 
 
 # This method is needed basically just to ensure that when the seed value is
 # printed, it is not surrounded with quote marks
-def writeControlFile(control_item, reproduce_directory):
+def write_control_file(control_item, reproduce_directory):
     # Write the actual control file
     real_repro_path = os.path.realpath(reproduce_directory)
     control_file_path = os.path.join(
@@ -305,26 +304,26 @@ if __name__ == "__main__":
         outputDirectory,
     )
 
-    commandLine = getCommandLine(genLogPath)
+    commandLine = get_command_line(genLogPath)
 
     if outputDirectory is not None:
-        reproduce_directory = createReproduceDirectory(outputDirectory)
+        reproduce_directory = create_reproduce_directory(outputDirectory)
         print(
             "First copying over all the Python files from: ",
             os.getcwd(),
             " into: ",
             reproduce_directory,
         )
-        copyTemplates(reproduce_directory)
+        copy_templates(reproduce_directory)
     else:
         reproduce_directory = "."
 
     print("\nGenerating and writing new control file to reproduce directory.")
     print("Parsing " + genLogPath + " to create control file...")
 
-    control_item = createControlItem(commandLine)
+    control_item = create_control_item(commandLine)
 
-    writeControlFile(control_item, reproduce_directory)
+    write_control_file(control_item, reproduce_directory)
 
     # get force path and checkout the repository
     if outputDirectory is not None:

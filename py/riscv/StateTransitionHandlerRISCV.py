@@ -492,7 +492,7 @@ class VmContextStateTransitionHandlerRISCV(StateTransitionHandler):
         self.randomInitializeRegister(aStateElem.getRegisterName())
         (reg_val, _) = self.readRegister(aStateElem.getRegisterName())
 
-        reg_val = combineRegisterValueWithFieldValue(
+        reg_val = combine_register_value_with_field_value(
             self,
             aStateElem.getRegisterName(),
             reg_val,
@@ -549,7 +549,7 @@ class VmContextStateTransitionHandlerRISCV(StateTransitionHandler):
             (reg_val, _) = self.readRegister(reg_name)
 
             for (i, reg_field_name) in enumerate(reg_field_names):
-                reg_val = combineRegisterValueWithFieldValue(
+                reg_val = combine_register_value_with_field_value(
                     self,
                     reg_name,
                     reg_val,
@@ -883,7 +883,7 @@ class StateTransitionHelperGprSet(object):
 #  @param aRegVal The current value of the register.
 #  @param aRegFieldName The name of the register field.
 #  @param aRegFieldVal The desired value of the register field.
-def combineRegisterValueWithFieldValue(
+def combine_register_value_with_field_value(
     aSequence, aRegName, aRegVal, aRegFieldName, aRegFieldVal
 ):
     (reg_field_mask, reg_field_reverse_mask) = aSequence.getRegisterFieldMask(

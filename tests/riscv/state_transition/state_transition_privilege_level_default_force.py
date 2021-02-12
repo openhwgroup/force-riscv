@@ -52,7 +52,7 @@ class MainSequence(Sequence):
             for _ in range(10):
                 self.genInstruction("ADDI##RISCV")
 
-            state_transition_test_utils.verifyState(
+            state_transition_test_utils.verify_state(
                 self, self._mExpectedStateData
             )
 

@@ -206,8 +206,6 @@ def arrange_operand_values(names, values):
 
         const_opr_val = [const_val]
 
-        # tmp_dict = dict()
-        # tmp_dict[const_opr_name] = const_opr_val
         const_opr_name_val = dict(zip(const_opr_name, const_opr_val))
         const_opr_name_val_lst.append(const_opr_name_val)
 
@@ -330,7 +328,6 @@ def build_tlbi_os_instructions(instr, op1_opr, extra_instrs):
         extra_instr.form = key
         extra_opr = copy.deepcopy(op1_opr)
         extra_opr.value = value
-        # extra_opr.width = len(value)
         extra_instr.change_operand(extra_opr, True)  # merge with the const
         extra_instr.asm.format = "TLBI %s" % key + " %s"
         extra_instrs.append(extra_instr)
@@ -424,7 +421,6 @@ def get_referenced_instruction(instr_file, instr_name_form_isa):
             "Get referenced instruction error.Input parameter "
             "'instr_name_form_isa' format error."
         )
-        return
     if len(attr_lst) == 3:
         isa_str = attr_lst[2].strip()
         if len(isa_str):
@@ -449,7 +445,6 @@ def get_referenced_instruction(instr_file, instr_name_form_isa):
             ):
                 return instr
     raise Exception("The instruction not found:", instr_name_form_isa)
-    return None
 
 
 # parse a xml instruction file and return the instruction file instance

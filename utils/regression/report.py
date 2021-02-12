@@ -215,7 +215,7 @@ class CommandLineParameters(object):
     ]
 
 
-def callFromPython(aCommandLineString):
+def call_from_python(aCommandLineString):
     from common.cmdline_utils import CmdLineParser
 
     command_list = aCommandLineString.split(" ")

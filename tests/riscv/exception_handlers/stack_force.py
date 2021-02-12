@@ -76,7 +76,7 @@ class MainSequence(Sequence):
                 aStack.push(gpr_index)
             elif operation == "pop":
                 aStack.pop(gpr_index)
-                exception_handlers_test_utils.assertGprHasValue(
+                exception_handlers_test_utils.assert_gpr_has_value(
                     self, gpr_index, self._mReferenceStack.pop()
                 )
 
@@ -86,7 +86,7 @@ class MainSequence(Sequence):
                 max_stack_index = len(self._mReferenceStack) - 1
                 stack_index = RandomUtils.random32(0, max_stack_index)
                 aStack.peek(gpr_index, aOffset=stack_index)
-                exception_handlers_test_utils.assertGprHasValue(
+                exception_handlers_test_utils.assert_gpr_has_value(
                     self,
                     gpr_index,
                     self._mReferenceStack[max_stack_index - stack_index],
@@ -138,7 +138,7 @@ class MainSequence(Sequence):
                 aStack.freeStackFrame()
 
                 for (gpr_index, expected_gpr_val) in reference_stack_frame:
-                    exception_handlers_test_utils.assertGprHasValue(
+                    exception_handlers_test_utils.assert_gpr_has_value(
                         self, gpr_index, expected_gpr_val
                     )
             elif operation == "arg":
@@ -150,7 +150,7 @@ class MainSequence(Sequence):
                     exclude=("0,%d" % aStack.pointerIndex())
                 )
                 aStack.arg(temp_gpr_index, arg_index)
-                exception_handlers_test_utils.assertGprHasValue(
+                exception_handlers_test_utils.assert_gpr_has_value(
                     self, temp_gpr_index, reference_stack_frame[arg_index][1]
                 )
             elif operation == "modifyArg":
@@ -177,7 +177,7 @@ class MainSequence(Sequence):
             gpr_name = "x%d" % aGprIndex
             self.randomInitializeRegister(gpr_name)
             (gpr_val, valid) = self.readRegister(gpr_name)
-            exception_handlers_test_utils.assertValidGprValue(
+            exception_handlers_test_utils.assert_valid_gpr_value(
                 self, aGprIndex, valid
             )
         else:
@@ -199,7 +199,7 @@ class MainSequence(Sequence):
         (stack_pointer_val, valid) = self.readRegister(
             "x%d" % stack_pointer_index
         )
-        exception_handlers_test_utils.assertValidGprValue(
+        exception_handlers_test_utils.assert_valid_gpr_value(
             self, stack_pointer_index, valid
         )
         stack_empty = stack_pointer_val == aStack.mStackTop

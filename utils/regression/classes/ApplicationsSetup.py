@@ -66,9 +66,6 @@ class ApplicationsSetup(object):
             workflow files. For now, workflow is being passed into
             forrest run via the config file."""
 
-            # self._mAppsInfo.mConfigPath = self._buildTemporaryWorkflowFile(
-            # single_run_app_opts, sequence_app_opts)
-
             for app_name, app_opts in single_run_app_opts:
                 app_info = self._getAppConfig(app_name)
                 self._mAppsInfo.addSingleRunApplication(app_info)

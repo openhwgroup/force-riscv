@@ -24,7 +24,6 @@ import os
 import defusedxml.defusedxml.ElementTree as ET
 import defusedxml.defusedxml.minidom as DOM
 
-# import Register #shared Register definition
 from BootPriority import *
 
 
@@ -248,17 +247,15 @@ class Register:
         self.mName = kwargs.get("name", "")
         self.mSkipPhysical = kwargs.get("skip_physical", 0)
 
-        # TODO: Do these physical fields need to be defined for RISCV? If so,
-        # add the required functionality for each.
+        # TODO: Do physical_type and physical_class need to be defined for
+        # RISCV? If so, add the required functionality for each.
         self.mPhysicalName = kwargs.get("physical_name", "")
         self.mIndex = kwargs.get("index", None)
         self.mLength = kwargs.get("length", "")
         self.mPhysicalLength = kwargs.get("physical_length", None)
         self.mBoot = kwargs.get("boot", 0)
         self.mType = kwargs.get("type", None)
-        # self.mPhysicalType = kwargs.get('physical_type', None)
         self.mClass = kwargs.get("class", None)
-        # self.mPhysicalClass = kwargs.get('physical_class', None)
         self.mPrivilege = kwargs.get("privilege", None)
         self.mDescription = kwargs.get("description", "")
         self.mRegisterFields = {}

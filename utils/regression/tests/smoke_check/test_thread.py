@@ -42,7 +42,7 @@ class UnitTest_NoLoopThread(UnitTest):
         }
 
         Msg.info("UnitTest_NoLoopThread >> Creating NoLoop Thread ... ")
-        myThread = ThreadFactory("NoLoopThread", True, myThreadProcs)
+        myThread = thread_factory("NoLoopThread", True, myThreadProcs)
 
         Msg.info("UnitTest_NoLoopThread >> Initializing Thread ... ")
         myThread.start_thread()
@@ -88,7 +88,7 @@ class UnitTest_LoopThread(UnitTest):
             "active": False,  # do not start the thread until ready
         }
         Msg.info("UnitTest_LoopThread << Creating Thread With Loop... ")
-        myThread = ThreadFactory(
+        myThread = thread_factory(
             "LoopThread", False, myThreadProcs, myThreadOpts
         )
 

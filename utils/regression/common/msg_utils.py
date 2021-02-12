@@ -297,16 +297,6 @@ class Msg:
                     "[%s] - %s" % (MsgLabel.get_label(arg_level), str(arg_msg))
                 )
 
-    # outputs
-    # @classmethod
-    # def user( cls, arg_msg = None ):
-    #     if Msg.lev & MsgLevel.user:
-    #         if arg_msg is None:
-    #             # add an empty line
-    #             print()
-    #         else:
-    #             Msg.write( arg_msg, MsgLevel.user )
-
     @classmethod
     def user(cls, arg_msg, arg_label=None):
         if Msg.lev & MsgLevel.user:

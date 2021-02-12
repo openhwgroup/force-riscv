@@ -17,8 +17,6 @@
 # comment: implements RtlExecutor which serves as a Class Wrapper for
 #          for executing the rtl simulator family in client processing apps
 
-# from launchers.lsf_launcher import LsfLauncher
-
 import shutil
 
 from executors.iss_executor import *
@@ -487,9 +485,6 @@ class RtlExecutor(IssExecutor):
             Msg.error_trace("RTL Process Failure")
             Msg.err("RTL did not properly execute, Reason: %s" % (str(arg_ex)))
             return False
-
-        finally:
-            pass
 
         return test_passed
 

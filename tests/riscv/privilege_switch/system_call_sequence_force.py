@@ -98,11 +98,10 @@ class MainSequence(Sequence):
         if target_addr is not None:
             params["TargetAddr"] = target_addr
 
+        # Don't skip validation if no target address is specified
         skip_addr_validation = self.choice((0, 1, None))
-        if skip_addr_validation is not None:
-            # Don't skip validation if no target address is specified
-            if ("TargetAddr" in params) or (skip_addr_validation != 1):
-                params["SkipAddrValidation"] = skip_addr_validation
+        if (skip_addr_validation is not None) and (("TargetAddr" in params) or (skip_addr_validation != 1)):
+            params["SkipAddrValidation"] = skip_addr_validation
 
         if RandomUtils.random32(0, 4) == 4:
             choices_mod = ChoicesModifier(self.genThread)
@@ -138,22 +137,20 @@ class MainSequence(Sequence):
         elif (priv_level_param == "M") or (priv_level_param == 3):
             expected_priv_level = 3
 
-        if expected_priv_level is not None:
-            if aCurrentState["PrivilegeLevel"] != expected_priv_level:
-                self.error(
-                    "Current privilege level does not match the expected "
-                    "value. Expected=%d, Actual=%d"
-                    % (expected_priv_level, aCurrentState["PrivilegeLevel"])
-                )
+        if (expected_priv_level is not None) and (aCurrentState["PrivilegeLevel"] != expected_priv_level):
+            self.error(
+                "Current privilege level does not match the expected "
+                "value. Expected=%d, Actual=%d"
+                % (expected_priv_level, aCurrentState["PrivilegeLevel"])
+            )
 
         expected_target_addr = aSysCallParams.get("TargetAddr")
-        if expected_target_addr is not None:
-            if aCurrentState["PC"] != expected_target_addr:
-                self.error(
-                    "Current PC does not match the expected value. "
-                    "Expected=0x%x, Actual=0x%x"
-                    % (expected_target_addr, aCurrentState["PC"])
-                )
+        if (expected_target_addr is not None) and (aCurrentState["PC"] != expected_target_addr):
+            self.error(
+                "Current PC does not match the expected value. "
+                "Expected=0x%x, Actual=0x%x"
+                % (expected_target_addr, aCurrentState["PC"])
+            )
 
         priv_level_name = None
         if aCurrentState["PrivilegeLevel"] == 0:
@@ -177,20 +174,19 @@ class MainSequence(Sequence):
             # supported
             if (expected_interrupt_mask is not None) and (
                 aCurrentState["PrivilegeLevel"] != 0
+            ) and (
+                aCurrentState[interrupt_field_name]
+                != expected_interrupt_mask
             ):
-                if (
-                    aCurrentState[interrupt_field_name]
-                    != expected_interrupt_mask
-                ):
-                    self.error(
-                        "Current mstatus.%s does not match the expected "
-                        "value. Expected=0x%x, Actual=0x%x"
-                        % (
-                            interrupt_field_name,
-                            expected_interrupt_mask,
-                            aCurrentState[interrupt_field_name],
-                        )
+                self.error(
+                    "Current mstatus.%s does not match the expected "
+                    "value. Expected=0x%x, Actual=0x%x"
+                    % (
+                        interrupt_field_name,
+                        expected_interrupt_mask,
+                        aCurrentState[interrupt_field_name],
                     )
+                )
 
             for reg_field_name in ("SUM", "MXR"):
                 expected_field_val = self._getExpectedRegisterFieldValue(
@@ -199,28 +195,26 @@ class MainSequence(Sequence):
                     aOrigState,
                 )
 
-                if expected_field_val is not None:
-                    if aCurrentState[reg_field_name] != expected_field_val:
-                        self.error(
-                            "Current mstatus.%s does not match the expected "
-                            "value. Expected=0x%x, Actual=0x%x"
-                            % (
-                                reg_field_name,
-                                expected_field_val,
-                                aCurrentState[reg_field_name],
-                            )
+                if (expected_field_val is not None) and (aCurrentState[reg_field_name] != expected_field_val):
+                    self.error(
+                        "Current mstatus.%s does not match the expected "
+                        "value. Expected=0x%x, Actual=0x%x"
+                        % (
+                            reg_field_name,
+                            expected_field_val,
+                            aCurrentState[reg_field_name],
                         )
+                    )
 
             expected_mprv_val = self._getExpectedRegisterFieldValue(
                 "MPRV", aSysCallParams.get("MPRV"), aOrigState
             )
-            if (expected_mprv_val is not None) and (priv_level_name == "M"):
-                if aCurrentState["MPRV"] != expected_mprv_val:
-                    self.error(
-                        "Current mstatus.MPRV does not match the expected "
-                        "value. Expected=0x%x, Actual=0x%x"
-                        % (expected_mprv_val, aCurrentState["MPRV"])
-                    )
+            if (expected_mprv_val is not None) and (priv_level_name == "M") and (aCurrentState["MPRV"] != expected_mprv_val):
+                self.error(
+                    "Current mstatus.MPRV does not match the expected "
+                    "value. Expected=0x%x, Actual=0x%x"
+                    % (expected_mprv_val, aCurrentState["MPRV"])
+                )
 
     # Randomly generate a target address for a privilege level switch.
     #

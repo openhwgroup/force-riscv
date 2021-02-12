@@ -337,7 +337,6 @@ class _CppUnitTestGenerator:
     # value such that in many cases, the generated string will hash to one of
     # the case values and fail at the full equality check.
     def _generate_fail_test_string(self, enum_value_name):
-        enum_value_name = enum_value_name
         if len(enum_value_name) > 1:
             fail_test_string = enum_value_name[0] + "_" + enum_value_name[2:]
         else:

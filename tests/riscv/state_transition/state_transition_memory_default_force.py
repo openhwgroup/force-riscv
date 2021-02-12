@@ -54,7 +54,7 @@ class MainSequence(Sequence):
                 )
 
             StateTransition.transitionToState(state)
-            state_transition_test_utils.verifyState(
+            state_transition_test_utils.verify_state(
                 self, self._mExpectedStateData
             )
 

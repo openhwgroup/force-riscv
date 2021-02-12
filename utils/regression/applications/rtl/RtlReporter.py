@@ -141,7 +141,7 @@ class RtlReporter(object):
                     Msg.dbg("Reporting command: " + str(report_command))
 
                     # actually execute the report script
-                    report.callFromPython(report_command)
+                    report.call_from_python(report_command)
 
                     # create or append metrics file
                     rtl_metrics_path = rtl_control_data.get(

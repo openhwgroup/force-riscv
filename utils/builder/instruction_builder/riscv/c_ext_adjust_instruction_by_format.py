@@ -121,15 +121,15 @@ def c_ext_adjust_instruction_by_format(aInstr):
         return adjust_store_sp(
             aInstr, "uimm[5:4|9:6]", "10-7,12-11", 16, 4
         )  # with imm name, size, and scale parameters
-    elif instr_format == "uimm[5]-rd$\\neq$0-uimm[4:2|7:6]":
-        # C.LWSP
+    elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:2|7:6]") or (instr_format == "uimm[5]-rd-uimm[4:2|7:6]"):
+        # C.LWSP or C.FLWSP
         #      12  6-4   3-2
         # uimm[5 | 4:2 | 7:6]
         return adjust_load_sp(
             aInstr, "uimm[5]", "uimm[4:2|7:6]", "3-2,12,6-4", 4, 2
         )  # with imm name, size, and scale parameters
-    elif instr_format == "uimm[5]-rd$\\neq$0-uimm[4:3|8:6]":
-        # C.LDSP
+    elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:3|8:6]") or (instr_format == "uimm[5]-rd-uimm[4:3|8:6]"):
+        # C.LDSP or C.FLDSP
         #      12  6-5   4-2
         # uimm[5 | 4:3 | 8:6]
         return adjust_load_sp(
@@ -141,20 +141,6 @@ def c_ext_adjust_instruction_by_format(aInstr):
         # uimm[5 | 4 | 9:6]
         return adjust_load_sp(
             aInstr, "uimm[5]", "uimm[4|9:6]", "5-2,12,6", 16, 4
-        )  # with imm name, size, and scale parameters
-    elif instr_format == "uimm[5]-rd-uimm[4:2|7:6]":
-        # C.FLWSP
-        #      12  6-4   3-2
-        # uimm[5 | 4:2 | 7:6]
-        return adjust_load_sp(
-            aInstr, "uimm[5]", "uimm[4:2|7:6]", "3-2,12,6-4", 4, 2
-        )  # with imm name, size, and scale parameters
-    elif instr_format == "uimm[5]-rd-uimm[4:3|8:6]":
-        # C.FLDSP
-        #      12  6-5   4-2
-        # uimm[5 | 4:3 | 8:6]
-        return adjust_load_sp(
-            aInstr, "uimm[5]", "uimm[4:3|8:6]", "4-2,12,6-5", 8, 3
         )  # with imm name, size, and scale parameters
     elif aInstr.name == "C.EBREAK":
         return True
@@ -446,9 +432,7 @@ def adjust_store_sp(aInstr, aImmName, aImmBits, aSize, aScale):
         is_sp = True
         return False
 
-    elif aInstr.name == "C.FSDSP":
-        pass
-    else:
+    elif aInstr.name != "C.FSDSP":
         return False
 
     if is_int:
@@ -502,9 +486,7 @@ def adjust_load_sp(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
         is_sp = True
         return False
 
-    elif aInstr.name == "C.FLDSP":
-        pass
-    else:
+    elif aInstr.name != "C.FLDSP":
         return False
 
     if is_int:
@@ -556,9 +538,7 @@ def adjust_load(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
     elif aInstr.name == "C.FLW":
         is_sp = True
         return False
-    elif aInstr.name == "C.FLD":
-        pass
-    else:
+    elif aInstr.name != "C.FLD":
         return False
 
     opr_adjustor.set_rs1p_int()
@@ -612,9 +592,7 @@ def adjust_store(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
         is_sp = True
         return False
 
-    elif aInstr.name == "C.FSD":
-        pass
-    else:
+    elif aInstr.name != "C.FSD":
         return False
 
     opr_adjustor.set_rs1p_int()

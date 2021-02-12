@@ -30,7 +30,6 @@ class MainSequence(depSequence):
 
         self.notice("Warm up resource entropy")
         for i in range(100):
-            # instr = instMap.pick(self)
             instr_tree = (
                 LDST32_All_instructions
                 if self.getGlobalState("AppRegisterWidth") == 32

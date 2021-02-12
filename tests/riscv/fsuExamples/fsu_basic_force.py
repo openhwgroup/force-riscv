@@ -31,9 +31,6 @@ class MainSequence(Sequence):
             10  # How many instructions should be generated in the test case.
         )
 
-        # Use only one of the two instrType assignments here; comment out the
-        # other one.
-
         # "ALL" indicates randomly select from the set of instructions in
         # the instructionSubset.
         # Or you can...
@@ -43,7 +40,6 @@ class MainSequence(Sequence):
         # riscv_instruction.xml file.
 
         instrType = "ALL"
-        # instrType = "FMUL.D#Double-precision#RISCV"
 
         # if you specify instrType="ALL", instructions will be generated from
         # this set of instructions

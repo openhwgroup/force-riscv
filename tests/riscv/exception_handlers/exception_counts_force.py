@@ -41,7 +41,7 @@ class MainSequence(Sequence):
 
         rv32 = self.getGlobalState("AppRegisterWidth") == 32
 
-        orig_gpr_values = exception_handlers_test_utils.reserveRandomGprs(
+        orig_gpr_values = exception_handlers_test_utils.reserve_random_gprs(
             self, 20
         )
         ecall_except_codes = {0: 8, 1: 9, 3: 11}
@@ -63,7 +63,7 @@ class MainSequence(Sequence):
                         "LD##RISCV", {"LSTarget": unaligned_target_addr}
                     )
                 self._verifyExceptionCount(4)
-                exception_handlers_test_utils.assertGprValuesUnchanged(
+                exception_handlers_test_utils.assert_gpr_values_unchanged(
                     self, orig_gpr_values
                 )
             elif except_code == 6:
@@ -79,13 +79,13 @@ class MainSequence(Sequence):
                         "SD##RISCV", {"LSTarget": unaligned_target_addr}
                     )
                 self._verifyExceptionCount(6)
-                exception_handlers_test_utils.assertGprValuesUnchanged(
+                exception_handlers_test_utils.assert_gpr_values_unchanged(
                     self, orig_gpr_values
                 )
             elif except_code == ecall_except_code:
                 self.genInstruction("ECALL##RISCV")
                 self._verifyExceptionCount(ecall_except_code)
-                exception_handlers_test_utils.assertGprValuesUnchanged(
+                exception_handlers_test_utils.assert_gpr_values_unchanged(
                     self, orig_gpr_values
                 )
             else:

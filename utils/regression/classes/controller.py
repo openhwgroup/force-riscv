@@ -62,7 +62,6 @@ class Controller(object):
         # for now there errors in controllers do not count as fails
         # however populating the callback should enable that capability
         self.on_fail_proc = None
-        # self.on_fail_proc = arg_on_fail_proc
 
     def do_fail(self):
         # if a fail proc exists then it will be called in a protected mode

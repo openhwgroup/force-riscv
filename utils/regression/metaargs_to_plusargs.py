@@ -99,8 +99,6 @@ class MetaArgsConversion(object):
         if self._mBaseResultSet is None:
             self._mBaseResultSet = self.rawResultSet(self.convertRawResult(""))
 
-        # print(" one set: ", str(raw_result_set))
-        # print(" base set: ", str(self._mBaseResultSet))
         net_set = raw_result_set - self._mBaseResultSet
 
         return " ".join(net_set)
@@ -129,14 +127,9 @@ class MetaArgsConversion(object):
 
 
 def convert_meta_args(aConversionParms):
-    if aConversionParms.meta_args is None:
-        if (aConversionParms.plusargs is not None) and len(
-            aConversionParms.cmp_plusargs
-        ):
-            pass
-        else:
-            print("Meta args not specified.")
-            sys.exit(1)
+    if (aConversionParms.meta_args is None) and ((aConversionParms.plusargs is None) or (not len(aConversionParms.cmp_plusargs))):
+        print("Meta args not specified.")
+        sys.exit(1)
 
     meta_args = aConversionParms.meta_args
 

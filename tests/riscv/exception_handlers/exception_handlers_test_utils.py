@@ -18,9 +18,7 @@
 #
 #  @param aSequence The calling sequence.
 #  @param aGprCount The number of GPRs to reserve.
-
-
-def reserveRandomGprs(aSequence, aGprCount):
+def reserve_random_gprs(aSequence, aGprCount):
     orig_gpr_values = {}
     gpr_indices = aSequence.getRandomGPRs(aGprCount)
     for gpr_index in gpr_indices:
@@ -28,7 +26,7 @@ def reserveRandomGprs(aSequence, aGprCount):
         aSequence.randomInitializeRegister(gpr_name)
 
         (gpr_val, valid) = aSequence.readRegister(gpr_name)
-        assertValidGprValue(aSequence, gpr_index, valid)
+        assert_valid_gpr_value(aSequence, gpr_index, valid)
         aSequence.reserveRegister(gpr_name)
 
         orig_gpr_values[gpr_index] = gpr_val
@@ -41,9 +39,9 @@ def reserveRandomGprs(aSequence, aGprCount):
 #  @param aSequence The calling sequence.
 #  @param aOrigGprValues A dictionary mapping GPR indices to their original
 #       values.
-def assertGprValuesUnchanged(aSequence, aOrigGprValues):
+def assert_gpr_values_unchanged(aSequence, aOrigGprValues):
     for (gpr_index, gpr_val) in aOrigGprValues.items():
-        assertGprHasValue(aSequence, gpr_index, gpr_val)
+        assert_gpr_has_value(aSequence, gpr_index, gpr_val)
 
 
 #  Fail if the GPR's value differs from its specified original value.
@@ -51,9 +49,9 @@ def assertGprValuesUnchanged(aSequence, aOrigGprValues):
 #  @param aSequence The calling sequence.
 #  @param aGprIndex The index of the GPR.
 #  @param aExpectedGprVal The expected GPR value.
-def assertGprHasValue(aSequence, aGprIndex, aExpectedGprVal):
+def assert_gpr_has_value(aSequence, aGprIndex, aExpectedGprVal):
     (gpr_val, valid) = aSequence.readRegister("x%d" % aGprIndex)
-    assertValidGprValue(aSequence, aGprIndex, valid)
+    assert_valid_gpr_value(aSequence, aGprIndex, valid)
 
     if gpr_val != aExpectedGprVal:
         aSequence.error(
@@ -68,6 +66,6 @@ def assertGprHasValue(aSequence, aGprIndex, aExpectedGprVal):
 #  @param aSequence The calling sequence.
 #  @param aGprIndex The index of the GPR.
 #  @param aValid A flag indicating whether the specified GPR has a valid value.
-def assertValidGprValue(aSequence, aGprIndex, aValid):
+def assert_valid_gpr_value(aSequence, aGprIndex, aValid):
     if not aValid:
         aSequence.error("Value for register x%d is invalid" % aGprIndex)

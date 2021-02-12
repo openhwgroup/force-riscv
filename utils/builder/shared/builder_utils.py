@@ -99,9 +99,6 @@ def update_bits_value(bits, value):
         start_loc += piece_sz
 
     bitval_list.sort(key=lambda x: x.high, reverse=True)
-    # print ("Sorted list")
-    # for bitval in bitval_list:
-    #     print (bitval.to_string())
 
     ret_bits = ""
     ret_value = ""
@@ -193,9 +190,6 @@ def bit_string_to_list(bit_str):
             for bit in range(range_start, range_end - 1, -1):
                 bit_list.append(bit)
 
-    # print ("bit_str %s splitted into:" % bit_str)
-    # print (bit_list)
-
     return bit_list
 
 
@@ -231,10 +225,6 @@ def bit_list_to_string(bit_list):
         bit_str += "," + range_str
     else:
         bit_str = range_str
-
-    # print ("Converting list:")
-    # print (bit_list)
-    # print ("to string %s" % bit_str)
 
     return bit_str
 

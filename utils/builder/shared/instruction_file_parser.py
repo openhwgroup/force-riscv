@@ -53,17 +53,13 @@ class InstructionFileHandler(ContentHandler, object):
         self.nameStack.append(name)
         self.currentChars = ""
 
-        if name == "instruction_file":
-            pass
-        elif name in ["I", "O", "asm"]:
+        if name in ["I", "O", "asm"]:
             self.__getattribute__("start_" + name)(attrs)
 
     def endElement(self, name):
         self.nameStack.pop()
 
-        if name == "instruction_file":
-            pass
-        elif name in ["I", "O", "asm"]:
+        if name in ["I", "O", "asm"]:
             self.__getattribute__("end_" + name)()
 
     def characters(self, content):
@@ -186,9 +182,6 @@ class InstructionFileParser(object):
 
     def parse(self, file_path):
         ifile_handler = InstructionFileHandler(file_path, self.instrFile)
-        # import traceback
-        # print( "File Path: " + str( file_path ))
-        # traceback.print_stack()
         try:
             defusedxml.defusedxml.sax.parse(file_path, ifile_handler)
         except BaseException:

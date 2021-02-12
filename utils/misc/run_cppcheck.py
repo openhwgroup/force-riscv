@@ -21,7 +21,7 @@ import subprocess
 import sys
 
 
-def setupArguments():
+def setup_arguments():
     parser = argparse.ArgumentParser(
         description="A script to run CppCheck",
         formatter_class=argparse.RawTextHelpFormatter,
@@ -53,7 +53,7 @@ def setupArguments():
     return parser
 
 
-def parseSvnStatus():
+def parse_svn_status():
     paths = []
 
     # subprocess.check_output returns a byte string: b'some text here'
@@ -67,14 +67,13 @@ def parseSvnStatus():
     for line in raw_svn_status.split("\n"):
         contents = line.split()
         # only check files that are [A]dded, [M]odified, or [R]eplaced
-        if contents[0] == "A" or contents[0] == "M" or contents[0] == "R":
-            if "unit_tests" not in contents[1] and "py" not in contents[1]:
-                paths.append(contents[1])
+        if (contents[0] in ("A", "M", "R")) and ("unit_tests" not in contents[1]) and ("py" not in contents[1]):
+            paths.append(contents[1])
 
     return (".", paths)
 
 
-def runCppcheck(args):
+def run_cpp_check(args):
     # build list for subprocess.call
     cppcheck_path = os.environ["CPPCHECK_BIN"]
     cmd_line = [cppcheck_path, "--language=c++", "--std=c++11"]
@@ -91,7 +90,7 @@ def runCppcheck(args):
         # from CppCheck manual: For historical reasons, --enable=style enables
         # warning, performance, portability, and style messages.
         cmd_line.append("--enable=style")
-        (root, paths) = parseSvnStatus()
+        (root, paths) = parse_svn_status()
     elif args.path[0].endswith(".cc") or args.path[0].endswith(
         ".h"
     ):  # file(s)
@@ -139,6 +138,6 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    parser = setupArguments()
+    parser = setup_arguments()
     args = parser.parse_args()
-    runCppcheck(args)
+    run_cpp_check(args)

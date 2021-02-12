@@ -254,7 +254,6 @@ def parse_diff_minus_plus_line(line):
 
 
 def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
-    # import codecs
     diff_handle = open(diff_file_name, "r", encoding="utf-8")
     exe_handle = open(exe_list_name, "w")
     bin_handle = open(bin_list_name, "w")

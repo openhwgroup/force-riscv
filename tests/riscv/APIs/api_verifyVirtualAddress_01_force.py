@@ -43,17 +43,11 @@ class MainSequence(Sequence):
         instruction_count = 5
 
         # 2 - Choose the subset of RISCV instruction you wish to use
-        # instruction_group = RV_G_instructions
-        # instruction_group = BranchJump_instructions
         instruction_group = (
             LDST32_All_instructions
             if self.getGlobalState("AppRegisterWidth") == 32
             else LDST_All_instructions
         )
-        # instruction_group = ALU_Int_All_instructions
-        # instruction_group = ALU_Float_All_instructions
-        # instruction_group = RV32I_instructions
-        # instruction_group = RV_A_instructions
 
         # 3 - If you want to specify a specific instruction, set
         # the_instruction2 to the appropriate string here and replace the

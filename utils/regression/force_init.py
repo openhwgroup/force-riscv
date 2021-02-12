@@ -45,7 +45,6 @@ def force_init():
     # gone wrong and recovery from second case is impossible raise a fatal
     # exception
     if not (os.path.exists(my_force_path + "/utils/")):
-        # raise OSError( "\"" + my_force_path + "/utils/\" does not exists,
         # check that it exists as a sub directory of Force" )
         raise OSError(
             '"' + my_force_path + '/utils/" does not exists, '
@@ -69,8 +68,6 @@ sys.path.append(the_force_root + "utils/")
 # executing and update the import path.
 def get_mod_root():
     my_path, my_tmp = os.path.split(os.path.realpath(sys.argv[0]))
-    # my_root, my_tmp = os.path.split( my_path )
-    # return str( my_root )
     return str(my_path)
 
 

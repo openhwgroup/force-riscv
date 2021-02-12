@@ -62,7 +62,7 @@ class MainSequence(Sequence):
         imm_val = RandomUtils.random32(0, 2047)
         assembly_helper.genMoveImmediate(dest_reg_index, imm_val)
         dest_reg_val = imm_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -71,14 +71,14 @@ class MainSequence(Sequence):
         shift_amount = RandomUtils.random32(0, max_shift_val)
         assembly_helper.genShiftLeftImmediate(dest_reg_index, shift_amount)
         dest_reg_val = (dest_reg_val << shift_amount) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         shift_amount = RandomUtils.random32(0, max_shift_val)
         assembly_helper.genShiftRightImmediate(dest_reg_index, shift_amount)
         dest_reg_val = (dest_reg_val >> shift_amount) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -87,7 +87,7 @@ class MainSequence(Sequence):
             dest_reg_index, shift_amount, aSrcRegIndex=src_reg_index
         )
         dest_reg_val = (src_reg_val << shift_amount) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -96,14 +96,14 @@ class MainSequence(Sequence):
             dest_reg_index, shift_amount, aSrcRegIndex=src_reg_index
         )
         dest_reg_val = (src_reg_val >> shift_amount) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         imm_val = RandomUtils.random32(0, 2047)
         assembly_helper.genAndImmediate(dest_reg_index, imm_val)
         dest_reg_val &= imm_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -112,14 +112,14 @@ class MainSequence(Sequence):
             dest_reg_index, imm_val, aSrcRegIndex=src_reg_index
         )
         dest_reg_val = src_reg_val & imm_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         imm_val = RandomUtils.random32(0, 2047)
         assembly_helper.genOrImmediate(dest_reg_index, imm_val)
         dest_reg_val |= imm_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -128,14 +128,14 @@ class MainSequence(Sequence):
             dest_reg_index, imm_val, aSrcRegIndex=src_reg_index
         )
         dest_reg_val = src_reg_val | imm_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         imm_val = RandomUtils.random32(0, 2047)
         assembly_helper.genXorImmediate(dest_reg_index, imm_val)
         dest_reg_val ^= imm_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -144,14 +144,14 @@ class MainSequence(Sequence):
             dest_reg_index, imm_val, aSrcRegIndex=src_reg_index
         )
         dest_reg_val = src_reg_val ^ imm_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         imm_val = RandomUtils.random32(0, 2047)
         assembly_helper.genAddImmediate(dest_reg_index, imm_val)
         dest_reg_val = (dest_reg_val + imm_val) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -160,13 +160,13 @@ class MainSequence(Sequence):
             dest_reg_index, imm_val, aSrcRegIndex=src_reg_index
         )
         dest_reg_val = (src_reg_val + imm_val) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         assembly_helper.genMoveRegister(dest_reg_index, src_reg_index)
         dest_reg_val = src_reg_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -181,7 +181,7 @@ class MainSequence(Sequence):
 
         assembly_helper.genAndRegister(dest_reg_index, src_reg_index)
         dest_reg_val &= src_reg_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -189,13 +189,13 @@ class MainSequence(Sequence):
             dest_reg_index, src_reg_index, aSrcRegIndex2=src_reg_index_2
         )
         dest_reg_val = src_reg_val_2 & src_reg_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         assembly_helper.genOrRegister(dest_reg_index, src_reg_index)
         dest_reg_val |= src_reg_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -203,13 +203,13 @@ class MainSequence(Sequence):
             dest_reg_index, src_reg_index, aSrcRegIndex2=src_reg_index_2
         )
         dest_reg_val = src_reg_val_2 | src_reg_val
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         assembly_helper.genNotRegister(dest_reg_index)
         dest_reg_val = ~dest_reg_val & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -217,13 +217,13 @@ class MainSequence(Sequence):
             dest_reg_index, aSrcRegIndex=src_reg_index
         )
         dest_reg_val = ~src_reg_val & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         assembly_helper.genAddRegister(dest_reg_index, src_reg_index)
         dest_reg_val = (dest_reg_val + src_reg_val) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -231,13 +231,13 @@ class MainSequence(Sequence):
             dest_reg_index, src_reg_index, aSrcRegIndex2=src_reg_index_2
         )
         dest_reg_val = (src_reg_val_2 + src_reg_val) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
         assembly_helper.genSubRegister(dest_reg_index, src_reg_index)
         dest_reg_val = (dest_reg_val - src_reg_val) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -245,7 +245,7 @@ class MainSequence(Sequence):
             dest_reg_index, src_reg_index, aMinuendRegIndex=src_reg_index_2
         )
         dest_reg_val = (src_reg_val_2 - src_reg_val) & MAX_GPR_VAL
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 
@@ -254,7 +254,7 @@ class MainSequence(Sequence):
         if not valid:
             self.error("Value for register mscratch is invalid")
 
-        exception_handlers_test_utils.assertGprHasValue(
+        exception_handlers_test_utils.assert_gpr_has_value(
             self, dest_reg_index, dest_reg_val
         )
 

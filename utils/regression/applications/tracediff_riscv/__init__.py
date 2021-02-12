@@ -16,7 +16,7 @@
 from .TracediffRiscVInit import (
     TracediffRiscVCmdLineOptions,
     TracediffRiscVParametersProcessor,
-    processTracediffRiscVControlData,
+    process_tracediff_riscv_control_data,
 )
 from .TracediffRiscVExecutor import TracediffRiscVExecutor
 from .TracediffRiscVReporter import TracediffRiscVReporter
@@ -29,7 +29,7 @@ Tag = "tracediff_riscv"
 
 ParametersProcessorClass = TracediffRiscVParametersProcessor
 
-ProcessControlData = processTracediffRiscVControlData
+ProcessControlData = process_tracediff_riscv_control_data
 
 ExecutorClass = TracediffRiscVExecutor
 

@@ -119,120 +119,113 @@ class FileController(Controller):
 
     def process(self):
 
-        try:
-            for my_ndx in range(self.ctrl_item.iterations):
+        for my_ndx in range(self.ctrl_item.iterations):
 
-                if self.is_terminated():
-                    break
+            if self.is_terminated():
+                break
 
-                try:
-                    my_item_ndx = 0
-                    for my_item_dict in self.fcontrol:
+            try:
+                my_item_ndx = 0
+                for my_item_dict in self.fcontrol:
+                    try:
+                        if self.is_terminated():
+                            break
+
+                        my_item_ndx += 1
+
+                        my_ctrl_item = ControlItem()
+                        my_ctrl_item.parent_fctrl = self.parent_fctrl
+                        my_ctrl_item.fctrl_item = str(my_item_dict)
+
                         try:
-                            if self.is_terminated():
-                                break
+                            my_ctrl_item.load(
+                                self.mAppsInfo,
+                                my_item_dict,
+                                self.ctrl_item,
+                            )
+                        except BaseException:
+                            raise
 
-                            my_item_ndx += 1
+                        my_item_type = my_ctrl_item.item_type()
+                        my_controller = None
 
-                            my_ctrl_item = ControlItem()
-                            my_ctrl_item.parent_fctrl = self.parent_fctrl
-                            my_ctrl_item.fctrl_item = str(my_item_dict)
-
-                            try:
-                                my_ctrl_item.load(
-                                    self.mAppsInfo,
-                                    my_item_dict,
-                                    self.ctrl_item,
-                                )
-                            except BaseException:
-                                raise
-
-                            my_item_type = my_ctrl_item.item_type()
-                            my_controller = None
-
-                            if my_item_type == ControlItemType.TaskItem:
-                                my_controller = TaskController(
-                                    self.mProcessQueue, self.mAppsInfo
-                                )
-
-                            elif my_item_type == ControlItemType.FileItem:
-                                my_controller = FileController(
-                                    self.mProcessQueue,
-                                    self.mAppsInfo,
-                                    self.mControlFileLocals,
-                                )
-
-                            else:
-                                raise Exception(
-                                    '"'
-                                    + my_fctrl_name
-                                    + '": Unknown Item Type ...\n'
-                                    "Unable to Process ... "
-                                )
-
-                            if my_controller.load(my_ctrl_item):
-                                my_controller.set_on_fail_proc(
-                                    self.on_fail_proc
-                                )
-                                my_controller.set_is_term_proc(
-                                    self.is_term_proc
-                                )
-                                my_controller.process()
-
-                        except TypeError as arg_ex:
-
-                            Msg.err(str(arg_ex))
-                            my_err_queue_item = SummaryErrorQueueItem(
-                                {
-                                    "error": "Item #%s Contains an Invalid "
-                                    "Type" % (str(my_item_ndx)),
-                                    "message": arg_ex,
-                                    "path": self.ctrl_item.file_path(),
-                                    "type": str(type(arg_ex)),
-                                }
+                        if my_item_type == ControlItemType.TaskItem:
+                            my_controller = TaskController(
+                                self.mProcessQueue, self.mAppsInfo
                             )
 
-                            if self.mProcessQueue.summary is not None:
-                                self.mProcessQueue.summary.queue.enqueue(
-                                    my_err_queue_item
-                                )
-                            Msg.blank()
-
-                        except FileNotFoundError as arg_ex:
-
-                            Msg.err(str(arg_ex))
-                            my_err_queue_item = SummaryErrorQueueItem(
-                                {
-                                    "error": arg_ex,
-                                    "message": "Control File Not Found ...",
-                                    "path": self.ctrl_item.file_path(),
-                                    "type": str(type(arg_ex)),
-                                }
+                        elif my_item_type == ControlItemType.FileItem:
+                            my_controller = FileController(
+                                self.mProcessQueue,
+                                self.mAppsInfo,
+                                self.mControlFileLocals,
                             )
 
-                            if self.mProcessQueue.summary is not None:
-                                self.mProcessQueue.summary.queue.enqueue(
-                                    my_err_queue_item
-                                )
-                            Msg.blank()
+                        else:
+                            raise Exception(
+                                '"'
+                                + my_fctrl_name
+                                + '": Unknown Item Type ...\n'
+                                "Unable to Process ... "
+                            )
 
-                        except Exception as arg_ex:
-                            Msg.error_trace(str(arg_ex))
-                            Msg.err(str(arg_ex))
-                            Msg.blank()
+                        if my_controller.load(my_ctrl_item):
+                            my_controller.set_on_fail_proc(
+                                self.on_fail_proc
+                            )
+                            my_controller.set_is_term_proc(
+                                self.is_term_proc
+                            )
+                            my_controller.process()
 
-                        finally:
-                            my_controller = None
-                            my_item_dict = None
+                    except TypeError as arg_ex:
 
-                except Exception as arg_ex:
-                    Msg.error_trace("[ERROR] - " + str(arg_ex))
-                    Msg.err(str(arg_ex))
-                finally:
-                    pass
+                        Msg.err(str(arg_ex))
+                        my_err_queue_item = SummaryErrorQueueItem(
+                            {
+                                "error": "Item #%s Contains an Invalid "
+                                "Type" % (str(my_item_ndx)),
+                                "message": arg_ex,
+                                "path": self.ctrl_item.file_path(),
+                                "type": str(type(arg_ex)),
+                            }
+                        )
 
-        finally:
-            pass
-            # Msg.dbg()
+                        if self.mProcessQueue.summary is not None:
+                            self.mProcessQueue.summary.queue.enqueue(
+                                my_err_queue_item
+                            )
+                        Msg.blank()
+
+                    except FileNotFoundError as arg_ex:
+
+                        Msg.err(str(arg_ex))
+                        my_err_queue_item = SummaryErrorQueueItem(
+                            {
+                                "error": arg_ex,
+                                "message": "Control File Not Found ...",
+                                "path": self.ctrl_item.file_path(),
+                                "type": str(type(arg_ex)),
+                            }
+                        )
+
+                        if self.mProcessQueue.summary is not None:
+                            self.mProcessQueue.summary.queue.enqueue(
+                                my_err_queue_item
+                            )
+                        Msg.blank()
+
+                    except Exception as arg_ex:
+                        Msg.error_trace(str(arg_ex))
+                        Msg.err(str(arg_ex))
+                        Msg.blank()
+
+                    finally:
+                        my_controller = None
+                        my_item_dict = None
+
+            except Exception as arg_ex:
+                Msg.error_trace("[ERROR] - " + str(arg_ex))
+                Msg.err(str(arg_ex))
 
         return True

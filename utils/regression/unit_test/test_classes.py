@@ -56,7 +56,7 @@ class LoopThread(HiThread):
             self.finished = True
 
 
-def ThreadFactory(argName, argNoLoop, argProcs={}, argOptions={}):
+def thread_factory(argName, argNoLoop, argProcs={}, argOptions={}):
 
     my_thread_opts = {}
 

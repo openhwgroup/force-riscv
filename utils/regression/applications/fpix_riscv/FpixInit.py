@@ -93,7 +93,7 @@ class FpixParametersProcessor(ParameterProcessor):
 
 #  Process iss control data
 #
-def processFpixControlData(aControlData, aAppParameters):
+def process_fpix_control_data(aControlData, aAppParameters):
     if aAppParameters is None:
         return  # TODO Temporary, to avoid failing in forrest run, to remove.
     key = "fpix_path"

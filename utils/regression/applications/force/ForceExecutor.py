@@ -56,7 +56,6 @@ class ForceExecutor(GenerateExecutor):
 
     def execute(self):
 
-        # super().execute()
         # Msg.dbg("ExecuteController::exec_gen(%s)" % (arg_task_file))
 
         # NOTE: Do not change force_cmd may need to reuse!!

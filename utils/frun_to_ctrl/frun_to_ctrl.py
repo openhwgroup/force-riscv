@@ -63,7 +63,6 @@ def main():
     input_filename = "/_def_frun.py"
     output_filename = "./control_line_item"
 
-    # result_t = copyfile(input_filename, output_filename)
     try:
         sys.path.append(os.path.abspath(os.getcwd()))
         import _def_frun

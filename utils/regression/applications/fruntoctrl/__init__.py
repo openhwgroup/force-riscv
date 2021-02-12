@@ -16,7 +16,7 @@
 from .FrunToCtrlInit import (
     FrunToCtrlCmdLineOptions,
     FrunToCtrlParametersProcessor,
-    processFrunToCtrlControlData,
+    process_frun_to_ctrl_control_data,
 )
 from .FrunToCtrlExecutor import FrunToCtrlExecutor
 from .FrunToCtrlReporter import FrunToCtrlReporter
@@ -29,7 +29,7 @@ Tag = "fruntoctrl"
 
 ParametersProcessorClass = FrunToCtrlParametersProcessor
 
-ProcessControlData = processFrunToCtrlControlData
+ProcessControlData = process_frun_to_ctrl_control_data
 
 ExecutorClass = FrunToCtrlExecutor
 

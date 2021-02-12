@@ -35,7 +35,7 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         state = self._createState()
         StateTransition.transitionToState(state)
-        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
@@ -58,10 +58,10 @@ class MainSequence(Sequence):
         )
         self.randomInitializeRegister(scause_name)
         (scause_val, valid) = self.readRegister(scause_name)
-        state_transition_test_utils.assertValidRegisterValue(
+        state_transition_test_utils.assert_valid_register_value(
             self, scause_name, valid
         )
-        scause_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+        scause_val = state_transition_test_utils.combine_register_value_with_field_value(
             self,
             scause_name,
             scause_val,
@@ -77,10 +77,10 @@ class MainSequence(Sequence):
         )
         self.randomInitializeRegister(stvec_name)
         (stvec_val, valid) = self.readRegister(stvec_name)
-        state_transition_test_utils.assertValidRegisterValue(
+        state_transition_test_utils.assert_valid_register_value(
             self, stvec_name, valid
         )
-        stvec_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+        stvec_val = state_transition_test_utils.combine_register_value_with_field_value(
             self, stvec_name, stvec_val, "MODE", mode_val
         )
         expected_sys_reg_state_data.append((stvec_name, stvec_val))

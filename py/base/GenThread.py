@@ -683,12 +683,10 @@ class GenThread(object):
         for item, weight in sorted(weighted_dict.items()):
             if picked_value < weight:
                 # found the picked item (instruction)
-                if isinstance(item, str):
+                if isinstance(item, str) or isinstance(item, Macro):
                     return item
                 elif isinstance(item, ItemMap):
                     return item.pick(self)
-                elif isinstance(item, Macro):
-                    return item
                 else:
                     raise TestException("Picked unsupported object.")
 

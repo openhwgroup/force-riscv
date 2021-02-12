@@ -53,7 +53,7 @@ class MainSequence(Sequence):
             state_elem_type_order,
         )
 
-        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a random State to test an explicit StateTransition.
     def _createState(self):
@@ -63,20 +63,20 @@ class MainSequence(Sequence):
 
         self._mExpectedStateData[
             EStateElementType.PC
-        ] = test_utils.addRandomPcStateElement(self, state)
+        ] = test_utils.add_random_pc_state_element(self, state)
         self._mExpectedStateData[
             EStateElementType.FloatingPointRegister
-        ] = test_utils.addRandomFloatingPointRegisterStateElements(
+        ] = test_utils.add_random_floating_point_register_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
         self._mExpectedStateData[
             EStateElementType.GPR
-        ] = test_utils.addRandomGprStateElements(
+        ] = test_utils.add_random_gpr_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
         self._mExpectedStateData[
             EStateElementType.Memory
-        ] = test_utils.addRandomMemoryStateElements(
+        ] = test_utils.add_random_memory_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
 
@@ -119,7 +119,7 @@ class MainSequence(Sequence):
 
         self._mExpectedStateData[
             EStateElementType.VectorRegister
-        ] = test_utils.addRandomVectorRegisterStateElements(
+        ] = test_utils.add_random_vector_register_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
 

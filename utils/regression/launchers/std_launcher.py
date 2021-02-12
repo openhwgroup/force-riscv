@@ -27,12 +27,6 @@ class StdLauncher(Launcher):
 
         self.process = None
 
-    # def __del__(self):
-    #     Msg.user( "Launcher Id 5: %s" % ( str( id( self ))), "STD-LAUNCHER" )
-    #     Msg.trace( )
-    #     Msg.error_trace( )
-    #
-
     def launch(self):
         Msg.user("Timeout: %s" % (str(self.timeout)), "STD-LAUNCHER")
         self.process_cmd, self.process_log = self.build()

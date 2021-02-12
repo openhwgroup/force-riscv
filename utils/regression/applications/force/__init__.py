@@ -16,7 +16,7 @@
 from .ForceInit import (
     ForceCmdLineOptions,
     ForceParametersProcessor,
-    processForceControlData,
+    process_force_control_data,
 )
 from .ForceExecutor import ForceExecutor
 from .ForceReporter import ForceReporter
@@ -29,7 +29,7 @@ Tag = "generator"
 
 ParametersProcessorClass = ForceParametersProcessor
 
-ProcessControlData = processForceControlData
+ProcessControlData = process_force_control_data
 
 ExecutorClass = ForceExecutor
 

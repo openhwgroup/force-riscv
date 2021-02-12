@@ -37,8 +37,7 @@ def get_boot_region_size():
 
 
 def get_base_initial_pc():
-    return 0x80011000  # Temporary to work on spike default memory model
-    # return 0x80001000
+    return 0x80011000
 
 
 def get_base_boot_pc():

@@ -80,7 +80,7 @@ class MainSequence(Sequence):
         test_utils = state_transition_test_utils
         state = self._createState()
         StateTransition.transitionToState(state)
-        test_utils.verifyState(self, self._mExpectedStateData)
+        test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
@@ -88,7 +88,7 @@ class MainSequence(Sequence):
         test_utils = state_transition_test_utils
         self._mExpectedStateData[
             EStateElementType.FloatingPointRegister
-        ] = test_utils.addRandomFloatingPointRegisterStateElements(
+        ] = test_utils.add_random_floating_point_register_state_elements(
             self, state, RandomUtils.random32(0, 15)
         )
         return state

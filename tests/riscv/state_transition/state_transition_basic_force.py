@@ -74,14 +74,14 @@ class MainSequence(Sequence):
         state = self._createState()
         StateTransition.transitionToState(state)
 
-        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
         state = State()
         self._mExpectedStateData[
             EStateElementType.Memory
-        ] = state_transition_test_utils.addRandomMemoryStateElements(
+        ] = state_transition_test_utils.add_random_memory_state_elements(
             self, state, RandomUtils.random32(0, 5)
         )
         return state

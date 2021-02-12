@@ -232,7 +232,7 @@ class CmdLineOpts(object):
 #
 # Retrieves command line arguments and returns them as a list (or None if it
 # does not exist)
-def basicCommandLineArgumentRetrieval(
+def basic_command_line_argument_retrieval(
     aArguments, aShort, aLong, aType, aNumArgs
 ):
     basic_parser = argparse.ArgumentParser(add_help=False)

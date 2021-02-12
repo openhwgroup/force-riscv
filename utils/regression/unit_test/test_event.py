@@ -106,7 +106,7 @@ class ThreadWrapper(object):
             # thread before finished handler (inside thread space)
             "on-finished": self.thread_finished,
         }
-        self.thread = ThreadFactory("EventTestThread", True, myThreadProcs)
+        self.thread = thread_factory("EventTestThread", True, myThreadProcs)
 
     def run_thread(self):
         Msg.info("UnitTest_HiEvent >> Initializing Thread ... ")

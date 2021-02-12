@@ -38,7 +38,6 @@ class QuickSummary(object):
         self.curr_test_log = None
         self.sim_cmd = None
         self.num_instr = arg_num_instr
-        # self.test_path = arg_summary_pathx
 
     def summary_directory(self):
         return self.summary_dir
@@ -174,11 +173,7 @@ class QuickSummary(object):
 
                     my_ofile.write(my_line + "\n")
 
-                    if sum_level > 2:
-                        print(my_line)
-                    elif sum_level == 1 and my_val[0] in [2]:
-                        print(my_line)
-                    elif sum_level == 2 and my_val[0] in [1, 2]:
+                    if (sum_level > 2) or ((sum_level == 1) and (my_val[0] == 2)) or ((sum_level == 2) and (my_val[0] in (1, 2))):
                         print(my_line)
 
                 my_ofile.write(
@@ -222,6 +217,3 @@ class QuickSummary(object):
             if Msg._debug():
                 traceback.print_exception("Exception", arg_ex, None)
             print("Error Processing Summary, " + str(arg_ex))
-
-        finally:
-            pass

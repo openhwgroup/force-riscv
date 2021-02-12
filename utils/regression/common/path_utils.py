@@ -453,11 +453,8 @@ class PathUtils(object):
 
     @classmethod
     def touch(cls, arg_fpath):
-        try:
-            os.utime(arg_fpath, None)
-        except OSError:
-            with open(arg_fpath, "a"):
-                pass
+        file_path = Path(arg_fpath)
+        file_path.touch()
 
     @classmethod
     def chmod(aClass, aFPath, aOctalPermissions):

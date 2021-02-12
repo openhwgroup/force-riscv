@@ -17,6 +17,5 @@
 
 def adjust_instruction_group(instr):
 
-    if instr.name.find(".") != -1:
-        if instr.name.startswith("F"):
-            instr.group = "Float"
+    if (instr.name.find(".") != -1) and instr.name.startswith("F"):
+        instr.group = "Float"

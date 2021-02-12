@@ -28,7 +28,7 @@ from riscv.Utils import LoadGPR64
 #  @param aStateElemCount The number of MemoryStateElements to add.
 #  @param aPrioirtyMin A lower bound on the priority of MemoryStateElements.
 #  @param aPriorityMax An upper bound on the priority of MemoryStateElements.
-def addRandomMemoryStateElements(
+def add_random_memory_state_elements(
     aSequence, aState, aStateElemCount, aPriorityMin=1, aPriorityMax=100
 ):
     rv32 = aSequence.getGlobalState("AppRegisterWidth") == 32
@@ -59,7 +59,7 @@ def addRandomMemoryStateElements(
 #       StateElements.
 #  @param aPriorityMax An upper bound on the priority of the vector register
 #       StateElements.
-def addRandomVectorRegisterStateElements(
+def add_random_vector_register_state_elements(
     aSequence, aState, aStateElemCount, aPriorityMin=1, aPriorityMax=100
 ):
     expected_vec_reg_state_data = []
@@ -90,7 +90,7 @@ def addRandomVectorRegisterStateElements(
 #  @param aStateElemCount The number of GPR StateElements to add.
 #  @param aPrioirtyMin A lower bound on the priority of the GPR StateElements.
 #  @param aPriorityMax An upper bound on the priority of the GPR StateElements.
-def addRandomGprStateElements(
+def add_random_gpr_state_elements(
     aSequence, aState, aStateElemCount, aPriorityMin=1, aPriorityMax=100
 ):
     expected_gpr_state_data = []
@@ -120,7 +120,7 @@ def addRandomGprStateElements(
 #  @param aState The State to which the PcStateElement should be added.
 #  @param aPrioirtyMin A lower bound on the priority of the PcStateElement.
 #  @param aPriorityMax An upper bound on the priority of the PcStateElement.
-def addRandomPcStateElement(
+def add_random_pc_state_element(
     aSequence, aState, aPriorityMin=1, aPriorityMax=100
 ):
     pc_val = aSequence.genVA(Size=4, Align=4, Type="I")
@@ -142,7 +142,7 @@ def addRandomPcStateElement(
 #       register StateElements.
 #  @param aPriorityMax An upper bound on the priority of the floating point
 #       register StateElements.
-def addRandomFloatingPointRegisterStateElements(
+def add_random_floating_point_register_state_elements(
     aSequence, aState, aStateElemCount, aPriorityMin=1, aPriorityMax=100
 ):
     expected_fp_reg_state_data = []
@@ -179,7 +179,7 @@ def addRandomFloatingPointRegisterStateElements(
 #  @param aRegVal The current value of the register.
 #  @param aRegFieldName The name of the register field.
 #  @param aRegFieldVal The desired value of the register field.
-def combineRegisterValueWithFieldValue(
+def combine_register_value_with_field_value(
     aSequence, aRegName, aRegVal, aRegFieldName, aRegFieldVal
 ):
     (reg_field_mask, reg_field_reverse_mask) = aSequence.getRegisterFieldMask(
@@ -198,34 +198,32 @@ def combineRegisterValueWithFieldValue(
 #  @param aSequence A Sequence object.
 #  @param aExpectedStateData A dictionary mapping a StateElement type to a
 #  list of expected State values for that StateElement type.
-def verifyState(aSequence, aExpectedStateData):
+def verify_state(aSequence, aExpectedStateData):
     expected_state_data = aExpectedStateData.copy()
 
     # Verify PC and GPR State data first, as verifying some of the other State
     # data may generate instructions using GPRs to retrieve the values.
     if EStateElementType.PC in expected_state_data:
-        _verifyPcState(aSequence, expected_state_data[EStateElementType.PC])
+        _verify_pc_state(aSequence, expected_state_data[EStateElementType.PC])
         del expected_state_data[EStateElementType.PC]
 
     if EStateElementType.GPR in expected_state_data:
-        _verifyRegisterState(
+        _verify_register_state(
             aSequence, expected_state_data[EStateElementType.GPR]
         )
         del expected_state_data[EStateElementType.GPR]
 
     for (state_elem_type, state_elem_data) in expected_state_data.items():
         if state_elem_type == EStateElementType.Memory:
-            _verifyMemoryState(aSequence, state_elem_data)
-        elif state_elem_type == EStateElementType.SystemRegister:
-            _verifyRegisterState(aSequence, state_elem_data)
+            _verify_memory_state(aSequence, state_elem_data)
+        elif (state_elem_type == EStateElementType.SystemRegister) or (state_elem_type == EStateElementType.FloatingPointRegister):
+            _verify_register_state(aSequence, state_elem_data)
         elif state_elem_type == EStateElementType.VectorRegister:
-            _verifyVectorRegisterState(aSequence, state_elem_data)
+            _verify_vector_register_state(aSequence, state_elem_data)
         elif state_elem_type == EStateElementType.VmContext:
-            _verifyVmContextState(aSequence, state_elem_data)
+            _verify_vm_context_state(aSequence, state_elem_data)
         elif state_elem_type == EStateElementType.PrivilegeLevel:
-            _verifyPrivilegeLevelState(aSequence, state_elem_data)
-        elif state_elem_type == EStateElementType.FloatingPointRegister:
-            _verifyRegisterState(aSequence, state_elem_data)
+            _verify_privilege_level_state(aSequence, state_elem_data)
         else:
             aSequence.error(
                 "Unexpected StateElement type %s" % state_elem_type
@@ -238,7 +236,7 @@ def verifyState(aSequence, aExpectedStateData):
 #  @param aRegName The index of the register.
 #  @param aValid A flag indicating whether the specified register has a valid
 #       value.
-def assertValidRegisterValue(aSequence, aRegName, aValid):
+def assert_valid_register_value(aSequence, aRegName, aValid):
     if not aValid:
         aSequence.error("Value for register %s is invalid" % aRegName)
 
@@ -247,10 +245,10 @@ def assertValidRegisterValue(aSequence, aRegName, aValid):
 #
 #  @param aSequence A Sequence object.
 #  @param aExpectedRegStateData A list of expected register State values.
-def _verifyRegisterState(aSequence, aExpectedRegStateData):
+def _verify_register_state(aSequence, aExpectedRegStateData):
     for (reg_name, expected_reg_val) in aExpectedRegStateData:
         (reg_val, valid) = aSequence.readRegister(reg_name)
-        assertValidRegisterValue(aSequence, reg_name, valid)
+        assert_valid_register_value(aSequence, reg_name, valid)
 
         if reg_val != expected_reg_val:
             aSequence.error(
@@ -264,7 +262,7 @@ def _verifyRegisterState(aSequence, aExpectedRegStateData):
 #
 #  @param aSequence A Sequence object.
 #  @param aExpectedMemStateData A list of expected memory State values.
-def _verifyMemoryState(aSequence, aExpectedMemStateData):
+def _verify_memory_state(aSequence, aExpectedMemStateData):
     load_gpr64_seq = LoadGPR64(aSequence.genThread)
     (base_reg_index, mem_val_reg_index) = aSequence.getRandomGPRs(
         2, exclude="0"
@@ -293,7 +291,7 @@ def _verifyMemoryState(aSequence, aExpectedMemStateData):
             )
         mem_val_reg_name = "x%d" % mem_val_reg_index
         (mem_val, valid) = aSequence.readRegister(mem_val_reg_name)
-        assertValidRegisterValue(aSequence, mem_val_reg_name, valid)
+        assert_valid_register_value(aSequence, mem_val_reg_name, valid)
         if mem_val != expected_mem_val:
             aSequence.error(
                 "Value at address 0x%x does not match the specified State. "
@@ -307,14 +305,14 @@ def _verifyMemoryState(aSequence, aExpectedMemStateData):
 #
 #  @param aSequence A Sequence object.
 #  @param aExpectedRegStateData List of expected vector register State values.
-def _verifyVectorRegisterState(aSequence, aExpectedRegStateData):
+def _verify_vector_register_state(aSequence, aExpectedRegStateData):
     for (reg_name, expected_reg_values) in aExpectedRegStateData:
         for (val_index, expected_reg_val) in enumerate(expected_reg_values):
             field_name = "%s_%d" % (reg_name, val_index)
             (field_val, valid) = aSequence.readRegister(
                 reg_name, field=field_name
             )
-            assertValidRegisterValue(aSequence, reg_name, valid)
+            assert_valid_register_value(aSequence, reg_name, valid)
 
             if field_val != expected_reg_val:
                 aSequence.error(
@@ -330,7 +328,7 @@ def _verifyVectorRegisterState(aSequence, aExpectedRegStateData):
 #  @param aSequence A Sequence object.
 #  @param aExpectedVmContextStateData A list of expected VM context State
 #       values.
-def _verifyVmContextState(aSequence, aExpectedVmContextStateData):
+def _verify_vm_context_state(aSequence, aExpectedVmContextStateData):
     for (
         reg_name,
         reg_field_name,
@@ -339,7 +337,7 @@ def _verifyVmContextState(aSequence, aExpectedVmContextStateData):
         (reg_field_val, valid) = aSequence.readRegister(
             reg_name, reg_field_name
         )
-        assertValidRegisterValue(aSequence, reg_name, valid)
+        assert_valid_register_value(aSequence, reg_name, valid)
 
         if reg_field_val != expected_reg_field_val:
             aSequence.error(
@@ -359,7 +357,7 @@ def _verifyVmContextState(aSequence, aExpectedVmContextStateData):
 #
 #  @param aSequence A Sequence object.
 #  @param aExpectedPrivilegeLevelStateData The expected privilege level.
-def _verifyPrivilegeLevelState(aSequence, aExpectedPrivLevelStateData):
+def _verify_privilege_level_state(aSequence, aExpectedPrivLevelStateData):
     priv_level = aSequence.getPEstate("PrivilegeLevel")
     if priv_level != aExpectedPrivLevelStateData:
         aSequence.error(
@@ -373,7 +371,7 @@ def _verifyPrivilegeLevelState(aSequence, aExpectedPrivLevelStateData):
 #
 #  @param aSequence A Sequence object.
 #  @param aExpectedPcStateData The expected PC value.
-def _verifyPcState(aSequence, aExpectedPcStateData):
+def _verify_pc_state(aSequence, aExpectedPcStateData):
     pc_val = aSequence.getPEstate("PC")
     if pc_val != aExpectedPcStateData:
         aSequence.error(

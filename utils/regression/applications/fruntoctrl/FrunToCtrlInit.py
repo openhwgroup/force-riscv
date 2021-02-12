@@ -67,7 +67,7 @@ class FrunToCtrlParametersProcessor(ParameterProcessor):
 
 #  Process fruntoctrl control data
 #
-def processFrunToCtrlControlData(aControlData, aAppParameters):
+def process_frun_to_ctrl_control_data(aControlData, aAppParameters):
     if aAppParameters is None:
         return  # TODO Temporary, to avoid failing in forrest run, to remove.
 

@@ -47,7 +47,7 @@ class MutexWrapper(object):
         }
 
         Msg.info("UnitTest_NoLoopThread >> Creating NoLoop Thread ... ")
-        myThread = ThreadFactory("NoLoopThread", True, myThreadProcs)
+        myThread = thread_factory("NoLoopThread", True, myThreadProcs)
 
         Msg.info("UnitTest_NoLoopThread >> Initializing Thread ... ")
         myThread.start_thread()

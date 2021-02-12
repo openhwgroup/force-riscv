@@ -73,9 +73,9 @@ class CmdLine(object):
     ShortOpts = "hx:l:"
 
     # command Switch Index
-    help = 0
-    process_max = 1
-    msg_lev = 2
+    help_index = 0
+    process_max_index = 1
+    msg_lev_index = 2
 
     # Short Opts
     Help = "-h"

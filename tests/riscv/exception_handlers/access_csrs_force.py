@@ -36,9 +36,7 @@ class MainSequence(Sequence):
         for i in range(20):
             self.genRandomInstrs(1, 10)
             (csr, is_writable) = self.genSelectCSR()
-            if csr is None:
-                pass
-            else:
+            if csr is not None:
                 self.genAccessCSR(csr, is_writable)
 
     # -----------------------------------------------------------------------

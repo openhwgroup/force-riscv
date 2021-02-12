@@ -23,9 +23,6 @@ from common.sys_utils import SysUtils
 from common.threads import HiOldThread, workers_done_event, summary_done_event
 
 
-# from classes.extractor import Extractor
-
-
 class SummaryNdx(object):
     RetCode = 0
     StdOut = 1
@@ -725,7 +722,6 @@ class SummaryGroups(object):
     def __init__(self):
         self.groups = {}
         self.queue = SummaryQueue()
-        # self.group_lookup = []
 
     def update_groups(self, arg_group):
         if arg_group not in self.groups:

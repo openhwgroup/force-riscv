@@ -1649,15 +1649,12 @@ def makedir(path):
     try:
         os.mkdir(path)
     except OSError as exc:
-        if exc.errno == errno.EEXIST and os.path.isdir(path):
-            pass
-        else:
+        if (exc.errno != errno.EEXIST) or (not os.path.isdir(path)):
             raise
 
 
 def is_first_file_newer(file1, file2):
     """If file2 is older than file1, or does not exist, return True"""
-    return True
     try:
         file1_ts = os.stat(file1).st_mtime
     except FileNotFoundError as exc:

@@ -23,12 +23,7 @@ class VectorOperandAdjustor(OperandAdjustor):
 
         # dictionary for instructions that use rd instead of vd where vd/rd is
         # defined
-
-        # TODO: VSETVLI and VSETVL are not arithmetic instructions and will be
-        #  taken care of after arithmetic instructions are done
         self.rd_dictionary = {
-            # 'VSETVLI',
-            # 'VSETVL',
             "VPOPC",
             "VFIRST",
             "VMV.X.S",

@@ -18,25 +18,29 @@
 
 class Bitstream(object):
     def __init__(self, bitstream=""):
-        self.bitstream = bitstream
+        self._bitstream_str = bitstream
+
+    @property
+    def bitstream(self):
+        return self._bitstream_str
 
     def stream(self):
-        if self.bitstream.startswith("0x"):
+        if self._bitstream_str.startswith("0x"):
             return self.convertHexToBin()
         else:
             return self.convert()
 
     def append(self, bitstream):
-        self.bitstream += bitstream
+        self._bitstream_str += bitstream
         return self
 
     def prepend(self, bitstream):
-        self.bitstream = bitstream + self.bitstream
+        self._bitstream_str = bitstream + self._bitstream_str
         return self
 
     def value(self):
         val = ""
-        for i in self.bitstream:
+        for i in self._bitstream_str:
             if i == "1" or i == "0":
                 val += i
             elif i == "X":
@@ -47,7 +51,7 @@ class Bitstream(object):
 
     def mask(self):
         m = ""
-        for i in self.bitstream:
+        for i in self._bitstream_str:
             if i == "1" or i == "0":
                 m += "1"
             elif i == "X":
@@ -59,7 +63,7 @@ class Bitstream(object):
     def valueMask(self):
         val = ""
         m = ""
-        for i in self.bitstream:
+        for i in self._bitstream_str:
             if i == "1" or i == "0":
                 val += i
                 m += "1"
@@ -75,7 +79,7 @@ class Bitstream(object):
 
     def convert(self):
         stream = ""
-        for i in self.bitstream:
+        for i in self._bitstream_str:
             if i == "1" or i == "0" or i == "x":
                 stream += i
             elif i == "X":
@@ -121,9 +125,9 @@ class Bitstream(object):
 
     def convertHexToBin(self):
         stream = ""
-        for i in self.bitstream[2:]:
+        for i in self._bitstream_str[2:]:
             if i == "_":
                 continue
             stream += "{0:04b}".format(int(i, 16))
-        self.bitstream = stream
+        self._bitstream_str = stream
         return stream

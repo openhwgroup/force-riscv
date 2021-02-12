@@ -37,16 +37,13 @@ from test_mutex import UnitTest_HiMutex
 from test_thread import UnitTest_HiThread
 
 
-# from test_semaphore import UnitTest_HiSemaphore
-
-
 class UnitTestRun(ModuleRun):
     def __init__(self, arg_force_dir):
         super().__init__(
             arg_force_dir,
             CmdLine.Switches,
             CmdLine.ShortOpts,
-            CmdLine.Switches[CmdLine.msg_lev],
+            CmdLine.Switches[CmdLine.msg_lev_index],
             Defaults.msg_level,
             CmdLine.MsgLevel,
         )
@@ -59,7 +56,7 @@ class UnitTestRun(ModuleRun):
     def process_cmdline(self):
         self.process_max = int(
             self.option_def(
-                CmdLine.Switches[CmdLine.process_max],
+                CmdLine.Switches[CmdLine.process_max_index],
                 Defaults.process_max,
                 CmdLine.ProcessMax,
             )
@@ -79,7 +76,7 @@ class UnitTestRun(ModuleRun):
     def check_usage(self):
         # validate arguments
         if self.option_def(
-            CmdLine.Switches[CmdLine.help], False, CmdLine.Help
+            CmdLine.Switches[CmdLine.help_index], False, CmdLine.Help
         ):
             from force_init import force_usage
 

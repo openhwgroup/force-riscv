@@ -65,7 +65,7 @@ class ForrestRun(ModuleRun):
             self.m_app_setup = ApplicationsSetup(
                 CommandLineParameters,
                 sys.argv,
-                CmdLineUtils.basicCommandLineArgumentRetrieval(
+                CmdLineUtils.basic_command_line_argument_retrieval(
                     sys.argv[1:], "-w", "--workflow", str, 1
                 ).workflow[0],
             )

@@ -57,9 +57,7 @@ class MainSequence(Sequence):
         for _ in range(50):
             self._testLoadGpr(self.random32())
 
-        if self.getGlobalState("AppRegisterWidth") == 32:
-            pass
-        else:
+        if self.getGlobalState("AppRegisterWidth") != 32:
             for _ in range(50):
                 self._testLoadGpr(self.random64())
 

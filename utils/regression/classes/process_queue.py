@@ -164,7 +164,6 @@ class ProcessWorkerThread(HiOldThread):
             )
         finally:
 
-            # my_launcher = None
             my_attempt = 0
             while not self.summary.queue.enqueue(my_sum_qitem):
                 SysUtils.sleep(100)
@@ -208,7 +207,6 @@ class ProcessWorkerThread(HiOldThread):
         my_launcher.content = self.queue_item.content
 
         return my_launcher
-        # self.launcher = my_launcher
 
     @property
     def launcher(self):

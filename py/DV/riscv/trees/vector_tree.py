@@ -16,14 +16,6 @@
 from base.InstructionMap import InstructionMap
 
 
-# Utility function used to combine multiple dictionaries into one
-def Merge(*args):
-    result = {}
-    for dict1 in args:
-        result.update(dict1)
-    return result
-
-
 vinteger_instructions = {
     "VADD.VI##RISCV": 10,
     "VADD.VV##RISCV": 10,

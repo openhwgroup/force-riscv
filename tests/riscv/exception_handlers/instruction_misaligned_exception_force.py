@@ -91,9 +91,7 @@ class MainSequence(Sequence):
     # with a misaligned return address...
 
     def genMisalignedExceptionReturn(self):
-        if self.getPEstate("PrivilegeLevel") == 0:
-            pass
-        else:
+        if self.getPEstate("PrivilegeLevel") != 0:
             target_address = self.genMisalignedInstrAddress()
             if self.getPEstate("PrivilegeLevel") == 3:
                 self.genInstruction("MRET##RISCV", {"epc": target_address})

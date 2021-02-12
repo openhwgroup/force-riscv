@@ -27,8 +27,6 @@
 #
 #
 
-# import seedgen.bin.seedgen as sg
-
 from classes.controller import Controller
 from classes.process_queue import ProcessQueueItem
 from common.msg_utils import Msg
@@ -70,9 +68,6 @@ class TaskController(Controller):
                 Msg.error_trace()
                 Msg.err(str(arg_ex))
                 Msg.blank()
-                # self.do_fail()
-            finally:
-                pass
 
     def process_task_list(self):
         for my_task_file in self.task_list:
@@ -91,38 +86,31 @@ class TaskController(Controller):
                 Msg.error_trace()
                 Msg.err(str(arg_ex))
                 Msg.blank()
-                # self.do_fail()
-            finally:
-                pass
 
     def process_task_file(self, arg_task_file, aParentDir):
-        try:
-            # NOTE: a task file can be but is not limited to being an test
-            # template file set base task directory and extract the task id and
-            # update directory
-            my_task_name = PathUtils.base_name(arg_task_file)
-            my_task_dir = my_task_name.replace(".py", "")
+        # NOTE: a task file can be but is not limited to being an test
+        # template file set base task directory and extract the task id and
+        # update directory
+        my_task_name = PathUtils.base_name(arg_task_file)
+        my_task_dir = my_task_name.replace(".py", "")
 
-            # Msg.info("suffix: %s" % ( str( self.ctrl_item.suffix )))
-            if self.ctrl_item.suffix is not None:
-                my_task_dir = my_task_dir.replace(
-                    "_force", "_%s_force" % (str(self.ctrl_item.suffix))
-                )
-
-            full_task_dir = PathUtils.append_path(
-                PathUtils.include_trailing_path_delimiter(aParentDir),
-                my_task_dir,
+        # Msg.info("suffix: %s" % ( str( self.ctrl_item.suffix )))
+        if self.ctrl_item.suffix is not None:
+            my_task_dir = my_task_dir.replace(
+                "_force", "_%s_force" % (str(self.ctrl_item.suffix))
             )
 
-            # check for exiting sub-directories, and extract the task iteration
-            # count to prevent unintended modifications to the original passed
-            # on the commafrom common.path_utils import PathUtilsnd line for
-            # this task or acquired from a control file item
+        full_task_dir = PathUtils.append_path(
+            PathUtils.include_trailing_path_delimiter(aParentDir),
+            my_task_dir,
+        )
 
-            self.process_task(arg_task_file, full_task_dir)
+        # check for exiting sub-directories, and extract the task iteration
+        # count to prevent unintended modifications to the original passed
+        # on the commafrom common.path_utils import PathUtilsnd line for
+        # this task or acquired from a control file item
 
-        finally:
-            pass
+        self.process_task(arg_task_file, full_task_dir)
 
     def process_task(self, arg_task_file, aTaskDir):
         try:
@@ -149,7 +137,3 @@ class TaskController(Controller):
             Msg.err(str(arg_ex))
             # reraise to prevent adding to summary instance
             raise
-
-        finally:
-            pass
-        # end try except finally

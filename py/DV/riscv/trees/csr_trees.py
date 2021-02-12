@@ -14,7 +14,7 @@
 
 
 # Utility function used to combine multiple dictionaries into one dictionary
-def Merge(*args):
+def merge(*args):
     result = {}
     for dict1 in args:
         result.update(dict1)
@@ -225,5 +225,5 @@ Machine_RO_CSRs = {
     "mhartid": 0,
 }
 
-All_Machine_RO_CSRs = Merge(Machine_RO_CSRs, Supervisor_RO_CSRs)
-All_Machine_RW_CSRs = Merge(Machine_RW_CSRs, Supervisor_RW_CSRs)
+All_Machine_RO_CSRs = merge(Machine_RO_CSRs, Supervisor_RO_CSRs)
+All_Machine_RW_CSRs = merge(Machine_RW_CSRs, Supervisor_RW_CSRs)

@@ -28,9 +28,6 @@ class PageFaultModifier(ChoicesModifier):
             "Invalid X",
             "Invalid WR",
             "Invalid V",
-            # 'Va Address Error',
-            # 'Misaligned Superpage',
-            # 'Last Level Pointer',
         ]
 
         self._mValidFaultLevels = {

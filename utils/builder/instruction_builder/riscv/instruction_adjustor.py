@@ -65,8 +65,6 @@ class G_InstructionAdjustor(InstructionAdjustor):
                 self.adjust_uimm(aInstr, opr)
             elif opr.name in ["pred", "succ"]:
                 self.adjust_barrier(aInstr, opr)
-            else:
-                pass
 
         gen_asm_operand(aInstr)
 
@@ -144,12 +142,11 @@ class G_InstructionAdjustor(InstructionAdjustor):
                 adjust_gpr_operand(aOpr, "Read", "GPR", 8)
         elif "rs1" in aOpr.name:
             ld_st_result = self._mLdStPattern.match(aInstr.name)
-            if ld_st_result is not None:  # rs1 - int gpr bols addressing opr
+            if (ld_st_result is not None) or (aInstr.name.startswith("LR")):
+                # rs1 - int gpr bols addressing opr or load Reserved
                 adjust_gpr_operand(aOpr, "Read", "GPR", 8, "Nonzero GPRs")
             elif aInstr.name.startswith("AMO"):  # AMO*
                 adjust_gpr_operand(aOpr, "ReadWrite", "GPR", 8, "Nonzero GPRs")
-            elif aInstr.name.startswith("LR"):  # Load Reserved
-                adjust_gpr_operand(aOpr, "Read", "GPR", 8, "Nonzero GPRs")
             elif aInstr.name.startswith("SC"):  # Store Conditional
                 adjust_gpr_operand(aOpr, "Write", "GPR", 8, "Nonzero GPRs")
             elif aInstr.name.startswith("FMV") or aInstr.name.startswith(

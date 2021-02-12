@@ -270,12 +270,11 @@ class ControlItem(object):
 
         for my_key in my_keys:
             my_tmp_dict = aItemDict.get(my_key, None)
-            if my_tmp_dict is not None:
-                if not isinstance(my_tmp_dict, dict):
-                    raise TypeError(
-                        'Control Item["%s"]: Must Be a Dictionary, "%s":%s'
-                        % (my_key, my_key, str(my_tmp_dict))
-                    )
+            if (my_tmp_dict is not None) and (not isinstance(my_tmp_dict, dict)):
+                raise TypeError(
+                    'Control Item["%s"]: Must Be a Dictionary, "%s":%s'
+                    % (my_key, my_key, str(my_tmp_dict))
+                )
         return True
 
     # this control item datsa is in the form of a dictionary, populate the

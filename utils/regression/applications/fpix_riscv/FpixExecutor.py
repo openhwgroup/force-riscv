@@ -155,9 +155,6 @@ class FpixExecutor(IssExecutor):
             )
             return False
 
-        finally:
-            pass
-
         return SysUtils.success(int(my_result[IssResult.process_retcode]))
 
     def open_log_file(self, aFileName, aOpenMode):

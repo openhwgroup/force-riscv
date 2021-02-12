@@ -45,14 +45,13 @@ class MyMainSequence(Sequence):
             # get the indexes for the GPRs that were used.
             instr_obj = self.queryInstructionRecord(instr_rec_id)
 
-            if "Dests" in instr_obj.keys():
-                if "rd" in instr_obj["Dests"]:
-                    rd_index = instr_obj["Dests"]["rd"]
-                    rd_name = "x{}".format(rd_index)
-                    if rd_name in usage_count:
-                        usage_count[rd_name] += 1
-                    else:
-                        usage_count[rd_name] = 1  # first time only
+            if ("Dests" in instr_obj) and ("rd" in instr_obj["Dests"]):
+                rd_index = instr_obj["Dests"]["rd"]
+                rd_name = "x{}".format(rd_index)
+                if rd_name in usage_count:
+                    usage_count[rd_name] += 1
+                else:
+                    usage_count[rd_name] = 1  # first time only
 
             if "Srcs" in instr_obj.keys():
                 if "rs1" in instr_obj["Srcs"]:

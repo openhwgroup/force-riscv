@@ -229,9 +229,7 @@ if __name__ == "__main__":
                 sys.exit(1)
             if xlen == 32:
                 app_registers_file = "output/app_registers_rv32.xml"
-            elif xlen == 64:
-                pass
-            else:
+            elif xlen != 64:
                 print("ERROR: Only valid 'xlen' values are 32 or 64")
                 sys.exit(1)
         else:

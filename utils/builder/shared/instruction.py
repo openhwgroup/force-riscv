@@ -103,9 +103,7 @@ class Operand(object):
             elif self.value.find("(1)") != -1:
                 self.name = "RES1" + self.name
                 self.type = "Immediate"
-                if self.value == "(1)(1)(1)(1)(1)":
-                    pass
-                else:
+                if self.value != "(1)(1)(1)(1)(1)":
                     print("Unhandled RES1 %s" % self.value)
                     sys.exit(1)
                 self.value = None

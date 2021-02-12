@@ -35,14 +35,14 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         state = self._createState()
         StateTransition.transitionToState(state)
-        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
         state = State()
         self._mExpectedStateData[
             EStateElementType.VectorRegister
-        ] = state_transition_test_utils.addRandomVectorRegisterStateElements(
+        ] = state_transition_test_utils.add_random_vector_register_state_elements(
             self, state, RandomUtils.random32(0, 15)
         )
         return state

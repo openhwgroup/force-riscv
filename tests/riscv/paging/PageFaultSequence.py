@@ -92,8 +92,6 @@ class PageFaultSequence(Sequence):
 
     # Return whether the appropriate page fault has been triggered.
     def _hasPageFaultOccurred(self):
-        # fault_levels = self._getFaultLevels()
-        # return (len(fault_levels) > 0)
         return self._expectedExceptionRecorded()
 
     # Verify that a page fault has been triggered and appropriately handled.
@@ -129,9 +127,7 @@ class PageFaultSequence(Sequence):
                     "Instruction at 0x%x did not re-execute after the fault"
                     "handler returned" % instr_va
                 )
-        elif resolution_type == PageFaultResolutionType.NONE:
-            pass
-        else:
+        elif resolution_type != PageFaultResolutionType.NONE:
             self.error("No verification provided for %s" % resolution_type)
 
     # Return true if a recorded exception code was one of the ones expected

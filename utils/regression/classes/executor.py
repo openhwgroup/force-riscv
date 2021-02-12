@@ -40,8 +40,6 @@ class Executor(object):
         self.task_name = None
 
     def load(self, arg_ctrl_item):
-        # Msg.user( str(arg_ctrl_item ))
-        # Msg.trace( "Executor::load()" )
         self.ctrl_item = arg_ctrl_item
         return self.ctrl_item is not None
 

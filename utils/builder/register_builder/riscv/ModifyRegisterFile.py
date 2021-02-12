@@ -159,9 +159,7 @@ class Files:
 
     # Saves current register trees to their files
     def save(self, aSaveFiles=None, aLicenseText=None):
-        if aSaveFiles is None:
-            pass
-        else:
+        if aSaveFiles is not None:
             if "system" in aSaveFiles:
                 self.mSystemRegisterFile = aSaveFiles["system"]
             if "app" in aSaveFiles:

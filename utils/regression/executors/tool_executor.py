@@ -43,15 +43,6 @@ class ToolKeys(object):
 
 class ToolExecutor(AppExecutor):
 
-    # def __init__( self ):
-    #     super().__init__()
-    #
-    # def load( self, arg_ctrl_item ):
-    #     super().load(arg_ctrl_item )
-    #
-    # def execute( self ):
-    #     super().execute()
-    #
     def extract_results(self, arg_result, arg_log, arg_elog):
 
         # extract information from the result log

@@ -327,18 +327,15 @@ class Register:
     #  attributes
     def __init__(self, **kwargs):
         self.mName = kwargs.get("name", "")
-        # TODO: Do these physical fields
-        # self.mPhysicalName = kwargs.get('physical_name', '')
+        # TODO: Do physical_name, physical_length, physical_type and
+        # physical_class fields need to be defined for RISCV?
         self.mIndex = kwargs.get(
             "index", None
-        )  # need to be defined for RISCV?
+        )
         self.mLength = kwargs.get("length", "")
-        # self.mPhysicalLength = kwargs.get('physical_length', None)
         self.mBoot = kwargs.get("boot", 0)
         self.mType = kwargs.get("type", None)
-        # self.mPhysicalType = kwargs.get('physical_type', None)
         self.mClass = kwargs.get("class", None)
-        # self.mPhysicalClass = kwargs.get('physical_class', None)
         self.mPrivilege = kwargs.get("privilege", None)
         self.mDescription = kwargs.get("description", "")
         self.mRegisterFields = {}

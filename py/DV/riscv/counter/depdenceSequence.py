@@ -16,10 +16,7 @@
 from base.Sequence import Sequence
 from base.ChoicesModifier import *
 
-# from riscv.SystemRegisterUtils import UpdateSystemRegister
 import pdb
-
-# from riscv.ModifierUtils import PageMemoryAttributeModifier
 
 
 class MyChoicesModifier(ChoicesModifier):
@@ -37,7 +34,6 @@ class depSequence(Sequence):
         super().__init__(gen_thread, name)
         self.genThread = gen_thread
         self.myChoiceMod = MyChoicesModifier(self.genThread)
-        # self.memattrModify = PageMemoryAttributeModifier(self.genThread)
 
     def choiceMod(self, **kargs):
         generalDepDicts = {

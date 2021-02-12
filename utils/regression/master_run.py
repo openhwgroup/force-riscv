@@ -40,7 +40,6 @@ from common.msg_utils import Msg
 from common.path_utils import PathUtils
 from common.sys_utils import SysUtils
 
-# from force_init import the_force_root
 from master_init import (
     Modes,
     Formats,
@@ -85,7 +84,7 @@ class MasterRun(ModuleRun):
     def __init__(self):
         try:
             self.mCmdLineParms = CommandLineParameters
-            self.mConfigArgs = retrieveConfigArgument(sys.argv[1:])
+            self.mConfigArgs = retrieve_config_argument(sys.argv[1:])
 
         except SystemExit as aSysExit:
             sys.exit(int(str(aSysExit)))
@@ -276,9 +275,6 @@ class MasterRun(ModuleRun):
     def shutdown(self):
         # {{{TODO}}}
         pass
-        # while not length( process_list ) > 0:
-        #     process_list[0].process_terminate()
-        #     process_list.remove( 0 )
 
     # initializes everything
     def init_all(self):
@@ -665,9 +661,7 @@ class MasterRun(ModuleRun):
         self.sum_level = self.option_def(
             CmdLine.Switches[CmdLine.sum_level], SummaryLevel.Fail, self.to_int
         )
-        # my_usr_lbl = Msg.set_label( "user", "PROCESS" )
         Msg.user("process-max: %d" % (self.m_app_info.mProcessMax), "MASTER")
-        # Msg.set_label( "user", my_usr_lbl )
 
     # create the proper summary
     def initialize_summary(self):
@@ -695,8 +689,6 @@ class MasterRun(ModuleRun):
             #  determine whether or not to stop processing more items instead
             #  of the insane way it works now.
             self.summary.set_is_term_proc(self.is_term_proc)
-
-        # self.options[CtrlItmKeys.summary] = self.summary
 
     def initialize_process_queue(self):
 
@@ -873,8 +865,8 @@ def sig_interrupt_handler(signal, frame):
     sys.exit(-1)
 
 
-def retrieveConfigArgument(aArguments):
-    config_argument = CmdLineUtils.basicCommandLineArgumentRetrieval(
+def retrieve_config_argument(aArguments):
+    config_argument = CmdLineUtils.basic_command_line_argument_retrieval(
         aArguments, "-c", "--config", str, 1
     )
 

@@ -91,7 +91,7 @@ class CompileParametersProcessor(ParameterProcessor):
 
 #  Process compile control data
 #
-def processCompileControlData(aControlData, aAppParameters):
+def process_compile_control_data(aControlData, aAppParameters):
     if aAppParameters is None:
         return  # TODO Temporary, to avoid failing in forrest run, to remove.
 

@@ -177,7 +177,6 @@ class SysUtils:
                         # sub-processes
                         if arg_kill:
                             # Msg.dbg( "Killing Everything ..." )
-                            # os.killpg( os.getpgid( my_pid ), signal.SIGTERM )
                             os.killpg(os.getpgid(my_pid), signal.SIGKILL)
 
                         # Trigger Shutdown of spawned processes

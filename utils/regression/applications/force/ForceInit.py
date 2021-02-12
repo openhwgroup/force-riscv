@@ -69,7 +69,7 @@ class ForceParametersProcessor(ParameterProcessor):
 
 #  Process force control data
 #
-def processForceControlData(aControlData, aAppParameters):
+def process_force_control_data(aControlData, aAppParameters):
     """
     :param object aControlData:
     :param object aAppParameters:

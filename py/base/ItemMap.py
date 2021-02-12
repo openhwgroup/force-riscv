@@ -124,9 +124,7 @@ class ItemMap(SortableObject):
             if isinstance(k, ItemMap):
                 size += k.size(skip_weight_check)
             elif isinstance(k, str):
-                if skip_weight_check:
-                    size += 1
-                elif v > 0:
+                if skip_weight_check or (v > 0):
                     size += 1
             else:
                 return NotImplemented

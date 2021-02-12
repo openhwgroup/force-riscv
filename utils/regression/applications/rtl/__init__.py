@@ -16,7 +16,7 @@
 from .RtlInit import (
     RtlCmdLineOptions,
     RtlParametersProcessor,
-    processRtlControlData,
+    process_rtl_control_data,
 )
 from .RtlExecutor import RtlExecutor
 from .RtlReporter import RtlReporter
@@ -29,7 +29,7 @@ Tag = "rtl"
 
 ParametersProcessorClass = RtlParametersProcessor
 
-ProcessControlData = processRtlControlData
+ProcessControlData = process_rtl_control_data
 
 ExecutorClass = RtlExecutor
 

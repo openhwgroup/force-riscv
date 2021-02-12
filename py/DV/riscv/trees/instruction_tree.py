@@ -110,7 +110,7 @@ V extension
 
 
 # Utility function used to combine multiple dictionaries into one
-def Merge(*args):
+def merge(*args):
     result = {}
     for dict1 in args:
         result.update(dict1)
@@ -310,7 +310,7 @@ ZFH64_instructions = {
 
 ZFH64_map = InstructionMap("ZFH64_instructions", ZFH64_instructions)
 
-ZFH_instructions = Merge(ZFH32_instructions, ZFH64_instructions)
+ZFH_instructions = merge(ZFH32_instructions, ZFH64_instructions)
 ZFH_map = InstructionMap("ZFH_instructions", ZFH_instructions)
 
 RV32M_instructions = {
@@ -336,7 +336,7 @@ RV64M_instructions = {
 
 RV64M_map = InstructionMap("RV64M_instructions", RV64M_instructions)
 
-ALU_M_instructions = Merge(RV32M_instructions, RV64M_instructions)
+ALU_M_instructions = merge(RV32M_instructions, RV64M_instructions)
 ALU_M_map = InstructionMap("ALU_M_instructions", ALU_M_instructions)
 
 RV32A_instructions = {
@@ -371,7 +371,7 @@ RV64A_instructions = {
 
 RV64A_map = InstructionMap("RV64A_instructions", RV64A_instructions)
 
-RV_A_instructions = Merge(RV32A_instructions, RV64A_instructions)
+RV_A_instructions = merge(RV32A_instructions, RV64A_instructions)
 RV_A_map = InstructionMap("RV_A_instructions", RV_A_instructions)
 
 Zicsr_instructions = {
@@ -389,7 +389,7 @@ Zifencei_instructions = {"FENCE.I##RISCV": 10}
 
 Zifencei_map = InstructionMap("Zifencei_instructions", Zifencei_instructions)
 
-RV_G_instructions = Merge(
+RV_G_instructions = merge(
     RV32I_instructions,
     RV64I_instructions,
     RV32F_instructions,
@@ -406,7 +406,7 @@ RV_G_instructions = Merge(
 
 RV_G_map = InstructionMap("RV_G_instructions", RV_G_instructions)
 
-RV32_G_instructions = Merge(
+RV32_G_instructions = merge(
     RV32I_instructions,
     RV32F_instructions,
     RV32D_instructions,
@@ -509,27 +509,27 @@ LDST_Double_map = InstructionMap(
 )
 
 # Combine groups
-LDST_Int_instructions = Merge(LD_Int_instructions, ST_Int_instructions)
+LDST_Int_instructions = merge(LD_Int_instructions, ST_Int_instructions)
 LDST_Int_map = InstructionMap("LDST_Int_instructions", LDST_Int_instructions)
 
-LDST_Int32_instructions = Merge(LD_Int32_instructions, ST_Int32_instructions)
+LDST_Int32_instructions = merge(LD_Int32_instructions, ST_Int32_instructions)
 LDST_Int32_map = InstructionMap(
     "LDST_Int32_instructions", LDST_Int32_instructions
 )
 
-LDST_Float_instructions = Merge(LD_Float_instructions, ST_Float_instructions)
+LDST_Float_instructions = merge(LD_Float_instructions, ST_Float_instructions)
 LDST_Float_map = InstructionMap(
     "LDST_Float_instructions", LDST_Float_instructions
 )
 
-LDST_IntFloat_instructions = Merge(
+LDST_IntFloat_instructions = merge(
     LDST_Float_instructions, LDST_Int_instructions
 )
 LDST_IntFloat_map = InstructionMap(
     "LDST_IntFloat_instructions", LDST_IntFloat_instructions
 )
 
-LDST32_IntFloat_instructions = Merge(
+LDST32_IntFloat_instructions = merge(
     LDST_Float_instructions, LDST_Int32_instructions
 )
 LDST32_IntFloat_map = InstructionMap(
@@ -576,17 +576,17 @@ ST_C32_instructions = {
 
 ST_C32_map = InstructionMap("ST_C32_instructions", ST_C32_instructions)
 
-LDST_C_instructions = Merge(LD_C_instructions, ST_C_instructions)
+LDST_C_instructions = merge(LD_C_instructions, ST_C_instructions)
 LDST_C_map = InstructionMap("LDST_C_instructions", LDST_C_instructions)
 
-LDST_C32_instructions = Merge(LD_C32_instructions, ST_C32_instructions)
+LDST_C32_instructions = merge(LD_C32_instructions, ST_C32_instructions)
 LDST_C32_map = InstructionMap("LDST_C32_instructions", LDST_C32_instructions)
 
 # All LDST except vector
-LDST_IFC_instructions = Merge(LDST_IntFloat_instructions, LDST_C_instructions)
+LDST_IFC_instructions = merge(LDST_IntFloat_instructions, LDST_C_instructions)
 LDST_IFC_map = InstructionMap("LDST_IFC_instructions", LDST_IFC_instructions)
 
-LDST32_IFC_instructions = Merge(
+LDST32_IFC_instructions = merge(
     LDST32_IntFloat_instructions, LDST_C32_instructions
 )
 LDST32_IFC_map = InstructionMap(
@@ -594,12 +594,10 @@ LDST32_IFC_map = InstructionMap(
 )
 
 # All LDST -   >>>> Needs V added <<<<<<
-LDST_All_instructions = Merge(LDST_IFC_instructions)
-# LDST_All_instructions = Merge(LDST_IntFloat_instructions)
+LDST_All_instructions = merge(LDST_IFC_instructions)
 LDST_All_map = InstructionMap("LDST_All_instructions", LDST_All_instructions)
 
-LDST32_All_instructions = Merge(LDST32_IFC_instructions)
-# LDST32_All_instructions = Merge(LDST_IntFloat_instructions)
+LDST32_All_instructions = merge(LDST32_IFC_instructions)
 LDST32_All_map = InstructionMap(
     "LDST32_All_instructions", LDST32_All_instructions
 )
@@ -743,7 +741,7 @@ FCVT_instructions = {
 
 FCVT_map = InstructionMap("FCVT_instructions", FCVT_instructions)
 
-ALU_Float_All_instructions = Merge(
+ALU_Float_All_instructions = merge(
     ALU_Float_Single_instructions, ALU_Float_Double_instructions
 )
 ALU_Float_All_map = InstructionMap(
@@ -806,13 +804,13 @@ ALU_Int_C_map = InstructionMap(
     "ALU_Int_C_instructions", ALU_Int_C_instructions
 )
 
-RV_C_instructions = Merge(
+RV_C_instructions = merge(
     ALU_Int_C_instructions, BranchJump_C_instructions, LDST_C_instructions
 )
 
 RV_C_map = {ALU_Int_C_map: 10, BranchJump_C_map: 10, LDST_C_map: 10}
 
-ALU_Int_All_instructions = Merge(
+ALU_Int_All_instructions = merge(
     ALU_Int32_instructions,
     ALU_Int64_instructions,
     ALU_M_instructions,
@@ -822,7 +820,7 @@ ALU_Int_All_map = InstructionMap(
     "ALU_Int_All_instructions", ALU_Int_All_instructions
 )
 
-ALU_Int32_All_instructions = Merge(
+ALU_Int32_All_instructions = merge(
     ALU_Int32_instructions, RV32M_instructions, ALU_Int32_C_instructions
 )
 ALU_Int32_All_map = InstructionMap(

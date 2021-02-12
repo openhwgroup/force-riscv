@@ -37,7 +37,7 @@ class MainSequence(Sequence):
         StateTransition.transitionToState(
             state_a, EStateTransitionOrderMode.ByPriority
         )
-        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
         if self.getGlobalState("AppRegisterWidth") == 32:
             instructions = (
@@ -61,7 +61,7 @@ class MainSequence(Sequence):
 
         state_b = self._createStateB()
         StateTransition.transitionToState(state_b)
-        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
         for _ in range(RandomUtils.random32(200, 500)):
             if self.getGlobalState("AppRegisterWidth") == 32:
@@ -71,7 +71,7 @@ class MainSequence(Sequence):
 
         state_c = self._createStateC()
         StateTransition.transitionToState(state_c)
-        state_transition_test_utils.verifyState(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
         for _ in range(RandomUtils.random32(200, 500)):
             self.genInstruction("FMUL.D#Double-precision#RISCV")
@@ -86,36 +86,8 @@ class MainSequence(Sequence):
         state.addPrivilegeLevelStateElementByName("M")
         self._mExpectedStateData[EStateElementType.PrivilegeLevel] = 3
 
-        expected_sys_reg_state_data = []
-
-        # TODO(Noah): Uncomment adding the system register StateElements when
-        #  the relevant system registers are defined correctly in the
-        #  system_registers.xml file.
-        # mip_name = 'mip'
-        # state.addSystemRegisterStateElementByField(
-        #   mip_name, 'MTIE', 0x1, aPriority=10)
-        # state.addSystemRegisterStateElementByField(
-        #   mip_name, 'MTIP', 0x0, aPriority=10)
-        # self.randomInitializeRegister(mip_name)
-        # (mip_val, valid) = self.readRegister(mip_name)
-        # state_transition_test_utils.assertValidRegisterValue(
-        #   self, mip_name, valid)
-        # mip_val = state_transition_test_utils
-        #   .combineRegisterValueWithFieldValue(
-        #       self, mip_name, mip_val, 'MTIE', 0x1)
-        # mip_val = state_transition_test_utils
-        #   .combineRegisterValueWithFieldValue(
-        #       self, mip_name, mip_val, 'MTIP', 0x0)
-        # expected_sys_reg_state_data.append((mip_name, mip_val))
-
-        # state.addRegisterStateElement('mtime', (0,), aPriority=5)
-        # expected_sys_reg_state_data.append(('mtime', 0))
-        # state.addRegisterStateElement('mtimecmp', (50,), aPriority=5)
-        # expected_sys_reg_state_data.append(('mtimecmp', 50))
-
-        self._mExpectedStateData[
-            EStateElementType.SystemRegister
-        ] = expected_sys_reg_state_data
+        # TODO(Noah): Add some system register StateElements when the system
+        # registers are defined correctly in the system_registers.xml file.
 
         return state
 
@@ -164,10 +136,10 @@ class MainSequence(Sequence):
         fcsr_name = "fcsr"
         state.addSystemRegisterStateElementByField(fcsr_name, "FRM", 1)
         (fcsr_val, valid) = self.readRegister(fcsr_name)
-        state_transition_test_utils.assertValidRegisterValue(
+        state_transition_test_utils.assert_valid_register_value(
             self, fcsr_name, valid
         )
-        fcsr_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+        fcsr_val = state_transition_test_utils.combine_register_value_with_field_value(
             self, fcsr_name, fcsr_val, "FRM", 1
         )
 
@@ -192,28 +164,28 @@ class MainSequence(Sequence):
         fs_val = RandomUtils.random32(1, 3)
         state.addSystemRegisterStateElementByField(sstatus_name, "FS", fs_val)
         (sstatus_val, valid) = self.readRegister(sstatus_name)
-        state_transition_test_utils.assertValidRegisterValue(
+        state_transition_test_utils.assert_valid_register_value(
             self, sstatus_name, valid
         )
-        sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+        sstatus_val = state_transition_test_utils.combine_register_value_with_field_value(
             self, sstatus_name, sstatus_val, "FS", fs_val
         )
 
         # Adjust expected value of SD bit according to architecture rules
         (xs_val, valid) = self.readRegister(sstatus_name, field="XS")
-        state_transition_test_utils.assertValidRegisterValue(
+        state_transition_test_utils.assert_valid_register_value(
             self, sstatus_name, valid
         )
         (vs_val, valid) = self.readRegister(sstatus_name, field="VS")
-        state_transition_test_utils.assertValidRegisterValue(
+        state_transition_test_utils.assert_valid_register_value(
             self, sstatus_name, valid
         )
         if (fs_val == 3) or (xs_val == 3) or (vs_val == 3):
-            sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            sstatus_val = state_transition_test_utils.combine_register_value_with_field_value(
                 self, sstatus_name, sstatus_val, "SD", 1
             )
         else:
-            sstatus_val = state_transition_test_utils.combineRegisterValueWithFieldValue(
+            sstatus_val = state_transition_test_utils.combine_register_value_with_field_value(
                 self, sstatus_name, sstatus_val, "SD", 0
             )
 

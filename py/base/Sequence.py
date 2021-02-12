@@ -216,7 +216,6 @@ class Sequence(object):
 
         return RandomUtils.random32(min_v, max_v)
 
-    # val = self.random64(min_v=0, max_v=MAX_UINT64)
     def random64(self, min_v=0, max_v=0xFFFFFFFFFFFFFFFF):
         warnings.warn(
             "Sequence.random64() is deprecated; "
@@ -404,7 +403,6 @@ class Sequence(object):
             "ValidAddressMask", addr, is_instr
         )
 
-    # random_item = self.pickWeighted(weighted_dict)
     def pickWeighted(self, weighted_dict):
         return self.genThread.pickWeighted(weighted_dict)
 
@@ -430,13 +428,11 @@ class Sequence(object):
         # iterate the shuffled list
         for index in shuffled_index_list:
             item = permuted_list[index]
-            if isinstance(item, str):
+            if isinstance(item, str) or isinstance(item, Macro):
                 yield item
             elif isinstance(item, ItemMap):
                 for j in item.getPermutated(self, skip_weight_check):
                     yield j
-            elif isinstance(item, Macro):
-                yield item
             else:
                 raise TestException(
                     "Picked unsupported object in getPermuated."
