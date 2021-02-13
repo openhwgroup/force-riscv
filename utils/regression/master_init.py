@@ -29,11 +29,11 @@ import sys
 # in this CommandLineParameters class.
 #
 
-f_option_text = """- When present, overrides the default control file, 
+f_option_text = """- When present, overrides the default control file,
   "_def_fctrl.py", in the default initial control directory which can be
-  specified as a full path or a filename.  
+  specified as a full path or a filename.
   If a file name is specified then the control directory will be used.
-  If a path is specified it will become the control directory in all cases.  
+  If a path is specified it will become the control directory in all cases.
   A control file must exist in the resolved control directory"""
 
 d_option_text = """- When present, overrides the default control path,
@@ -41,7 +41,7 @@ d_option_text = """- When present, overrides the default control path,
   the master run folder. If a path was specified as part of the control file
   name on the command line, this option is ignored."""
 
-c_option_text = """- When present, overrides the default config file, 
+c_option_text = """- When present, overrides the default config file,
   "_riscv_rv64_fcfg.py", located in the config directory which is found in the
   module directory which equates to the location of Master Run.
   A custom config file may be substituted by specifying a new file name or
@@ -65,8 +65,8 @@ s_option_text = """- When present, overrides the default location of any client
   determined by using the directory where the executing master run is
   located."""
 
-n_option_text = """- When present, overrides the default client application, 
-  "forrest_run.py", used to process individual tasks. The run name must 
+n_option_text = """- When present, overrides the default client application,
+  "forrest_run.py", used to process individual tasks. The run name must
   reference an executable file in the default or specified directory.
   If a path is specified that path can be either a relative path having the
   same rules as the run directory or a full path to the executable."""
@@ -76,11 +76,11 @@ class CommandLineParameters(object):
     usage = (
         """
       Master Regression and Performance Utility
-    
+
       Example:
-    
+
         %s -f control_file_fctrl.py
-    
+
     """
         % sys.argv[0]
     )
@@ -111,8 +111,20 @@ class CommandLineParameters(object):
             {"default": "_def_fctrl.py", "metavar": ""},
             f_option_text,
         ],
-        ["-d", "--control-dir=", 1, {"metavar": ""}, d_option_text,],
-        ["-c", "--config=", 1, {"metavar": ""}, c_option_text,],
+        [
+            "-d",
+            "--control-dir=",
+            1,
+            {"metavar": ""},
+            d_option_text,
+        ],
+        [
+            "-c",
+            "--config=",
+            1,
+            {"metavar": ""},
+            c_option_text,
+        ],
         [
             "-r",
             "--num-runs=",
@@ -147,9 +159,27 @@ class CommandLineParameters(object):
         # |       "long option"  |  "additional specifications"   |
         # |       |              |  |                             |
         # |       |              |  |                             |
-        ["-o", "--test-base=", 1, {"metavar": ""}, o_option_text,],
-        ["-s", "--run-dir=", 1, {"metavar": ""}, s_option_text,],
-        ["-n", "--run-name=", 1, {"metavar": ""}, n_option_text,],
+        [
+            "-o",
+            "--test-base=",
+            1,
+            {"metavar": ""},
+            o_option_text,
+        ],
+        [
+            "-s",
+            "--run-dir=",
+            1,
+            {"metavar": ""},
+            s_option_text,
+        ],
+        [
+            "-n",
+            "--run-name=",
+            1,
+            {"metavar": ""},
+            n_option_text,
+        ],
         [
             "-j",
             "--run-launcher=",

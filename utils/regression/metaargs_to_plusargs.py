@@ -179,9 +179,9 @@ class CommandLineParameters(object):
     usage = (
         """
       Convert meta args to plusargs.
-    
+
       Example:
-    
+
         %s -m "mp_hack=on mp_hack_debug=on"
     """
         % sys.argv[0]

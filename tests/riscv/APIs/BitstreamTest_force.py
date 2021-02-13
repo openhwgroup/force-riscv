@@ -44,7 +44,7 @@ class MainSequence(Sequence):
         # get page information test
         # Note: should not have any record returned in this case
         self.notice("GetPageInfo validation...")
-        bank = instr_rec[0 : instr_rec.find("#")]
+        bank = instr_rec[: instr_rec.find("#")]
         addr = instr_rec[instr_rec.find("#") + 1 :]
         results = self.getPageInfo(addr, "VA", bank)
         for keys, record in sorted(results.items()):

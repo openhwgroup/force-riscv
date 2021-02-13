@@ -19,7 +19,7 @@ import UtilityFunctions
 from Enums import EStateElementType, EStateTransitionType
 from State import State
 
-import state_transition_test_utils
+import state_transition_test_utils as utils
 from base.Sequence import Sequence
 from base.StateTransitionHandler import StateTransitionHandler
 from riscv.EnvRISCV import EnvRISCV
@@ -203,14 +203,14 @@ class MainSequence(Sequence):
 
         self.randomInitializeRegister(sys_reg_name)
         (sys_reg_val, valid) = self.readRegister(sys_reg_name)
-        state_transition_test_utils.assert_valid_register_value(
+        utils.assert_valid_register_value(
             self, sys_reg_name, valid
         )
 
-        sys_reg_val = state_transition_test_utils.combine_register_value_with_field_value(
+        sys_reg_val = utils.combine_register_value_with_field_value(
             self, sys_reg_name, sys_reg_val, "MIE", 0x0
         )
-        sys_reg_val = state_transition_test_utils.combine_register_value_with_field_value(
+        sys_reg_val = utils.combine_register_value_with_field_value(
             self, sys_reg_name, sys_reg_val, "MPRV", 0x1
         )
 
@@ -240,7 +240,7 @@ class MainSequence(Sequence):
             (orig_fp_reg_val, valid) = self.readRegister(
                 containing_fp_reg_name
             )
-            state_transition_test_utils.assert_valid_register_value(
+            utils.assert_valid_register_value(
                 self, containing_fp_reg_name, valid
             )
 
@@ -287,7 +287,7 @@ class MainSequence(Sequence):
                 (field_val, valid) = self.readRegister(
                     vec_reg_name, field=field_name
                 )
-                state_transition_test_utils.assert_valid_register_value(
+                utils.assert_valid_register_value(
                     self, vec_reg_name, valid
                 )
                 vec_reg_values.append(field_val)

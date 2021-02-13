@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 control_items = [
-    {"fname": "*_force.py", "generator": {"--noiss": None,},},
+    {"fname": "*_force.py", "generator": {"--noiss": None}},
 ]

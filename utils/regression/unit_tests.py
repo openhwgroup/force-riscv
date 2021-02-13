@@ -32,14 +32,14 @@ def usage(extra=None):
         """
 Run quick regression
   -h, --help            print this help message
-  --clean               Run "make clean" in each unit test directory before 
+  --clean               Run "make clean" in each unit test directory before
                         running "make".
   --force-path          point to force path.
   --nopicky             disable -Weffc++ compiler flag.
   -x, --process-max     The maximum number of concurrent execution threads.
-  -z, --print-failures  Print the stdout and stderr of each failing test case 
+  -z, --print-failures  Print the stdout and stderr of each failing test case
                         to the console.
-    
+
 Example:
     %s --force-path force-gen-path
 """

@@ -163,10 +163,10 @@ class CommandLineParameters(object):
     usage = (
         """
       To generate a report from master_run regression output.
-    
+
       Example:
-    
-        %s -P /path/to/regression/output 
+
+        %s -P /path/to/regression/output
     """
         % sys.argv[0]
     )

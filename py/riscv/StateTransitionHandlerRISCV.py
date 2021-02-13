@@ -826,15 +826,15 @@ class StateTransitionHelperGprSet(object):
             #  arbitrary GPR we need.
             if aValidate:
                 self._validateInsufficientArbitaryGprs(aGprCount)
-
-            self._mArbitraryGprIndices = (
-                self._mStateTransHandler.getAllArbitraryGprs(aExclude=(0, 1, 2))
+            handler = self._mStateTransHandler
+            self._mArbitraryGprIndices = handler.getAllArbitraryGprs(
+                aExclude=(0, 1, 2)
             )
             remaining_gpr_count = aGprCount - len(self._mArbitraryGprIndices)
             excluded_regs = "0,1,2,%s" % ",".join(
                 str(index) for index in self._mArbitraryGprIndices
             )
-            self._mNonArbitraryGprIndices = self._mStateTransHandler.getRandomGPRs(
+            self._mNonArbitraryGprIndices = handler.getRandomGPRs(
                 remaining_gpr_count, exclude=excluded_regs, no_skip=True
             )
 
@@ -868,7 +868,10 @@ class StateTransitionHelperGprSet(object):
     #
     #  @param aGprCount The number of GPRs requested.
     def _validateInsufficientArbitaryGprs(self, aGprCount):
-        if self._mStateTransHandler.mStateTransType == EStateTransitionType.Boot:
+        if (
+            self._mStateTransHandler.mStateTransType
+            == EStateTransitionType.Boot
+        ):
             self._mStateTransHandler.error(
                 "Boot StateTransitions must have at least %d arbitary GPR(s) "
                 "available" % aGprCount

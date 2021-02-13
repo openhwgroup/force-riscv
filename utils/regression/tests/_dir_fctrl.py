@@ -15,9 +15,9 @@
 #
 
 control_items = [
-    {"fname": "utils/regression/tests/APIs/_def_fctrl.py",},
+    {"fname": "utils/regression/tests/APIs/_def_fctrl.py"},
     {
         "fname": "_def_fctrl.py",
-        "options": {"control-dir": "utils/regression/tests/examples",},
+        "options": {"control-dir": "utils/regression/tests/examples"},
     },
 ]

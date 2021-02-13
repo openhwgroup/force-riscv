@@ -103,7 +103,7 @@ class SysUtils:
 
         except Exception as arg_ex:
             Msg.err("stdout: " + str(arg_ex))
-            my_fout = subprocess.PIPE  # SysUtils.ifthen( my_fout is None, my_fout )
+            my_fout = subprocess.PIPE
 
         try:
             my_ferr = SysUtils.ifthen(
@@ -112,7 +112,7 @@ class SysUtils:
 
         except Exception as arg_ex:
             Msg.err("stderr: " + str(arg_ex))
-            my_ferr = subprocess.PIPE  # SysUtils.ifthen( my_ferr is None, my_ferr )
+            my_ferr = subprocess.PIPE
         return (my_fout, my_ferr)
 
     @classmethod

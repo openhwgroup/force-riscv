@@ -16,19 +16,19 @@
 control_items = [
     {
         "fname": "api_getPageInfo_01_force.py",
-        "options": {"max-instr": 50000,},
+        "options": {"max-instr": 50000},
         "generator": {
             "--noiss": None,
             "--max-instr": 50000,
             "--options": '"PrivilegeLevel=1"',
         },
     },
-    {"fname": "Constraint_force.py", "generator": {"--noiss": None,},},
+    {"fname": "Constraint_force.py", "generator": {"--noiss": None}},
     {
         "fname": "InitializeRegisterTest_force.py",
-        "generator": {"--noiss": None,},
+        "generator": {"--noiss": None},
     },
-    {"fname": "LoadImmediate_force.py", "generator": {"--noiss": None,},},
-    {"fname": "State_force.py", "generator": {"--noiss": None,},},
-    {"fname": "WriteRegisterTest_force.py", "generator": {"--noiss": None,},},
+    {"fname": "LoadImmediate_force.py", "generator": {"--noiss": None}},
+    {"fname": "State_force.py", "generator": {"--noiss": None}},
+    {"fname": "WriteRegisterTest_force.py", "generator": {"--noiss": None}},
 ]

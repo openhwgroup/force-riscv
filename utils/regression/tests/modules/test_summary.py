@@ -59,9 +59,9 @@ class CommandLineParameters(object):
     usage = (
         """
       Test summary module of master_run.
-    
+
       Example:
-    
+
         %s -f /path/to/regression/output/forrest.log
     """
         % sys.argv[0]

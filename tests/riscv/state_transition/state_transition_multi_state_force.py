@@ -18,7 +18,7 @@ import StateTransition
 from Enums import EStateElementType, EStateTransitionOrderMode
 from State import State
 
-import state_transition_test_utils
+import state_transition_test_utils as utils
 from base.Sequence import Sequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
@@ -37,7 +37,7 @@ class MainSequence(Sequence):
         StateTransition.transitionToState(
             state_a, EStateTransitionOrderMode.ByPriority
         )
-        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
+        utils.verify_state(self, self._mExpectedStateData)
 
         if self.getGlobalState("AppRegisterWidth") == 32:
             instructions = (
@@ -61,7 +61,7 @@ class MainSequence(Sequence):
 
         state_b = self._createStateB()
         StateTransition.transitionToState(state_b)
-        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
+        utils.verify_state(self, self._mExpectedStateData)
 
         for _ in range(RandomUtils.random32(200, 500)):
             if self.getGlobalState("AppRegisterWidth") == 32:
@@ -71,7 +71,7 @@ class MainSequence(Sequence):
 
         state_c = self._createStateC()
         StateTransition.transitionToState(state_c)
-        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
+        utils.verify_state(self, self._mExpectedStateData)
 
         for _ in range(RandomUtils.random32(200, 500)):
             self.genInstruction("FMUL.D#Double-precision#RISCV")
@@ -136,10 +136,10 @@ class MainSequence(Sequence):
         fcsr_name = "fcsr"
         state.addSystemRegisterStateElementByField(fcsr_name, "FRM", 1)
         (fcsr_val, valid) = self.readRegister(fcsr_name)
-        state_transition_test_utils.assert_valid_register_value(
+        utils.assert_valid_register_value(
             self, fcsr_name, valid
         )
-        fcsr_val = state_transition_test_utils.combine_register_value_with_field_value(
+        fcsr_val = utils.combine_register_value_with_field_value(
             self, fcsr_name, fcsr_val, "FRM", 1
         )
 
@@ -164,28 +164,28 @@ class MainSequence(Sequence):
         fs_val = RandomUtils.random32(1, 3)
         state.addSystemRegisterStateElementByField(sstatus_name, "FS", fs_val)
         (sstatus_val, valid) = self.readRegister(sstatus_name)
-        state_transition_test_utils.assert_valid_register_value(
+        utils.assert_valid_register_value(
             self, sstatus_name, valid
         )
-        sstatus_val = state_transition_test_utils.combine_register_value_with_field_value(
-            self, sstatus_name, sstatus_val, "FS", fs_val
+        sstatus_val = utils.combine_register_value_with_field_value(
+           self, sstatus_name, sstatus_val, "FS", fs_val
         )
 
         # Adjust expected value of SD bit according to architecture rules
         (xs_val, valid) = self.readRegister(sstatus_name, field="XS")
-        state_transition_test_utils.assert_valid_register_value(
+        utils.assert_valid_register_value(
             self, sstatus_name, valid
         )
         (vs_val, valid) = self.readRegister(sstatus_name, field="VS")
-        state_transition_test_utils.assert_valid_register_value(
+        utils.assert_valid_register_value(
             self, sstatus_name, valid
         )
         if (fs_val == 3) or (xs_val == 3) or (vs_val == 3):
-            sstatus_val = state_transition_test_utils.combine_register_value_with_field_value(
+            sstatus_val = utils.combine_register_value_with_field_value(
                 self, sstatus_name, sstatus_val, "SD", 1
             )
         else:
-            sstatus_val = state_transition_test_utils.combine_register_value_with_field_value(
+            sstatus_val = utils.combine_register_value_with_field_value(
                 self, sstatus_name, sstatus_val, "SD", 0
             )
 

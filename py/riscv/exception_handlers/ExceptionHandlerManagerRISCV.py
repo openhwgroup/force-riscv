@@ -153,14 +153,15 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
                 )
 
         for (
-            mem_bank_handler_registry
+            registry
         ) in self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistries():
-            mem_bank_handler_registry.mHandlerSubroutineGenerator = HandlerSubroutineGeneratorRISCV(
+            generator = HandlerSubroutineGeneratorRISCV(
                 self.genThread, self.factory, self.exceptions_stack
             )
+            registry.mHandlerSubroutineGenerator = generator
 
             if self.fastMode():
-                mem_bank_handler_registry.registerExceptHandlerWithClassName(
+                registry.registerExceptHandlerWithClassName(
                     "riscv.exception_handlers.FastExceptionHandlers",
                     "FastEmptyHandlerRISCV",
                     self.factory,
@@ -170,7 +171,7 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
                     "FastEmptyHandlerRISCV"
                 )
             else:
-                mem_bank_handler_registry.registerExceptHandlerWithClassName(
+                registry.registerExceptHandlerWithClassName(
                     "riscv.exception_handlers.AsynchronousHandlers",
                     "AsynchronousHandlerRISCV",
                     self.factory,
@@ -187,11 +188,9 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
             "[ExceptionHandlerManagerRISCV] EXC MEMORY START: 0x%x"
             % exc_memory
         )
-
-        handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-            MemoryBankRISCV.DEFAULT
-        )
-        handler_registry.mStartAddr = exc_memory
+        repo = self.memBankHandlerRegistryRepo
+        registry = repo.getMemoryBankHandlerRegistry(MemoryBankRISCV.DEFAULT)
+        registry.mStartAddr = exc_memory
 
         exception_bounds_info_set = {"Function": "UpdateExceptionBounds"}
         exception_bounds_info_set["memory_bounds"] = "%s,%s" % (

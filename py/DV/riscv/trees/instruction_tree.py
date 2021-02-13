@@ -29,7 +29,7 @@ References...
 
 Extension       Component extensions and/or instructions
 ------------------------------------------------------------------------------
-RV32I             completed     
+RV32I             completed
 RV64I             completed
 RV32F             completed
 RV64F             completed
@@ -70,7 +70,7 @@ Regular loads and stores
   LDST_Float        completed       =   LD_Float + ST_Float
   LDST_IntFloat     completed       =   LDST_Int + LDST_Float
   LDST_IFC          completed       =   LDST_IntFloat + LDST_C
-  LDST_All          partially completed, missing V       
+  LDST_All          partially completed, missing V
                                     =   LDST_IntFloat + LDST_C + (LDST_V)
   LDST_Byte         completed
   LDST_Half         completed
@@ -78,7 +78,7 @@ Regular loads and stores
   LDST_Double       completed
 
 Regular ALU Int
-  ALU_Int32         completed       =   RV32I - loads - stores - branches - 
+  ALU_Int32         completed       =   RV32I - loads - stores - branches -
                                         umps
   ALU_Int64         completed       =   RV64I - loads - stores
   ALU_M             completed       =   RV32M + RV64M
@@ -90,7 +90,7 @@ Regular ALU Float
   ALU_Float_Single  completed       =   RV32S + RV64S - loads - stores - FCVT
   ALU_Float_Double  completed       =   RV32D + RV64D - loads - stores - FCVT
   FCVT              completed
-  ALU_Float_All     completed       =   ALU_Float_Single + ALU_Float_Double 
+  ALU_Float_All     completed       =   ALU_Float_Single + ALU_Float_Double
 
 C extension
   LD_C              completed

@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# This class encapsulates the information required to assign an excpeption
+
+
+# This class encapsulates the information required to assign an exception
 # handler class to handle a particular exception in a specified operating
 # state.
-
-
 class ExceptionHandlerAssignmentRequest(object):
     def __init__(
         self,

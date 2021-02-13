@@ -249,9 +249,9 @@ class CommandLineParameters(object):
         """
       Run master_run with regression result reporting
       (A temporary solution to utilize existing Perl reporting scripts)
-    
+
       Example:
-    
+
         %s -c control_file_fctrl.py
     """
         % sys.argv[0]

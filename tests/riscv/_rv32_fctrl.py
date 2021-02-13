@@ -17,130 +17,130 @@
 control_items = [
     {
         "fname": "rv32/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "APIs/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "APIs/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "address_solving/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "loop/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "loop/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "branch/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "branch/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "exception_handlers/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/g_instructions/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/g_instructions/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/c_instructions/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/c_instructions/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/v_instructions/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/v_instructions/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/priv_instructions/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/priv_instructions/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "instructions/zfh_instructions/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "paging/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "paging/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "privilege_switch/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "privilege_switch/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "state_transition/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "vector/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "../../examples/riscv/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "bnt/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "register/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "register/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "multiprocessing/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "multiprocessing/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "thread_group/_def_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
         "fname": "thread_group/_noiss_fctrl.py",
-        "generator": {"--cfg": "config/riscv_rv32.config",},
+        "generator": {"--cfg": "config/riscv_rv32.config"},
     },
 ]

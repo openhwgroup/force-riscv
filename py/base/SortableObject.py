@@ -16,7 +16,6 @@
 
 
 #  Made the given object sortable and comparable
-#
 class SortableObject(object):
     def __init__(self):
         # derived class MUST set up _mSortableName!

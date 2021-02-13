@@ -45,9 +45,9 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
 
     # level bits are (mostly) same for Sv39, Sv48, but different for Sv32
     LEVEL_BITS = {
-        32: {1: (31, 22), 0: (21, 12),},
-        39: {2: (38, 30), 1: (29, 21), 0: (20, 12),},
-        48: {3: (47, 39), 2: (38, 30), 1: (29, 21), 0: (20, 12),},
+        32: {1: (31, 22), 0: (21, 12)},
+        39: {2: (38, 30), 1: (29, 21), 0: (20, 12)},
+        48: {3: (47, 39), 2: (38, 30), 1: (29, 21), 0: (20, 12)},
     }
     # level mask same for Sv39, Sv48, but different for Sv32
     LEVEL_MASK = {32: 0x3FF, 39: 0x1FF, 48: 0x1FF}
@@ -193,26 +193,23 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
     #  @param aHandlerContext The exception handler context from which
     #       register indices can be retrieved by role.
     def _assignScratchRegisterIndices(self, aHandlerContext):
-        self._mPrivRegIndex = aHandlerContext.getScratchRegisterIndices(
+        context = aHandlerContext
+        self._mPrivRegIndex = context.getScratchRegisterIndices(
             RegisterCallRole.PRIV_LEVEL_VALUE
         )
-        self._mCauseRegIndex = aHandlerContext.getScratchRegisterIndices(
+        self._mCauseRegIndex = context.getScratchRegisterIndices(
             RegisterCallRole.CAUSE_VALUE
         )
         (
             self._mPteAddrRegIndex,
             self._mPteRegIndex,
-        ) = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.ARGUMENT, 2
-        )
+        ) = context.getScratchRegisterIndices(RegisterCallRole.ARGUMENT, 2)
         (
             self._mR1,
             self._mR2,
             self._mR3,
-        ) = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.TEMPORARY, 3
-        )
-        self._mCalleeSavedRegIndices = aHandlerContext.getScratchRegisterIndices(
+        ) = context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 3)
+        self._mCalleeSavedRegIndices = context.getScratchRegisterIndices(
             RegisterCallRole.CALLEE_SAVED, 3
         )
         (

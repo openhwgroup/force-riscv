@@ -73,15 +73,13 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
             save_pc = self.getPEstate("PC")
             start_addr = self.nextCodeAddresses[default_mem_bank]
             self.setPEstate("PC", start_addr)
-
-            mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-                default_mem_bank
-            )
+            repo = self.memBankHandlerRegistryRepo
+            registry = repo.getMemoryBankHandlerRegistry(default_mem_bank)
             handler_context = self.createExceptionHandlerContext(
                 0, default_mem_bank
             )
 
-            registry = mem_bank_handler_registry
+            registry = registry
             generator = registry.mHandlerSubroutineGenerator
             generator.generateRoutine(
                 "TableWalk", handler_context=handler_context
@@ -112,9 +110,8 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
         return 64
 
     def createExceptionHandlerContext(self, err_code, mem_bank):
-        mem_bank_handler_registry = self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistry(
-            mem_bank
-        )
+        repo = self.memBankHandlerRegistryRepo
+        registry = repo.getMemoryBankHandlerRegistry(mem_bank)
         if self.fastMode():
             handler_context = ExceptionHandlerContext(
                 err_code,
@@ -122,7 +119,7 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
                 self.privLevel.name,
                 self.exceptions_stack,
                 self.address_table,
-                mem_bank_handler_registry,
+                registry,
             )
         else:
             handler_context = ComprehensiveExceptionHandlerContext(
@@ -131,7 +128,7 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
                 self.privLevel.name,
                 self.exceptions_stack,
                 self.address_table,
-                mem_bank_handler_registry,
+                registry,
             )
 
         return handler_context

@@ -39,41 +39,41 @@ system register choices file, and (system) register field choices file.
 
 To run the script, type: %s <options>, where <options> include:
 
-  -i, --system_registers_starter <starter file>   
-            Specify the system registers starter file (defaults to 
+  -i, --system_registers_starter <starter file>
+            Specify the system registers starter file (defaults to
             input/system_registers_starter.xml)
 
-  -m, --modifications_script <mods script>        
+  -m, --modifications_script <mods script>
             Specify the register/field/choices modifications script
             (has no default value)
-                  
-  -S, --system_registers                          
-            Output the system registers file. 
+
+  -S, --system_registers
+            Output the system registers file.
             (defaults to output/system_registers.xml)
 
-  -R, --system_register_choices                   
-            Output the system register choices file. 
+  -R, --system_register_choices
+            Output the system register choices file.
             (defaults to output/system_register_choices.xml)
 
-  -F, --register_field_choices                    
-            Output the register field choices file. 
+  -F, --register_field_choices
+            Output the register field choices file.
             (defaults to output/register_field_choices.xml)
 
-  -s, --system_registers_file                     
+  -s, --system_registers_file
             Specify the path to the system registers (output) file.
 
-  -r, --system_register_choices_file              
+  -r, --system_register_choices_file
             Specify the path to the system register choices (output) file.
 
-  -f, --register_field_choices_file               
+  -f, --register_field_choices_file
             Specify the path to the register field choices (output) file.
 
-  -h, --help                                      
+  -h, --help
             Print this help message.
 
 Examples:
 
-  %s                       
+  %s
 
             No options specified. use default starter file to produce all
             system register files.
@@ -82,8 +82,8 @@ Examples:
 
             Output only the system registers file.
 
-  %s --system_registers_starter 
-            input/system_registers_starter_v10.xml 
+  %s --system_registers_starter
+            input/system_registers_starter_v10.xml
                 -m register_changes/hypervisor_reg_updates.py
 
           A starter file (input/system_registers_starter_v10.xml) has been

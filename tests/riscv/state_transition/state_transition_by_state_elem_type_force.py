@@ -22,7 +22,7 @@ from Enums import (
 )
 from State import State
 
-import state_transition_test_utils
+import state_transition_test_utils as utils
 from StateTransitionHandlerTest import StateTransitionHandlerTest
 from base.Sequence import Sequence
 from riscv.EnvRISCV import EnvRISCV
@@ -62,7 +62,7 @@ class MainSequence(Sequence):
             state_elem_type_order,
         )
 
-        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
+        utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
@@ -77,10 +77,10 @@ class MainSequence(Sequence):
         )
         self.randomInitializeRegister(mcause_name)
         (mcause_val, valid) = self.readRegister(mcause_name)
-        state_transition_test_utils.assert_valid_register_value(
+        utils.assert_valid_register_value(
             self, mcause_name, valid
         )
-        mcause_val = state_transition_test_utils.combine_register_value_with_field_value(
+        mcause_val = utils.combine_register_value_with_field_value(
             self,
             mcause_name,
             mcause_val,
@@ -94,10 +94,10 @@ class MainSequence(Sequence):
         state.addSystemRegisterStateElementByField("mtvec", "MODE", mode_val)
         self.randomInitializeRegister(mtvec_name)
         (mtvec_val, valid) = self.readRegister(mtvec_name)
-        state_transition_test_utils.assert_valid_register_value(
+        utils.assert_valid_register_value(
             self, mtvec_name, valid
         )
-        mtvec_val = state_transition_test_utils.combine_register_value_with_field_value(
+        mtvec_val = utils.combine_register_value_with_field_value(
             self, mtvec_name, mtvec_val, "MODE", mode_val
         )
         expected_sys_reg_state_data.append((mtvec_name, mtvec_val))
@@ -108,12 +108,12 @@ class MainSequence(Sequence):
 
         self._mExpectedStateData[
             EStateElementType.GPR
-        ] = state_transition_test_utils.add_random_gpr_state_elements(
+        ] = utils.add_random_gpr_state_elements(
             self, state, RandomUtils.random32(0, 5)
         )
         self._mExpectedStateData[
             EStateElementType.PC
-        ] = state_transition_test_utils.add_random_pc_state_element(self, state)
+        ] = utils.add_random_pc_state_element(self, state)
 
         return state
 

@@ -26,11 +26,11 @@ def usage():
       -l, --log specify the generator log file
       -t, --trace specify the name of the simulator instruction trace file.
       -h, --help print this help message
-    
+
     Example:
-    
+
     %s -l gen.log -t fpix_sim.log
-    
+
       For this example, the output file will be: fpix_sim.log.symbol
     """
         % sys.argv[0]
