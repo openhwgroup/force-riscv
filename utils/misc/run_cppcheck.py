@@ -67,7 +67,11 @@ def parse_svn_status():
     for line in raw_svn_status.split("\n"):
         contents = line.split()
         # only check files that are [A]dded, [M]odified, or [R]eplaced
-        if (contents[0] in ("A", "M", "R")) and ("unit_tests" not in contents[1]) and ("py" not in contents[1]):
+        if (
+            (contents[0] in ("A", "M", "R"))
+            and ("unit_tests" not in contents[1])
+            and ("py" not in contents[1])
+        ):
             paths.append(contents[1])
 
     return (".", paths)

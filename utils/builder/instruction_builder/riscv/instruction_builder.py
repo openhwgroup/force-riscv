@@ -69,7 +69,9 @@ def process_instruction_file(
     file_parser = InstructionFileParser(instr_file)
     file_parser.parse(starter_file)
 
-    instr_adjustor = instruction_adjustor.RiscV_InstructionAdjustor(aAdjustByFormatFunc)
+    instr_adjustor = instruction_adjustor.RiscV_InstructionAdjustor(
+        aAdjustByFormatFunc
+    )
     instr_file.adjust_instructions(instr_adjustor)
 
     out_file_name = aOutputFile
@@ -86,7 +88,9 @@ def process_instruction_file(
 def build_instructions():
     try:
         opts, args = getopt.getopt(
-            sys.argv[1:], "h", ["help", "g-ext", "c-ext", "v-ext", "zfh-ext", "priv"]
+            sys.argv[1:],
+            "h",
+            ["help", "g-ext", "c-ext", "v-ext", "zfh-ext", "priv"],
         )
     except getopt.GetoptError as err:
         print(err)
@@ -124,9 +128,15 @@ def build_instructions():
             sys.exit(1)
 
     from adjust_instruction_by_format import adjust_instruction_by_format
-    from c_ext_adjust_instruction_by_format import c_ext_adjust_instruction_by_format
-    from v_ext_adjust_instruction_by_format import v_ext_adjust_instruction_by_format
-    from priv_adjust_instruction_by_format import priv_adjust_instruction_by_format
+    from c_ext_adjust_instruction_by_format import (
+        c_ext_adjust_instruction_by_format,
+    )
+    from v_ext_adjust_instruction_by_format import (
+        v_ext_adjust_instruction_by_format,
+    )
+    from priv_adjust_instruction_by_format import (
+        priv_adjust_instruction_by_format,
+    )
 
     if output_all or g_ext_only:
         process_instruction_file(

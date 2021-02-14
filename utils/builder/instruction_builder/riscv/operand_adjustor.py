@@ -79,7 +79,7 @@ class OperandAdjustor(object):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Nonzero GPRs"
         self.add_asm_op(aSrcOpr)
-        
+
     def set_rs2_int(self):
         rs2_opr = self.mInstr.find_operand("rs2")
         rs2_opr.access = "Read"
@@ -221,7 +221,7 @@ class OperandAdjustor(object):
         const_bits.merge_operand(aOtherConst)
         const_bits.update_bits_value()
         self.mInstr.operands.remove(aOtherConst)
-        
+
     ########################################
     # C extension operands
     #
@@ -245,7 +245,7 @@ class OperandAdjustor(object):
         reg_opr = self.mInstr.find_operand("rd'")
         reg_opr.access = "Write"
         self.set_reg_prime_dp(reg_opr)
-        
+
     def set_rs2p_int(self):
         reg_opr = self.mInstr.find_operand("rs2'")
         reg_opr.access = "Read"
@@ -260,12 +260,12 @@ class OperandAdjustor(object):
         reg_opr = self.mInstr.find_operand("rs2'")
         reg_opr.access = "Read"
         self.set_reg_prime_dp(reg_opr)
-        
+
     def set_rs1p_int(self):
         reg_opr = self.mInstr.find_operand("rs1'")
         reg_opr.access = "Read"
         self.set_reg_prime_int(reg_opr)
-        
+
     def set_reg_prime_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Prime GPRs"
@@ -281,12 +281,12 @@ class OperandAdjustor(object):
         aSrcOpr.type = "FPR"
         aSrcOpr.choices = "Prime 64-bit SIMD/FP registers"
         self.add_asm_op(aSrcOpr)
-    
+
     def set_reg_not02_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "GPRs not x0, x2"
         self.add_asm_op(aSrcOpr)
-        
+
     def merge_imm_5_4_0(self):
         self.mInstr.remove_operand("imm[5]")
         imm_4_0 = self.mInstr.find_operand("imm[4:0]")
@@ -311,13 +311,13 @@ class OperandAdjustor(object):
         reg_opr.name = "rs1"
         reg_opr.access = "Read"
         self.set_reg_nonzero_int(reg_opr)
-        
+
     def set_rs2_nonzero_int(self):
         reg_opr = self.mInstr.find_operand("rs2$\\neq$0")
         reg_opr.name = "rs2"
         reg_opr.access = "Read"
         self.set_reg_nonzero_int(reg_opr)
-        
+
     def set_rd_not02_int(self):
         reg_opr = self.mInstr.find_operand("rd$\\neq$$\\{0,2\\}$")
         reg_opr.name = "rd"
@@ -328,7 +328,7 @@ class OperandAdjustor(object):
         aSrcOpr.oclass = "ImmediateExcludeOperand"
         aSrcOpr.exclude = "0"
         self.add_asm_op(aSrcOpr)
-        
+
     def merge_nzimm_17_16_12(self):
         self.mInstr.remove_operand("nzimm[17]")
         imm_16_12 = self.mInstr.find_operand("nzimm[16:12]")

@@ -111,20 +111,8 @@ class CommandLineParameters(object):
             {"default": "_def_fctrl.py", "metavar": ""},
             f_option_text,
         ],
-        [
-            "-d",
-            "--control-dir=",
-            1,
-            {"metavar": ""},
-            d_option_text,
-        ],
-        [
-            "-c",
-            "--config=",
-            1,
-            {"metavar": ""},
-            c_option_text,
-        ],
+        ["-d", "--control-dir=", 1, {"metavar": ""}, d_option_text],
+        ["-c", "--config=", 1, {"metavar": ""}, c_option_text],
         [
             "-r",
             "--num-runs=",
@@ -159,27 +147,9 @@ class CommandLineParameters(object):
         # |       "long option"  |  "additional specifications"   |
         # |       |              |  |                             |
         # |       |              |  |                             |
-        [
-            "-o",
-            "--test-base=",
-            1,
-            {"metavar": ""},
-            o_option_text,
-        ],
-        [
-            "-s",
-            "--run-dir=",
-            1,
-            {"metavar": ""},
-            s_option_text,
-        ],
-        [
-            "-n",
-            "--run-name=",
-            1,
-            {"metavar": ""},
-            n_option_text,
-        ],
+        ["-o", "--test-base=", 1, {"metavar": ""}, o_option_text],
+        ["-s", "--run-dir=", 1, {"metavar": ""}, s_option_text],
+        ["-n", "--run-name=", 1, {"metavar": ""}, n_option_text],
         [
             "-j",
             "--run-launcher=",

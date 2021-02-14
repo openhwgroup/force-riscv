@@ -58,9 +58,7 @@ class MainSequence(Sequence):
         )
         self.randomInitializeRegister(scause_name)
         (scause_val, valid) = self.readRegister(scause_name)
-        utils.assert_valid_register_value(
-            self, scause_name, valid
-        )
+        utils.assert_valid_register_value(self, scause_name, valid)
         scause_val = utils.combine_register_value_with_field_value(
             self,
             scause_name,
@@ -77,9 +75,7 @@ class MainSequence(Sequence):
         )
         self.randomInitializeRegister(stvec_name)
         (stvec_val, valid) = self.readRegister(stvec_name)
-        utils.assert_valid_register_value(
-            self, stvec_name, valid
-        )
+        utils.assert_valid_register_value(self, stvec_name, valid)
         stvec_val = utils.combine_register_value_with_field_value(
             self, stvec_name, stvec_val, "MODE", mode_val
         )

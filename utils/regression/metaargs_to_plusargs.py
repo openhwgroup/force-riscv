@@ -127,7 +127,10 @@ class MetaArgsConversion(object):
 
 
 def convert_meta_args(aConversionParms):
-    if (aConversionParms.meta_args is None) and ((aConversionParms.plusargs is None) or (not len(aConversionParms.cmp_plusargs))):
+    if (aConversionParms.meta_args is None) and (
+        (aConversionParms.plusargs is None)
+        or (not len(aConversionParms.cmp_plusargs))
+    ):
         print("Meta args not specified.")
         sys.exit(1)
 

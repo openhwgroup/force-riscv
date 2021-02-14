@@ -33,7 +33,7 @@ class MainSequence(Sequence):
     VALID_DATA_TYPES = ["FP", "INT"]
     VALID_DATA_SIZES = [16, 32, 64]
     INSTRUCTIONS = {
-        "H": ["FMUL.H#Half-precision#RISCV", "FDIV.H#Half-precision#RISCV",],
+        "H": ["FMUL.H#Half-precision#RISCV", "FDIV.H#Half-precision#RISCV"],
         "S": [
             "FMUL.S#Single-precision#RISCV",
             "FDIV.S#Single-precision#RISCV",

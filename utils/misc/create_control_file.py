@@ -144,7 +144,9 @@ def update_control_item(control_item, sig, value):
 
 def format_options_string(control_item):
     # close the quote mark on the --options section
-    if ("generator" in control_item) and ("--options" in control_item["generator"]):
+    if ("generator" in control_item) and (
+        "--options" in control_item["generator"]
+    ):
         previous = control_item["generator"]["--options"]
         control_item["generator"].update(
             {"--options": "\\" + '"' + previous + "\\" + '"'}

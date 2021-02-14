@@ -170,12 +170,8 @@ class FileController(Controller):
                             )
 
                         if my_controller.load(my_ctrl_item):
-                            my_controller.set_on_fail_proc(
-                                self.on_fail_proc
-                            )
-                            my_controller.set_is_term_proc(
-                                self.is_term_proc
-                            )
+                            my_controller.set_on_fail_proc(self.on_fail_proc)
+                            my_controller.set_is_term_proc(self.is_term_proc)
                             my_controller.process()
 
                     except TypeError as arg_ex:

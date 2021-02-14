@@ -36,7 +36,11 @@ class RiscV_InstructionAdjustor(object):
             supported_instr = copy.deepcopy(instr)
             self.mSupportedInstrFile.add_instruction(supported_instr)
         else:
-            print("unsupported instr: {} using format: {}".format(instr.get_full_ID(), instr.get_format()))
+            print(
+                "unsupported instr: {} using format: {}".format(
+                    instr.get_full_ID(), instr.get_format()
+                )
+            )
 
     def get_supported_instructions(self):
         return self.mSupportedInstrFile

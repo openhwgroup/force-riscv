@@ -136,9 +136,7 @@ class MainSequence(Sequence):
         fcsr_name = "fcsr"
         state.addSystemRegisterStateElementByField(fcsr_name, "FRM", 1)
         (fcsr_val, valid) = self.readRegister(fcsr_name)
-        utils.assert_valid_register_value(
-            self, fcsr_name, valid
-        )
+        utils.assert_valid_register_value(self, fcsr_name, valid)
         fcsr_val = utils.combine_register_value_with_field_value(
             self, fcsr_name, fcsr_val, "FRM", 1
         )
@@ -164,22 +162,16 @@ class MainSequence(Sequence):
         fs_val = RandomUtils.random32(1, 3)
         state.addSystemRegisterStateElementByField(sstatus_name, "FS", fs_val)
         (sstatus_val, valid) = self.readRegister(sstatus_name)
-        utils.assert_valid_register_value(
-            self, sstatus_name, valid
-        )
+        utils.assert_valid_register_value(self, sstatus_name, valid)
         sstatus_val = utils.combine_register_value_with_field_value(
-           self, sstatus_name, sstatus_val, "FS", fs_val
+            self, sstatus_name, sstatus_val, "FS", fs_val
         )
 
         # Adjust expected value of SD bit according to architecture rules
         (xs_val, valid) = self.readRegister(sstatus_name, field="XS")
-        utils.assert_valid_register_value(
-            self, sstatus_name, valid
-        )
+        utils.assert_valid_register_value(self, sstatus_name, valid)
         (vs_val, valid) = self.readRegister(sstatus_name, field="VS")
-        utils.assert_valid_register_value(
-            self, sstatus_name, valid
-        )
+        utils.assert_valid_register_value(self, sstatus_name, valid)
         if (fs_val == 3) or (xs_val == 3) or (vs_val == 3):
             sstatus_val = utils.combine_register_value_with_field_value(
                 self, sstatus_name, sstatus_val, "SD", 1

@@ -101,20 +101,32 @@ class CSRTreeBuilder:
             # standard user CSRs...
             if (i >= 0 and i < 0xFF) or (i >= 0x400 and i < 0x4FF):
                 self.mCSRTypesByIndex[i] = ("User", "RW")
-            elif (i >= 0xC00 and i < 0xCBF):
+            elif i >= 0xC00 and i < 0xCBF:
                 self.mCSRTypesByIndex[i] = ("User", "R")
             # standard supervisor CSRs...
-            if (i >= 0x100 and i < 0x1FF) or (i >= 0x500 and i < 0x5BF) or (i >= 0x900 and i < 0x9BF):
+            if (
+                (i >= 0x100 and i < 0x1FF)
+                or (i >= 0x500 and i < 0x5BF)
+                or (i >= 0x900 and i < 0x9BF)
+            ):
                 self.mCSRTypesByIndex[i] = ("Supervisor", "RW")
             elif i >= 0xD00 and i < 0xDBF:
                 self.mCSRTypesByIndex[i] = ("Supervisor", "R")
             # standard hypervisor CSRs...
-            if (i >= 0x200 and i < 0x2FF) or (i >= 0x600 and i < 0x6BF) or (i >= 0xA00 and i < 0xABF):
+            if (
+                (i >= 0x200 and i < 0x2FF)
+                or (i >= 0x600 and i < 0x6BF)
+                or (i >= 0xA00 and i < 0xABF)
+            ):
                 self.mCSRTypesByIndex[i] = ("Hypervisor", "RW")
             elif i >= 0xE00 and i < 0xEBF:
                 self.mCSRTypesByIndex[i] = ("Hypervisor", "R")
             # standard machine CSRs...
-            if (i >= 0x300 and i < 0x3FF) or (i >= 0x700 and i < 0x7AF) or (i >= 0xB00 and i < 0xBBF):
+            if (
+                (i >= 0x300 and i < 0x3FF)
+                or (i >= 0x700 and i < 0x7AF)
+                or (i >= 0xB00 and i < 0xBBF)
+            ):
                 self.mCSRTypesByIndex[i] = ("Machine", "RW")
             elif i >= 0xF00 and i < 0xFBF:
                 self.mCSRTypesByIndex[i] = ("Machine", "R")
@@ -253,7 +265,7 @@ class CSRTreeBuilder:
         if aCSRs:
             aFile.write("\n")
             for rn in aCSRs:
-                aFile.write("    \"%s\": %d,\n" % (rn, self.csrBias(rn)))
+                aFile.write('    "%s": %d,\n' % (rn, self.csrBias(rn)))
 
         aFile.write("}\n")
 
@@ -271,9 +283,10 @@ starter file, as follows:
 
    and, if no arguments are specified:
 
-     
+
 
 """
+
 
 if __name__ == "__main__":
     mSysRegsStarterFile = "input/system_registers_starter_rv64.xml"

@@ -77,9 +77,7 @@ class MainSequence(Sequence):
         )
         self.randomInitializeRegister(mcause_name)
         (mcause_val, valid) = self.readRegister(mcause_name)
-        utils.assert_valid_register_value(
-            self, mcause_name, valid
-        )
+        utils.assert_valid_register_value(self, mcause_name, valid)
         mcause_val = utils.combine_register_value_with_field_value(
             self,
             mcause_name,
@@ -94,9 +92,7 @@ class MainSequence(Sequence):
         state.addSystemRegisterStateElementByField("mtvec", "MODE", mode_val)
         self.randomInitializeRegister(mtvec_name)
         (mtvec_val, valid) = self.readRegister(mtvec_name)
-        utils.assert_valid_register_value(
-            self, mtvec_name, valid
-        )
+        utils.assert_valid_register_value(self, mtvec_name, valid)
         mtvec_val = utils.combine_register_value_with_field_value(
             self, mtvec_name, mtvec_val, "MODE", mode_val
         )

@@ -47,8 +47,13 @@ class RegressionSummaryItem(SummaryItem):
     def commit_simulate(self):
 
         try:
-            # check the return code for error and check to see for instruction overrun
-            if SysUtils.success(self.iss_retcode) and (int(self.instr_count) < self.max_instr) and (int(self.instr_count) >= self.min_instr):
+            # check the return code for error and check to see for instruction
+            # overrun
+            if (
+                SysUtils.success(self.iss_retcode)
+                and (int(self.instr_count) < self.max_instr)
+                and (int(self.instr_count) >= self.min_instr)
+            ):
                 self.iss_result = "PASS"
                 self.iss_level = SummaryLevel.Any
                 return 1
@@ -100,7 +105,11 @@ class RegressionSummaryItem(SummaryItem):
     def iss_success(self):
 
         # Check to see for instruction overrun
-        if SysUtils.success(self.iss_retcode) and (int(self.instr_count) < self.max_instr) and (int(self.instr_count) >= self.min_instr):
+        if (
+            SysUtils.success(self.iss_retcode)
+            and (int(self.instr_count) < self.max_instr)
+            and (int(self.instr_count) >= self.min_instr)
+        ):
             return True
         return False
 

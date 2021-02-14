@@ -5,3 +5,10 @@ __pycache__/
 make_area/
 output/
 .idea/
+handcar/patcher/originals/
+handcar/patcher/patched/
+handcar/so_build/cosim/src/
+handcar/spike_mod/
+handcar/src/
+handcar/standalone/
+

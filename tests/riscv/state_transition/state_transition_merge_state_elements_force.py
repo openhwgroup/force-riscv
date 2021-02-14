@@ -203,9 +203,7 @@ class MainSequence(Sequence):
 
         self.randomInitializeRegister(sys_reg_name)
         (sys_reg_val, valid) = self.readRegister(sys_reg_name)
-        utils.assert_valid_register_value(
-            self, sys_reg_name, valid
-        )
+        utils.assert_valid_register_value(self, sys_reg_name, valid)
 
         sys_reg_val = utils.combine_register_value_with_field_value(
             self, sys_reg_name, sys_reg_val, "MIE", 0x0
@@ -287,9 +285,7 @@ class MainSequence(Sequence):
                 (field_val, valid) = self.readRegister(
                     vec_reg_name, field=field_name
                 )
-                utils.assert_valid_register_value(
-                    self, vec_reg_name, valid
-                )
+                utils.assert_valid_register_value(self, vec_reg_name, valid)
                 vec_reg_values.append(field_val)
 
             expected_vec_reg_state_data[vec_reg_name] = vec_reg_values

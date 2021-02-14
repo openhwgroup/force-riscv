@@ -22,18 +22,18 @@ template_string = """
 ${value_settings}
   };
   extern ${raw_type} E${class_name}Size;
-  
+
   //!< Get string name for enum.
   extern const std::string E${class_name}_to_string(E${class_name} in_enum);
-  
+
   //!< Get enum value for string name.
   extern E${class_name} string_to_E${class_name}(const std::string& in_str);
-  
+
   //!< Try to get enum value for string name, set status to indicate if
   //!< conversion successful. Return value is indeterminate on failure.
   extern E${class_name} try_string_to_E${class_name}(
     const std::string& in_str, bool& okay);
-  
+
   //!< Define a type name for the enum base data type.
   typedef ${raw_type} E${class_name}BaseType;
 

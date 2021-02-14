@@ -130,7 +130,9 @@ class RunWithReport(object):
         return ret_val
 
     def _getTestDir(self):
-        if (self.summaryOnly() or self.reportOnly()) and (self._mRunParameters.report_dir is not None):
+        if (self.summaryOnly() or self.reportOnly()) and (
+            self._mRunParameters.report_dir is not None
+        ):
             return self._mRunParameters.report_dir
 
         if self._mRunParameters.test_dir is None:

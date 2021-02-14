@@ -121,14 +121,18 @@ def c_ext_adjust_instruction_by_format(aInstr):
         return adjust_store_sp(
             aInstr, "uimm[5:4|9:6]", "10-7,12-11", 16, 4
         )  # with imm name, size, and scale parameters
-    elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:2|7:6]") or (instr_format == "uimm[5]-rd-uimm[4:2|7:6]"):
+    elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:2|7:6]") or (
+        instr_format == "uimm[5]-rd-uimm[4:2|7:6]"
+    ):
         # C.LWSP or C.FLWSP
         #      12  6-4   3-2
         # uimm[5 | 4:2 | 7:6]
         return adjust_load_sp(
             aInstr, "uimm[5]", "uimm[4:2|7:6]", "3-2,12,6-4", 4, 2
         )  # with imm name, size, and scale parameters
-    elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:3|8:6]") or (instr_format == "uimm[5]-rd-uimm[4:3|8:6]"):
+    elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:3|8:6]") or (
+        instr_format == "uimm[5]-rd-uimm[4:3|8:6]"
+    ):
         # C.LDSP or C.FLDSP
         #      12  6-5   4-2
         # uimm[5 | 4:3 | 8:6]

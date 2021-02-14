@@ -45,7 +45,9 @@ class MyMainSequence(Sequence):
             # page crossings and some accesses that are at the end of the page,
             # but not crossing the page.
 
-            if (instr in LDST_Byte_instructions) or (instr in LDST_Half_instructions):
+            if (instr in LDST_Byte_instructions) or (
+                instr in LDST_Half_instructions
+            ):
                 min_addr = 0xFFC
             elif instr in LDST_Word_instructions:
                 min_addr = 0xFFA

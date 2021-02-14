@@ -42,7 +42,6 @@ class ToolKeys(object):
 
 
 class ToolExecutor(AppExecutor):
-
     def extract_results(self, arg_result, arg_log, arg_elog):
 
         # extract information from the result log

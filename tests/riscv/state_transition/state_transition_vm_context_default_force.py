@@ -35,7 +35,9 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         state = self._createState()
         StateTransition.transitionToState(state)
-        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(
+            self, self._mExpectedStateData
+        )
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):

@@ -173,7 +173,11 @@ class QuickSummary(object):
 
                     my_ofile.write(my_line + "\n")
 
-                    if (sum_level > 2) or ((sum_level == 1) and (my_val[0] == 2)) or ((sum_level == 2) and (my_val[0] in (1, 2))):
+                    if (
+                        (sum_level > 2)
+                        or ((sum_level == 1) and (my_val[0] == 2))
+                        or ((sum_level == 2) and (my_val[0] in (1, 2)))
+                    ):
                         print(my_line)
 
                 my_ofile.write(

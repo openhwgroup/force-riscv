@@ -53,7 +53,9 @@ class MainSequence(Sequence):
             state_elem_type_order,
         )
 
-        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
+        state_transition_test_utils.verify_state(
+            self, self._mExpectedStateData
+        )
 
     # Create a random State to test an explicit StateTransition.
     def _createState(self):

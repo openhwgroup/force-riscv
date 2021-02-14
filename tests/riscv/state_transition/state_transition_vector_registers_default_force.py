@@ -18,7 +18,7 @@ import StateTransition
 from Enums import EStateElementType
 from State import State
 
-import state_transition_test_utils
+import state_transition_test_utils as utils
 from base.Sequence import Sequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
@@ -35,14 +35,14 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         state = self._createState()
         StateTransition.transitionToState(state)
-        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
+        utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
         state = State()
         self._mExpectedStateData[
             EStateElementType.VectorRegister
-        ] = state_transition_test_utils.add_random_vector_register_state_elements(
+        ] = utils.add_random_vector_register_state_elements(
             self, state, RandomUtils.random32(0, 15)
         )
         return state

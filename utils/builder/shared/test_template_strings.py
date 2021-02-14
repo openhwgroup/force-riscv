@@ -43,6 +43,6 @@ RISCVAdditionalImport = (
 RISCVGenThreadInit = """def gen_thread_initialization(gen_thread):
     gen_thread.applyChoiceModifier(PageMemoryAttributeModifier)
 
-# Points to the generator thread initialization function defined in this 
+# Points to the generator thread initialization function defined in this
 # file, optional
 GenThreadInitialization = gen_thread_initialization"""

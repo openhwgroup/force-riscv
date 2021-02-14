@@ -216,7 +216,9 @@ def verify_state(aSequence, aExpectedStateData):
     for (state_elem_type, state_elem_data) in expected_state_data.items():
         if state_elem_type == EStateElementType.Memory:
             _verify_memory_state(aSequence, state_elem_data)
-        elif (state_elem_type == EStateElementType.SystemRegister) or (state_elem_type == EStateElementType.FloatingPointRegister):
+        elif (state_elem_type == EStateElementType.SystemRegister) or (
+            state_elem_type == EStateElementType.FloatingPointRegister
+        ):
             _verify_register_state(aSequence, state_elem_data)
         elif state_elem_type == EStateElementType.VectorRegister:
             _verify_vector_register_state(aSequence, state_elem_data)

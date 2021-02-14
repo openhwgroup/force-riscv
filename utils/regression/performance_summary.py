@@ -88,8 +88,13 @@ class PerformanceSummaryItem(SummaryItem):
         )
         try:
 
-            # check the return code for error and check to see for instruction overrun
-            if SysUtils.success(self.iss_retcode) and (int(self.instr_count) < self.max_instr) and (int(self.instr_count) >= self.min_instr):
+            # check the return code for error and check to see for instruction
+            # overrun
+            if (
+                SysUtils.success(self.iss_retcode)
+                and (int(self.instr_count) < self.max_instr)
+                and (int(self.instr_count) >= self.min_instr)
+            ):
                 self.iss_result = "PASS"
                 self.iss_level = SummaryLevel.Any
                 return 1
