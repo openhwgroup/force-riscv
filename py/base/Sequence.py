@@ -62,8 +62,8 @@ class Sequence(object):
     def getResult(self):
         return None
 
-    def setSharedThreadObject(self, name, object):
-        self.genThread.setSharedThreadObject(name, object)
+    def setSharedThreadObject(self, name, a_object):
+        self.genThread.setSharedThreadObject(name, a_object)
 
     def getSharedThreadObject(self, name):
         return self.genThread.getSharedThreadObject(name)
@@ -336,9 +336,9 @@ class Sequence(object):
     def reserveRegister(self, name, access="Write"):
         self.genThread.reserveRegister(name, access)
 
-    def unreserveRegisterByIndex(self, size, index, type, access="Write"):
+    def unreserveRegisterByIndex(self, size, index, my_type, access="Write"):
         self.genThread.unreserveRegisterByIndex(
-            size, index, type, access
+            size, index, my_type, access
         )  # input index
 
     def unreserveRegister(self, name, access="Write", reserve_type="User"):
@@ -368,8 +368,8 @@ class Sequence(object):
         return self.genThread.getRegisterFieldMask(register_name, field_list)
 
     # self.genSequence()
-    def genSequence(self, type, kargs={}):
-        self.genThread.genSequence(type, kargs)
+    def genSequence(self, my_type, kargs={}):
+        self.genThread.genSequence(my_type, kargs)
 
     # get register information
     def getRegisterInfo(self, name, index):
@@ -535,29 +535,29 @@ class Sequence(object):
     def getVariable(self, name, var_type):
         return self.genThread.getVariable(name, var_type)
 
-    def dumpPythonObject(self, object, hex=False):
-        if isinstance(object, dict):
-            for (key, value) in sorted(object.items()):
+    def dumpPythonObject(self, a_object, a_hex=False):
+        if isinstance(a_object, dict):
+            for (key, value) in sorted(a_object.items()):
                 if isinstance(value, int):
-                    if hex:
+                    if a_hex:
                         self.notice("%s:%x" % (key, value))
                     else:
                         self.notice("%s:%d" % (key, value))
                 elif isinstance(value, (dict, list)):
-                    self.dumpPythonObject(value, hex)
+                    self.dumpPythonObject(value, a_hex)
                 else:
                     self.notice("%s:%s" % (key, value))
-        elif isinstance(object, list):
-            for i in range(len(object)):
-                if isinstance(object[i], int):
-                    if hex:
-                        self.notice("%s:%x" % (i, object[i]))
+        elif isinstance(a_object, list):
+            for i in range(len(a_object)):
+                if isinstance(a_object[i], int):
+                    if a_hex:
+                        self.notice("%s:%x" % (i, a_object[i]))
                     else:
-                        self.notice("%s:%d" % (i, object[i]))
-                elif isinstance(object[i], (dict, list)):
-                    self.dumpPythonObject(object[i], hex)
+                        self.notice("%s:%d" % (i, a_object[i]))
+                elif isinstance(a_object[i], (dict, list)):
+                    self.dumpPythonObject(a_object[i], a_hex)
                 else:
-                    self.notice("%s:%s" % (i, object[i]))
+                    self.notice("%s:%s" % (i, a_object[i]))
         else:
             self.error("dumpPythonObject: object not dict or list")
 

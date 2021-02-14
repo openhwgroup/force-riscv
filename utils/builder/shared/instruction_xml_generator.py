@@ -24,8 +24,8 @@ import types
 
 def change_to_index(bits_str_lst):
     res_lst = list()
-    for str in bits_str_lst:
-        num_lst = str.split("-")
+    for string in bits_str_lst:
+        num_lst = string.split("-")
         num_lst.sort()
         if len(num_lst) > 1:
             idx_range = range(int(num_lst[0]), int(num_lst[-1]) + 1)
@@ -93,8 +93,8 @@ def merge_instr_const_operand(instr, opr_data):
     str_tmp = " ".join(new_bit_lst)
     str_tmp = str_tmp.strip(",")
     bits_section = str_tmp.split(",")
-    for str in bits_section:
-        num_str = str.strip().split(" ")
+    for string in bits_section:
+        num_str = string.strip().split(" ")
         if len(num_str) > 1:
             if len(new_bit):
                 new_bit = new_bit + "," + num_str[0] + "-" + num_str[-1]

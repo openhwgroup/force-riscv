@@ -59,9 +59,9 @@ class ChoicesModifier(object):
     # record the set type and ID commited
     def commitSet(self):
         self.commitId = len(self.commitChoices)
-        for (setId, type) in self.modifyChoices:
-            self.genThread.commitModificationSet(type, setId)
-            self.commitChoices.append((setId, type))
+        for (set_id, my_type) in self.modifyChoices:
+            self.genThread.commitModificationSet(my_type, set_id)
+            self.commitChoices.append((set_id, my_type))
         self.modifyChoices.clear()
         return self.commitId
 
@@ -69,8 +69,8 @@ class ChoicesModifier(object):
         if len(self.modifyChoices) == 0:
             self.genThread.error("no choices modification to register")
         self.registerId, reg_type = self.modifyChoices[0]
-        for (setId, type) in self.modifyChoices:
-            self.genThread.registerModificationSet(type, setId)
+        for (setId, my_type) in self.modifyChoices:
+            self.genThread.registerModificationSet(my_type, setId)
         self.modifyChoices.clear()
         return self.registerId
 
@@ -94,8 +94,8 @@ class ChoicesModifier(object):
         if commitId is None:
             commitId = self.commitId
         while len(self.commitChoices) > commitId:
-            (setId, type) = self.commitChoices.pop()
-            self.genThread.revertModificationSet(type, setId)
+            (setId, my_type) = self.commitChoices.pop()
+            self.genThread.revertModificationSet(my_type, setId)
 
     # get choices tree info, choices tree type: OperandChoices,
     # RegisterFieldValueChoices, PagingChoices, GeneralChoices,

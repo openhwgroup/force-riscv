@@ -39,7 +39,7 @@ class HiCriticalSection(object):
     def __enter__(self):
         self.enter()
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, my_type, value, traceback):
         self.leave()
 
 
@@ -57,5 +57,5 @@ class HiMutex(object):
     def __enter__(self):
         self.acquire()
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, my_type, value, traceback):
         self.release()

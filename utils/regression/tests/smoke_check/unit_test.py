@@ -33,6 +33,6 @@ class UnitTest(object):
     def __enter__(self):
         self.run_test()
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, my_type, value, traceback):
         self.process_result()
         Msg.blank()

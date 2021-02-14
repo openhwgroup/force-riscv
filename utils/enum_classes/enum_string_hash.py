@@ -135,17 +135,17 @@ def _compute_hash_table(indexes, string_values):
     duplicate_count = 0
     for string_value in string_values:
         length = len(string_value)
-        hash = 0
+        my_hash = 0
 
         for i in indexes:
-            hash = hash ^ ord(string_value[i % length])
+            my_hash = my_hash ^ ord(string_value[i % length])
 
-        if hash in hash_table:
-            values = hash_table[hash]
+        if my_hash in hash_table:
+            values = hash_table[my_hash]
             values.append(string_value)
             duplicate_count += 1
         else:
-            hash_table[hash] = [string_value]
+            hash_table[my_hash] = [string_value]
 
     return (hash_table, duplicate_count)
 

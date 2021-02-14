@@ -35,11 +35,11 @@ class CompileExecutor(AppExecutor):
 
     def load(self, aCtrlItem):
         super().load(aCtrlItem)
-        self.mMakefilePath = self.ctrl_item.compile.get("path")
-        self.mOptions = self.ctrl_item.compile.get("options")
+        self.mMakefilePath = self.ctrl_item.do_compile.get("path")
+        self.mOptions = self.ctrl_item.do_compile.get("options")
 
     def skip(self):
-        if not self.ctrl_item.compile.get("run", False):
+        if not self.ctrl_item.do_compile.get("run", False):
             Msg.user(
                 "[CompileExecutor::skip] skipping since 'run' is not True..."
             )
@@ -68,7 +68,7 @@ class CompileExecutor(AppExecutor):
         return SysUtils.success(int(result[0]))
 
     def pre(self):
-        if self.ctrl_item.compile.get("mp"):
+        if self.ctrl_item.do_compile.get("mp"):
             cmd = (
                 "%s/script/lsu_resize.py -scd_num %d -sca_num "
                 "%d -scb_starve %d"
@@ -86,7 +86,7 @@ class CompileExecutor(AppExecutor):
             Msg.user("MP pre-compile command result = %s" % str(result))
 
     def post(self):
-        if self.ctrl_item.compile.get("mp"):
+        if self.ctrl_item.do_compile.get("mp"):
             lsu_folder = PathUtils.real_path(
                 "%s/../../../rtl/lsu" % self.mMakefilePath
             )

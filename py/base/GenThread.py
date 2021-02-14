@@ -153,9 +153,9 @@ class GenThread(object):
         for seq in self.cleanUpSequences:
             seq.run()
 
-    def setSharedThreadObject(self, name, object):
+    def setSharedThreadObject(self, name, a_object):
         with ThreadRequestContextManager():
-            GenThread.sharedThreadObjects[name] = object
+            GenThread.sharedThreadObjects[name] = a_object
 
     def getSharedThreadObject(self, name):
         with ThreadRequestContextManager():
@@ -522,8 +522,8 @@ class GenThread(object):
             self.genThreadID, registerName, fieldList
         )
 
-    def genSequence(self, type, kargs={}):
-        self.interface.genSequence(self.genThreadID, type, kargs)
+    def genSequence(self, my_type, kargs={}):
+        self.interface.genSequence(self.genThreadID, my_type, kargs)
 
     def getRegisterInfo(self, name, index):
         myDict = {}
