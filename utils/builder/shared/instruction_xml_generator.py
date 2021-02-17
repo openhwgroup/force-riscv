@@ -362,10 +362,10 @@ def differentiate_referenced_instruction(instr_info, referenced_xml_file_path):
     instrs_file_referenced = parse_instruction_file(referenced_xml_file_path)
     instr_file_res = InstructionFile()
 
-    for key in instr_info.keys():
+    for key1 in instr_info.keys():
 
-        referenced_instr_name = key
-        var_item = instr_info[key]
+        referenced_instr_name = key1
+        var_item = instr_info[key1]
         instr_attr_val = None
         instr_opr_val = None
         if len(var_item) == 2:
@@ -385,9 +385,9 @@ def differentiate_referenced_instruction(instr_info, referenced_xml_file_path):
         if instr_attr_val:
             set_instr_attribute(instr, instr_attr_val)
 
-        for key in instr_opr_val.keys():
-            opr_name = key
-            opr_val = instr_opr_val[key]
+        for key2 in instr_opr_val.keys():
+            opr_name = key2
+            opr_val = instr_opr_val[key2]
             if opr_name == "asm":
                 set_instr_asm(instr, opr_val)
             else:

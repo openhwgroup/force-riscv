@@ -120,7 +120,7 @@ class QuickSummary(object):
         self.curr_test_id = None
         self.curr_test_log = None
 
-    # deprocated use view for new work
+    # deprecated use view for new work
     def summarize(self, sum_level=None):
         self.view(sum_level)
 
