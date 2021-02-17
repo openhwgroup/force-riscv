@@ -17,10 +17,6 @@ import threading
 from common.kernel_objs import HiCriticalSection, HiMutex
 
 
-class HiCollection(list):
-    pass
-
-
 class HiCollectionItem(object):
     def __init__(self, arg_owner):
         self.owner = arg_owner

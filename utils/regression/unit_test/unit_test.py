@@ -18,10 +18,6 @@
 from common.msg_utils import Msg
 
 
-class UnitTest(object):
-    pass
-
-
 # base unit test class
 class UnitTest(object):
     def run_test(self):

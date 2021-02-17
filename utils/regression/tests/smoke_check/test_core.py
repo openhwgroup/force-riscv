@@ -15,18 +15,6 @@
 #
 
 
-class UsageStr(object):
-    pass
-
-
-class CmdLine(object):
-    pass
-
-
-class Defaults(object):
-    pass
-
-
 UsageStr = """
 Single Task Regression and Performance Execute Utility
   -h, --help          - when present, displays this message

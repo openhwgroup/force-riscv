@@ -625,12 +625,6 @@ class Sequence(object):
     def unlockThreadScheduler(self):
         self.genThread.unlockThreadScheduler()
 
-    def setSharedThreadObject(self, name, obj):
-        self.genThread.setSharedThreadObject(name, obj)
-
-    def getSharedThreadObject(self, name):
-        return self.genThread.getSharedThreadObject(name)
-
     def hasSharedThreadObject(self, name):
         return self.genThread.hasSharedThreadObject(name)
 
