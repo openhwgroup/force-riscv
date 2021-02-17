@@ -63,7 +63,7 @@ class FastExceptionHandlersBaseRISCV(ReusableSequence):
 
         if self.mPrivLevel not in ("S", "M"):
             self.error(
-                'INTERNAL ERROR: unknown privilege level: "%s%.'
+                'INTERNAL ERROR: unknown privilege level: "%s'
                 % self.mPrivLevel
             )
 

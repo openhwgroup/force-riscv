@@ -122,5 +122,5 @@ class ExecuteController(Controller):
 
     # arg_ex is an exception class
     def report_error(self, arg_ex):
-        Msg.err("%s: %s" % (str(type(self), str(arg_ex))))
+        Msg.err("%s: %s" % (str(type(self)), str(arg_ex)))
         raise
