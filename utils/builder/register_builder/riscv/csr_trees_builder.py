@@ -99,39 +99,39 @@ class CSRTreeBuilder:
 
         for i in range(0, 0xFFF):
             # standard user CSRs...
-            if (i >= 0 and i < 0xFF) or (i >= 0x400 and i < 0x4FF):
+            if (0 <= i < 0xFF) or (0x400 <= i < 0x4FF):
                 self.mCSRTypesByIndex[i] = ("User", "RW")
-            elif i >= 0xC00 and i < 0xCBF:
+            elif 0xC00 <= i < 0xCBF:
                 self.mCSRTypesByIndex[i] = ("User", "R")
             # standard supervisor CSRs...
             if (
-                (i >= 0x100 and i < 0x1FF)
-                or (i >= 0x500 and i < 0x5BF)
-                or (i >= 0x900 and i < 0x9BF)
+                (0x100 <= i < 0x1FF)
+                or (0x500 <= i < 0x5BF)
+                or (0x900 <= i < 0x9BF)
             ):
                 self.mCSRTypesByIndex[i] = ("Supervisor", "RW")
-            elif i >= 0xD00 and i < 0xDBF:
+            elif 0xD00 <= i < 0xDBF:
                 self.mCSRTypesByIndex[i] = ("Supervisor", "R")
             # standard hypervisor CSRs...
             if (
-                (i >= 0x200 and i < 0x2FF)
-                or (i >= 0x600 and i < 0x6BF)
-                or (i >= 0xA00 and i < 0xABF)
+                (0x200 <= i < 0x2FF)
+                or (0x600 <= i < 0x6BF)
+                or (0xA00 <= i < 0xABF)
             ):
                 self.mCSRTypesByIndex[i] = ("Hypervisor", "RW")
-            elif i >= 0xE00 and i < 0xEBF:
+            elif 0xE00 <= i < 0xEBF:
                 self.mCSRTypesByIndex[i] = ("Hypervisor", "R")
             # standard machine CSRs...
             if (
-                (i >= 0x300 and i < 0x3FF)
-                or (i >= 0x700 and i < 0x7AF)
-                or (i >= 0xB00 and i < 0xBBF)
+                (0x300 <= i < 0x3FF)
+                or (0x700 <= i < 0x7AF)
+                or (0xB00 <= i < 0xBBF)
             ):
                 self.mCSRTypesByIndex[i] = ("Machine", "RW")
-            elif i >= 0xF00 and i < 0xFBF:
+            elif 0xF00 <= i < 0xFBF:
                 self.mCSRTypesByIndex[i] = ("Machine", "R")
             # machine-mode Debug CSRs...
-            elif i >= 0x7B0 and i < 0x7BF:
+            elif 0x7B0 <= i < 0x7BF:
                 self.mCSRTypesByIndex[i] = ("Debug", "RW")
             # one known custom (machine mode) CSR...
             elif i == 0x7C0:

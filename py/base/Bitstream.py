@@ -112,7 +112,7 @@ class Bitstream(object):
 
     def strAt(self, pos):
         stream = self.convert()
-        if pos < len(stream) and pos >= 0:
+        if len(stream) > pos >= 0:
             return stream[len(stream) - 1 - pos]
         return ""
 
