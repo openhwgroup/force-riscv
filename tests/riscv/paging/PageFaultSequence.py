@@ -111,7 +111,7 @@ class PageFaultSequence(Sequence):
         )
 
         xepc_val = self._readXepcRegister()
-        instr_record = self.queryInstructionRecord(aFaultingInsterId)
+        instr_record = self.queryInstructionRecord(aFaultingInstrId)
         instr_va = instr_record["VA"]
 
         # check the PC value in addition to the instruction VA in case a

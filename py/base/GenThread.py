@@ -526,8 +526,7 @@ class GenThread(object):
         self.interface.genSequence(self.genThreadID, my_type, kargs)
 
     def getRegisterInfo(self, name, index):
-        myDict = {}
-        myDict["Index"] = index
+        myDict = {"Index": index}
         return self.interface.query(
             self.genThreadID, "RegisterInfo", name, myDict
         )
@@ -704,8 +703,7 @@ class GenThread(object):
         )
 
     def getChoicesTreeInfo(self, treeName, treeType):
-        myDict = {}
-        myDict["Type"] = treeType
+        myDict = {"Type": treeType}
         return self.interface.query(
             self.genThreadID, "ChoicesTreeInfo", treeName, myDict
         )

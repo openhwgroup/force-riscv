@@ -227,25 +227,16 @@ class ProcessWorkerThread(HiOldThread):
 
 class ProcessMonitorThread(HiThread):
     def __init__(self):
-        my_thread_opts = {}
-        my_thread_opts["noloop"] = False  # Thread has a processing loop
-        my_thread_opts["name"] = "ProcessMonitorThread"  # name the thread
-        my_thread_opts[
-            "on-start"
-        ] = do_on_start  # thread initalize sequence-outside thread space
-        my_thread_opts[
-            "on-execute"
-        ] = do_on_execute  # thread before execute handler-inside thread space
-        my_thread_opts[
-            "on-done"
-        ] = do_on_done  # thread after execute handler-inside thread space
-        my_thread_opts[
-            "on-finished"
-        ] = do_on_finished  # thread done cleanup handler-outside thread space
-        my_thread_opts[
-            "daemon"
-        ] = False  # monitors should not be daemons, EVER!!!!!!
-        my_thread_opts["active"] = False  # Wait to start thread
+        my_thread_opts = {
+            "noloop": False,
+            "name": "ProcessMonitorThread",
+            "on-start": do_on_start,
+            "on-execute": do_on_execute,
+            "on-done": do_on_done,
+            "on-finished": do_on_finished,
+            "daemon": False,
+            "active": False,
+        }
 
         self.thread_list = ThreadList()
 

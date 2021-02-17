@@ -78,9 +78,7 @@ class FastExceptionHandlersBaseRISCV(ReusableSequence):
 
     def useAddressTable(self):
         self.use_addr_table = True
-        info_set = {}
-        info_set["Function"] = "AddrTableEC"
-        info_set["EC"] = self.err_code
+        info_set = {"Function": "AddrTableEC", "EC": self.err_code}
         self.exceptionRequest("UpdateHandlerInfo", info_set)
 
     # generate the code to process the exception

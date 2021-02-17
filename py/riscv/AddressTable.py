@@ -121,9 +121,10 @@ class AddressTableManagerRISCV(Sequence):
             table_index=self.table_index
         )
         fast_mode = self.genThread.fastMode
-        addr_table_info_set = {}
-        addr_table_info_set["table_index"] = self.table_index
-        addr_table_info_set["fast_mode"] = fast_mode
+        addr_table_info_set = {
+            "table_index": self.table_index,
+            "fast_mode": fast_mode,
+        }
         self.genSequence("InitializeAddrTables", addr_table_info_set)
 
     # only copy table index.

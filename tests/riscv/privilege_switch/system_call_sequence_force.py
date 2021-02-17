@@ -67,9 +67,10 @@ class MainSequence(Sequence):
 
     # Get the current system state relevant for privilege level switching.
     def _getState(self):
-        state = {}
-        state["PrivilegeLevel"] = self.getPEstate("PrivilegeLevel")
-        state["PC"] = self.getPEstate("PC")
+        state = {
+            "PrivilegeLevel": self.getPEstate("PrivilegeLevel"),
+            "PC": self.getPEstate("PC"),
+        }
 
         for reg_field_name in ("MIE", "SIE", "UIE", "SUM", "MXR", "MPRV"):
             (state[reg_field_name], valid) = self.readRegister(

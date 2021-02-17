@@ -392,9 +392,7 @@ class PrivilegeLevelHandlerSet(Sequence):
             )
 
         if hasattr(handler, "use_addr_table") and (handler.use_addr_table):
-            info_set = {}
-            info_set["Function"] = "AddrTableEC"
-            info_set["EC"] = err_code
+            info_set = {"Function": "AddrTableEC", "EC": err_code}
             self.exceptionRequest("UpdateHandlerInfo", info_set)
 
     def _genJumpToSynchronousHandler(self, aHandlerClassName, aMemBank):

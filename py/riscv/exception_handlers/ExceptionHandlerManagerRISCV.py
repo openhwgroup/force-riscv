@@ -192,11 +192,14 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
         registry = repo.getMemoryBankHandlerRegistry(MemoryBankRISCV.DEFAULT)
         registry.mStartAddr = exc_memory
 
-        exception_bounds_info_set = {"Function": "UpdateExceptionBounds"}
-        exception_bounds_info_set["memory_bounds"] = "%s,%s" % (
-            exc_memory,
-            mem_size,
-        )
+        exception_bounds_info_set = {
+            "Function": "UpdateExceptionBounds",
+            "memory_bounds": "%s,%s"
+            % (
+                exc_memory,
+                mem_size,
+            ),
+        }
         self.exceptionRequest("UpdateHandlerInfo", exception_bounds_info_set)
 
     def getDefaultAssignmentFilePath(self, defaultSetName):

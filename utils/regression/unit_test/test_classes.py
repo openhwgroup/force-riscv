@@ -58,25 +58,14 @@ class LoopThread(HiThread):
 
 def thread_factory(argName, argNoLoop, argProcs={}, argOptions={}):
 
-    my_thread_opts = {}
-
-    my_thread_opts[
-        "noloop"
-    ] = argNoLoop  # Does the thread have a processing loop
-    my_thread_opts["name"] = argName  # name the thread
-
-    my_thread_opts["on-start"] = argProcs.get(
-        "on-start", None
-    )  # start thread sequence (outside thread space)
-    my_thread_opts["on-execute"] = argProcs.get(
-        "on-execute", None
-    )  # thread termination handler (inside thread space)
-    my_thread_opts["on-finished"] = argProcs.get(
-        "on-finished", None
-    )  # thread before finished handler (inside thread space)
-    my_thread_opts["on-done"] = argProcs.get(
-        "on-done", None
-    )  # thread terminated handler (outside thread space)
+    my_thread_opts = {
+        "noloop": argNoLoop,
+        "name": argName,
+        "on-start": argProcs.get("on-start", None),
+        "on-execute": argProcs.get("on-execute", None),
+        "on-finished": argProcs.get("on-finished", None),
+        "on-done": argProcs.get("on-done", None),
+    }
 
     if argNoLoop:
         return NoLoopThread(my_thread_opts)

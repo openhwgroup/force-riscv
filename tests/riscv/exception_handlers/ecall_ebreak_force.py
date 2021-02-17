@@ -38,9 +38,8 @@ class MainSequence(Sequence):
                 self.genInstruction(the_instruction)
 
             if RandomUtils.random32(0, 1) == 1:
-                params = {}
+                params = {"Function": "SwitchPrivilegeLevel"}
                 # Choices modified to only select ECALL
-                params["Function"] = "SwitchPrivilegeLevel"
                 self.systemCall(params)
             else:
                 self.genInstruction("EBREAK##RISCV")
