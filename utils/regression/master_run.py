@@ -853,7 +853,7 @@ class MasterRun(ModuleRun):
         return self.mode
 
 
-def sig_interrupt_handler(signal, frame):
+def sig_interrupt_handler(a_signal, frame):
     # Allows us to catch SIGINTs and inform child threads to quit at next
     # chance. Since the child threads are daemons, this should not be needed,
     # but we can remove this at a later date.

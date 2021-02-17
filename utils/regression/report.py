@@ -220,14 +220,14 @@ def call_from_python(aCommandLineString):
 
     command_list = aCommandLineString.split(" ")
 
-    cmd_line_parser = CmdLineParser(CommandLineParameters, add_help=True)
-    args = cmd_line_parser.parse_args(command_list[1:])
-    run_with_report_parms = RunWithReportParms()
-    cmd_line_parser.set_parameters(run_with_report_parms)
-    dir_name = os.path.dirname(command_list[0])
+    parser = CmdLineParser(CommandLineParameters, add_help=True)
+    my_args = parser.parse_args(command_list[1:])
+    RunWithReportParms()
+    parser.set_parameters(run_with_report_parms)
+    folder_name = os.path.dirname(command_list[0])
 
     # print ("args now: %s, dir name %s" % (str(args), dir_name))
-    run_with_report(run_with_report_parms, dir_name)
+    run_with_report(run_with_report_parms, folder_name)
 
 
 if __name__ == "__main__":

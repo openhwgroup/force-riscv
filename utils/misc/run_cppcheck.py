@@ -22,11 +22,11 @@ import sys
 
 
 def setup_arguments():
-    parser = argparse.ArgumentParser(
+    arg_parser = argparse.ArgumentParser(
         description="A script to run CppCheck",
         formatter_class=argparse.RawTextHelpFormatter,
     )
-    parser.add_argument(
+    arg_parser.add_argument(
         "path",
         nargs="*",
         help="Usage: 'FORCE_ROOT/utils/misc/run_cppcheck.py [path to file]'\n"
@@ -36,21 +36,21 @@ def setup_arguments():
     )
     # parser.add_argument('--addon_path', nargs='*', help='path(s) to
     # script(s) to run on Cppcheck dump file')
-    parser.add_argument(
+    arg_parser.add_argument(
         "--xml",
         nargs="?",
         help="Displays XML output\nDefaults to 'No'\nUseful for getting "
         "error id (for suppression)",
         default="No",
     )
-    parser.add_argument(
+    arg_parser.add_argument(
         "--inline",
         nargs="?",
         help="Suppresses findings for things marked with '// "
         "cppcheck-suppress' in source\nDefaults to 'Yes'",
         default="Yes",
     )
-    return parser
+    return arg_parser
 
 
 def parse_svn_status():
@@ -77,36 +77,36 @@ def parse_svn_status():
     return (".", paths)
 
 
-def run_cpp_check(args):
+def run_cpp_check(a_args):
     # build list for subprocess.call
     cppcheck_path = os.environ["CPPCHECK_BIN"]
     cmd_line = [cppcheck_path, "--language=c++", "--std=c++11"]
 
     # root is force root directory
     # paths is list of files (or the two src/ folders)
-    root = args.path[0]
+    root = a_args.path[0]
     paths = [
-        os.path.join(args.path[0], "base", "src"),
-        os.path.join(args.path[0], "riscv", "src"),
+        os.path.join(a_args.path[0], "base", "src"),
+        os.path.join(a_args.path[0], "riscv", "src"),
     ]
 
-    if args.path[0].casefold() == "svn".casefold():  # svn
+    if a_args.path[0].casefold() == "svn".casefold():  # svn
         # from CppCheck manual: For historical reasons, --enable=style enables
         # warning, performance, portability, and style messages.
         cmd_line.append("--enable=style")
         (root, paths) = parse_svn_status()
-    elif args.path[0].endswith(".cc") or args.path[0].endswith(
+    elif a_args.path[0].endswith(".cc") or a_args.path[0].endswith(
         ".h"
     ):  # file(s)
         # from CppCheck manual: For historical reasons, --enable=style enables
         # warning, performance, portability, and style messages.
         cmd_line.append("--enable=style")
-        if ("base" + os.path.sep) in args.path[0]:
-            root = args.path[0][: args.path[0].find("base" + os.path.sep)]
-        elif ("riscv" + os.path.sep) in args.path[0]:
-            root = args.path[0][: args.path[0].find("riscv" + os.path.sep)]
+        if ("base" + os.path.sep) in a_args.path[0]:
+            root = a_args.path[0][: a_args.path[0].find("base" + os.path.sep)]
+        elif ("riscv" + os.path.sep) in a_args.path[0]:
+            root = a_args.path[0][: a_args.path[0].find("riscv" + os.path.sep)]
         paths = []
-        for file_path in args.path:
+        for file_path in a_args.path:
             paths.append(file_path)
     else:  # FORCE path
         cmd_line.append("--enable=all")
@@ -122,9 +122,9 @@ def run_cpp_check(args):
     )
 
     # additional minor arguments
-    if args.xml != "No":
+    if a_args.xml != "No":
         cmd_line.append("--xml")
-    if args.inline == "Yes":
+    if a_args.inline == "Yes":
         cmd_line.append("--inline-suppr")
 
     # adding paths (or files) to check

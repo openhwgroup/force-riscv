@@ -594,8 +594,8 @@ class _CppFunctionGenerationContext:
         return self._var_name_suffix
 
 
-def generate_enum_files(app_name):
-    enum_file_specs = _create_enum_file_specs(app_name)
+def generate_enum_files(a_app_name):
+    enum_file_specs = _create_enum_file_specs(a_app_name)
     for enum_file_spec in enum_file_specs:
         _generate_enum_file(enum_file_spec)
 
@@ -637,10 +637,10 @@ def _generate_enum_file(enum_file_spec):
     _write_enum_file(cpp_unit_test_path, cpp_unit_test_contents)
 
 
-def _create_enum_file_specs(app_name):
+def _create_enum_file_specs(a_app_name):
     enum_file_specs = []
     force_path = os.path.join("..", "..")
-    if app_name == "Force":
+    if a_app_name == "Force":
         base_enum_file_spec = _EnumFileSpec(
             "base_enum_classes",
             os.path.join(force_path, "base"),
@@ -655,7 +655,7 @@ def _create_enum_file_specs(app_name):
             os.path.join(force_path, "unit_tests", "tests", "riscv"),
         )
         enum_file_specs.append(riscv_enum_file_spec)
-    elif app_name == "Fpix":
+    elif a_app_name == "Fpix":
         base_enum_file_spec = _EnumFileSpec(
             "fpix_base_enum_classes",
             os.path.join(force_path, "fpix"),
@@ -664,7 +664,7 @@ def _create_enum_file_specs(app_name):
         )
         enum_file_specs.append(base_enum_file_spec)
     else:
-        raise ValueError("Unknown application name %s" % app_name)
+        raise ValueError("Unknown application name %s" % a_app_name)
 
     return enum_file_specs
 

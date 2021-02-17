@@ -32,8 +32,7 @@ warnings.warn(
 
 
 class RestrictedElement(_etree.ElementBase):
-    """A restricted Element class that filters out instances of some classes
-    """
+    """A restricted Element class that filters out instances of some classes"""
 
     __slots__ = ()
     # blacklist = (etree._Entity, etree._ProcessingInstruction, etree._Comment)
@@ -82,8 +81,7 @@ class RestrictedElement(_etree.ElementBase):
 
 
 class GlobalParserTLS(threading.local):
-    """Thread local context for custom parser instances
-    """
+    """Thread local context for custom parser instances"""
 
     parser_config = {
         "resolve_entities": False,

@@ -163,7 +163,7 @@ class Operand(object):
         else:
             self.value = val
 
-    def merge_operand(self, opr, update_bits=False):
+    def merge_operand(self, opr, a_update_bits=False):
         if self.type != opr.type:
             raise BuilderException(
                 'Merging different types of operand "%s"=>"%s" and "%s"=>"%s".'
@@ -177,8 +177,8 @@ class Operand(object):
             self.value = opr.value
 
         self.width += opr.width
-        if update_bits:
-            self.bits = update_bits(self.bits)
+        if a_update_bits:
+            self.bits = a_update_bits(self.bits)
 
     def update_bits_value(self):
         self.bits, self.value = update_bits_value(self.bits, self.value)

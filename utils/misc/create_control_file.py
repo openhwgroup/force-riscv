@@ -60,27 +60,27 @@ Example:
     print(usage_str)
 
 
-def get_command_line(genLogPath):
+def get_command_line(a_gen_log_path):
     try:
         with open(
-            os.path.join(os.path.sep, os.getcwd(), genLogPath)
+            os.path.join(os.path.sep, os.getcwd(), a_gen_log_path)
         ) as myFile:
             maxcount = 20
-            for linecount, line in enumerate(myFile):
-                if "Command line:" in line:
-                    return line.rstrip("\n")
+            for linecount, my_line in enumerate(myFile):
+                if "Command line:" in my_line:
+                    return my_line.rstrip("\n")
                 if linecount > maxcount:
                     break
             print("Command line missing from log file.")
             exit(1)
     except BaseException:
-        print("Could not read " + genLogPath + ", does it exist?")
+        print("Could not read " + a_gen_log_path + ", does it exist?")
         exit(1)
 
 
-def create_reproduce_directory(outputDirectory):
+def create_reproduce_directory(a_output_directory):
     try:
-        new_dir = os.path.join(os.path.sep, os.getcwd(), outputDirectory)
+        new_dir = os.path.join(os.path.sep, os.getcwd(), a_output_directory)
         os.mkdir(new_dir)
     except BaseException:
         print(
@@ -91,74 +91,74 @@ def create_reproduce_directory(outputDirectory):
     return new_dir
 
 
-def copy_templates(reproduce_directory):
+def copy_templates(a_reproduce_directory):
     pyfiles = glob.glob("*.py")
     try:
         for item in pyfiles:
             shutil.copy2(
                 os.path.join(os.path.sep, os.getcwd(), item),
-                os.path.join(os.path.sep, reproduce_directory),
+                os.path.join(os.path.sep, a_reproduce_directory),
             )
     except BaseException:
         print("Failed to copy Python files to reproduce directory.")
         exit(1)
 
 
-def find_dash_option(signatureSubStr, line):
-    index = line.find(signatureSubStr)
-    if index != -1:
-        a = line[index + 1 :].split(" ")[1]
+def find_dash_option(signatureSubStr, a_line):
+    idx = a_line.find(signatureSubStr)
+    if idx != -1:
+        string = a_line[idx + 1 :].split(" ")[1]
         # print("free option: ",signatureSubStr, a)
-        return a
+        return string
     return None
 
 
-def find_free_switch(signatureSubStr, line):
-    index = line.find(signatureSubStr)
-    if index != -1:
+def find_free_switch(signatureSubStr, a_line):
+    idx = a_line.find(signatureSubStr)
+    if idx != -1:
         # print("switch option: ",signatureSubStr)
         return True
     return None
 
 
-def update_control_item(control_item, sig, value):
+def update_control_item(a_control_item, sig, value):
     slot_array = sig[2].split(":")
     if len(slot_array) == 1:
-        control_item.update({slot_array[0]: value})
+        a_control_item.update({slot_array[0]: value})
     elif len(slot_array) == 2:
-        if slot_array[0] not in control_item:
-            control_item.update({slot_array[0]: dict()})
+        if slot_array[0] not in a_control_item:
+            a_control_item.update({slot_array[0]: dict()})
         try:
             num = int(value)
-            control_item[slot_array[0]].update({slot_array[1]: num})
+            a_control_item[slot_array[0]].update({slot_array[1]: num})
         except BaseException:
             # Logic to account for seed values so that they appear without
             # quote marks in the final output.
             try:
                 num = int(value, 16)
-                control_item[slot_array[0]].update({slot_array[1]: hex(num)})
+                a_control_item[slot_array[0]].update({slot_array[1]: hex(num)})
             except BaseException:
-                control_item[slot_array[0]].update({slot_array[1]: value})
-    return control_item
+                a_control_item[slot_array[0]].update({slot_array[1]: value})
+    return a_control_item
 
 
-def format_options_string(control_item):
+def format_options_string(a_control_item):
     # close the quote mark on the --options section
-    if ("generator" in control_item) and (
-        "--options" in control_item["generator"]
+    if ("generator" in a_control_item) and (
+        "--options" in a_control_item["generator"]
     ):
-        previous = control_item["generator"]["--options"]
-        control_item["generator"].update(
+        previous = a_control_item["generator"]["--options"]
+        a_control_item["generator"].update(
             {"--options": "\\" + '"' + previous + "\\" + '"'}
         )
-    return control_item
+    return a_control_item
 
 
-def create_control_item(line):
+def create_control_item(a_line):
     # Do the parsing, iterating through the implemented signatures, assuming
     # the 'Command line' was listed in the first 20 lines of the supplied
     # log file
-    control_item = dict()
+    ctrl_item = dict()
 
     # (signature, handler, control_item_key, value_type)
     signatures = [
@@ -200,45 +200,45 @@ def create_control_item(line):
         value = None
 
         if sig[1] in ["free_option", "cluster_option"]:
-            value = find_dash_option(sig[0], line)
+            value = find_dash_option(sig[0], a_line)
             if value is not None:
-                control_item = update_control_item(control_item, sig, value)
+                ctrl_item = update_control_item(ctrl_item, sig, value)
 
         elif sig[1] == "free_switch":
-            value = find_free_switch(sig[0], line)
+            value = find_free_switch(sig[0], a_line)
             if value is not None:
                 # Even though at this point we identified a valid free_switch,
                 # subsequent logic needs the value to be 'None' so that
                 # printing works correctly
                 value = None
-                control_item = update_control_item(control_item, sig, value)
+                ctrl_item = update_control_item(ctrl_item, sig, value)
 
     # Add --options to generator sub-dictionary
-    optionsString = find_dash_option("--options", line)
+    optionsString = find_dash_option("--options", a_line)
     if optionsString != "":
-        if "generator" not in control_item:
-            control_item.update({"generator": dict()})
-        control_item["generator"].update({"--options": optionsString})
-        control_item = format_options_string(control_item)
+        if "generator" not in ctrl_item:
+            ctrl_item.update({"generator": dict()})
+        ctrl_item["generator"].update({"--options": optionsString})
+        ctrl_item = format_options_string(ctrl_item)
 
-    return control_item
+    return ctrl_item
 
 
 # This method is needed basically just to ensure that when the seed value is
 # printed, it is not surrounded with quote marks
-def write_control_file(control_item, reproduce_directory):
+def write_control_file(a_control_item, a_reproduce_directory):
     # Write the actual control file
-    real_repro_path = os.path.realpath(reproduce_directory)
+    real_repro_path = os.path.realpath(a_reproduce_directory)
     control_file_path = os.path.join(
         os.path.sep, real_repro_path, "_reproduce_fctrl.py"
     )
     with open(control_file_path, "w+") as control_file:
         print("\nPrinting formatted control file text to: ", control_file_path)
         control_file.write("control_items = [\n{\n")
-        for key, value in control_item.items():
+        for key, value in a_control_item.items():
             if key == "generator":
                 string = '"generator" : {'
-                for gkey, gvalue in control_item["generator"].items():
+                for gkey, gvalue in a_control_item["generator"].items():
                     if gkey in ["--seed", "-s"]:
                         string += '"--seed" : ' + gvalue + ", "
                     else:

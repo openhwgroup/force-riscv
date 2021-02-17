@@ -117,7 +117,7 @@ def create_vector_app_register(aIndex, aRegSize):
     return v_reg
 
 
-def build_app_registers(app_registers_file, xlen):
+def build_app_registers(a_app_registers_file, a_xlen):
 
     for size in (32, 64):
         app_register_doc = RegistersDocument("RISC-V %s-bit Registers" % size)
