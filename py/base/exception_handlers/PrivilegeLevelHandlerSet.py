@@ -257,7 +257,7 @@ class PrivilegeLevelHandlerSet(Sequence):
     def getDispatchErrorCode(self):
         raise NotImplementedError
 
-    def createExceptionHandlerContext(self, err_code):
+    def createExceptionHandlerContext(self, err_code, mem_bank):
         raise NotImplementedError
 
     def getInstructionLength(self):

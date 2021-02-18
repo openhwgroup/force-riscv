@@ -57,5 +57,5 @@ class ToolExecutor(AppExecutor):
         }
         return my_res_dict
 
-    def query_errors(self, arg_hfile):
+    def query_errors(self, arg_hfile, arg_results=None):
         return None

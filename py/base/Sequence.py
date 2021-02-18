@@ -657,6 +657,7 @@ class Sequence(object):
         return self.genThread.synchronizeWithBarrier(kargs)
 
     def _convertStringToEnum(self, aEnumClass, aString):
+        enum_val = None
         try:
             enum_val = aEnumClass.__members__[aString]
         except KeyError:

@@ -40,10 +40,10 @@ class HiStack(HiCollection):
         self.append(item)
 
     # pops and returns the top item of the stack
-    def pop(self):
+    def pop(self, index=None):
         if self.empty():
             return None
-        return super().pop()
+        return super().pop(index)
 
     # returns the top item of the stack
     def peek(self):

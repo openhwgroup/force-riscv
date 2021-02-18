@@ -139,7 +139,7 @@ class ForceExecutor(GenerateExecutor):
 
         return my_seed, my_total, my_secondary, my_default
 
-    def query_errors(self, arg_hfile):
+    def query_errors(self, arg_hfile, arg_results=None):
         my_error = None
         for my_line in arg_hfile:
             if SysUtils.found(my_line.find("[fail]")):

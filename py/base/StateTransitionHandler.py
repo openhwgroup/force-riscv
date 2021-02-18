@@ -29,6 +29,7 @@ class StateTransitionHandler(Sequence):
 
         self.mStateTransType = None
         self._mArbitraryGprs = None
+        self._mArbitraryGprIndices = None
 
     # Execute the State change represented by the StateElement. Only instances
     # of the StateElement types for which the StateTransitionHandler has been

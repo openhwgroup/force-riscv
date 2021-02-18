@@ -96,5 +96,5 @@ class IssExecutor(AppExecutor):
             % (arg_extension, arg_test_name)
         )
 
-    def query_errors(self, arg_hfile):
+    def query_errors(self, arg_hfile, arg_results=None):
         return None
