@@ -49,9 +49,9 @@ class RestrictedElement(_etree.ElementBase):
         iterator = super(RestrictedElement, self).__iter__()
         return self._filter(iterator)
 
-    def iterchildren(self, tag=None, reversed=False):
+    def iterchildren(self, tag=None, reverse=False):
         iterator = super(RestrictedElement, self).iterchildren(
-            tag=tag, reversed=reversed
+            tag=tag, reverse=reverse
         )
         return self._filter(iterator)
 

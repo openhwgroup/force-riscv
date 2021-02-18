@@ -56,7 +56,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "file_read_backwards"
-copyright = "2016, Robin Robin"
+copyright_txt = "2016, Robin Robin"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
