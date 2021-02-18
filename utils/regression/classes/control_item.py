@@ -152,6 +152,13 @@ class ControlItem(object):
         self._seed = None
         self.suffix = None
         self.work_dir = None
+        self.fctrl_name = None
+        self.performance = None
+        self.regression = None
+        self.timeout = None
+        self.fctrl_name = None
+        self.item_path = None
+        self.vals = None
 
     @property
     def seed(self):

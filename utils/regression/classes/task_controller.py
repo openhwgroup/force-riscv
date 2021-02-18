@@ -40,7 +40,7 @@ class TaskController(Controller):
     def __init__(self, aProcessQueue, aAppsInfo):
         super().__init__(aAppsInfo)
         self.mProcessQueue = aProcessQueue
-        # Msg.dbg( "TaskController::__init__( ... )" )
+        self.task_list = None
 
     def load(self, arg_ctrl_item):
         super().load(arg_ctrl_item)

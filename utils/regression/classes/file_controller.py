@@ -32,6 +32,9 @@ class FileController(Controller):
         # Msg.dbg( "FileController::__init__( )" )
         self.mProcessQueue = aProcessQueue
         self.mControlFileLocals = {}
+        self.parent_fctrl = None
+        self.fcontrol = None
+
         if isinstance(aParentLocals, dict):
             import copy
 

@@ -19,6 +19,10 @@ from riscv.PrivilegeLevel import PrivilegeLevelRISCV
 
 
 class InstructionAddressMisalignedHandlerRISCV(ReusableSequence):
+    def __init__(self, aGenThread, aFactory, aStack):
+        super().__init__(aGenThread, aFactory, aStack)
+        self.privilegeLevel = None
+
     def generateHandler(self, **kwargs):
         try:
             handler_context = kwargs["handler_context"]

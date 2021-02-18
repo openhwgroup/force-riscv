@@ -92,6 +92,7 @@ class ThreadWrapper(object):
         self.execute_event = EventWrapper("execute-event").event
         self.done_event = EventWrapper("done-event").event
         self.finished_event = EventWrapper("finished-event").event
+        self.thread = None
         self.init_thread()
 
     def init_thread(self):

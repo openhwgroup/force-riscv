@@ -98,6 +98,7 @@ class GenThread(object):
         self.genThreadInitFunc = None
         self.setupComplete = False
         self.exceptionHandlerManager = None
+        self.fastMode = None
 
     def addSequence(self, seq):
         self.sequences.append(seq)

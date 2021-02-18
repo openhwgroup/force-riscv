@@ -101,6 +101,8 @@ class ParseFiles:
 
         # Build the directory mappings
         self.test_dirs = [x[0] for x in os.walk(os.getcwd())]
+        self.master_instns_in_force_file_dict = None
+        self.master_force_files_dict = None
 
     def run(self):
         # Build the list hierarchy to load the instruction names into

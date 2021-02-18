@@ -50,6 +50,7 @@ class UnitTestRun(ModuleRun):
             Defaults.msg_level,
             CmdLine.MsgLevel,
         )
+        self.process_max = None
 
     def load(self):
         Msg.dbg("ForrestRun::load()")

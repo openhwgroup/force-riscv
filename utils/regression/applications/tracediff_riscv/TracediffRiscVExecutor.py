@@ -21,6 +21,8 @@ class TracediffRiscVExecutor(ToolExecutor):
     def __init__(self):
         super().__init__()
         self.trace_cmd = None
+        self.log = None
+        self.elog = None
 
     def load(self, arg_ctrl_item):
         super().load(arg_ctrl_item)

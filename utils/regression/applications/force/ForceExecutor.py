@@ -23,6 +23,7 @@ from executors.generate_executor import *
 class ForceExecutor(GenerateExecutor):
     def __init__(self):
         super().__init__()
+        self.force_cmd = None
 
     def load(self, arg_ctrl_item):
         super().load(arg_ctrl_item)

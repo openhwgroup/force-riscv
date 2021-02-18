@@ -30,6 +30,7 @@ class Sequence(object):
         self.genThread = gen_thread
         self.name = name
         self.entryFunction = None
+        self.globalEretPreambleSequence = None
 
     def setup(self, **kargs):
         pass

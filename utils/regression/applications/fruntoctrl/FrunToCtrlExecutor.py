@@ -26,6 +26,8 @@ class FrunToCtrlExecutor(AppExecutor):
     def __init__(self):
         super().__init__()
         self.mFrunToCtrlCmd = None
+        self.log = None
+        self.elog = None
 
     def load(self, aCtrlItem):
         super().load(aCtrlItem)

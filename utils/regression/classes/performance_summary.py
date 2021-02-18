@@ -46,6 +46,10 @@ class PerformanceInstructionType:
 
 
 class PerformanceSummaryItem(SummaryItem):
+    def __init__(self, arg_summary):
+        super().__init__(arg_summary)
+        self.force_result = None
+
     def unpack(self, arg_queue_item):
         super().unpack(arg_queue_item)
 

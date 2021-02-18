@@ -118,6 +118,11 @@ class PageFaultExceptionHandlerRegisters:
 
 
 class PageFaultExceptionHandlerRISCV(ReusableSequence):
+    def __init__(self, aGenThread, aFactory, aStack):
+        super().__init__(aGenThread, aFactory, aStack)
+        self.mHandlerStack = None
+        self.privilegeLevel = None
+
     def generateHandler(self, **kwargs):
         self.notice(
             "[PageFaultExceptionHandlerRISC] generating 'comprehensive' page "

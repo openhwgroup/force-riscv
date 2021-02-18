@@ -110,6 +110,10 @@ class AccessExceptionHandlerRegisters:
 
 
 class AccessExceptionHandlerRISCV(ReusableSequence):
+    def __init__(self):
+        self.mHandlerStack = None
+        self.privilegeLevel = None
+
     def generateHandler(self, **kwargs):
         try:
             handler_context = kwargs["handler_context"]

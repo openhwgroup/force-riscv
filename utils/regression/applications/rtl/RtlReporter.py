@@ -41,6 +41,7 @@ class RtlReporter(object):
         )
         self.mTotalCycleCount = None
         self.mTotalInstructionCount = None
+        self.mReportBaseName = None
 
     # Resolve the values of the member variables using information available
     # from the top level inter module shared object and perform reporting

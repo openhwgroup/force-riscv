@@ -25,8 +25,18 @@ from classes.summary import Summary, SummaryItem, SummaryGroups, SummaryLevel
 
 
 class RegressionSummaryItem(SummaryItem):
+    def __init__(self, arg_summary):
+        super().__init__(arg_summary)
+        self.force_result = None
+        self.iss_result = None
+        self.iss_level = None
+        self.rtl_result = None
+        self.rtl_level = None
+        self.trace_cmp_result = None
+        self.trace_cmp_level = None
 
-    # save the initial generation information for this task item
+        # save the initial generation information for this task item
+
     def commit_generate(self):
 
         # Msg.dbg( "RegressionSummaryItem::commit_generate" )

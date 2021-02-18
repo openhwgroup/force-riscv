@@ -63,6 +63,7 @@ All_Machine_RW_CSRs = merge(Machine_RW_CSRs, Supervisor_RW_CSRs)
 
 class CSRTreeBuilder:
     def __init__(self, aSysRegsStarterFile=None, aCSRTreeFile=None):
+        self.mCSRTypesByIndex = {}
         if aSysRegsStarterFile is None:
             raise ValueError(
                 "Internal error (CSRTreeBuilder): "
@@ -96,7 +97,6 @@ class CSRTreeBuilder:
     # map all valid CSR indexes to privilege-mode/access-rights...
     def setupCSRIndices(self):
         self.mCSRTypesByIndex = {}
-
         for i in range(0, 0xFFF):
             # standard user CSRs...
             if (0 <= i < 0xFF) or (0x400 <= i < 0x4FF):

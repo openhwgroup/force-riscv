@@ -83,10 +83,11 @@ class RestrictedElement(_etree.ElementBase):
 class GlobalParserTLS(threading.local):
     """Thread local context for custom parser instances"""
 
+    def __init__(self):
+        self._default_parser = None
+
     parser_config = {
         "resolve_entities": False,
-        # 'remove_comments': True,
-        # 'remove_pis': True,
     }
 
     element_class = RestrictedElement

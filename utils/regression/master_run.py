@@ -119,6 +119,17 @@ class MasterRun(ModuleRun):
         self.crit_sec = HiCriticalSection()
         self.processor_name = None
         self.fctrl = None
+        self.iss = None
+        self.generator = None
+        self.rtl = None
+        self.performance = None
+        self.regression = None
+        self.master_config = None
+        self.fctrl_name = None
+        self.output_root = None
+        self.launcher_type = None
+        self.output_dir = None
+        self.process_cmd = None
 
         self.terminated = False
 

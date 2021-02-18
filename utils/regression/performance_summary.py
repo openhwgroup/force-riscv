@@ -48,6 +48,14 @@ class PerformanceInstructionType:
 
 
 class PerformanceSummaryItem(SummaryItem):
+    def __init__(self, arg_summary):
+        super().__init__(arg_summary)
+        self.force_result = None
+        self.iss_message = None
+        self.iss_result = None
+        self.iss_level = None
+        self.count = 0
+
     def unpack(self, arg_queue_item):
         super().unpack(arg_queue_item)
 
@@ -80,7 +88,6 @@ class PerformanceSummaryItem(SummaryItem):
         return 0
 
     def commit_simulate(self):
-
         self.instr_count, self.iss_message = self.extract_iss_info()
         Msg.user(
             "Instr Count: %d, Message: %s"

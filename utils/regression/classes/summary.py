@@ -66,6 +66,10 @@ class SummaryErrorQueueItem(object):
 
 
 class SummaryErrorItem(object):
+    def __init__(self):
+        self.error_item = None
+        self.error_item = None
+
     def load(self, arg_error_qitem):
         self.extract_error(arg_error_qitem)
         self.report()
@@ -184,6 +188,25 @@ class SummaryItem(object):
             ),
             ("Signal", self.load_signaled, SummaryDetail.Signaled),
         ]
+
+        self.process_cmd = None
+        self.process_log = None
+        self.process_result = None
+        self.frun_path = None
+        self.parent_fctrl = None
+        self.fctrl_item = None
+        self.item_group = None
+        self.fctrl_content = None
+        self.work_dir = None
+        self.task_id = None
+        self.task_index = None
+        self.task_path = None
+        self.force_msg = None
+        self.seed = None
+        self.iss_message = None
+        self.rtl_message = None
+        self.trace_cmp_msg = None
+        self.passed = None
 
     def load(self, arg_queue_item):
 
