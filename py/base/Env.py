@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import itertools
+
 import PyInterface
 import Log
 import RandomUtils
@@ -82,17 +84,20 @@ class Env(object):
 
     # Setup generator threads
     def setup(self):
-        for i_chip in range(self.numberChips):
-            for i_core in range(self.numberCores):
-                for i_thread in range(self.numberThreads):
-                    gen_thread_id = self.createBackEndGenThread(
-                        i_thread, i_core, i_chip
-                    )  # create back end generator thread
-                    new_gen_thread = self.createGenThread(
-                        gen_thread_id, i_thread, i_core, i_chip
-                    )  # create front end generator thread
-                    self.genThreads.append(new_gen_thread)
-                    self.setupGenThread(new_gen_thread)
+        combinations = itertools.product(
+            range(self.numberChips),
+            range(self.numberCores),
+            range(self.numberThreads)
+        )
+        for (i_chip, i_core, i_thread) in combinations:
+            gen_thread_id = self.createBackEndGenThread(
+                i_thread, i_core, i_chip
+            )  # create back end generator thread
+            new_gen_thread = self.createGenThread(
+                gen_thread_id, i_thread, i_core, i_chip
+            )  # create front end generator thread
+            self.genThreads.append(new_gen_thread)
+            self.setupGenThread(new_gen_thread)
 
         self.assignMainGen()
         self.addThreadSplitterSequence()
@@ -168,8 +173,6 @@ class Env(object):
                 thread_obj.setEretPreambleSequence(sequence)
             else:
                 self.interface.error("invalid sequence type: %d" % seq_type)
-        else:
-            self.interface.error("invalid thread id: %d" % thread_id)
 
     # run Sequence on a thread
     # TBD: to optimize thread list for better performance
@@ -182,13 +185,14 @@ class Env(object):
                 thread_obj.runEretPreambleSequence(param_dict)
             else:
                 self.interface.error("invalid sequence type: %d" % seq_type)
-        else:
-            self.interface.error("invalid thread id: %d" % thread_id)
 
     def getThreadObject(self, thread_id):
         for thread in self.genThreads:
             if thread.genThreadID == thread_id:
                 return thread
+
+        self.interface.error("invalid thread id: %d" % thread_id)
+
         return None
 
     # Add a sequence to be run before generating the main test.

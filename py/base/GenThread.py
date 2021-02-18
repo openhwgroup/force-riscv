@@ -117,26 +117,28 @@ class GenThread(object):
         prior to that point in order to generate the exception handlers.
         Rather than pollute the GenThread dispatching logic with this special
         case, we use a flag to indicate it has completed."""
-        if not self.setupComplete:
-            self.initializeThread()
+        if self.setupComplete:
+            return
 
-            for mod in self.setupModifiers:
-                mod.apply()
+        self.initializeThread()
 
-            # Write the genThreadInitFunc here for the following considerations
-            # a) the function should be able to change the modifiers that
-            #       has applied by the setupModifiers (after setupModifiers)
-            # b) the function should be able to configure the Exception
-            #       Handlers infos before generate the ExceptionHandlers
-            #       (before setupSequences)
-            if self.genThreadInitFunc is not None:
-                self.genThreadInitFunc(self)
+        for mod in self.setupModifiers:
+            mod.apply()
 
-            self.assignSetupSequences()
-            for seq in self.setupSequences:
-                seq.run()
+        # Write the genThreadInitFunc here for the following considerations
+        # a) the function should be able to change the modifiers that
+        #       has applied by the setupModifiers (after setupModifiers)
+        # b) the function should be able to configure the Exception
+        #       Handlers infos before generate the ExceptionHandlers
+        #       (before setupSequences)
+        if self.genThreadInitFunc is not None:
+            self.genThreadInitFunc(self)
 
-            self.setupComplete = True
+        self.assignSetupSequences()
+        for seq in self.setupSequences:
+            seq.run()
+
+        self.setupComplete = True
 
     def generate(self, **kargs):
         for seq in self.beforeSequences:
@@ -202,18 +204,9 @@ class GenThread(object):
         return len(exception_records)
 
     def queryExceptions(self, kargs):
-        if "EC" in kargs and isinstance(kargs["EC"], int):
-            kargs["EC"] = str(kargs["EC"])
-        if "PC" in kargs and isinstance(kargs["PC"], int):
-            kargs["PC"] = str(kargs["PC"])
-        if "SRC_PRIVLEV" in kargs and isinstance(kargs["SRC_PRIVLEV"], int):
-            kargs["SRC_PRIVLEV"] = str(kargs["SRC_PRIVLEV"])
-        if "TGT_PRIVLEV" in kargs and isinstance(kargs["TGT_PRIVLEV"], int):
-            kargs["TGT_PRIVLEV"] = str(kargs["TGT_PRIVLEV"])
-        if "Last" in kargs and isinstance(kargs["Last"], bool):
-            kargs["Last"] = str(kargs["Last"])
-        if "FSC" in kargs and isinstance(kargs["FSC"], int):
-            kargs["FSC"] = str(kargs["FSC"])
+        for (key, val) in kargs.items():
+            kargs[key] = str(val)
+
         return self.interface.query(
             self.genThreadID, "AdvancedExceptionsHistory", "", kargs
         )

@@ -41,7 +41,7 @@ class Bitstream(object):
     def value(self):
         val = ""
         for i in self._bitstream_str:
-            if i == "1" or i == "0":
+            if i in ("0", "1"):
                 val += i
             elif i == "X":
                 val += "0000"
@@ -52,7 +52,7 @@ class Bitstream(object):
     def mask(self):
         m = ""
         for i in self._bitstream_str:
-            if i == "1" or i == "0":
+            if i in ("0", "1"):
                 m += "1"
             elif i == "X":
                 m += "0000"
@@ -64,7 +64,7 @@ class Bitstream(object):
         val = ""
         m = ""
         for i in self._bitstream_str:
-            if i == "1" or i == "0":
+            if i in ("0", "1"):
                 val += i
                 m += "1"
             elif i == "X":
@@ -80,7 +80,7 @@ class Bitstream(object):
     def convert(self):
         stream = ""
         for i in self._bitstream_str:
-            if i == "1" or i == "0" or i == "x":
+            if i in ("0", "1", "x"):
                 stream += i
             elif i == "X":
                 stream += "xxxx"
