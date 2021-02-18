@@ -161,12 +161,6 @@ namespace Force {
     //!< write out simulation trace file (if any), send 'terminate' directive to simulator...
     virtual void Terminate() = 0;
 
-    //!< return simulator version info as String...
-    virtual void GetSimulatorVersion(std::string &sim_version) = 0;
-
-    //!< read simulator physical memory. Return 0 if no errors...
-    virtual void ReadPhysicalMemory(uint32 memBank, uint64 address, uint32 size, unsigned char *pBytes) = 0;
-
     //!< write simulator physical memory. Return 0 if no errors...
     virtual void WritePhysicalMemory(uint32 memBank, uint64 address, uint32  size, const unsigned char *pBytes) = 0;
 
@@ -176,14 +170,8 @@ namespace Force {
     //!< read the bytes corresponding to a physical register from a large logical register without forcing the simulator to used Force's naming convention.
     virtual void PartialReadLargeRegister(uint32 CpuID, const char* pRegname, uint8_t* pBytes, uint32 length, uint32 offset) = 0;
 
-    //!< write the bytes corresponding to a physical register from a large logical register without forcing the simulator to used Force's naming convention.
-    virtual void PartialWriteLargeRegister(uint32 CpuID, const char* pRegname, const uint8_t* pBytes, uint32 length, uint32 offset) = 0;
-
     //!< write simulator register. mask indicates which bits to write...
     virtual void WriteRegister(uint32 CpuID,const char *regname,uint64 rval,uint64 rmask) = 0;
-
-    //!< request simulator to 'inject event(s)...
-    virtual void InjectEvents(uint32 CpuID, uint32 events) = 0;
 
     //!< step instruction for specified cpu; returns after simulator step complete, with all updates.
     virtual void Step(uint32 cpuid,std::vector<RegUpdate> &rRegUpdates,std::vector<MemUpdate> &rMemUpdates, std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptUpdates) = 0;

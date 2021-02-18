@@ -258,24 +258,6 @@ namespace Force {
     spSimApiHandle = nullptr;
   }
 
-  //!< return simulator version info as String...
-
-  void SimApiHANDCAR::GetSimulatorVersion(std::string &sim_version) {
-    if (mOfsApiTrace.is_open()) {
-      mOfsApiTrace << "{\n"
-		   << "char tbuf[1024];\n"
-		   << "strcpy(tbuf,\"?\");\n"
-		   << "sim_api.get_simulator_version(tbuf);\n"
-		   << "printf(\"Simulator version: '%s'\n\",tbuf);\n"
-		   << "}" << std::endl;
-    }
-    char tbuf[1024];
-    strcpy(tbuf,"?");
-
-    mpSimDllAPI->get_simulator_version(tbuf);
-    sim_version.assign(tbuf);
-  }
-
   //!< obtain the opcode and dissassembly that corresponds to a given PC address
   
   void SimApiHANDCAR::GetDisassembly(uint32 CpuID, const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly)
@@ -309,37 +291,6 @@ namespace Force {
 
     delete[] op;
     delete[] dis;
-  }
-
-  //!< read simulator physical memory. Return 0 if no errors...
-
-  void SimApiHANDCAR::ReadPhysicalMemory(uint32 memBank, uint64 address, uint32 size, unsigned char *pBytes)
-  {
-    if (mOfsApiTrace.is_open()) {
-      char tbuf[1024];
-      sprintf(tbuf,"  int rcode = sim_api.read_simulator_memory(%d,0x%llx,%d,tbuf);\n",
-              memBank,(unsigned long long) address,size);
-      mOfsApiTrace << "{\n"
-		   << "  char tbuf[size + 1];\n"
-		   << tbuf << "\n";
-      ApiTraceCheckRcode("read_simulator_memory");
-      mOfsApiTrace << "  printf(\"read_simulator_memory, bytes read: \");\n"
-		   << "  tbuf[0] = '\0';\n"
-		   << "  unsigned char tb[3];"
-		   << "  for (int i = 0; i < size; i++) {"
-		   << "     sprintf(tb,\" 0x%02x\",tbuf[i]);\n"
-		   << "     strcat(tbuf,tb);\n"
-		   << "  }\n"
-		   << "  tbuf\n"
-		   << "}" << std::endl;
-    }
-
-    if (0 != mpSimDllAPI->read_simulator_memory(memBank, (const uint64_t*)&address, size, (uint8_t *) pBytes)) {
-      stringstream err_stream;
-      err_stream << "Problems reading from simulator memory. PA: 0x" << hex << address
-                 << dec << ", # of bytes: " << size << "\n";
-      throw SimulationError(err_stream.str());
-    }
   }
 
   //!< write simulator physical memory. Return 0 if no errors...
@@ -442,27 +393,6 @@ namespace Force {
     }
   }
 
-  //!< write the bytes corresponding to a physical register from a large logical register without forcing the simulator to use Force's naming convention.
-  
-  void SimApiHANDCAR::PartialWriteLargeRegister(uint32 CpuID, const char* pRegname, const uint8_t* pBytes, uint32 length, uint32 offset)
-  {
-    if (mOfsApiTrace.is_open()) {
-      char tbuf[1024];
-      sprintf(tbuf,"  sim_api.partial_write_large_register(0x%x,\"%s\",&bytes,length,offset);\n",CpuID,pRegname);
-      mOfsApiTrace << "{\n"
-           << " uint8_t* pBytes;\n"
-           << tbuf;
-      sprintf(tbuf,"  printf(\"  %s",pRegname);
-    }
- 
-    if (0 != mpSimDllAPI->partial_write_large_register(CpuID, pRegname, pBytes, (uint32_t)length, (uint32_t)offset)) {
-      stringstream err_stream;
-      err_stream << "Problems writing simulator register. CPU ID: " << hex << CpuID << dec
-                 << ", register: '" << pRegname << "\n";
-      throw SimulationError(err_stream.str());
-    }
-  }
-
   //!< write simulator register. mask indicates which bits to write...
 
   void SimApiHANDCAR::WriteRegister(uint32 CpuID, const char *regname, uint64 rval, uint64 rmask)
@@ -504,24 +434,6 @@ namespace Force {
                  << ", register: '" << regname << "', value: 0x" << rval
                  << ", mask: 0x" << rmask << dec << "\n";
       throw SimulationError(err_stream.str());
-    }
-  }
-
-  //!< request simulator to 'inject event(s)...
-
-  void SimApiHANDCAR::InjectEvents(uint32 CpuID, uint32 events)
-  {
-    if (mOfsApiTrace.is_open()) {
-      char tbuf[1024];
-      sprintf(tbuf,"inject_events(0x%x,0x%x);\n",CpuID, events);
-      mOfsApiTrace << tbuf << std::endl;
-    }
-
-    if (!mpSimDllAPI->inject_simulator_events(CpuID, events)) {
-      stringstream err_stream;
-      err_stream << "Problems injecting simulator events. CPU ID: " << hex << CpuID 
-                 << ", events: 0x" << events << "\n"; 
-            throw SimulationError(err_stream.str());
     }
   }
 
