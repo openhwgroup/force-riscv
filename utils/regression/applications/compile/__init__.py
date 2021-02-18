@@ -25,7 +25,7 @@ from .CompileReporter import CompileReporter
 CmdLineOptions = CompileCmdLineOptions
 
 # Tag for the application
-Tag = "compile"
+Tag = "compile_rtl"
 
 ParametersProcessorClass = CompileParametersProcessor
 
