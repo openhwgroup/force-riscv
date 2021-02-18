@@ -110,7 +110,8 @@ class AccessExceptionHandlerRegisters:
 
 
 class AccessExceptionHandlerRISCV(ReusableSequence):
-    def __init__(self):
+    def __init__(self, aGenThread, aFactory, aStack):
+        super().__init__(aGenThread, aFactory, aStack)
         self.mHandlerStack = None
         self.privilegeLevel = None
 
