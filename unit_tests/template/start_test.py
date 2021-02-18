@@ -15,55 +15,25 @@
 # limitations under the License.
 #
 
+import argparse
 import getopt
 import os
 import shutil
 import sys
 
 
-def usage():
-    usage_str = (
-        """
-Starting a unit test directory.  Run the script inside unit_tests directory.
-
-Example:
-%s -d TEST_DIR -t TEST_NAME
-A directory called TEST_NAME will be created under unit_tests/tests/TEST_DIR
-"""
-        % sys.argv[0]
-    )
-
-    print(usage_str)
-
-
 def start_test():
-    try:
-        opts, args = getopt.getopt(
-            sys.argv[1:], "hd:t:", ["help", "test-dir=", "test="]
-        )
-    except getopt.GetoptError as err:
-        print(err)
-        usage()
-        sys.exit(1)
-
-    test_name = None
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            usage()
-            sys.exit()
-        elif o in ("-d", "--test-dir"):
-            test_dir = a
-        elif o in ("-t", "--test"):
-            test_name = a
-        else:
-            raise ValueError("Unhandled option.")
-
-    if (not test_name) or (not test_dir):
-        usage()
-        sys.exit()
+    parser = argparse.ArgumentParser(
+        description="Create a unit test directory called TEST_NAME within "
+        "the unit_tests/tests/TEST_DIR directory. Run this script inside the "
+        "unit_tests directory."
+    )
+    parser.add_argument("-d", "--test_dir", required=True)
+    parser.add_argument("-t", "--test_name", required=True)
+    args = parser.parse_args()
 
     check_location()
-    start_test_with_name(test_dir, test_name)
+    start_test_with_name(args.test_dir, args.test_name)
 
 
 def check_dir(dir_name):
