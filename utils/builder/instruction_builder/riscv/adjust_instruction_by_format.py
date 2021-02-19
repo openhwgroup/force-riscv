@@ -102,8 +102,6 @@ def adjust_rs2_rs1_rd(instr):
         opr_adjustor.set_rs2_int()
         return True
 
-    return False
-
 
 def adjust_fp_rs2_rs1_int_rd(instr):
     opr_adjustor = OperandAdjustor(instr)

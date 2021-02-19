@@ -87,7 +87,7 @@ class Env(object):
         combinations = itertools.product(
             range(self.numberChips),
             range(self.numberCores),
-            range(self.numberThreads)
+            range(self.numberThreads),
         )
         for (i_chip, i_core, i_thread) in combinations:
             gen_thread_id = self.createBackEndGenThread(
