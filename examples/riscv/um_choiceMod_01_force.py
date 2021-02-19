@@ -32,7 +32,7 @@ class MyMainSequence(Sequence):
 
         for _ in range(1000):
 
-            # the selection of GPRs to use for generateion will be
+            # the selection of GPRs to use for generation will be
             # affected by the fact that the weightings were changed
             # in the gen_thread_initialization function.
             if self.getGlobalState("AppRegisterWidth") == 32:
@@ -42,44 +42,32 @@ class MyMainSequence(Sequence):
 
             instr_rec_id = self.genInstruction(instr)
 
-            # get the indexes for the GPRs that were used.
             instr_obj = self.queryInstructionRecord(instr_rec_id)
-
-            if ("Dests" in instr_obj) and ("rd" in instr_obj["Dests"]):
-                rd_index = instr_obj["Dests"]["rd"]
-                rd_name = "x{}".format(rd_index)
-                if rd_name in usage_count:
-                    usage_count[rd_name] += 1
-                else:
-                    usage_count[rd_name] = 1  # first time only
-
-            if "Srcs" in instr_obj.keys():
-                if "rs1" in instr_obj["Srcs"]:
-                    rs1_index = instr_obj["Srcs"]["rs1"]
-                    rs1_name = "x{}".format(rs1_index)
-                    if rs1_name in usage_count:
-                        usage_count[rs1_name] += 1
-                    else:
-                        usage_count[rs1_name] = 1
-                if "rs2" in instr_obj["Srcs"]:
-                    rs2_index = instr_obj["Srcs"]["rs2"]
-                    rs2_name = "x{}".format(rs2_index)
-                    if rs2_name in usage_count:
-                        usage_count[rs2_name] += 1
-                    else:
-                        usage_count[rs2_name] = 1
+            self._add_register_usage_counts(instr_obj, usage_count)
 
         # print the usage count for each GPR
         # check results in gen.log
         # frequency of x10-x13 should be higher based on the choices
         # modification if enough instructions are generated
-        self.notice(">>>>>>>>>>  Usage count for all GPRs  <<<<<<<<<<<<")
+        self.notice("**********  Usage count for all GPRs  ************")
         for reg_name in sorted(usage_count):
             self.notice(
-                ">>>>>>>>>>  Usage count for {}:  {}".format(
+                "**********  Usage count for {}:  {}".format(
                     reg_name, usage_count[reg_name]
                 )
             )
+
+    def _add_register_usage_counts(self, instr_obj, usage_count):
+        self._add_register_usage_count_for_operand("Dests", "rd", instr_obj, usage_count)
+        self._add_register_usage_count_for_operand("Srcs", "rs1", instr_obj, usage_count)
+        self._add_register_usage_count_for_operand("Srcs", "rs2", instr_obj, usage_count)
+
+    def _add_register_usage_count_for_operand(self, outer_opr_key, inner_opr_key, instr_obj, usage_count):
+        if (outer_opr_key in instr_obj) and (inner_opr_key in instr_obj[outer_opr_key]):
+            reg_index = instr_obj[outer_opr_key][inner_opr_key]
+            reg_name = "x{}".format(reg_index)
+            usage_count.setdefault(reg_name, 0)
+            usage_count[reg_name] += 1
 
 
 # Modify GPR weightings.  A higher weighting means force-riscv is more likely

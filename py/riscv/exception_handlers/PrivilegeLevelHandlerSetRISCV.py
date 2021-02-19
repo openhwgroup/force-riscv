@@ -79,7 +79,6 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
                 0, default_mem_bank
             )
 
-            registry = registry
             generator = registry.mHandlerSubroutineGenerator
             generator.generateRoutine(
                 "TableWalk", handler_context=handler_context

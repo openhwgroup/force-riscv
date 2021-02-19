@@ -778,16 +778,8 @@ def adjust_f_rs1(instr):
             opr_adjustor.set_rs1_dp()
         elif "Q" in src_str:
             opr_adjustor.set_rs1_qp()
-        elif "W" in src_str:
-            if "U" in src_str:
-                opr_adjustor.set_rs1_int()
-            else:
-                opr_adjustor.set_rs1_int()
-        elif "L" in src_str:
-            if "U" in src_str:
-                opr_adjustor.set_rs1_int()
-            else:
-                opr_adjustor.set_rs1_int()
+        elif ("W" in src_str) or ("L" in src_str):
+            opr_adjustor.set_rs1_int()
 
         if "S" in dest_str:
             opr_adjustor.set_rd_sp()
@@ -797,16 +789,8 @@ def adjust_f_rs1(instr):
             opr_adjustor.set_rd_dp()
         elif "Q" in dest_str:
             opr_adjustor.set_rd_qp()
-        elif "W" in dest_str:
-            if "U" in dest_str:
-                opr_adjustor.set_rd_int()
-            else:
-                opr_adjustor.set_rd_int()
-        elif "L" in dest_str:
-            if "U" in dest_str:
-                opr_adjustor.set_rd_int()
-            else:
-                opr_adjustor.set_rd_int()
+        elif ("W" in dest_str) or ("L" in dest_str):
+            opr_adjustor.set_rd_int()
 
         return True
 
