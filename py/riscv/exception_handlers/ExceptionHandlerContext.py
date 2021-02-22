@@ -58,23 +58,32 @@ class ExceptionHandlerContext(object):
             )
 
         if isinstance(call_role_reg_indices, tuple):
-            if aCount:
-                if aCount > len(call_role_reg_indices):
-                    raise ValueError(
-                        "More scratch registers requested than are available "
-                        "for %s." % aRegCallRole
-                    )
+            call_role_reg_indices = self._getScratchRegisterIndicesFromTuple(
+                call_role_reg_indices, aCount
+            )
+        elif aCount and (aCount != 1):
+            raise ValueError(
+                "More scratch registers requested than are available "
+                "for %s." % aRegCallRole
+            )
 
-                if aCount == 1:
-                    call_role_reg_indices = call_role_reg_indices[0]
-                else:
-                    call_role_reg_indices = call_role_reg_indices[0:aCount]
+        return call_role_reg_indices
+
+    def _getScratchRegisterIndicesFromTuple(self, aCallRoleRegIndices, aCount):
+        if not aCount:
+            return aCallRoleRegIndices
+
+        call_role_reg_indices = aCallRoleRegIndices
+        if aCount > len(call_role_reg_indices):
+            raise ValueError(
+                "More scratch registers requested than are available "
+                "for %s." % aRegCallRole
+            )
+
+        if aCount == 1:
+            call_role_reg_indices = call_role_reg_indices[0]
         else:
-            if aCount and (aCount != 1):
-                raise ValueError(
-                    "More scratch registers requested than are available "
-                    "for %s." % aRegCallRole
-                )
+            call_role_reg_indices = call_role_reg_indices[0:aCount]
 
         return call_role_reg_indices
 

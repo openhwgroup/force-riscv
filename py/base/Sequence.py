@@ -15,6 +15,7 @@
 #
 #  Sequence class
 #  Base sequence class, pass on API calls to GenThread class
+from base.ItemMap import ItemMap
 from base.Macro import Macro
 import base.UtilityFunctions as UtilityFunctions
 from base.TestUtils import get_stack_frame_string
@@ -23,6 +24,7 @@ from Enums import EGlobalStateType, ELimitType
 import Log
 import RandomUtils
 import warnings
+from inspect import signature
 
 
 class Sequence(object):
@@ -47,17 +49,7 @@ class Sequence(object):
             self.generate(**kargs)
             self.cleanUp(**kargs)
         else:
-            from inspect import signature
-
-            entry_args = []
-            for param in signature(self.entryFunction).parameters.values():
-                if param.kind == param.POSITIONAL_ONLY:
-                    try:
-                        entry_args.append(kargs[param.name])
-                    except KeyError:
-                        self.notice(
-                            "missing entry point argument %s" % (param.name)
-                        )
+            entry_args = self._getEntryFunctionPositionalArgs(**kargs)
             self.entryFunction(*entry_args, **kargs)
 
     def getResult(self):
@@ -92,36 +84,19 @@ class Sequence(object):
         )
 
     def genMacro(self, item, param):
-        return self.genInstrOrSequence(Macro(item, param))
+        return self._genInstructionSequenceFromMacro(Macro(item, param))
 
     def genInstrOrSequence(self, item, kargs=dict()):
         try:
             if isinstance(item, str):
                 return self.genInstruction(item, kargs)
-            elif isinstance(item, Macro):
-                objName = item.obj()
-                objVal = item.value()
-                if issubclass(objName, Sequence):
-                    myInstance = objName(self.genThread)
-                    args = {}
-                    if isinstance(objVal, str):
-                        args = dict(e.split("=") for e in objVal.split(","))
-                    elif isinstance(objVal, dict):
-                        args = objVal
-                    myInstance.run(**args)
-                    return myInstance
-            elif isinstance(item, Sequence):
-                item.run(**kargs)
-                return item
-            elif issubclass(item, Sequence):
-                # self.notice("genInstrOrSequence: sequence class is given")
-                myInstance = item(self.genThread)
-                myInstance.run(**kargs)
-                return myInstance
+            else:
+                return self._genInstructionSequence(item, kargs)
         except TypeError:
             self.error(
                 "genInstrOrSequence: given item type or format is incorrect"
             )
+
         return None
 
     def genInstruction(self, instr_name, kargs=dict()):
@@ -247,29 +222,15 @@ class Sequence(object):
     # Permute the given item list and return one item at a time
     # the item list could be dictionary, list, str, or tuple
     def choicePermutated(self, items):
-        item_list = None
-        index_list = []
-        # Note: enumerate on dictionary returns key only
+        item_list = items
         if isinstance(items, dict):
-            i = 0
-            item_list = []
-            for item, weights in sorted(items.items()):
-                item_list.append(item)
-                index_list.append(i)
-                i += 1
-        else:
-            item_list = items
-            for i, item in enumerate(items):
-                # item_list.append(item)
-                index_list.append(i)
+            item_list = list(sorted(items.items()))
+
+        index_list = list(range(len(item_list)))
         shuffled_index_list = self.shuffleList(index_list)
 
         for i in shuffled_index_list:
-            item = item_list[i]
-            if isinstance(items, dict):
-                yield item, items[item]
-            else:
-                yield item
+            yield item_list[i]
 
     # Register module API
     # (reg1, reg2, reg3) = self.getRandomRegisters(Number=3, Type="GPR",
@@ -412,32 +373,25 @@ class Sequence(object):
 
     # get permuted item
     def getPermutated(self, weighted_dict, skip_weight_check=False):
-        from base.ItemMap import ItemMap
-        from base.Macro import Macro
+        # verify all items are of supported types
+        if not all(map(lambda item: isinstance(item, (str, ItemMap, Macro)), weighted_dict)):
+            raise TestException(
+                "Picked unsupported object in getPermutated."
+            )
 
         # first shuffle the given dictionary
-        permuted_list = []
-        ori_index_list = []
-        i = 0
-        for item, weight in sorted(weighted_dict.items()):
-            if skip_weight_check or weight > 0:
-                permuted_list.append(item)
-                ori_index_list.append(i)
-                i += 1
-        shuffled_index_list = self.shuffleList(ori_index_list)
+        sorted_items = sorted(weighted_dict.items())
+        if not skip_weight_check:
+            sorted_items = filter(lambda item, weight: weight > 0, sorted_items)
+
+        permuted_list = list(sorted_items)
+        index_list = list(range(len(permuted_list)))
+        shuffled_index_list = self.shuffleList(index_list)
 
         # iterate the shuffled list
         for index in shuffled_index_list:
-            item = permuted_list[index]
-            if isinstance(item, str) or isinstance(item, Macro):
+            for item in self._getPermutatedItems(permuted_list[index][0], skip_weight_check):
                 yield item
-            elif isinstance(item, ItemMap):
-                for j in item.getPermutated(self, skip_weight_check):
-                    yield j
-            else:
-                raise TestException(
-                    "Picked unsupported object in getPermuated."
-                )
 
     # self.error("failed to setup scenario at address 0x%x" % addr)
     def error(self, err_msg):
@@ -538,27 +492,9 @@ class Sequence(object):
 
     def dumpPythonObject(self, a_object, a_hex=False):
         if isinstance(a_object, dict):
-            for (key, value) in sorted(a_object.items()):
-                if isinstance(value, int):
-                    if a_hex:
-                        self.notice("%s:%x" % (key, value))
-                    else:
-                        self.notice("%s:%d" % (key, value))
-                elif isinstance(value, (dict, list)):
-                    self.dumpPythonObject(value, a_hex)
-                else:
-                    self.notice("%s:%s" % (key, value))
+            self._dumpPythonDictionary(a_object, a_hex)
         elif isinstance(a_object, list):
-            for i in range(len(a_object)):
-                if isinstance(a_object[i], int):
-                    if a_hex:
-                        self.notice("%s:%x" % (i, a_object[i]))
-                    else:
-                        self.notice("%s:%d" % (i, a_object[i]))
-                elif isinstance(a_object[i], (dict, list)):
-                    self.dumpPythonObject(a_object[i], a_hex)
-                else:
-                    self.notice("%s:%s" % (i, a_object[i]))
+            self._dumpPythonList(a_object, a_hex)
         else:
             self.error("dumpPythonObject: object not dict or list")
 
@@ -656,6 +592,47 @@ class Sequence(object):
     def synchronizeWithBarrier(self, **kargs):
         return self.genThread.synchronizeWithBarrier(kargs)
 
+    def _getEntryFunctionPositionalArgs(self, **kargs):
+        entry_args = []
+        for param in signature(self.entryFunction).parameters.values():
+            try:
+                if param.kind == param.POSITIONAL_ONLY:
+                    entry_args.append(kargs[param.name])
+            except KeyError:
+                self.notice(
+                    "missing entry point argument %s" % (param.name)
+                )
+
+        return entry_args
+
+    def _genInstructionSequence(self, item, kargs):
+        if isinstance(item, Macro):
+            return self._genInstructionSequenceFromMacro(item)
+        elif isinstance(item, Sequence):
+            item.run(**kargs)
+            return item
+        elif issubclass(item, Sequence):
+            myInstance = item(self.genThread)
+            myInstance.run(**kargs)
+            return myInstance
+
+    def _genInstructionSequenceFromMacro(self, macro):
+        objName = macro.obj()
+        objVal = macro.value()
+        if issubclass(objName, Sequence):
+            myInstance = objName(self.genThread)
+
+            args = {}
+            if isinstance(objVal, str):
+                args = dict(e.split("=") for e in objVal.split(","))
+            elif isinstance(objVal, dict):
+                args = objVal
+
+            myInstance.run(**args)
+            return myInstance
+
+        return None
+
     def _convertStringToEnum(self, aEnumClass, aString):
         enum_val = None
         try:
@@ -667,3 +644,34 @@ class Sequence(object):
             )
 
         return enum_val
+
+    def _getPermutatedItems(self, base_item, skip_weight_check):
+        if isinstance(base_item, str) or isinstance(base_item, Macro):
+            yield base_item
+        elif isinstance(base_item, ItemMap):
+            for item in base_item.getPermutated(self, skip_weight_check):
+                yield item
+
+    def _dumpPythonDictionary(self, a_dict, a_hex):
+        for (key, value) in sorted(a_dict.items()):
+            if isinstance(value, int):
+                self._dumpPythonContainerEntry(key, value, a_hex)
+            elif isinstance(value, (dict, list)):
+                self.dumpPythonObject(value, a_hex)
+            else:
+                self.notice("%s:%s" % (key, value))
+
+    def _dumpPythonList(self, a_list, a_hex):
+        for (i, item) in enumerate(a_list):
+            if isinstance(item, int):
+                self._dumpPythonContainerEntry(i, item, a_hex)
+            elif isinstance(item, (dict, list)):
+                self.dumpPythonObject(item, a_hex)
+            else:
+                self.notice("%s:%s" % (i, item))
+
+    def _dumpPythonContainerEntry(self, a_key, a_value, a_hex):
+        if a_hex:
+            self.notice("%s:%x" % (a_key, a_value))
+        else:
+            self.notice("%s:%d" % (a_key, a_value))
