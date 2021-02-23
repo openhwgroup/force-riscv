@@ -73,9 +73,7 @@ class PageFaultModifier(ChoicesModifier):
         elif "Type" in kwargs:
             self._updateWithType(kwargs["Type"], **kwargs)
         else:
-            Log.error(
-                "specify All or fault name as kwarg to update choices."
-            )
+            Log.error("specify All or fault name as kwarg to update choices.")
 
     def modifyExceptionRegulation(self):
         choice_dict = {"Prevent": 100, "Allow": 1, "Trigger": 0}
@@ -91,12 +89,16 @@ class PageFaultModifier(ChoicesModifier):
     def updateFaultTypeChoices(self, aType, **kwargs):
         table_levels = kwargs.get("Level", self._mValidFaultLevels[aType])
         self._validateTableLevels(aType, table_levels)
-        priv_levels = kwargs.get("Privilege", self._mValidPrivilegeLevels[aType])
+        priv_levels = kwargs.get(
+            "Privilege", self._mValidPrivilegeLevels[aType]
+        )
         self._validatePrivilegeLevels(aType, priv_levels)
         weight = kwargs.get("Weight", 100)
         self._validateWeight(aType, weight)
 
-        for (table_level, priv_level) in itertools.product(table_levels, priv_levels):
+        for (table_level, priv_level) in itertools.product(
+            table_levels, priv_levels
+        ):
             self.updatePageFaultChoice(aType, table_level, priv_level, weight)
 
         self.modifyExceptionRegulation()
@@ -106,9 +108,7 @@ class PageFaultModifier(ChoicesModifier):
             # ptr + misaligned superpage
             self.updateSuperpageSizeChoices(50)
         elif aType == "Misaligned Superpage":
-            self.updateSuperpageSizeChoices(
-                100
-            )  # needs superpage descriptor
+            self.updateSuperpageSizeChoices(100)  # needs superpage descriptor
         elif aType == "Last Level Pointer":
             self.updateSuperpageSizeChoices(
                 0
@@ -132,11 +132,7 @@ class PageFaultModifier(ChoicesModifier):
         if aType in self._mValidFaultTypes:
             self.updateFaultTypeChoices(aType, **kwargs)
         else:
-            Log.error(
-                "invalid type specified, type={}".format(
-                    aType
-                )
-            )
+            Log.error("invalid type specified, type={}".format(aType))
 
     def _validateTableLevels(self, aType, aTableLevels):
         for table_level in aTableLevels:

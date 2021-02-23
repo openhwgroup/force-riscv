@@ -374,15 +374,20 @@ class Sequence(object):
     # get permuted item
     def getPermutated(self, weighted_dict, skip_weight_check=False):
         # verify all items are of supported types
-        if not all(map(lambda item: isinstance(item, (str, ItemMap, Macro)), weighted_dict)):
-            raise TestException(
-                "Picked unsupported object in getPermutated."
+        if not all(
+            map(
+                lambda item: isinstance(item, (str, ItemMap, Macro)),
+                weighted_dict,
             )
+        ):
+            raise TestException("Picked unsupported object in getPermutated.")
 
         # first shuffle the given dictionary
         sorted_items = sorted(weighted_dict.items())
         if not skip_weight_check:
-            sorted_items = filter(lambda item, weight: weight > 0, sorted_items)
+            sorted_items = filter(
+                lambda item, weight: weight > 0, sorted_items
+            )
 
         permuted_list = list(sorted_items)
         index_list = list(range(len(permuted_list)))
@@ -390,7 +395,9 @@ class Sequence(object):
 
         # iterate the shuffled list
         for index in shuffled_index_list:
-            for item in self._getPermutatedItems(permuted_list[index][0], skip_weight_check):
+            for item in self._getPermutatedItems(
+                permuted_list[index][0], skip_weight_check
+            ):
                 yield item
 
     # self.error("failed to setup scenario at address 0x%x" % addr)
@@ -599,9 +606,7 @@ class Sequence(object):
                 if param.kind == param.POSITIONAL_ONLY:
                     entry_args.append(kargs[param.name])
             except KeyError:
-                self.notice(
-                    "missing entry point argument %s" % (param.name)
-                )
+                self.notice("missing entry point argument %s" % (param.name))
 
         return entry_args
 

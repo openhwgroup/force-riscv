@@ -58,12 +58,22 @@ class MyMainSequence(Sequence):
             )
 
     def _add_register_usage_counts(self, instr_obj, usage_count):
-        self._add_register_usage_count_for_operand("Dests", "rd", instr_obj, usage_count)
-        self._add_register_usage_count_for_operand("Srcs", "rs1", instr_obj, usage_count)
-        self._add_register_usage_count_for_operand("Srcs", "rs2", instr_obj, usage_count)
+        self._add_register_usage_count_for_operand(
+            "Dests", "rd", instr_obj, usage_count
+        )
+        self._add_register_usage_count_for_operand(
+            "Srcs", "rs1", instr_obj, usage_count
+        )
+        self._add_register_usage_count_for_operand(
+            "Srcs", "rs2", instr_obj, usage_count
+        )
 
-    def _add_register_usage_count_for_operand(self, outer_opr_key, inner_opr_key, instr_obj, usage_count):
-        if (outer_opr_key in instr_obj) and (inner_opr_key in instr_obj[outer_opr_key]):
+    def _add_register_usage_count_for_operand(
+        self, outer_opr_key, inner_opr_key, instr_obj, usage_count
+    ):
+        if (outer_opr_key in instr_obj) and (
+            inner_opr_key in instr_obj[outer_opr_key]
+        ):
             reg_index = instr_obj[outer_opr_key][inner_opr_key]
             reg_name = "x{}".format(reg_index)
             usage_count.setdefault(reg_name, 0)
