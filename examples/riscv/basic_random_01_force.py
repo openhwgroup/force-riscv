@@ -54,6 +54,7 @@ class MainSequence(Sequence):
             else RV_G_instructions
         )
 
+        """
         # instruction_group = BranchJump_instructions
         # instruction_group = LDST_All_instructions
         # instruction_group = ALU_Int_All_instructions
@@ -67,7 +68,7 @@ class MainSequence(Sequence):
         # string values to use for a given instruction, search for that
         # instruction in force/py/DV/riscv/trees/instruction_tree.py.
         # the_instruction2 = "ADD##RISCV"
-
+        """
         for _ in range(instruction_count):
             # select a specific instruction from the instruction group
             the_instruction = self.pickWeighted(instruction_group)
