@@ -115,8 +115,8 @@
 
   <!-- Page Fault Generation Choices -->
   <choices name="Invalid V#level 3#S#stage 1" type="Paging">
-    <choice description="V=1, valid"   name="false" value="0x0" weight="100"/>
-    <choice description="V=0, invalid" name="true"  value="0x1" weight="0"/>
+    <choice description="V=1, valid"   name="false" value="0x0" weight="0"/>
+    <choice description="V=0, invalid" name="true"  value="0x1" weight="10"/>
   </choices>
   <choices name="Invalid V#level 2#S#stage 1" type="Paging">
     <choice description="V=1, valid"   name="false" value="0x0" weight="100"/>

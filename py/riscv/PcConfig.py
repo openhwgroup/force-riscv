@@ -20,7 +20,6 @@ def get_reset_pc():
 
 
 def get_initial_pc(thread_id):
-    # TODO randomize
     return get_base_initial_pc() + thread_id * get_initial_pc_offset()
 
 

@@ -82,7 +82,6 @@ class FpixParametersProcessor(ParameterProcessor):
     def __init__(self, aCmdLineOptions):
         super().__init__(FpixCmdLineOptions.cOptions, aCmdLineOptions)
 
-        # TODO add checks for ISS so file as well as for Fpix executable
         fpix_path = self.mAppParameters.parameter("fpix_path")
         if not PathUtils.check_exe(fpix_path):
             raise Exception(
@@ -95,7 +94,7 @@ class FpixParametersProcessor(ParameterProcessor):
 #
 def process_fpix_control_data(aControlData, aAppParameters):
     if aAppParameters is None:
-        return  # TODO Temporary, to avoid failing in forrest run, to remove.
+        return
     key = "fpix_path"
     if aAppParameters.parameter(key):
         aControlData[key] = aAppParameters.parameter(key)

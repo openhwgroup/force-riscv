@@ -60,7 +60,6 @@ def adjust_instruction_by_format(instr):
     elif instr_format == "":
         return adjust_const_only(instr)
     else:
-        # print ("TODO instruction format: %s" % instr_format)
         record_instruction_format(instr_format)
         pass
 
@@ -181,9 +180,6 @@ def adjust_imm12_rs1_rd(instr):
         return adjust_int_load(instr)
     elif instr_full_ID.startswith("FENCE"):
         instr.group = "System"
-        # TODO imm[11:0], rs1, and rd are currently reserved unused fields
-        #  to target more fine grained fences in future extensions, check if
-        #  we need to set up or mark as ignore
         opr_adjustor.set_imm("imm[11:0]", "simm12", True)
         opr_adjustor.set_rs1_int()
         opr_adjustor.set_rd_int()
@@ -224,7 +220,7 @@ def adjust_imm12_rs1_rd(instr):
         return True
 
     # print ("instruction: %s" % instr.get_full_ID())
-    return False  # TODO
+    return False
 
 
 # Instructions like SLLI are handled here.
@@ -530,7 +526,6 @@ def adjust_aq_rs2(instr):
     opr_adjustor.set_rs2_int()
     opr_adjustor.set_rs1_int_ls_base()
     opr_adjustor.set_rd_int()
-    # TODO setup aq/rl bit fields appropriately
 
     instr_full_ID = instr.get_full_ID()
     if ".W" in instr_full_ID:
@@ -573,7 +568,6 @@ def adjust_aq_rs1(instr):
     opr_adjustor = OperandAdjustor(instr)
     opr_adjustor.set_rs1_int_ls_base()
     opr_adjustor.set_rd_int()
-    # TODO setup aq/rl bit fields appropriately
 
     instr.iclass = "LoadStoreInstruction"
 
@@ -798,8 +792,6 @@ def adjust_f_rs1(instr):
 
 
 # Fence instruction
-# TODO FM field? see if we need the 1000 encoding for FENCE.TSO which ignores
-#  write-to-read ordering
 def adjust_fence(instr):
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
@@ -810,9 +802,6 @@ def adjust_fence(instr):
         pred_opr.choices = "Barrier option"
         succ_opr = instr.find_operand("succ")
         succ_opr.choices = "Barrier option"
-        # TODO rs1 and rd are currently reserved unused fields to target more
-        #  fine grained fences in future extensions, check if we need to set up
-        #  or mark as ignore
         opr_adjustor.set_rs1_int()
         opr_adjustor.set_rd_int()
         return True

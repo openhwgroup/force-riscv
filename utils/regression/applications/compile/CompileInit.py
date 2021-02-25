@@ -93,7 +93,7 @@ class CompileParametersProcessor(ParameterProcessor):
 #
 def process_compile_control_data(aControlData, aAppParameters):
     if aAppParameters is None:
-        return  # TODO Temporary, to avoid failing in forrest run, to remove.
+        return
 
     keys = [
         "compile",

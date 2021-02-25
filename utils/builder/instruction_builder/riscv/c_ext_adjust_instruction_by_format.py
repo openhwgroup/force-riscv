@@ -149,7 +149,6 @@ def c_ext_adjust_instruction_by_format(aInstr):
     elif aInstr.name == "C.EBREAK":
         return True
     else:
-        # print ("TODO instruction format: %s" % instr_format)
         record_instruction_format(instr_format)
         pass
 

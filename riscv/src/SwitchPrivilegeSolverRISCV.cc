@@ -122,8 +122,6 @@ namespace Force {
       }
     }
 
-    // TODO(Noah): Permit modifying SUM, MXR and MPRV when support for changing those fields is
-    // established. For now, set the target state to always use the existing values.
     mTargetState["SUM"] = ParseTargetStateParameterValue("Same");
     mTargetState["MXR"] = ParseTargetStateParameterValue("Same");
     mTargetState["MPRV"] = ParseTargetStateParameterValue("Same");
@@ -399,8 +397,6 @@ namespace Force {
 
   bool SwitchPrivilegeSolver::IsTargetStateParameter(const string& rParamName) const
   {
-    // TODO(Noah): Permit specifying SUM, MXR and MPRV when support for changing those fields is
-    // established.
     //const set<string> target_state_keys = {"InterruptMask", "SUM", "MXR", "MPRV"};
     const set<string> target_state_keys = {"InterruptMask"};
 

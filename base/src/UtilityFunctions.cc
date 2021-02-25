@@ -335,9 +335,6 @@ namespace Force {
     return value;
   }
 
-  /*!
-    TODO temporary will improve for efficiency later.
-  */
   EExtendType get_extend_type_amount(const string& ea_name, uint32& amount)
   {
     EExtendType extend_type = EExtendType(0);

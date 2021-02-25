@@ -68,7 +68,6 @@ class RtlKeys(object):
     rtl_end = "end"
     rtl_count = "count"
     rtl_message = "message"
-    # {{{TODO}}} following line deprecated
     rtl_log = "log"
 
 
@@ -99,8 +98,6 @@ class RtlExecutor(IssExecutor):
         self.rtl = self.ctrl_item.rtl
 
     def filterPlusArgs(self, aPlusArgs):
-        # TODO These are mismatch between what we have with what the RTL make
-        #  file produce, will need to verify if these are needed.
         args_list = aPlusArgs.split(" ")
         filtered_list = []
         for arg in args_list:
@@ -443,7 +440,6 @@ class RtlExecutor(IssExecutor):
             RtlKeys.rtl_end: str(arg_result[RtlResult.process_end]),
             RtlKeys.rtl_count: int(my_result[RtlResult.rtl_cycle_count]),
             RtlKeys.rtl_message: str(my_result[RtlResult.rtl_message])
-            # {{{TODO}}} following line deprecated
             ,
             RtlKeys.rtl_log: arg_log,
         }

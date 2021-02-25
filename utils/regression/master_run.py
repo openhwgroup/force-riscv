@@ -152,7 +152,7 @@ class MasterRun(ModuleRun):
             self.m_app_info.mMainAppPath = (
                 PathUtils.include_trailing_path_delimiter(self.module_dir)
                 + "../.."
-            )  # TODO still keep main app path for now.
+            )
             self.m_app_info.mProcessMax = self.option_def(
                 CmdLine.Switches[CmdLine.process_max], None, self.to_int
             )
@@ -194,8 +194,6 @@ class MasterRun(ModuleRun):
             app_executor = app_cfg.createExecutor()
             app_executor.load(self.ctrl_item)
             if not app_executor.skip():
-                # TODO: need to add some proper logging here (so we can find
-                #  information in the output folder)
                 Msg.info("Currently executing %s app" % app_cfg.name())
                 app_executor.pre()
                 app_executor.execute()
@@ -217,12 +215,6 @@ class MasterRun(ModuleRun):
         if self.summary:
             Msg.dbg(Formats.summ_level % (self.sum_level))
             self.summary.process_summary(self.sum_level)
-
-            # TODO: total_cycle_count and total_instruction_count are specific
-            #  to RegressionSummary and are used in the rtl application's
-            #  reporter (PerformanceSummary does not contain either).
-            #  Do the rtl application and performance mode ever get run at the
-            #  same time?
 
             # make cycle count and instruction count available in the shared
             # object
@@ -284,7 +276,6 @@ class MasterRun(ModuleRun):
 
     # add a callback that will execute and shutdown all threads when executed
     def shutdown(self):
-        # {{{TODO}}}
         pass
 
     # initializes everything
@@ -658,9 +649,6 @@ class MasterRun(ModuleRun):
         )
 
         if self.max_fails > 0:
-            # TODO: expand this to use the terminated proc as a way to
-            # determine whether or not to stop processing more items instead
-            # of the insane way it works now.
             self.is_term_proc = self.query_terminated
             self.on_fail_proc = self.handle_on_fail
 
@@ -696,14 +684,10 @@ class MasterRun(ModuleRun):
 
         if self.summary is not None:
             self.summary.set_on_fail_proc(self.on_fail_proc)
-            # TODO: expand this to use the terminated proc as a way to
-            #  determine whether or not to stop processing more items instead
-            #  of the insane way it works now.
             self.summary.set_is_term_proc(self.is_term_proc)
 
     def initialize_process_queue(self):
 
-        # {{{TODO}}} - Clean this up
         global workers_done_event
 
         self.process_queue = ProcessQueue()
@@ -721,7 +705,6 @@ class MasterRun(ModuleRun):
 
         self.process_queue.open_queue()
 
-        # TODO: Replace the open_queue call with a simplified version above
         # self.process_queue.open_queue(self.process_cmd, self.summary,
         #                               self.process_max, workers_done_event,
         #                               self.process_launcher )

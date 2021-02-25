@@ -130,7 +130,7 @@
 ---
 >   state.reset(max_isa, id);
 501a527
-> 	//TODO need to add register read callback calls here
+> 	//need to add register read callback calls here
 561a588,594
 >   update_generator_register(this->id, "privilege", prv, 0x3ull, "write");
 > }
@@ -247,12 +247,12 @@
 > 
 >     effective_value = state.pmpaddr[i];
 688a755,756
->      //TODO here we need a callback call for each pmpcfg that is altered, right now this
+>      //here we need a callback call for each pmpcfg that is altered, right now this
 >      //just does the very last one.
 695a764,767
 >         effective_value = cfg;
 > 
-> 	//TODO this will cause at least two updates for the same write, BUT it will indicate that multiple entries in the pmpcfg array were written if this happens. This is a stopgap.
+> 	// this will cause at least two updates for the same write, BUT it will indicate that multiple entries in the pmpcfg array were written if this happens. This is a stopgap.
 > 	update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "write");
 705a778
 >       effective_value = state.fflags;
@@ -548,7 +548,7 @@
 >       state.medeleg = (state.medeleg & ~mask) | (val & mask);
 >       break;
 >     }
->     //TODO why are we aliasing mcycle as minstret?
+>     //aliasing mcycle as minstret?
 >     case CSR_INSTRET:
 >     case CSR_MINSTRET:
 >     case CSR_CYCLE:
@@ -700,7 +700,7 @@
 >     case CSR_DCSR:
 >       state.dcsr.prv = get_field(val, DCSR_PRV);
 >       state.dcsr.step = get_field(val, DCSR_STEP);
->       // TODO: ndreset and fullreset
+>       // ndreset and fullreset
 >       state.dcsr.ebreakm = get_field(val, DCSR_EBREAKM);
 >       state.dcsr.ebreakh = get_field(val, DCSR_EBREAKH);
 >       state.dcsr.ebreaks = get_field(val, DCSR_EBREAKS);
@@ -798,7 +798,7 @@
 >     if((which & ((xlen / 32) - 1)) != 0)
 >         return 0xDEADBEEFDEADBEEF;
 966a1507
->     //TODO use this as the example for the callback call in the set_csr non-api function
+>     // use this as the example for the callback call in the set_csr non-api function
 976,978c1517,1521
 <       require_fp;
 <       if (!supports_extension('F'))
@@ -888,7 +888,7 @@
 > 
 > //
 > //
-> // TODO the merge program ignored get_csr and only treated get_csr_api 
+> // the merge program ignored get_csr and only treated get_csr_api 
 > //
 > 
 > // Note that get_csr is sometimes called when read side-effects should not

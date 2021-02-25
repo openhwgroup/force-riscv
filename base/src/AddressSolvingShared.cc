@@ -320,7 +320,7 @@ namespace Force {
           mIndexChoices.push_back(addr_reg);
         }
       }
-      else if (mpGenerator->HasISS()) { // TODO Gate out no-iss mode for now.
+      else if (mpGenerator->HasISS()) {
         if (OperandConflict(reg_ptr)) {
           continue;
         }
@@ -437,8 +437,6 @@ namespace Force {
 
   void VectorIndexedSolvingShared::SetupIndexChoices()
   {
-    // TODO(Noah): Relax the differ constraint to allow legal cases where the source/destination
-    // register and the index register are the same when a good way to do so can be determined.
     OperandConstraint* index_opr_constr = mpIndexOpr->GetOperandConstraint();
     index_opr_constr->SubDifferOperandValues(*mpInstruction, *(mpIndexOpr->GetOperandStructure()));
 
@@ -459,9 +457,6 @@ namespace Force {
       for (const string& index_reg_name : index_reg_names) {
         Register* reg = reg_file->RegisterLookup(index_reg_name);
 
-        // TODO(Noah): Relax the use of the OperandConflict() check for initialized registers to
-        // allow legal cases where the source/destination register and the index register are the
-        // same when a good way to do so can be determined.
         if (reg->IsInitialized() and (not OperandConflict(reg))) {
           if (reg->HasAttribute(ERegAttrType::HasValue)) {
             auto addr_reg = new AddressingRegister();
@@ -476,8 +471,6 @@ namespace Force {
           }
         }
         else if (mpGenerator->HasISS() and (not OperandConflict(reg))) {
-          // TODO(Noah): Uncomment the logic below to enable free index registers when the
-          // OperandDataRequest can be modified to initialize register groups.
           /*
           auto addr_reg = new AddressingRegister();
           addr_reg->SetRegister(reg);

@@ -116,8 +116,6 @@ def record_instruction_format(aInstructionFormat):
 
 
 def add_layout_operand(aInstruction):
-    # TODO(Noah): Add additional load/store whole register instructions when
-    #  they are supported by Handcar.
     load_store_whole_register = ["VL1R.V", "VS1R.V"]
 
     operand_adjustor = VectorOperandAdjustor(aInstruction)

@@ -138,11 +138,6 @@ class Env(object):
             seq.genThread = self.mGenMain
             seq.run()
 
-        # TODO(Noah): Remove this logic if and when a more abstracted
-        #  mechanism to assign the exceptions manager can be determined. All
-        # threads share the same exception handler sets, so we need to
-        # propagate their locations to each thread. We do this by creating
-        # copies of the exceptions manager.
         self.mGenMain.setup()
         for gen_thread in self.genThreads:
             if gen_thread is not self.mGenMain:

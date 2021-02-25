@@ -42,9 +42,6 @@ class GenSemaphoreRISCV(GenSemaphore):
             self.unreserveRegister("x%d" % self.mAddrReg)
 
     def _acquireSemaphore(self):
-        # TODO(Noah): Adjust for the possibility of different threads having
-        #  different endianness if and when this becomes necessary.
-
         (self._mCounterReg, self._mStatusReg) = self.getRandomGPRs(
             2, exclude="0"
         )
@@ -107,9 +104,6 @@ class GenSemaphoreRISCV(GenSemaphore):
         self.endLinearBlock(block_id, max_re_execution_instructions=9)
 
     def _releaseSemaphore(self):
-        # TODO(Noah): Adjust for the possibility of different threads having
-        #  different endianness if and when this becomes necessary.
-
         block_id = self.beginLinearBlock()
 
         self.genInstruction(

@@ -225,7 +225,7 @@ namespace Force {
     for (EAddressSolutionFilterTypeBaseType i = 0; i < EAddressSolutionFilterTypeSize; ++ i) {
       EAddressSolutionFilterType filter_type = EAddressSolutionFilterType(i);
       auto addr_filter = InstantiateAddressSolutionFilter(filter_type);
-      if (nullptr == addr_filter) continue; // TODO, temporary, shouldn't getting inapplicable options in the first place.
+      if (nullptr == addr_filter) continue;
       pGen->mpAddressFilteringRegulator->mAddressSolutionFilters.push_back(addr_filter);
     }
   }

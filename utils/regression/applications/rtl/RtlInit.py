@@ -156,7 +156,7 @@ def process_rtl_control_data(aControlData, aAppParameters):
     :param object aAppParameters:
     """
     if aAppParameters is None:
-        return  # TODO Temporary, to avoid failing in forrest run, to remove.
+        return
 
     if not (aAppParameters.parameter("rtl") or len(aControlData) > 0):
         return

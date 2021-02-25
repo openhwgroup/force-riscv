@@ -30,7 +30,6 @@ def priv_adjust_instruction_by_format(instr):
     elif instr_format == "":
         return adjust_const_only(instr)
     else:
-        # print ("TODO instruction format: %s" % instr_format)
         record_instruction_format(instr_format)
         pass
 

@@ -121,7 +121,7 @@ namespace Force {
           }
           break;
         }
-        case ERegisterType::SysReg: //TODO add custom SysReg ordering/processing if necessary
+        case ERegisterType::SysReg:
         {
          // << "{BootOrderRISCV::AdjustOrder} sysreg name=" << reg_name << endl;
           InsertSystemRegister(it, num_sys_regs);
@@ -145,8 +145,6 @@ namespace Force {
   {
     uint32 count = 0; // instr_count(mpLastGPR->Value())<<2;
 
-    // TODO additional offset will be calculated.
-
     return count;
   }
 
@@ -154,15 +152,8 @@ namespace Force {
   {
     auto last_gpr_name = mpLastGPR->RegisterName();
 
-    // TODO potentially loading more state registers here.
-
     rRequests.push_back(new GenLoadRegister(last_gpr_name, mpLastGPR->Value()));
   }
-
-  //  void BootOrderRISCV::AppendInstructionBarrier(std::vector<GenRequest*>& rRequests)
-  //{
-    // TODO add instruction barrier if necessary.
-  //}
 
   void BootOrderRISCV::InsertSystemRegister(const list<BootElement*>::iterator& rBootElemItr, size_t& numSysRegs)
   {

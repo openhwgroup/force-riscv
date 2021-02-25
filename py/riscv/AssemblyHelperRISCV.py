@@ -110,8 +110,6 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #  @param aBrOffset The branch offset.
     def genRelativeBranchWithLink(self, aBrOffset):
         # We use the conventional link register x1
-        # TODO(Noah): Provide a mechanism for using alternate link registers
-        # do so if it is deemed valuable.
         self.mSequence.genInstruction(
             "JAL##RISCV", {"rd": 1, "simm20": aBrOffset, "NoRestriction": 1}
         )
@@ -120,8 +118,6 @@ class AssemblyHelperRISCV(AssemblyHelper):
     # default link register.
     def genReturn(self):
         # We use the conventional link register x1
-        # TODO(Noah): Provide a mechanism for using alternate link registers
-        # do so if it is deemed valuable.
         self.mSequence.genInstruction(
             "JALR##RISCV", {"rd": 0, "rs1": 1, "simm12": 0, "NoRestriction": 1}
         )

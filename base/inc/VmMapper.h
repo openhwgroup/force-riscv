@@ -63,7 +63,6 @@ namespace Force {
     bool IsActive()      const { return (mState == EVmStateType::Active); } //!< Return if the VmMapper is active.
     bool IsInitialized() const { return (mState == EVmStateType::Active || mState == EVmStateType::Initialized); } //!< Return if the VmMapper is active.
 
-    //TODO may be able to locate default impl outside of base
     GenPageRequest* GenPageRequestInstance(bool isInstr=true, EMemAccessType memAccessType=EMemAccessType::Unknown) const; //!< Return a GenPageRequest instance.
     GenPageRequest* GenPageRequestRegulated(bool isInstr=true, EMemAccessType memAccessType=EMemAccessType::Unknown, bool noFault = false) const; //!< Retuan a regulated GenPageRequest instance.
     bool VerifyStreamingVa(uint64 va, uint64 size, bool isInstr) const; //!< Verify if the streaming virtual address range is usable.

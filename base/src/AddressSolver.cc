@@ -697,8 +697,6 @@ namespace {
           index_value = index_choice->RegisterValue();
         }
       } else {
-        // TODO(Noah): Implement solving for the case when the base and index registers are the same register, as soon
-        // as the other cases have been handled and a solution for this case can be devised.
         continue;
       }
       CreateFreeBaseIndexSolution(rSharedBI, *index_choice, index_value);
@@ -814,9 +812,6 @@ namespace {
           SolveFreeStrideFixed(strided_shared, *stride_choice);
         }
       }
-
-      // TODO(Noah): Implement solving for the case when the base and index registers are the same
-      // register when a solution for this case can be devised.
     }
 
     return HasIndexSolutions();
@@ -873,9 +868,6 @@ namespace {
 
   void VectorStridedMode::SolveFreeStrideFree(const VectorStridedSolvingShared& rStridedShared, const AddressingRegister& rStrideChoice)
   {
-    // TODO(Noah): Devise a better algorithm for this when there is time to do so. This approach
-    // starts with relatively large random value for the stride and makes it successively smaller
-    // assuming that smaller strides should be more likely to yield a solution.
     bool solved = false;
     uint64 base_val = rStridedShared.FreeTarget();
     const Register* stride_ptr = rStrideChoice.GetRegister();
@@ -911,9 +903,6 @@ namespace {
 
   bool VectorStridedMode::AreTargetAddressesUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 baseVal, cuint64 strideVal)
   {
-    // TODO(Noah): Make this logic more robust by accounting for element masking when there is time
-    // to do so.
-
     bool target_addresses_usable = IsTargetAddressUsable(rStridedShared, baseVal, rStridedShared.TargetConstraint());
     for (uint32 elem_index = 1; elem_index < rStridedShared.GetElementCount(); elem_index++) {
       if (not target_addresses_usable) {
@@ -1055,11 +1044,6 @@ namespace {
     RegisterOperand* index_opr = GetIndexOperand(rShared);
     const Register* index_reg = Index();
     index_opr->SetChoiceResultDirect(*(rShared.GetGenerator()), *(rShared.GetInstruction()), index_reg->Name());
-
-    // TODO(Noah): Implement setting the operand data for free index registers when there is time to
-    // do so. The primary issue is that the existing OperandDataRequest class is designed to handle
-    // only one register's values, whereas the vector index operand may consist of several
-    // registers.
   }
 
   void VectorIndexedMode::GetTargetAddresses(const AddressSolvingShared& rShared, const MultiRegisterIndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
@@ -1166,9 +1150,6 @@ namespace {
 
   bool VectorIndexedMode::AreTargetAddressesUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, const vector<uint64>& rIndexRegValues, const ConstraintSet* pTargetConstr)
   {
-    // TODO(Noah): Make this logic more robust by accounting for element masking when there is time
-    // to do so.
-
     vector<uint64> index_elem_values;
     change_uint64_to_elementform(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), rIndexRegValues, index_elem_values);
 
@@ -1274,12 +1255,10 @@ namespace {
     ImmediateOperand* offset_opr = alu_imm_opr_constr->OffsetOperand();
     OperandConstraint* offset_constr = offset_opr->GetOperandConstraint();
 
-    // TODO(Noah): Implement solving with offset operand constraints when it is deemed necessary to do so.
     if (offset_constr->HasConstraint()) {
       return false;
     }
 
-    // TODO(Noah): Implement solving with target constraints when it is deemed necessary to do so.
     if (rShared.TargetConstraint() != nullptr) {
       return false;
     }
@@ -1326,7 +1305,6 @@ namespace {
       return false;
     }
 
-    // TODO(Noah): Implement solving with target constraints when it is deemed necessary to do so.
     if (rShared.TargetConstraint() != nullptr) {
       return false;
     }
@@ -1631,7 +1609,7 @@ namespace {
           }
         }
       }
-      else if (gen.HasISS()) { // TODO gate out no-iss mode for now.
+      else if (gen.HasISS()) {
         if (mpAddressSolvingShared->OperandConflict(reg_ptr)) {
           continue;
         }
@@ -1685,11 +1663,6 @@ namespace {
       return false;
     }
 
-    // TODO(Noah): Randomly choose which register operands will be fixed, rather than choosing the ones at the end of
-    // the list, when there is time to do so. We can do this by implementing a method to shuffle the register operands
-    // vector.
-    // TODO(Noah): Randomly choose different registers for different AddressingModes, rather than repeatedly using the
-    // same registers for each AddressingMode, when there is time to do so.
     for (size_t i = 2; i < reg_operands.size(); i++) {
       const RegisterOperand* reg_operand = reg_operands[i];
       Register* reg_ptr = nullptr;
@@ -1893,7 +1866,7 @@ namespace {
         }
       }
     }
-    else if (gen.HasISS()) { // TODO gate out no-iss mode for now.
+    else if (gen.HasISS()) {
       if (not mpAddressSolvingShared->OperandConflict(reg_ptr)) {
         AddressingMode* clone_addr_mode = dynamic_cast<AddressingMode* >(mpModeTemplate->Clone());
         clone_addr_mode->SetBase(reg_ptr);

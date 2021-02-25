@@ -70,7 +70,6 @@ class ModuleRun(ABC):
     # Reflects the supplied default value in arg_def_val if none matching the
     # arg_switch can be found in the parsed options.
     def option_def(self, aSwitch, aDefVal=None, aConversionFunc=None):
-        # TODO deprecate this
         return_value = self.m_app_info.mCmdLineOpts.option_def(
             aSwitch, aDefVal
         )

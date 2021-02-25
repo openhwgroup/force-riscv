@@ -484,7 +484,6 @@ namespace Force {
     std::string mName;                            //!< Name.
     InitPolicyTuple* mpInitPolicyInfo;            //!< Pointer to initialization policy info.
     std::vector<RegisterField *> mRegisterFields; //!< Vector of RegisterFields.
-    // TODO may change from vector to dictionary to increase search performance.
 
     friend class RegisterParser;
     friend class RegisterFile;

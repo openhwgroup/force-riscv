@@ -70,7 +70,6 @@ namespace Force {
     bool   GetWriteExecuteNever() const override; //!< Return initial write execute never flag
     EPageGranuleType GetGranuleType() const override; //!< Return address space initial page granule type.
 
-    //TODO update to be able to target other hgatp/vsatp registers if needed
     const std::string StatusRegisterName() const { return (mRegisterPrefix + std::string("status")); } //!< returns status register name
     const std::string AtpRegisterName() const { return "satp"; } //!< returns address translation/protection register name
   protected:

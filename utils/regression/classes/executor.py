@@ -123,6 +123,6 @@ class Executor(object):
     def factory(self, arg_ctrl_item):
         Msg.error_trace()
         raise NotImplementedError(
-            "{{{TODO}}}: Implement a factory method to create one or more "
-            "executors, Executor::factory() ..."
+            "Not Implemented Error: Implement a factory method to"
+            "create one or more executors, Executor::factory() ..."
         )

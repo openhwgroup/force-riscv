@@ -38,10 +38,6 @@ class MainSequence(VectorTestSequence):
     def _setUpTest(self):
         choices_mod = ChoicesModifier(self.genThread)
 
-        # TODO(Noah): Remove the restriction on SEW when a mechanism to skip
-        #  instructions with illegal vector layouts is implemented. For now,
-        #  SEW = 64 ensures all applicable instructions can be legally
-        #  generated.
         choice_weights = {
             "0x0": 0,
             "0x1": 0,

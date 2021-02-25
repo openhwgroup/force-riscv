@@ -1634,7 +1634,7 @@ REPLACEMENT_HEADER_FILENAMES = [
     "devices.h",
     "decode.h",
     "disasm.h",
-]  # TODO identify the original source counterparts for these
+]
 REPLACEMENT_INSTRUCTION_HEADER_FILENAMES = ["mret.h", "sret.h"]
 GLOB_REPLACEMENT_INSTRUCTION_HEADER_FILENAMES = ["insns/*.h"]
 

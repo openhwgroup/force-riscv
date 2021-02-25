@@ -707,7 +707,6 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
 
         (reg_val_gpr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
 
-        # TODO(Noah): Handle Q regisers when the Q extension is supported.
         load_gpr64_seq = LoadGPR64(self.genThread)
         load_gpr64_seq.load(reg_val_gpr_index, aStateElem.getValues()[0])
 
@@ -765,7 +764,6 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
         self.initializeMemoryBlock(mem_block_ptr_index, aStateElems)
         offset = 0
         for state_elem in aStateElems:
-            # TODO(Noah): Handle Q regisers when the Q extension is supported.
             fp_load_instr = (
                 "FLW##RISCV"
                 if state_elem.getName().startswith("S")
@@ -814,16 +812,6 @@ class StateTransitionHelperGprSet(object):
             aGprCount, aExclude=(0, 1, 2)
         )
         if self._mArbitraryGprIndices is None:
-            # TODO(Noah): Implement a better solution to having insufficient
-            #  arbitrary GPRs during a Boot StateTransition when such a
-            #  solution can be devised. Ideally we would like to restore
-            #  non-arbitrary GPRs with their initial values rather than their
-            #  current values during a Boot StateTransition, but there is no
-            #  convenient way to get that information here at present. We
-            #  expect that we only need one arbitrary GPR other than for
-            #  system registers, but the system registers are always loaded
-            #  before the GPRs. The last GPR in the boot sequence provides the
-            #  arbitrary GPR we need.
             if aValidate:
                 self._validateInsufficientArbitaryGprs(aGprCount)
             handler = self._mStateTransHandler

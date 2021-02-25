@@ -247,8 +247,6 @@ class Register:
         self.mName = kwargs.get("name", "")
         self.mSkipPhysical = kwargs.get("skip_physical", 0)
 
-        # TODO: Do physical_type and physical_class need to be defined for
-        # RISCV? If so, add the required functionality for each.
         self.mPhysicalName = kwargs.get("physical_name", "")
         self.mIndex = kwargs.get("index", None)
         self.mLength = kwargs.get("length", "")

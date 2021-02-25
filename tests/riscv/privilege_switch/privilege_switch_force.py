@@ -38,7 +38,6 @@ class MainSequence(Sequence):
                 "LUI##RISCV",
             ]
         ret_instructions = ["MRET##RISCV"]  # , 'SRET##RISCV' ]
-        # TODO enable support for SRET once legal generation works correctly
 
         for _ in range(10):
             for _ in range(self.random32(0, 5)):

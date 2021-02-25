@@ -98,9 +98,6 @@ class MainSequence(Sequence):
 
         self.unreserveRegister("x%d" % src_reg_index)
 
-        # TODO(Noah): Include branch and jump instructions when the issue with
-        #  linear blocks overlapping previously generated instructions is
-        #  resolved.
         if self.getGlobalState("AppRegisterWidth") == 32:
             instr_map = RV32_G_map - BranchJump_map
         else:

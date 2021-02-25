@@ -117,7 +117,6 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }
@@ -157,7 +156,6 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }
@@ -171,22 +169,9 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }
-
-  //TODO determine if non-atomic constr is populated/needed for RISCV
-      /*{
-        bool atomic = false;
-        rPageReq.GetGenBoolAttribute(EPageGenBoolAttrType::Atomic, atomic);
-        if (atomic) {
-          const ConstraintSet* vm_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NonAtomic);
-          if (vm_constr != nullptr) {
-            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NonAtomic, vm_constr));
-          }
-        }
-      }*/
 
   void AddressFilteringRegulatorRISCV::GetDataPageFaultVmConstraints(const GenPageRequest& rPageReq, const VmMapper& rVmMapper, vector<VmConstraint* >& rVmConstraints, EExceptionConstraintType constrType) const
   {
@@ -202,7 +187,7 @@ namespace Force {
               rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NoUserAccess, no_user_constr));
             }
           }
-          else //TODO need SUM logic here to not exclude those pages when sum is set
+          else
           {
             const ConstraintSet* user_constr = rVmMapper.GetVmConstraint(EVmConstraintType::UserAccess);
             if (user_constr != nullptr)
@@ -247,7 +232,6 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }

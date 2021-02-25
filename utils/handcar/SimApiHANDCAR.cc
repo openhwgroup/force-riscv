@@ -60,20 +60,11 @@ namespace {
 
   uint64 mask_address_to_size(cuint64 addr)
   {
-    // TODO(Noah): Implement a better way to control logging of address values when there is time to
-    // do so. Handcar always reports sign-extended 64-bit address values even when operating in
-    // 32-bit mode, which causes strange-looking log output. The logic below eliminates the
-    // sign-extension.
     uint64 mask_size = 64;
     if (sXlen == 32) {
       mask_size = 32;
     }
 
-    // TODO(Noah): Enable validation when the issue with vector indexed address calculations is
-    // resolved. Currently, the entire value of a 64-bit index element is used in the address
-    // calculation, but the spec indicates only the first XLEN bits should be used. The upper bits
-    // get effectively ignored in the mapping, but the VA value still contains those upper bits when
-    // it shouldn't.
     //validate_mask(addr, mask_size);
 
     uint64 mask = MAX_UINT64 >> (64 - mask_size);
@@ -83,10 +74,6 @@ namespace {
 
   uint64 mask_register_to_size(const string& rRegName, cuint64 regVal)
   {
-    // TODO(Noah): Implement a better way to control logging of register values when there is time
-    // to do so. Handcar always stores sign-extended 64-bit register values even when operating in
-    // 32-bit mode, which causes strange-looking log output. The logic below eliminates the
-    // sign-extension.
     uint32 mask_size = 64;
     if (rRegName[0] == 'f' and isdigit(rRegName[1])) {
       mask_size = sFlen;
@@ -407,7 +394,6 @@ namespace Force {
     }
 
     //Remove any suffix the generator has attached to the register name, the simulator doesn't use the suffix.
-    // TODO make this available for Quad FP
     int errorcode = 0;
     string reg_name = regname;
     uint64 underscore_pos = reg_name.find("_");
@@ -492,12 +478,10 @@ namespace Force {
   
   void SimApiHANDCAR::WakeUp(uint32 cpuId)
   {
-    // TODO
   }
 
   void SimApiHANDCAR::TurnOn(uint32 cpuId)
   {
-    // TODO
   }
 
   void SimApiHANDCAR::EnterSpeculativeMode(uint32 cpuId)
@@ -523,7 +507,6 @@ namespace Force {
 
       if (rConfig.mSimConfigString.find("RV32") != string::npos) {
         sXlen = 32;
-        cout << "XXX RV32!" << endl;
       }
 
       if (rConfig.mSimConfigString.find("D") != string::npos) {
@@ -532,7 +515,6 @@ namespace Force {
     }
 
     string config_str = config_stream.str();
-    cout << "XXX '" << config_str << "'" << endl;
 
     return config_str;
   }

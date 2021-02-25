@@ -228,9 +228,6 @@ namespace Force {
     auto vm_mapper = gen.GetVmManager()->CurrentVmMapper();
 
     try {
-      // TODO(Noah): Change this implementation to attempt to generate a valid target address when the Constraint module
-      // supports constraining certain bits to certain values; until then, a partial initialization will always fill in
-      // the missing values randomly.
       if (initMask != 0x0) {
         return GenerateRandomDataWithSize(size, initMask, currentData);
       }

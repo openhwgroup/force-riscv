@@ -367,12 +367,6 @@ class ThreadHandlerSet(Sequence):
                     branch_addr,
                 )
 
-        # TODO(Noah): Try just collecting the handler boundaries for the
-        #  memory bank corresponding to memBank after getting this class
-        #  working correctly. As this method is only generating handlers for
-        #  one memory bank, it seems like it should only be necessary to
-        # collect the handler boundaries for one memory bank. collect the
-        # handler boundaries from the PrivilegeLevelHandlerSets.
         for mem_bank_handler_registry in self.memBankHandlerRegistries:
             for (
                 handler_name,

@@ -108,7 +108,6 @@ namespace Force {
     const AddressTagging* addr_tagging = vm_mapper->GetAddressTagging();
     uint64 untagged_bnt_address = addr_tagging->UntagAddress(not_taken_addr, true);
 
-    // TODO consider the case when the memory range has been reserved.
     char print_buffer[32];
     snprintf(print_buffer, 32, "BNT%d", mId);
     pGen->ReserveMemory(print_buffer, untagged_bnt_address, pGen->BntReserveSpace(), 0, true);
@@ -120,7 +119,6 @@ namespace Force {
   {
     auto vm_regime = pGen->GetVmManager()->CurrentVmRegime();
     const vector<Register* > & reg_context = vm_regime->RegisterContext();
-    //TODO might want to share the PeState between multiple Bnt structures.
     mpPeState = new SimplePeState();
     mpPeState->SaveState(pGen, reg_context);
   }
@@ -130,7 +128,6 @@ namespace Force {
     uint64 last_pc = pGen->LastPC();
     mNextPC = last_pc + instrBytes;
     // uint64 pc_now = pGen->PC();
-    // TODO check if actual taken is consistent with the taken value evaluated by ISG.
     SetAccurate(true);
     SavePeState(pGen);
   }

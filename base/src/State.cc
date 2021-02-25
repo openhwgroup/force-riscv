@@ -116,10 +116,6 @@ namespace Force {
       try_string_to_EVmContextParamType(reg_field->Name(), is_vm_context_param);
 
       if (is_vm_context_param) {
-        // TODO(Noah): Fail here when a mechanism for identifying VM context parameter fields with
-        // certainty is devised. Currently, we can determine if the field name matches, but there
-        // may be multiple register fields with the same name spread across different system
-        // registers.
         LOG(warn) << "{State::AddRegisterStateElement} Register " << containing_reg->Name() << " contains field " 
 		  << reg_field->Name() << ", which may be a VM context parameter field. Use AddVmContextStateElement() for VM context parameter fields." << endl;
       }
@@ -163,9 +159,6 @@ namespace Force {
     bool is_vm_context_param = false;
     try_string_to_EVmContextParamType(rRegFieldName, is_vm_context_param);
     if (is_vm_context_param) {
-      // TODO(Noah): Fail here when a mechanism for identifying VM context parameter fields with
-      // certainty is devised. Currently, we can determine if the field name matches, but there may
-      // be multiple register fields with the same name spread across different system registers.
       LOG(warn) << "{State::AddSystemRegisterStateElementByField} Register field " << rRegFieldName << " may be a VM context parameter field. Use AddVmContextStateElement() for VM context parameter fields." << endl;
     }
 

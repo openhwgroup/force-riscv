@@ -44,8 +44,6 @@ class MainSequence(Sequence):
         ],
     }
 
-    # TODO add assert method to check instr record for rs1/rs2 indices and
-    #  verify sources reg value within constraints passed in
 
     def generate(self, **kargs):
         (prec, prec_valid) = self.getOption("precision")
@@ -71,8 +69,6 @@ class MainSequence(Sequence):
             )
             data_size = 32
 
-        # TODO randomize data values and expand constraints to test size
-        #  boundaries
         data_string = "(0x0)"
         if data_type == "FP":
             data_string = "(exp=0x0-0xF)(sign=0x1)(frac=0x0-0xFF)"

@@ -125,7 +125,7 @@ class TaskController(Controller):
 
             # save the task template file name with path to the control item
             self.ctrl_item.fname = arg_task_file
-            # prepare control item content, TODO don't really need it.
+            # prepare control item content
             my_content = self.ctrl_item.prepare(self.mAppsInfo, arg_task_file)
             my_queue_item = ProcessQueueItem(
                 sub_task_dir, self.ctrl_item, self.mAppsInfo, my_content

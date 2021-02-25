@@ -114,8 +114,6 @@ class MainSequence(Sequence):
             )
             params["AddrChoicesModID"] = choices_mod.registerSet()
 
-        # TODO(Noah): Add testing for SUM, MXR and MPRV when support for
-        #  changing those fields is established.
         # for param_name in ('InterruptMask', 'SUM', 'MXR', 'MPRV'):
         for param_name in ("InterruptMask",):
             param_val = self.choice((0, 1, "Same", "Flip", "Random", None))

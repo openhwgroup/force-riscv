@@ -214,9 +214,6 @@ class RunWithReport(object):
         if self._mRunParameters.dump_xml:
             gather_cmd += " --dump"
 
-        # TODO use this one instead when confident the gather flow is working
-        #  correctly gather_cmd = self._mDirName + "/../misc/gather_force.pl
-        #  -u top %s/top_regress_sim.rpt -q" % self._mTestDir
         return gather_cmd
 
     def runGatherCommand(self):

@@ -133,8 +133,6 @@ class RunWithReport(object):
         if self._mRunParameters.dump_xml:
             gather_cmd += " --dump"
 
-        # TODO use this one instead when confident the gather flow is
-        #  working correctly
         return gather_cmd
 
     def runGatherCommand(self):

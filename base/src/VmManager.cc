@@ -213,7 +213,7 @@ namespace Force {
     //2. compare and find if VmcontextParams exist
     //3. if not exist, create new address space, add to cache, delete tmpVmContextParameters and return id
 
-    if (!mpVmInfo->PagingEnabled()) { // TODO, should allow paging disabled case.
+    if (!mpVmInfo->PagingEnabled()) {
       FAIL("Paging-not-enabled");
     }
     const VmFactory* factory = GetVmFactory(regimeType);
@@ -248,7 +248,7 @@ namespace Force {
   // output: a deltaMap of context parameters contextId vs current default
   bool VmManager::GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap,  uint32 contextId) const
   {
-    if (!mpVmInfo->PagingEnabled()) { // TODO should remove this, non-paging mode should be okay.
+    if (!mpVmInfo->PagingEnabled()) {
       FAIL("Paging-not-enabled");
     }
 

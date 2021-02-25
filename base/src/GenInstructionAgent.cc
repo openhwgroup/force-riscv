@@ -347,7 +347,6 @@ namespace Force {
     BntNode* bnt_node = pInstr->GetBntNode();
     if (nullptr == bnt_node) return;
 
-    //TODO check to see if branch target is in address error space - if so, inject sequence to step simulation
     auto vm_mapper = mpGenerator->GetVmManager()->CurrentVmMapper();
     const AddressTagging* addr_tagging = vm_mapper->GetAddressTagging();
     uint64 untagged_va = addr_tagging->UntagAddress(bnt_node->BranchTarget(), true);
@@ -488,7 +487,7 @@ namespace Force {
     return true;
   }
 
-  static cuint32 sMaxExceptionHandlerLength = 1000; // TODO, set a temporary max exception handler length.
+  static cuint32 sMaxExceptionHandlerLength = 1000;
 
   void GenInstructionAgent::ExecuteHandler()
   {
@@ -534,7 +533,6 @@ namespace Force {
       if (not memory_manager->InstructionPaInitialized(pa_tuple)) {
         LOG(notice) << "{GenInstructionAgent::ExecuteHandler} next PC 0x" << hex << gen_pc->Value() << "=>" << pa_tuple.ToString() << " is not initialized, ending handler execution." << endl;
         ExceptionReturn();
-        // TODO detect conditional branch in loop and re-converge back.
         break;
       }
 
@@ -627,7 +625,6 @@ namespace Force {
             try_loop_reconverge = true;
           }
         }
-        // TODO detect conditional branch in loop and re-converge back.
         break;
       }
       else if (re_exe_length >= maxReExeInstr) {

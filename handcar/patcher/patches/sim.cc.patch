@@ -117,7 +117,7 @@
 >   //  //fdt_parse_pmp_num((void *)dtb.c_str(), &pmp_num, "riscv");
 >   //  //fdt_parse_pmp_alignment((void *)dtb.c_str(), &pmp_granularity, "riscv");
 > 
->   //  //TODO these inputs will have to be hard coded unled dtb fdt are added as dependencies.
+>   //  //these inputs will have to be hard coded until dtb and fdt are added as dependencies.
 >   //  procs[i]->set_pmp_num(pmp_num);
 >   //  procs[i]->set_pmp_granularity(pmp_granularity);
 >   //}
@@ -364,7 +364,7 @@
 205c267,268
 < bool sim_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
-> //TODO: Michael use the dedicated function for initializing
+> // use the dedicated function for initializing
 > void simlib_t::make_dtb()
 207,216d269
 <   if (addr + len < addr || !paddr_ok(addr + len - 1))
@@ -1021,7 +1021,7 @@
 >   }
 > 
 >   //All checks passed; write the elements into the value buffer
->   // TODO make this a memcpy
+>   // make this a memcpy
 >   for(size_t element = offset; element < (offset + length); ++element)
 >   {
 >     pValue[element - offset] = get_core(procid)->VU.elt<uint8_t>(index, element);
@@ -1052,7 +1052,7 @@
 >   }
 > 
 >   //All checks passed; write the elements into the value buffer
->   // TODO make this a memcpy
+>   // make this a memcpy
 >   for(size_t element = offset; element < (offset + length); ++element)
 >   {
 >     get_core(procid)->VU.elt<uint8_t>(index, element) = pValue[element - offset];
@@ -1217,7 +1217,7 @@
 >   return 0;
 > }
 > 
-> //TODO this and beyond, will probably have to cast differently here and other places to the get the pointer types the same and compatible with the function.
+> //will probably have to cast differently here and other places to the get the pointer types the same and compatible with the function.
 > int simlib_t::write_vecr(uint32_t procid, const std::string& input_name, const uint8_t* value, uint32_t length)
 326c1073,1185
 <   debug_module.proc_reset(id);

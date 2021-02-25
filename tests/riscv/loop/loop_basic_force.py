@@ -43,8 +43,6 @@ class MainSequence(Sequence):
         if not valid:
             self.error("Unable to read register %s" % gpr_name)
 
-        # TODO(Noah): Enable the error checking below when running Force with
-        #  co-simulation is enabled for RISCV.
         expected_gpr_val = orig_gpr_val + 3
         if gpr_val != expected_gpr_val:
             # self.error('Unexpected register value: Expected = 0x%x,

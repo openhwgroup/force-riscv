@@ -223,7 +223,7 @@ def main():
     my_module = ForrestRun()
 
     try:
-        my_module.force_path = the_force_root  # TODO remove this very soon
+        my_module.force_path = the_force_root
 
         my_logfile = my_module.m_app_info.mCmdLineOpts.option_def(
             CmdLine.Switches[CmdLine.logfile], None

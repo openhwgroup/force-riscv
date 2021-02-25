@@ -130,7 +130,7 @@ namespace Force {
 
     //fcsr init
     field_map.clear();
-    field_map["FRM"] = 0x0; //TODO determine preferred default value for rounding mode
+    field_map["FRM"] = 0x0;
     field_map["NZ"] = 0x0;
     field_map["DZ"] = 0x0;
     field_map["OF"] = 0x0;

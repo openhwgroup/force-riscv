@@ -25,8 +25,6 @@ class MainSequence(VectorTestSequence):
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
-        # TODO(Noah): Add additional load/store whole register instructions
-        #  when they are supported by Handcar.
         self._mInstrList = (
             "VL1R.V##RISCV",
             "VS1R.V##RISCV",
@@ -42,11 +40,6 @@ class MainSequence(VectorTestSequence):
     def _getAllowedExceptionCodes(self, aInstr):
         allowed_except_codes = set()
 
-        # TODO(Noah): Remove the line below permitting store page fault
-        #  exceptions when the page descriptor generation is improved.
-        #  Currently, we are generating read-only pages for load instructions,
-        #  which is causing subsequent store instructions to the same page to
-        #  fault.
         allowed_except_codes.add(0xF)
 
         return allowed_except_codes

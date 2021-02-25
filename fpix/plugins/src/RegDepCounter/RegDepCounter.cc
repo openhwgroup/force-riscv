@@ -272,12 +272,9 @@ class RegDepCounter : public Force::SimPlugin
         };
       
         // Turn arguments from the top level that went uninterpreted into possible plugin options.
-        // TODO:Michael remove this function from plugins and Fpix entirely
         void parsePluginsClargs(vector<string> &plugins_cl_args) {  }
       
         //Use the ParseGuide helper class to lookup and assign option values, stress free
-        // TODO:Michael consider adding some narrower types to the ParseGuide class 
-        // TODO:Michael for the sake of uniformity, handle argumentless/ boolean variables in ParseGuide as well
         void parsePluginsOptions(std::map<std::string, std::string> & arPluginsOptions)
         {
             std::vector<Force::ParseGuide> guides;
@@ -303,7 +300,6 @@ class RegDepCounter : public Force::SimPlugin
         } 
       
         // coerce all register names to upper case, 64 bits. return true if GP reg...
-        //TODO:Michael consider transforming to enums aleady in this method
         bool GPReg(string &arDest, string &arSrc) 
         {
             arDest = arSrc;
@@ -313,7 +309,6 @@ class RegDepCounter : public Force::SimPlugin
         }
       
         // use pre-step event to look for start of random code...
-        // TODO:Michael can we look at MMU updates here? It may be a pathway to map PC to PA to Opcode
         void onPreStep() 
         {
             if (_mInRandomInstructions) 
@@ -331,7 +326,6 @@ class RegDepCounter : public Force::SimPlugin
         }
       
         // check gp register accesses on each step event...
-        // TODO:Michael can we look at MMU updates here? It may be a pathway to map PC to PA to Opcode
         void onStep(vector<RegUpdate> *apRegUpdates, vector<MemUpdate> *apMemUpdates, vector<MmuEvent> *apMMUUpdates, vector<ExceptionUpdate> *apExceptions) 
         {
             LOG(debug) << "RegDepCounter: Received onStep event!" << endl;
@@ -362,7 +356,7 @@ class RegDepCounter : public Force::SimPlugin
                     if ((*apRegUpdates)[i].access_type == rw_check_phase.first) 
                     {
                         string rname;
-                        if (GPReg(rname,(*apRegUpdates)[i].regname)) //TODO: Michael add in VReg when the templates are ready to test
+                        if (GPReg(rname,(*apRegUpdates)[i].regname))
                         {
                             //Translate register name to EOperandType and number
                             //NOTE: there is a disconnect between the terminology used in the enum and the data source that creates the register update information.
@@ -376,7 +370,7 @@ class RegDepCounter : public Force::SimPlugin
                             //Bundle the reg access info since we need to use the information in multiple ways and places
                             struct RegAccess reg_access_temp(reg_type, reg_num, Force::string_to_EAccessAgeType(rw_check_phase.second), (*apRegUpdates)[i].CpuID);
                             
-                            //Only check for a dependency for this register if we have not already counted one. TODO: Michael is the a way to make this part less awkward?
+                            //Only check for a dependency for this register if we have not already counted one.
                             auto same_register_lambda = [&reg_access_temp](const struct RegAccess & other){return reg_access_temp.is_same_register(other);};
                             if(std::find_if(new_dependency_registers.begin(), new_dependency_registers.end(), same_register_lambda) == new_dependency_registers.end())
                             {

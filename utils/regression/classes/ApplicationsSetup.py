@@ -52,20 +52,6 @@ class ApplicationsSetup(object):
 
         # Populate single run applications options
         if aSingleRun:
-            """TODO: The output directory hasn't been initialized when
-            we get to this point, so we aren't able to determine if the
-            workflow file should be written to output/regression/ or
-            output/performance/ yet. Ideally we would set up all of
-            master run before doing any application setup, but the
-            current implementation is the other way around. Fixing this
-            issue is too large an effort for something this small, but
-            this should be revisited when 1) we decide to knock out
-            some of the major technical debt that master run has
-            accrued, 2) we decide on being able to include workflow in
-            control files, or 3) we decide to start explicitly logging
-            workflow files. For now, workflow is being passed into
-            forrest run via the config file."""
-
             for app_name, app_opts in single_run_app_opts:
                 app_info = self._getAppConfig(app_name)
                 self._mAppsInfo.addSingleRunApplication(app_info)
@@ -92,33 +78,6 @@ class ApplicationsSetup(object):
         # result.
         if aAddOpts:
             self._resolveParameters()
-
-    # TODO:
-    """Currently, the workflow file is arranged as a list of tuples:
-    (application name, list of dictionaries associated with the app).
-    The way workflow parsing works right now is to split each
-    dictionary into a key and value and append them to existing
-    lists of values for the associated key. It is the application's
-    responsibility to handle the list of options for each key. Since
-    this feature was originally intended for use with the Iss
-    application and Iss has only 1 option (path), it works perfectly.
-    Issues arise when this functionality is adapted for future
-    applications which may have more than 1 optional option: if the
-    first dictionary for app X contained 2 key-value pairs (a:'a',
-    b:'b') and the second contained a single (a:'a2'), the
-    application would get 2 lists of different sizes (a:['a', 'a2']
-    b:['b']) and would be unable to determine which a-value the
-    single b-value maps to.
-    There are 2 clear solutions available:
-    The first is to change master run's behavior: how it handles
-    options, and loading them into their respective applications.
-    Doing this would not require each application having its own
-    custom handling of multiple dictionaries, however would change
-    some core functionality of master run.
-    The second is to modify this current workflow parser to pass
-    entire dictionaries into applications instead of a list for each
-    option. This does not change any major master run functionality
-    but requires custom handling in each application."""
 
     # Adds options to provided system arguments to resolve later
     #

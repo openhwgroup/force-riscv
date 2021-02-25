@@ -30,8 +30,6 @@ class ThreadSplitterSequence(Sequence):
         with ThreadSplitterContextManager(self):
             pc = PcConfig.get_base_boot_pc()
             (skip_boot, skip_boot_valid) = self.getOption("SkipBootCode")
-            # TODO allow for granular control of skip boot code/skip thread
-            # splitter code
             if skip_boot_valid and skip_boot == 1:
                 pc = PcConfig.get_base_initial_pc()
 

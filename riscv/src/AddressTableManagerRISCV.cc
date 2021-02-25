@@ -43,8 +43,6 @@ namespace Force {
       addr_table->SetRecoveryAddressGenerator(new RecoveryAddressGeneratorRISCV(pGen));
     }
 
-    // needs review
-    // TODO signup with exception level changing event.
     const Generator* generator = GetGenerator();
     auto reg_file = generator->GetRegisterFile();
     auto phys_ptr = reg_file->PhysicalRegisterLookup("privilege");

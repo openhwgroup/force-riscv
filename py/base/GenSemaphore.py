@@ -68,10 +68,6 @@ class GenSemaphore(Sequence):
         if (self.mSemaVA & 0x00FFFFFFFFFF0000) == 0:
             self.error("ERROR VA=%x is invalid" % self.mSemaVA)
 
-        # TODO(Noah): Implement a better mechanism for checking whether paging
-        #  is enabled than checking whether the page info object is empty when
-        #  such a mechanism can be devised. There may be error conditions when
-        #  paging is enabled that also yield an empty page info object.
         shared_va_page_info = self.getPageInfo(self.mSemaVA, "VA", self.mBank)
         if shared_va_page_info and (
             shared_va_page_info["Page"]["MemoryAttr"] != self.mVaAttr

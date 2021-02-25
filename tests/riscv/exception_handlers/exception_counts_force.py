@@ -111,8 +111,6 @@ class MainSequence(Sequence):
         medeleg_val_reg_index = self.getRandomGPR(exclude="0")
         load_gpr64_seq.load(medeleg_val_reg_index, medeleg_val)
 
-        # TODO(Noah): Uncomment the statement below when the medeleg
-        #  register is usable; it currently has a specified size of 0.
         # self.genInstruction(
         #   'CSRRW#register#RISCV', {'rd': 0, 'rs1': medeleg_val_reg_index,
         #                            'csr': self.getRegisterIndex('medeleg')})

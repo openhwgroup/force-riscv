@@ -279,7 +279,7 @@
 <     auto ppte = sim->addr_to_mem(pte_paddr);
 ---
 >     //std::cout << "mmu_t::walk pte_paddr=0x" << std::hex << pte_paddr << std::endl;
->     //auto ppte = sim->addr_to_mem(pte_paddr); //TODO replace with check that our memory model accepts this pa
+>     //auto ppte = sim->addr_to_mem(pte_paddr);
 >     bool ppte = sim->sparse_is_pa_initialized(pte_paddr, vm.ptesize);
 316c445,491
 <     reg_t pte = vm.ptesize == 4 ? from_le(*(uint32_t*)ppte) : from_le(*(uint64_t*)ppte);
@@ -330,7 +330,7 @@
 >     // These endianness conversion functions are defined in the new version, do they work for our purposes or are they redundant with the above code?
 >     //
 >     //
->     reg_t pte = vm.ptesize == 4 ? from_le((uint32_t)ppte_val) : from_le(ppte_val); //TODO load the actual data from the memory model
+>     reg_t pte = vm.ptesize == 4 ? from_le((uint32_t)ppte_val) : from_le(ppte_val);
 318a494,495
 >     //std::cout << "mmu_t::walk pte=0x" << std::hex << pte << " ppn=0x" << ppn << std::endl;
 > 
@@ -348,7 +348,7 @@
 338c521,525
 <         *(uint32_t*)ppte |= to_le((uint32_t)ad);
 ---
->         (uint32_t)ppte_val |= to_le((uint32_t)ad); //TODO replace with a write to the memory model data, needs an iso check during dev too
+>         (uint32_t)ppte_val |= to_le((uint32_t)ad);
 >         sim->sparse_write(pte_paddr, reinterpret_cast<uint8_t*>(&ppte_val), vm.ptesize); //NOTE this was written as a write from pte rather than ppte_val which doesnt match the reference code intent.
 >         uint32_t debug_buff = 0;
 >         sim->sparse_read_partially_initialized(pte_paddr, vm.ptesize, reinterpret_cast<uint8_t*>(&debug_buff));
@@ -408,7 +408,7 @@
 > 
 >     std::cerr << "\tpte_paddr: " << std::hex << pte_paddr << std::endl;
 > 
->     //auto ppte = sim->addr_to_mem(pte_paddr); //TODO replace with check that our memory model accepts this pa
+>     //auto ppte = sim->addr_to_mem(pte_paddr);
 >     bool ppte = true;
 >     if (!ppte || !pmp_ok(pte_paddr, vm.ptesize, LOAD, PRV_S))
 >     {

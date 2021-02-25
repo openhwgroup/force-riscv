@@ -36,8 +36,6 @@ class MainSequence(Sequence):
         else:
             self.notice("FORCE/RISCV configured for 64-bits...")
 
-        # TODO(Noah): Test branch instruction generation methods
-
         (dest_reg_index, src_reg_index, src_reg_index_2) = self.getRandomGPRs(
             3, exclude="0"
         )

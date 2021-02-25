@@ -52,7 +52,7 @@ namespace Force {
     {
       pMemMgr->AllocatePageTableBlock(bankType, tableSize, tableSize, usable, root_addr);
       LOG(debug) << "[SetupRootPageTableRISCV::SetupRootPageTable] initial root-address: 0x" << std::hex << root_addr << std::dec << std::endl;
-      pRegFile->InitializeRegisterFieldFullValue(reg_ptr, "PPN", (root_addr >> 12)); //TODO field is just PPN, so 44:0 need to be written ignoring the page offset (should be 0x000 for this case)
+      pRegFile->InitializeRegisterFieldFullValue(reg_ptr, "PPN", (root_addr >> 12)); //field is just PPN, so 44:0 need to be written ignoring the page offset (should be 0x000 for this case)
       auto reg_ptrX = pRegFile->RegisterLookup(regName);
       auto field_ptrX = reg_ptrX->RegisterFieldLookup("PPN");
       uint64 root_addrX = (field_ptrX->Value() << 12);

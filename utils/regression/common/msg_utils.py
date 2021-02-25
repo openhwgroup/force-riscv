@@ -200,9 +200,6 @@ class Msg:
         | MsgLevel.info
         | MsgLevel.noinfo
     )
-    # TODO: This is a hack to default messaging to master run's specified
-    #  default logging level. In the future, make the message utility
-    #  completely independent of master run.
 
     # set the default message level
     @classmethod

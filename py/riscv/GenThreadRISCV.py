@@ -135,9 +135,7 @@ class GenThreadRISCV(GenThread):
         self.systemCallSequence = SystemCallSequence
 
         # create SelfHostedDebugSequence instance...
-        # TODO:
         #   from riscv.SelfHostedDebugSequence import SelfHostedDebugSequence
-        # TODO: self.selfHostedDebugSequence = SelfHostedDebugSequence
 
     def installAddressTable(self):
         from riscv.AddressTable import AddressTableManagerRISCV

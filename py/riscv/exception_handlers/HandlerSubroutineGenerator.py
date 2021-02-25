@@ -118,7 +118,6 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         )
 
         # self.mAssemblyHelper.addLabel('ATP MODE check')
-        # TODO add switching for diff modes
         if self.getGlobalState("AppRegisterWidth") == 32:
             self.callRoutine("TableWalkSV32")
         else:

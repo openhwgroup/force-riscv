@@ -69,7 +69,7 @@ class FrunToCtrlParametersProcessor(ParameterProcessor):
 #
 def process_frun_to_ctrl_control_data(aControlData, aAppParameters):
     if aAppParameters is None:
-        return  # TODO Temporary, to avoid failing in forrest run, to remove.
+        return
 
     key = "frun-to-ctrl"
     if aAppParameters.parameter(key):

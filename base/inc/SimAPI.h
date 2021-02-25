@@ -42,8 +42,6 @@ namespace Force {
   typedef unsigned int CacheType;
   typedef unsigned int CacheAttrs;
 
-  //TODO I recommend adding a struct for instruction updates that includes things like instruction number, pc, text, operands, and adding callback to make use of it.
-
   //!< MemUpdate - struct used to record memory updates from simulator...
 
   struct MemUpdate {

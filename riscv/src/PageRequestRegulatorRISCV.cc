@@ -59,7 +59,6 @@ namespace Force {
 
   void PageRequestRegulatorRISCV::Setup(const Generator* pGen)
   {
-    //TODO setup privileged condition for RISCV if needed
     PageRequestRegulator::Setup(pGen);
   }
 

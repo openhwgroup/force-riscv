@@ -86,9 +86,6 @@ class MainSequence(Sequence):
         state.addPrivilegeLevelStateElementByName("M")
         self._mExpectedStateData[EStateElementType.PrivilegeLevel] = 3
 
-        # TODO(Noah): Add some system register StateElements when the system
-        # registers are defined correctly in the system_registers.xml file.
-
         return state
 
     # Create a State in S privilege level with the Sv39 virtual memory system
@@ -101,8 +98,6 @@ class MainSequence(Sequence):
         state.addPrivilegeLevelStateElementByName("S")
         self._mExpectedStateData[EStateElementType.PrivilegeLevel] = 1
 
-        # TODO(Noah): Uncomment specifying the satp.MODE value when switching
-        #  to the Sv39 virtual memory system is supported.
         # state.addVmContextStateElement('satp', 'MODE', 8)
         # self._mExpectedStateData[
         #   EStateElementType.VmContext] = [('satp', 'MODE', 8)]
@@ -140,12 +135,6 @@ class MainSequence(Sequence):
         fcsr_val = utils.combine_register_value_with_field_value(
             self, fcsr_name, fcsr_val, "FRM", 1
         )
-
-        # TODO(Noah): Enable verification of setting the fcsr register when
-        #  the readRegister() method reads the correct value for fcsr.
-        #  Currently, the top 58 bits are being initialized to a non-zero
-        #  value by Force, which is not legal.
-        #  expected_sys_reg_state_data.append((fcsr_name, fcsr_val))
 
         expected_fp_reg_state_data = []
         for fp_reg_index in range(0, 32):

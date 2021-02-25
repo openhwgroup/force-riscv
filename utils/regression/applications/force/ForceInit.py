@@ -76,7 +76,7 @@ def process_force_control_data(aControlData, aAppParameters):
     :return:
     """
     if aAppParameters is None:
-        return  # TODO Temporary, to avoid failing in forrest run, to remove.
+        return
 
     key = "path"
     if aAppParameters.parameter(key):

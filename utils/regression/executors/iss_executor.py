@@ -29,7 +29,6 @@ from classes.control_item import ControlItem
 class IssResult(ProcessResult):
     iss_instr_count = 0
     iss_message = 1
-    # {{{TODO}}} following line deprecated
     iss_log = 2
 
 
@@ -41,7 +40,6 @@ class IssKeys(object):
     iss_end = "end"
     iss_count = "count"
     iss_message = "message"
-    # {{{TODO}}} following line deprecated
     iss_log = "log"
 
 
@@ -65,7 +63,6 @@ class IssExecutor(AppExecutor):
             IssKeys.iss_end: str(arg_result[IssResult.process_end]),
             IssKeys.iss_count: int(my_result[IssResult.iss_instr_count]),
             IssKeys.iss_message: str(my_result[IssResult.iss_message])
-            # {{{TODO}}} following line deprecated
             ,
             IssKeys.iss_log: arg_log,
         }

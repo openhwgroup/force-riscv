@@ -40,9 +40,6 @@ class MainSequence(VectorTestSequence):
     def _setUpTest(self):
         choices_mod = ChoicesModifier(self.genThread)
 
-        # TODO(Noah): Remove the restriction on SEW when a mechanism to skip
-        #  instructions with illegal vector layouts is implemented. For now,
-        #  ensure vector element width is set to no more than 16 bits.
         choice_weights = {
             "0x0": 10,
             "0x1": 10,

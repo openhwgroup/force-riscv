@@ -182,7 +182,7 @@ namespace Force {
   void GenSequenceAgentRISCV::GetLoadFPRSequence(const Register* regPtr, uint64 loadValue, vector<GenRequest* >& reqSeq, const Register* gprPtr)
   {
     char reg_precision = regPtr->Name().at(0);
-    char reg_prec_instr_char = 'W'; // TODO may want default to be D
+    char reg_prec_instr_char = 'W';
     switch (reg_precision)
     {
       case 'S':
@@ -192,7 +192,6 @@ namespace Force {
         reg_prec_instr_char = 'D';
         break;
       case 'Q':
-        //TODO no FMV.Q.X in RV64 - need way to load lower/upper halves of 128 bit register via 1 or more instructions
         LOG(notice) << "{GenSequenceAgentRISCV::GetLoadFPRSequence} using FMV.D.X for Quad Precision instr" << endl;
         reg_prec_instr_char = 'D';
         break;
@@ -234,7 +233,7 @@ namespace Force {
 
   void GenSequenceAgentRISCV::GetLoadVecRegSequence(const Register* regPtr, uint64 loadValue, vector<GenRequest*>& reqSeq, const Register* gprPtr)
   {
-    const char* instr_name = "VL1R.V##RISCV"; //TODO: build each instruction -> "%s%d%s", "VL", nf, "R.V##RISCV"
+    const char* instr_name = "VL1R.V##RISCV";
     const char* src_opr = "rs1";
     const char* dest_opr = "vd";
 

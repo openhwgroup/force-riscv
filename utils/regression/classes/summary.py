@@ -808,7 +808,6 @@ class SummaryThread(HiOldThread):
                     my_qitem = None
 
                 except TimeoutError as arg_ex:
-                    # {{{TODO}}} Implement proper heartbeat
                     # Msg.dbg( str( arg_ex ) )
                     if workers_done_event.isSet():
                         break

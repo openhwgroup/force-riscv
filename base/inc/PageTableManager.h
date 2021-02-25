@@ -66,7 +66,6 @@ namespace Force
     void UpdateVmConstraints(const PageTable* pTable); //!< utility function to extract the constraints from the table entry and apply them to the managed set
 
     //std::vector<PageTable*> mPageTables; //!< sorted vector of page tables mapped in this memory bank
-    //TODO might need to change to vector of TablePTE if we want to have the entry info saved here as well - check validity
     std::vector<RootPageTable*> mRootPageTables; //!< sorted vector of root page tables mapped in this bank
     std::vector<VmConstraint*> mVmConstraints; //!< vector of VM Constraints describing current context of existing mappings
 

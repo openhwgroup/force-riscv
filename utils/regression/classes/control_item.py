@@ -35,7 +35,7 @@ class CtrlItmKeys(object):
     # control item file directory, could be relative, absolute, or current
     fdir = "control-dir"
 
-    # control item file name TODO: should be renamed to item-fname
+    # control item file name
     fctrl_name = "fctrl-name"
 
     fctrl_dir = "fctrl-dir"

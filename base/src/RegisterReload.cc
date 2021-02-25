@@ -60,8 +60,6 @@ namespace Force {
 
   void RegisterUpdate::Apply(RegisterFile* pRegFile)
   {
-    // TODO - how to verify if HasISS is false (NoISS mode)
-
     pRegFile->RegisterLookup(mName)->SetValue(mUpdateValue);
   }
 
@@ -111,7 +109,6 @@ namespace Force {
 
   const std::string RegisterReload::ToString() const
   {
-    // TODO
     return "RegisterReload";
   }
 

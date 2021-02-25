@@ -52,9 +52,6 @@ class ExceptionHandlerManager(Sequence):
         self.memBankHandlerRegistryRepo = MemoryBankHandlerRegistryRepository()
         self.exceptions_stack = factory.createExceptionHandlerStack(gen_thread)
 
-        # TODO(Noah) Implement use of a list of ThreadHandlerSets
-        # a list will allow different threads to utilize different
-        # exception handlers.
         self.thread_handler_set = factory.createThreadHandlerSet(
             gen_thread, self.memBankHandlerRegistryRepo, self.exceptions_stack
         )
@@ -138,8 +135,6 @@ class ExceptionHandlerManager(Sequence):
         return self.default_set_name == "Fast"
 
     # Generate all exception sets. Map a set to the current thread
-    # TODO(Noah): Implement creation of multiple exception handler sets
-    # currently, only one set is supported.
     def generate(self, **kwargs):
         # generate stack for each thread
         # NOTE: result is same GPR used as stack pointer, for all threads

@@ -183,7 +183,6 @@ namespace Force {
 
   void MemoryBank::ReserveMemory(const ConstraintSet& memConstr)
   {
-    // TODO check if usable contains the memConstr first.
     mpUsable->MarkUsed(memConstr);
     if (mpPhysicalPageManager != nullptr)
     {

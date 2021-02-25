@@ -327,8 +327,6 @@ class Register:
     #  attributes
     def __init__(self, **kwargs):
         self.mName = kwargs.get("name", "")
-        # TODO: Do physical_name, physical_length, physical_type and
-        # physical_class fields need to be defined for RISCV?
         self.mIndex = kwargs.get("index", None)
         self.mLength = kwargs.get("length", "")
         self.mBoot = kwargs.get("boot", 0)

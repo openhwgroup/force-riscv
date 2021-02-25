@@ -25,11 +25,6 @@ class MainSequence(LoopTestSequence):
     def __init__(self, gen_thread, name=None):
         super().__init__(gen_thread, name)
 
-        # TODO(Noah): Uncomment the load and store instructions when the
-        #  Handcar memory initialization issue is resolved.
-        # TODO(Noah): Uncomment the branch instructions when running Force
-        #  with co-simulation is enabled for RISCV.
-
         self._mInstructionWeights = {
             "ADD##RISCV": 10,
             "ADDI##RISCV": 10,

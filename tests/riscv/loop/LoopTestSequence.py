@@ -40,8 +40,6 @@ class LoopTestSequence(Sequence):
         if not valid:
             self.error("Unable to read register %s" % loop_reg_name)
 
-        # TODO(Noah): Enable the error checking below when running Force with
-        #  co-simulation is enabled for RISCV.
         if loop_reg_val != 0:
             # self.error('Unexpected register value: Expected = 0x0,
             #            Actual = 0x%x' % loop_reg_val)

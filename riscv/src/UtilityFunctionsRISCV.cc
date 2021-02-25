@@ -68,6 +68,6 @@ namespace Force {
       return EPagingExceptionType::StoreAmoPageFault;
     }
 
-    return EPagingExceptionType::LoadPageFault; //TODO need to handle unknown memaccess potentially
+    return EPagingExceptionType::LoadPageFault;
   }
 }
