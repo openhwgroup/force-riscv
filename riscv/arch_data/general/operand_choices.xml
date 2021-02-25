@@ -338,6 +338,9 @@
     <choice name="v30" value="30" weight="10"/>
     <choice name="v31" value="31" weight="10"/>
   </choices>
+  <choices name="Fence GPRs" type="RegisterOperand">
+    <choice name="x0" value="1" weight="10"/>
+  </choices>
   <choices name="Integer data pattern" type="ChoicesOperand">
     <choice name="All one" value="0x0" weight="10"/>
     <choice name="All zero" value="0x1" weight="10"/>
@@ -429,5 +432,27 @@
   <choices name="Write after write address reuse" type="ChoicesOperand">
     <choice name="No reuse" value="0x0" weight="0"/>
     <choice name="Reuse" value="0x1" weight="100"/>
+  </choices>
+  <choices name="Fence mode" type="ImmediateOperand">
+    <choice name="none" value="0x0" weight="10"/>
+    <choice name="TSO" value="0x8" weight="0"/>
+  </choices>
+  <choices name="Barrier option" type="ImmediateOperand">
+    <choice name="none" value="0x0" weight="10"/>
+    <choice name="W" value="0x1" weight="10"/>
+    <choice name="R" value="0x2" weight="10"/>
+    <choice name="RW" value="0x3" weight="10"/>
+    <choice name="O" value="0x4" weight="10"/>
+    <choice name="OW" value="0x5" weight="10"/>
+    <choice name="OR" value="0x6" weight="10"/>
+    <choice name="ORW" value="0x7" weight="10"/>
+    <choice name="I" value="0x8" weight="10"/>
+    <choice name="IW" value="0x9" weight="10"/>
+    <choice name="IR" value="0xA" weight="10"/>
+    <choice name="IRW" value="0xB" weight="10"/>
+    <choice name="IO" value="0xC" weight="10"/>
+    <choice name="IOW" value="0xD" weight="10"/>
+    <choice name="IOR" value="0xE" weight="10"/>
+    <choice name="IORW" value="0xF" weight="10"/>
   </choices>
 </choices_file>
