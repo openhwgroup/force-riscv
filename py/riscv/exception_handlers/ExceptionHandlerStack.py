@@ -26,6 +26,7 @@ from riscv.Utils import LoadGPR64
 # register x1 is used. This register is implicitly saved when a stack frame is
 # created and reloaded when a stack frame is freed.
 
+
 class ExceptionHandlerStackRISCV(Sequence):
     def __init__(self, aGenThread):
         super().__init__(aGenThread)

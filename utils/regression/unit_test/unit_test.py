@@ -15,11 +15,18 @@
 #
 # test_base.py
 
+import sys
 from common.msg_utils import Msg
 
 
 # base unit test class
 class UnitTest(object):
+    def run(self):
+        try:
+            self.__enter__()
+        finally:
+            self.__exit__(sys.exc_info())
+
     def run_test(self):
         pass
 
@@ -29,6 +36,6 @@ class UnitTest(object):
     def __enter__(self):
         self.run_test()
 
-    def __exit__(self, my_type, value, traceback):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         self.process_result()
         Msg.blank()

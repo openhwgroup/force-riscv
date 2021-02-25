@@ -118,10 +118,8 @@ class UnitTest_LoopThread(UnitTest):
 class UnitTest_HiThread(UnitTest):
     def run_test(self):
         Msg.info("HiThread: Start all Thread Unit Tests ... ")
-        with UnitTest_NoLoopThread():
-            pass
-        with UnitTest_LoopThread():
-            pass
+        UnitTest_NoLoopThread().run()
+        UnitTest_LoopThread().run()
 
     def process_result(self):
         Msg.info("HiThread: Process All Thread Test Results ... ")

@@ -439,8 +439,7 @@ class RtlExecutor(IssExecutor):
             RtlKeys.rtl_start: str(arg_result[RtlResult.process_start]),
             RtlKeys.rtl_end: str(arg_result[RtlResult.process_end]),
             RtlKeys.rtl_count: int(my_result[RtlResult.rtl_cycle_count]),
-            RtlKeys.rtl_message: str(my_result[RtlResult.rtl_message])
-            ,
+            RtlKeys.rtl_message: str(my_result[RtlResult.rtl_message]),
             RtlKeys.rtl_log: arg_log,
         }
 

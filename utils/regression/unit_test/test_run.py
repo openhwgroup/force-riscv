@@ -68,12 +68,9 @@ class UnitTestRun(ModuleRun):
 
     def run(self):
         Msg.dbg("ThreadTestRun::run()")
-        with UnitTest_HiThread():
-            pass
-        with UnitTest_HiEvent():
-            pass
-        with UnitTest_HiMutex():
-            pass
+        UnitTest_HiThread().run()
+        UnitTest_HiEvent().run()
+        UnitTest_HiMutex().run()
 
     # checks for usage requests and performs the initial validation of the
     # command line

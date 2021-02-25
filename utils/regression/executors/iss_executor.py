@@ -62,8 +62,7 @@ class IssExecutor(AppExecutor):
             IssKeys.iss_start: str(arg_result[IssResult.process_start]),
             IssKeys.iss_end: str(arg_result[IssResult.process_end]),
             IssKeys.iss_count: int(my_result[IssResult.iss_instr_count]),
-            IssKeys.iss_message: str(my_result[IssResult.iss_message])
-            ,
+            IssKeys.iss_message: str(my_result[IssResult.iss_message]),
             IssKeys.iss_log: arg_log,
         }
 

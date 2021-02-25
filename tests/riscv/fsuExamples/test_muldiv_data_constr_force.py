@@ -44,7 +44,6 @@ class MainSequence(Sequence):
         ],
     }
 
-
     def generate(self, **kargs):
         (prec, prec_valid) = self.getOption("precision")
         (data_type, data_type_valid) = self.getOption("data_type")
