@@ -535,17 +535,18 @@ class RegisterFile:
 
     # Returns tree from provided label
     def getTreeFromLabel(self, aLabel):
+        ret_tree = None
         if aLabel == "system":
-            return self.mSystemTree
+            ret_tree = self.mSystemTree
         elif aLabel == "app":
-            return self.mApplicationTree
+            ret_tree = self.mApplicationTree
         elif aLabel == "impl":
-            return self.mImplementationTree
+            ret_tree = self.mImplementationTree
         elif aLabel == "choices":
-            return self.mRegisterChoicesTree
+            ret_tree = self.mRegisterChoicesTree
 
         print("RegisterFile.getTreeFromLabel(): Unknown label: %s" % aLabel)
-        return None
+        return ret_tree
 
     # Adds provided register to the specified tree
     def addRegisterToTree(self, aTree, aRegister):

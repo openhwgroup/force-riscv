@@ -173,23 +173,26 @@ class MsgLabel:
     # get Msg Level Label
     @classmethod
     def get_label(cls, arg_lev):
+        ret_val = ""
         if arg_lev is str:
             # little recursion solves a couple of problems
             return MsgLabel.get_label(MsgLevel.translate(arg_lev))
         if arg_lev & MsgLevel.info:
-            return str(MsgLabel.info)
+            ret_val = str(MsgLabel.info)
         elif arg_lev & MsgLevel.dbg:
-            return str(MsgLabel.dbg)
+            ret_val = str(MsgLabel.dbg)
         elif arg_lev & MsgLevel.user:
-            return str(MsgLabel.user)
+            ret_val = str(MsgLabel.user)
         elif arg_lev & MsgLevel.crit:
-            return str(MsgLabel.crit)
+            ret_val = str(MsgLabel.crit)
         elif arg_lev & MsgLevel.err:
-            return str(MsgLabel.err)
+            ret_val = str(MsgLabel.err)
         elif arg_lev & MsgLevel.warn:
-            return str(MsgLabel.warn)
+            ret_val = str(MsgLabel.warn)
         elif arg_lev & MsgLevel.trace:
-            return str(MsgLabel.trace)
+            ret_val = str(MsgLabel.trace)
+
+        return ret_val
 
 
 class Msg:
@@ -389,65 +392,51 @@ class Msg:
     @classmethod
     def lout(cls, arg_obj, arg_lev, arg_lbl=None, arg_indent=""):
 
-        if not arg_obj:
-            return
-        if isinstance(arg_obj, (list, dict)):
-            if not len(arg_obj) > 0 or not arg_obj:
-                return
-
-        elif not hasattr(arg_obj, "__class__"):
-            return
-
-        if isinstance(arg_lev, str):
-            Msg.lout(arg_obj, MsgLevel.translate(arg_lev), arg_lbl)
-            return
-
-        if not arg_lev & Msg.lev:
-            return
-
-        arg_indent += "\t"
-
-        if arg_lbl is not None:
-            Msg.write_nostrip(arg_indent + str(arg_lbl), arg_lev)
-
-        if isinstance(arg_obj, list):
-            my_ndx = 0
-            for my_item in arg_obj:
-                my_ndx += 1
-                if isinstance(my_item, (list, dict)):
-                    Msg.lout(
-                        my_item, arg_lev, str(my_ndx), "%s" % (arg_indent)
-                    )
+        if arg_obj:
+            if (isinstance(arg_obj, (list, dict)) and len(arg_obj) > 0) or hasattr(arg_obj, "__class__"):
+                if isinstance(arg_lev, str):
+                    Msg.lout(arg_obj, MsgLevel.translate(arg_lev), arg_lbl)
                 else:
-                    Msg.write_nostrip(
-                        "%s[%02d] = %s" % (arg_indent, my_ndx, str(my_item)),
-                        arg_lev,
-                        True,
-                    )
+                    if not arg_lev & Msg.lev:
+                        return
 
-        elif isinstance(arg_obj, dict):
+                    arg_indent += "\t"
+                    if arg_lbl is not None:
+                        Msg.write_nostrip(arg_indent + str(arg_lbl), arg_lev)
 
-            for my_key in arg_obj:
-                if isinstance(arg_obj[my_key], (list, dict)):
-                    Msg.lout(
-                        arg_obj[my_key], arg_lev, my_key, "%s" % (arg_indent)
-                    )
-                else:
-                    Msg.write_nostrip(
-                        "%s[%s] = %s"
-                        % (arg_indent, my_key, str(arg_obj[my_key])),
-                        arg_lev,
-                        True,
-                    )
-
-        elif hasattr(arg_obj, "__class__"):
-
-            Msg.lout(arg_obj.__dict__, arg_lev, None, "%s" % (arg_indent))
-
-        else:
-            raise Exception(
-                "Argument 1 needs to be of list or dictionary type"
-            )
+                    if isinstance(arg_obj, list):
+                        my_ndx = 0
+                        for my_item in arg_obj:
+                            my_ndx += 1
+                            if isinstance(my_item, (list, dict)):
+                                Msg.lout(
+                                    my_item, arg_lev, str(my_ndx), "%s" % (arg_indent)
+                                )
+                            else:
+                                Msg.write_nostrip(
+                                    "%s[%02d] = %s" % (arg_indent, my_ndx, str(my_item)),
+                                    arg_lev,
+                                    True,
+                                )
+                    elif isinstance(arg_obj, dict):
+                        for my_key in arg_obj:
+                            if isinstance(arg_obj[my_key], (list, dict)):
+                                Msg.lout(
+                                    arg_obj[my_key], arg_lev, my_key, "%s" % (arg_indent)
+                                )
+                            else:
+                                Msg.write_nostrip(
+                                    "%s[%s] = %s"
+                                    % (arg_indent, my_key, str(arg_obj[my_key])),
+                                    arg_lev,
+                                    True,
+                                )
+                    elif hasattr(arg_obj, "__class__"):
+                        Msg.lout(arg_obj.__dict__, arg_lev, None, "%s" % (arg_indent))
+                    else:
+                        raise Exception(
+                            "Argument 1 needs to be of list or dictionary type"
+                        )
 
     @classmethod
     def flush(cls):

@@ -42,21 +42,24 @@ class CleanUpRules(object):
 
     def shouldKeepFile(self, fileName):
         self.fileBaseName = PathUtils.base_name(fileName)
+        ret_val = False
 
         if self.fileBaseName in self.baseNamesToKeep:
-            return True
+            ret_val = True
 
         if self.keepNone:
-            return False  # keep none of the rest
+            ret_val = False  # keep none of the rest
 
         if self.keepAll:
-            return True
+            ret_val = True
+        
+        if self.typesToKeep is not None:
+            for typeToKeep in self.typesToKeep:
+                if self.fileBaseName.endswith(typeToKeep):
+                    ret_val = True
+                    break
 
-        for typeToKeep in self.typesToKeep:
-            if self.fileBaseName.endswith(typeToKeep):
-                return True
-
-        return False
+        return ret_val 
 
     def setBaseNamesToKeep(self, baseNames):
         self.baseNamesToKeep = baseNames

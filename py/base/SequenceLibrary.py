@@ -36,25 +36,22 @@ class SequenceLibrary(object):
     # randomly choose a sequence instance
     def chooseOne(self):
         # randomly choose one from the list
-        if not self.seqList:
-            # the sequence list is not created
-            return None
-        name, path = self._pickWeighted()
-        if name is not None:
-            myClass = self._getClass(name, path)
-            if myClass is not None:
-                if issubclass(myClass, Sequence):
-                    key = name + path
-                    if key not in self.seqDict:
-                        mySeq = self._generateSeqInstance(myClass)
-                        self.seqDict[key] = mySeq
-                        return mySeq
-                    return self.seqDict[key]
-                elif issubclass(myClass, SequenceLibrary):
-                    mySeqLib = self._generateSeqLibInstance(myClass)
-                    return mySeqLib.chooseOne()
-                return None
-            return None
+        if self.seqList:
+            name, path = self._pickWeighted()
+            if name is not None:
+                myClass = self._getClass(name, path)
+                if myClass is not None:
+                    if issubclass(myClass, Sequence):
+                        key = name + path
+                        if key not in self.seqDict:
+                            mySeq = self._generateSeqInstance(myClass)
+                            self.seqDict[key] = mySeq
+                            return mySeq
+                        return self.seqDict[key]
+                    elif issubclass(myClass, SequenceLibrary):
+                        mySeqLib = self._generateSeqLibInstance(myClass)
+                        return mySeqLib.chooseOne()
+        
         return None
 
     # grab one from permutated sequence list, one at a time
