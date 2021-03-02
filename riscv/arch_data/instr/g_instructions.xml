@@ -491,14 +491,14 @@
     <O name="fm" type="Immediate" bits="31-28" choices="Fence mode"/>
     <O name="pred" type="Immediate" bits="27-24" choices="Barrier option"/>
     <O name="succ" type="Immediate" bits="23-20" choices="Barrier option"/>
-    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="Fence GPRs"/>
-    <O name="rd" type="GPR" bits="11-7" access="Write" choices="Fence GPRs"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="FENCE %s, %s, %s, %s, %s" op1="fm" op2="pred" op3="succ" op4="rs1" op5="rd"/>
   </I>
   <I name="FENCE.I" isa="RISCV" group="System" extension="Zifencei">
     <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000000000000010001111"/>
-    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="Fence GPRs"/>
-    <O name="rd" type="GPR" bits="11-7" access="Write" choices="Fence GPRs"/>
+    <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
+    <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="FENCE.I %s, %s, %s" op1="rs1" op2="rd"/>
   </I>
   <I name="FEQ.D" isa="RISCV" group="Float" extension="RV32D">

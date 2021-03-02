@@ -338,9 +338,6 @@
     <choice name="v30" value="30" weight="10"/>
     <choice name="v31" value="31" weight="10"/>
   </choices>
-  <choices name="Fence GPRs" type="RegisterOperand">
-    <choice name="x0" value="1" weight="10"/>
-  </choices>
   <choices name="Integer data pattern" type="ChoicesOperand">
     <choice name="All one" value="0x0" weight="10"/>
     <choice name="All zero" value="0x1" weight="10"/>
