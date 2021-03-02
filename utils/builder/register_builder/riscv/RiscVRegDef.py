@@ -546,7 +546,9 @@ class RegisterFile:
         elif aLabel == "choices":
             ret_tree = self.mRegisterChoicesTree
         else:
-            print("RegisterFile.getTreeFromLabel(): Unknown label: %s" % aLabel)
+            print(
+                "RegisterFile.getTreeFromLabel(): Unknown label: %s" % aLabel
+            )
 
         return ret_tree
 

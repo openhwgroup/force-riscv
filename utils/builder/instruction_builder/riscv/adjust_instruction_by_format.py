@@ -72,6 +72,7 @@ def record_instruction_format(aInstrFormat):
     else:
         format_map[aInstrFormat] = 1
 
+
 def adjust_rs2_rs1_rd(instr):
     opr_adjustor = OperandAdjustor(instr)
 
@@ -146,7 +147,7 @@ def adjust_fp_rs2_rs1_rd(instr):
         opr_adjustor.set_rd_qp()
         ret_val = True
 
-    return ret_val 
+    return ret_val
 
 
 # Lots integer instructions fall into this category.  Like ADDI, JALR, LB etc.
@@ -724,7 +725,7 @@ def adjust_f_rs2(instr):
         opr_adjustor.set_rd_qp()
         ret_val = True
 
-    return ret_val 
+    return ret_val
 
 
 # Floating point Instructions w/ 1 register input operand
@@ -786,7 +787,7 @@ def adjust_f_rs1(instr):
 
         ret_val = True
 
-    return ret_val 
+    return ret_val
 
 
 # Fence instruction

@@ -51,7 +51,7 @@ class SequenceLibrary(object):
                     elif issubclass(myClass, SequenceLibrary):
                         mySeqLib = self._generateSeqLibInstance(myClass)
                         return mySeqLib.chooseOne()
-        
+
         return None
 
     # grab one from permutated sequence list, one at a time

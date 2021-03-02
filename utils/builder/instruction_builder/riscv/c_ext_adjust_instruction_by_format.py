@@ -152,7 +152,7 @@ def c_ext_adjust_instruction_by_format(aInstr):
     else:
         record_instruction_format(instr_format)
 
-    return ret_val 
+    return ret_val
 
 
 def record_instruction_format(aInstrFormat):
@@ -160,6 +160,7 @@ def record_instruction_format(aInstrFormat):
         format_map[aInstrFormat] += 1
     else:
         format_map[aInstrFormat] = 1
+
 
 def adjust_rs1p_or_rdp_rs2p(aInstr):
     opr_adjustor = OperandAdjustor(aInstr)

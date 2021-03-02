@@ -106,7 +106,7 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     else:
         record_instruction_format(instruction_format)
 
-    return ret_val 
+    return ret_val
 
 
 def record_instruction_format(aInstructionFormat):
@@ -209,6 +209,7 @@ def get_element_size(aConstBitsOpr):
             ret_val = 128
 
     return ret_val
+
 
 def adjust_vd_rs1(aInstruction):
     if aInstruction.iclass == "VectorLoadStoreInstruction":
