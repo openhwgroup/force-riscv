@@ -44,7 +44,9 @@ class MainSequence(PageFaultSequence):
 
     # Create an instance of the appropriate page fault modifier.
     def createPageFaultModifier(self):
-        return PageFaultModifier(self.genThread)
+        return PageFaultModifier(
+            self.genThread, self.getGlobalState("AppRegisterWidth")
+        )
 
     # Return the tuple of instructions to choose from to trigger a page fault.
     def getInstructionList(self):

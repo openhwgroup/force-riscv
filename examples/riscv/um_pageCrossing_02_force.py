@@ -36,30 +36,36 @@ class MyMainSequence(Sequence):
             # Get two adjacent 4K pages.
             page_addr = self.genVA(Size=0x2000, Align=0x1000)
 
-            # Generate addresses at the end of the page that are aligned
-            # according to the target size.  No page crossings here; every
-            # access is right at the end of a page.
-            if instr in LDST_Byte_instructions:
-                page_addr |= 0xFFF
-            elif instr in LDST_Half_instructions:
-                page_addr |= 0xFFE
-            elif instr in LDST_Word_instructions:
-                page_addr |= 0xFFC
-            elif instr in LDST_Double_instructions:
-                page_addr |= 0xFF8
-            else:
-                self.error(
-                    ">>>>>  Hmmm...  {} is an unexpected instruction.".format(
-                        instr
-                    )
-                )
+            target_addr = page_addr + self._get_address_offset(instr)
 
             self.notice(
                 ">>>>>  Instruction: {}   Target addr: {:012x}".format(
-                    instr, page_addr
+                    instr, target_addr
                 )
             )
-            self.genInstruction(instr, {"LSTarget": page_addr})
+            self.genInstruction(instr, {"LSTarget": target_addr})
+
+    def _get_address_offset(self, instr):
+        # Generate addresses at the end of the page that are aligned
+        # according to the target size.  No page crossings here; every
+        # access is right at the end of a page.
+        addr_offset = 0
+        if instr in LDST_Byte_instructions:
+            addr_offset = 0xFFF
+        elif instr in LDST_Half_instructions:
+            addr_offset = 0xFFE
+        elif instr in LDST_Word_instructions:
+            addr_offset = 0xFFC
+        elif instr in LDST_Double_instructions:
+            addr_offset = 0xFF8
+        else:
+            self.error(
+                ">>>>>  Hmmm...  {} is an unexpected instruction.".format(
+                    instr
+                )
+            )
+
+        return addr_offset
 
 
 MainSequenceClass = MyMainSequence

@@ -131,6 +131,10 @@ control_items = [
         "generator": {"--cfg": "config/riscv_rv64.config"},
     },
     {
+        "fname": "../../examples/tutorial/_def_fctrl.py",
+        "generator": {"--cfg": "config/riscv_rv64.config"},
+    },
+    {
         "fname": "bnt/_def_fctrl.py",
         "generator": {"--cfg": "config/riscv_rv64.config"},
     },

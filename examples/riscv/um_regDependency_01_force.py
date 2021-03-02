@@ -55,20 +55,23 @@ class MyMainSequence(Sequence):
             source_regs = instr_obj2["Srcs"]
             source_reg_id = source_regs["rs1"]
 
-            # make sure the read-after-write dependency was generated
-            if source_reg_id == target_reg_id:
-                self.notice(
-                    ">>>>>>>>>>  It worked!  Target reg of the first \
-                        instruction is feeding the source reg of the second \
-                        instruction."
+            self._check_dependency(source_reg_id, target_reg_id)
+
+    def _check_dependency(self, source_reg_id, target_reg_id):
+        # make sure the read-after-write dependency was generated
+        if source_reg_id == target_reg_id:
+            self.notice(
+                ">>>>>>>>>>  It worked!  Target reg of the first \
+                    instruction is feeding the source reg of the second \
+                    instruction."
+            )
+        else:
+            self.notice(
+                ">>>>>>>>>>  FAIL!  Source reg id: {}    \
+                    Target reg id: {}".format(
+                    source_reg_id, target_reg_id
                 )
-            else:
-                self.notice(
-                    ">>>>>>>>>>  FAIL!  Source reg id: {}    \
-                        Target reg id: {}".format(
-                        source_reg_id, target_reg_id
-                    )
-                )
+            )
 
 
 #  Points to the MainSequence defined in this file

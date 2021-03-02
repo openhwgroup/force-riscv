@@ -25,9 +25,7 @@ class MyMainSequence(Sequence):
 
             # request the id of an available GPR - avoid "x0"
             # setting reg_id variable scope outside of the for loop
-            reg_id = 0
-            while reg_id == 0:
-                reg_id = self.getRandomGPR()
+            reg_id = self.getRandomGPR(exclude="0")
 
             # generate an instruction that writes that GPR
             instr_rec_id1 = self.genInstruction("ADD##RISCV", {"rd": reg_id})
