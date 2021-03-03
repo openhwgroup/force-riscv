@@ -173,17 +173,9 @@ class LoopControlBase(Sequence):
     # Reserve the loop register if it has not already been reserved.
     def _reserveLoopRegister(self):
         loop_reg_name = self.getGprName(self.mLoopRegIndex)
-        read_reserved = self.isRegisterReserved(loop_reg_name, access="Read")
-        write_reserved = self.isRegisterReserved(loop_reg_name, access="Write")
-        if read_reserved and write_reserved:
-            self._mLoopRegReservationAccess = None
-        elif read_reserved:
-            self._mLoopRegReservationAccess = "Write"
-        elif write_reserved:
-            self._mLoopRegReservationAccess = "Read"
-        else:
-            self._mLoopRegReservationAccess = "ReadWrite"
-
+        self._mLoopRegReservationAccess = self._getRegisterReservationAccess(
+            loop_reg_name
+        )
         if self._mLoopRegReservationAccess is not None:
             self.reserveRegister(
                 loop_reg_name, access=self._mLoopRegReservationAccess
@@ -197,3 +189,24 @@ class LoopControlBase(Sequence):
                 access=self._mLoopRegReservationAccess,
             )
             self._mLoopRegReservationAccess = None
+
+    # Get the register reservation access required to fully reserve the
+    # specified register. For example, if the regiser is reserved for "Write",
+    # "Read" is returned.
+    #
+    #  @param aLoopRegName The name of the register.
+    def _getRegisterReservationAccess(self, aLoopRegName):
+        loop_reg_reservation_access = None
+
+        read_reserved = self.isRegisterReserved(aLoopRegName, access="Read")
+        write_reserved = self.isRegisterReserved(aLoopRegName, access="Write")
+        if read_reserved and write_reserved:
+            loop_reg_reservation_access = None
+        elif read_reserved:
+            loop_reg_reservation_access = "Write"
+        elif write_reserved:
+            loop_reg_reservation_access = "Read"
+        else:
+            loop_reg_reservation_access = "ReadWrite"
+
+        return loop_reg_reservation_access

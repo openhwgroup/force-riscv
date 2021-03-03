@@ -38,19 +38,9 @@ class SequenceLibrary(object):
         # randomly choose one from the list
         if self.seqList:
             name, path = self._pickWeighted()
+
             if name is not None:
-                myClass = self._getClass(name, path)
-                if myClass is not None:
-                    if issubclass(myClass, Sequence):
-                        key = name + path
-                        if key not in self.seqDict:
-                            mySeq = self._generateSeqInstance(myClass)
-                            self.seqDict[key] = mySeq
-                            return mySeq
-                        return self.seqDict[key]
-                    elif issubclass(myClass, SequenceLibrary):
-                        mySeqLib = self._generateSeqLibInstance(myClass)
-                        return mySeqLib.chooseOne()
+                return self._chooseSequenceFromName(name, path)
 
         return None
 
@@ -105,6 +95,13 @@ class SequenceLibrary(object):
             picked_value -= sorted_list[i][3]
         return None, None
 
+    def _chooseSequenceFromName(self, name, path):
+        myClass = self._getClass(name, path)
+        if myClass is not None:
+            return self._chooseSequenceFromClass(name, path, myClass)
+
+        return None
+
     # import a reference class based on given class name and module path
     def _getClass(self, name, path):
         try:
@@ -117,6 +114,19 @@ class SequenceLibrary(object):
         except AttributeError:
             # given class name is incorrect
             return None
+
+    def _chooseSequenceFromClass(self, name, path, my_class):
+        if issubclass(my_class, Sequence):
+            key = name + path
+            mySeq = self.seqDict.setdefault(
+                key, self._generateSeqInstance(my_class)
+            )
+            return mySeq
+        elif issubclass(my_class, SequenceLibrary):
+            mySeqLib = self._generateSeqLibInstance(my_class)
+            return mySeqLib.chooseOne()
+
+        return None
 
     # generaate the sequence instance from given sequence class reference
     def _generateSeqInstance(self, seq_ref):

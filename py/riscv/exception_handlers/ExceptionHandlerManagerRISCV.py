@@ -108,78 +108,24 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
 
         trap_handler_module_name = None
         trap_handler_class_name = None
-        have_trap_handler = False
 
-        for (
-            (exception_class_name, subexception_class_name),
-            (handler_module_name, handler_class_name),
-        ) in handler_assignments.items():
+        for handler_assignment in handler_assignments.items():
+            (
+                (exception_class_name, _),
+                (handler_module_name, handler_class_name),
+            ) = handler_assignment
             if "TRAP_REDIRECTION" in exception_class_name:
                 trap_handler_module_name = handler_module_name
                 trap_handler_class_name = handler_class_name
-                have_trap_handler = True
                 continue
 
-            exception_class = self.getExceptionClass(exception_class_name)
-
-            subexception_class = None
-            if subexception_class_name is not None:
-                subexception_class = self.getExceptionClass(
-                    subexception_class_name
-                )
-
-            for (
-                priv_level,
-                security_state,
-            ) in self.getPrivilegeLevelSecurityStateCombinations():
-                if have_trap_handler and self.useTrapHandler(
-                    exception_class_name, subexception_class_name, priv_level
-                ):
-                    handler_module_name = trap_handler_module_name
-                    handler_class_name = trap_handler_class_name
-
-                handler_assignment_request = ExceptionHandlerAssignmentRequest(
-                    exception_class,
-                    (priv_level,),
-                    (security_state,),
-                    handler_module_name,
-                    handler_class_name,
-                    aMemBank=None,
-                    aSubexcClass=subexception_class,
-                )
-
-                self.thread_handler_set.assignSynchronousExceptionHandler(
-                    handler_assignment_request
-                )
-
-        for (
-            registry
-        ) in self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistries():
-            generator = HandlerSubroutineGeneratorRISCV(
-                self.genThread, self.factory, self.exceptions_stack
+            self._assignHandler(
+                handler_assignment,
+                trap_handler_module_name,
+                trap_handler_class_name,
             )
-            registry.mHandlerSubroutineGenerator = generator
 
-            if self.fastMode():
-                registry.registerExceptHandlerWithClassName(
-                    "riscv.exception_handlers.FastExceptionHandlers",
-                    "FastEmptyHandlerRISCV",
-                    self.factory,
-                    self.exceptions_stack,
-                )
-                self.thread_handler_set.assignAsynchronousExceptionHandler(
-                    "FastEmptyHandlerRISCV"
-                )
-            else:
-                registry.registerExceptHandlerWithClassName(
-                    "riscv.exception_handlers.AsynchronousHandlers",
-                    "AsynchronousHandlerRISCV",
-                    self.factory,
-                    self.exceptions_stack,
-                )
-                self.thread_handler_set.assignAsynchronousExceptionHandler(
-                    "AsynchronousHandlerRISCV"
-                )
+        self._assignSpecialHandlers()
 
     def configureHandlerMemory(self):
         (exc_memory, mem_size) = self.queryHandlerSetMemory("0")
@@ -249,3 +195,72 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
             return valid
 
         return filter(filter_valid, combinations)
+
+    def _assignHandler(
+        self, handlerAssignment, trapHandlerModuleName, trapHandlerClassName
+    ):
+        (
+            (exception_class_name, subexception_class_name),
+            (handler_module_name, handler_class_name),
+        ) = handlerAssignment
+        exception_class = self.getExceptionClass(exception_class_name)
+
+        subexception_class = None
+        if subexception_class_name is not None:
+            subexception_class = self.getExceptionClass(
+                subexception_class_name
+            )
+
+        for (
+            priv_level,
+            security_state,
+        ) in self.getPrivilegeLevelSecurityStateCombinations():
+            if (trapHandlerClassName is not None) and self.useTrapHandler(
+                exception_class_name, subexception_class_name, priv_level
+            ):
+                handler_module_name = trapHandlerModuleName
+                handler_class_name = trapHandlerClassName
+
+            handler_assignment_request = ExceptionHandlerAssignmentRequest(
+                exception_class,
+                (priv_level,),
+                (security_state,),
+                handler_module_name,
+                handler_class_name,
+                aMemBank=None,
+                aSubexcClass=subexception_class,
+            )
+
+            self.thread_handler_set.assignSynchronousExceptionHandler(
+                handler_assignment_request
+            )
+
+    def _assignSpecialHandlers(self):
+        for (
+            registry
+        ) in self.memBankHandlerRegistryRepo.getMemoryBankHandlerRegistries():
+            generator = HandlerSubroutineGeneratorRISCV(
+                self.genThread, self.factory, self.exceptions_stack
+            )
+            registry.mHandlerSubroutineGenerator = generator
+
+            if self.fastMode():
+                registry.registerExceptHandlerWithClassName(
+                    "riscv.exception_handlers.FastExceptionHandlers",
+                    "FastEmptyHandlerRISCV",
+                    self.factory,
+                    self.exceptions_stack,
+                )
+                self.thread_handler_set.assignAsynchronousExceptionHandler(
+                    "FastEmptyHandlerRISCV"
+                )
+            else:
+                registry.registerExceptHandlerWithClassName(
+                    "riscv.exception_handlers.AsynchronousHandlers",
+                    "AsynchronousHandlerRISCV",
+                    self.factory,
+                    self.exceptions_stack,
+                )
+                self.thread_handler_set.assignAsynchronousExceptionHandler(
+                    "AsynchronousHandlerRISCV"
+                )

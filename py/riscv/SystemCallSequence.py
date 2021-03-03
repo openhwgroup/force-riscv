@@ -146,8 +146,7 @@ class SystemCallSequence(Sequence):
     #       generated.
     #  @param aTargetPrivLevel The target privilege level.
     #  @param aTargetAddr The address at which to resume execution after
-    #       completing the privilege
-    #       level switch.
+    #       completing the privilege level switch.
     #  @param aIntermediateRetAddr The return address for the first ECALL of a
     #       2 ECALL sequence
     def _genPrivilegeLevelSwitchInstructions(
@@ -184,16 +183,7 @@ class SystemCallSequence(Sequence):
             # for the first ECALL as the first entry; after the first ECALL, we
             # increment the data block address pointer to allow loading the
             # data block as usual in the second ECALL
-
-            if self._mAppRegSize == 32:
-                self._mAssemblyHelper.genAddImmediate(
-                    self._mDataBlockAddrRegIndex, 4
-                )
-            else:
-                self._mAssemblyHelper.genAddImmediate(
-                    self._mDataBlockAddrRegIndex, 8
-                )
-
+            self._genIncrementDataBlockPointer()
             action_code = 2  # Load From Data Block
             self._mAssemblyHelper.genMoveImmediate(
                 self._mActionCodeRegIndex, action_code
@@ -269,6 +259,17 @@ class SystemCallSequence(Sequence):
         self.genInstruction(
             ("%sRET##RISCV" % priv_level_prefix), {"NoRestriction": 1}
         )
+
+    # Generate an instruction to increment the data block address pointer.
+    def _genIncrementDataBlockPointer(self):
+        if self._mAppRegSize == 32:
+            self._mAssemblyHelper.genAddImmediate(
+                self._mDataBlockAddrRegIndex, 4
+            )
+        else:
+            self._mAssemblyHelper.genAddImmediate(
+                self._mDataBlockAddrRegIndex, 8
+            )
 
     # Generate instruction to load a single GPR
     #

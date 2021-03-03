@@ -13,11 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import functools
 import warnings
 
 import Log
 import RandomUtils
 
+from base.ItemMap import ItemMap
+from base.Macro import Macro
 from base.Sequence import Sequence
 from base.TestException import *
 from base.ThreadRequest import ThreadRequestContextManager
@@ -658,13 +661,9 @@ class GenThread(object):
         return self.interface.getVariable(self.genThreadID, name, var_type)
 
     def pickWeighted(self, weighted_dict):
-        from base.ItemMap import ItemMap
-        from base.Macro import Macro
-
-        total_weight = 0
-        for item, weight in weighted_dict.items():
-            total_weight += weight
-
+        total_weight = functools.reduce(
+            lambda total, val: total + val, weighted_dict.values()
+        )
         if total_weight <= 0:
             raise TestException(
                 "Sum of all weights in weighted-dict incorrect %d"
@@ -675,17 +674,19 @@ class GenThread(object):
 
         for item, weight in sorted(weighted_dict.items()):
             if picked_value < weight:
-                # found the picked item (instruction)
-                if isinstance(item, str) or isinstance(item, Macro):
-                    return item
-                elif isinstance(item, ItemMap):
-                    return item.pick(self)
-                else:
-                    raise TestException("Picked unsupported object.")
+                return self._getPickedItem(item)
 
             picked_value -= weight
         else:
             Log.fail("Error picking item from weighted dict")
+
+    def _getPickedItem(self, base_item):
+        if isinstance(base_item, str) or isinstance(base_item, Macro):
+            return base_item
+        elif isinstance(base_item, ItemMap):
+            return base_item.pick(self)
+        else:
+            raise TestException("Picked unsupported object.")
 
     def pickWeightedValue(self, weighted_dict):
         picked_val = self.pickWeighted(weighted_dict)
