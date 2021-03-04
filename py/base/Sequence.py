@@ -395,10 +395,9 @@ class Sequence(object):
 
         # iterate the shuffled list
         for index in shuffled_index_list:
-            for item in self._getPermutatedItems(
+            yield from self._getPermutatedItems(
                 permuted_list[index][0], skip_weight_check
-            ):
-                yield item
+            )
 
     # self.error("failed to setup scenario at address 0x%x" % addr)
     def error(self, err_msg):
@@ -654,8 +653,7 @@ class Sequence(object):
         if isinstance(base_item, str) or isinstance(base_item, Macro):
             yield base_item
         elif isinstance(base_item, ItemMap):
-            for item in base_item.getPermutated(self, skip_weight_check):
-                yield item
+            yield from base_item.getPermutated(self, skip_weight_check)
 
     def _dumpPythonDictionary(self, a_dict, a_hex):
         for (key, value) in sorted(a_dict.items()):
