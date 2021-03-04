@@ -19,7 +19,13 @@
 
 import shutil
 
-from executors.iss_executor import *
+from executors.iss_executor import (
+    ProcessResult,
+    IssExecutor,
+    Msg,
+    SysUtils,
+    PathUtils,
+)
 
 
 class RtlDefaults(object):
@@ -72,6 +78,18 @@ class RtlKeys(object):
 
 
 class RtlExecutor(IssExecutor):
+    success_keywords = ["PASSED", "TC_PASSED"]
+    fail_keywords = [
+        "FAILED",
+        "failed",
+        "corruption problem",
+        "Error",
+        "ERROR",
+        "Segmentation fault",
+        "TC_FAILED",
+    ]
+    tool_fail_keywords = ["SLI error", "core dumped", "SIGHUP"]
+
     def __init__(self):
         super().__init__()
         self.rtl_cmd = None
@@ -79,6 +97,9 @@ class RtlExecutor(IssExecutor):
         self.rtl = None
         self.yes_preload_boot_code = False
         self.preload_cmd = None
+
+        self.test_passed = None
+        self.message = None
 
     def use_rtl(self):
         return len(self.ctrl_item.rtl) > 0
@@ -97,8 +118,8 @@ class RtlExecutor(IssExecutor):
         super().load(arg_ctrl_item)
         self.rtl = self.ctrl_item.rtl
 
-    def filterPlusArgs(self, aPlusArgs):
-        args_list = aPlusArgs.split(" ")
+    def filter_plus_args(self, a_plus_args):
+        args_list = a_plus_args.split(" ")
         filtered_list = []
         for arg in args_list:
             if arg in [
@@ -165,12 +186,12 @@ class RtlExecutor(IssExecutor):
         Msg.user("Meta args converting command: %s" % convert_cmd, "META-CONV")
         if not is_valid:
             Msg.user("Conversion failed.", "META-CONV")
-            raise Exception("Meta conversion failed: %s" % meta_args)
+            raise ValueError("Meta conversion failed: %s" % meta_args)
         else:
             Msg.user("Converted to plus args: %s" % plus_args, "META-CONV")
 
         if self.rtl.get("filter"):
-            plus_args = self.filterPlusArgs(plus_args)
+            plus_args = self.filter_plus_args(plus_args)
             Msg.user("Filtered plus args: %s" % plus_args, "META-CONV")
         return plus_args
 
@@ -324,7 +345,7 @@ class RtlExecutor(IssExecutor):
     #   a significantly large wave dump that in some cases upon using the rerun
     #   scripts may exceed the disk quota of the unprepared.
     #
-    def copyWavesFsdbDoFile(self):
+    def copy_waves_fsdb_do_file(self):
         dofile_path = self.rtl.get("fsdb_do")
 
         if isinstance(dofile_path, str):
@@ -343,7 +364,7 @@ class RtlExecutor(IssExecutor):
     #   Caveat: the fidelity of the rerun will depend on the environment
     #   variables set during the previous execution
     #
-    def outputRerunScript(self):
+    def output_rerun_script(self):
         # use current test directory as output location and write script that
         # allows rerun of at least the RTL portion of the test.
         output_directory = PathUtils.current_dir()
@@ -371,15 +392,19 @@ class RtlExecutor(IssExecutor):
         )
 
         class LsfDefaults(object):
-            Group = "trg"
-            Queue = "normal"
-            ThreadCount = 16
-            CoreFileSize = 1
+            group = "trg"
+            queue = "normal"
+            thread_count = 16
+            core_file_size = 1
             lsf_log = "lsf.%J"
 
         bsub_prepend = (
             "bsub -K -G %s -q %s -C %s -o "
-            % (LsfDefaults.Group, LsfDefaults.Queue, LsfDefaults.CoreFileSize)
+            % (
+                LsfDefaults.group,
+                LsfDefaults.queue,
+                LsfDefaults.core_file_size,
+            )
             + LsfDefaults.lsf_log
         )
 
@@ -414,14 +439,14 @@ class RtlExecutor(IssExecutor):
             )
             raise
 
-    def extract_results(self, arg_result, arg_log, arg_elog):
+    def extract_results(self, a_result, a_log, a_elog):
 
         # extract information from the generate log
-        my_result, my_error = self.query_logs(arg_log, arg_elog)
-        Msg.user("Process: %s" % (str(arg_result)), "RTL-SIM")
-        Msg.user("Log[%s]: []" % (str(arg_log)), "RTL-SIM")
+        my_result, my_error = self.query_logs(a_log, a_elog)
+        Msg.user("Process: %s" % (str(a_result)), "RTL-SIM")
+        Msg.user("Log[%s]: []" % (str(a_log)), "RTL-SIM")
 
-        process_ret_code = int(arg_result[RtlResult.process_retcode])
+        process_ret_code = int(a_result[RtlResult.process_retcode])
         test_passed = my_result[RtlResult.rtl_passed]
 
         if (process_ret_code == 0) and not test_passed:
@@ -434,27 +459,26 @@ class RtlExecutor(IssExecutor):
 
         my_process_data = {
             RtlKeys.rtl_retcode: process_ret_code,
-            RtlKeys.rtl_stdout: str(arg_result[RtlResult.process_stdout]),
-            RtlKeys.rtl_stderr: str(arg_result[RtlResult.process_stderr]),
-            RtlKeys.rtl_start: str(arg_result[RtlResult.process_start]),
-            RtlKeys.rtl_end: str(arg_result[RtlResult.process_end]),
+            RtlKeys.rtl_stdout: str(a_result[RtlResult.process_stdout]),
+            RtlKeys.rtl_stderr: str(a_result[RtlResult.process_stderr]),
+            RtlKeys.rtl_start: str(a_result[RtlResult.process_start]),
+            RtlKeys.rtl_end: str(a_result[RtlResult.process_end]),
             RtlKeys.rtl_count: int(my_result[RtlResult.rtl_cycle_count]),
             RtlKeys.rtl_message: str(my_result[RtlResult.rtl_message]),
-            RtlKeys.rtl_log: arg_log,
+            RtlKeys.rtl_log: a_log,
         }
 
         return my_process_data
 
     def execute(self):
 
-        my_result = None
         test_passed = True
 
         try:
             self.build_cmd()
 
-            self.copyWavesFsdbDoFile()
-            self.outputRerunScript()
+            self.copy_waves_fsdb_do_file()
+            self.output_rerun_script()
 
             # report the command line
             Msg.info("RTLCommand = " + str({"rtl-command": self.rtl_cmd}))
@@ -468,7 +492,7 @@ class RtlExecutor(IssExecutor):
                 True,
             )
 
-            Msg.user("Results: %s" % (str(my_result)), "RTLEX-RESULT" "")
+            Msg.user("Results: %s" % (str(my_result)), "RTLEX-RESULT")
             my_extract_results = self.extract_results(
                 my_result, "./" + self.rtl_log, None
             )
@@ -483,63 +507,57 @@ class RtlExecutor(IssExecutor):
 
         return test_passed
 
-    def open_log_file(self, pFileName, pOpenMode):
+    def open_log_file(self, a_filename, a_open_mode):
         from file_read_backwards import FileReadBackwards
 
-        return FileReadBackwards(pFileName)
+        return FileReadBackwards(a_filename)
+
+    def find_status(self, line):
+        return_value = False
+
+        if any(kw in line for kw in self.success_keywords):
+            return_value = True
+        elif any(kw in line for kw in self.fail_keywords):
+            self.test_passed = False
+            self.message = ""
+        elif any(kw in line for kw in self.tool_fail_keywords):
+            self.test_passed = False
+            self.message = "TOOL FAIL: " + line + " ; "
+
+        return return_value
+
+    def find_error(self, line):
+        return_value = False
+        if line.find("UVM_FATAL") != -1:
+            self.message += line
+            return_value = True
+        if line.find("ERROR") != -1:
+            self.message += line
+            return_value = True
+        return return_value
 
     # used to avoid abstract method error
-    def query_result_log(self, arg_hfile):
+    def query_result_log(self, a_hfile):
         cycle_count = 0
-        test_passed = True
-        error_found = False
-        message = None
+        self.test_passed = True
+        self.message = None
 
-        success_keywords = ["PASSED", "TC_PASSED"]
-        fail_keywords = [
-            "FAILED",
-            "failed",
-            "corruption problem",
-            "Error",
-            "ERROR",
-            "Segmentation fault",
-            "TC_FAILED",
-        ]
-        tool_fail_keywords = ["SLI error", "core dumped", "SIGHUP"]
-
-        for line in arg_hfile:
-            if line.find("Total cycles : ") == 0:
+        for line in a_hfile:
+            if not cycle_count and line.find("Total cycles : ") == 0:
                 cycle_count = int(line[15:])
                 continue
 
-            if test_passed:
-                if any(kw in line for kw in success_keywords):
-                    break
-
-                if any(kw in line for kw in fail_keywords):
-                    test_passed = False
-                    message = ""
+            while self.test_passed and not self.find_status(line):
+                continue
+            if not self.test_passed:
+                while not self.find_error(line):
                     continue
 
-                if any(kw in line for kw in tool_fail_keywords):
-                    test_passed = False
-                    message = "TOOL FAIL: " + line + " ; "
-                    continue
-            else:
-                if not error_found:
-                    if line.find("UVM_FATAL") != -1:
-                        error_found = True
-                        message += line
-                        break
-                    if line.find("ERROR") != -1:
-                        error_found = True
-                        message += line
-                        break
+            return cycle_count, self.message, self.test_passed
 
-        return cycle_count, message, test_passed
-
-    def assemble_cmd(self, arg_params):
+    @staticmethod
+    def assemble_cmd(a_params):
         my_cmd = ""
-        for my_index, my_param in enumerate(arg_params):
+        for my_param in a_params:
             my_cmd += str(my_param)
         return my_cmd[1:]
