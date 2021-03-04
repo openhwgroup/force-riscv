@@ -20,7 +20,7 @@ from base.Sequence import Sequence
 class MainSequence(Sequence):
     """Exercise different combinations of values for the parameters for the genVA instruction.
        Focus in this test is to try values of the Size, Align, and Flatmap parameters. 
-       Type is always 'D'; Bank is always '0'.
+       Type is always 'D'; Bank is always 'Default'.
     """
 
     def generate(self, **kargs):
@@ -40,7 +40,7 @@ class MainSequence(Sequence):
 
                 for _ in range(2):
 
-                    rand_VA = self.genVA(Size=theSize, Align=theAlign, Type="D", Bank=0, FlatMap=1)
+                    rand_VA = self.genVA(Size=theSize, Align=theAlign, Type="D", Bank='Default', FlatMap=1)
                     self.notice(">>>>>> Requested Alignment:  {:6d}     Requested Size:  {:6d}     gen target VA={:12X}".format(theAlign, theSize, rand_VA))
 
                     instr_id = self.genInstruction(self.choice(ldstr_byte_ops), {'LSTarget':rand_VA})
@@ -61,7 +61,7 @@ class MainSequence(Sequence):
 
                 for _ in range(2):
 
-                    rand_VA = self.genVA(Size=theSize, Align=theAlign, Type="D", Bank=0, FlatMap=0)
+                    rand_VA = self.genVA(Size=theSize, Align=theAlign, Type="D", Bank='Default', FlatMap=0)
                     self.notice(">>>>>> Requested Alignment:  {:6d}     Requested Size:  {:6d}     gen target VA={:12X}".format(theAlign, theSize, rand_VA))
 
                     instr_id = self.genInstruction(self.choice(ldstr_byte_ops), {'LSTarget':rand_VA})

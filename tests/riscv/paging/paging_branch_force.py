@@ -38,9 +38,9 @@ class MainSequence(Sequence):
 
             rand_VA = 0
             if opt_valid:
-                rand_VA = self.genVA(Size=size, Align=align, Type="I", Bank=0, FlatMap=opt_value)
+                rand_VA = self.genVA(Size=size, Align=align, Type="I", Bank='Default', FlatMap=opt_value)
             else:
-                rand_VA = self.genVA(Size=size, Align=align, Type="I", Bank=0)
+                rand_VA = self.genVA(Size=size, Align=align, Type="I", Bank='Default')
 
             self.notice("gen target VA={:#x}".format(rand_VA))
             self.genInstruction(branch_instr, {'BRTarget':rand_VA})

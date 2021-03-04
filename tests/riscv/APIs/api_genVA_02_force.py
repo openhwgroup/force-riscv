@@ -67,9 +67,9 @@ class MainSequence(Sequence):
 
             for addrRange in theAddressRange:
 
-                self.notice('>>>>>>>>>>>  Size= {}     Align= {}     Type= {}     Bank= {}     Flatmap= {}     Range= {}'.format(theSize, theAlign, "D", 0, 1, addrRange))
+                self.notice('>>>>>>>>>>>  Size= {}     Align= {}     Type= {}     Bank= {}     Flatmap= {}     Range= {}'.format(theSize, theAlign, "D", 'Default', 1, addrRange))
 
-                rand_VA = self.genVA(Size=theSize, Align=theAlign, Type="D", Bank=0, FlatMap=1, Range=addrRange)
+                rand_VA = self.genVA(Size=theSize, Align=theAlign, Type="D", Bank='Default', FlatMap=1, Range=addrRange)
                 self.notice(">>>>>> Requested Address Range:  {:<30s}       Returned VA:  {:016X}".format(addrRange, rand_VA))
 
                 instr_id = self.genInstruction(self.choice(ldstr_double_ops), {'LSTarget':rand_VA})

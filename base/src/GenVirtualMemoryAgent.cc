@@ -140,7 +140,7 @@ namespace Force {
     VmManager* vm_manager = mpGenerator->GetVmManager();
     VmMapper* vm_mapper = vm_manager->CurrentVmMapper();
 
-    if (va_req->VmSpecified()) 
+    if (va_req->VmSpecified())
     {
       std::unique_ptr<VmInfo> vm_info_storage(vm_manager->VmInfoInstance()); // to release vm_info when done.
 
@@ -149,7 +149,7 @@ namespace Force {
 
       bool valid_regime = false;
       EVmRegimeType regime_type = vm_info_storage.get()->RegimeType(&valid_regime);
-      if (valid_regime) 
+      if (valid_regime)
       {
         LOG(info) << "{GenVirtualMemoryAgent::GenVA} target VM info: " << vm_info_storage.get()->ToString() << " regime type: " << EVmRegimeType_to_string(regime_type) << endl;
         vm_mapper = vm_manager->GetVmMapper(*vm_info_storage.get());
