@@ -98,8 +98,8 @@ setup:
 .PHONY: handcar
 handcar:
 	@./scripts/regenerate_and_build.bash -n
-	@./scripts/filesurgeon.py
 	@cd patcher && $(MAKE) && cd ..
+	@./scripts/filesurgeon.py
 	@$(MAKE) bin/handcar_cosim.so
 
 .PHONY: install
