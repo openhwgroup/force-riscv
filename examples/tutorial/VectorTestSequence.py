@@ -129,7 +129,8 @@ class VectorTestSequence(Sequence):
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
         pass
 
-    # Verify the instruction didn't unexpectedly trigger the specified exception.
+    # Verify the instruction didn't unexpectedly trigger the specified
+    # exception.
     #
     #  @param aInstr The name of the instruction.
     #  @param aExceptCode The exception code.

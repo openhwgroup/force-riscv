@@ -428,7 +428,7 @@ class PathUtils(object):
             PathUtils.move(my_file, arg_target)
 
     @classmethod
-    def write_file(aClass, aFilePath, aContent, aFileType):
+    def write_file(cls, aFilePath, aContent, aFileType):
 
         with open(aFilePath, "w") as my_ofile:
             try:
@@ -446,7 +446,7 @@ class PathUtils(object):
     # Return time last modified of a file or directory in timestamp format
     # (floating point number)
     @classmethod
-    def time_modified(aClass, aFilePath):
+    def time_modified(cls, aFilePath):
         file_stat = os.stat(aFilePath)
         mod_time = file_stat.st_mtime
         return mod_time
@@ -457,7 +457,7 @@ class PathUtils(object):
         file_path.touch()
 
     @classmethod
-    def chmod(aClass, aFPath, aOctalPermissions):
+    def chmod(cls, aFPath, aOctalPermissions):
         try:
             os.chmod(aFPath, aOctalPermissions)
         except OSError:
@@ -467,7 +467,7 @@ class PathUtils(object):
     # Returns the full file path from a string or quits out if the file cannot
     # be found
     @classmethod
-    def resolvePath(aClass, aFilePath):
+    def resolvePath(cls, aFilePath):
         try:
             return str(
                 Path(aFilePath).resolve()
@@ -482,5 +482,5 @@ class PathUtils(object):
             sys.exit(1)
 
     @classmethod
-    def expandVars(aClass, aPath):
+    def expandVars(cls, aPath):
         return os.path.expandvars(aPath)

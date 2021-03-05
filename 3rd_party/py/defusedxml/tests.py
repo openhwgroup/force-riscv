@@ -366,7 +366,8 @@ class TestDefusedSax(BaseTests):
             self.parse(self.xml_external, forbid_entities=False)
         msg = (
             "ExternalReferenceForbidden"
-            "(system_id='http://www.w3schools.com/xml/note.xml', public_id=None)"
+            "(system_id='http://www.w3schools.com/xml/note.xml', "
+            "public_id=None)"
         )
         self.assertEqual(str(ctx.exception), msg)
         self.assertEqual(repr(ctx.exception), msg)

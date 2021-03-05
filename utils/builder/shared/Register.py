@@ -235,7 +235,7 @@ class PhysicalRegister:
     # Create a PhysicalRegister object with all attributes provided
     @classmethod
     def createPhysicalRegister(
-        self,
+        cls,
         aName,
         aSize,
         aIndex,
