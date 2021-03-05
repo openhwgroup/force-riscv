@@ -36,5 +36,3 @@ diff3 -m --label loc --label old --label new ../spike_mod/simlib.h originals/sim
 diff3 -m --label loc --label old --label new ../spike_mod/specialize.h originals/specialize.h upstream/specialize.h > updating/specialize.h
 diff3 -m --label loc --label old --label new ../so_build/cosim/src/handcar_cosim_wrapper.cc originals/spike.cc upstream/spike.cc > updating/spike.cc
 diff3 -m --label loc --label old --label new ../spike_mod/sret.h originals/sret.h upstream/sret.h > updating/sret.h
-
-

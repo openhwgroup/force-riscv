@@ -16,11 +16,6 @@
 # limitations under the License.
 #
 
-mkdir -p originals/insns
-mkdir -p modified/insns
-mkdir -p patches/insns
-mkdir -p patched/insns
-
 cp ../standalone/config.h ./originals
 cp ../standalone/riscv/devices.h ./originals
 cp ../standalone/riscv/disasm.h ./originals

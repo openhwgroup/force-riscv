@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
@@ -16,8 +14,20 @@
 # limitations under the License.
 #
 
-cd patcher
-./step_1_create_patches.bash  
-./step_2_apply_patches.bash  
-./step_3_stage_patched.bash
-cd ../
+all:
+	@make setup
+	@make patch
+
+.PHONY: setup
+setup:
+	@mkdir -p ./patched/insns ./originals/insns ./patches/insns ./modified/insns
+
+.PHONY: patch
+patch:
+	@./scripts/step_1_create_patches.bash
+	@./scripts/step_2_apply_patches.bash
+	@./scripts/step_3_stage_patched.bash
+
+.PHONY: clean
+clean:
+	rm -rf ./patched ./originals ./modified
