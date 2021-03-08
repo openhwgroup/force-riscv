@@ -53,7 +53,7 @@ $(OBJ_DIR)/%.o: %.cc %.d
 
 .PHONY: make_dir
 make_dir:
-	@mkdir -p make_area make_area/obj make_area/dep
+	@mkdir -p ../bin make_area make_area/obj make_area/dep
 
 .PHONY: tests
 tests:

@@ -172,19 +172,19 @@ class ControlItem( object ):
         app_tag = aAppCfg.tag()
         Msg.user("processing %s application" % app_tag)
 
-        if aParentItem is None:
-            # no parent item.
-            app_dict = aItemDict.get( app_tag  , { } )
-        else:
-            # have parent item, get default from parent item
-            if app_tag in aItemDict:
-                app_dict = aItemDict[ app_tag ]
-            else:
-                parent_dict = getattr( aParentItem, app_tag )
-                app_dict = copy.deepcopy( parent_dict )
+        app_dict = aItemDict.get(app_tag, { })
+        if any(map(lambda val: isinstance(val, dict), app_dict.values())):
+            raise TypeError("Control Item Data: Nested dictionary not allowed inside %s, Control Item: %s" % (app_tag, aItemDict))
 
-        setattr( self, app_tag, app_dict)
-        aAppCfg.processControlData(app_dict)
+        # Merge this item's app control data with the parent item's app control
+        # data. Only override the parent item's data when there is a matching
+        # key in this item's data.
+        parent_dict = getattr(aParentItem, app_tag, { })
+        merged_app_dict = copy.deepcopy(parent_dict)
+        merged_app_dict.update(app_dict)
+
+        setattr(self, app_tag, merged_app_dict)
+        aAppCfg.processControlData(merged_app_dict)
 
     def item_type( self ):
         if self.fctrl_name.endswith( "_force.py" ):
