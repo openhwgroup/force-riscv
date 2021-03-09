@@ -496,10 +496,11 @@
     <asm format="FENCE %s, %s, %s, %s, %s" op1="fm" op2="pred" op3="succ" op4="rs1" op5="rd"/>
   </I>
   <I name="FENCE.I" isa="RISCV" group="System" extension="Zifencei">
-    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000000000000010001111"/>
+    <O name="const_bits" type="Constant" bits="14-12,6-0" value="0010001111"/>
+    <O name="imm12" type="Immediate" bits="31-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="FENCE.I %s, %s, %s" op1="rs1" op2="rd"/>
+    <asm format="FENCE.I %s, %s, %s" op1="imm12" op2="rs1" op3="rd"/>
   </I>
   <I name="FEQ.D" isa="RISCV" group="Float" extension="RV32D">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="10100010101010011"/>

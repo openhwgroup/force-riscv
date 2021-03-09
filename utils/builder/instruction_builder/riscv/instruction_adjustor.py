@@ -61,7 +61,7 @@ class G_InstructionAdjustor(InstructionAdjustor):
                 self.adjust_csr(aInstr, opr)
             elif 'uimm' in opr.name:
                 self.adjust_uimm(aInstr, opr)
-            elif opr.name in ['pred', 'succ']:
+            elif opr.name in ['pred', 'succ', 'fm']:
                 self.adjust_barrier(aInstr, opr)
             else:
                 pass
@@ -193,6 +193,8 @@ class G_InstructionAdjustor(InstructionAdjustor):
         elif '[11:0]' in aOpr.name:
             if aInstr.name.startswith('JALR'):
                 adjust_imm_operand(aOpr, True, 12, '31-20')
+            if aInstr.name.startswith('FENCE'):
+                adjust_imm_operand(aOpr, False, 12)
             else:
                 adjust_imm_operand(aOpr, True, 12)
         elif aInstr.name in 'JAL': # imm[20|10:1|11|19:12]
@@ -219,7 +221,10 @@ class G_InstructionAdjustor(InstructionAdjustor):
         adjust_imm_operand(aOpr, False, 4)
 
     def adjust_barrier(self, aInstr, aOpr):
-        aOpr.choices = 'Barrier option'
+        if aOpr.name in ['pred', 'succ']:
+            aOpr.choices = 'Barrier option'
+        else: #fm operand
+            aOpr.choices = 'Fence mode'
 
     def _FpInstrSize(self, aName):
         size_result = self._mFpSizePattern.match(aName)
