@@ -136,7 +136,7 @@ def add_layout_operand(aInstruction):
     ):
         reg_count = 1
         elem_width = None
-        ints = re.findall("\d+", aInstruction.name)
+        ints = re.findall(r"\d+", aInstruction.name)
         if len(ints) > 1:
             reg_count = ints[0]
             elem_width = ints[1]
