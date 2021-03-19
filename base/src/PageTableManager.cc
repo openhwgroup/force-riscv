@@ -112,7 +112,6 @@ namespace Force
     //checking for overlap done when trying to allocate new root page table
     auto insert_it = std::lower_bound(mRootPageTables.begin(), mRootPageTables.end(), pRootTable, &root_page_table_less_than);
     mRootPageTables.insert(insert_it, pRootTable);
-    //TODO: need to setup vm constraints based on the root table
     UpdateVmConstraints(pRootTable);
   }
 
@@ -133,7 +132,6 @@ namespace Force
 
   void PageTableManager::UpdateVmConstraints(const PageTable* pTable)
   {
-    //TODO: need to use table pointer to update the vm constraints accordingly for allocated table... might need tablePTE here for all attrs
   }
 
   bool root_page_table_less_than(const RootPageTable* pLhsRpt, const RootPageTable* pRhsRpt)

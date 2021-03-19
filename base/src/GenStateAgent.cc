@@ -302,8 +302,8 @@ namespace Force {
     if (end_addr == block_start)
       lb_req->SetEmpty();
 
-
     lb_req->SetPrimaryValue(block_start);
+    lb_req->SetBlockEndAddress(end_addr);
     LOG(notice) << "{GenStateAgent::EndLinear} end block ID=" << dec << lb_id << " at 0x" << hex << end_addr << " execute=" << lb_req->Execute() << endl;
     if (not lb_req->Execute())
       UpdatePcOnISS(end_addr);

@@ -113,12 +113,6 @@ class ApiDump: public Force::SimPlugin
             dumpMemoryUpdate(apMemUpdate); 
         }
   
-        void onMmuEvent(MmuEvent *apMMUEvent) 
-        { 
-            cout << MethodName("onMmuEvent","") << endl;
-            dumpMmuEvent(apMMUEvent);
-        }
-  
         void onException(ExceptionUpdate *apExceptionUpdate) 
         { 
             cout << MethodName("Exception") << endl;

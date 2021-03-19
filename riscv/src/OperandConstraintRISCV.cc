@@ -25,6 +25,7 @@
 #include <Generator.h>
 #include <Register.h>
 #include <RegisterReserver.h>
+#include <Config.h>
 #include <VectorLayout.h>
 #include <VectorLayoutSetupRISCV.h>
 
@@ -164,7 +165,7 @@ namespace Force {
   void FullsizeConditionalBranchOperandConstraint::SetBranchTakenForBLT(int64 rs1Val, int64 rs2Val)
   {
     LOG(info) << "FullsizeConditionalBranchOperandConstraint::SetBranchTakenForBLT(...)" << endl;
-    LOG(debug) << "Rs1 val is: " << hex << rs1Val << " and the rs2 val is: " << rs2Val << endl;
+    LOG(debug) << "Rs1 val is: " << std::dec << rs1Val << " and the rs2 val is: " << rs2Val << endl;
     //Evaluate the BLT logic here
     mTaken = (rs1Val < rs2Val);
   }
@@ -180,7 +181,7 @@ namespace Force {
   void FullsizeConditionalBranchOperandConstraint::SetBranchTakenForBGE(int64 rs1Val, int64 rs2Val)
   {
     LOG(info) << "FullsizeConditionalBranchOperandConstraint::SetBranchTakenForBGE(...)" << endl;
-    LOG(debug) << "Rs1 val is: " << hex << rs1Val << " and the rs2 val is: " << rs2Val << endl;
+    LOG(debug) << "Rs1 val is: " << std::dec << rs1Val << " and the rs2 val is: " << rs2Val << endl;
     //Evaluate the BGE logic here
     mTaken = (rs1Val >= rs2Val);
   }
@@ -281,7 +282,19 @@ namespace Force {
       auto rs1_ropr = dynamic_cast<const RegisterOperand* >(src_1_opr);
       string rs1_reg_name = rs1_ropr->ChoiceText();
       rs1_val = reg_file->RegisterLookup(rs1_reg_name)->Value();
- 
+
+      bool rv32 = (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32); // force-risc configured to 32-bits
+
+      if (rv32 && ( (branch_type == EBranchConditionType::BLT) || (branch_type == EBranchConditionType::BGE) ) ) {
+	// sign-extend unsigned 32 bit value to 64 bits...
+	uint64 rs1 = rs1_val;
+	uint64 rs2 = rs2_val;
+	rs2_val = sign_extend64(rs2_val, 32);
+        rs1_val = sign_extend64(rs1_val, 32);
+	LOG(debug) << "[SetConditionalBranchTaken] rs1: 0x" << std::hex << rs1 << " sign-extended: 0x" << rs1_val << std::dec << std::endl;
+	LOG(debug) << "[SetConditionalBranchTaken] rs1: 0x" << std::hex << rs2 << " sign-extended: 0x" << rs2_val << std::dec << std::endl;
+      }
+
       switch(branch_type)
       {
         case EBranchConditionType::BEQ:  SetBranchTakenForBEQ(rs1_val, rs2_val); break; 
@@ -330,7 +343,6 @@ namespace Force {
     }
 
     // Notification for illegal instruction when EMUL * NFIELDS > 8 (Section 7.8)
-    // TODO (Chris): Handle this case when implementing generic generation control option later
     uint32 illegal_reg_limit = reg_count;
     if (reg_count > 8) {
       LOG(notice) << "{VectorRegisterOperandConstraintRISCV::Setup} EMUL * NFIELDS = " << reg_count << " > 8" << endl;

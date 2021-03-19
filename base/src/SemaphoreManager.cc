@@ -54,6 +54,7 @@ namespace Force {
       pa_req.AddDetail("align", mSize);
       pa_req.AddDetail("isInstr", 0);
       pa_req.AddDetail("Range", pa_var); // PA in the range valid for all PEs
+      pa_req.AddDetail("Shared", true);
 
       // Ensure an unmapped adddres is used, so we can assign the desired memory attributes when
       // generating VAs later

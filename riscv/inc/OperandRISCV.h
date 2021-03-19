@@ -259,6 +259,26 @@ namespace Force {
   };
 
   /*!
+    \class VectorStridedLoadStoreOperandRISCV
+    \brief Operand for RISCV vector strided load/store operations.
+  */
+  class VectorStridedLoadStoreOperandRISCV : public VectorStridedLoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorStridedLoadStoreOperandRISCV);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorStridedLoadStoreOperandRISCV);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorStridedLoadStoreOperandRISCV);
+
+    Object* Clone() const override { return new VectorStridedLoadStoreOperandRISCV(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorStridedLoadStoreOperandRISCV"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorStridedLoadStoreOperandRISCV);
+
+    bool IsIllegal(const Instruction& rInstr) override; //!< Return true if the result will yield an illegal instruction regardless of the operands chosen.
+  private:
+    Operand* GetDataOperand(const Instruction& rInstr) const; //!< Return data operand.
+  };
+
+  /*!
     \class VectorIndexedLoadStoreOperandRISCV
     \brief Operand for RISCV vector indexed load/store operations.
   */
@@ -272,6 +292,8 @@ namespace Force {
     const char* Type() const override { return "VectorIndexedLoadStoreOperandRISCV"; } //!< Return a string describing the actual type of the Object.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperandRISCV);
+
+    bool IsIllegal(const Instruction& rInstr) override; //!< Return true if the result will yield an illegal instruction regardless of the operands chosen.
   private:
     void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const override; //!< Get the names of the index registers.
     void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.

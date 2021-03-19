@@ -347,7 +347,6 @@ namespace Force {
     BntNode* bnt_node = pInstr->GetBntNode();
     if (nullptr == bnt_node) return;
 
-    //TODO check to see if branch target is in address error space - if so, inject sequence to step simulation
     auto vm_mapper = mpGenerator->GetVmManager()->CurrentVmMapper();
     const AddressTagging* addr_tagging = vm_mapper->GetAddressTagging();
     uint64 untagged_va = addr_tagging->UntagAddress(bnt_node->BranchTarget(), true);
@@ -404,11 +403,6 @@ namespace Force {
           LOG(info) << "{GenInstructionAgent::UpdateRegisterFromSimulation} update PC value 0x" << hex << update.rval << endl;
         }
         else {
-        //if (update.regname == "SSBS")
-        //{
-        //  LOG(warn) << "{GenInstructionAgent::UpdateRegisterFromSimulation} skipping update for PSTATE SSBS name=" << update.regname << " value=0x" << hex << update.rval << " mask=0x" << update.mask << endl;
-        //  continue;
-        //}
           auto reg_file = mpGenerator->GetRegisterFile();
           auto phys_register = reg_file->PhysicalRegisterLookup(update.regname);
           LOG(info) << "{GenInstructionAgent::UpdateRegisterFromSimulation} update register " << update.regname << " value 0x" << hex << update.rval << ", mask 0x" << update.mask << endl;
@@ -493,7 +487,7 @@ namespace Force {
     return true;
   }
 
-  static cuint32 sMaxExceptionHandlerLength = 1000; // TODO, set a temporary max exception handler length.
+  static cuint32 sMaxExceptionHandlerLength = 1000;
 
   void GenInstructionAgent::ExecuteHandler()
   {
@@ -539,7 +533,6 @@ namespace Force {
       if (not memory_manager->InstructionPaInitialized(pa_tuple)) {
         LOG(notice) << "{GenInstructionAgent::ExecuteHandler} next PC 0x" << hex << gen_pc->Value() << "=>" << pa_tuple.ToString() << " is not initialized, ending handler execution." << endl;
         ExceptionReturn();
-        // TODO detect conditional branch in loop and re-converge back.
         break;
       }
 
@@ -583,7 +576,7 @@ namespace Force {
     }
   }
 
-  void GenInstructionAgent::ReExecute(uint64 addr)
+  void GenInstructionAgent::ReExecute(cuint64 addr, cuint32 maxReExeInstr)
   {
     LOG(notice) << "{GenInstructionAgent::ReExecute} starting address 0x" << hex << addr << endl;
     mpGenerator->SetPC(addr);
@@ -632,7 +625,9 @@ namespace Force {
             try_loop_reconverge = true;
           }
         }
-        // TODO detect conditional branch in loop and re-converge back.
+        break;
+      }
+      else if (re_exe_length >= maxReExeInstr) {
         break;
       }
     }

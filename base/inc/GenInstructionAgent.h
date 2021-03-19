@@ -53,7 +53,7 @@ namespace Force {
     void StepInstruction(const Instruction* pInstr); //!< Step commited instruction.
     void ExecuteHandler(); //!< Step through exception handler.
     void ExceptionReturn(); //!< Handle exception return.
-    void ReExecute(uint64 addr); //!< Handles re-execution.
+    void ReExecute(cuint64 addr, cuint32 maxReExeInstr); //!< Handles re-execution.
     void HandleNotification(const NotificationSender* sender, ENotificationType eventType, Object* payload) override; //!< Handle a notification.
     void InitializeReadOnlyRegistersWithISS(const std::vector<ReadOnlyRegister* >& rRegs); //!< Initialize readonly register by reading values from ISS.
     void ResetReadOnlyRegisterFieldsWithISS(const std::vector<ReadOnlyRegisterField* >& rRegFields); //!< initialize readonly register fields by reading values from ISS

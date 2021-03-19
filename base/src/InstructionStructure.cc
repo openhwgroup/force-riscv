@@ -96,7 +96,7 @@ namespace Force {
   {
     string key = ShortName();
     if (key.empty()) {
-      LOG(debug) << "No short key for the operand \"" << Name() << "\", use long key:" << Name() << endl;
+      //LOG(debug) << "No short key for the operand \"" << Name() << "\", use long key:" << Name() << endl;
       key = Name();
     }
 
@@ -180,8 +180,6 @@ namespace Force {
   {
   }
 
-  // TODO this need improvement
-  // * Improve performance.
   bool LoadStoreOperandStructure::AtomicOrderedAccess() const
   {
     string load_type = EMemOrderingType_to_string(mMemLoadType);

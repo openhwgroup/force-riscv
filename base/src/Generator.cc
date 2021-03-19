@@ -510,7 +510,6 @@ namespace Force {
 
   void Generator::InitializeMemory(uint64 addr, uint32 bank, uint32 size, uint64 data, bool isInstr, bool isVirtual)
   {
-    // TODO isVirtual not supported
     if (isVirtual)
     {
       auto vm_mapper = GetVmManager()->CurrentVmMapper();
@@ -805,7 +804,6 @@ namespace Force {
   {
     ChoicesModerator* choices_mod = GetChoicesModerator(EChoicesType::RegisterFieldValueChoices);
 
-    // TODO move this into Register module.
     Register* current_reg = mpRegisterFile->RegisterLookup(registerName);
     current_reg->Block();
     for (auto item : field_value_map) {
@@ -910,16 +908,16 @@ namespace Force {
     LOG(info) << "Generator sleep on low power" << endl;
   }
 
-  void Generator::ReExecute(uint64 addr)
+  void Generator::ReExecute(cuint64 addr, cuint32 maxReExeInstr)
   {
     auto instr_agent = static_cast<GenInstructionAgent*>(mAgents[int(EGenAgentType::GenInstructionAgent)]);
-    instr_agent->ReExecute(addr);
+    instr_agent->ReExecute(addr, maxReExeInstr);
   }
 
   bool Generator::VerifyVirtualAddress(uint64 va, uint64 size, bool isInstr) const
   {
     auto vm_mapper = GetVmManager()->CurrentVmMapper();
-    auto page_req = vm_mapper->GenPageRequestRegulated(isInstr, EMemAccessType::ReadWrite); // TODO need to add ways to pass in Read/Write attribute.
+    auto page_req = vm_mapper->GenPageRequestRegulated(isInstr, EMemAccessType::ReadWrite);
     return vm_mapper->VerifyVirtualAddress(va, size, isInstr, page_req);
   }
 

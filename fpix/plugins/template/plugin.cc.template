@@ -109,11 +109,6 @@ class Example: public Force::SimPlugin
             cout << MethodName("onMemoryUpdate","") << "\n";
         }
   
-        void onMmuEvent(MmuEvent *apMMUEvent) 
-        { 
-            cout << MethodName("onMmuEvent","") << endl;
-        }
-  
         void onException(ExceptionUpdate *apExceptionUpdate) 
         { 
             cout << MethodName("Exception") << endl;

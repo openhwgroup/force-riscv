@@ -45,7 +45,7 @@ namespace Force
 class ConfigParserFPIX : public pugi::xml_tree_walker 
 {
     public:
-        ConfigParserFPIX(ConfigFPIX* cfg) //!< Constructor, pass in pointer to Config object.
+        explicit ConfigParserFPIX(ConfigFPIX* cfg) //!< Constructor, pass in pointer to Config object.
           : _mpConfig(cfg)
         {
         }
@@ -80,6 +80,12 @@ class ConfigParserFPIX : public pugi::xml_tree_walker
                 string full_file_path = _mpConfig->LookUpFile(simulator_so_file);
                 _mpConfig->mSimulatorSharedObjectFile = full_file_path;
                 LOG(info) << "   Simulator shared object: " << full_file_path << std::endl;
+            }
+	    else if (strcmp(node_name, "simulator_config_string") == 0)
+            {
+                const char *simulator_cfg_str = arNode.attribute("value").value();
+                _mpConfig->mSimulatorConfigString = simulator_cfg_str;
+                LOG(info) << "   Simulator config string: " << _mpConfig->mSimulatorConfigString << std::endl;
             }
             else
             {

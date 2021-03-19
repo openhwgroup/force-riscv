@@ -59,15 +59,10 @@ void PartialReadLargeRegister(uint32 CpuID, const char* regname, uint8_t* bytes,
     memcpy(bytes, &registerValue[0] + offset, length); 
 }
 
-void PartialWriteLargeRegister(uint32 CpuID, const char* regname, const uint8_t* bytes, uint32_t length, uint32_t offset) override {}
-
 void InitializeIss(const ApiSimConfig& rConfig, const std::string &rSimSoFile, const std::string& rApiTraceFile) override {} 
 void Terminate() override {}
-void GetSimulatorVersion(std::string &sim_version) override {}
-void ReadPhysicalMemory(uint32 mem_bank, uint64 address, uint32 size, unsigned char *pBytes) override {}
 void WritePhysicalMemory(uint32 mem_bank, uint64 address, uint32  size, const unsigned char *pBytes) override {}
 void WriteRegister(uint32 CpuID,const char *regname,uint64 rval,uint64 rmask) override {}
-void InjectEvents(uint32 CpuID, uint32 interrupt_sets) override {}
 void Step(uint32 cpuid,std::vector<RegUpdate> &rRegisterUpdates,std::vector<MemUpdate> &rMemUpdates, std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptions) override 
 {
     GetVectorRegisterUpdates(rRegisterUpdates); 

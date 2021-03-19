@@ -100,6 +100,8 @@ namespace Force {
 
   void State::AddRegisterStateElement(const string& rRegName, const vector<uint64>& rRegValues, cuint32 priority)
   {
+    LOG(debug) << "[State::AddRegisterStateElement] '" << rRegName << "'" << std::endl;
+
     const RegisterFile* reg_file = mpGenerator->GetRegisterFile();
     Register* reg = reg_file->RegisterLookup(rRegName);
 
@@ -114,18 +116,19 @@ namespace Force {
       try_string_to_EVmContextParamType(reg_field->Name(), is_vm_context_param);
 
       if (is_vm_context_param) {
-        // TODO(Noah): Fail here when a mechanism for identifying VM context parameter fields with
-        // certainty is devised. Currently, we can determine if the field name matches, but there
-        // may be multiple register fields with the same name spread across different system
-        // registers.
-        LOG(warn) << "{State::AddRegisterStateElement} Register " << containing_reg->Name() << " contains field " << reg_field->Name() << ", which may be a VM context parameter field. Use AddVmContextStateElement() for VM context parameter fields." << endl;
+        LOG(warn) << "{State::AddRegisterStateElement} Register " << containing_reg->Name() << " contains field " 
+		  << reg_field->Name() << ", which may be a VM context parameter field. Use AddVmContextStateElement() for VM context parameter fields." << endl;
       }
     }
 
-    uint64 value_size = 64;
+    uint64 value_size = (containing_reg->Size() == 32) ? 32 : 64;
     uint64 values_count = containing_reg->Size() / value_size;
     vector<uint64> values(values_count, 0);
     vector<uint64> masks(values_count, 0);
+
+    LOG(debug) << "[State::AddRegisterStateElement] containing register/size: " << containing_reg->Name() << "/" << std::dec << containing_reg->Size()
+	    << " values-count: " << values_count << " rRegValues.size: " << rRegValues.size() << std::endl;
+
     if ((containing_reg->Name() == reg->Name()) and (rRegValues.size() == values_count)) {
       values = rRegValues;
       fill(masks.begin(), masks.end(), MAX_UINT64);
@@ -156,9 +159,6 @@ namespace Force {
     bool is_vm_context_param = false;
     try_string_to_EVmContextParamType(rRegFieldName, is_vm_context_param);
     if (is_vm_context_param) {
-      // TODO(Noah): Fail here when a mechanism for identifying VM context parameter fields with
-      // certainty is devised. Currently, we can determine if the field name matches, but there may
-      // be multiple register fields with the same name spread across different system registers.
       LOG(warn) << "{State::AddSystemRegisterStateElementByField} Register field " << rRegFieldName << " may be a VM context parameter field. Use AddVmContextStateElement() for VM context parameter fields." << endl;
     }
 

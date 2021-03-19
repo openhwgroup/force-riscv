@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
   // Obtain the options information from the plugins
 
   // load program config, process command line options, including those to be appended from the plugins.
-  load_program_options(my_config, my_test_files, plugins_cl_args, argc, argv, "config/riscv.config");
+  load_program_options(my_config, my_test_files, plugins_cl_args, argc, argv, "config/riscv_rv64.config");
 
   LOG(debug) << "Load/initialize simulator shared object..." << endl;
 
@@ -63,7 +63,8 @@ int main(int argc, char* argv[]) {
                         my_config.VectorRegisterLength(), /* vector register length */
                         my_config.MaxVectorElementWidth(), /* maximum vector element width */
                         "./fpix_sim.log", /* simulator debug trace file */
-                        true
+                        true,
+                        my_config.SimulatorConfigString()
                        );
 
   sim_api.InitializeIss(sim_dll_cfg, my_config.SimulatorSharedObjectFile(), "" /* no api trace file */);

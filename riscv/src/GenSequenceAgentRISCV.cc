@@ -62,6 +62,11 @@ namespace Force {
   {
     // << "Loading register " << regPtr->Name() << " with 0x" << hex << loadValue << " size=" << dec << regPtr->Size() << " index=" << regPtr->IndexValue() << endl;
 
+    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32) {
+      GetLoadGPR32BitSequence(regPtr, loadValue, reqSeq);
+      return;
+    }
+    
     if ((loadValue & 0xFFFFFFFFFFFFF800) == 0xFFFFFFFFFFFFF800) {
         return GetLoadGPRTop53BitsSetSequence(regPtr, loadValue, reqSeq);
     }
@@ -177,7 +182,7 @@ namespace Force {
   void GenSequenceAgentRISCV::GetLoadFPRSequence(const Register* regPtr, uint64 loadValue, vector<GenRequest* >& reqSeq, const Register* gprPtr)
   {
     char reg_precision = regPtr->Name().at(0);
-    char reg_prec_instr_char = 'W'; // TODO may want default to be D
+    char reg_prec_instr_char = 'W';
     switch (reg_precision)
     {
       case 'S':
@@ -187,7 +192,6 @@ namespace Force {
         reg_prec_instr_char = 'D';
         break;
       case 'Q':
-        //TODO no FMV.Q.X in RV64 - need way to load lower/upper halves of 128 bit register via 1 or more instructions
         LOG(notice) << "{GenSequenceAgentRISCV::GetLoadFPRSequence} using FMV.D.X for Quad Precision instr" << endl;
         reg_prec_instr_char = 'D';
         break;
@@ -229,7 +233,7 @@ namespace Force {
 
   void GenSequenceAgentRISCV::GetLoadVecRegSequence(const Register* regPtr, uint64 loadValue, vector<GenRequest*>& reqSeq, const Register* gprPtr)
   {
-    const char* instr_name = "VL1R.V##RISCV"; //TODO: build each instruction -> "%s%d%s", "VL", nf, "R.V##RISCV"
+    const char* instr_name = "VL1R.V##RISCV";
     const char* src_opr = "rs1";
     const char* dest_opr = "vd";
 
@@ -295,7 +299,7 @@ namespace Force {
     reqSeq.push_back(str_req);
   }
 
-  void GenSequenceAgentRISCV::GetBranchToSelfSequence(vector<GenRequest* >& req_seq)
+  void GenSequenceAgentRISCV::GetBranchToSelfSequence(vector<GenRequest* >& req_seq) const
   {
     const char* j_instr = "JAL##RISCV";
     auto j_req = new GenInstructionRequest(j_instr);
@@ -304,13 +308,6 @@ namespace Force {
     j_req->AddOperandRequest("rd", 0);
     j_req->AddOperandRequest("simm20", 0);
     req_seq.push_back(j_req);
-  }
-
-  void GenSequenceAgentRISCV::EndOfTest()
-  {
-    vector<GenRequest* > req_seq;
-    GetBranchToSelfSequence(req_seq);
-    mpGenerator->PrependRequests(req_seq);
   }
 
   void GenSequenceAgentRISCV::BranchToTarget()
@@ -373,6 +370,8 @@ namespace Force {
   void GenSequenceAgentRISCV::RestoreArchBootStates()
   {
     auto reg_file = mpGenerator->GetRegisterFile();
+
+    mpGenerator->SetPrivilegeLevel(0x3);
 
     auto misa_reg = reg_file->RegisterLookup("misa");
     uint64 misa_reg_val = misa_reg->InitialValue();
@@ -557,8 +556,14 @@ namespace Force {
       GetReloadBaseAddressSequence(inter_reg_ptr, 8, reqSeq);
     }
 
-    const char* ldr_name = "LD##RISCV";
-    auto ldr_req = new GenInstructionRequest(ldr_name);
+    GenInstructionRequest* ldr_req = nullptr;
+    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32) {
+      ldr_req = new GenInstructionRequest("LW##RISCV");
+    }
+    else {
+      ldr_req = new GenInstructionRequest("LD##RISCV");
+    }
+
     ldr_req->AddOperandRequest("rd", regPtr->IndexValue());
     ldr_req->AddOperandRequest("rs1", inter_reg_ptr->IndexValue());
     ldr_req->AddDetail("LSData", to_string(loadValue));
@@ -587,6 +592,16 @@ namespace Force {
 
   void GenSequenceAgentRISCV::RegulateInitRegisters(std::list<Register*>& registers) const
   {
+  }
+
+  void GenSequenceAgentRISCV::GetEndOfTestSequence(vector<GenRequest*>& rReqSeq) const
+  {
+    GetBranchToSelfSequence(rReqSeq);
+  }
+
+  uint32 GenSequenceAgentRISCV::GetEndOfTestInstructionCount() const
+  {
+    return 1;
   }
 
   void GenSequenceAgentRISCV::GetLoadGPRTop53BitsSetSequence(const Register* regPtr, uint32 loadValue, std::vector<GenRequest* >& reqSeq)
@@ -623,7 +638,8 @@ namespace Force {
 
     uint32 imm12_to_load = loadValue & 0xFFF;
     if (imm12_to_load) {
-      const char* addiw_name = "ADDIW##RISCV";
+      bool is_rv32 = (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32);
+      const char* addiw_name = is_rv32 ? "ADDI##RISCV" : "ADDIW##RISCV";
       auto addiw_req = new GenInstructionRequest(addiw_name);
       addiw_req->AddOperandRequest(dest_opr, regPtr->IndexValue());
       addiw_req->AddOperandRequest("rs1", regPtr->IndexValue());

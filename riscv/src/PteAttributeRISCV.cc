@@ -68,13 +68,13 @@ namespace Force
       LOG(trace) << "{AddressPteAttributeRISCV::Generate} error_val=0x" << hex << error_val
                  << " phys_lower=0x" << rPte.PhysicalLower() << " mask=0x" << mpStructure->Mask()
                  << " lsb=0x" << mpStructure->Lsb() << endl;
-      mValue = ((error_val | rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically*/
+      mValue = ((error_val | rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask();
     }
     else
     {
       LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower()
                  << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
-      mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
+      mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask();
     }
   }
 
@@ -107,7 +107,7 @@ namespace Force
     return false;
   }
 
-  void DAPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void DAPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     GetDefaultConstraint(rTriggerConstr);
     auto mem_access = rPagingReq.MemoryAccessType();
@@ -136,6 +136,23 @@ namespace Force
 
   void DAPteAttributeRISCV::SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const
   {
+    switch(mValue) {
+    case 0:
+      break;
+    case 1:
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Accessed, 1);
+      break;
+    case 2:
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Dirty, 1);
+      break;
+    case 3:
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Accessed, 1);
+      rPte.SetPageGenAttribute(EPageGenAttributeType::Dirty, 1);
+      break;
+    default:
+        LOG(fail) << "{DAPteAttributeRISCV::SetPteGenAttribute} invalid generated value, can't set pte attribute" << endl;
+        FAIL("da-pte-invalid");
+    }
   }
 
   bool GPteAttributeRISCV::GetValueConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, PageTableEntry& rPte, ConstraintSet& rValueConstr) const
@@ -149,7 +166,6 @@ namespace Force
     return get_exception_type_from_access_type(rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr), rPagingReq.MemoryAccessType());
   }
 
-  //TODO can maybe make this more generic, impl is similar (1 choice to eval) for most bits
   bool UPteAttributeRISCV::EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const
   {
     uint32 level = rPte.ParentTableLevel();
@@ -172,7 +188,7 @@ namespace Force
     return false;
   }
 
-  void UPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void UPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     uint32 sum_value = 0;
     bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
@@ -220,7 +236,6 @@ namespace Force
 
   void UPteAttributeRISCV::SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const
   {
-    //TODO determine if any necessary pte attrs need to be set by U
   }
 
   EPagingExceptionType XPteAttributeRISCV::GetExceptionType(const GenPageRequest& rPagingReq) const
@@ -250,7 +265,7 @@ namespace Force
     return false;
   }
 
-  void XPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void XPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
     if (is_instr)
@@ -299,7 +314,6 @@ namespace Force
 
   bool WRPteAttributeRISCV::EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const
   {
-    //TODO evaluate if val constraint passing is needed for llptr support
     //if (ll_ptr_fault != 0) mValue = 0;
 
     uint32 level = rPte.ParentTableLevel();
@@ -333,7 +347,7 @@ namespace Force
     return false;
   }
 
-  void WRPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void WRPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     auto mem_access = rPagingReq.MemoryAccessType();
     rTriggerConstr.AddValue(0x2); // W=1 R=0 always invalid (reserved by specification)
@@ -353,6 +367,12 @@ namespace Force
         LOG(fail) << "{WRPteAttributeRISCV::ExceptionTriggeringConstraint} invalid or unsupported mem access type=" << EMemAccessType_to_string(mem_access) << endl;
         FAIL("wr_pte_invalid_mem_access");
         break;
+    }
+
+    bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
+    if (is_instr && (pteLevel > 0))
+    {
+      rTriggerConstr.SubValue(0x0);
     }
   }
 
@@ -439,7 +459,7 @@ namespace Force
     return false;
   }
 
-  void VPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rTriggerConstr) const
+  void VPteAttributeRISCV::ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const
   {
     rTriggerConstr.AddValue(0x0);
   }

@@ -125,7 +125,6 @@ int PluginManager::Initialize(std::vector<std::string> &plugin_paths, std::map<s
         }
 
         //Break up the config file plugins options string so we can separate option name from any arguments.
-        std::vector<std::pair<std::string, std::string>> split_local_options;
         if(element.second.PluginsOptions().size() > 0){
             std::string temp = element.second.PluginsOptions(); //Strange behavior was seen here if a temporary copy was not made. The first substring would be returned corrupted.
             Force::StringSplitter popt_splitter(temp, ',');

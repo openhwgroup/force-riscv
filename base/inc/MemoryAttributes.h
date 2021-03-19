@@ -38,9 +38,6 @@ namespace Force
     ASSIGNMENT_OPERATOR_ABSENT(MemoryAttributes);
     COPY_CONSTRUCTOR_ABSENT(MemoryAttributes);
 
-    //TODO potentially refactor initialize and reload to be more generic
-    // - would likely want this to become managed object which holds a ptr to regfile and/or choices adapter
-    // - mair_name string passing would need to be modified
     virtual void   Initialize(const RegisterFile* pRegisterFile, const PagingChoicesAdapter& rChoicesAdapter, const std::string& rMairName) = 0; //!< Initialize memory attributes.
     virtual void   Reload(const RegisterFile* pRegisterFile, const PagingChoicesAdapter& rChoicesAdapter, const std::string& rMairName) = 0; //!< Reload memory attributes.
     virtual uint64 Value() const = 0; //!< Return memory attributes value.
@@ -48,7 +45,6 @@ namespace Force
     virtual const ConstraintSet* ArchTypeConstraint() const = 0; //!< Return arch memory attribute type constraint.
     virtual const ConstraintSet* ImplTypeConstraint() const = 0; //!< Return impl memory attribute type constraint.
 
-    //TODO might need to refactor interfaces which reference index as that may not be architecturally agnostic
     virtual uint32 ArchTypeToIndex(uint32 archType) const = 0; //!< Return an index value with matching arch memory attribute type.
     virtual uint32 ImplTypeToIndex(EMemAttributeImplType implType) const = 0; //!< Return an index value with matching impl memory attribute type.
     virtual EMemAttributeImplType ArchTypeToImplType(uint32 archType) const = 0; //!< Convert architectural memory attribute type to implementation defined type.

@@ -13,10 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+export PYTHONPATH:=$(PYTHONPATH):../../../../3rd_party/py
+
 REGISTER_BUILDER=./register_builder.py
 CSR_TREES_BUILDER=./csr_trees_builder.py
 
-INSTALL_DIR=../../../../riscv/arch_data
+INSTALL_DIR=../../../../riscv/arch_data/reg
 TREES_INSTALL_DIR=../../../../py/DV/riscv/trees
 
 .PHONY: all
@@ -62,13 +64,17 @@ register_field_choices: $(REGISTER_BUILDER)
 .PHONY: install
 install:
 	@echo 'Building Registers: installing register files'
-	@cp -f output/app_registers_rv64.xml $(INSTALL_DIR)/app_registers.xml
-	@cp -f output/system_registers_rv64.xml $(INSTALL_DIR)/system_registers.xml
-	@cp -f output/system_register_choices_rv64.xml $(INSTALL_DIR)/system_register_choices.xml
-	@cp -f output/register_field_choices_rv64.xml $(INSTALL_DIR)/register_field_choices.xml
+	@cp -f output/app_registers_rv64.xml $(INSTALL_DIR)/app_registers_rv64.xml
+	@cp -f output/system_registers_rv64.xml $(INSTALL_DIR)/system_registers_rv64.xml
+	@cp -f output/system_register_choices_rv64.xml $(INSTALL_DIR)/system_register_choices_rv64.xml
+	@cp -f output/register_field_choices_rv64.xml $(INSTALL_DIR)/register_field_choices_rv64.xml
+	@cp -f output/app_registers_rv32.xml $(INSTALL_DIR)/app_registers_rv32.xml
+	@cp -f output/system_registers_rv32.xml $(INSTALL_DIR)/system_registers_rv32.xml
+	@cp -f output/system_register_choices_rv32.xml $(INSTALL_DIR)/system_register_choices_rv32.xml
+	@cp -f output/register_field_choices_rv32.xml $(INSTALL_DIR)/register_field_choices_rv32.xml
 	@cp -f output/csr_trees.py $(TREES_INSTALL_DIR)/csr_trees.py
 
 .PHONY: clean
 clean:
 	@echo 'Building Registers: clean'
-	@rm -f output/*.xml output/*.txt
+	@rm -f output/*.xml output/*.txt output/*py

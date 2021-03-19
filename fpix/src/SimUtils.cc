@@ -60,10 +60,11 @@ namespace Force {
 			     sim_cfg->VectorRegisterLength(), /* vector register length */
 			     sim_cfg->MaxVectorElementWidth(), /* maximum vector element width */
 			     "./fpix_sim.log", /* simulator debug trace file */
-            false
+                             false,
+			     sim_cfg->SimulatorConfigString()
 			     );
 
-    mspSimAPI->InitializeIss(sim_dll_cfg, sim_cfg->SimulatorSharedObjectFile(),"" /* no api trace file */);
+    mspSimAPI->InitializeIss(sim_dll_cfg, sim_cfg->SimulatorSharedObjectFile(),"" /* no api trace file */ );
 
     LOG(debug) << "done." << endl;
     LOG(debug) << "      Simulator DLL: '" << sim_cfg->SimulatorSharedObjectFile() << "'." << endl;
@@ -92,15 +93,12 @@ bool SimUtils::LoadTest(uint64_t &entry_point, SimAPI *sim_ptr, vector<string> *
 
   entry_point = (uint64_t) -1;
 
-  for (vector<string>::iterator i = test_files->begin(); i != test_files->end() && success; i++) {
+  for (vector<string>::iterator i = test_files->begin(); i != test_files->end() && success; ++i) {
     string next_test_file = *i;
     uint64_t next_entry_point = 0;
 
     if (next_test_file.find(".Secondary.ELF") != string::npos) {
       success = LoadTestFromELF(next_entry_point, sim_ptr, next_test_file, true);
-    } 
-    else if (next_test_file.find(".Default.ELF") != string::npos) {
-      success = LoadTestFromELF(next_entry_point,sim_ptr, next_test_file);
     } 
     else {
       success = LoadTestFromELF(next_entry_point,sim_ptr, next_test_file); //!< will ASSUME test is default...
@@ -155,7 +153,7 @@ bool SimUtils::LoadTestFromELF(uint64_t &entry_point, SimAPI *sim_ptr, string &e
      const char *pData = pSection->get_data();
      uint32 dsize      = pSection->get_size();
      uint64 daddress   = pSection->get_address();
-     string pName      = pSection->get_name();
+     //string pName      = pSection->get_name();
 
      bool is_instr     = flags & SHF_EXECINSTR;
      bool is_data      = flags & SHF_WRITE;
@@ -221,7 +219,7 @@ void SimUtils::AssignCpuIDs(vector<uint32_t> &cpuIDs, uint32_t num_chips,uint32_
 bool SimUtils::GetRegisterUpdate(uint64_t &rval, std::vector<RegUpdate> &reg_updates, const string &rname, const string &accessType) {
   bool haveit = false;
 
-  for (std::vector<RegUpdate>::iterator i = reg_updates.begin(); i != reg_updates.end(); i++) {
+  for (std::vector<RegUpdate>::iterator i = reg_updates.begin(); i != reg_updates.end(); ++i) {
     if ( ((*i).regname == rname) && ((*i).access_type == accessType) ) {
       rval = (*i).rval;
       haveit = true;
@@ -245,7 +243,7 @@ void SimUtils::DumpRegisterUpdate(RegUpdate src) const {
 //!< Dump set of register updates to stdout
                     
 void SimUtils::DumpRegisterUpdates(std::vector<RegUpdate> reg_updates) const {
-  for (vector<RegUpdate>::iterator i = reg_updates.begin(); i != reg_updates.end(); i++) {
+  for (vector<RegUpdate>::iterator i = reg_updates.begin(); i != reg_updates.end(); ++i) {
     DumpRegisterUpdate(*i);
   }
 }
@@ -265,7 +263,7 @@ void SimUtils::DumpMemoryUpdate(MemUpdate src) const {
 //!< Dump set of memory updates to stdout
                                                                 
 void SimUtils::DumpMemoryUpdates(std::vector<MemUpdate> mem_updates) const {
-  for (vector<MemUpdate>::iterator i = mem_updates.begin(); i != mem_updates.end(); i++) {
+  for (vector<MemUpdate>::iterator i = mem_updates.begin(); i != mem_updates.end(); ++i) {
     DumpMemoryUpdate(*i);
   }
 }

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<choices_file>
+  <!-- General Choices -->
+  <choices name="Page Allocation Scheme" type="Paging">
+    <choice description="Random Free Allocation" name="RandomFreeAlloc" value="0x0" weight="100"/>
+    <choice description="Flat Mapped Allocation" name="FlatMapAlloc" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Data Page Aliasing" type="Paging">
+    <choice description="No Aliasing" name="NoAliasing" value="0x0" weight="10"/>
+    <choice description="Aliasing" name="Aliasing" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Instruction Page Aliasing" type="Paging">
+    <choice description="No Aliasing" name="NoAliasing" value="0x0" weight="10"/>
+    <choice description="Aliasing" name="Aliasing" value="0x1" weight="0"/>
+  </choices>
+  <choices name="Root Page Table Aliasing" type="Paging">
+    <choice description="Don't attempt aliasing" name="NoAlias" value="0x0" weight="10"/>
+    <choice description="Attempt aliasing first" name="Alias" value="0x1" weight="0"/>
+  </choices>
+
+  <!-- Page Size Choices -->
+  <choices name="Page size#4K granule#S#stage 1" type="Paging">
+    <choice description="4K page size" name="4K" value="0x0" weight="97"/>
+    <choice description="4M page size" name="4M" value="0x1" weight="2"/>
+  </choices>
+  <choices name="System Page size#4K granule#S#stage 1" type="Paging">
+    <choice description="4K page size" name="4K" value="0x0" weight="100"/>
+    <choice description="4M page size" name="4M" value="0x1" weight="0"/>
+  </choices>
+
+  <!-- Descriptor Attribute Generation Choices -->
+  <choices name="SystemPage#S#stage 1" type="Paging">
+    <choice description="SystemPage=0" name="notsyspage" value="0x0" weight="100"/>
+    <choice description="SystemPage=1" name="syspage" value="0x1" weight="0"/>
+  </choices>
+  <choices name="DA#S#stage 1" type="Paging">
+    <choice description="DA=0b00" name="0" value="0x0" weight="1"/>
+    <choice description="DA=0b01" name="1" value="0x1" weight="100"/>
+    <choice description="DA=0b10" name="2" value="0x2" weight="1"/>
+    <choice description="DA=0b11" name="3" value="0x3" weight="100"/>
+  </choices>
+  <choices name="G#S#stage 1" type="Paging">
+    <choice description="G=0" name="0" value="0x0" weight="100"/>
+    <choice description="G=1" name="1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="U#S#stage 1" type="Paging">
+    <choice description="U=0" name="0" value="0x0" weight="10"/>
+    <choice description="U=1" name="1" value="0x1" weight="10"/>
+  </choices>
+  <choices name="X#S#stage 1" type="Paging">
+    <choice description="X=0" name="0" value="0x0" weight="10"/>
+    <choice description="X=1" name="1" value="0x1" weight="10"/>
+  </choices>
+  <choices name="WR#S#stage 1" type="Paging">
+    <choice description="no access" name="0" value="0x0" weight="10"/>
+    <choice description="read access" name="1" value="0x1" weight="100"/>
+    <choice description="invalid WR" name="2" value="0x2" weight="1"/>
+    <choice description="readwrite access" name="3" value="0x3" weight="100"/>
+  </choices>
+  <choices name="V#S#stage 1" type="Paging">
+    <choice description="V=0" name="0" value="0x0" weight="1"/>
+    <choice description="V=1" name="1" value="0x1" weight="100"/>
+  </choices>
+
+  <!-- Exception Regulation Choices --> 
+  <choices name="InstructionPageFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="LoadPageFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="StoreAmoPageFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="InstructionAccessFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="LoadAccessFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+  <choices name="StoreAmoAccessFault#S#stage 1" type="Paging">
+    <choice description="Prevent" name="Prevent" value="0x0" weight="100"/>
+    <choice description="Allow" name="Allow" value="0x1" weight="0"/>
+    <choice description="Trigger" name="Trigger" value="0x2" weight="0"/>
+  </choices>
+
+  <!-- Page Fault Generation Choices -->
+  <choices name="Invalid V#level 1#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x0" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+  <choices name="Invalid V#level 0#S#stage 1" type="Paging">
+    <choice description="V=1, valid"   name="false" value="0x0" weight="100"/>
+    <choice description="V=0, invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Invalid DA#level 1#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x0" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+  <choices name="Invalid DA#level 0#S#stage 1" type="Paging">
+    <choice description="DA valid"   name="false" value="0x0" weight="100"/>
+    <choice description="DA invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Misaligned Superpage#level 1#S#stage 1" type="Paging">
+    <choice description="valid address"   name="false" value="0x0" weight="100"/>
+    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Last Level Pointer#level 0#S#stage 1" type="Paging">
+    <choice description="Last level leaf node" name="false" value="0x0" weight="100"/>
+    <choice description="Last level pointer" name="true" value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Invalid X#level 1#S#stage 1" type="Paging">
+    <choice description="X valid"   name="false" value="0x0" weight="100"/>
+    <choice description="X invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+  <choices name="Invalid X#level 0#S#stage 1" type="Paging">
+    <choice description="X valid"   name="false" value="0x0" weight="100"/>
+    <choice description="X invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Invalid WR#level 1#S#stage 1" type="Paging">
+    <choice description="WR valid"   name="false" value="0x0" weight="100"/>
+    <choice description="WR invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+  <choices name="Invalid WR#level 0#S#stage 1" type="Paging">
+    <choice description="WR valid"   name="false" value="0x0" weight="100"/>
+    <choice description="WR invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Invalid U#level 1#S#stage 1" type="Paging">
+    <choice description="U valid"   name="false" value="0x0" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+  <choices name="Invalid U#level 0#S#stage 1" type="Paging">
+    <choice description="U valid"   name="false" value="0x0" weight="100"/>
+    <choice description="U invalid" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+  <choices name="Va Address Error#S#stage 1" type="Paging">
+    <choice description="valid address"   name="false" value="0x0" weight="100"/>
+    <choice description="invalid address" name="true"  value="0x1" weight="0"/>
+  </choices>
+
+</choices_file>

@@ -136,8 +136,8 @@ namespace Force {
   void ThreadGroupModerator::QueryThreadGroup(uint32 groupId, vector<ThreadGroup* >& threadGroups) const
   {
     if (groupId == -1u) { // all thread groups
-      for (auto& group_iter : mThreadGroups)
-        threadGroups.push_back(group_iter.second);
+      transform(mThreadGroups.cbegin(), mThreadGroups.cend(), back_inserter(threadGroups),
+        [](const pair<uint32, ThreadGroup*>& rThreadGroupEntry) { return rThreadGroupEntry.second; });
     }
     else {
       auto it = mThreadGroups.find(groupId);

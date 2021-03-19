@@ -2941,7 +2941,7 @@ namespace Force {
   }
 
 
-  unsigned char EPteTypeSize = 8;
+  unsigned char EPteTypeSize = 9;
 
   const string EPteType_to_string(EPteType in_enum)
   {
@@ -2950,6 +2950,7 @@ namespace Force {
     case EPteType::P16K: return "P16K";
     case EPteType::P64K: return "P64K";
     case EPteType::P2M: return "P2M";
+    case EPteType::P4M: return "P4M";
     case EPteType::P32M: return "P32M";
     case EPteType::P512M: return "P512M";
     case EPteType::P1G: return "P1G";
@@ -2980,8 +2981,21 @@ namespace Force {
       validate(in_str, "P4K", enum_type_name);
       return EPteType::P4K;
     case 77:
-      validate(in_str, "P2M", enum_type_name);
-      return EPteType::P2M;
+      {
+        size_t size_77 = in_str.size();
+        char hash_value_77 = in_str.at(1 < size_77 ? 1 : 1 % size_77);
+
+        switch (hash_value_77) {
+        case 50:
+          validate(in_str, "P2M", enum_type_name);
+          return EPteType::P2M;
+        case 52:
+          validate(in_str, "P4M", enum_type_name);
+          return EPteType::P4M;
+        default:
+          unknown_enum_name(enum_type_name, in_str);
+        }
+      }
     case 81:
       validate(in_str, "P32M", enum_type_name);
       return EPteType::P32M;
@@ -3017,8 +3031,22 @@ namespace Force {
       okay = (in_str == "P4K");
       return EPteType::P4K;
     case 77:
-      okay = (in_str == "P2M");
-      return EPteType::P2M;
+      {
+        size_t size_77 = in_str.size();
+        char hash_value_77 = in_str.at(1 < size_77 ? 1 : 1 % size_77);
+
+        switch (hash_value_77) {
+        case 50:
+          okay = (in_str == "P2M");
+          return EPteType::P2M;
+        case 52:
+          okay = (in_str == "P4M");
+          return EPteType::P4M;
+        default:
+          okay = false;
+          return EPteType::P4K;
+        }
+      }
     case 81:
       okay = (in_str == "P32M");
       return EPteType::P32M;
@@ -3263,7 +3291,7 @@ namespace Force {
   }
 
 
-  unsigned char EPageGenAttributeTypeSize = 5;
+  unsigned char EPageGenAttributeTypeSize = 7;
 
   const string EPageGenAttributeType_to_string(EPageGenAttributeType in_enum)
   {
@@ -3273,6 +3301,8 @@ namespace Force {
     case EPageGenAttributeType::AddrSizeFault: return "AddrSizeFault";
     case EPageGenAttributeType::DataAccessPermission: return "DataAccessPermission";
     case EPageGenAttributeType::InstrAccessPermission: return "InstrAccessPermission";
+    case EPageGenAttributeType::Accessed: return "Accessed";
+    case EPageGenAttributeType::Dirty: return "Dirty";
     default:
       unknown_enum_value("EPageGenAttributeType", (unsigned char)(in_enum));
     }
@@ -3286,12 +3316,18 @@ namespace Force {
     char hash_value = in_str.at(2 < size ? 2 : 2 % size);
 
     switch (hash_value) {
+    case 99:
+      validate(in_str, "Accessed", enum_type_name);
+      return EPageGenAttributeType::Accessed;
     case 100:
       validate(in_str, "AddrSizeFault", enum_type_name);
       return EPageGenAttributeType::AddrSizeFault;
     case 109:
       validate(in_str, "MemAttrImpl", enum_type_name);
       return EPageGenAttributeType::MemAttrImpl;
+    case 114:
+      validate(in_str, "Dirty", enum_type_name);
+      return EPageGenAttributeType::Dirty;
     case 115:
       validate(in_str, "InstrAccessPermission", enum_type_name);
       return EPageGenAttributeType::InstrAccessPermission;
@@ -3314,12 +3350,18 @@ namespace Force {
     char hash_value = in_str.at(2 < size ? 2 : 2 % size);
 
     switch (hash_value) {
+    case 99:
+      okay = (in_str == "Accessed");
+      return EPageGenAttributeType::Accessed;
     case 100:
       okay = (in_str == "AddrSizeFault");
       return EPageGenAttributeType::AddrSizeFault;
     case 109:
       okay = (in_str == "MemAttrImpl");
       return EPageGenAttributeType::MemAttrImpl;
+    case 114:
+      okay = (in_str == "Dirty");
+      return EPageGenAttributeType::Dirty;
     case 115:
       okay = (in_str == "InstrAccessPermission");
       return EPageGenAttributeType::InstrAccessPermission;
@@ -3483,7 +3525,7 @@ namespace Force {
   }
 
 
-  unsigned char EGlobalStateTypeSize = 6;
+  unsigned char EGlobalStateTypeSize = 7;
 
   const string EGlobalStateType_to_string(EGlobalStateType in_enum)
   {
@@ -3494,6 +3536,7 @@ namespace Force {
     case EGlobalStateType::PageTableRegionStart: return "PageTableRegionStart";
     case EGlobalStateType::MemoryFillPattern: return "MemoryFillPattern";
     case EGlobalStateType::ElfMachine: return "ElfMachine";
+    case EGlobalStateType::AppRegisterWidth: return "AppRegisterWidth";
     default:
       unknown_enum_value("EGlobalStateType", (unsigned char)(in_enum));
     }
@@ -3507,6 +3550,9 @@ namespace Force {
     char hash_value = in_str.at(16 < size ? 16 : 16 % size);
 
     switch (hash_value) {
+    case 65:
+      validate(in_str, "AppRegisterWidth", enum_type_name);
+      return EGlobalStateType::AppRegisterWidth;
     case 104:
       validate(in_str, "ElfMachine", enum_type_name);
       return EGlobalStateType::ElfMachine;
@@ -3538,6 +3584,9 @@ namespace Force {
     char hash_value = in_str.at(16 < size ? 16 : 16 % size);
 
     switch (hash_value) {
+    case 65:
+      okay = (in_str == "AppRegisterWidth");
+      return EGlobalStateType::AppRegisterWidth;
     case 104:
       okay = (in_str == "ElfMachine");
       return EGlobalStateType::ElfMachine;

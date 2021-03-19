@@ -313,8 +313,8 @@ namespace Force {
 
     target_query->SetName(instr_ptr->FullName());
     target_query->SetOpcode(instr_ptr->Opcode());
-    target_query->SetPA(phys_addr);  // TODO - use the given address for now
-    target_query->SetBank(bank); //TODO - check if the memory bank is correct
+    target_query->SetPA(phys_addr);
+    target_query->SetBank(bank);
 
     if (ETranslationResultType::Mapped == vm_mapper->TranslatePaToVa(phys_addr, EMemBankType(bank), vir_addr))
     {
@@ -423,7 +423,7 @@ namespace Force {
     uint64 untagged_addr = addr;
     if (type == "VA")
     {
-      untagged_addr = addr_tagging->UntagAddress(addr, false); //TODO this needs to reflect whether its instr or data mem, not just unconditionally untag
+      untagged_addr = addr_tagging->UntagAddress(addr, false);
     }
 
     bool res = vm_mapper->GetPageInfo(untagged_addr, type, bank, pageInformation);

@@ -897,7 +897,6 @@ namespace Force {
 
   void IndexMaskOperator::TakeOutMask(uint64& rValue) const
   {
-    // TODO
   }
 
   IndexMaskTrimmer::IndexMaskTrimmer(ConstraintSet& rConstrSet, const IndexMaskOperator* pOperator)

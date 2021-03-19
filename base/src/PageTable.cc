@@ -73,7 +73,7 @@ namespace Force {
 
   bool PageTable::UnconstructedTableLevel(const Page* pageObj, uint64& rLevel)
   {
-    uint32 level_gap = (pageObj->Level() - TableLevel());
+    uint32 level_gap = (TableLevel() - pageObj->Level());
     if (level_gap > MAX_PAGE_TABLE_LEVEL)
     {
       LOG(fail) << "{VmAddressSpace::PageTableWalk} level gap too large: " << dec << level_gap << " page level " << pageObj->Level() << " table level " << TableLevel() << endl;
@@ -99,7 +99,7 @@ namespace Force {
 
   const TablePte* PageTable::PageTableWalk(const Page* pageObj, const VmAddressSpace* pVmas, PageTableInfoRec& page_table_rec) const
   {
-    uint32 level_gap = (pageObj->Level() - TableLevel());
+    uint32 level_gap = (TableLevel() - pageObj->Level());
     if (level_gap > MAX_PAGE_TABLE_LEVEL) {
       LOG(fail) << "{VmAddressSpace::PageTableWalk} level gap too large: " << dec << level_gap << " page level " << pageObj->Level() << " table level " << TableLevel() << endl;
       FAIL("table-level-gap-too-large");
@@ -127,7 +127,6 @@ namespace Force {
 
   void PageTable::ConstructPageTableWalk(uint64 VA, Page* pageObj, VmAddressSpace* pVmas, const GenPageRequest& pPageReq)
   {
-    //uint32 level_gap = (pageObj->Level() - TableLevel());
     uint32 level_gap = (TableLevel() - pageObj->Level());
     if (level_gap > MAX_PAGE_TABLE_LEVEL) {
       LOG(fail) << "{VmAddressSpace::ConstructPageTableWalk} level gap too large: " << dec << level_gap << " page level " << pageObj->Level() << " table level " << TableLevel() << endl;
@@ -180,7 +179,6 @@ namespace Force {
     mEntries[pte_index] = pPte;
 
     // write descriptor to memory.
-    //TODO clean up pteshift
     uint64 descr_addr = TableBase() + (pte_index << pVmas->GetControlBlock()->PteShift());
     uint64 descr_value = pPte->Descriptor();
     LOG(notice) << "Writing descriptor 0x" << hex << descr_value << " to address [" << uint32(mMemoryBank) << "]0x" << descr_addr << " size " << dec << pPte->DescriptorSize() << " " << pPte->DescriptorDetails() << endl;
@@ -197,13 +195,14 @@ namespace Force {
   }
 
   RootPageTable::RootPageTable()
-    : PageTable(), mHighestLookUpBit(0), mTableStep(0), mpBaseAddressSpace(nullptr), mTableIdentifier(""), mAddressSpaces()
+    : PageTable(), mHighestLookUpBit(0), mTableStep(0), mPteShift(0), mMaxTableLevel(0), mpBaseAddressSpace(nullptr), mTableIdentifier(""), mAddressSpaces()
   {
   }
 
   //move to unprotected if needed and check impl
   RootPageTable::RootPageTable(const RootPageTable& rOther)
     : PageTable(rOther), mHighestLookUpBit(rOther.mHighestLookUpBit), mTableStep(rOther.mTableStep),
+      mPteShift(rOther.mPteShift), mMaxTableLevel(rOther.mMaxTableLevel), 
       mpBaseAddressSpace(nullptr), mTableIdentifier(rOther.mTableIdentifier), mAddressSpaces()
   {
   }
@@ -212,18 +211,17 @@ namespace Force {
   {
   }
 
-  void RootPageTable::Setup(uint32 tableStep, uint32 highBit, const string& rPteSuffix)
+  void RootPageTable::Setup(uint32 tableStep, uint32 highBit, uint32 tableLowBit, const string& rPteSuffix, uint32 rPteShift, uint32 rMaxTableLevel)
   {
     mTableStep        = tableStep;
     mHighestLookUpBit = highBit;
+    mPteShift         = rPteShift;
+    mMaxTableLevel    = rMaxTableLevel;
 
-    uint32 low_bit          = mTableStep + PteShift();
-    uint32 init_table_level = MaxTableLevel() + 1;
+    uint32 init_table_level = mMaxTableLevel + 1;
 
-    uint32 levels_lowbit = get_root_level_low_bit(highBit,low_bit,tableStep);
-    uint32 table_low = levels_lowbit & 0x0000ffff;
-    mTableLevel = init_table_level - (levels_lowbit >> 16);
-    SetLookUpBitRange(table_low, highBit);
+    mTableLevel = init_table_level - 1;
+    SetLookUpBitRange(tableLowBit, highBit);
 
     uint32 table_size = TableSize();
     string psize_string = string(get_page_size_string(table_size));

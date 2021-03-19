@@ -121,7 +121,6 @@ namespace Force {
   void ImmediatePartialOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
     ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
-    //TODO check if mAllowReserved should be set
   }
 
   /*!
@@ -452,15 +451,16 @@ namespace Force {
     }
   }
 
-  void AddressingOperandConstraint::SetUsePreamble(Generator& rGen)
+  void AddressingOperandConstraint::SetUsePreamble(cbool usePreamble, const Generator& rGen)
   {
-    mUsePreamble = true;
+    mUsePreamble = usePreamble;
+    if (usePreamble) {
+      vector<const RegisterOperand*> reg_vec;
+      GetRegisterOperands(reg_vec);
 
-    vector<const RegisterOperand* > reg_vec;
-    GetRegisterOperands(reg_vec);
-
-    for (auto reg_opr : reg_vec) {
-      reg_opr->AddWriteConstraint(rGen);
+      for (auto reg_opr : reg_vec) {
+        reg_opr->AddWriteConstraint(rGen);
+      }
     }
   }
 

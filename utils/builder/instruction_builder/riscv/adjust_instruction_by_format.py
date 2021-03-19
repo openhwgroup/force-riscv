@@ -1,15 +1,15 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
+# FORCE-RISCV is licensed under the Apache License, Version 2.0
+#  (the "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
 #
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+# OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
@@ -19,6 +19,7 @@ from operand_adjustor import *
 from shared.instruction import *
 
 format_map = {}
+
 
 def adjust_instruction_by_format(instr):
 
@@ -59,12 +60,12 @@ def adjust_instruction_by_format(instr):
     elif instr_format == "":
         return adjust_const_only(instr)
     else:
-        #print ("TODO instruction format: %s" % instr_format)
         record_instruction_format(instr_format)
         pass
 
-    #dump_format_map()
+    # dump_format_map()
     return False
+
 
 def record_instruction_format(aInstrFormat):
     if aInstrFormat in format_map:
@@ -72,22 +73,27 @@ def record_instruction_format(aInstrFormat):
     else:
         format_map[aInstrFormat] = 1
 
+
 def dump_format_map():
-    print ("========================================")
+    print("========================================")
     for key, value in sorted(format_map.items()):
-        print ("Format: %s, count: %d" % (key, value))
+        print("Format: %s, count: %d" % (key, value))
 
 
 def adjust_rs2_rs1_rd(instr):
     opr_adjustor = OperandAdjustor(instr)
 
-    #print("rs2-rs1-rd instr: {}".format(instr.name))
+    # print("rs2-rs1-rd instr: {}".format(instr.name))
 
     if instr.name.startswith("F"):
-        if instr.name.startswith("FLE") or instr.name.startswith("FLT") or instr.name.startswith("FEQ"):
-          return adjust_fp_rs2_rs1_int_rd(instr)        
+        if (
+            instr.name.startswith("FLE")
+            or instr.name.startswith("FLT")
+            or instr.name.startswith("FEQ")
+        ):
+            return adjust_fp_rs2_rs1_int_rd(instr)
         else:
-          return adjust_fp_rs2_rs1_rd(instr)
+            return adjust_fp_rs2_rs1_rd(instr)
     else:
         # integer instructions
         opr_adjustor.set_rd_int()
@@ -95,13 +101,11 @@ def adjust_rs2_rs1_rd(instr):
         opr_adjustor.set_rs2_int()
         return True
 
-    return False
-
 
 def adjust_fp_rs2_rs1_int_rd(instr):
     opr_adjustor = OperandAdjustor(instr)
     opr_adjustor.set_rd_int()
-    instr.group="Float"
+    instr.group = "Float"
 
     if ".H" in instr.name:
         opr_adjustor.set_rs2_hp()
@@ -126,7 +130,7 @@ def adjust_fp_rs2_rs1_int_rd(instr):
 def adjust_fp_rs2_rs1_rd(instr):
     opr_adjustor = OperandAdjustor(instr)
 
-    instr.group="Float"
+    instr.group = "Float"
 
     if ".H" in instr.name:
         opr_adjustor.set_rs2_hp()
@@ -151,6 +155,7 @@ def adjust_fp_rs2_rs1_rd(instr):
 
     return False
 
+
 # Lots integer instructions fall into this category.  Like ADDI, JALR, LB etc.
 def adjust_imm12_rs1_rd(instr):
     opr_adjustor = OperandAdjustor(instr)
@@ -163,11 +168,18 @@ def adjust_imm12_rs1_rd(instr):
         return True
     elif instr.name == "JALR":
         return adjust_jalr(instr)
-    elif instr.name in ["LB", "LBU", "LD", "LH", "LHU", "LW", "LWU"]: # integer load store instructions.
+    elif instr.name in [
+        "LB",
+        "LBU",
+        "LD",
+        "LH",
+        "LHU",
+        "LW",
+        "LWU",
+    ]:  # integer load store instructions.
         return adjust_int_load(instr)
     elif instr_full_ID.startswith("FENCE"):
-        instr.group="System"
-        #TODO imm[11:0], rs1, and rd are currently reserved unused fields to target more fine grained fences in future extensions, check if we need to set up or mark as ignore
+        instr.group = "System"
         opr_adjustor.set_imm("imm[11:0]", "simm12", True)
         opr_adjustor.set_rs1_int()
         opr_adjustor.set_rd_int()
@@ -191,8 +203,8 @@ def adjust_imm12_rs1_rd(instr):
             size = 16
             opr_adjustor.set_rd_qp()
 
-        attr_dict = dict() # dict for additional attribute
-        subop_dict = dict() # dict for sub operands
+        attr_dict = dict()  # dict for additional attribute
+        subop_dict = dict()  # dict for sub operands
         subop_dict["base"] = "rs1"
         subop_dict["offset"] = "simm12"
         attr_dict["offset-scale"] = "0"
@@ -202,11 +214,13 @@ def adjust_imm12_rs1_rd(instr):
         attr_dict["element-size"] = size
         attr_dict["mem-access"] = "Read"
 
-        add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
+        add_addressing_operand(
+            instr, None, "LoadStore", None, subop_dict, attr_dict
+        )
         return True
 
-    #print ("instruction: %s" % instr.get_full_ID())
-    return False # TODO
+    # print ("instruction: %s" % instr.get_full_ID())
+    return False
 
 
 # Instructions like SLLI are handled here.
@@ -219,13 +233,14 @@ def adjust_shamt_rs1_rd(instr):
 
     if instr.name in ["SLLI", "SRAI", "SRLI"]:
         if shamt_opr.bits == "24-20":
-            instr.form="RV32I"
+            instr.form = "RV32I"
             return True
         if shamt_opr.bits == "25-20":
-            instr.form="RV64I"
+            instr.form = "RV64I"
             return True
 
     return True
+
 
 # FCLASS/FMOV floating point instructions
 def adjust_rs1_rd(instr):
@@ -278,6 +293,7 @@ def adjust_rs1_rd(instr):
 
     return False
 
+
 def adjust_imm20_rd(instr):
     opr_adjustor = OperandAdjustor(instr)
     opr_adjustor.set_rd_int()
@@ -295,13 +311,15 @@ def adjust_jal(instr):
 
     instr.iclass = "BranchInstruction"
 
-    attr_dict = dict() # dict for additional attribute
-    subop_dict = dict() # dict for sub operands
+    attr_dict = dict()  # dict for additional attribute
+    subop_dict = dict()  # dict for sub operands
     subop_dict["offset"] = "simm20"
     attr_dict["offset-scale"] = "1"
     class_name = "PcRelativeBranchOperand"
 
-    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "Branch", class_name, subop_dict, attr_dict
+    )
     return True
 
 
@@ -315,15 +333,17 @@ def adjust_jalr(instr):
 
     instr.iclass = "BranchInstruction"
 
-    attr_dict = dict() # dict for additional attribute
-    subop_dict = dict() # dict for sub operands
+    attr_dict = dict()  # dict for additional attribute
+    subop_dict = dict()  # dict for sub operands
     subop_dict["base"] = "rs1"
     subop_dict["offset"] = "simm12"
     attr_dict["offset-scale"] = "0"
     attr_dict["base"] = "rs1"
     class_name = "BaseOffsetBranchOperand"
 
-    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "Branch", class_name, subop_dict, attr_dict
+    )
     return True
 
 
@@ -341,26 +361,28 @@ def adjust_branches(instr):
 
     instr.iclass = "BranchInstruction"
 
-    attr_dict = dict() # dict for additional attribute
-    subop_dict = dict() # dict for sub operands
+    attr_dict = dict()  # dict for additional attribute
+    subop_dict = dict()  # dict for sub operands
     subop_dict["offset"] = "simm12"
     attr_dict["offset-scale"] = "1"
     class_name = "ConditionalBranchOperandRISCV"
 
     if instr.name == "BEQ":
-      attr_dict["condition"] = "BEQ"
-    elif instr.name == "BGE": 
-      attr_dict["condition"] = "BGE"
-    elif instr.name == "BGEU": 
-      attr_dict["condition"] = "BGEU"
-    elif instr.name == "BLT": 
-      attr_dict["condition"] = "BLT"
-    elif instr.name == "BLTU": 
-      attr_dict["condition"] = "BLTU"
-    elif instr.name == "BNE": 
-      attr_dict["condition"] = "BNE"
+        attr_dict["condition"] = "BEQ"
+    elif instr.name == "BGE":
+        attr_dict["condition"] = "BGE"
+    elif instr.name == "BGEU":
+        attr_dict["condition"] = "BGEU"
+    elif instr.name == "BLT":
+        attr_dict["condition"] = "BLT"
+    elif instr.name == "BLTU":
+        attr_dict["condition"] = "BLTU"
+    elif instr.name == "BNE":
+        attr_dict["condition"] = "BNE"
 
-    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "Branch", class_name, subop_dict, attr_dict
+    )
     return True
 
 
@@ -382,8 +404,8 @@ def adjust_int_load(instr):
     elif instr.name == "LD":
         size = 8
 
-    attr_dict = dict() # dict for additional attribute
-    subop_dict = dict() # dict for sub operands
+    attr_dict = dict()  # dict for additional attribute
+    subop_dict = dict()  # dict for sub operands
     subop_dict["base"] = "rs1"
     subop_dict["offset"] = "simm12"
     attr_dict["offset-scale"] = "0"
@@ -393,8 +415,11 @@ def adjust_int_load(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "LoadStore", None, subop_dict, attr_dict
+    )
     return True
+
 
 # Instructions including SD, FSD etc.
 def adjust_stores(instr):
@@ -405,6 +430,7 @@ def adjust_stores(instr):
         return adjust_fp_stores(instr)
 
     return False
+
 
 # Instructions including SB, SD, SH, SW.
 def adjust_int_stores(instr):
@@ -430,8 +456,8 @@ def adjust_int_stores(instr):
     elif instr.name == "SD":
         size = 8
 
-    attr_dict = dict() # dict for additional attribute
-    subop_dict = dict() # dict for sub operands
+    attr_dict = dict()  # dict for additional attribute
+    subop_dict = dict()  # dict for sub operands
     subop_dict["base"] = "rs1"
     subop_dict["offset"] = "simm12"
     attr_dict["offset-scale"] = "0"
@@ -441,8 +467,11 @@ def adjust_int_stores(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "LoadStore", None, subop_dict, attr_dict
+    )
     return True
+
 
 # FSW, FSD, FSQ, FSH - floating point store instructions
 def adjust_fp_stores(instr):
@@ -472,8 +501,8 @@ def adjust_fp_stores(instr):
         size = 16
         opr_adjustor.set_rs2_qp()
 
-    attr_dict = dict() # dict for additional attribute
-    subop_dict = dict() # dict for sub operands
+    attr_dict = dict()  # dict for additional attribute
+    subop_dict = dict()  # dict for sub operands
     subop_dict["base"] = "rs1"
     subop_dict["offset"] = "simm12"
     attr_dict["offset-scale"] = "0"
@@ -483,23 +512,22 @@ def adjust_fp_stores(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "LoadStore", None, subop_dict, attr_dict
+    )
 
     return True
 
+
 # Instructions including SC.W, SC.D, AMO*.W, AMO*.D
 def adjust_aq_rs2(instr):
-    #aq, rl, rs2, rs1, rd
+    # aq, rl, rs2, rs1, rd
     opr_adjustor = OperandAdjustor(instr)
     opr_adjustor.set_rs2_int()
     opr_adjustor.set_rs1_int_ls_base()
     opr_adjustor.set_rd_int()
-    #TODO setup aq/rl bit fields appropriately
-
-    instr.iclass = "LoadStoreInstruction"
 
     instr_full_ID = instr.get_full_ID()
-
     if ".W" in instr_full_ID:
         size = 4
     elif ".D" in instr_full_ID:
@@ -516,26 +544,30 @@ def adjust_aq_rs2(instr):
     attr_dict["element-size"] = size
 
     if instr_full_ID.startswith("AMO"):
+        instr.iclass = "LoadStoreInstruction"
         rs1_opr = instr.find_operand("rs1")
         rs1_opr.access = "ReadWrite"
         attr_dict["sorder"] = "AtomicRW"
         attr_dict["lorder"] = "AtomicRW"
         attr_dict["mem-access"] = "ReadWrite"
     elif instr_full_ID.startswith("SC"):
+        instr.iclass = "UnpredictStoreInstruction"
         order = "Ordered"
         attr_dict["sorder"] = order
         attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "LoadStore", None, subop_dict, attr_dict
+    )
     return True
+
 
 # Instructions including LR.W, LR.D
 def adjust_aq_rs1(instr):
-    #aq, rl, rs1, rd
+    # aq, rl, rs1, rd
     opr_adjustor = OperandAdjustor(instr)
     opr_adjustor.set_rs1_int_ls_base()
     opr_adjustor.set_rd_int()
-    #TODO setup aq/rl bit fields appropriately
 
     instr.iclass = "LoadStoreInstruction"
 
@@ -558,15 +590,21 @@ def adjust_aq_rs1(instr):
     attr_dict["mem-access"] = "Read"
     attr_dict["lorder"] = "Ordered"
 
-    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
+    add_addressing_operand(
+        instr, None, "LoadStore", None, subop_dict, attr_dict
+    )
     return True
 
+
 # CSR register Instructions
-# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5" access="Write" choices="System registers"/>
+# <O name="systemreg" type="SysReg" bits="19,18-16,15-12,11-8,7-5"
+# access="Write" choices="System registers"/>
 # CSRRW - always writes
-# if rd=x0, then the instruction shall not read the CSR and shall not cause any of the side effects that might occur on a CSR read
+# if rd=x0, then the instruction shall not read the CSR and shall not
+# cause any of the side effects that might occur on a CSR read
 # CSRRS/C - always reads
-# if rs1=x0 then the instruction will not write to the CSR at all, and so shall not cause any of the side effects that might otherwise occur on a CSR write
+# if rs1=x0 then the instruction will not write to the CSR at all, and so shall
+# not cause any of the side effects that might otherwise occur on a CSR write
 def adjust_csr_rs1(instr):
     opr_adjustor = OperandAdjustor(instr)
     instr.group = "System"
@@ -574,7 +612,7 @@ def adjust_csr_rs1(instr):
 
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
-    csr_opr.access = "Write"
+    csr_opr.access = "ReadWrite"
     csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 
@@ -583,12 +621,16 @@ def adjust_csr_rs1(instr):
 
     return True
 
+
 # CSR Immediate Instructions
-# the immediate forms use a 5-bit zero-extended immediate encoded in the rs1 field
+# the immediate forms use a 5-bit zero-extended immediate encoded in the rs1
+# field
 # CSRRWI - always writes
-# if rd=x0, then the instruction shall not read the CSR and shall not cause any of the side effects that might occur on a CSR read
+# if rd=x0, then the instruction shall not read the CSR and shall not cause
+# any of the side effects that might occur on a CSR read
 # CSRRSI/CSRRCI - alwas reads
-# if rs1=x0 then the instruction will not write to the CSR at all, and so shall not cause any of the side effects that might otherwise occur on a CSR write
+# if rs1=x0 then the instruction will not write to the CSR at all, and so shall
+# not cause any of the side effects that might otherwise occur on a CSR write
 def adjust_csr_imm(instr):
     opr_adjustor = OperandAdjustor(instr)
     instr.group = "System"
@@ -596,7 +638,7 @@ def adjust_csr_imm(instr):
 
     csr_opr = instr.find_operand("csr")
     csr_opr.type = "SysReg"
-    csr_opr.access = "Write"
+    csr_opr.access = "ReadWrite"
     csr_opr.choices = "System registers"
     opr_adjustor.add_asm_op(csr_opr)
 
@@ -605,9 +647,10 @@ def adjust_csr_imm(instr):
 
     return True
 
+
 # Floating point Instructions w/ 3 register input operands
-#adjust group/type to float
-#fix rm type from register to immediate
+# adjust group/type to float
+# fix rm type from register to immediate
 def adjust_f_rs3(instr):
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
@@ -647,9 +690,10 @@ def adjust_f_rs3(instr):
 
     return False
 
+
 # Floating point Instructions w/ 2 register input operands
-#adjust group/type to float
-#fix rm type from register to immediate
+# adjust group/type to float
+# fix rm type from register to immediate
 def adjust_f_rs2(instr):
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
@@ -685,6 +729,7 @@ def adjust_f_rs2(instr):
 
     return False
 
+
 # Floating point Instructions w/ 1 register input operand
 def adjust_f_rs1(instr):
     opr_adjustor = OperandAdjustor(instr)
@@ -713,7 +758,7 @@ def adjust_f_rs1(instr):
             return True
 
     elif instr_full_ID.startswith("FCVT"):
-        source_dest_pattern = re.compile(r'FCVT.(?P<dest>\w*).(?P<src>\w*)')
+        source_dest_pattern = re.compile(r"FCVT.(?P<dest>\w*).(?P<src>\w*)")
         source_dest_result = source_dest_pattern.match(instr_full_ID)
 
         src_str = source_dest_result.group("src")
@@ -727,16 +772,8 @@ def adjust_f_rs1(instr):
             opr_adjustor.set_rs1_dp()
         elif "Q" in src_str:
             opr_adjustor.set_rs1_qp()
-        elif "W" in src_str:
-            if "U" in src_str:
-                opr_adjustor.set_rs1_int()
-            else:
-                opr_adjustor.set_rs1_int()
-        elif "L" in src_str:
-            if "U" in src_str:
-                opr_adjustor.set_rs1_int()
-            else:
-                opr_adjustor.set_rs1_int()
+        elif ("W" in src_str) or ("L" in src_str):
+            opr_adjustor.set_rs1_int()
 
         if "S" in dest_str:
             opr_adjustor.set_rd_sp()
@@ -746,39 +783,31 @@ def adjust_f_rs1(instr):
             opr_adjustor.set_rd_dp()
         elif "Q" in dest_str:
             opr_adjustor.set_rd_qp()
-        elif "W" in dest_str:
-            if "U" in dest_str:
-                opr_adjustor.set_rd_int()
-            else:
-                opr_adjustor.set_rd_int()
-        elif "L" in dest_str:
-            if "U" in dest_str:
-                opr_adjustor.set_rd_int()
-            else:
-                opr_adjustor.set_rd_int()
+        elif ("W" in dest_str) or ("L" in dest_str):
+            opr_adjustor.set_rd_int()
 
         return True
 
     return False
 
-# Fence instruction 
-#TODO FM field? see if we need the 1000 encoding for FENCE.TSO which ignores write-to-read ordering
+
+# Fence instruction
 def adjust_fence(instr):
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
 
     if instr_full_ID.startswith("FENCE"):
-        instr.group="System"
+        instr.group = "System"
         pred_opr = instr.find_operand("pred")
         pred_opr.choices = "Barrier option"
         succ_opr = instr.find_operand("succ")
         succ_opr.choices = "Barrier option"
-        #TODO rs1 and rd are currently reserved unused fields to target more fine grained fences in future extensions, check if we need to set up or mark as ignore
         opr_adjustor.set_rs1_int()
         opr_adjustor.set_rd_int()
         return True
 
     return False
+
 
 # Const only operand instructions (ECALL, EBREAK)
 def adjust_const_only(instr):

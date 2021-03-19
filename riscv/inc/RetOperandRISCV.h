@@ -105,6 +105,8 @@ namespace Force {
     void GenerateOthers(const Generator& rGen, Instruction& instr); //!< Generate other return state information.
   protected:
     ASSIGNMENT_OPERATOR_ABSENT(RetOperand);
+  private:
+    uint64 GetEffectiveTargetPc(const Generator& rGen, cuint64 epcVal) const; //!< Get the effective target PC value. This may differ from the value of the xepc register depending on the value of IALIGN.
   };
 
 }

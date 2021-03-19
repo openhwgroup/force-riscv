@@ -103,7 +103,6 @@ namespace Force {
   {
     PteAttribute* pte_attr = nullptr;
 
-    //TODO make the PteAttribute vector ordered by EPteAttributeType key and do binary search.
     auto itr = find_if(mAttributes.cbegin(), mAttributes.cend(),
       [attrType](const PteAttribute* pPteAttr) { return (pPteAttr->PteAttributeType() == attrType); });
 
@@ -238,6 +237,10 @@ namespace Force {
     case EPageGenAttributeType::InstrAccessPermission:
       return EInstrAccessPermissionType_to_string(EInstrAccessPermissionType(attrValue));
     case EPageGenAttributeType::AddrSizeFault:
+      return std::to_string(attrValue);
+    case EPageGenAttributeType::Accessed:
+      return std::to_string(attrValue);
+    case EPageGenAttributeType::Dirty:
       return std::to_string(attrValue);
     default:
       LOG(fail) << "{PageTableEntry::PageGenAttributeToString} attribute not handled: " << EPageGenAttributeType_to_string(attrType) << endl;

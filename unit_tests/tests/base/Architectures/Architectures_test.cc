@@ -23,7 +23,7 @@ namespace Force {
 
   class ArchInfoTEST2 : public ArchInfo {
   public:
-    ArchInfoTEST2(const std::string& name)
+    explicit ArchInfoTEST2(const std::string& name)
       : ArchInfo(name)
     {
 

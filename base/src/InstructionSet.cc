@@ -163,7 +163,7 @@ namespace Force {
     bool set_const_value(OperandStructure* op_struct, const char* value_str)
     {
       const char first_char = value_str[0];
-      if (first_char == '!' || first_char == 'x') return false; //!< TODO skip the not-equal type values
+      if (first_char == '!' || first_char == 'x') return false;
 
       uint32 const_value = parse_bin32(value_str);
       uint32 exp_const_value = op_struct->Encoding(const_value);
@@ -383,9 +383,6 @@ namespace Force {
             auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
             cast_struct->SetElementWidth(parse_uint32(attr.value()));
           }
-
-          // TODO(Noah): Devise and implement a better way of processing attributes generically when there is time to
-          // do so. For now, keep the DataProcessing attribute processing at the end.
           else if (op_struct->Type() == EOperandType::DataProcessing) {
             auto cast_struct = dynamic_cast<DataProcessingOperandStructure*> (op_struct);
             process_data_processing_operand_attribute(attr_name, attr.value(), cast_struct);

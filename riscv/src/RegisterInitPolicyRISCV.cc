@@ -55,7 +55,11 @@ namespace Force {
     std::unique_ptr<ConstraintSet> usable_constr_ptr(usable_constr);
 
     RootPageTable root_table;
-    root_table.Setup(9, 47, "");
+
+    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32)
+      root_table.Setup(10, 31, 22, "", 2, 1);  // Sv32
+    else
+      root_table.Setup(9, 47, 39, "", 3, 3);   // Sv48
     uint32 tb_size = root_table.RootTableSize();
 
     SetupRootPageTableRISCV setup_page_table;

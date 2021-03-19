@@ -108,7 +108,7 @@ namespace Force {
     auto existing_ptr = (*container_ptr)[res_index];
     if (nullptr != existing_ptr) {
       existing_ptr->MergeConstraintSet(*pConstr);
-      delete pConstr; // TODO add a MergeConsumeConstraintSet method.
+      delete pConstr;
     }
     else {
       (*container_ptr)[res_index] = pConstr;

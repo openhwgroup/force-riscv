@@ -803,7 +803,7 @@ namespace Force {
   }
 
 
-  unsigned char EVmConstraintTypeSize = 12;
+  unsigned char EVmConstraintTypeSize = 15;
 
   const string EVmConstraintType_to_string(EVmConstraintType in_enum)
   {
@@ -820,6 +820,9 @@ namespace Force {
     case EVmConstraintType::PageFault: return "PageFault";
     case EVmConstraintType::FlatMap: return "FlatMap";
     case EVmConstraintType::AccessFault: return "AccessFault";
+    case EVmConstraintType::NoDataAccess: return "NoDataAccess";
+    case EVmConstraintType::NotAccessed: return "NotAccessed";
+    case EVmConstraintType::NotDirty: return "NotDirty";
     default:
       unknown_enum_value("EVmConstraintType", (unsigned char)(in_enum));
     }
@@ -830,45 +833,54 @@ namespace Force {
   {
     string enum_type_name = "EVmConstraintType";
     size_t size = in_str.size();
-    char hash_value = in_str.at(0) ^ in_str.at(13 < size ? 13 : 13 % size);
+    char hash_value = in_str.at(3 < size ? 3 : 3 % size) ^ in_str.at(6 < size ? 6 : 6 % size);
 
     switch (hash_value) {
-    case 4:
-      validate(in_str, "PageTable", enum_type_name);
-      return EVmConstraintType::PageTable;
-    case 22:
-      validate(in_str, "PageFault", enum_type_name);
-      return EVmConstraintType::PageFault;
-    case 33:
-      validate(in_str, "NoUserAccess", enum_type_name);
-      return EVmConstraintType::NoUserAccess;
-    case 34:
-      validate(in_str, "AccessFault", enum_type_name);
-      return EVmConstraintType::AccessFault;
-    case 37:
+    case 1:
       validate(in_str, "AddressError", enum_type_name);
       return EVmConstraintType::AddressError;
-    case 39:
-      validate(in_str, "UserAccess", enum_type_name);
-      return EVmConstraintType::UserAccess;
-    case 40:
-      validate(in_str, "PrivilegedNoExecute", enum_type_name);
-      return EVmConstraintType::PrivilegedNoExecute;
-    case 43:
-      validate(in_str, "NoExecute", enum_type_name);
-      return EVmConstraintType::NoExecute;
-    case 44:
-      validate(in_str, "Existing", enum_type_name);
-      return EVmConstraintType::Existing;
-    case 54:
+    case 4:
       validate(in_str, "FlatMap", enum_type_name);
       return EVmConstraintType::FlatMap;
-    case 58:
-      validate(in_str, "UnprivilegedNoExecute", enum_type_name);
-      return EVmConstraintType::UnprivilegedNoExecute;
-    case 60:
+    case 7:
+      validate(in_str, "PageTable", enum_type_name);
+      return EVmConstraintType::PageTable;
+    case 8:
       validate(in_str, "ReadOnly", enum_type_name);
       return EVmConstraintType::ReadOnly;
+    case 13:
+      validate(in_str, "NoExecute", enum_type_name);
+      return EVmConstraintType::NoExecute;
+    case 16:
+      validate(in_str, "PageFault", enum_type_name);
+      return EVmConstraintType::PageFault;
+    case 17:
+      validate(in_str, "UserAccess", enum_type_name);
+      return EVmConstraintType::UserAccess;
+    case 19:
+      validate(in_str, "PrivilegedNoExecute", enum_type_name);
+      return EVmConstraintType::PrivilegedNoExecute;
+    case 27:
+      validate(in_str, "UnprivilegedNoExecute", enum_type_name);
+      return EVmConstraintType::UnprivilegedNoExecute;
+    case 29:
+      validate(in_str, "Existing", enum_type_name);
+      return EVmConstraintType::Existing;
+    case 32:
+      validate(in_str, "NoDataAccess", enum_type_name);
+      return EVmConstraintType::NoDataAccess;
+    case 35:
+      validate(in_str, "AccessFault", enum_type_name);
+      return EVmConstraintType::AccessFault;
+    case 36:
+      validate(in_str, "NotAccessed", enum_type_name);
+      return EVmConstraintType::NotAccessed;
+    case 48:
+      validate(in_str, "NotDirty", enum_type_name);
+      return EVmConstraintType::NotDirty;
+    case 50:
+      validate(in_str, "NoUserAccess", enum_type_name);
+      return EVmConstraintType::NoUserAccess;
     default:
       unknown_enum_name(enum_type_name, in_str);
     }
@@ -879,45 +891,54 @@ namespace Force {
   {
     okay = true;
     size_t size = in_str.size();
-    char hash_value = in_str.at(0) ^ in_str.at(13 < size ? 13 : 13 % size);
+    char hash_value = in_str.at(3 < size ? 3 : 3 % size) ^ in_str.at(6 < size ? 6 : 6 % size);
 
     switch (hash_value) {
-    case 4:
-      okay = (in_str == "PageTable");
-      return EVmConstraintType::PageTable;
-    case 22:
-      okay = (in_str == "PageFault");
-      return EVmConstraintType::PageFault;
-    case 33:
-      okay = (in_str == "NoUserAccess");
-      return EVmConstraintType::NoUserAccess;
-    case 34:
-      okay = (in_str == "AccessFault");
-      return EVmConstraintType::AccessFault;
-    case 37:
+    case 1:
       okay = (in_str == "AddressError");
       return EVmConstraintType::AddressError;
-    case 39:
-      okay = (in_str == "UserAccess");
-      return EVmConstraintType::UserAccess;
-    case 40:
-      okay = (in_str == "PrivilegedNoExecute");
-      return EVmConstraintType::PrivilegedNoExecute;
-    case 43:
-      okay = (in_str == "NoExecute");
-      return EVmConstraintType::NoExecute;
-    case 44:
-      okay = (in_str == "Existing");
-      return EVmConstraintType::Existing;
-    case 54:
+    case 4:
       okay = (in_str == "FlatMap");
       return EVmConstraintType::FlatMap;
-    case 58:
-      okay = (in_str == "UnprivilegedNoExecute");
-      return EVmConstraintType::UnprivilegedNoExecute;
-    case 60:
+    case 7:
+      okay = (in_str == "PageTable");
+      return EVmConstraintType::PageTable;
+    case 8:
       okay = (in_str == "ReadOnly");
       return EVmConstraintType::ReadOnly;
+    case 13:
+      okay = (in_str == "NoExecute");
+      return EVmConstraintType::NoExecute;
+    case 16:
+      okay = (in_str == "PageFault");
+      return EVmConstraintType::PageFault;
+    case 17:
+      okay = (in_str == "UserAccess");
+      return EVmConstraintType::UserAccess;
+    case 19:
+      okay = (in_str == "PrivilegedNoExecute");
+      return EVmConstraintType::PrivilegedNoExecute;
+    case 27:
+      okay = (in_str == "UnprivilegedNoExecute");
+      return EVmConstraintType::UnprivilegedNoExecute;
+    case 29:
+      okay = (in_str == "Existing");
+      return EVmConstraintType::Existing;
+    case 32:
+      okay = (in_str == "NoDataAccess");
+      return EVmConstraintType::NoDataAccess;
+    case 35:
+      okay = (in_str == "AccessFault");
+      return EVmConstraintType::AccessFault;
+    case 36:
+      okay = (in_str == "NotAccessed");
+      return EVmConstraintType::NotAccessed;
+    case 48:
+      okay = (in_str == "NotDirty");
+      return EVmConstraintType::NotDirty;
+    case 50:
+      okay = (in_str == "NoUserAccess");
+      return EVmConstraintType::NoUserAccess;
     default:
       okay = false;
       return EVmConstraintType::Existing;

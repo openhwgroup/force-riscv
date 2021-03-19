@@ -41,10 +41,6 @@ namespace Force {
     PhysicalPageSplit page_split = GetPhysicalPageSplit(va, size);
 
     if (page_split.mSize2 > 0) {
-      // TODO(Noah): Replace passing 1 as element size with a better mechanism if and when one is discovered. I don't
-      // presently see an alternative because the total data size is expected to be a multiple of the element size.
-      // The data size following the split could be just about anything, so using the elementSize parameter often
-      // won't work.
       MemoryInitRecord* mem_init_data1 = mpRecordArchive->GetMemoryInitRecord(mThreadId, page_split.mSize1, 1, memDataType, memAccessType);
       uint8* mem_data1 = new uint8[page_split.mSize1];
       memcpy(mem_data1, memData, page_split.mSize1);

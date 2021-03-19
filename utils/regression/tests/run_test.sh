@@ -1,4 +1,4 @@
-#!/bin/tcsh
+#!/bin/sh
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
@@ -17,7 +17,7 @@
 
 echo .
 echo .
-cd utils/regression
+cd utils/regression || exit
 echo .
 echo .
 # run the directory tests

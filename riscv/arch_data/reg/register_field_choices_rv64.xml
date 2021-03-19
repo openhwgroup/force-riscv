@@ -1,0 +1,234 @@
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+ OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<?xml version="1.0" ?>
+<choices_file>
+  <choices name="sstatus.MXR" type="RegisterFieldValue">
+    <choice description="No make executable readable" value="0x0" weight="10"/>
+    <choice description="Make executable readable" value="0x1" weight="0"/>
+  </choices>
+  <choices name="sstatus.SUM" type="RegisterFieldValue">
+    <choice description="No Supervisor access to User Memory" value="0x0" weight="10"/>
+    <choice description="Supervisor access to User Memory" value="0x1" weight="0"/>
+  </choices>
+  <choices name="mstatus.VS" type="RegisterFieldValue">
+    <choice description="Vector unit off" value="0x0" weight="0"/>
+    <choice description="Vector unit initial" value="0x1" weight="10"/>
+    <choice description="Vector unit clean" value="0x2" weight="10"/>
+    <choice description="Vector unit dirty" value="0x3" weight="10"/>
+  </choices>
+  <choices name="misa.MXL" type="RegisterFieldValue">
+    <choice description="Undefined" value="0x0" weight="0"/>
+    <choice description="ISA width is 32" value="0x1" weight="0"/>
+    <choice description="ISA width is 64" value="0x2" weight="10"/>
+    <choice description="ISA width is 128" value="0x3" weight="0"/>
+  </choices>
+  <choices name="misa.A" type="RegisterFieldValue">
+    <choice description="Atomic extension is not supported" value="0x0" weight="0"/>
+    <choice description="Atomic extension is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.B" type="RegisterFieldValue">
+    <choice description="Bit-Manipulation extension is not supported" value="0x0" weight="10"/>
+    <choice description="Bit-Manipulation extension is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.C" type="RegisterFieldValue">
+    <choice description="Compressed extension is not supported" value="0x0" weight="0"/>
+    <choice description="Compressed extension is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.D" type="RegisterFieldValue">
+    <choice description="Double-precision floating-point extension is not supported" value="0x0" weight="0"/>
+    <choice description="Double-precision floating-point extension is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.E" type="RegisterFieldValue">
+    <choice description="RV32E base ISA is not supported" value="0x0" weight="10"/>
+    <choice description="RV32E base ISA is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.F" type="RegisterFieldValue">
+    <choice description="Single-precision floating-point extension is not supported" value="0x0" weight="0"/>
+    <choice description="Single-precision floating-point extension is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.G" type="RegisterFieldValue">
+    <choice description="Additional standard extensions are not present" value="0x0" weight="10"/>
+    <choice description="Additional standard extensions are present" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.H" type="RegisterFieldValue">
+    <choice description="Hypervisor extension is not supported" value="0x0" weight="10"/>
+    <choice description="Hypervisor extension is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.I" type="RegisterFieldValue">
+    <choice description="Integer base ISA is not present" value="0x0" weight="0"/>
+    <choice description="Integer base ISA is present" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.J" type="RegisterFieldValue">
+    <choice description="Dynamically Translated Languages extension is not supported" value="0x0" weight="10"/>
+    <choice description="Dynamically Translated Languages extension is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.K" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.L" type="RegisterFieldValue">
+    <choice description="Decimal Floating-Point extension is not supported" value="0x0" weight="10"/>
+    <choice description="Decimal Floating-Point extension is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.M" type="RegisterFieldValue">
+    <choice description="Integer Multiply/Divide extension is not supported" value="0x0" weight="0"/>
+    <choice description="Integer Multiply/Divide  extension is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.N" type="RegisterFieldValue">
+    <choice description="User-level interrupts are not supported" value="0x0" weight="10"/>
+    <choice description="User-level interrupts are supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.O" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.P" type="RegisterFieldValue">
+    <choice description="Packed-SIMD extension is not supported" value="0x0" weight="10"/>
+    <choice description="Packed-SIMD extension is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.Q" type="RegisterFieldValue">
+    <choice description="Quad-precision Floating-Point extension is not supported" value="0x0" weight="10"/>
+    <choice description="Quad-precision Floating-Point extension is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.R" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.S" type="RegisterFieldValue">
+    <choice description="Supervisor mode is not supported" value="0x0" weight="0"/>
+    <choice description="Supervisor mode is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.T" type="RegisterFieldValue">
+    <choice description="Transactional Memory extension is not supported" value="0x0" weight="10"/>
+    <choice description="Transactional Memory extension is supported" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.U" type="RegisterFieldValue">
+    <choice description="User mode is not supported" value="0x0" weight="0"/>
+    <choice description="User mode is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.V" type="RegisterFieldValue">
+    <choice description="Vector extension is not supported" value="0x0" weight="0"/>
+    <choice description="Vector extension is supported" value="0x1" weight="10"/>
+  </choices>
+  <choices name="misa.W" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.X" type="RegisterFieldValue">
+    <choice description="Non-standard extensions are not present" value="0x0" weight="10"/>
+    <choice description="Non-standard extensions are present" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.Y" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="misa.Z" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Instruction address misaligned" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Instruction access fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Illegal instruction" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Breakpoint" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Load address misaligned" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Load access fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Store/AMO address misaligned" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Store/AMO access fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Environment call from U-mode" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Environment call from S-mode" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.RESERVED 3" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.RESERVED - Environment call from M-mode" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Instruction page fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Load page fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.RESERVED 4" type="RegisterFieldValue">
+    <choice description="Reserved 0" value="0x0" weight="10"/>
+    <choice description="Reserved 1" value="0x1" weight="0"/>
+  </choices>
+  <choices name="medeleg.Store/AMO page fault" type="RegisterFieldValue">
+    <choice description="Do NOT delegate to S-mode" value="0x0" weight="10"/>
+    <choice description="Delegate to S-mode" value="0x1" weight="0"/>
+  </choices>
+  <choices name="vtype.VMA" type="RegisterFieldValue">
+    <choice description="Inactive elements remain undisturbed" value="0x0" weight="10"/>
+    <choice description="Inactive elements may be overwritten" value="0x1" weight="10"/>
+  </choices>
+  <choices name="vtype.VTA" type="RegisterFieldValue">
+    <choice description="Tail elements remain undisturbed" value="0x0" weight="10"/>
+    <choice description="Tail elements may be overwritten" value="0x1" weight="10"/>
+  </choices>
+  <choices name="vtype.VLMUL" type="RegisterFieldValue">
+    <choice description="32 register groups" value="0x0" weight="10"/>
+    <choice description="16 register groups" value="0x1" weight="10"/>
+    <choice description="8 register groups" value="0x2" weight="10"/>
+    <choice description="4 register groups" value="0x3" weight="10"/>
+    <choice description="Reserved" value="0x4" weight="0"/>
+    <choice description="1/8, 32 register groups" value="0x5" weight="10"/>
+    <choice description="1/4, 32 register groups" value="0x6" weight="10"/>
+    <choice description="1/2, 32 register groups" value="0x7" weight="10"/>
+  </choices>
+  <choices name="vtype.VSEW" type="RegisterFieldValue">
+    <choice description="8-bit elements" value="0x0" weight="0"/>
+    <choice description="16-bit elements" value="0x1" weight="10"/>
+    <choice description="32-bit elements" value="0x2" weight="10"/>
+    <choice description="64-bit elements" value="0x3" weight="10"/>
+    <choice description="128-bit elements" value="0x4" weight="0"/>
+    <choice description="256-bit elements" value="0x5" weight="0"/>
+    <choice description="512-bit elements" value="0x6" weight="0"/>
+    <choice description="1028-bit elements" value="0x7" weight="0"/>
+  </choices>
+</choices_file>

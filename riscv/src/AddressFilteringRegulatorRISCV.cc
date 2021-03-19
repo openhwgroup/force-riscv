@@ -117,7 +117,6 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }
@@ -157,7 +156,6 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }
@@ -171,22 +169,9 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }
-
-  //TODO determine if non-atomic constr is populated/needed for RISCV
-      /*{
-        bool atomic = false;
-        rPageReq.GetGenBoolAttribute(EPageGenBoolAttrType::Atomic, atomic);
-        if (atomic) {
-          const ConstraintSet* vm_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NonAtomic);
-          if (vm_constr != nullptr) {
-            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NonAtomic, vm_constr));
-          }
-        }
-      }*/
 
   void AddressFilteringRegulatorRISCV::GetDataPageFaultVmConstraints(const GenPageRequest& rPageReq, const VmMapper& rVmMapper, vector<VmConstraint* >& rVmConstraints, EExceptionConstraintType constrType) const
   {
@@ -202,7 +187,7 @@ namespace Force {
               rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NoUserAccess, no_user_constr));
             }
           }
-          else //TODO need SUM logic here to not exclude those pages when sum is set
+          else
           {
             const ConstraintSet* user_constr = rVmMapper.GetVmConstraint(EVmConstraintType::UserAccess);
             if (user_constr != nullptr)
@@ -219,7 +204,26 @@ namespace Force {
             {
               rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::ReadOnly, ro_constr));
             }
+
+            const ConstraintSet* not_dirty_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NotDirty);
+            if (not_dirty_constr != nullptr)
+            {
+              rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NotDirty, not_dirty_constr));
+            }
           }
+
+          const ConstraintSet* not_accessed_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NotAccessed);
+          if (not_accessed_constr != nullptr)
+          {
+            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NotAccessed, not_accessed_constr));
+          }
+
+          const ConstraintSet* no_data_access_constr = rVmMapper.GetVmConstraint(EVmConstraintType::NoDataAccess);
+          if (no_data_access_constr != nullptr)
+          {
+            rVmConstraints.push_back(new VmNotInConstraint(EVmConstraintType::NoDataAccess, no_data_access_constr));
+          }
+
           const ConstraintSet* pf_constr = rVmMapper.GetVmConstraint(EVmConstraintType::PageFault);
           if (pf_constr != nullptr)
           {
@@ -228,7 +232,6 @@ namespace Force {
         }
         break;
       default:
-        // TODO implement other exception constraint types
         break;
     }
   }

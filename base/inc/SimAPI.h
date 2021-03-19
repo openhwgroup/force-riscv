@@ -42,8 +42,6 @@ namespace Force {
   typedef unsigned int CacheType;
   typedef unsigned int CacheAttrs;
 
-  //TODO I recommend adding a struct for instruction updates that includes things like instruction number, pc, text, operands, and adding callback to make use of it.
-
   //!< MemUpdate - struct used to record memory updates from simulator...
 
   struct MemUpdate {
@@ -122,10 +120,10 @@ namespace Force {
 
   class ApiSimConfig {
   public:
-    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mMaxVectorElemWidth(32), mpTraceFile(NULL), mUseTraceFile(false) { } //!< default constructor
+    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mMaxVectorElemWidth(32), mpTraceFile(NULL), mUseTraceFile(false), mSimConfigString("") { } //!< default constructor
 
-    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, uint32 maxVectorElemWidth, const char* pTraceFile, bool outputTraceFile) //!< Constructor.
-      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mMaxVectorElemWidth(maxVectorElemWidth), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile)
+    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, uint32 maxVectorElemWidth, const char* pTraceFile, bool outputTraceFile, const std::string& rSimCfgStr) //!< Constructor.
+      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mMaxVectorElemWidth(maxVectorElemWidth), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile), mSimConfigString(rSimCfgStr)
     {
     }
 
@@ -142,6 +140,7 @@ namespace Force {
     uint32 mMaxVectorElemWidth; //!< Maximum vector element width in bits.
     const char* mpTraceFile; //!< trace file. not output trace if it is NULL
     bool mUseTraceFile;
+    std::string mSimConfigString; //!< any additions to simulator config 
   };
 
   /*!
@@ -160,32 +159,20 @@ namespace Force {
     //!< write out simulation trace file (if any), send 'terminate' directive to simulator...
     virtual void Terminate() = 0;
 
-    //!< return simulator version info as String...
-    virtual void GetSimulatorVersion(std::string &sim_version) = 0;
-
-    //!< read simulator physical memory. Return 0 if no errors...
-    virtual void ReadPhysicalMemory(uint32 mem_bank, uint64 address, uint32 size, unsigned char *pBytes) = 0;
-
     //!< write simulator physical memory. Return 0 if no errors...
-    virtual void WritePhysicalMemory(uint32 mem_bank, uint64 address, uint32  size, const unsigned char *pBytes) = 0;
+    virtual void WritePhysicalMemory(uint32 memBank, uint64 address, uint32  size, const unsigned char *pBytes) = 0;
 
     //!< read register value...
-    virtual void ReadRegister(uint32 CpuID, const char *regname, uint64 *rval, uint64 *rmask) = 0;
+    virtual void ReadRegister(uint32 CpuID, const char *regname, uint64 *rval, uint64 *pRegMask) = 0;
 
     //!< read the bytes corresponding to a physical register from a large logical register without forcing the simulator to used Force's naming convention.
     virtual void PartialReadLargeRegister(uint32 CpuID, const char* pRegname, uint8_t* pBytes, uint32 length, uint32 offset) = 0;
 
-    //!< write the bytes corresponding to a physical register from a large logical register without forcing the simulator to used Force's naming convention.
-    virtual void PartialWriteLargeRegister(uint32 CpuID, const char* pRegname, const uint8_t* pBytes, uint32 length, uint32 offset) = 0;
-
     //!< write simulator register. mask indicates which bits to write...
     virtual void WriteRegister(uint32 CpuID,const char *regname,uint64 rval,uint64 rmask) = 0;
 
-    //!< request simulator to 'inject event(s)...
-    virtual void InjectEvents(uint32 CpuID, uint32 interrupt_sets) = 0;
-
     //!< step instruction for specified cpu; returns after simulator step complete, with all updates.
-    virtual void Step(uint32 cpuid,std::vector<RegUpdate> &rRegUpdates,std::vector<MemUpdate> &rMemUpdates, std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptions) = 0;
+    virtual void Step(uint32 cpuid,std::vector<RegUpdate> &rRegUpdates,std::vector<MemUpdate> &rMemUpdates, std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptUpdates) = 0;
 
     virtual void WakeUp(uint32 cpuId) = 0; //!< Wake up from lower power state.
     virtual void TurnOn(uint32 cpuId) = 0; //!< Turn the Iss thread on.

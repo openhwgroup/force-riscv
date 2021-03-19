@@ -43,8 +43,6 @@ namespace Force {
       addr_table->SetRecoveryAddressGenerator(new RecoveryAddressGeneratorRISCV(pGen));
     }
 
-    // needs review
-    // TODO signup with exception level changing event.
     const Generator* generator = GetGenerator();
     auto reg_file = generator->GetRegisterFile();
     auto phys_ptr = reg_file->PhysicalRegisterLookup("privilege");
@@ -58,8 +56,10 @@ namespace Force {
     {	
 	LOG(notice) << "Can't cast privilege"<< endl;
     }
-
-    conf_ptr->SignUp(this);
+    else
+    {
+      conf_ptr->SignUp(this);
+    }
   }
 
   void AddressTableManagerRISCV::GetReloadRegisters(cuint32 targetMemBank, cuint32 targetEl, map<string, uint64>& rReloadMap) const

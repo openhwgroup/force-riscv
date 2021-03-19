@@ -56,7 +56,7 @@ namespace Force {
     virtual bool InitializeRootPageTable(VmAddressSpace* pVmas, RootPageTable* pRootTable); //!< Initialize root page table.
 
     virtual GenPageRequest* PhysicalRegionPageRequest(const PhysicalRegion* pPhysRegion, bool& rRegionCompatible) const { return nullptr; }         //!< Return page-request object for a given physical region type.
-    virtual uint32          PteShift()                                             const { return 3; }               //!< Return PTE shift based on PTE size.
+    virtual uint32          PteShift()                                             const { return 0; }               //!< Return PTE shift based on PTE size.
     virtual ConstraintSet*  InitialVirtualConstraint()                             const; //!< Get initial constraint set from control block info
 
     uint32              Asid()               const  { return mAsid; }               //!< Return ASID.

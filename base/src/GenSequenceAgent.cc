@@ -48,11 +48,6 @@ using namespace std;
 
 namespace Force {
 
-  Object* GenSequenceAgent::Clone() const
-  {
-    return new GenSequenceAgent(*this);
-  }
-
   void  GenSequenceAgent::SetGenRequest(GenRequest* genRequest)
   {
     mpSequenceRequest = dynamic_cast<GenSequenceRequest* >(genRequest);
@@ -218,6 +213,15 @@ namespace Force {
   {
     auto lower_bound_iter = std::lower_bound(registerList.begin(), registerList.end(), element, boot_comparator);
     registerList.insert(lower_bound_iter, element);    //reg_set_by_boot holding
+  }
+
+  void GenSequenceAgent::EndOfTest()
+  {
+    vector<GenRequest*> req_seq;
+    GetEndOfTestSequence(req_seq);
+    mpGenerator->PrependRequests(req_seq);
+
+    mHasGenEndOfTest = true;
   }
 
   void GenSequenceAgent::BootLoading()
@@ -444,7 +448,7 @@ namespace Force {
 
     bool any_bnt = false;
     vector<GenRequest*> bnt_requests;
-    EGenModeTypeBaseType gen_mode_change = EGenModeTypeBaseType(EGenModeType::SimOff) | EGenModeTypeBaseType(EGenModeType::NoEscape);
+    EGenModeTypeBaseType gen_mode_change = EGenModeTypeBaseType(EGenModeType::SimOff);
     bnt_requests.push_back(new GenStateRequest(EGenStateActionType::Push, EGenStateType::GenMode, gen_mode_change));
 
     for (auto bnt_node : bnt_nodes) {
@@ -490,7 +494,6 @@ namespace Force {
       FAIL("failed-to-translate-not-taken-path");
     }
 
-    // TODO handle cases when the VA range stradle two pages.
     uint64 inter_start = 0;
     uint64 inter_size = 0;
     auto free_constr = mpGenerator->GetMemoryManager()->GetMemoryBank(bank)->Free();
@@ -498,8 +501,7 @@ namespace Force {
 
     LOG(notice) << "{GenSequenceAgent::ProcessBntNode} generating not-taken-path starting from 0x" << hex << not_taken_path << "=>[" << bank << "]0x" << pa << " intersection start 0x" << inter_start << " size " << dec << inter_size << endl;
 
-    auto bnt_min_space = mpGenerator->BntMinSpace();
-    if (pa >= inter_start && inter_size >= bnt_min_space + pa - inter_start ) {
+    if ((pa == inter_start) && (inter_size >= mpGenerator->BntMinSpace())) {
       mpGenerator->SetPC(not_taken_path);
       auto bnt_branch = new GenBranchToTarget(bnt_node->TakenPath(), false, true); // NoBnt
       mpGenerator->PrependRequest(bnt_branch);
@@ -512,9 +514,17 @@ namespace Force {
     if (mpGenerator->SimulationEnabled()) {
       auto re_exe_req = mpSequenceRequest->CastInstance<GenReExecutionRequest>();
       uint64 re_exe_addr = re_exe_req->ReExecutionAddress();
+      uint32 max_re_exe_instr = re_exe_req->MaxReExecutionInstructions();
+      if (mHasGenEndOfTest) {
+        // We limit the number of re-execution steps to avoid the possibility of infinitely
+        // repeating the end of test instructions, particularly in the branch to self case. This
+        // could happen if an instruction in the end of test sequence triggers an exception.
+        max_re_exe_instr = GetEndOfTestInstructionCount();
+      }
+
       delete mpSequenceRequest;
       mpSequenceRequest = nullptr;
-      mpGenerator->ReExecute(re_exe_addr);
+      mpGenerator->ReExecute(re_exe_addr, max_re_exe_instr);
     }
   }
 
@@ -850,7 +860,6 @@ namespace Force {
 
     GetLoadLargeRegisterSequence(reg_ptr, cast_req->RegisterValues(), req_seq, inter_reg_ptr, cast_req->ImmOffset());
 
-    // TODO: add SetRegister request for NoISS mode.
     mpGenerator->PrependRequests(req_seq);
   }
 

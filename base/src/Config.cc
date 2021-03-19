@@ -110,6 +110,16 @@ namespace Force {
           mpArchitectures->DefaultArchInfo()->SetSimulatorDLL(file_name);
         }
       }
+      else if (strcmp(node_name, "simulator_config_string") == 0) {
+        const char* file_name = node.attribute("value").value();
+        // this if string.empty() is to make sure not to override the Simulator config string if already defined.
+        if (mpArchitectures->DefaultArchInfo()->SimulatorConfigString().empty()) {
+          mpArchitectures->DefaultArchInfo()->SetSimulatorConfigString(file_name);
+        }
+	mpConfig->SetGlobalStateValue(EGlobalStateType::AppRegisterWidth, 64);
+	if (std::string(file_name).find("RV32") != std::string::npos)
+	  mpConfig->SetGlobalStateValue(EGlobalStateType::AppRegisterWidth, 32);
+      }
       else if (strcmp(node_name, "simulator_standalone") == 0) {
         const char* file_name = node.attribute("file").value();
         mpArchitectures->DefaultArchInfo()->SetSimulatorStandalone(file_name);

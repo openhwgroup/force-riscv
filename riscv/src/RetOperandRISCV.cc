@@ -283,16 +283,15 @@ namespace Force {
     RetOperandConstraint* ret_constr = mpOperandConstraint->CastInstance<RetOperandConstraint>();
 
     // update pe state.
-    if (ret_constr->PEUpdateId() == 0 && ret_constr->TargetAddressConstraint() == nullptr) {
+    if (ret_constr->PEUpdateId() == 0) {
       PeStateUpdate* pe_state = new PeStateUpdate();
       if (not gen.HasISS()) {
         pe_state->UpdateState("PrivilegeLevel", "Set", (uint64)(ret_constr->TargetPrivilege()));
-        //TODO Replace with virtual register for privilege level to trigger update VM.
         pe_state->UpdateRegisterField(ret_constr->StatusName(), ret_constr->PpName(), (uint64)(ret_constr->TargetPrivilege()));
       }
       auto reload_registers = ret_constr->ReloadRegisters();
       auto epc_iter = reload_registers.find(ret_constr->EpcName());
-      pe_state->UpdateState("PC", "Set", epc_iter->second);
+      pe_state->UpdateState("PC", "Set", GetEffectiveTargetPc(gen, epc_iter->second));
       uint64 update_id = DataStation::Instance()->Add(pe_state);
       ret_constr->SetPEUpdateId(update_id);
       LOG(info) << "{RetOperandRISCV::GenerateOthers} set PeStateUpdate Update ID :" << update_id << endl;
@@ -355,6 +354,23 @@ namespace Force {
     GenRequest* eret_request = new GenCallBackEretRequest(ret_constr->PreambleSequence());
     gen.AddPreambleRequest(eret_request);
     return true;
+  }
+
+  uint64 RetOperand::GetEffectiveTargetPc(const Generator& rGen, cuint64 epcVal) const
+  {
+    uint64 effective_target_pc = epcVal;
+
+    const RegisterFile* reg_file = rGen.GetRegisterFile();
+    Register* misa_reg = reg_file->RegisterLookup("misa");
+    RegisterField* c_field = misa_reg->RegisterFieldLookup("C");
+    if (c_field->FieldValue() == 0x1) {
+      effective_target_pc = get_aligned_value(effective_target_pc, 2);
+    }
+    else {
+      effective_target_pc = get_aligned_value(effective_target_pc, 4);
+    }
+
+    return effective_target_pc;
   }
 
 }

@@ -1576,6 +1576,7 @@ CASE( "tests for EPteType" ) {
       EXPECT(EPteType_to_string(EPteType::P16K) == "P16K");
       EXPECT(EPteType_to_string(EPteType::P64K) == "P64K");
       EXPECT(EPteType_to_string(EPteType::P2M) == "P2M");
+      EXPECT(EPteType_to_string(EPteType::P4M) == "P4M");
       EXPECT(EPteType_to_string(EPteType::P32M) == "P32M");
       EXPECT(EPteType_to_string(EPteType::P512M) == "P512M");
       EXPECT(EPteType_to_string(EPteType::P1G) == "P1G");
@@ -1587,6 +1588,7 @@ CASE( "tests for EPteType" ) {
       EXPECT(string_to_EPteType("P16K") == EPteType::P16K);
       EXPECT(string_to_EPteType("P64K") == EPteType::P64K);
       EXPECT(string_to_EPteType("P2M") == EPteType::P2M);
+      EXPECT(string_to_EPteType("P4M") == EPteType::P4M);
       EXPECT(string_to_EPteType("P32M") == EPteType::P32M);
       EXPECT(string_to_EPteType("P512M") == EPteType::P512M);
       EXPECT(string_to_EPteType("P1G") == EPteType::P1G);
@@ -1606,6 +1608,8 @@ CASE( "tests for EPteType" ) {
       EXPECT(try_string_to_EPteType("P64K", okay) == EPteType::P64K);
       EXPECT(okay);
       EXPECT(try_string_to_EPteType("P2M", okay) == EPteType::P2M);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPteType("P4M", okay) == EPteType::P4M);
       EXPECT(okay);
       EXPECT(try_string_to_EPteType("P32M", okay) == EPteType::P32M);
       EXPECT(okay);
@@ -1781,6 +1785,8 @@ CASE( "tests for EPageGenAttributeType" ) {
       EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::AddrSizeFault) == "AddrSizeFault");
       EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::DataAccessPermission) == "DataAccessPermission");
       EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::InstrAccessPermission) == "InstrAccessPermission");
+      EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::Accessed) == "Accessed");
+      EXPECT(EPageGenAttributeType_to_string(EPageGenAttributeType::Dirty) == "Dirty");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -1789,6 +1795,8 @@ CASE( "tests for EPageGenAttributeType" ) {
       EXPECT(string_to_EPageGenAttributeType("AddrSizeFault") == EPageGenAttributeType::AddrSizeFault);
       EXPECT(string_to_EPageGenAttributeType("DataAccessPermission") == EPageGenAttributeType::DataAccessPermission);
       EXPECT(string_to_EPageGenAttributeType("InstrAccessPermission") == EPageGenAttributeType::InstrAccessPermission);
+      EXPECT(string_to_EPageGenAttributeType("Accessed") == EPageGenAttributeType::Accessed);
+      EXPECT(string_to_EPageGenAttributeType("Dirty") == EPageGenAttributeType::Dirty);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -1806,6 +1814,10 @@ CASE( "tests for EPageGenAttributeType" ) {
       EXPECT(try_string_to_EPageGenAttributeType("DataAccessPermission", okay) == EPageGenAttributeType::DataAccessPermission);
       EXPECT(okay);
       EXPECT(try_string_to_EPageGenAttributeType("InstrAccessPermission", okay) == EPageGenAttributeType::InstrAccessPermission);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPageGenAttributeType("Accessed", okay) == EPageGenAttributeType::Accessed);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPageGenAttributeType("Dirty", okay) == EPageGenAttributeType::Dirty);
       EXPECT(okay);
     }
 
@@ -1923,6 +1935,7 @@ CASE( "tests for EGlobalStateType" ) {
       EXPECT(EGlobalStateType_to_string(EGlobalStateType::PageTableRegionStart) == "PageTableRegionStart");
       EXPECT(EGlobalStateType_to_string(EGlobalStateType::MemoryFillPattern) == "MemoryFillPattern");
       EXPECT(EGlobalStateType_to_string(EGlobalStateType::ElfMachine) == "ElfMachine");
+      EXPECT(EGlobalStateType_to_string(EGlobalStateType::AppRegisterWidth) == "AppRegisterWidth");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -1932,6 +1945,7 @@ CASE( "tests for EGlobalStateType" ) {
       EXPECT(string_to_EGlobalStateType("PageTableRegionStart") == EGlobalStateType::PageTableRegionStart);
       EXPECT(string_to_EGlobalStateType("MemoryFillPattern") == EGlobalStateType::MemoryFillPattern);
       EXPECT(string_to_EGlobalStateType("ElfMachine") == EGlobalStateType::ElfMachine);
+      EXPECT(string_to_EGlobalStateType("AppRegisterWidth") == EGlobalStateType::AppRegisterWidth);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -1951,6 +1965,8 @@ CASE( "tests for EGlobalStateType" ) {
       EXPECT(try_string_to_EGlobalStateType("MemoryFillPattern", okay) == EGlobalStateType::MemoryFillPattern);
       EXPECT(okay);
       EXPECT(try_string_to_EGlobalStateType("ElfMachine", okay) == EGlobalStateType::ElfMachine);
+      EXPECT(okay);
+      EXPECT(try_string_to_EGlobalStateType("AppRegisterWidth", okay) == EGlobalStateType::AppRegisterWidth);
       EXPECT(okay);
     }
 

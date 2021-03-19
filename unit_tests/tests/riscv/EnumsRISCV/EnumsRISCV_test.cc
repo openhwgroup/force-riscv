@@ -519,6 +519,9 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::PageFault) == "PageFault");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::FlatMap) == "FlatMap");
       EXPECT(EVmConstraintType_to_string(EVmConstraintType::AccessFault) == "AccessFault");
+      EXPECT(EVmConstraintType_to_string(EVmConstraintType::NoDataAccess) == "NoDataAccess");
+      EXPECT(EVmConstraintType_to_string(EVmConstraintType::NotAccessed) == "NotAccessed");
+      EXPECT(EVmConstraintType_to_string(EVmConstraintType::NotDirty) == "NotDirty");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -534,6 +537,9 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(string_to_EVmConstraintType("PageFault") == EVmConstraintType::PageFault);
       EXPECT(string_to_EVmConstraintType("FlatMap") == EVmConstraintType::FlatMap);
       EXPECT(string_to_EVmConstraintType("AccessFault") == EVmConstraintType::AccessFault);
+      EXPECT(string_to_EVmConstraintType("NoDataAccess") == EVmConstraintType::NoDataAccess);
+      EXPECT(string_to_EVmConstraintType("NotAccessed") == EVmConstraintType::NotAccessed);
+      EXPECT(string_to_EVmConstraintType("NotDirty") == EVmConstraintType::NotDirty);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -565,6 +571,12 @@ CASE( "tests for EVmConstraintType" ) {
       EXPECT(try_string_to_EVmConstraintType("FlatMap", okay) == EVmConstraintType::FlatMap);
       EXPECT(okay);
       EXPECT(try_string_to_EVmConstraintType("AccessFault", okay) == EVmConstraintType::AccessFault);
+      EXPECT(okay);
+      EXPECT(try_string_to_EVmConstraintType("NoDataAccess", okay) == EVmConstraintType::NoDataAccess);
+      EXPECT(okay);
+      EXPECT(try_string_to_EVmConstraintType("NotAccessed", okay) == EVmConstraintType::NotAccessed);
+      EXPECT(okay);
+      EXPECT(try_string_to_EVmConstraintType("NotDirty", okay) == EVmConstraintType::NotDirty);
       EXPECT(okay);
     }
 

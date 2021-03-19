@@ -24,18 +24,17 @@ namespace Force {
   {
     mPteTypes.push_back(EPteType::P4K);
     mPteTypes.push_back(EPteType::P2M);
+    mPteTypes.push_back(EPteType::P4M);
     mPteTypes.push_back(EPteType::P1G);
     mPteTypes.push_back(EPteType::P512G);
   }
 
   void PhysicalPageManagerRISCV::GetIncompatibleAttributes(const ConstraintSet* pMemAttrs, std::vector<EMemoryAttributeType>& memConstraintTypes)
   {
-    // TODO Determine what implementation is needed here
   }
 
   void PhysicalPageManagerRISCV::ConvertMemoryAttributes(const ConstraintSet* pMemAttrs, std::vector<EMemoryAttributeType>& memConstraintTypes)
   {
-    // TODO Determine what implementation is needed here
   }
 
 }

@@ -68,6 +68,7 @@ namespace Force {
     void SetSimulatorApiModule(const std::string& iFile) { mSimulatorApiModule = iFile; } //!< Set path the simulator API module.
     void SetSimulatorDLL(const std::string& iFile) { mSimulatorDLL = iFile; }; //!< Set path to simulator shared object.
     void SetSimulatorStandalone(const std::string& iFile) { mSimulatorStandalone = iFile; }; //!< set path to simulator standalone.
+    void SetSimulatorConfigString(const std::string& iCfgStr) { mSimulatorConfigString = iCfgStr; }; //!< set simulator ISA config string
     const std::list<std::string>& InstructionFiles() const { return mInstructionFiles; } //!< Obtain a read-only reference to the instruction file names.
     const std::list<std::string>& RegisterFiles() const { return mRegisterFiles; } //!< Obtain a read-only reference to the register file names.
     const std::list<std::string>& ChoicesFiles() const { return mChoicesFiles; } //!< Obtain a read-only reference to the choices file names.
@@ -76,6 +77,7 @@ namespace Force {
     const std::string& SimulatorApiModule() const { return mSimulatorApiModule; } //!< Obtain a read-only reference to the simulator Api module name.
     const std::string& SimulatorDLL() const { return mSimulatorDLL; } //!< Obtain a read-only reference to the simulator shared object file.
     const std::string& SimulatorStandalone() const { return mSimulatorStandalone; } //!< Obtain a read-only reference to the simulator standalone
+    const std::string& SimulatorConfigString() const { return mSimulatorConfigString; } //!< Obtain a read-only reference to the simulator config string
     const std::string& DefaultInstructionClass() const { return mDefaultIClass; } //!< Return default instruction class.
     const std::string& DefaultPteClass() const { return mDefaultPteClass; } //!< Return default PTE class.
     const std::string& DefaultPteAttributeClass() const { return mDefaultPteAttributeClass; } //!< Return default PTE attribute class.
@@ -83,8 +85,6 @@ namespace Force {
     const std::vector<EMemBankType>& GetMemoryBanks() const { return mMemoryBanks; } //!< Return supported memory banks.
     virtual uint32 ElfMachineType() const { return 0; } //!< Return ELF machine type.
     virtual const std::string FindOperandShortName(const std::string& longName) const { return ""; } //!< return operand short name
-    // TODO(Noah): Determine an alternate way to construct the appropriate physical page manager
-    // instance when there is time to do so; we do not want to keep this as a public method.
     virtual PhysicalPageManager* InstantiatePhysicalPageManager(EMemBankType bankType) const { return nullptr; } //!< Instantiate a PhysicalPageManager object based on the ArchInfo type.
     virtual void SetupSimAPIs() { } //!< Setup simulator APIs.
   protected:
@@ -125,7 +125,7 @@ namespace Force {
     std::string mSimulatorApiModule; //!< Simulator API module.
     std::string mSimulatorDLL; //!< Simulator dynamically loaded library.
     std::string mSimulatorStandalone; //!< Simulator standalone executable.
-
+    std::string mSimulatorConfigString; //!< Simulator ISA config string
     friend class ConfigParser;
   };
 

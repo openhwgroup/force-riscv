@@ -72,7 +72,7 @@ namespace Force {
     GetRegisterFieldState(satp_reg, EVmInfoBoolType::MODE);
 
     auto mstatus_reg = reg_file->RegisterLookup("mstatus");
-    GetRegisterFieldState(mstatus_reg, EVmInfoBoolType::MPRV); //TODO MPP needed to determine effect of MPRV
+    GetRegisterFieldState(mstatus_reg, EVmInfoBoolType::MPRV);
     GetRegisterFieldState(mstatus_reg, EVmInfoBoolType::TVM); //Trap Virtual Memory - if paging enable will cause exceptions on all vm ops
     //need MPP to determine paging enabled for priv=m MPRV=1 MPP=S
     //this can create a new unique case where instr's are direct mapped and data accesses are translated via 'S' addr translation and protection
@@ -83,7 +83,7 @@ namespace Force {
     switch (attrType)
     {
       case EVmInfoBoolType::MODE:
-        return "satp"; //TODO update for other ATP regs
+        return "satp";
       case EVmInfoBoolType::MPRV:
       case EVmInfoBoolType::TVM:
         return "mstatus";

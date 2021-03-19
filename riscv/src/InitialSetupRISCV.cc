@@ -77,24 +77,34 @@ namespace Force {
 
     std::map<string, uint64> field_map;
 
+    bool rv32 = mpConfig->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32; // force-risc configured to 32-bits 
+    
     // misa init...
     field_map["WLRL_VAR"] = 0;                                 // zero out 
     mpGenerator->InitializeRegisterFields("misa", field_map);  //   multi-bit reserved field
     mpGenerator->RandomInitializeRegister("misa", "");
 
     // medeleg init...
-    field_map.clear();
-    field_map["RESERVED 1"] = 0;                                 //
-    field_map["CUSTOM USE 1"] = 0;                               // zero out 
-    field_map["RESERVED 2"] = 0;                                 //   multi-bit reserved fields
-    field_map["CUSTOM USE 2"] = 0;                               //
-    mpGenerator->InitializeRegisterFields("medeleg", field_map); //
+    if (rv32) {
+      // 32-bit version of medeleg doesn't have 'RESERVED' or 'CUSTOM' fields...
+    } else {
+      field_map.clear();
+      field_map["RESERVED 1"] = 0;                                 //
+      field_map["CUSTOM USE 1"] = 0;                               // zero out 
+      field_map["RESERVED 2"] = 0;                                 //   multi-bit reserved fields
+      field_map["CUSTOM USE 2"] = 0;                               //
+      mpGenerator->InitializeRegisterFields("medeleg", field_map); //
+    }
     mpGenerator->RandomInitializeRegister("medeleg", "");
     
     //mstatus init
     field_map.clear();
-    field_map["SXL"] = 0x2;
-    field_map["UXL"] = 0x2;
+    if (rv32) {
+      // 32-bit version of mstatus doesn't have SXL or UXL fields...
+    } else {
+      field_map["SXL"] = 0x2;
+      field_map["UXL"] = 0x2;
+    }
     field_map["TSR"] = 0x0;
     field_map["TW"] = 0x0;
     field_map["TVM"] = 0x0;
@@ -120,7 +130,7 @@ namespace Force {
 
     //fcsr init
     field_map.clear();
-    field_map["FRM"] = 0x0; //TODO determine preferred default value for rounding mode
+    field_map["FRM"] = 0x0;
     field_map["NZ"] = 0x0;
     field_map["DZ"] = 0x0;
     field_map["OF"] = 0x0;
@@ -131,11 +141,20 @@ namespace Force {
 
     //satp init
     field_map.clear();
-    field_map["MODE"] = 0x9;
+    if (rv32) {
+      field_map["MODE"] = 0x1;  // satp.mode is single-bit field. set to 1 to enable Sv32 paging
+    } else {
+      field_map["MODE"] = 0x9;  // paging mode value is 0x9 for Sv48
+    }
     if (mpDisablePagingOption->mValid && (mpDisablePagingOption->mValue != 0))
     {
+      LOG(debug) << "[InitialSetupRISCV::Process] Paging IS disabled..." << std::endl;
+
       field_map["MODE"] = 0x0;
+    } else {
+      LOG(debug) << "[InitialSetupRISCV::Process] Paging IS Enabled..." << std::endl;	   
     }
+
     mpGenerator->InitializeRegisterFields("satp", field_map);
 
     //internal privilege register init

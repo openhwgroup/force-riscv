@@ -53,17 +53,6 @@ namespace Force {
     }
   }
 
-  // TODO(Noah): Treat an offset range constraint as a range of permissible offset operand values
-  // without regard to sign interpretation when there is time to do so. AddOffsetRangeConstraint()
-  // currently uses the complement of the range constraint when one of the bounds is negative and
-  // the other is positive. For example, if we have a 4-bit signed offset with a range constraint of
-  // {0x6-0xC}, the current behavior treats the constraint as if the operand can take on any of the
-  // values in {0x0-0x6, 0xC-0xF}, i.e. the 11 values from -4 (0xC) to 6 (0x6). The interpretation
-  // that is consistent with the way constraints are treated elsewhere is that the operand can take
-  // on any of the values in {0x6-0xC}, i.e. the 7 values from -4 (0xC) to 0 (0x0) and from 6 (0x6)
-  // to 7 (0x7). This interpretation makes the size of the result constraint equal to the size of
-  // the offset constraint (neglecting the allowance for the access size), which is what we would
-  // expect.
   void BaseOffsetConstraint::AddOffsetRangeConstraint(uint64 offsetLower, uint64 offsetUpper, ConstraintSet& rAdditionalConstr) const
   {
     int64 lower_normalized = (int64)SignExtendShiftOffset(offsetLower);

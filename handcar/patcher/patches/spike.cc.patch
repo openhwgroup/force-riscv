@@ -158,7 +158,7 @@
 >     USED = true,
 >     UNUSED = false
 >   };
-105,175c60,92
+105,175c60,135
 < void merge_overlapping_memory_regions(std::vector<std::pair<reg_t, mem_t*>>& mems)
 < {
 <   // check the user specified memory regions and merge the overlapping or
@@ -264,11 +264,8 @@
 >     const char arg2[] = "no_elf\0";
 >     memcpy(_stored_argv[0], arg1, strlen(arg1)+1);
 >     memcpy(_stored_argv[_stored_argc-1], arg2, strlen(arg2)+1);
-178,180c95,472
-<   merge_overlapping_memory_regions(res);
-<   return res;
-< }
----
+>   }
+> 
 >   
 >   // _unpackFlatOptions function: takes a space separated options string, formatted as it would be for command line arguments for the Spike original executable, 
 >   //    and recomposes it into an argument vector so that spike argument parsing code can work exactly as it was designed to work. 
@@ -310,9 +307,13 @@
 >     {
 >       _token_vector.push_back(flat_options_temp);
 >     }
->   }
-> 
-> 
+178,180d137
+<   merge_overlapping_memory_regions(res);
+<   return res;
+< }
+182c139,485
+< int main(int argc, char** argv)
+---
 >   // _rejectOrEnroll function: looks up an option by name from the _options_map and determines if the right types of arguments have been provided. If so, the option is enabled and the argument is stored.
 >   //
 >   // inputs:
@@ -647,9 +648,7 @@
 >   {
 >     return _stored_argc;
 >   } 
-182c474,483
-< int main(int argc, char** argv)
----
+> 
 > 
 >   // These can't be methods of OptionsStorage, but they need access to OptionsStorage private that ought not be more widely exposed.
 >   friend void initialize_simulator(const char* options);
@@ -658,9 +657,11 @@
 > };
 > OptionsStorage* _pOptionsStorage;
 > 
+> bool isa_rv32;  // true if simulator configured (via isa cmdline option) as 32-bits (RV32)
+> bool isa_D;     // true if double-precision floating pt extension configured in
 > 
 > void initialize_simulator(const char* options)
-183a485,536
+183a487,538
 >   // Hopefully the user has called set_simulator_parameter a number of times before calling initialize_simulator, but handle the contingency if they didn't.
 >   if(_pOptionsStorage == nullptr)
 >   {
@@ -713,25 +714,25 @@
 >     printf("\n");
 >   }
 >   
-192,193d544
+192,193d546
 <   size_t initrd_size;
 <   reg_t initrd_start = 0, initrd_end = 0;
-195,199d545
+195,199d547
 <   std::vector<std::pair<reg_t, mem_t*>> mems;
 <   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
 <   std::unique_ptr<icache_sim_t> ic;
 <   std::unique_ptr<dcache_sim_t> dc;
 <   std::unique_ptr<cache_sim_t> l2;
-201,204d546
+201,204d548
 <   bool log_commits = false;
 <   const char *log_path = nullptr;
 <   std::function<extension_t*()> extension;
 <   const char* initrd = NULL;
-208,210d549
+208,210d551
 <   const char* dtb_file = NULL;
 <   uint16_t rbb_port = 0;
 <   bool use_rbb = false;
-212,220d550
+212,220d552
 <   debug_module_config_t dm_config = {
 <     .progbufsize = 2,
 <     .max_bus_master_bits = 0,
@@ -741,15 +742,15 @@
 <     .support_abstract_csr_access = true,
 <     .support_haltgroups = true
 <   };
-222c552
+222c554
 < 
 ---
 >  
-226c556
+226c558
 < 
 ---
 >  
-235,277d564
+235,277d566
 <   auto const device_parser = [&plugin_devices](const char *s) {
 <     const std::string str(s);
 <     std::istringstream stream(str);
@@ -793,14 +794,14 @@
 <     plugin_devices.emplace_back(base, new mmio_plugin_device_t(name, args));
 <   };
 < 
-279,280d565
+279,280d567
 <   parser.help(&suggest_help);
 <   parser.option('h', "help", 0, [&](const char* s){help(0);});
-285d569
+285d571
 <   parser.option('m', 0, 1, [&](const char* s){mems = make_mems(s);});
-288d571
+288d573
 <   parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoi(s);});
-291,293c574,576
+291,293c576,578
 <   parser.option(0, "ic", 1, [&](const char* s){ic.reset(new icache_sim_t(s));});
 <   parser.option(0, "dc", 1, [&](const char* s){dc.reset(new dcache_sim_t(s));});
 <   parser.option(0, "l2", 1, [&](const char* s){l2.reset(cache_sim_t::construct(s, "L2$"));});
@@ -808,15 +809,15 @@
 >   parser.option(0, "ic", 1, [&](const char* s){ic = new icache_sim_t(s);});
 >   parser.option(0, "dc", 1, [&](const char* s){dc = new dcache_sim_t(s);});
 >   parser.option(0, "l2", 1, [&](const char* s){l2 = cache_sim_t::construct(s, "L2$");});
-298,299c581
+298,299c583
 <   parser.option(0, "device", 1, device_parser);
 <   parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
 ---
 >   //parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
-302,303d583
+302,303d585
 <   parser.option(0, "dtb", 1, [&](const char *s){dtb_file = s;});
 <   parser.option(0, "initrd", 1, [&](const char* s){initrd = s;});
-312,332d591
+312,332d593
 <   parser.option(0, "dm-progsize", 1,
 <       [&](const char* s){dm_config.progbufsize = atoi(s);});
 <   parser.option(0, "dm-sba", 1,
@@ -838,7 +839,7 @@
 <   parser.option(0, "log", 1,
 <                 [&](const char* s){log_path = s;});
 < 
-334,368c593,597
+334,367d594
 <   std::vector<std::string> htif_args(argv1, (const char*const*)argv + argc);
 <   if (mems.empty())
 <     mems = make_mems("2048");
@@ -873,14 +874,16 @@
 <     printf("%s", s.get_dts());
 <     return 0;
 <   }
-< 
----
->  
+368a596,603
+>   std::string isa_str = isa;
+>   isa_rv32 = isa_str.find("RV32") != std::string::npos;
+>   isa_D = (isa_str.find("F") != std::string::npos) && (isa_str.find("D") != std::string::npos);
+> 
 >   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, start_pc, 
 >     hartids);
 >   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
 >  
-375,377c604,910
+375,377c610,663
 <     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
 <     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
 <     if (extension) s.get_core(i)->register_extension(extension());
@@ -939,8 +942,11 @@
 >   {
 >     delete _pSimulatorTopLevel;
 >     _pSimulatorTopLevel = nullptr;
->   }
-> 
+380,382c666,735
+<   s.set_debug(debug);
+<   s.configure_log(log, log_commits);
+<   s.set_histogram(histogram);
+---
 >   // originally handled by smart pointers, but we have to delete these manually now.
 >   if(ic != nullptr)
 >   {
@@ -1011,8 +1017,12 @@
 > 
 >   return rcode;
 > }
-> 
-> 
+384d736
+<   auto return_code = s.run();
+386,387c738,779
+<   for (auto& mem : mems)
+<     delete mem.second;
+---
 > void dump_memory(const char* file_to_create)
 > {
 >   //if(_pMemories != nullptr)
@@ -1055,17 +1065,27 @@
 >     _pSimulatorTopLevel->dump_sparse_memory(dump2);    
 >   //}
 > }
-> 
-> 
+389,390d780
+<   for (auto& plugin_device : plugin_devices)
+<     delete plugin_device.second;
+392c782,784
+<   return return_code;
+---
 > int step_simulator(int target_id, int num_steps, int stx_failed)
 > {
 >   return _pSimulatorTopLevel->step_simulator(target_id, num_steps, stx_failed);
-> }
+393a786,1302
 > 
 > 
 > int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly)
 > {
->   return _pSimulatorTopLevel->get_disassembly(pc, opcode, disassembly);
+>   return _pSimulatorTopLevel->get_disassembly(0, pc, opcode, disassembly);
+> }
+> 
+> 
+> int get_disassembly_for_target(int target_id, const uint64_t* pc, char** opcode, char** disassembly)
+> {
+>   return _pSimulatorTopLevel->get_disassembly(target_id, pc, opcode, disassembly);
 > }
 > 
 > 
@@ -1087,7 +1107,7 @@
 >   return 0;
 > }
 > 
-> //TODO NEW DEBUG
+> //NEW DEBUG
 > int read_simulator_register(int target_id, const char* pRegName, uint8_t* pValue, int length)
 > {
 >   //Check that the pointers point to something
@@ -1192,11 +1212,8 @@
 >   if(pRegName == nullptr || pValue == nullptr || _pSimulatorTopLevel == nullptr)
 >   {
 >     return 1;
-380,382c913,948
-<   s.set_debug(debug);
-<   s.configure_log(log, log_commits);
-<   s.set_histogram(histogram);
----
+>   }
+> 
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 3; // Four is not one of the admissible categories
@@ -1233,28 +1250,20 @@
 >   {
 >     return 1;
 >   }
-384c950,954
-<   auto return_code = s.run();
----
+> 
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 3; // Four is not one of the admissible categories
 >   uint64_t index = _pSimulatorTopLevel->get_vecr_number(std::string(pRegName));
 >   std::string temp_name = _pSimulatorTopLevel->get_vecr_name(index);
-386,387c956,961
-<   for (auto& mem : mems)
-<     delete mem.second;
----
+> 
 >   // Check if this is any of the other types of register
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
 >     category = 4; //fail category
 >     status = 3;
 >   }
-389,390c963,973
-<   for (auto& plugin_device : plugin_devices)
-<     delete plugin_device.second;
----
+> 
 >   // Check the category of the register and try to obtain the name
 >   switch(category)
 >   {
@@ -1266,11 +1275,9 @@
 >     default:
 >       status = 3; // failure
 >   }
-392c975
-<   return return_code;
----
+> 
 >   return status;
-393a977,1247
+> }
 > 
 > 
 > int write_simulator_register(int target_id, const char* pRegName, const uint8_t* data, int length)
@@ -1444,6 +1451,33 @@
 >   return _pSimulatorTopLevel->translate_virtual_address_api(target_id, vaddr, intent, paddr, memattrs);
 > }
 > 
+> bool is_gpr(std::string &rname) {
+>   uint64_t index = _pSimulatorTopLevel->get_xpr_number(rname);
+>   std::string temp_name = _pSimulatorTopLevel->get_xpr_name(index);
+> 
+>   return (temp_name.find("unknown") == std::string::npos);
+> }
+> 
+> int register_size(std::string &rname) {
+>   int length = isa_rv32 ? 4 : 8;  // set the 'default' register length based on the ISA (RV32 vs RV64)
+> 
+>   if (rname == std::string("PC")) {
+>     length = 8;  // if the register is the PC then set the length to 8...
+>   } else {
+>     uint64_t index = _pSimulatorTopLevel->get_fpr_number(rname);
+>     std::string temp_name = _pSimulatorTopLevel->get_fpr_name(index);
+> 
+>     if (temp_name == "unknown-fpr") {
+>       // not a floating pt register...
+>     } else {
+>       if ( isa_D )   // if double-precision floating pt extension present
+>         length = 8;  //   then floating pt registers are widened to 64 bits
+>     }
+>   }
+> 
+>   return length;
+> }
+> 
 > int read_simulator_register_fpix(uint32_t target_id, const char* registerName, uint64_t* pValue, uint64_t* mask)
 > {
 >   if(registerName == nullptr || pValue == nullptr || mask == nullptr || _pSimulatorTopLevel == nullptr)
@@ -1452,9 +1486,10 @@
 >   }
 > 
 >   //const uint64_t buffer = (pValue & mask); // Are we masked on or masked off? Need to check what the convention of the bitmask is here.
->   int length = 8;
 >   std::string nameForReference(registerName);
 > 
+>   int length = register_size(nameForReference);
+>   
 >   if(nameForReference != std::string("PC"))
 >   {
 >     // Is the user asking to read a register that actually exists? 
@@ -1486,6 +1521,7 @@
 >         
 >     // Check the category of the register and try to obtain the name
 >     uint32_t my_length = static_cast<uint32_t>(length);
+> 
 >     switch(category)
 >     {
 >       case(0) : //CSR
@@ -1507,7 +1543,7 @@
 >         break;
 >       }
 >       // Fpix API is not suited for getting 128 bit values like from the vector registers and floating point registers yet.
->       // TODO, here load the data into an appropriate buffer and then copy the first 64 bits to the user's buffer 
+>       // load the data into an appropriate buffer and then copy the first 64 bits to the user's buffer 
 >       default:
 >         status = 3; // failure
 >     }
@@ -1533,10 +1569,24 @@
 >     return 1;
 >   }
 > 
->   const uint64_t buffer = (value & mask); // Are we masked on or masked off? Need to check what the convention of the bitmask is here.
->   
->   int length = 8;
 >   std::string nameForReference(registerName);
+> 
+>   //int length = 8;
+>   int length = register_size(nameForReference);
+> 
+> 
+>   uint64_t rval = value;
+> 
+>   if ( is_gpr(nameForReference) && (length == 4) ) {
+>     if ( (rval & 0x80000000) != 0)
+>       rval |= 0xffffffff00000000ull;
+>   }
+>       
+>   const uint64_t buffer = rval;     // Are we masked on or masked off?
+>                                     // Need to check what the convention of the bitmask is here.
+>   
+> 
+>   //std::cout << "[write_simulator_register_fpix] " << nameForReference << " = !!!" << std::hex << rval << std::dec << "!!!" << std::endl;
 > 
 >   return write_simulator_register(static_cast<int>(target_id), registerName, reinterpret_cast<const uint8_t*>(&buffer), length);
 > }

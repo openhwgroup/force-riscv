@@ -279,28 +279,42 @@
 <     auto ppte = sim->addr_to_mem(pte_paddr);
 ---
 >     //std::cout << "mmu_t::walk pte_paddr=0x" << std::hex << pte_paddr << std::endl;
->     //auto ppte = sim->addr_to_mem(pte_paddr); //TODO replace with check that our memory model accepts this pa
+>     //auto ppte = sim->addr_to_mem(pte_paddr);
 >     bool ppte = sim->sparse_is_pa_initialized(pte_paddr, vm.ptesize);
-316c445,477
+316c445,491
 <     reg_t pte = vm.ptesize == 4 ? from_le(*(uint32_t*)ppte) : from_le(*(uint64_t*)ppte);
 ---
 >     uint64_t ppte_val = 0ull;
->     //sim->sparse_read_partially_initialized(pte_paddr, sizeof(uint64_t), reinterpret_cast<uint8_t*>(ppte_val)); 
->     //uint64_t buff = 0ull;
->     //std::cerr << "length: " << len << " paddr: " << std::hex << paddr <<  std::endl;
->     ppte_val = sim->sparse_read(pte_paddr, sizeof(uint64_t)); // In testing of the api version of this, it was noticed that reading in the commented out way was byte reversing the expected values.
->     //std::cout << "mmu_t::walk ppte_val=0x" << std::hex << ppte_val << std::endl;
 > 
->     uint64_t ppte_reversed_val = 0ull;
->     uint8_t* val = (uint8_t*)&ppte_val;
->     uint8_t* rev = (uint8_t*)&ppte_reversed_val;
->     for (int i = 0; i < sizeof(uint64_t); i++)
->     {
->       rev[i] = val[sizeof(uint64_t)-1-i];
+>     if (vm.ptesize == 4) {
+>        // Sv32...
+>        uint32_t tbuf = sim->sparse_read(pte_paddr, sizeof(uint32_t));
+>        uint32_t ppte_reversed_val = 0ull;
+>        uint8_t* val = (uint8_t*)&tbuf;
+>        uint8_t* rev = (uint8_t*)&ppte_reversed_val;
+>        for (int i = 0; i < sizeof(uint32_t); i++) {
+>           rev[i] = val[sizeof(uint32_t)-1-i];
+>        }
+>        //std::cout << "mmut_t::walk ppte_reversed_val=0x" << std::hex << ppte_reversed_val << std::endl;
+>        ppte_val = ppte_reversed_val;
+>     } else { 
+>        //sim->sparse_read_partially_initialized(pte_paddr, sizeof(uint64_t), reinterpret_cast<uint8_t*>(ppte_val)); 
+>        //uint64_t buff = 0ull;
+>        //std::cerr << "length: " << len << " paddr: " << std::hex << paddr <<  std::endl;
+>        ppte_val = sim->sparse_read(pte_paddr, sizeof(uint64_t)); // In testing of the api version of this,
+>                                                                 // it was noticed that reading in the commented out way was
+>                                                                 // byte reversing the expected values.
+>        //std::cout << "mmu_t::walk ppte_val=0x" << std::hex << ppte_val << std::endl;
+>        uint64_t ppte_reversed_val = 0ull;
+>        uint8_t* val = (uint8_t*)&ppte_val;
+>        uint8_t* rev = (uint8_t*)&ppte_reversed_val;
+>        for (int i = 0; i < sizeof(uint64_t); i++)
+>        {
+>          rev[i] = val[sizeof(uint64_t)-1-i];
+>        }
+>        //std::cout << "mmut_t::walk ppte_reversed_val=0x" << std::hex << ppte_reversed_val << std::endl;
+>        ppte_val = ppte_reversed_val;
 >     }
-> 
->     //std::cout << "mmut_t::walk ppte_reversed_val=0x" << std::hex << ppte_reversed_val << std::endl;
->     ppte_val = ppte_reversed_val;
 > 
 >     //sim->sparse_read_partially_initialized(paddr, len, bytes);
 >     //bool same_data_was_loaded = true;
@@ -316,35 +330,35 @@
 >     // These endianness conversion functions are defined in the new version, do they work for our purposes or are they redundant with the above code?
 >     //
 >     //
->     reg_t pte = vm.ptesize == 4 ? from_le((uint32_t)ppte_val) : from_le(ppte_val); //TODO load the actual data from the memory model
-318a480,481
+>     reg_t pte = vm.ptesize == 4 ? from_le((uint32_t)ppte_val) : from_le(ppte_val);
+318a494,495
 >     //std::cout << "mmu_t::walk pte=0x" << std::hex << pte << " ppn=0x" << ppn << std::endl;
 > 
-320a484
+320a498
 >       //std::cout << "mmu_t::walk next level table base=0x" << std::hex << base << std::endl;
-321a486
+321a500
 >       //std::cout << "mmu_t::walk u bit set causing page fault" << std::endl;
-323a489
+323a503
 >       //std::cout << "mmu_t::walk v bit not set, or R+W not set causing page fault" << std::endl;
-327a494
+327a508
 >       //std::cout << "mmu_t::walk non-executable, or load not readable causing page fault" << std::endl;
-329a497,498
+329a511,512
 >       reg_t test_val = ppn & ((reg_t(1) << ptshift) - 1);
 >       //std::cout << "mmu_t::walk misaligned superpage val=0x" << std::hex << test_val << " causing page fault" << std::endl;
-338c507,511
+338c521,525
 <         *(uint32_t*)ppte |= to_le((uint32_t)ad);
 ---
->         (uint32_t)ppte_val |= to_le((uint32_t)ad); //TODO replace with a write to the memory model data, needs an iso check during dev too
+>         (uint32_t)ppte_val |= to_le((uint32_t)ad);
 >         sim->sparse_write(pte_paddr, reinterpret_cast<uint8_t*>(&ppte_val), vm.ptesize); //NOTE this was written as a write from pte rather than ppte_val which doesnt match the reference code intent.
 >         uint32_t debug_buff = 0;
 >         sim->sparse_read_partially_initialized(pte_paddr, vm.ptesize, reinterpret_cast<uint8_t*>(&debug_buff));
 >         assert(debug_buff == (uint32_t)ppte_val && "Failed to modify ppte_val correctly");
-342a516,517
+342a530,531
 >       {
 >         //std::cout << "mmu_t::walk ad bits ad=0x" << std::hex << ad << " causing page fault" << std::endl;
-343a519
+343a533
 >       }
-347a524,530
+347a538,544
 > 
 >       //report the translation via the callback mechanism
 >       bool has_stage_two = (vm.levels > 1); 
@@ -352,7 +366,7 @@
 >       update_mmu_event(&mmu_event);
 > 
 >       //std::cout << "mmu_t::walk end value=0x" << std::hex << value << std::endl;
-356a540,668
+356a554,682
 >   }
 > }
 > 
@@ -394,7 +408,7 @@
 > 
 >     std::cerr << "\tpte_paddr: " << std::hex << pte_paddr << std::endl;
 > 
->     //auto ppte = sim->addr_to_mem(pte_paddr); //TODO replace with check that our memory model accepts this pa
+>     //auto ppte = sim->addr_to_mem(pte_paddr);
 >     bool ppte = true;
 >     if (!ppte || !pmp_ok(pte_paddr, vm.ptesize, LOAD, PRV_S))
 >     {

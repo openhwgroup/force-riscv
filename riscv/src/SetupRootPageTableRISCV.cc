@@ -42,6 +42,8 @@ namespace Force {
 
   uint64 SetupRootPageTableRISCV::SetupRootPageTable(uint32 tableSize, MemoryManager* pMemMgr, EMemBankType bankType, const RegisterFile* pRegFile, const std::string& regName, const ConstraintSet* usable)
   {
+    LOG(debug) << "[SetupRootPageTableRISCV::SetupRootPageTable] table-size: " << std::dec << tableSize << " (0x" << std::hex << tableSize << ")" << std::dec << " reg: " << regName << std::endl;
+
     uint64 root_addr = 0;
     auto reg_ptr = pRegFile->RegisterLookup(regName);
     auto field_ptr = reg_ptr->RegisterFieldLookup("PPN");
@@ -49,12 +51,18 @@ namespace Force {
     if (!field_ptr->IsInitialized())
     {
       pMemMgr->AllocatePageTableBlock(bankType, tableSize, tableSize, usable, root_addr);
-      pRegFile->InitializeRegisterFieldFullValue(reg_ptr, "PPN", (root_addr >> 12)); //TODO field is just PPN, so 44:0 need to be written ignoring the page offset (should be 0x000 for this case)
+      LOG(debug) << "[SetupRootPageTableRISCV::SetupRootPageTable] initial root-address: 0x" << std::hex << root_addr << std::dec << std::endl;
+      pRegFile->InitializeRegisterFieldFullValue(reg_ptr, "PPN", (root_addr >> 12)); //field is just PPN, so 44:0 need to be written ignoring the page offset (should be 0x000 for this case)
+      auto reg_ptrX = pRegFile->RegisterLookup(regName);
+      auto field_ptrX = reg_ptrX->RegisterFieldLookup("PPN");
+      uint64 root_addrX = (field_ptrX->Value() << 12);
+      LOG(debug) << "[SetupRootPageTableRISCV::SetupRootPageTable] satp.PPN: 0x" << std::hex << field_ptr->Value() << " yields table addr: 0x" << root_addrX << std::dec << std::endl;
     }
     else
     {
       root_addr = (field_ptr->Value() << 12);
       uint64 end = root_addr + (tableSize - 1);
+      LOG(debug) << "[SetupRootPageTableRISCV::SetupRootPageTable] root-address: 0x" << std::hex << root_addr << " end: 0x" << end << std::dec << std::endl;
       ConstraintSet addr_constr(root_addr, end);
 
       if (usable->ContainsConstraintSet(addr_constr))

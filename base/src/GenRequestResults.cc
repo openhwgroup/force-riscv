@@ -68,9 +68,10 @@ namespace Force {
       rPyObject = py::int_(mBlockId);
     }
     else {
-      py::tuple result_tuple = py::tuple(2);
+      py::tuple result_tuple = py::tuple(3);
       result_tuple[0] = py::int_(mValue);
-      result_tuple[1] = py::int_(mEmpty);
+      result_tuple[1] = py::int_(mBlockEndAddr);
+      result_tuple[2] = py::int_(mEmpty);
       rPyObject = result_tuple;
     }
   }

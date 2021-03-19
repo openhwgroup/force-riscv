@@ -183,8 +183,6 @@ namespace Force {
     switch (agentType) {
     case EGenAgentType::GenInstructionAgent:
       return new GenInstructionAgent();
-    case EGenAgentType::GenSequenceAgent:
-      return new GenSequenceAgent();
     case EGenAgentType::GenVirtualMemoryAgent:
       return new GenVirtualMemoryAgent();
     case EGenAgentType::GenQueryAgent:
@@ -227,7 +225,7 @@ namespace Force {
     for (EAddressSolutionFilterTypeBaseType i = 0; i < EAddressSolutionFilterTypeSize; ++ i) {
       EAddressSolutionFilterType filter_type = EAddressSolutionFilterType(i);
       auto addr_filter = InstantiateAddressSolutionFilter(filter_type);
-      if (nullptr == addr_filter) continue; // TODO, temporary, shouldn't getting inapplicable options in the first place.
+      if (nullptr == addr_filter) continue;
       pGen->mpAddressFilteringRegulator->mAddressSolutionFilters.push_back(addr_filter);
     }
   }
@@ -267,10 +265,11 @@ namespace Force {
                                config_ptr->LimitValue(ELimitType::MaxPhysicalVectorLen), /* vector register length */
                                config_ptr->LimitValue(ELimitType::MaxVectorElementWidth), /* maximum vector element width */
                                "./sim.log", /* ignore for now */
-                               true
+                               true,
+			       SimulatorConfigString()
                                );
 
-      mpSimAPI->InitializeIss(sim_dll_cfg, sim_so_file, config_ptr->IssApiTraceFile());
+      mpSimAPI->InitializeIss(sim_dll_cfg, sim_so_file, config_ptr->IssApiTraceFile() );
     }
 
     LOG(notice) << "Simulator Standalone: '" << config_ptr->LookUpFile(SimulatorStandalone()) << "'." << endl;

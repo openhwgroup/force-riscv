@@ -63,8 +63,6 @@ namespace Force {
     std::vector<std::string> status_param_names; //mstatus, sstatus, ustatus
     std::vector<std::string> atp_param_names;    //satp, hgatp, vsatp
 
-    //TODO refine context parameters
-
     switch (mPrivilegeLevel)
     {
       case EPrivilegeLevelType::M:
@@ -127,7 +125,6 @@ namespace Force {
 
   bool VmasControlBlockRISCV::GetBigEndian() const
   {
-    //TODO define behavior when spike updated to support M/S/UBE - endianness bit only applies to data accesses
     /*switch (mPrivilegeLevel)
     {
       case EPrivilegeLevelType::M:
@@ -159,10 +156,20 @@ namespace Force {
     return true;
   }
 
+  //!< if Force configured for 32-bit ISA, then paging mode must be Sv32...
+  
+  bool VmasControlBlockRISCV::SV32() const {
+    return Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32; // force-risc configured to 32-bits 
+  }
+ 
+  //!< Return PTE shift based on paging mode...
+  //
+  uint32 VmasControlBlockRISCV::PteShift() const { 
+    return SV32() ? 2 : 3;
+  }
+
   uint64 VmasControlBlockRISCV::GetMaxPhysicalAddress() const
   {
-    //TODO switch off mode - max PA is technically 56 for sv39/sv48 and 34 for sv32
-
     /*Uses all bits of PTE to store PPN[x] values - this causes some odd PA sizes after xlate
       since PPN fields in PTE start at 10, but the page offset is 12 we have extra bits in PTE
       allowing for first PPN to have more than the tablestep worth of bits.*/
@@ -179,8 +186,7 @@ namespace Force {
 
   uint32 VmasControlBlockRISCV::HighestVaBitCurrent(uint32 rangeNum) const
   {
-    //TODO switch off mode bit - Sv32/39/48 have 31/38/47 for max va bits
-    return 47;
+    return SV32() ? 31 : 47;
   }
 
   void VmasControlBlockRISCV::GetAddressErrorRanges(vector<TranslationRange>& rRanges) const
@@ -188,6 +194,9 @@ namespace Force {
     TranslationRange addr_err_range;
 
     uint64 va_bits = mpRootPageTable->HighestLookUpBit();
+    
+    if (SV32()) va_bits += 1; // addressses are not sign-extended in Sv32, thus no Address Error exception
+    
     uint64 error_start = 0x1ull << va_bits;
     uint64 error_end = sign_extend64((0x1ull << va_bits), va_bits+1) - 1;
 
@@ -204,8 +213,6 @@ namespace Force {
     mpRootPageTable = RootPageTableInstance();
     if (nullptr == pRootTable)
     {
-      //TODO make setup root table not fail if new alloc fails, since we have option to alias. return alloc success
-      //TODO also need setup to be able to force non-alias case and make address space usable
       SetupRootPageTable(mpRootPageTable, pVmas, mGranuleType, mPteIdentifierSuffix, AtpRegisterName());
     }
     else
@@ -232,7 +239,13 @@ namespace Force {
       FAIL("root_page_table_nullptr");
     }
 
-    pRootTable->Setup(9, HighestVaBitCurrent(), pteSuffix);
+    uint32 pteSize       = SV32() ? 2  : 3;
+    uint32 tableStep     = SV32() ? 10 : 9;
+    uint32 maxTableLevel = SV32() ? 1  : 3;
+    uint32 tableLowBit   = SV32() ? 22 : 39;
+
+    pRootTable->Setup(tableStep, HighestVaBitCurrent(), tableLowBit, pteSuffix, pteSize, maxTableLevel);
+    
     pRootTable->SetMemoryBank(DefaultMemoryBank());
     auto reg_file = mpGenerator->GetRegisterFile();
     auto mem_mgr  = mpGenerator->GetMemoryManager();
@@ -333,11 +346,21 @@ namespace Force {
     auto v_constr = new ConstraintSet();
 
     uint64 va_bits = mpRootPageTable->HighestLookUpBit();
-    uint64 va_end  = (0x1ull << va_bits) - 0x1ull;
-    v_constr->AddRange(0, va_end);
 
-    uint64 va_start = sign_extend64((0x1ull << va_bits), va_bits+1);
-    v_constr->AddRange(va_start, ~0x0ull);
+    if (SV32()) {
+      uint64 va_end  = (0x1ull << (va_bits + 1)) - 0x1ull;
+      v_constr->AddRange(0, va_end);
+      LOG(debug) << "{VmasControlBlockRISCV::InitialVirtualConstraint} For Sv32, va range: 0x0/0x" << std::hex << va_end << std::dec << std::endl;
+    } else {
+      uint64 va_end  = (0x1ull << va_bits) - 0x1ull;
+      v_constr->AddRange(0, va_end);
+
+      LOG(debug) << "{VmasControlBlockRISCV::InitialVirtualConstraint} va_end: 0x0/0x" << std::hex << va_end << std::dec << std::endl;
+      uint64 va_start = sign_extend64((0x1ull << va_bits), va_bits+1);
+      v_constr->AddRange(va_start, ~0x0ull);
+
+      LOG(debug) << "{VmasControlBlockRISCV::InitialVirtualConstraint} va_start: 0x0/0x" << std::hex << va_start << std::dec << std::endl;
+    }
 
     if (v_constr->IsEmpty())
     {

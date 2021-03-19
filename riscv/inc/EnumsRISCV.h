@@ -208,6 +208,9 @@ namespace Force {
     PageFault = 9,
     FlatMap = 10,
     AccessFault = 11,
+    NoDataAccess = 12,
+    NotAccessed = 13,
+    NotDirty = 14,
   };
   extern unsigned char EVmConstraintTypeSize;
   extern const std::string EVmConstraintType_to_string(EVmConstraintType in_enum); //!< Get string name for enum.

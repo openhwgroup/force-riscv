@@ -16,8 +16,8 @@
 # limitations under the License.
 #
 
-cd patcher
+cd patcher || exit
 ./step_1_create_patches.bash  
 ./step_2_apply_patches.bash  
 ./step_3_stage_patched.bash
-cd ../
+cd ../ || exit

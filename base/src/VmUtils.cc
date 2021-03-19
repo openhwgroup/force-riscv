@@ -29,9 +29,6 @@ using namespace std;
 
 namespace Force {
 
-  // TODO(Noah): Move all references to specific EPteType values to the architecture-specific layers
-  // when there is time to do so. Then, move the EPteType enum to the architecture-specific enum
-  // files.
   uint32 get_page_shift(EPteType pteType)
   {
     uint32 page_shift = 0;
@@ -47,6 +44,9 @@ namespace Force {
       break;
     case EPteType::P2M:
       page_shift = 21;
+      break;
+    case EPteType::P4M:
+      page_shift = 22;
       break;
     case EPteType::P32M:
       page_shift = 25;
@@ -124,6 +124,9 @@ namespace Force {
       break;
     case 21:
       pte_type = EPteType::P2M;
+      break;
+    case 22:
+      pte_type = EPteType::P4M;
       break;
     case 25:
       pte_type = EPteType::P32M;

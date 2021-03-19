@@ -36,8 +36,6 @@ namespace Force {
   void VmDirectMapControlBlockRISCV::Setup(Generator* pGen)
   {
     VmDirectMapControlBlock::Setup(pGen);
-
-    // TODO call AddParameter to add parameters
   }
 
   void VmDirectMapControlBlockRISCV::Initialize()

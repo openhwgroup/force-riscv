@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) [2020] Futurewei Technologies, Inc.
+
+ FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+ FIT FOR A PARTICULAR PURPOSE.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<instruction_file>
+  <I name="FCVT.H.L" isa="RISCV" group="General" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101010000101010011"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FCVT.H.L"/>
+  </I>
+  <I name="FCVT.H.LU" isa="RISCV" group="General" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101010000111010011"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FCVT.H.LU"/>
+  </I>
+  <I name="FCVT.L.H" isa="RISCV" group="General" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100010000101010011"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FCVT.L.H"/>
+  </I>
+  <I name="FCVT.LU.H" isa="RISCV" group="General" extension="RV64F">
+    <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1100010000111010011"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="rm" type="Register" bits="14-12"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <asm format="FCVT.LU.H"/>
+  </I>
+</instruction_file>

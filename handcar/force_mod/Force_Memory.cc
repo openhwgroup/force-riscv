@@ -14,13 +14,14 @@
 // limitations under the License.
 //
 
-#include <vector>
-#include <ostream>
-#include <iomanip>
 #include "Force_Memory.h"
-#include <fmt.h>
+
+#include <algorithm>
 #include <cassert>
+#include <fmt.h>
+#include <iomanip>
 #include <iostream>
+#include <ostream>
 
 using namespace std;
 
@@ -326,7 +327,7 @@ namespace Force {
     /*!
       Dump data in big endian format
     */
-    void Dump(ostream& out_str, uint64 value) const
+    static void Dump(ostream& out_str, uint64 value)
     {
       uint64 data;
       for (auto i = sizeof(value) - 1; i > 0; i --) {
@@ -343,7 +344,7 @@ namespace Force {
       \data:   the reference for the merged data
       \Cautious: the caller should assure value|nBytes validation.
     */
-    void MergeValue(uint32 offset, uint64 value, uint32 nBytes, uint64& data)
+    static void MergeValue(uint32 offset, uint64 value, uint32 nBytes, uint64& data)
     {
       uint32 mem_bytes = sizeof(data);
       uint32 len_in_bits = nBytes << 3;
@@ -361,7 +362,7 @@ namespace Force {
       \data: the reference for the merged data
       \Cautious: the caller should assure value|nBytes validation.
     */
-    void MergeMaskedValue (uint32 offset, uint64 value, uint64 mergeMask, uint32 nBytes, uint64& data)
+    static void MergeMaskedValue (uint32 offset, uint64 value, uint64 mergeMask, uint32 nBytes, uint64& data)
     {
       uint32 mem_bytes = sizeof(data);
       uint32 len_in_bits = nBytes << 3;
@@ -381,20 +382,10 @@ namespace Force {
         return value;
       }
 
-      uint64 random = 0ull;
-      if (randomPattern) {
-        random = valuePattern; //Random::Instance()->Random64(0);
-        // << "read initial value with random pattern" << endl;
-      }
-      else {
-        random = valuePattern;
-        // << "read intial value with value pattern 0x" << hex << valuePattern << endl;
-      }
-
-      return (random & ~init_mask) | (value & init_mask);
+      return (valuePattern & ~init_mask) | (value & init_mask);
     }
 
-    uint64 GetInitializedMask(cuint32 offset, cuint64 attrs, cuint32 nBytes) const
+    static uint64 GetInitializedMask(cuint32 offset, cuint64 attrs, cuint32 nBytes)
     {
       uint32 pos_in_bits = (MEM_BYTES - (offset + nBytes)) << 3;
       uint64 init_mask = BASE_INIT_MASK & (attrs << pos_in_bits); // mask to 0x00000101_01010000 as an example
@@ -419,6 +410,38 @@ namespace Force {
     uint64 mAttributes;    //!< Memory bytes attributes, big endian format.
     uint64 mAddress;       //!< Memory bytes starting address.
   };
+
+  bool Section::Intersects(const Section& rOther) const
+  {
+    if ((GetEndAddress() >= rOther.mAddress) and (rOther.GetEndAddress() >= mAddress)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool Section::Contains(const Section& rOther) const
+  {
+    if ((mAddress <= rOther.mAddress) and (GetEndAddress() >= rOther.GetEndAddress())) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool Section::operator<(const Section& rOther) const
+  {
+    if (mAddress < rOther.mAddress) {
+      return true;
+    }
+
+    return false;
+  }
+
+  uint64 Section::GetEndAddress() const
+  {
+    return (mAddress + mSize - 1);
+  }
 
   Memory::~Memory()
   {
@@ -624,6 +647,8 @@ namespace Force {
       FAIL("write-un-initialized-memory");
     }
 
+    Unreserve(address, nBytes);
+
     uint32 nbytes = (ADDR_OFFSET(address) + nBytes <= mem_bytes) ?
                     nBytes : mem_bytes - ADDR_OFFSET(address);
     MetaAccess ma_low(ADDR_ALIGN(address), ADDR_OFFSET(address), nbytes,
@@ -643,6 +668,8 @@ namespace Force {
     if (nBytes == 0) {
       FAIL("unsupported-number-of-bytes");
     }
+
+    Unreserve(address, nBytes);
 
     // handle crossing part
     uint32 nSize = ADDR_ALIGN(address + MEM_BYTES - 1) - address;
@@ -674,6 +701,47 @@ namespace Force {
       WriteMemoryBytes(ma_last);
     }
 
+  }
+
+  void Memory::Reserve(uint64 address, uint32 nBytes)
+  {
+    Unreserve(address, nBytes);
+
+    // Insert reserved Section in sorted position
+    Section section(address, nBytes, EMemDataType::Both);
+    auto itr = upper_bound(mReservedRanges.begin(), mReservedRanges.end(), section);
+    mReservedRanges.insert(itr, section);
+  }
+
+  void Memory::Unreserve(uint64 address, uint32 nBytes)
+  {
+    // Remove all reserved Sections that intersect the input Section; the first Section that could
+    // intersect is the one immediately preceding the input Seciton's upper bound
+    Section section(address, nBytes, EMemDataType::Both);
+    auto itr = upper_bound(mReservedRanges.begin(), mReservedRanges.end(), section);
+    if (itr != mReservedRanges.begin()) {
+      --itr;
+    }
+
+    mReservedRanges.erase(remove_if(itr, mReservedRanges.end(),
+      [&section](const Section& rSection) { return rSection.Intersects(section); }),
+      mReservedRanges.end());
+  }
+
+  bool Memory::IsReserved(uint64 address, uint32 nBytes)
+  {
+    // Return true if a reserved Section contains the input Section; the first Section that could
+    // contain the input Section is the one immediately preceding the input Section's upper bound
+    Section section(address, nBytes, EMemDataType::Both);
+    auto itr = upper_bound(mReservedRanges.begin(), mReservedRanges.end(), section);
+    if (itr != mReservedRanges.begin()) {
+      --itr;
+    }
+
+    bool contained = any_of(itr, mReservedRanges.end(),
+      [&section](const Section& rSection) { return rSection.Contains(section); });
+
+    return contained;
   }
 
   uint64 Memory::ReadInitialValue(uint64 address, uint32 nBytes) const

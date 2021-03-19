@@ -39,36 +39,24 @@ namespace Force {
     //!< write out simulation trace file (if any), send 'terminate' directive to simulator...
     void Terminate() override;
 
-    //!< return simulator version info as String...
-    void GetSimulatorVersion(std::string &sim_version) override;
-
     //!< obtain the opcode and dissassembly that corresponds to a given PC address
-    void GetDisassembly(const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly);
-
-    //!< read simulator physical memory. Return 0 if no errors...
-    void ReadPhysicalMemory(uint32 mem_bank, uint64 address, uint32 size, unsigned char *pBytes) override;
+    void GetDisassembly(uint32 CpuID, const uint64_t* pPc, std::string& rOpcode, std::string& rDisassembly);
 
     //!< write simulator physical memory. Return 0 if no errors...
-    void WritePhysicalMemory(uint32 mem_bank, uint64 address, uint32  size, const unsigned char *pBytes) override;
+    void WritePhysicalMemory(uint32 memBank, uint64 address, uint32  size, const unsigned char *pBytes) override;
 
     //!< read register value...
-    void ReadRegister(uint32 CpuID, const char *regname, uint64 *rval, uint64 *rmask) override;
+    void ReadRegister(uint32 CpuID, const char *regname, uint64 *rval, uint64 *pRegMask) override;
 
     //!< read the bytes corresponding a physical register from a large logical register without forcing the simulator to used Force's naming convention.
     void PartialReadLargeRegister(uint32 CpuID, const char* pRegname, uint8_t* pBytes, uint32 length, uint32 offset) override;
 
-    //!< write the bytes corresponding a physical register from a large logical register without forcing the simulator to used Force's naming convention.
-    void PartialWriteLargeRegister(uint32 CpuID, const char* pRegname, const uint8_t* pBytes, uint32 length, uint32 offset) override;
-
     //!< write simulator register. mask indicates which bits to write...
     void WriteRegister(uint32 CpuID,const char *regname,uint64 rval,uint64 rmask) override;
 
-    //!< request simulator to 'inject event(s)...
-    void InjectEvents(uint32 CpuID, uint32 interrupt_sets) override;
-
     //!< step instruction for specified cpu; returns after simulator step complete, with all updates.
     void Step(uint32 cpuid,std::vector<RegUpdate> &rRegUpdates,std::vector<MemUpdate> &rMemUpdates,
-	      std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptions) override;
+	      std::vector<MmuEvent> &rMmuEvents, std::vector<ExceptionUpdate> &rExceptUpdates) override;
 
     void WakeUp(uint32 cpuId) override; //!< Wake up from lower power state.
     void TurnOn(uint32 cpuId) override; //!< Turn the Iss thread on.

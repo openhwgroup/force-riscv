@@ -32,6 +32,7 @@ namespace Force {
       .value("PageTableRegionStart", EGlobalStateType::PageTableRegionStart)
       .value("MemoryFillPattern", EGlobalStateType::MemoryFillPattern)
       .value("ElfMachine", EGlobalStateType::ElfMachine)
+      .value("AppRegisterWidth", EGlobalStateType::AppRegisterWidth)
       ;
 
     py::enum_<ELimitType>(mod, "ELimitType")

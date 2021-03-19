@@ -183,7 +183,6 @@ namespace Force {
 
   void MemoryBank::ReserveMemory(const ConstraintSet& memConstr)
   {
-    // TODO check if usable contains the memConstr first.
     mpUsable->MarkUsed(memConstr);
     if (mpPhysicalPageManager != nullptr)
     {
@@ -436,7 +435,8 @@ namespace Force {
 
   bool MemoryManager::InstructionPaInitialized(const PaTuple& rPaTuple) const
   {
-    return PaInitialized(rPaTuple, 4);
+    uint32 min_instr_size = 2;
+    return PaInitialized(rPaTuple, min_instr_size);
   }
 
   void MemoryManager::OutputTest(const std::map<uint32, Generator *>& generators, uint64 resetPC, uint32 machineType)

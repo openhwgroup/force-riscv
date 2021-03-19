@@ -87,7 +87,6 @@ namespace Force {
   {
     if (bytes != mInstructionSpace) {
       mInstructionSpace = bytes;
-      // TODO related updates
     }
   }
 
@@ -147,7 +146,7 @@ namespace Force {
 
     // cross over to the next page
     mPaEnd1 = mpPcTransRange->PhysicalUpper();
-    uint64 part2_va = mpPcTransRange->Upper() + 1; // TODO check wrap around.
+    uint64 part2_va = mpPcTransRange->Upper() + 1;
     uint32 part2_size = mInstructionSpace - range_space;
     if (nullptr == mpCrossOverRange) {
       mpCrossOverRange = map_pc_part(pGen, part2_va, part2_size);

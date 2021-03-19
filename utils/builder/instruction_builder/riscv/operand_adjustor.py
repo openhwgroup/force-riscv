@@ -1,22 +1,22 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
+# FORCE-RISCV is licensed under the Apache License, Version 2.0
+#  (the "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
 #
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+# OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
 from shared.instruction import Operand
 
-class OperandAdjustor(object):
 
+class OperandAdjustor(object):
     def __init__(self, instr):
         self.mInstr = instr
         self.mAsmOpCount = 0
@@ -79,7 +79,7 @@ class OperandAdjustor(object):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Nonzero GPRs"
         self.add_asm_op(aSrcOpr)
-        
+
     def set_rs2_int(self):
         rs2_opr = self.mInstr.find_operand("rs2")
         rs2_opr.access = "Read"
@@ -203,7 +203,9 @@ class OperandAdjustor(object):
         self.mInstr.asm.ops.append(opr.name)
 
     # add an implied register operand to the instruction.
-    def add_implied_register(self, aOpName, aOpType, aAccessType, aInsertIndex):
+    def add_implied_register(
+        self, aOpName, aOpType, aAccessType, aInsertIndex
+    ):
         implied_opr = Operand()
         implied_opr.name = aOpName
         implied_opr.type = aOpType
@@ -212,13 +214,14 @@ class OperandAdjustor(object):
             implied_opr.access = aAccessType
         self.mInstr.insert_operand(aInsertIndex, implied_opr)
 
-    # merge a const field into const_bits field and delete the passed in operand
+    # merge a const field into const_bits field and delete the passed
+    # in operand
     def merge_into_const_bits(self, aOtherConst):
         const_bits = self.mInstr.find_operand("const_bits")
         const_bits.merge_operand(aOtherConst)
         const_bits.update_bits_value()
         self.mInstr.operands.remove(aOtherConst)
-        
+
     ########################################
     # C extension operands
     #
@@ -233,42 +236,57 @@ class OperandAdjustor(object):
         reg_opr.access = "Write"
         self.set_reg_prime_int(reg_opr)
 
+    def set_rdp_sp(self):
+        reg_opr = self.mInstr.find_operand("rd'")
+        reg_opr.access = "Write"
+        self.set_reg_prime_sp(reg_opr)
+
     def set_rdp_dp(self):
         reg_opr = self.mInstr.find_operand("rd'")
         reg_opr.access = "Write"
         self.set_reg_prime_dp(reg_opr)
-        
+
     def set_rs2p_int(self):
         reg_opr = self.mInstr.find_operand("rs2'")
         reg_opr.access = "Read"
         self.set_reg_prime_int(reg_opr)
 
+    def set_rs2p_sp(self):
+        reg_opr = self.mInstr.find_operand("rs2'")
+        reg_opr.access = "Read"
+        self.set_reg_prime_sp(reg_opr)
+
     def set_rs2p_dp(self):
         reg_opr = self.mInstr.find_operand("rs2'")
         reg_opr.access = "Read"
         self.set_reg_prime_dp(reg_opr)
-        
+
     def set_rs1p_int(self):
         reg_opr = self.mInstr.find_operand("rs1'")
         reg_opr.access = "Read"
         self.set_reg_prime_int(reg_opr)
-        
+
     def set_reg_prime_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "Prime GPRs"
         aSrcOpr.oclass = "CompressedRegisterOperandRISCV"
         self.add_asm_op(aSrcOpr)
 
+    def set_reg_prime_sp(self, aSrcOpr):
+        aSrcOpr.type = "FPR"
+        aSrcOpr.choices = "Prime 32-bit SIMD/FP registers"
+        self.add_asm_op(aSrcOpr)
+
     def set_reg_prime_dp(self, aSrcOpr):
         aSrcOpr.type = "FPR"
         aSrcOpr.choices = "Prime 64-bit SIMD/FP registers"
         self.add_asm_op(aSrcOpr)
-    
+
     def set_reg_not02_int(self, aSrcOpr):
         aSrcOpr.type = "GPR"
         aSrcOpr.choices = "GPRs not x0, x2"
         self.add_asm_op(aSrcOpr)
-        
+
     def merge_imm_5_4_0(self):
         self.mInstr.remove_operand("imm[5]")
         imm_4_0 = self.mInstr.find_operand("imm[4:0]")
@@ -293,13 +311,13 @@ class OperandAdjustor(object):
         reg_opr.name = "rs1"
         reg_opr.access = "Read"
         self.set_reg_nonzero_int(reg_opr)
-        
+
     def set_rs2_nonzero_int(self):
         reg_opr = self.mInstr.find_operand("rs2$\\neq$0")
         reg_opr.name = "rs2"
         reg_opr.access = "Read"
         self.set_reg_nonzero_int(reg_opr)
-        
+
     def set_rd_not02_int(self):
         reg_opr = self.mInstr.find_operand("rd$\\neq$$\\{0,2\\}$")
         reg_opr.name = "rd"
@@ -310,7 +328,7 @@ class OperandAdjustor(object):
         aSrcOpr.oclass = "ImmediateExcludeOperand"
         aSrcOpr.exclude = "0"
         self.add_asm_op(aSrcOpr)
-        
+
     def merge_nzimm_17_16_12(self):
         self.mInstr.remove_operand("nzimm[17]")
         imm_16_12 = self.mInstr.find_operand("nzimm[16:12]")

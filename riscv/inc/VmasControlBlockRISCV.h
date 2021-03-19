@@ -51,7 +51,8 @@ namespace Force {
     void CommitPageTable(uint64 VA, const PageTable* pParentTable, const TablePte* pTablePte, std::vector<ConstraintSet* >& rVmConstraints) override;
     void CommitPage(const Page* pPage, std::vector<ConstraintSet* >& rVmConstraints) override;
 
-
+    bool SV32() const; //!< Return true if riscv paging mode is Sv32
+    uint32 PteShift() const override; //!< Return PTE shift based on PTE size.
     uint32 HighestVaBitCurrent(uint32 rangeNum = 0ul) const override; //!< Return current highest VA bit.
     ConstraintSet* GetPageTableUsableConstraint(EMemBankType memBank) const override; //!< Returns the page table physical usable constraint as determined by max phys address and variable.
     bool IsPaValid(uint64 PA, EMemBankType bank, std::string& rMsgStr) const override; //!< Check if the PA+bank is valid for the address space.
@@ -69,7 +70,6 @@ namespace Force {
     bool   GetWriteExecuteNever() const override; //!< Return initial write execute never flag
     EPageGranuleType GetGranuleType() const override; //!< Return address space initial page granule type.
 
-    //TODO update to be able to target other hgatp/vsatp registers if needed
     const std::string StatusRegisterName() const { return (mRegisterPrefix + std::string("status")); } //!< returns status register name
     const std::string AtpRegisterName() const { return "satp"; } //!< returns address translation/protection register name
   protected:

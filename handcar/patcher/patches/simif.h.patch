@@ -22,7 +22,7 @@
 <   virtual bool mmio_load(reg_t addr, size_t len, uint8_t* bytes) = 0;
 <   virtual bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes) = 0;
 <   // Callback for processors to let the simulation know they were reset.
-18a14,22
+18a14,25
 > 
 >   // to support sparse memory model
 >   virtual uint64_t sparse_read(reg_t paddr, size_t len) = 0;
@@ -32,3 +32,6 @@
 >   virtual bool sparse_is_pa_initialized(reg_t paddr, size_t len) = 0;
 >   virtual void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type) = 0;
 >   virtual void sparse_initialize_pa(reg_t paddr, const uint8_t* data, const uint8_t* attrs, uint32_t nBytes, Force::EMemDataType type) = 0;
+>   virtual void sparse_reserve(reg_t paddr, size_t numBytes) = 0;
+>   virtual void sparse_unreserve(reg_t paddr, size_t numBytes) = 0;
+>   virtual bool sparse_is_reserved(reg_t paddr, size_t numBytes) = 0;
