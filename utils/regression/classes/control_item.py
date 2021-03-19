@@ -257,6 +257,7 @@ class ControlItem( object ):
         self.num_cores   = my_options.get( CtrlItmKeys.num_cores   , parent_options.get( CtrlItmKeys.num_cores   , CtrlItmDefs.num_cores   ))
         self.num_threads = my_options.get( CtrlItmKeys.num_threads , parent_options.get( CtrlItmKeys.num_threads , CtrlItmDefs.num_threads ))
         self.no_sim      = my_options.get( CtrlItmKeys.no_sim      , parent_options.get( CtrlItmKeys.no_sim      , CtrlItmDefs.no_sim      ))
+        self.suffix      = my_options.get( CtrlItmKeys.suffix      , parent_options.get( CtrlItmKeys.suffix      , CtrlItmDefs.suffix      ))
         self.timeout     = my_options.get( CtrlItmKeys.timeout     , parent_options.get( CtrlItmKeys.timeout     , CtrlItmDefs.timeout     ))
         self.seed        = my_options.get( CtrlItmKeys.seed        , parent_options.get( CtrlItmKeys.seed        , CtrlItmDefs.seed        ))
 
