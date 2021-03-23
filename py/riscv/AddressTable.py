@@ -77,35 +77,26 @@ class AddressTableRISCV(Sequence):
         self, aDestReg, aAddrReg, aIncrementAddr=False
     ):
         if self._mAppRegSize == 32:
-            self.genInstruction(
-                "LW##RISCV",
-                {
-                    "rd": aDestReg,
-                    "rs1": aAddrReg,
-                    "simm12": 0,
-                    "NoRestriction": 1,
-                },
-            )
-            if aIncrementAddr:
-                self.genInstruction(
-                    "ADDI##RISCV",
-                    {"rd": aAddrReg, "rs1": aAddrReg, "simm12": 4},
-                )
+            instr = "LW##RISCV"
+            data_size = 4
         else:
+            instr = "LD##RISCV"
+            data_size = 8
+
+        self.genInstruction(
+            instr,
+            {
+                "rd": aDestReg,
+                "rs1": aAddrReg,
+                "simm12": 0,
+                "NoRestriction": 1,
+            },
+        )
+        if aIncrementAddr:
             self.genInstruction(
-                "LD##RISCV",
-                {
-                    "rd": aDestReg,
-                    "rs1": aAddrReg,
-                    "simm12": 0,
-                    "NoRestriction": 1,
-                },
+                "ADDI##RISCV",
+                {"rd": aAddrReg, "rs1": aAddrReg, "simm12": data_size},
             )
-            if aIncrementAddr:
-                self.genInstruction(
-                    "ADDI##RISCV",
-                    {"rd": aAddrReg, "rs1": aAddrReg, "simm12": 8},
-                )
 
 
 #  AddressTableManagerRISCV class

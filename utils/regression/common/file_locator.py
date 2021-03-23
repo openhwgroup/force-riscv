@@ -29,7 +29,7 @@ class FileLocator(object):
     #       the filepath's existence
     #
     @classmethod
-    def checkNestedPath(aClass, aPathList):
+    def checkNestedPath(cls, aPathList):
         # validate the input
         if not isinstance(aPathList, list):
             raise Exception(
@@ -66,7 +66,7 @@ class FileLocator(object):
     #       flag that indicates if the filepath could be resolved.
     #
     @classmethod
-    def resolveFileLocation(aClass, aInputString, aPrefixDirectoryList):
+    def resolveFileLocation(cls, aInputString, aPrefixDirectoryList):
         # validate the input
         if not isinstance(aPrefixDirectoryList, list):
             raise Exception(

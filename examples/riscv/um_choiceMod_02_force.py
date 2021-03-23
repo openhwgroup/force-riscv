@@ -37,12 +37,7 @@ class MyMainSequence(Sequence):
             # granule#S#stage 1" which was set before this generate was called
             # via the GenThreadInitialization below.
 
-            for _ in range(20):
-                if self.getGlobalState("AppRegisterWidth") == 32:
-                    instr = self.pickWeighted(RV32_G_instructions)
-                else:
-                    instr = self.pickWeighted(RV_G_instructions)
-                self.genInstruction(instr)
+            self._gen_rv_g_instructions()
 
             # Modify the choices settings
             choices_mod.modifyOperandChoices(
@@ -56,18 +51,29 @@ class MyMainSequence(Sequence):
             choices_mod.commitSet()
 
             # generate instructions
-            for _ in range(20):
-
-                if self.getGlobalState("AppRegisterWidth") == 32:
-                    instr_mix = {RV32F_map: 10, LDST32_All_map: 10}
-                else:
-                    instr_mix = {ALU_Float_All_map: 10, LDST_All_map: 10}
-
-                instr = self.pickWeighted(instr_mix)
-                self.genInstruction(instr)
+            self._gen_data_processing_and_load_store_instructions()
 
             # undo the choices settings - revert back to prior
             choices_mod.revert()
+
+    def _gen_rv_g_instructions(self):
+        for _ in range(20):
+            if self.getGlobalState("AppRegisterWidth") == 32:
+                instr = self.pickWeighted(RV32_G_instructions)
+            else:
+                instr = self.pickWeighted(RV_G_instructions)
+
+            self.genInstruction(instr)
+
+    def _gen_data_processing_and_load_store_instructions(self):
+        for _ in range(20):
+            if self.getGlobalState("AppRegisterWidth") == 32:
+                instr_mix = {RV32F_map: 10, LDST32_All_map: 10}
+            else:
+                instr_mix = {ALU_Float_All_map: 10, LDST_All_map: 10}
+
+            instr = self.pickWeighted(instr_mix)
+            self.genInstruction(instr)
 
 
 # Modify the Paging Choices so that the test uses only 4K, 2M, or 4M page sizes

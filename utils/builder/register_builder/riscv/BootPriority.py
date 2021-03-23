@@ -22,5 +22,6 @@
 class BootPriority:
     # Returns the appropriate boot priority based on the name and type of
     # register provided along with if the register is write only
-    def getBootPriority(aName=None, aType=None, aWriteOnly=0):
+    @classmethod
+    def getBootPriority(cls, aName=None, aType=None, aWriteOnly=0):
         return 1

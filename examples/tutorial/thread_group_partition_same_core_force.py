@@ -35,53 +35,64 @@ class ThreadPartitionGlobalInitSeq(GlobalInitSeqRISCV):
 class MainSequence(Sequence):
     def generate(self, **kargs):
         if self.getThreadGroupId() == 0:
-            # Thread Group 0 generates random integer data processing
-            # instructions
-            for _ in range(RandomUtils.random32(50, 100)):
-                instr = ALU_Int64_map.pick(self.genThread)
-                self.genInstruction(instr)
+            self._gen_group_0_instructions()
         elif self.getThreadGroupId() == 1:
-            # Thread Group 1 generates random integer load/store instructions
-            for _ in range(RandomUtils.random32(50, 100)):
-                instr = LDST_Int_map.pick(self.genThread)
-
-                # The NoPreamble flag avoids generating instructions to load a
-                # value into the base register prior to generating the load or
-                # store instruction
-                self.genInstruction(instr, {"NoPreamble": 1})
+            self._gen_group_1_instructions()
         elif self.getThreadGroupId() == 2:
-            # Thread Group 2 randomly selects from a large collection of
-            # instructions
-            for _ in range(RandomUtils.random32(50, 100)):
-                instr = RV_G_map.pick(self.genThread)
-                self.genInstruction(instr)
+            self._gen_group_2_instructions()
         else:
-            # The remaining thread groups generate load/store instructions
-            # targeting a shared memory location. A thread locking context
-            # permits only one thread at a time to execute until the executing
-            # thread exits the context. This ensures only one thread generates
-            # the shared physical address and the remaining threads use it.
-            shared_phys_addr = 0
-            shared_phys_addr_name = "Shared PA"
-            with self.threadLockingContext():
-                if not self.hasSharedThreadObject(shared_phys_addr_name):
-                    shared_phys_addr = self.genPA(
-                        Size=8, Align=8, Type="D", Shared=1
-                    )
-                    self.setSharedThreadObject(
-                        shared_phys_addr_name, shared_phys_addr
-                    )
-                else:
-                    shared_phys_addr = self.getSharedThreadObject(
-                        shared_phys_addr_name
-                    )
+            self._gen_shared_memory_instructions()
 
-            target_addr = self.genVAforPA(
-                Size=8, Align=8, Type="D", PA=shared_phys_addr
-            )
-            for _ in range(RandomUtils.random32(10, 20)):
-                instr = LDST_Int_map.pick(self.genThread)
-                self.genInstruction(instr, {"LSTarget": target_addr})
+    # Thread Group 0 generates random integer data processing instructions.
+    def _gen_group_0_instructions(self):
+        for _ in range(RandomUtils.random32(50, 100)):
+            instr = ALU_Int64_map.pick(self.genThread)
+            self.genInstruction(instr)
+
+    # Thread Group 1 generates random integer load/store instructions.
+    def _gen_group_1_instructions(self):
+        for _ in range(RandomUtils.random32(50, 100)):
+            instr = LDST_Int_map.pick(self.genThread)
+
+            # The NoPreamble flag avoids generating instructions to load a
+            # value into the base register prior to generating the load or
+            # store instruction
+            self.genInstruction(instr, {"NoPreamble": 1})
+
+    # Thread Group 2 randomly selects from a large collection of
+    # instructions.
+    def _gen_group_2_instructions(self):
+        for _ in range(RandomUtils.random32(50, 100)):
+            instr = RV_G_map.pick(self.genThread)
+            self.genInstruction(instr)
+
+    # Other thread groups generate load/store instructions
+    # targeting a shared memory location. A thread locking context
+    # permits only one thread at a time to execute until the executing
+    # thread exits the context. This ensures only one thread generates
+    # the shared physical address and the remaining threads use it.
+    def _gen_shared_memory_instructions(self):
+        shared_phys_addr = 0
+        shared_phys_addr_name = "Shared PA"
+        with self.threadLockingContext():
+            if not self.hasSharedThreadObject(shared_phys_addr_name):
+                shared_phys_addr = self.genPA(
+                    Size=8, Align=8, Type="D", Shared=1
+                )
+                self.setSharedThreadObject(
+                    shared_phys_addr_name, shared_phys_addr
+                )
+            else:
+                shared_phys_addr = self.getSharedThreadObject(
+                    shared_phys_addr_name
+                )
+
+        target_addr = self.genVAforPA(
+            Size=8, Align=8, Type="D", PA=shared_phys_addr
+        )
+        for _ in range(RandomUtils.random32(10, 20)):
+            instr = LDST_Int_map.pick(self.genThread)
+            self.genInstruction(instr, {"LSTarget": target_addr})
 
 
 GlobalInitialSequenceClass = ThreadPartitionGlobalInitSeq

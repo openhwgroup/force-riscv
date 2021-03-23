@@ -83,4 +83,4 @@ class FastExceptionHandlersBaseRISCV(ReusableSequence):
 
     # generate the code to process the exception
     def processException(self):
-        NotImplementedError
+        raise NotImplementedError

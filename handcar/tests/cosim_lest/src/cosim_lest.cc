@@ -18,6 +18,7 @@
 //#include <Log.h>
 #include <map>
 #include <cstring>
+#include <algorithm>
 
 //------------------------------------------------
 // include necessary header files here
@@ -44,10 +45,7 @@ void update_vector_element(uint32_t cpuid, const char *pRegName, uint32_t vRegIn
 {
    //std::cout << "Update vector element called. cpuid: " << cpuid << " regname: " << pRegName << " vRegIndex: " << vRegIndex << " eltIndex: " << eltIndex << " eltByteWidth: " << eltByteWidth << " pAccessType: " << pAccessType << std::endl;
 
-   for(uint8_t & elt : global_buffer)
-   {    
-     elt = 0;
-   }
+   std::fill(global_buffer.begin(), global_buffer.end(), 0);
    for(size_t byte_number = 0; byte_number < byteLength; ++ byte_number)
    {
      global_buffer[byte_number] = value[byte_number];

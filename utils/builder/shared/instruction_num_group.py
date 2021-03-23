@@ -33,7 +33,7 @@ class IGroupByNumber(object):
         # exception
         if (len(self.instructions) + 1) > self.size:
             raise BuilderException(
-                'Adding instruction "%s" to full group "%s\, with size "%d".'
+                'Adding instruction "%s" to full group "%s" with size "%d".'
                 % (instr.name, self.name, self.size)
             )
         # If there's still space, append the instruction to the end of the list

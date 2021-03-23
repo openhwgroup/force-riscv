@@ -17,13 +17,13 @@ import Log
 import traceback
 
 
-def assert_false(expression, msg=None):
+def assert_false(expression, msg=""):
     if expression:
         err_msg = "%s is true. %s" % (str(expression), msg)
         log_failure(err_msg)
 
 
-def assert_equal(first, second, msg=None):
+def assert_equal(first, second, msg=""):
     if first != second:
         err_msg = "%s != %s. %s" % (str(first), str(second), msg)
         log_failure(err_msg)

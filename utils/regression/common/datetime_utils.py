@@ -80,5 +80,5 @@ class DateTime(object):
         return time.time()
 
     @classmethod
-    def DateDelta(arg_delta=1):
+    def DateDelta(cls, arg_delta=1):
         return datetime.utcnow() - timedelta(days=arg_delta)

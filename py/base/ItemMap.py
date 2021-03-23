@@ -47,7 +47,7 @@ class ItemMap(SortableObject):
             return NotImplemented
 
     def itemType(self):
-        return NotImplemented
+        raise NotImplementedError
 
     def isCompatible(self, aOther):
         return isinstance(aOther, ItemMap)
@@ -64,13 +64,10 @@ class ItemMap(SortableObject):
             raise Exception(
                 "Empty %s map %s", (self.itemType(), self._mSortableName)
             )
+
         for k, v in self.mItemDict.items():
-            if isinstance(k, str):
-                simple_string += " (key:value) = (%s : %d)" % (k, v)
-            elif isinstance(k, ItemMap):
-                simple_string += k.toSimpleString()
-            else:
-                return NotImplemented
+            simple_string += self._getItemString(k, v)
+
         return simple_string
 
     def substract(self, aOther):
@@ -93,7 +90,7 @@ class ItemMap(SortableObject):
             elif isinstance(k, ItemMap):
                 k.getItemIdSet(aIdSet)
             else:
-                return NotImplemented
+                raise TypeError
 
     def clone(self, aIdSet):
         sort_name = self._mSortableName
@@ -104,32 +101,82 @@ class ItemMap(SortableObject):
         return self.__class__(sort_name, item_dict)
 
     def deepCopyDict(self, aIdSet):
-        copy_dict = {}
+        dict_copy = {}
         for k, v in self.mItemDict.items():
-            if isinstance(k, ItemMap):
-                cloned_map = k.clone(aIdSet)
-                if cloned_map:
-                    copy_dict[cloned_map] = v
-            elif isinstance(k, str):
-                if k in aIdSet:
-                    copy_dict[k] = v
-            else:
-                return NotImplemented
+            (k_copy, v_copy) = self._deepCopyDictItem(k, v, aIdSet)
 
-        return copy_dict
+            if (k_copy is not None) and (v_copy is not None):
+                dict_copy[k_copy] = v_copy
+
+        return dict_copy
 
     def size(self, skip_weight_check=False):
+        get_item_size = self._getItemSizeIfWeighted
+        if skip_weight_check:
+            get_item_size = self._getItemSize
+
+        size = functools.reduce(
+            lambda total, item: total + get_item_size(key, val),
+            self.mItemDict.items(),
+        )
+
+    def _getItemString(self, key, val):
+        simple_string = ""
+        if isinstance(key, str):
+            simple_string = " (key:value) = (%s : %d)" % (key, val)
+        elif isinstance(key, ItemMap):
+            simple_string = key.toSimpleString()
+        else:
+            raise TypeError
+
+        return simple_string
+
+    def _deepCopyDictItem(self, key, val, id_set):
+        (key_copy, val_copy) = (None, None)
+        if isinstance(key, ItemMap):
+            (key_copy, val_copy) = self._deepCopyDictItemMap(key, val, id_set)
+        elif isinstance(key, str):
+            (key_copy, val_copy) = self._deepCopyDictString(key, val, id_set)
+        else:
+            raise TypeError
+
+        return (key_copy, val_copy)
+
+    def _getItemSize(self, key, val):
         size = 0
-        for k, v in self.mItemDict.items():
-            if isinstance(k, ItemMap):
-                size += k.size(skip_weight_check)
-            elif isinstance(k, str):
-                if skip_weight_check or (v > 0):
-                    size += 1
-            else:
-                return NotImplemented
+        if isinstance(key, ItemMap):
+            size = key.size(True)
+        elif isinstance(key, str):
+            size = 1
+        else:
+            raise TypeError
 
         return size
+
+    def _getItemSizeIfWeighted(self, key, val):
+        size = 0
+        if isinstance(key, ItemMap):
+            size = key.size(False)
+        elif isinstance(key, str):
+            if val > 0:
+                size = 1
+        else:
+            raise TypeError
+
+        return size
+
+    def _deepCopyDictItemMap(self, item_map, val, id_set):
+        cloned_map = key.clone(id_set)
+        if cloned_map:
+            return (cloned_map, val)
+
+        return (None, None)
+
+    def _deepCopyDictString(self, string, val, id_set):
+        if string in id_set:
+            return (string, val)
+
+        return (None, None)
 
 
 #  A thin wrapper around an instruction dict, so it can be used as a dict key

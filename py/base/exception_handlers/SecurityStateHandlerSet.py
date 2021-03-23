@@ -59,23 +59,9 @@ class SecurityStateHandlerSet(object):
         )
 
         if aAssignmentRequest.mSubexcClass is not None:
-            handler_assignment = self._mHandlerAssignments.get(
-                aAssignmentRequest.mExcClass,
-                ExceptionHandlerAssignment(mem_bank),
+            self._assignSynchronousSubexceptionHandler(
+                aAssignmentRequest, mem_bank
             )
-
-            # Only permit adding subassignments if the top-level exception
-            # class does not have a handler assigned to handle it.
-            if handler_assignment.mHandlerClassName is None:
-                handler_assignment.addSubassignment(
-                    aAssignmentRequest.mSubexcClass,
-                    aAssignmentRequest.mHandlerClassName,
-                    mem_bank,
-                )
-
-            self._mHandlerAssignments[
-                aAssignmentRequest.mExcClass
-            ] = handler_assignment
         else:
             if aAssignmentRequest.mExcClass not in self._mHandlerAssignments:
                 self._mHandlerAssignments[
@@ -93,3 +79,32 @@ class SecurityStateHandlerSet(object):
     #  @param aExceptionClass The type of exception.
     def getSynchronousExceptionHandlerAssignment(self, aExceptionClass):
         return self._mHandlerAssignments[aExceptionClass]
+
+    # Assign the specified handler within the specified memory bank to handle
+    # the specified subexception class. If a handler is already assigned to the
+    # exception class or subexception class, this method does nothing.
+    #
+    #  @param aAssignmentRequest An object containing information specifying
+    #       an excpetion handler class and when it should be executed.
+    #  @param aMemBank The memory bank in which the handler should be
+    #       generated.
+    def _assignSynchronousSubexceptionHandler(
+        self, aAssignmentRequest, aMemBank
+    ):
+        handler_assignment = self._mHandlerAssignments.get(
+            aAssignmentRequest.mExcClass,
+            ExceptionHandlerAssignment(aMemBank),
+        )
+
+        # Only permit adding subassignments if the top-level exception
+        # class does not have a handler assigned to handle it.
+        if handler_assignment.mHandlerClassName is None:
+            handler_assignment.addSubassignment(
+                aAssignmentRequest.mSubexcClass,
+                aAssignmentRequest.mHandlerClassName,
+                aMemBank,
+            )
+
+        self._mHandlerAssignments[
+            aAssignmentRequest.mExcClass
+        ] = handler_assignment

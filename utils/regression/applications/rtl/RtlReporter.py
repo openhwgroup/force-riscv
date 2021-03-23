@@ -22,167 +22,165 @@ import os.path
 
 class RtlReporter(object):
     def __init__(self):
-        self.mReportNameBase = None  # "name of top level control file"
+        self.m_report_name_base = None  # "name of top level control file"
 
         # "query for parameter version from dictionary in shared object"
-        self.mForceScmVersion = None
+        self.m_force_scm_version = None
 
         # "even though this was a standard module, was it actually used?"
-        self.mRtlWasEnabled = None
+        self.m_rtl_was_enabled = None
 
-        self.mReportingWasSkipped = (
+        self.m_reporting_was_skipped = (
             None  # "if the user deliberately said no reporting?"
         )
-        self.mReportDumpXml = (
+        self.m_report_dump_xml = (
             None  # "do we want an xml dump instead of an upload?"
         )
-        self.mRegressionOutputDirectory = (
+        self.m_regression_output_directory = (
             None  # "where is that data we are using to generate the report"
         )
-        self.mTotalCycleCount = None
-        self.mTotalInstructionCount = None
-        self.mReportBaseName = None
+        self.m_total_cycle_count = None
+        self.m_total_instruction_count = None
+        self.rtl_config = None
+        self.rtl_report_name = None
+
+    def setup_report(self, a_apps_info):
+        mr_info = a_apps_info.mTagToReportInfo.get("master_run", None)
+        if mr_info:
+            self.m_total_cycle_count = mr_info.get("total_cycle_count", None)
+            self.m_total_instruction_count = mr_info.get(
+                "total_instruction_count", None
+            )
+            self.m_report_name_base = mr_info.get("initial_control_file", None)
+            self.m_regression_output_directory = mr_info.get(
+                "output_dir", None
+            )
+
+        force_info = a_apps_info.mTagToReportInfo.get("generator", None)
+        if force_info:  # force info was in the report info dictionary
+            self.m_force_scm_version = force_info.get("version", None)
+        else:  # force info was obtainable from the config object
+            force_info = a_apps_info.mTagToApp.get("generator")
+            self.m_force_scm_version = force_info.parameter("version")
+
+        self.rtl_config = a_apps_info.mTagToApp.get("rtl", None)
+        if not self.rtl_config:
+            return False
+
+        self.m_rtl_was_enabled = self.rtl_config.parameter("rtl")
+
+        # If the rtl app was active, check if the user disabled reporting
+        if not self.m_rtl_was_enabled:
+            return False
+
+        self.m_reporting_was_skipped = self.rtl_config.parameter(
+            "rtl.report.skip"
+        )
+
+        # If reporting was enabled, continue to resolve information
+        if self.m_reporting_was_skipped:
+            return False
+
+        self.m_report_dump_xml = self.rtl_config.parameter("rtl.report.xml")
+        self.rtl_report_name = self.rtl_config.parameter("rtl.report.name")
+
+        if self.rtl_report_name == "master_run" and self.m_report_name_base:
+            self.rtl_report_name = self.m_report_name_base.strip(".py")
+
+        return True
 
     # Resolve the values of the member variables using information available
     # from the top level inter module shared object and perform reporting
-    def report(self, aAppsInfo, aMyTag):
+    def report(self, a_apps_info, a_my_tag):
 
-        mr_info = aAppsInfo.mTagToReportInfo.get("master_run", None)
-        if mr_info:
-            self.mTotalCycleCount = mr_info.get("total_cycle_count", None)
-            self.mTotalInstructionCount = mr_info.get(
-                "total_instruction_count", None
-            )
-            self.mReportBaseName = mr_info.get("initial_control_file", None)
-            self.mRegressionOutputDirectory = mr_info.get("output_dir", None)
+        if not self.setup_report(a_apps_info):
+            return
 
-        force_info = aAppsInfo.mTagToReportInfo.get("generator", None)
-        if force_info:  # force info was in the report info dictionary
-            self.mForceScmVersion = force_info.get("version", None)
-        else:  # force info was obtainable from the config object
-            force_info = aAppsInfo.mTagToApp.get("generator")
-            self.mForceScmVersion = force_info.parameter("version")
+        time_stamp = datetime.utcnow()
+        time_string = "_%0.4d%0.2d%0.2d_%0.2d%0.2d" % (
+            time_stamp.year,
+            time_stamp.month,
+            time_stamp.day,
+            time_stamp.hour,
+            time_stamp.minute,
+        )
 
-        rtl_config = aAppsInfo.mTagToApp.get("rtl", None)
-        if rtl_config:
-            self.mRtlWasEnabled = rtl_config.parameter("rtl")
+        version = ""
+        revision_stamp = ""
 
-            # If the rtl app was active, check if the user disabled reporting
-            if self.mRtlWasEnabled:
-                self.mReportingWasSkipped = rtl_config.parameter(
-                    "rtl.report.skip"
+        for item in self.m_force_scm_version:
+            if item.get("status", False):
+                version = item["version"]
+                # prefer git data, otherwise keep looking for
+                # valid version
+                if item["scm_type"] == "git":
+                    break
+        if version:
+            revision_stamp = "_r" + str(version)
+
+        rtl_report_name = self.rtl_report_name + time_string + revision_stamp
+
+        rtl_control_data = {}
+        self.rtl_config.processControlData(rtl_control_data)
+        report_script_path = rtl_control_data.get("report_script_path", None)
+        report_script_path = PathUtils.real_path(
+            a_apps_info.mMainAppPath + "/" + report_script_path
+        )
+        report_directory = PathUtils.real_path(
+            self.m_regression_output_directory + "/../../"
+        )
+
+        # What about the report path?  We get that from the
+        # master_run output_dir
+        report_command = (
+            report_script_path
+            + " --report-dir "
+            + report_directory
+            + " --name "
+            + rtl_report_name
+        )
+        if self.m_report_dump_xml:
+            report_command += " --dump-xml"
+
+        Msg.dbg("Main app path: " + str(a_apps_info.mMainAppPath))
+        Msg.dbg("Report script path: " + str(report_script_path))
+        Msg.dbg("Report directory: " + str(report_directory))
+        Msg.dbg("Reporting command: " + str(report_command))
+
+        # actually execute the report script
+        report.call_from_python(report_command)
+
+        # create or append metrics file
+        rtl_metrics_path = rtl_control_data.get("rtl_metrics_path", None)
+        home = os.path.expanduser("~")
+        rtl_metrics_path = rtl_metrics_path.replace("~", home)
+
+        if not os.path.isfile(rtl_metrics_path):
+            with open(rtl_metrics_path, "w+") as outfile:
+                outfile.write(
+                    "||------------------------------------------"
+                    "---|--------------------|-------------------"
+                    "-||\n"
+                )
+                outfile.write(
+                    "||                                   "
+                    "Regression|        Total Cycles|  Total "
+                    "Instructions||\n"
+                )
+                outfile.write(
+                    "||-------------------------------------------"
+                    "--|--------------------|-------------------"
+                    "-||\n"
                 )
 
-                # If reporting was enabled, continue to resolve information
-                if not self.mReportingWasSkipped:
-                    self.mReportDumpXml = rtl_config.parameter(
-                        "rtl.report.xml"
-                    )
-                    rtl_report_name = rtl_config.parameter("rtl.report.name")
-
-                    if (
-                        rtl_report_name == "master_run"
-                        and self.mReportBaseName
-                    ):
-                        rtl_report_name = self.mReportBaseName.strip(".py")
-
-                    time_stamp = datetime.utcnow()
-                    time_string = "_%0.4d%0.2d%0.2d_%0.2d%0.2d" % (
-                        time_stamp.year,
-                        time_stamp.month,
-                        time_stamp.day,
-                        time_stamp.hour,
-                        time_stamp.minute,
-                    )
-
-                    version = ""
-                    revision_stamp = ""
-
-                    for item in self.mForceScmVersion:
-                        if item.get("status", False):
-                            version = item["version"]
-                            # prefer git data, otherwise keep looking for
-                            # valid version
-                            if item["scm_type"] == "git":
-                                break
-                    if version:
-                        revision_stamp = "_r" + str(version)
-
-                    rtl_report_name = (
-                        rtl_report_name + time_string + revision_stamp
-                    )
-
-                    rtl_control_data = {}
-                    rtl_config.processControlData(rtl_control_data)
-                    report_script_path = rtl_control_data.get(
-                        "report_script_path", None
-                    )
-                    report_script_path = PathUtils.real_path(
-                        aAppsInfo.mMainAppPath + "/" + report_script_path
-                    )
-                    report_directory = PathUtils.real_path(
-                        self.mRegressionOutputDirectory + "/../../"
-                    )
-
-                    # What about the report path?  We get that from the
-                    # master_run output_dir
-                    report_command = (
-                        report_script_path
-                        + " --report-dir "
-                        + report_directory
-                        + " --name "
-                        + rtl_report_name
-                    )
-                    if self.mReportDumpXml:
-                        report_command += " --dump-xml"
-
-                    Msg.dbg("Main app path: " + str(aAppsInfo.mMainAppPath))
-                    Msg.dbg("Report script path: " + str(report_script_path))
-                    Msg.dbg("Report directory: " + str(report_directory))
-                    Msg.dbg("Reporting command: " + str(report_command))
-
-                    # actually execute the report script
-                    report.call_from_python(report_command)
-
-                    # create or append metrics file
-                    rtl_metrics_path = rtl_control_data.get(
-                        "rtl_metrics_path", None
-                    )
-                    home = os.path.expanduser("~")
-                    rtl_metrics_path = rtl_metrics_path.replace("~", home)
-
-                    if not os.path.isfile(rtl_metrics_path):
-                        with open(rtl_metrics_path, "w+") as outfile:
-                            outfile.write(
-                                "||------------------------------------------"
-                                "---|--------------------|-------------------"
-                                "-||\n"
-                            )
-                            outfile.write(
-                                "||                                   "
-                                "Regression|        Total Cycles|  Total "
-                                "Instructions||\n"
-                            )
-                            outfile.write(
-                                "||-------------------------------------------"
-                                "--|--------------------|-------------------"
-                                "-||\n"
-                            )
-
-                    with open(rtl_metrics_path, "a") as outfile:
-                        outfile.write("||")
-                        for space in range(45 - len(rtl_report_name)):
-                            outfile.write(" ")
-                        outfile.write(rtl_report_name + "|")
-                        for space in range(
-                            20 - len(str(self.mTotalCycleCount))
-                        ):
-                            outfile.write(" ")
-                        outfile.write(str(self.mTotalCycleCount) + "|")
-                        for space in range(
-                            20 - len(str(self.mTotalInstructionCount))
-                        ):
-                            outfile.write(" ")
-                        outfile.write(
-                            str(self.mTotalInstructionCount) + "||\n"
-                        )
+        with open(rtl_metrics_path, "a") as outfile:
+            outfile.write("||")
+            for _ in range(45 - len(rtl_report_name)):
+                outfile.write(" ")
+            outfile.write(rtl_report_name + "|")
+            for _ in range(20 - len(str(self.m_total_cycle_count))):
+                outfile.write(" ")
+            outfile.write(str(self.m_total_cycle_count) + "|")
+            for _ in range(20 - len(str(self.m_total_instruction_count))):
+                outfile.write(" ")
+            outfile.write(str(self.m_total_instruction_count) + "||\n")

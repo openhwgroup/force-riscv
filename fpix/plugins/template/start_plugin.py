@@ -15,52 +15,24 @@
 # limitations under the License.
 #
 
+import argparse
 import getopt
 import os
 import shutil
 import sys
 
 
-def usage():
-    usage_str = (
-        """
-Starting a plugin source directory.
-Run the script inside Force/fpix/plugins/template directory.
-
-    Example:
-    %s -n PLUGIN_NAME
-    A directory called PLUGIN_NAME will be created under Force/fpix/plugins/src
-"""
-        % sys.argv[0]
-    )
-
-    print(usage_str)
-
-
 def start_plugin():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hn:", ["help", "name="])
-    except getopt.GetoptError as err:
-        print(err)
-        usage()
-        sys.exit(1)
-
-    plugin_name = None
-    for o, a in opts:
-        if o in ("-h", "--help"):
-            usage()
-            sys.exit()
-        elif o in ("-n", "--name"):
-            plugin_name = a
-        else:
-            raise ValueError("Unhandled option.")
-
-    if not plugin_name:
-        usage()
-        sys.exit()
+    parser = argparse.ArgumentParser(
+        description="Create a plugin source directory called PLUGIN_NAME "
+        "within the fpix/plugins/src directory. Run the script inside the "
+        "fpix/plugins/template directory."
+    )
+    parser.add_argument("-n", "--plugin_name", required=True)
+    args = parser.parse_args()
 
     check_location()
-    start_plugin_with_name(plugin_name)
+    start_plugin_with_name(args.plugin_name)
 
 
 def check_dir(dir_name):

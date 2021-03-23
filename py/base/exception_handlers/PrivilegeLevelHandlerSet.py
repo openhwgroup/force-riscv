@@ -313,20 +313,7 @@ class PrivilegeLevelHandlerSet(Sequence):
         end_handler_pc = self.getPEstate("PC")
         self.setPEstate("PC", jump_table_pc)
 
-        assembly_helper = self.factory.createAssemblyHelper(self)
-        for (
-            exception_class,
-            handler_assignment,
-        ) in sorted_handler_assignments:
-            if handler_assignment.hasSubassignments():
-                assembly_helper.genRelativeBranchToAddress(
-                    dispatch_addresses[exception_class]
-                )
-            else:
-                self._genJumpToSynchronousHandler(
-                    handler_assignment.mHandlerClassName,
-                    handler_assignment.mMemBank,
-                )
+        self._generateJumpTable(sorted_handler_assignments, dispatch_addresses)
 
         self.setPEstate("PC", end_handler_pc)
 
@@ -352,33 +339,8 @@ class PrivilegeLevelHandlerSet(Sequence):
         handler_routine_name = self._getHandlerRoutineName(handler)
         if not handler.hasGeneratedRoutine(handler_routine_name):
             start_addr = self.getPEstate("PC")
-
-            # The dispatch code and jump tables will be generated in the
-            # default memory bank. We generate handlers in this memory bank in
-            # a continuous block without needing to adjust the PC value. For
-            # handlers that need to be generated in a different memory bank, we
-            # need to modify the PC value and restore it afterward.
-            save_pc = None
-            if aMemBank != aSecurityState.getDefaultMemoryBank():
-                save_pc = self.getPEstate("PC")
-                start_addr = self.nextCodeAddresses[aMemBank]
-                self.setPEstate("PC", start_addr)
-
-            handler.generateRoutine(
-                handler_routine_name,
-                handler_context=self.createExceptionHandlerContext(
-                    err_code, aMemBank
-                ),
-            )
-
-            end_addr = self.getPEstate("PC")
-            if save_pc is not None:
-                self.setPEstate("PC", save_pc)
-                self.nextCodeAddresses[aMemBank] = end_addr
-
-            # Update the dictionary with the new addresses
-            self.recordSpecificHandlerBoundary(
-                aMemBank, err_code, start_addr, end_addr
+            self._generateSynchronousHandlerRoutine(
+                aMemBank, aSecurityState, err_code, handler
             )
 
             self.debug(
@@ -394,6 +356,58 @@ class PrivilegeLevelHandlerSet(Sequence):
         if hasattr(handler, "use_addr_table") and (handler.use_addr_table):
             info_set = {"Function": "AddrTableEC", "EC": err_code}
             self.exceptionRequest("UpdateHandlerInfo", info_set)
+
+    def _generateJumpTable(
+        self, aSortedHandlerAssignments, aDispatchAddresses
+    ):
+        assembly_helper = self.factory.createAssemblyHelper(self)
+        for (
+            exception_class,
+            handler_assignment,
+        ) in aSortedHandlerAssignments:
+            if handler_assignment.hasSubassignments():
+                assembly_helper.genRelativeBranchToAddress(
+                    aDispatchAddresses[exception_class]
+                )
+            else:
+                self._genJumpToSynchronousHandler(
+                    handler_assignment.mHandlerClassName,
+                    handler_assignment.mMemBank,
+                )
+
+    def _generateSynchronousHandlerRoutine(
+        self, aMemBank, aSecurityState, aErrCode, aHandler
+    ):
+        start_addr = self.getPEstate("PC")
+
+        # The dispatch code and jump tables will be generated in the
+        # default memory bank. We generate handlers in this memory bank in
+        # a continuous block without needing to adjust the PC value. For
+        # handlers that need to be generated in a different memory bank, we
+        # need to modify the PC value and restore it afterward.
+        save_pc = None
+        if aMemBank != aSecurityState.getDefaultMemoryBank():
+            save_pc = self.getPEstate("PC")
+            start_addr = self.nextCodeAddresses[aMemBank]
+            self.setPEstate("PC", start_addr)
+
+        handler_routine_name = self._getHandlerRoutineName(aHandler)
+        aHandler.generateRoutine(
+            handler_routine_name,
+            handler_context=self.createExceptionHandlerContext(
+                aErrCode, aMemBank
+            ),
+        )
+
+        end_addr = self.getPEstate("PC")
+        if save_pc is not None:
+            self.setPEstate("PC", save_pc)
+            self.nextCodeAddresses[aMemBank] = end_addr
+
+        # Update the dictionary with the new addresses
+        self.recordSpecificHandlerBoundary(
+            aMemBank, aErrCode, start_addr, end_addr
+        )
 
     def _genJumpToSynchronousHandler(self, aHandlerClassName, aMemBank):
         repo = self.memBankHandlerRegistryRepo

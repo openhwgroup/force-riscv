@@ -23,6 +23,7 @@ from Enums import ELimitType
 
 from base.ChoicesModifier import ChoicesModifier
 from base.Sequence import Sequence
+from base.TestUtils import assert_equal
 from base.UtilityFunctions import mask_to_size
 
 
@@ -110,16 +111,8 @@ class VectorTestSequence(Sequence):
         elif not self._isSkipAllowed(aInstr, aInstrParams):
             self.error("Instruction %s did not generate correctly" % aInstr)
 
-        for (except_code, except_count) in self._mExceptCounts.items():
-            new_except_count = self.queryExceptionRecordsCount(except_code)
-
-            if new_except_count > except_count:
-                if except_code in self._getAllowedExceptionCodes(aInstr):
-                    self._mExceptCounts[except_code] = new_except_count
-                else:
-                    self.error(
-                        "Instruction %s did not execute correctly" % aInstr
-                    )
+        for except_code in self._mExceptCounts:
+            self._verifyExceptionCount(aInstr, except_code)
 
     # Return true if it is permissible for the generation to skip this
     # instruction.
@@ -135,6 +128,19 @@ class VectorTestSequence(Sequence):
     #  @param aInstrRecord A record of the generated instruction.
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
         pass
+
+    # Verify the instruction didn't unexpectedly trigger the specified
+    # exception.
+    #
+    #  @param aInstr The name of the instruction.
+    #  @param aExceptCode The exception code.
+    def _verifyExceptionCount(self, aInstr, aExceptCode):
+        new_except_count = self.queryExceptionRecordsCount(aExceptCode)
+        if new_except_count > self._mExceptCounts[aExceptCode]:
+            if aExceptCode in self._getAllowedExceptionCodes(aInstr):
+                self._mExceptCounts[aExceptCode] = new_except_count
+            else:
+                self.error("Instruction %s did not execute correctly" % aInstr)
 
     # Get allowed exception codes.
     #
@@ -166,24 +172,7 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         self._mTargetAddrConstr = None
         instr_params = {}
         if RandomUtils.random32(0, 1) == 1:
-            if RandomUtils.random32(0, 1) == 1:
-                instr_params["NoPreamble"] = 1
-
-            target_choice = RandomUtils.random32(0, 2)
-            if target_choice == 1:
-                target_addr = self.genVA(Size=512, Align=8, Type="D")
-                self._mTargetAddrConstr = ConstraintSet(target_addr)
-                instr_params["LSTarget"] = str(self._mTargetAddrConstr)
-            elif target_choice == 2:
-                va_range_size = RandomUtils.random32()
-                min_target_addr = self.genVA(Size=512, Align=8, Type="D")
-                max_target_addr = mask_to_size(
-                    (min_target_addr + RandomUtils.random32()), 64
-                )
-                self._mTargetAddrConstr = ConstraintSet(
-                    min_target_addr, max_target_addr
-                )
-                instr_params["LSTarget"] = str(self._mTargetAddrConstr)
+            instr_params = self._generateInstructionParameters()
 
         return instr_params
 
@@ -203,14 +192,44 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrRecord A record of the generated instruction.
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
-        if (self._mTargetAddrConstr is not None) and (
-            not self._mTargetAddrConstr.containsValue(aInstrRecord["LSTarget"])
+        if (
+            (self._mTargetAddrConstr is not None)
+            and (0x2 not in self._getAllowedExceptionCodes(aInstr))
+            and (
+                not self._mTargetAddrConstr.containsValue(
+                    aInstrRecord["LSTarget"]
+                )
+            )
         ):
             self.error(
                 "Target address 0x%x was outside of the specified "
                 "constraint %s"
                 % (aInstrRecord["LSTarget"], self._mTargetAddrConstr)
             )
+
+    # Generate parameters for a load or store instruction.
+    def _generateInstructionParameters(self):
+        instr_params = {}
+        if RandomUtils.random32(0, 1) == 1:
+            instr_params["NoPreamble"] = 1
+
+        target_choice = RandomUtils.random32(0, 2)
+        if target_choice == 1:
+            target_addr = self.genVA(Size=512, Align=8, Type="D")
+            self._mTargetAddrConstr = ConstraintSet(target_addr)
+            instr_params["LSTarget"] = str(self._mTargetAddrConstr)
+        elif target_choice == 2:
+            va_range_size = RandomUtils.random32()
+            min_target_addr = self.genVA(Size=512, Align=8, Type="D")
+            max_target_addr = mask_to_size(
+                (min_target_addr + RandomUtils.random32()), 64
+            )
+            self._mTargetAddrConstr = ConstraintSet(
+                min_target_addr, max_target_addr
+            )
+            instr_params["LSTarget"] = str(self._mTargetAddrConstr)
+
+        return instr_params
 
     # Get allowed exception codes.
     #
@@ -250,122 +269,3 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     def _getEew(self, aInstr):
         match = re.fullmatch(r"V[A-Z]+(\d+)\.V\#\#RISCV", aInstr)
         return int(match.group(1))
-
-
-#  This class provides some common parameters for testing VSETVL and
-#  VSETVLI instructions.
-class VectorVsetvlTestSequence(VectorTestSequence):
-    def __init__(self, aGenThread, aName=None):
-        super().__init__(aGenThread, aName)
-
-        self.mVtype = None
-        self.mAvl = None
-        self._mVlen = None
-        self._mElen = None
-        self._mVlmul = None
-        self._mVsew = None
-        self._mVl = None
-
-    # Set up the environment prior to generating the test instructions.
-    def _setUpTest(self):
-        config = Config.getInstance()
-        self._mVlen = config.getLimitValue(ELimitType.MaxPhysicalVectorLen)
-        self._mElen = config.getLimitValue(ELimitType.MaxVectorElementWidth)
-
-    # Return parameters to be passed to Sequence.genInstruction().
-    def _getInstructionParameters(self):
-        instr_params = {}
-
-        # Randomly choose between generating with specified parameters and
-        # generating without; need to generate with parameters initially to
-        # generate field values at least once
-        if (self.mVtype is None) or (RandomUtils.random32(0, 1) == 1):
-            self._generateRegisterFieldValues()
-            instr_params = self._generateInstructionParameters()
-
-        return instr_params
-
-    # Verify additional aspects of the instruction generation and execution.
-    #
-    #  @param aInstr The name of the instruction.
-    #  @param aInstrRecord A record of the generated instruction.
-    def _performAdditionalVerification(self, aInstr, aInstrRecord):
-        dest_reg_index = aInstrRecord["Dests"]["rd"]
-        if dest_reg_index != 0:
-            dest_reg_name = "x%d" % dest_reg_index
-            (dest_reg_val, valid) = self.readRegister(dest_reg_name)
-            self.assertValidRegisterValue(dest_reg_name, valid)
-
-            if dest_reg_val != self._mVl:
-                self.error(
-                    "Unexpected destination register value; "
-                    "Expected=0x%x, Actual=0x%x" % (self._mVl, dest_reg_val)
-                )
-
-        (vlmul_val, valid) = self.readRegister("vtype", field="VLMUL")
-        self.assertValidRegisterValue("vtype", valid)
-        if vlmul_val != self._mVlmul:
-            self.error(
-                "Unexpected vtype.VLMUL value; Expected=0x%x, Actual=0x%x"
-                % (self._mVlmul, vlmul_val)
-            )
-
-        (vsew_val, valid) = self.readRegister("vtype", field="VSEW")
-        self.assertValidRegisterValue("vtype", valid)
-        if vsew_val != self._mVsew:
-            self.error(
-                "Unexpected vtype.VSEW value; Expected=0x%x, Actual=0x%x"
-                % (self._mVsew, vsew_val)
-            )
-
-        (vl_val, valid) = self.readRegister("vl")
-        self.assertValidRegisterValue("vl", valid)
-        if vl_val != self._mVl:
-            self.error(
-                "Unexpected vl value; Expected=0x%x, Actual=0x%x"
-                % (self._mVl, vl_val)
-            )
-
-    # Generate randomized values for vtype and vl fields.
-    def _generateRegisterFieldValues(self):
-        max_vsew_val = round(math.log2(self._mElen // 8))
-        self._mVsew = RandomUtils.random32(0, max_vsew_val)
-
-        self._mVlmul = self.choice(self._getVlmulChoices())
-        self.mVtype = (
-            ((self._mVlmul & 0x4) << 3)
-            | (self._mVsew << 2)
-            | (self._mVlmul & 0x3)
-        )
-
-        vlmax = self._calculateVlmax()
-        if RandomUtils.random32(0, 1) == 1:
-            self.mAvl = RandomUtils.random32(0, vlmax)
-            self._mVl = self.mAvl
-        else:
-            self.mAvl = RandomUtils.random32(aMin=(2 * vlmax))
-            self._mVl = vlmax
-
-    # Generate parameters to be passed to Sequence.genInstruction() and load
-    # register operands.
-    def _generateInstructionParameters(self):
-        raise NotImplementedError
-
-    # Get legal choices for the vtype.VLMUL field. This method only adds
-    # fractional LMUL choices that satisfy the constraint LMUL >= SEW / ELEN
-    # because those are the configurations required by the architecture
-    # specification.
-    def _getVlmulChoices(self):
-        vlmul_choices = [0, 1, 2, 3]
-        sew = self.calculateSew(self._mVsew)
-        elen_sew_log_ratio = round(math.log2(self._mElen // sew))
-        for i in range(min(elen_sew_log_ratio, 3)):
-            vlmul_choices.append(7 - i)
-
-        return vlmul_choices
-
-    # Calculate the value of VLMAX.
-    def _calculateVlmax(self):
-        lmul = self.calculateLmul(self._mVlmul)
-        sew = self.calculateSew(self._mVsew)
-        return round((lmul * self._mVlen) / sew)

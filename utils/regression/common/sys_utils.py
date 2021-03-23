@@ -307,7 +307,7 @@ class SysUtils:
         time.sleep(arg_interval / 1000)
 
     @classmethod
-    def sleep_seconds_with_progress(aClass, aSeconds):
+    def sleep_seconds_with_progress(cls, aSeconds):
         for i in range(aSeconds):
             sys.stdout.write("%d " % aSeconds)
             aSeconds -= 1

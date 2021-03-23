@@ -105,23 +105,12 @@ class MainSequence(VectorTestSequence):
     # Logging selected VLMUL and VSEW choices
     def _logChoices(self):
         (vlmul, _) = self.readRegister("vtype", field="VLMUL")
+        lmul = self.calculateLmul(vlmul)
+        self.notice("LMUL: %f" % lmul)
+
         (vsew, _) = self.readRegister("vtype", field="VSEW")
-        if vlmul == 0x0:
-            lmul = "1"
-        elif vlmul == 0x5:
-            lmul = "1/8"
-        elif vlmul == 0x6:
-            lmul = "1/4"
-        elif vlmul == 0x7:
-            lmul = "1/2"
-        if vsew == 0x1:
-            sew = "16"
-        elif vsew == 0x2:
-            sew = "32"
-        elif vsew == 0x3:
-            sew = "64"
-        self.notice("LMUL: %s" % lmul)
-        self.notice("SEW: %s" % sew)
+        sew = self.calculateSew(vsew)
+        self.notice("SEW: %d" % sew)
 
 
 MainSequenceClass = MainSequence

@@ -40,11 +40,7 @@ class ReusableSequence(Sequence):
     def generateRoutine(self, aRoutineName, **kwargs):
         routine_names = [aRoutineName]
         for routine_name in routine_names:
-            for prereq_routine_name in self.getPrerequisiteRoutineNames(
-                routine_name
-            ):
-                if prereq_routine_name not in routine_names:
-                    routine_names.append(prereq_routine_name)
+            self._appendPrerequisiteRoutineNames(routine_name, routine_names)
 
         # Generate with the prerequisite routines first
         for routine_name in reversed(routine_names):
@@ -105,6 +101,19 @@ class ReusableSequence(Sequence):
     # need to be generated prior to generating the specified routine.
     def getPrerequisiteRoutineNames(self, aRoutineName):
         return tuple()
+
+    # Append the names of all routines that the specified routine directly
+    # depends on.
+    #
+    #  @param aRoutineName The name of the routine to generate.
+    #  @param aRoutineNames A list of routine names to append the prerequisite
+    #       routine names to.
+    def _appendPrerequisiteRoutineNames(self, aRoutineName, aRoutineNames):
+        for prereq_routine_name in self.getPrerequisiteRoutineNames(
+            aRoutineName
+        ):
+            if prereq_routine_name not in aRoutineNames:
+                aRoutineNames.append(prereq_routine_name)
 
     # Generate the specified routine and record its starting address. This
     # method should only be called after ensuring the routine has not been

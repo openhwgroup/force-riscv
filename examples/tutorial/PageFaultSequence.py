@@ -51,8 +51,6 @@ class PageFaultSequence(Sequence):
             instr_id = self.genInstruction(self.choice(instruction_list))
             instr_count += 1
 
-        # self._verifyPageFaultResolution(instr_id, pc_val)
-
         page_fault_mod.revert()
 
         for _ in range(5):
@@ -93,42 +91,6 @@ class PageFaultSequence(Sequence):
     # Return whether the appropriate page fault has been triggered.
     def _hasPageFaultOccurred(self):
         return self._expectedExceptionRecorded()
-
-    # Verify that a page fault has been triggered and appropriately handled.
-    #
-    # @param aFaultingInstrId - the ID of the instruction that should have
-    #       triggered a page fault.
-    # @param aPcVal - the value of the PC prior to generating the instruction
-    #       that should have triggered a page fault.
-    def _verifyPageFaultResolution(self, aFaultingInstrId, aPcVal):
-        if not self._hasPageFaultOccurred():
-            self.error("A fault of the expected type was not triggered.")
-
-        (handlers_set, valid) = self.getOption("handlers_set")
-        fast_handlers = handlers_set == "Fast"
-        resolution_type = self.getPageFaultResolutionType(
-            self._getFaultLevels(), fast_handlers
-        )
-
-        xepc_val = self._readXepcRegister()
-        instr_record = self.queryInstructionRecord(aFaultingInsterId)
-        instr_va = instr_record["VA"]
-
-        # check the PC value in addition to the instruction VA in case a
-        # preamble instruction triggered the fault
-        if resolution_type == PageFaultResolutionType.SKIP_INSTRUCTION:
-            if xepc_val in [instr_va, aPcVal]:
-                self.error(
-                    "Fault handler did not skip the faulting instruction."
-                )
-        elif resolution_type == PageFaultResolutionType.RE_EXECUTE_INSTRUCTION:
-            if xepc_val in [instr_va, aPcVal]:
-                self.error(
-                    "Instruction at 0x%x did not re-execute after the fault "
-                    "handler returned" % instr_va
-                )
-        elif resolution_type != PageFaultResolutionType.NONE:
-            self.error("No verification provided for %s" % resolution_type)
 
     # Return true if a recorded exception code was one of the ones expected
     # for this test

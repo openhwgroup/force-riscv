@@ -531,7 +531,8 @@ class RegisterFile:
     # Adds a register from a file
     def addRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.addRegisterToTree(tree, aRegister)
+        if tree is not None:
+            self.addRegisterToTree(tree, aRegister)
 
     # Returns tree from provided label
     def getTreeFromLabel(self, aLabel):
@@ -544,8 +545,11 @@ class RegisterFile:
             ret_tree = self.mImplementationTree
         elif aLabel == "choices":
             ret_tree = self.mRegisterChoicesTree
+        else:
+            print(
+                "RegisterFile.getTreeFromLabel(): Unknown label: %s" % aLabel
+            )
 
-        print("RegisterFile.getTreeFromLabel(): Unknown label: %s" % aLabel)
         return ret_tree
 
     # Adds provided register to the specified tree
@@ -859,7 +863,8 @@ class RegisterFile:
     # Deletes specified register
     def deleteRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.deleteRegisterFromTree(tree, aRegister)
+        if tree is not None:
+            self.deleteRegisterFromTree(tree, aRegister)
 
     # Deletes specified register and associated register choices from
     # provided tree
@@ -898,7 +903,8 @@ class RegisterFile:
     # Adds specified physical register from file
     def addPhysicalRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.addPhysicalRegisterToTree(tree, aRegister)
+        if tree is not None:
+            self.addPhysicalRegisterToTree(tree, aRegister)
 
     # Adds specified physical register to the provided tree
     def addPhysicalRegisterToTree(self, aTree, aRegister):
@@ -928,7 +934,8 @@ class RegisterFile:
     # Copies specified register from file
     def copyRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.copyRegisterToTree(tree, aRegister)
+        if tree is not None:
+            self.copyRegisterToTree(tree, aRegister)
 
     # Copies specified register into the provided tree
     def copyRegisterToTree(self, aTree, aRegister):
@@ -949,12 +956,14 @@ class RegisterFile:
     # Updates specified fields from file
     def updateFieldsFromFile(self, aFields):
         tree = self.getTreeFromLabel(aFields["target"])
-        self.updateFieldsToTree(tree, aFields)
+        if tree is not None:
+            self.updateFieldsToTree(tree, aFields)
 
     # Updates register attributes from file
     def updateRegisterAttributeFromFile(self, aAttribute):
         tree = self.getTreeFromLabel(aAttribute["target"])
-        self.updateRegisterAttributeToTree(tree, aAttribute)
+        if tree is not None:
+            self.updateRegisterAttributeToTree(tree, aAttribute)
 
     # Updates specified register attributes in the provided tree
     def updateRegisterAttributeToTree(self, aTree, aAttribute):
@@ -974,7 +983,8 @@ class RegisterFile:
     # Updates physical register attributes from file
     def updatePhysicalRegisterAttributeFromFile(self, aAttribute):
         tree = self.getTreeFromLabel(aAttribute["target"])
-        self.updatePhysicalRegisterAttributeToTree(tree, aAttribute)
+        if tree is not None:
+            self.updatePhysicalRegisterAttributeToTree(tree, aAttribute)
 
     # Updates specified physical register attributes in the provided tree
     def updatePhysicalRegisterAttributeToTree(self, aTree, aAttribute):
