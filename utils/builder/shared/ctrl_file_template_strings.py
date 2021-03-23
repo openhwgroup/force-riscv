@@ -13,21 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-#ctrl file template strings
-ctrl_items_template = 'control_items = [ '
+# ctrl file template strings
+ctrl_items_template = "control_items = [ "
 fname_template = '"fname":"{}*_force.py"'
 generator_template = ',"generator":{{{}}}'
 options_template = ',"options":{{{}}}'
 performance_template = ',"performance":{{{}}}'
 
-#option strings
+# option strings
 noiss = '"--noiss":None,'
 nosim = '"no-sim":True,'
 group = '"group":"{}",'
 options = '"--options":"\\"{}\\"",'
 
-#misc strings
-ctrl_item_separator ='\n                  '
+# misc strings
+ctrl_item_separator = "\n                  "
 
-#arch specific strings
-arch_genopts ='MMU=1,all_cacheable=1'
+# arch specific strings
+arch_genopts = "MMU=1,all_cacheable=1"
