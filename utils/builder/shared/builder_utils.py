@@ -15,19 +15,16 @@
 #
 import os.path
 import sys
-
 from shared.builder_exception import BuilderException
-
 
 def check_dir(dir_path):
     if not os.path.exists(dir_path):
-        print('Nonexistent dir path "%s".' % dir_path)
+        print("Nonexistent dir path \"%s\"." % dir_path)
         sys.exit(1)
 
     if not os.path.isdir(dir_path):
-        print('Path "%s" is not a directory.' % dir_path)
+        print("Path \"%s\" is not a directory." % dir_path)
         sys.exit(1)
-
 
 def high_bits_width_to_str(hi_bit, width):
     if width == 0:
@@ -40,8 +37,8 @@ def high_bits_width_to_str(hi_bit, width):
             print("Incorrect hi bit %d and width %d combo" % (hi_bit, width))
         return "%d-%d" % (hi_bit, hi_bit - width + 1)
 
-
 class BitValue(object):
+
     def __init__(self, hi, lo, val):
         self.high = hi
         self.low = lo
@@ -67,14 +64,12 @@ class BitValue(object):
             return True
         return False
 
-
 # Updating bits-value pair so that the bits are sorted and merged if they can,
 # example: original bits-value "30,29,28-21,15-10,31", "00110100000000001"
 #          sorted bits-value   "31-21,15-10",          "10011010000000000"
 
-
 def update_bits_value(bits, value):
-    bits_list = bits.split(",")
+    bits_list = bits.split(',')
     if len(bits_list) == 1:
         return bits, value
 
@@ -82,7 +77,7 @@ def update_bits_value(bits, value):
     bitval_list = list()
     # print("Updating bits value \"%s\", \"%s\"" % (bits, value))
     for bits_piece in bits_list:
-        range_split = bits_piece.split("-")
+        range_split = bits_piece.split('-')
         piece_sz = 1
         if len(range_split) == 1:
             bit_val = int(range_split[0])
@@ -91,14 +86,15 @@ def update_bits_value(bits, value):
             bit_hi = int(range_split[0])
             bit_lo = int(range_split[1])
             piece_sz = bit_hi - bit_lo + 1
-            new_bitval_obj = BitValue(
-                bit_hi, bit_lo, value[start_loc : (start_loc + piece_sz)]
-            )
-
+            new_bitval_obj = BitValue(bit_hi, bit_lo, value[start_loc:(start_loc + piece_sz)])
+            
         bitval_list.append(new_bitval_obj)
         start_loc += piece_sz
 
-    bitval_list.sort(key=lambda x: x.high, reverse=True)
+    bitval_list.sort(key=lambda x:x.high, reverse=True)
+    # print ("Sorted list")
+    # for bitval in bitval_list:
+    #     print (bitval.to_string())
 
     ret_bits = ""
     ret_value = ""
@@ -109,28 +105,24 @@ def update_bits_value(bits, value):
             ret_bits += cur_bitval_obj.get_bits_str() + ","
             ret_value += cur_bitval_obj.value
             cur_bitval_obj = bitval_obj
-
+    
     ret_bits += cur_bitval_obj.get_bits_str()
     ret_value += cur_bitval_obj.value
     # print ("Updated bits \"%s\", value \"%s\"" % (ret_bits, ret_value))
     if len(value) != len(ret_value):
-        print(
-            "ERROR updating bits-value pair, length before %d, after %d"
-            % (len(value), len(ret_value))
-        )
+        print ("ERROR updating bits-value pair, length before %d, after %d" % (len(value), len(ret_value)))
         sys.exit(1)
     return ret_bits, ret_value
 
-
 def update_bits(bits):
-    bits_list = bits.split(",")
+    bits_list = bits.split(',')
     if len(bits_list) == 1:
         return bits
 
     bitval_list = list()
     # print("Updating bits value \"%s\", \"%s\"" % (bits, value))
     for bits_piece in bits_list:
-        range_split = bits_piece.split("-")
+        range_split = bits_piece.split('-')
         piece_sz = 1
         if len(range_split) == 1:
             bit_val = int(range_split[0])
@@ -140,10 +132,10 @@ def update_bits(bits):
             bit_lo = int(range_split[1])
             piece_sz = bit_hi - bit_lo + 1
             new_bitval_obj = BitValue(bit_hi, bit_lo, "")
-
+            
         bitval_list.append(new_bitval_obj)
 
-    bitval_list.sort(key=lambda x: x.high, reverse=True)
+    bitval_list.sort(key=lambda x:x.high, reverse=True)
 
     ret_bits = ""
     cur_bitval_obj = bitval_list[0]
@@ -152,20 +144,16 @@ def update_bits(bits):
         if not cur_bitval_obj.merge(bitval_obj):
             ret_bits += cur_bitval_obj.get_bits_str() + ","
             cur_bitval_obj = bitval_obj
-
+    
     ret_bits += cur_bitval_obj.get_bits_str()
     return ret_bits
 
-
 def merge_imm_value(value1, value2):
-    if None is value1:
+    if None == value1:
         return value2
-
+        
     if len(value1) != len(value2):
-        raise BuilderException(
-            "Merging value but value length don't match: %d and %d."
-            % (len(value1), len(value2))
-        )
+        raise BuilderException("Merging value but value length don't match: %d and %d." % (len(value1), len(value2)))
 
     merged_value = ""
     for i in range(len(value1)):
@@ -173,15 +161,15 @@ def merge_imm_value(value1, value2):
             merged_value += value2[i]
         else:
             merged_value += value1[i]
+    # print ("Merged value1 \"%s\" and value2 \"%s\" into \"%s\"" % (value1, value2, merged_value))
     return merged_value
-
 
 def bit_string_to_list(bit_str):
     bit_list = list()
-    range_list = bit_str.split(",")
+    range_list = bit_str.split(',')
 
     for range_i in range_list:
-        range_split = range_i.split("-")
+        range_split = range_i.split('-')
         if len(range_split) == 1:
             bit_list.append(range_split[0])
         else:
@@ -189,9 +177,11 @@ def bit_string_to_list(bit_str):
             range_end = int(range_split[1])
             for bit in range(range_start, range_end - 1, -1):
                 bit_list.append(bit)
+    
+    #print ("bit_str %s splitted into:" % bit_str)
+    #print (bit_list)
 
     return bit_list
-
 
 def get_bit_or_range_string(range_start, range_end):
     if range_start == range_end:
@@ -199,7 +189,6 @@ def get_bit_or_range_string(range_start, range_end):
     else:
         range_str = "%d-%d" % (range_start, range_end)
     return range_str
-
 
 # This function assume bit_list to be already sorted in descending order
 def bit_list_to_string(bit_list):
@@ -226,16 +215,19 @@ def bit_list_to_string(bit_list):
     else:
         bit_str = range_str
 
+    #print ("Converting list:")
+    #print (bit_list)
+    #print ("to string %s" % bit_str)
+
     return bit_str
-
-
+    
 def get_bits_size(bits_str):
-    bits_list = bits_str.split(",")
+    bits_list = bits_str.split(',')
 
     bits_size = 0
     # print("Updating bits value \"%s\", \"%s\"" % (bits, value))
     for bits_piece in bits_list:
-        range_split = bits_piece.split("-")
+        range_split = bits_piece.split('-')
         piece_sz = 1
         if len(range_split) == 2:
             bit_hi = int(range_split[0])
