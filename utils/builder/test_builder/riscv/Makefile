@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+export PYTHONPATH:=$(PYTHONPATH):../../../../3rd_party/py
+
 TEST_BUILDER=./riscv_test_builder.py
 XML_INPUT_DIR=input/xml/
 INSTALL_DIR=../../../../tests/riscv/instructions/

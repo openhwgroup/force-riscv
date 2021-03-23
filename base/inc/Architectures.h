@@ -85,8 +85,6 @@ namespace Force {
     const std::vector<EMemBankType>& GetMemoryBanks() const { return mMemoryBanks; } //!< Return supported memory banks.
     virtual uint32 ElfMachineType() const { return 0; } //!< Return ELF machine type.
     virtual const std::string FindOperandShortName(const std::string& longName) const { return ""; } //!< return operand short name
-    // TODO(Noah): Determine an alternate way to construct the appropriate physical page manager
-    // instance when there is time to do so; we do not want to keep this as a public method.
     virtual PhysicalPageManager* InstantiatePhysicalPageManager(EMemBankType bankType) const { return nullptr; } //!< Instantiate a PhysicalPageManager object based on the ArchInfo type.
     virtual void SetupSimAPIs() { } //!< Setup simulator APIs.
   protected:

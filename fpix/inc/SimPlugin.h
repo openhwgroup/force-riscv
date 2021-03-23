@@ -74,7 +74,6 @@ namespace Force {
 
     virtual void onRegisterUpdate(RegUpdate *reg_update) { };    //!< on register update as a result of stepping an instruction
     virtual void onMemoryUpdate(MemUpdate *mem_update) { };      //!< "  memory                   "
-    virtual void onMmuEvent(MmuEvent *mmu_event) { };            //!< "  mmu event                   "
     virtual void onException(ExceptionUpdate *exceptions) { };   //!< on instruction that caused an exception, after step
 
     virtual void atTestEnd() { };         //!< at test ends, after last instruction was stepped

@@ -1107,7 +1107,7 @@
 >   return 0;
 > }
 > 
-> //TODO NEW DEBUG
+> //NEW DEBUG
 > int read_simulator_register(int target_id, const char* pRegName, uint8_t* pValue, int length)
 > {
 >   //Check that the pointers point to something
@@ -1543,7 +1543,7 @@
 >         break;
 >       }
 >       // Fpix API is not suited for getting 128 bit values like from the vector registers and floating point registers yet.
->       // TODO, here load the data into an appropriate buffer and then copy the first 64 bits to the user's buffer 
+>       // load the data into an appropriate buffer and then copy the first 64 bits to the user's buffer 
 >       default:
 >         status = 3; // failure
 >     }

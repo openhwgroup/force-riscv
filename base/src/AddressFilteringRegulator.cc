@@ -81,25 +81,15 @@ namespace Force {
 
   void AddressFilteringRegulator::GetVmConstraints(const GenPageRequest& rPageReq, const VmMapper& rVmMapper, std::vector<VmConstraint* >& rVmConstraints) const
   {
-    bool is_instr = false; // TODO should improve this.
-    rPageReq.GetGenBoolAttribute(EPageGenBoolAttrType::InstrAddr, is_instr); // TODO should improve this
+    bool is_instr = false;
+    rPageReq.GetGenBoolAttribute(EPageGenBoolAttrType::InstrAddr, is_instr);
 
-    // TODO would like to use EMemDataType here instead of EPageGenBoolAttrType::InstrAddr
-    //switch (rPageReq.DataType()) {
-    //case EMemDataType::Instruction:
     if (is_instr) {
       GetInstrVmConstraints(rPageReq, rVmMapper, rVmConstraints);
     }
-    //break;
-    //case EMemDataType::Data:
     else {
       GetDataVmConstraints(rPageReq, rVmMapper, rVmConstraints);
     }
-    //break;
-    //default:
-    // TODO no special code here.
-    //;
-    //}
   }
 
 }

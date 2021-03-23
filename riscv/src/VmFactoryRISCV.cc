@@ -136,7 +136,6 @@ namespace Force {
 
   void VmFactoryRISCV::GetRegisterContext(std::vector<std::string>& rRegNames, bool pagingEnabled) const
   {
-    //TODO PMP regs probably will affect context - need to evaluate when implemented
     rRegNames.push_back("mstatus");
     rRegNames.push_back("misa");
     rRegNames.push_back("privilege");
@@ -163,7 +162,6 @@ namespace Force {
 
   void VmFactoryRISCV::GetDelayedRegisterContext(std::vector<std::string>& rRegNames) const
   {
-    //TODO determine if RISCV needs any delayed register init
   }
 
   bool VmFactoryRISCV::PagingEnabled(Generator& rGen) const

@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+export PYTHONPATH:=$(PYTHONPATH):../../../../3rd_party/py
+
 INSTR_BUILDER=./instruction_builder.py
 GVIMDIFF=/usr/bin/gvimdiff
 INSTALL_DIR=../../../../riscv/arch_data/instr
@@ -29,8 +31,7 @@ make_dir:
 	@mkdir -p output
 
 .PHONY: instructions
-#instructions: g_instructions c_instructions v_instructions priv_instructions zfh_instructions
-instructions: g_instructions c_instructions priv_instructions zfh_instructions
+instructions: g_instructions c_instructions v_instructions zfh_instructions priv_instructions
 	@echo 'Building Instructions: all'
 	@$(INSTR_BUILDER)
 
@@ -40,7 +41,7 @@ g_instructions: $(INSTR_BUILDER) input/g_instructions_starter.xml input/g_instru
 	@$(INSTR_BUILDER) --g-ext
 
 .PHONY: c_instructions
-c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/c_instructions_rv64_starter.xml input/c_instructions_rv32_starter.xml
+c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/c_instructions_rv32_starter.xml input/c_instructions_rv64_starter.xml
 	@echo 'Building Instructions: c-ext'
 	@$(INSTR_BUILDER) --c-ext
 
@@ -48,6 +49,11 @@ c_instructions: $(INSTR_BUILDER) input/c_instructions_starter.xml input/c_instru
 v_instructions: $(INSTR_BUILDER) input/v_instructions_starter.xml
 	@echo 'Building Instructions: v-ext'
 	@$(INSTR_BUILDER) --v-ext
+
+.PHONY: zfh_instructions
+zfh_instructions: $(INSTR_BUILDER) input/zfh_instructions_starter.xml input/zfh_instructions_rv64_starter.xml
+	@echo 'Building Instructions: zfh-ext'
+	@$(INSTR_BUILDER) --zfh-ext
 
 .PHONY: priv_instructions
 priv_instructions: $(INSTR_BUILDER) input/priv_instructions_starter.xml
@@ -65,9 +71,11 @@ install:
 	@cp -f output/supported_g_instructions.xml $(INSTALL_DIR)/g_instructions.xml
 	@cp -f output/supported_g_instructions_rv64.xml $(INSTALL_DIR)/g_instructions_rv64.xml
 	@cp -f output/supported_c_instructions.xml $(INSTALL_DIR)/c_instructions.xml
-	@cp -f output/supported_c_instructions_rv64.xml $(INSTALL_DIR)/c_instructions_rv64.xml
 	@cp -f output/supported_c_instructions_rv32.xml $(INSTALL_DIR)/c_instructions_rv32.xml
-#	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
+	@cp -f output/supported_c_instructions_rv64.xml $(INSTALL_DIR)/c_instructions_rv64.xml
+	@cp -f output/supported_v_instructions.xml $(INSTALL_DIR)/v_instructions.xml
+	@cp -f output/supported_zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions.xml
+	@cp -f output/supported_zfh_instructions_rv64.xml $(INSTALL_DIR)/zfh_instructions_rv64.xml
 	@cp -f output/supported_priv_instructions.xml $(INSTALL_DIR)/priv_instructions.xml
 	@cp -f output/supported_zfh_instructions.xml $(INSTALL_DIR)/zfh_instructions.xml
 	@cp -f output/supported_zfh_instructions_rv64.xml $(INSTALL_DIR)/zfh_instructions_rv64.xml

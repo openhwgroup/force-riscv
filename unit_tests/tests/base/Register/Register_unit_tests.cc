@@ -274,7 +274,6 @@ CASE("BitField class") {
   EXPECT(true    == bfield_0.HasAttribute(ERegAttrType::HasValue));
   //Test Size
   EXPECT(12u     == bfield_0.Size());
-  //TODO Test GetPhysicalRegisters (should test w/ register file class)
 
   //Clone and test copy constructed values
   BitField* bfield_0_clone = dynamic_cast<BitField*>(bfield_0.Clone());
@@ -307,7 +306,6 @@ CASE("BitField class") {
   EXPECT(false   == partial);
   EXPECT(0xDED0u == bfield_0.Value());
   EXPECT(0xDEDu  == bfield_0.BitFieldValue());
-  //TODO Could add expect_fail w/ normal init once double init fail is back in
 
   delete phy_reg_0;
   delete phy_reg_1;
@@ -387,7 +385,6 @@ CASE("RegisterField class") {
   EXPECT("reg_field_0" == reg_field_0.ToString());
   //Test Size
   EXPECT(20u == reg_field_0.Size());
-  //TODO Test GetPhysicalRegisters (should test w/ register file class)
 
   //Clone and test copy constructed values
   RegisterField* reg_field_0_clone = dynamic_cast<RegisterField*>(reg_field_0.Clone());
@@ -503,7 +500,6 @@ CASE("Register class") {
   EXPECT(0xEDCBA9u == reg_0.Value());
   //Test Initial Value Accessors
   EXPECT(0x234567u == reg_0.InitialValue());
-  //TODO Test ReloadValue
   //Test RegisterType
   EXPECT(ERegisterType::GPR == reg_0.RegisterType());
   //Test Boot
@@ -513,7 +509,6 @@ CASE("Register class") {
   //Test Name and ToString (from Object)
   EXPECT("reg_0" == reg_0.Name());
   EXPECT("reg_0" == reg_0.ToString());
-  //TODO Test RegisterFields
   //Test Size
   EXPECT(64u == reg_0.Size());
   //Test RegisterFieldLookup
@@ -558,10 +553,6 @@ CASE("Register class") {
   EXPECT(true    == reg_0.HasAttribute(ERegAttrType::HasValue));
   //Test IsReadOnly (always false for base)
   EXPECT(false   == reg_0.IsReadOnly());
-  //TODO Test GetPhysicalRegisters (should test w/ register file class)
-  //TODO Test Setup (should test w/ register file class)
-  //TODO Test GetChoiceTree (should test in functional tests)
-  //TODO Test InitializeRandomly and InitializeFieldRandomly (should test in functional tests)
 
   //Test Clone and copy constructed values
   Register* reg_0_clone = dynamic_cast<Register*>(reg_0.Clone());
@@ -578,7 +569,6 @@ CASE("Register class") {
   //reg fields should be cloned, verify not pointing to original reg fields
   EXPECT(reg_field_0 != reg_0_clone->RegisterFieldLookup("reg_field_0"));
   EXPECT(reg_field_1 != reg_0_clone->RegisterFieldLookup("reg_field_1"));
-  //TODO check bitfields cloned and ptrs to phy reg updated after setup
 
   delete reg_0_clone;
   delete phy_reg_0;
@@ -663,10 +653,6 @@ CASE("RegisterFile class") {
     SECTION("Test Type (from Object)") {
       EXPECT("RegisterFile" == reg_file_0.Type());
     }
-
-    //TODO Test LoadRegisterFiles (implicitly tested by functional, should create simple unit test version)
-
-    //TODO Test Registers/PhysicalRegisters interface
 
     SECTION("Test RegisterLookup") {
       EXPECT(reg_0     == reg_file_0.RegisterLookup("reg_0"));
@@ -779,8 +765,6 @@ CASE("RegisterFile class") {
       EXPECT(reg_field_2  != reg_1_clone->RegisterFieldLookup("reg_field_2"));
       EXPECT(reg_field_3  != reg_1_clone->RegisterFieldLookup("reg_field_3"));
       EXPECT(reg_file_0.mRegIndex2Name == reg_file_0_clone->mRegIndex2Name);
-      //TODO check bitfields cloned and ptrs to phy reg updated after setup
-      //TODO wherever RW Constraints get tested, verify those vector's copy constructed vals
 
       delete reg_file_0_clone;
     }

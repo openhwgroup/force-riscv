@@ -180,8 +180,6 @@ namespace Force {
   {
   }
 
-  // TODO this need improvement
-  // * Improve performance.
   bool LoadStoreOperandStructure::AtomicOrderedAccess() const
   {
     string load_type = EMemOrderingType_to_string(mMemLoadType);

@@ -244,7 +244,7 @@ namespace Force {
         trans->AddDetail(key, value_str);
       } else if (py::isinstance<py::int_>(value_obj)) {
         //uint64 value = value_obj.cast<uint64>();
-        uint64 value = cast_py_int(value_obj); // TODO use more efficient solution.
+        uint64 value = cast_py_int(value_obj);
         trans->AddDetail(key, value);
       } else {
         LOG(fail) << "not handled key " << key << " value " << value_obj << endl;

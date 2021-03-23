@@ -247,8 +247,8 @@ namespace Force {
     mutable uint64 mOpcode;     //!< instruction Opcode
     mutable uint64 mPA;         //!< instruction physical address
     mutable uint32 mBank;       //!< instruction memory bank
-    mutable std::pair<bool, uint64> mVA;         //!< instruction virtual address, bool indicates valid VA or not
-    mutable std::pair<bool, uint64> mIPA;        //!< instruction IPA, bool indicates valid IPA or not (TODO implement with stage 2)
+    mutable std::pair<bool, uint64> mVA;         //!< virtual address, bool indicates valid VA or not
+    mutable std::pair<bool, uint64> mIPA;        //!< intermediate physical address, bool indicates valid IPA or not
     mutable std::pair<bool, uint64> mLSTarget;   //!< load store instruction target pair. The first element shows the target is valid or not.
     mutable std::pair<bool, uint64> mBRTarget;   //!< branch instruction target pair. The first element shows the target is valid or not
     mutable std::string mGroup;      //!< instruction group name

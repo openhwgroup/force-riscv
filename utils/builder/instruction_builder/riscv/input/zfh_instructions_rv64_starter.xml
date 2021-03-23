@@ -14,9 +14,6 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  -->
-<!--
-Add RISCV main instruction starter information in this file.
--->
 <instruction_file>
   <I name="FCVT.H.L" isa="RISCV" group="General" extension="RV64F">
     <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101010000101010011"/>

@@ -68,13 +68,13 @@ namespace Force
       LOG(trace) << "{AddressPteAttributeRISCV::Generate} error_val=0x" << hex << error_val
                  << " phys_lower=0x" << rPte.PhysicalLower() << " mask=0x" << mpStructure->Mask()
                  << " lsb=0x" << mpStructure->Lsb() << endl;
-      mValue = ((error_val | rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically*/
+      mValue = ((error_val | rPte.PhysicalLower()) >> (mpStructure->Lsb() + 2)) & mpStructure->Mask();
     }
     else
     {
       LOG(trace) << "{AddressPteAttributeRISCV::Generate} phys_lower=0x" << hex << rPte.PhysicalLower()
                  << " mask=0x" << mpStructure->Mask() << " lsb=0x" << mpStructure->Lsb() << endl;
-      mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask(); //TODO get hardcoded shift programatically
+      mValue = (rPte.PhysicalLower() >> (mpStructure->Lsb() + 2)) & mpStructure->Mask();
     }
   }
 
@@ -166,7 +166,6 @@ namespace Force
     return get_exception_type_from_access_type(rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr), rPagingReq.MemoryAccessType());
   }
 
-  //TODO can maybe make this more generic, impl is similar (1 choice to eval) for most bits
   bool UPteAttributeRISCV::EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const
   {
     uint32 level = rPte.ParentTableLevel();
@@ -237,7 +236,6 @@ namespace Force
 
   void UPteAttributeRISCV::SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const
   {
-    //TODO determine if any necessary pte attrs need to be set by U
   }
 
   EPagingExceptionType XPteAttributeRISCV::GetExceptionType(const GenPageRequest& rPagingReq) const
@@ -316,7 +314,6 @@ namespace Force
 
   bool WRPteAttributeRISCV::EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const
   {
-    //TODO evaluate if val constraint passing is needed for llptr support
     //if (ll_ptr_fault != 0) mValue = 0;
 
     uint32 level = rPte.ParentTableLevel();
@@ -372,11 +369,6 @@ namespace Force
         break;
     }
 
-    // TODO(Noah): Implement a better solution for this issue when one can be devised. The problem
-    // is that if the X, W and R bits are all 0, it indicates a non-leaf page table entry. We want
-    // to avoid unintentionally generating such entries when are are attempting to set the
-    // attributes of a leaf page table entry to trigger a fault. We can allow X, W and R to be 0 at
-    // Level 0 because the page table walk will not attempt to progress to a level beyond Level 0.
     bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
     if (is_instr && (pteLevel > 0))
     {

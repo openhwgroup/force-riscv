@@ -179,7 +179,6 @@ namespace Force {
     mEntries[pte_index] = pPte;
 
     // write descriptor to memory.
-    //TODO clean up pteshift
     uint64 descr_addr = TableBase() + (pte_index << pVmas->GetControlBlock()->PteShift());
     uint64 descr_value = pPte->Descriptor();
     LOG(notice) << "Writing descriptor 0x" << hex << descr_value << " to address [" << uint32(mMemoryBank) << "]0x" << descr_addr << " size " << dec << pPte->DescriptorSize() << " " << pPte->DescriptorDetails() << endl;

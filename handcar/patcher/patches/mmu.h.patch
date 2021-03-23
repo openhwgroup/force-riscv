@@ -60,7 +60,7 @@
 >     void update_exception_event(const SimException* exception);
 > }
 > 
-> // virtual memory configuration TODO is this valid for all VM modes or is this some hardcoded / macro written cruft?
+> // virtual memory configuration
 72a116,127
 >   inline reg_t misaligned_load_partially_initialized(reg_t addr, size_t size)
 >   {
@@ -333,7 +333,7 @@
 <     return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 <   }
 ---
->   //TODO see where even called and possibly remove
+>   //possibly remove
 >   //inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
 >   //  return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 >   //}

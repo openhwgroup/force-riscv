@@ -287,7 +287,6 @@ namespace Force {
       PeStateUpdate* pe_state = new PeStateUpdate();
       if (not gen.HasISS()) {
         pe_state->UpdateState("PrivilegeLevel", "Set", (uint64)(ret_constr->TargetPrivilege()));
-        //TODO Replace with virtual register for privilege level to trigger update VM.
         pe_state->UpdateRegisterField(ret_constr->StatusName(), ret_constr->PpName(), (uint64)(ret_constr->TargetPrivilege()));
       }
       auto reload_registers = ret_constr->ReloadRegisters();

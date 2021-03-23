@@ -58,13 +58,11 @@ int simulate(SimAPI* pSimAPI, ConfigFPIX *cfg, vector<string> *test_files) {
 
   int rcode = 0; // any non-zero value will represent an error...
 
-  bool all_stop = false; // set to true once all threads reach end-test
-
   while( processing_events && !rcode ) {
 
     bool more_to_do = false; // will be true if at least one sim-thread has more work to do...
 
-    all_stop = true;
+    bool all_stop = true;
     for (auto st = sim_threads.begin(); st != sim_threads.end() && !rcode; st++) {
       all_stop &= (*st)->EndTestReached();  // can only be true if all threads have hit end-test
     }

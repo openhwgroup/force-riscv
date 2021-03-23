@@ -199,7 +199,6 @@ namespace Force {
 
   void ImmediatePartialOperand::Generate(Generator& gen, Instruction& instr)
   {
-    // TODO investigate why test fail when using base class Generate method.
     if (mpOperandConstraint->HasConstraint()) {
       auto opr_constr = mpOperandConstraint->GetConstraint();
       mValue = (uint32)(opr_constr->ChooseValue());
@@ -662,11 +661,6 @@ namespace Force {
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
     bool no_restrict = instr.NoRestriction();
     if (no_restrict or IsIllegal(instr)) {
-      // TODO(Noah): Implement a choices mechanism that allows for skipping illegal instruction
-      // generation altogether when there is time to do so.
-      // If no restriction is set, then the front end should have set up the details, and there is
-      // no need to generate an address solution. There is also no need to generate an address
-      // solution if all possible results are known to be illegal.
       addr_constr->SetUsePreamble(false, gen);
       BaseGenerate(gen, instr, no_restrict);
       return;
@@ -852,7 +846,7 @@ namespace Force {
   bool RegisterBranchOperand::MustGeneratePreamble(const Generator& rGen) const
   {
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
-    if (not rGen.HasISS() /* TODO temporary */ or addr_constr->UsePreamble()) {
+    if (not rGen.HasISS() or addr_constr->UsePreamble()) {
       return true;
     }
 
@@ -1418,7 +1412,7 @@ namespace Force {
   bool BaseIndexLoadStoreOperand::MustGeneratePreamble(const Generator& rGen) const
   {
     auto addr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
-    if (not rGen.HasISS() /* TODO temporary */ or addr_constr->UsePreamble()) {
+    if (not rGen.HasISS() or addr_constr->UsePreamble()) {
       return true;
     }
 
@@ -1495,8 +1489,6 @@ namespace Force {
   {
     GroupOperand::Generate(gen, instr);
 
-    // TODO(Noah): Implement solving for the case when the base and index registers are the same
-    // register when a solution for this case can be devised.
     DifferStrideOperand(gen, instr);
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
@@ -1555,13 +1547,6 @@ namespace Force {
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
 
-    // TODO(Noah): Implement a more robust solution method when one can be devised. The difficulty
-    // is finding a pattern of equidistant compliant address ranges. We have the facility to find
-    // one compliant address range, but then we have to find a series of address ranges that are
-    // stride length apart that also comply with the relevant constraints. A brute force approach to
-    // this would likely be very costly. The suboptimal solution constrains all of the addressses to
-    // be in one large block. This is relatively reliable, but limits the possible stride values
-    // that can be used.
     bool solved = false;
     try {
       uint64 addr_block_size = initAddrBlockSize;
@@ -1849,7 +1834,6 @@ namespace Force {
       }
     }
     mChoiceText = Name();
-    // TODO, also set value to register index.
   }
 
   OperandConstraint* ImpliedRegisterOperand::InstantiateOperandConstraint() const

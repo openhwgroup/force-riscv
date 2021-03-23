@@ -2,15 +2,15 @@
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
- FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+ FORCE-RISCV is licensed under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
- THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
- FIT FOR A PARTICULAR PURPOSE.
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+ OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
@@ -20,14 +20,14 @@
     <O name="simm12" type="Immediate" bits="31-20" class="SignedImmediateOperand"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="ADDIW %s, %s, %s" op1="simm12" op2="rs1" op3="rd"/>
+    <asm format="ADDIW %s, %s, %s" op1="rd" op2="rs1" op3="simm12"/>
   </I>
   <I name="ADDW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000000000111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="ADDW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="ADDW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="AMOADD.D" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64A">
     <O name="const_bits" type="Constant" bits="31-27,14-12,6-0" value="000000110101111"/>
@@ -133,14 +133,14 @@
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="DIVUW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="DIVUW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="DIVW" isa="RISCV" group="General" extension="RV64M">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000011000111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="DIVW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="DIVW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="FCVT.D.L" isa="RISCV" group="Float" extension="RV64D">
     <O name="const_bits" type="Constant" bits="31-25,24-20,6-0" value="1101001000101010011"/>
@@ -217,7 +217,7 @@
       <O name="rs1" type="GPR" bits="19-15" access="Read" choices="Nonzero GPRs"/>
       <O name="simm12" type="Immediate" bits="31-20" class="SignedImmediateOperand"/>
     </O>
-    <asm format="LD %s, %s, %s" op1="simm12" op2="rs1" op3="rd"/>
+    <asm format="LD %s, %s, %s" op1="rd" op2="rs1" op3="simm12"/>
   </I>
   <I name="LR.D" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64A">
     <O name="const_bits" type="Constant" bits="31-27,24-20,14-12,6-0" value="00010000000110101111"/>
@@ -236,28 +236,28 @@
       <O name="rs1" type="GPR" bits="19-15" access="Read" choices="Nonzero GPRs"/>
       <O name="simm12" type="Immediate" bits="31-20" class="SignedImmediateOperand"/>
     </O>
-    <asm format="LWU %s, %s, %s" op1="simm12" op2="rs1" op3="rd"/>
+    <asm format="LWU %s, %s, %s" op1="rd" op2="rs1" op3="simm12"/>
   </I>
   <I name="MULW" isa="RISCV" group="General" extension="RV64M">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000010000111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="MULW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="MULW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="REMUW" isa="RISCV" group="General" extension="RV64M">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000011110111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="REMUW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="REMUW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="REMW" isa="RISCV" group="General" extension="RV64M">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000011100111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="REMW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="REMW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="SC.D" isa="RISCV" class="UnpredictStoreInstruction" group="General" extension="RV64A">
     <O name="const_bits" type="Constant" bits="31-27,14-12,6-0" value="000110110101111"/>
@@ -277,76 +277,76 @@
       <O name="rs1" type="GPR" bits="19-15" access="Read" choices="Nonzero GPRs"/>
       <O name="simm12" type="Immediate" bits="31-25,11-7" class="SignedImmediateOperand"/>
     </O>
-    <asm format="SD %s, %s, %s" op1="simm12" op2="rs2" op3="rs1"/>
+    <asm format="SD %s, %s, %s" op1="rs2" op2="rs1" op3="simm12"/>
   </I>
   <I name="SLLI" form="RV64I" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000000010010011"/>
     <O name="shamt" type="Immediate" bits="25-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SLLI %s, %s, %s" op1="shamt" op2="rs1" op3="rd"/>
+    <asm format="SLLI %s, %s, %s" op1="rd" op2="rs1" op3="shamt"/>
   </I>
   <I name="SLLIW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000000010011011"/>
     <O name="shamt" type="Immediate" bits="24-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SLLIW %s, %s, %s" op1="shamt" op2="rs1" op3="rd"/>
+    <asm format="SLLIW %s, %s, %s" op1="rd" op2="rs1" op3="shamt"/>
   </I>
   <I name="SLLW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000000010111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SLLW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="SLLW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="SRAI" form="RV64I" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100001010010011"/>
     <O name="shamt" type="Immediate" bits="25-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SRAI %s, %s, %s" op1="shamt" op2="rs1" op3="rd"/>
+    <asm format="SRAI %s, %s, %s" op1="rd" op2="rs1" op3="shamt"/>
   </I>
   <I name="SRAIW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000001010011011"/>
     <O name="shamt" type="Immediate" bits="24-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SRAIW %s, %s, %s" op1="shamt" op2="rs1" op3="rd"/>
+    <asm format="SRAIW %s, %s, %s" op1="rd" op2="rs1" op3="shamt"/>
   </I>
   <I name="SRAW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000001010111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SRAW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="SRAW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="SRLI" form="RV64I" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000001010010011"/>
     <O name="shamt" type="Immediate" bits="25-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SRLI %s, %s, %s" op1="shamt" op2="rs1" op3="rd"/>
+    <asm format="SRLI %s, %s, %s" op1="rd" op2="rs1" op3="shamt"/>
   </I>
   <I name="SRLIW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000001010011011"/>
     <O name="shamt" type="Immediate" bits="24-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SRLIW %s, %s, %s" op1="shamt" op2="rs1" op3="rd"/>
+    <asm format="SRLIW %s, %s, %s" op1="rd" op2="rs1" op3="shamt"/>
   </I>
   <I name="SRLW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="00000001010111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SRLW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="SRLW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
   <I name="SUBW" isa="RISCV" group="General" extension="RV64I">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="01000000000111011"/>
     <O name="rs2" type="GPR" bits="24-20" access="Read" choices="GPRs"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="SUBW %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
+    <asm format="SUBW %s, %s, %s" op1="rd" op2="rs1" op3="rs2"/>
   </I>
 </instruction_file>

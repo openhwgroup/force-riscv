@@ -791,7 +791,6 @@ namespace Force {
 
     switch (req_type) {
     case EVmRequestType::GenPA:
-      // TODO
       return new GenPaRequest();
       break;
     case EVmRequestType::GenVA:
@@ -1648,7 +1647,7 @@ namespace Force {
     }
 
     if (mPageSizes.size()) {
-      out_str << ", Page sizes"; // TODO
+      out_str << ", Page sizes";
     }
 
     for (auto pte_attr_pair : mPteAttributes) {

@@ -983,7 +983,7 @@ namespace Force {
 
   uint64 ConstraintSet::ChooseValue() const
   {
-    uint64 total_size = CalculateSize(); // mSize; TODO make it possible to avoid calculating all weights every time
+    uint64 total_size = CalculateSize();
 
     // Use IsEmpty() here rather than comparing the size to 0. There's a corner case in which the ConstraintSet
     // encompasses all possible 64-bit values; such a ConstraintSet will have a size of 0 even though it is not empty.
@@ -996,7 +996,7 @@ namespace Force {
     uint64 picked_value = Random::Instance()->Random64(0, total_size - 1);
     uint64 half_size = total_size >> 1;
     if (picked_value > half_size) {
-      return ChosenValueFromBack(picked_value, total_size); // TODO, just use mSize without passing in repeatedly calculated size.
+      return ChosenValueFromBack(picked_value, total_size);
     } else {
       return ChosenValueFromFront(picked_value);
     }
@@ -2060,9 +2060,6 @@ namespace Force {
 
         // If the range partially overflowed, we need to split it
         if (new_upper_bound < new_lower_bound) {
-          // TODO(Noah): Insert check that fails if a prior constraint has been split, as this should not be possible,
-          // before submitting these changes.
-
           range_constr->SetLowerBound(0);
           split_constr_upper = new RangeConstraint(new_lower_bound, MAX_UINT64);
         }
@@ -2074,8 +2071,6 @@ namespace Force {
       mConstraints.push_back(split_constr_upper);
     }
 
-    // TODO(Noah): Evaluate the performance of keeping track of the new minimum constraint and using the vector rotate()
-    // method instead of sort() when there is time to do so.
     sort(mConstraints.begin(), mConstraints.end(), &compare_constraints);
   }
 
@@ -2326,7 +2321,6 @@ namespace Force {
     }
   }
 
-  // TODO These contains methods need some optimizations.
   bool ConstraintSet::ContainsValue(uint64 value) const
   {
     if (IsEmpty()) return false;

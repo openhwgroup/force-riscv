@@ -121,7 +121,6 @@ namespace Force {
   void ImmediatePartialOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
     ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
-    //TODO check if mAllowReserved should be set
   }
 
   /*!

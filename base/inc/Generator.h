@@ -145,7 +145,7 @@ namespace Force {
     virtual GenPageRequest* GenPageRequestRegulated(const VmMapper *pVmMapper, bool isInstr=true, EMemAccessType memAccessType=EMemAccessType::Unknown) const; //!M Retuan a regulated GenPageRequest instance.
     virtual void SetPrivilegeLevel(uint32 priv) { } //!< Set exception level.
     virtual uint32 PrivilegeLevel() const { return 0; } //!< Return exception level.
-    virtual ConditionFlags GetConditionFlags() const = 0; //!< Return current condition flag values.  TODO need to go arch specific.
+    virtual ConditionFlags GetConditionFlags() const = 0; //!< Return current condition flag values.
     virtual std::string GetGPRName(uint32 index) const = 0; //!< Return gpr name from index value.
     virtual std::string GetGPRExcludes() const = 0; //!< Return gpr exclude indices in string format.
     virtual void SetupInstructionGroup(EInstructionGroupType iGrpType) { } //!< Setup for instruction group.

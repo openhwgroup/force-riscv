@@ -63,8 +63,6 @@ namespace Force {
     std::vector<std::string> status_param_names; //mstatus, sstatus, ustatus
     std::vector<std::string> atp_param_names;    //satp, hgatp, vsatp
 
-    //TODO refine context parameters
-
     switch (mPrivilegeLevel)
     {
       case EPrivilegeLevelType::M:
@@ -127,7 +125,6 @@ namespace Force {
 
   bool VmasControlBlockRISCV::GetBigEndian() const
   {
-    //TODO define behavior when spike updated to support M/S/UBE - endianness bit only applies to data accesses
     /*switch (mPrivilegeLevel)
     {
       case EPrivilegeLevelType::M:
@@ -173,8 +170,6 @@ namespace Force {
 
   uint64 VmasControlBlockRISCV::GetMaxPhysicalAddress() const
   {
-    //TODO switch off mode - max PA is technically 56 for sv39/sv48 and 34 for sv32
-
     /*Uses all bits of PTE to store PPN[x] values - this causes some odd PA sizes after xlate
       since PPN fields in PTE start at 10, but the page offset is 12 we have extra bits in PTE
       allowing for first PPN to have more than the tablestep worth of bits.*/
@@ -191,7 +186,6 @@ namespace Force {
 
   uint32 VmasControlBlockRISCV::HighestVaBitCurrent(uint32 rangeNum) const
   {
-    //TODO switch off mode bit - Sv32/39/48 have 31/38/47 for max va bits
     return SV32() ? 31 : 47;
   }
 
@@ -219,8 +213,6 @@ namespace Force {
     mpRootPageTable = RootPageTableInstance();
     if (nullptr == pRootTable)
     {
-      //TODO make setup root table not fail if new alloc fails, since we have option to alias. return alloc success
-      //TODO also need setup to be able to force non-alias case and make address space usable
       SetupRootPageTable(mpRootPageTable, pVmas, mGranuleType, mPteIdentifierSuffix, AtpRegisterName());
     }
     else

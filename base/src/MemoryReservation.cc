@@ -57,7 +57,6 @@ namespace Force {
       ConstraintSet* new_constr = new ConstraintSet(range);
       mInitialConstraints[int(memBank)] = new_constr;
     } else {
-      // TODO to implement.
       LOG(fail) << "{MemoryReservation::AddConstraint} adding constraint string to existing constraint set not yet supported." << endl;
       FAIL("add-constraint-operation-not-supported");
     }
@@ -65,7 +64,6 @@ namespace Force {
 
   void MemoryReservation::AddVirtualConstraint(const std::string& range, const VmMapper* pVmMapper)
   {
-    // TODO to implement.
     LOG(fail) << "{MemoryReservation::AddVirtualConstraint} method not yet implemented." << endl;
     FAIL("method-not-yet-implemented");
   }
@@ -91,7 +89,6 @@ namespace Force {
 
   void MemoryReservation::AddVirtualRange(uint64 start, uint64 size, const VmMapper* pVmMapper)
   {
-    // TODO not a complete solution, need to consider case when the VA ranges is translated into non-continuous physical ranges,
     uint64 pa = 0;
     uint32 bank = 0;
     auto trans_result = pVmMapper->TranslateVaToPa(start, pa, bank);

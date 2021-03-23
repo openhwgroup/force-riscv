@@ -484,7 +484,6 @@ namespace Force {
     std::string mName;                            //!< Name.
     InitPolicyTuple* mpInitPolicyInfo;            //!< Pointer to initialization policy info.
     std::vector<RegisterField *> mRegisterFields; //!< Vector of RegisterFields.
-    // TODO may change from vector to dictionary to increase search performance.
 
     friend class RegisterParser;
     friend class RegisterFile;
@@ -601,7 +600,7 @@ namespace Force {
     //\section overrides
     const char* Type() const override { return "BankedRegister"; }   //!< Object Type override
     Object * Clone() const override = 0; //!< Return cloned BankedRegister object.
-    void Setup(const RegisterFile* registerFile) override;           //!< Setup banked register object - TODO should be pure virtual
+    void Setup(const RegisterFile* registerFile) override;           //!< Setup banked register object
     void HandleNotification(const NotificationSender* sender, ENotificationType eventType, Object* pPayload) override; //!< Receive Notification override
 
     //\section banked register functions

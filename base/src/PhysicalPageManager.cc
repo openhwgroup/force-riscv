@@ -251,7 +251,6 @@ namespace Force
       }
       else
       {
-        //TODO - should only ever go from true to false, if we want support to mark page as aliasable again needs more work
         if (!is_flat_map)
         {
           if (!(*range_pair.first)->CanAlias())
@@ -340,7 +339,6 @@ namespace Force
     std::vector<EMemoryAttributeType> mem_constr_types;
     std::vector<EMemoryAttributeType> incompatible_mem_constr_types;
 
-    //TODO figure out what attributes should be looked at if none are inside pagereq impl or target
     if (use_target_alias_attrs)
     {
       ConvertMemoryAttributes(target_alias_attrs, mem_constr_types);
@@ -396,8 +394,6 @@ namespace Force
     return true;
   }
 
-  //TODO verify functionality and attribute comparison assumptions inside this code
-  //TODO make more generic to support matching of a different amount of compatible attributes
   bool PhysicalPageManager::MemAttrCompatibility(const ConstraintSet* pAllocAttrs, const ConstraintSet* pAliasAttrs)
   {
     if (pAllocAttrs == nullptr)
@@ -421,7 +417,6 @@ namespace Force
     //  1) compare attributes in each set against each other, make sure they are valid. I.E. size of each vector should be 1 w/ current implementation
     //    if alloc_constr_types are invalid, should fail as this would be invalid use case of the attrs in the page req.
     //    if alias_constr_types are invalid, could have been forced earlier in the case so just return false indicating we can't alias to that location.
-    //    TODO: if a page was aliased with incompatible attributes, should we allow other pages to alias to it if the alloc pages attributes match at least 1 of the alias pages mixed attributes?
     //
     //  2) compare attributes between the two vectors to make sure they match. currently can do a 1 to 1 check if failing on size > 1
 
@@ -500,7 +495,6 @@ namespace Force
     }
     phys_page->AddPage(pPage);
 
-    //TODO offload to physical mem module
     std::unique_ptr<ConstraintSet> page_mem_attrs_storage(phys_page->GetMemoryAttributes());
 
     if (!page_mem_attrs_storage.get()->IsEmpty())
@@ -583,7 +577,6 @@ namespace Force
     return (*find_iter.first);
   }
 
-  //TODO optimize by creating vector of phys page sorted on page id to binary search
   PhysicalPage* PhysicalPageManager::FindPhysicalPage(uint64 physId) const
   {
     PhysicalPage* phys_page = nullptr;

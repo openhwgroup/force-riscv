@@ -315,8 +315,6 @@ namespace Force {
 
   bool DivSolutionStrategy::Solve(OperandSolutionMap* pOprSolutions, uint64& rTargetAddress, const AddressTagging* pAddrTagging) const
   {
-    // TODO(Noah): Implement solving for the repeated register case when there is time to do so. The target address
-    // should always be 0x1 in this case, so it's largely a matter of checking that 0x1 is a valid target address.
     if (HasRepeatedRegisters(*pOprSolutions)) {
       return false;
     }
@@ -326,9 +324,6 @@ namespace Force {
     OperandSolution* divisor_opr_solution = GetOperandSolution("divisor", pOprSolutions);
     const ConstraintSet* divisor_constr = divisor_opr_solution->GetConstraint();
 
-    // TODO(Noah): Improve solving for the cases when dividend and/or divisor constraints are flexible when there is
-    // time to do so. It would only apply when the relevant registers have not yet been initialized, but it would yield
-    // much better results.
     uint64 dividend = dividend_constr->ChooseValue();
     uint64 divisor = divisor_constr->ChooseValue();
 
@@ -606,7 +601,6 @@ namespace Force {
 
   bool MulSolutionStrategy::Solve(OperandSolutionMap* pOprSolutions, uint64& rTargetAddress, const AddressTagging* pAddrTagging) const
   {
-    // TODO(Noah): Implement solving for the repeated register case when there is time to do so.
     if (HasRepeatedRegisters(*pOprSolutions)) {
       return false;
     }

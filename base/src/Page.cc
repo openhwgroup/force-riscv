@@ -103,7 +103,6 @@ namespace Force {
   {
     PteAttribute* pte_attr = nullptr;
 
-    //TODO make the PteAttribute vector ordered by EPteAttributeType key and do binary search.
     auto itr = find_if(mAttributes.cbegin(), mAttributes.cend(),
       [attrType](const PteAttribute* pPteAttr) { return (pPteAttr->PteAttributeType() == attrType); });
 
