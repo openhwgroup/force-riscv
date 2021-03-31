@@ -23,6 +23,10 @@ from common.cmdline_utils import CmdLineOpts
 from common.msg_utils import Msg
 from master_init import Defaults
 
+# Importing applications is necessary for the importlib call below to succeed
+# in Python 3.4
+import applications
+
 
 #  Manage applications that make up the master run workflow.
 #
