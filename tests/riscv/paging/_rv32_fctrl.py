@@ -62,5 +62,5 @@ control_items = [
   { "fname":"page_fault_on_branch_force.py",     
     "options": {'max-instr': 10000}, 
     "generator":{"--options":"\"PrivilegeLevel=1,DelegateExceptions=0,FlatMap=1,handlers_set=Fast\"",}},
-  { "fname":"page_fault_rv64_fctrl.py",  }
+  { "fname":"page_fault_rv32_fctrl.py",  }
       ]
