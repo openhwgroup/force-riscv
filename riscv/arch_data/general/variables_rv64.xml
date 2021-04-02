@@ -28,8 +28,8 @@
   <variable name="Enable register reloading" value="1" type="Value"/>
   <variable name="Reloading registers number" value="20-15" type="String"/>
   <variable name="Address table memory size" value="0x1000" type="Value"/>
-  <variable name="Default page table physical memory range" value="0x0-0x800000000000" type="String" /> <!-- TODO mirroring va req, need to verify -->
-  <variable name="Page tables number per block allocating" value="0x200" type="Value" /> <!-- TODO make sure this works with Sv* reqs -->
+  <variable name="Default page table physical memory range" value="0x0-0x800000000000" type="String" />
+  <variable name="Page tables number per block allocating" value="0x200" type="Value" />
   <variable name="No data page fault allowed" value="0" type="Value"/>
   <variable name="No instruction page fault allowed" value="0" type="Value"/>
   <variable name="Semaphore Physical Address Range" value="0x0-0xffffffffff" type="String" />

@@ -37,7 +37,6 @@
 #include <AddressTableManager.h>
 #include <Choices.h>
 #include <ChoicesModerator.h>
-//#include <ExceptionContextRISCV.h> TODO implement
 #include <Log.h>
 
 #include <memory>
@@ -464,12 +463,6 @@ namespace Force {
 
     ExceptionManager::Instance()->AddHandlerBounds(EMemBankTypeBaseType(EMemBankType::Default), boundaries_list);
   }
-
-  //TODO implement riscv exc context
-  /*ExceptionContext* GenExceptionAgentRISCV::ExceptionContextInstance(EExceptionClassType exceptClass) const
-  {
-    return new ExceptionContextRISCV(mpGenerator, exceptClass);
-  }*/
 
   EExceptionVectorType GenExceptionAgentRISCV::GetExceptionVectorType(const string& vecStr) const
   {

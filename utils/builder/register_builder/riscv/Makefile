@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+export PYTHONPATH:=$(PYTHONPATH):../../../../3rd_party/py
+
 REGISTER_BUILDER=./register_builder.py
 CSR_TREES_BUILDER=./csr_trees_builder.py
 

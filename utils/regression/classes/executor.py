@@ -1,15 +1,15 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
+# FORCE-RISCV is licensed under the Apache License, Version 2.0
+#  (the "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
 #
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+# OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
@@ -25,90 +25,104 @@ from common.errors import AbstractionError
 class ProcessResult:
     # exec process results
     process_retcode = 0
-    process_stdout  = 1
-    process_stderr  = 2
-    process_start   = 3
-    process_end     = 4
+    process_stdout = 1
+    process_stderr = 2
+    process_start = 3
+    process_end = 4
 
 
 # Executor abstract class
-class Executor( object ):
-
-    def __init__( self ):
+class Executor(object):
+    def __init__(self):
         self.ctrl_item = None
         self.frun = None
         self.task_file = None
         self.task_name = None
 
-    def load( self, arg_ctrl_item ):
-        # Msg.user( str(arg_ctrl_item ))
-        # Msg.trace( "Executor::load()" )
+    def load(self, arg_ctrl_item):
         self.ctrl_item = arg_ctrl_item
         return self.ctrl_item is not None
 
     def skip(self):
         return False
 
-    def set_frun( self, arg_frun ):
+    def set_frun(self, arg_frun):
         self.frun = arg_frun
 
-    def set_task_file( self, arg_task_file ):
+    def set_task_file(self, arg_task_file):
         self.task_file = arg_task_file
 
-    def set_task_name( self, arg_task_name ):
+    def set_task_name(self, arg_task_name):
         self.task_name = arg_task_name
 
-    def execute( self ):
+    def execute(self):
         Msg.error_trace()
-        raise AbstractionError( "Abstract Method Error: Executor::execute() not implemented in descendent [%s]" % ( str( type( self ))))
+        raise AbstractionError(
+            "Abstract Method Error: Executor::execute() not implemented "
+            "in descendent [%s]" % (str(type(self)))
+        )
 
-    def extract_results( self, arg_result, arg_log, arg_elog ):
+    def extract_results(self, arg_result, arg_log, arg_elog):
         Msg.error_trace()
-        raise AbstractionError( "Abstract Method Error: Executor::extract_results(...) not implemented in descendent [%s]" % ( str( type( self ))))
+        raise AbstractionError(
+            "Abstract Method Error: Executor::extract_results(...) not "
+            "implemented in descendent [%s]" % (str(type(self)))
+        )
 
-    def open_log_file( self, pFileName, pOpenMode ):
-        return open( pFileName, pOpenMode )
-    
-    def query_logs( self, arg_log, arg_elog ):
+    def open_log_file(self, pFileName, pOpenMode):
+        return open(pFileName, pOpenMode)
+
+    def query_logs(self, arg_log, arg_elog):
 
         my_errors = None
 
-        with self.open_log_file( arg_log, "r" ) as my_hfile:
-            Msg.dbg( "File Open: %s" % arg_log)
+        with self.open_log_file(arg_log, "r") as my_hfile:
+            Msg.dbg("File Open: %s" % arg_log)
             try:
-                my_results = self.query_result_log( my_hfile )
+                my_results = self.query_result_log(my_hfile)
             except Exception as arg_ex:
-                # NOTE: Determine the possible errors and handle accordingly, for now just keep processing
+                # NOTE: Determine the possible errors and handle accordingly,
+                # for now just keep processing
                 Msg.error_trace()
-                Msg.err( str( arg_ex ))
+                Msg.err(str(arg_ex))
                 raise
             finally:
                 my_hfile.close()
 
         if arg_elog is not None:
-            with self.open_log_file( arg_elog, "r" ) as my_hfile:
-                Msg.dbg( "File Open: %s" % arg_elog)
+            with self.open_log_file(arg_elog, "r") as my_hfile:
+                Msg.dbg("File Open: %s" % arg_elog)
                 try:
-                    my_errors = self.query_errors( my_hfile )
+                    my_errors = self.query_errors(my_hfile)
 
                 except Exception as arg_ex:
-                    # NOTE: Determine the possible errors and handle accordingly, for now just keep processing
+                    # NOTE: Determine the possible errors and handle
+                    # accordingly, for now just keep processing
                     Msg.error_trace()
-                    Msg.err( str( arg_ex ))
+                    Msg.err(str(arg_ex))
                     raise
                 finally:
                     my_hfile.close()
 
         return my_results, my_errors
 
-    def query_result_log( self, arg_hfile ):
+    def query_result_log(self, arg_hfile):
         Msg.error_trace()
-        raise AbstractionError( "Abstract Method Error: Executor::query_result_log() not implemented in descendent [%s]" % ( str( type( self ))))
+        raise AbstractionError(
+            "Abstract Method Error: Executor::query_result_log() not "
+            "implemented in descendent [%s]" % (str(type(self)))
+        )
 
-    def query_errors( self, arg_hfile, arg_results ):
+    def query_errors(self, arg_hfile, arg_results):
         Msg.error_trace()
-        raise AbstractionError( "Abstract Method Error: Executor::query_errors() not implemented in descendent [%s]" % ( str( type( self ))))
+        raise AbstractionError(
+            "Abstract Method Error: Executor::query_errors() not "
+            "implemented in descendent [%s]" % (str(type(self)))
+        )
 
-    def factory( self, arg_ctrl_item ):
+    def factory(self, arg_ctrl_item):
         Msg.error_trace()
-        raise NotImplementedError( "{{{TODO}}}: Implement a factory method to create one or more executors, Executor::factory() ..." )
+        raise NotImplementedError(
+            "Not Implemented Error: Implement a factory method to"
+            "create one or more executors, Executor::factory() ..."
+        )

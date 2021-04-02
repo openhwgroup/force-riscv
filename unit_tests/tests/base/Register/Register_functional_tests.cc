@@ -19,9 +19,7 @@
 #include <memory>               //unique_ptr used for choice tree interaction
 #include <string.h>
 
-//TODO - use constant or count # regs programatically. or just remove
 #define TOTAL_REGISTER_NUMBER 20
-//TODO - use constant or count # regs programatically. or just remove
 #define TOTAL_PHYSICAL_REGISTER_NUMBER 21
 
 #define private public
@@ -163,7 +161,6 @@ CASE("RegisterFile class - RISCV regs")
   EXPECT( 1 == (int)phys4->SubIndexValue() );
   EXPECT( 0 == string(phys4->Type()).compare("PhysicalRegister") );
 
-  //TODO - change test to non x0 reset val register (x0 reset is different)
   const PhysicalRegister* phys5 = test_register_file->PhysicalRegisterLookup("x0");
   EXPECT( 64 == (int)phys5->Size() );
   EXPECT( ERegisterType::GPR == phys5->RegisterType() );
@@ -304,8 +301,6 @@ CASE("RegisterFile class - RISCV regs")
   BitField* bit_copy = *bits_copy.rbegin();
   EXPECT( 64 == (int)bit_copy->Size() );
 
-  // TODO - evaluate if this is valid idea to test -> Test RegisterFields with shift > 0
-
   // Register fcsr has field RES0
   const Register* reg_fcsr = copy->RegisterLookup("fcsr");
   RegisterField* res0_fcsr = reg_fcsr->RegisterFieldLookup("RES0");
@@ -325,7 +320,6 @@ CASE("Paritial register init")
   Register* S9 = test_register_file->RegisterLookup("S9");
   Register* S10 = test_register_file->RegisterLookup("S10");
 
-  //TODO - figure out possible expects for random init regs
   S9->InitializeRandomly(nullptr);
   S10->InitializeRandomly(nullptr);
 }
@@ -395,7 +389,6 @@ CASE("Test Register class lookups, interaction, and propogation")
 }
 CASE("Reset value logic")
 {
-  //TODO x0 is a read-only register, some of the testing assumption here are not correct, need revisit very soon.
   RegisterFile* test_register_file = dynamic_cast<RegisterFile*>(register_file_top->Clone());
   test_register_file->Setup();
 
@@ -455,7 +448,6 @@ CASE("Choice Tree logic")
     }
     SECTION("Repeated random init 1")
     {
-      //TODO - figure out possible expects for random register init
       test_register_file->InitializeRegisterFieldRandomly(sstatus_reg, "SUM", pModerator);
       sstatus_reg->InitializeRandomly(pModerator);
       sstatus_reg->InitializeRandomly(pModerator);

@@ -140,7 +140,7 @@ namespace Force {
     VmManager* vm_manager = mpGenerator->GetVmManager();
     VmMapper* vm_mapper = vm_manager->CurrentVmMapper();
 
-    if (va_req->VmSpecified()) 
+    if (va_req->VmSpecified())
     {
       std::unique_ptr<VmInfo> vm_info_storage(vm_manager->VmInfoInstance()); // to release vm_info when done.
 
@@ -149,7 +149,7 @@ namespace Force {
 
       bool valid_regime = false;
       EVmRegimeType regime_type = vm_info_storage.get()->RegimeType(&valid_regime);
-      if (valid_regime) 
+      if (valid_regime)
       {
         LOG(info) << "{GenVirtualMemoryAgent::GenVA} target VM info: " << vm_info_storage.get()->ToString() << " regime type: " << EVmRegimeType_to_string(regime_type) << endl;
         vm_mapper = vm_manager->GetVmMapper(*vm_info_storage.get());
@@ -276,7 +276,6 @@ namespace Force {
     std::unique_ptr<GenPageRequest> local_page_req(vm_mapper->GenPageRequestRegulated(is_instr, EMemAccessType::ReadWrite));
     SetCommonPageRequestAttributes(*vapa_req, local_page_req.get());
 
-    //TODO determine if force alias should be option for GenVAforPA
     //local_page_req->SetGenBoolAttribute(EPageGenBoolAttrType::ForceAlias, vapa_req->ForceAlias());
 
     local_page_req->SetAttributeValue(EPageRequestAttributeType::PA, vapa_req->PhysAddr());
@@ -292,7 +291,7 @@ namespace Force {
 
     ret_va = vm_mapper->MapAddressRangeForPA(vapa_req->PhysAddr(), mem_bank, vapa_req->Size(), is_instr, local_page_req.get());
 
-    /*if (vapa_req->SharedMemory()) { //TODO get physical address based allocation to support crossing page boundaries in shared memory scenarios
+    /*if (vapa_req->SharedMemory()) {
       PhysicalPageSplitter page_splitter(vm_mapper);
       PhysicalPageSplit page_split = page_splitter.GetPhysicalPageSplit(ret_va, vapa_req->Size());
 
@@ -372,8 +371,7 @@ namespace Force {
     const vector<EMemBankType>& mem_banks = mpGenerator->GetArchInfo()->GetMemoryBanks();
     ConstraintSet usable_constr;
 
-    // get an usable region that is common with all memory banks.
-    // TODO this method might best to be implemented in Architecture layer.
+    // get a usable region that is common with all memory banks.
     bool first_done = false;
     for (auto mem_bank: mem_banks) {
       EMemBankTypeBaseType base_type = EMemBankTypeBaseType(mem_bank);
@@ -461,7 +459,6 @@ namespace Force {
   {
     uint32 addr_offset = physAddr & 0x7;
     if (addr_offset) {
-      // TODO expecting address to be aligned to 8 bytes.
       LOG(fail) << "{GenVirtualMemoryAgent::RandomInitializeMemory} address not properly aligned: 0x" << hex << physAddr << endl;
       FAIL("unexpected-unaligned-address");
     }

@@ -2,15 +2,15 @@
 <!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
- FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+ FORCE-RISCV is licensed under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
 
   http://www.apache.org/licenses/LICENSE-2.0
 
- THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
- FIT FOR A PARTICULAR PURPOSE.
+ THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+ OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+ NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
@@ -488,19 +488,19 @@
   </I>
   <I name="FENCE" isa="RISCV" group="System" extension="RV32I">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="0000001111"/>
-    <O name="fm" type="Immediate" bits="31-27"/>
-    <O name="pred" type="Immediate" bits="26-21" choices="Barrier option"/>
-    <O name="succ" type="Immediate" bits="20-20" choices="Barrier option"/>
+    <O name="fm" type="Immediate" bits="31-28" choices="Fence mode"/>
+    <O name="pred" type="Immediate" bits="27-24" choices="Barrier option"/>
+    <O name="succ" type="Immediate" bits="23-20" choices="Barrier option"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="FENCE %s, %s, %s, %s, %s" op1="fm" op2="pred" op3="succ" op4="rs1" op5="rd"/>
   </I>
   <I name="FENCE.I" isa="RISCV" group="System" extension="Zifencei">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="0010001111"/>
-    <O name="simm12" type="Immediate" bits="31-20" class="SignedImmediateOperand"/>
+    <O name="imm12" type="Immediate" bits="31-20"/>
     <O name="rs1" type="GPR" bits="19-15" access="Read" choices="GPRs"/>
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
-    <asm format="FENCE.I %s, %s, %s" op1="simm12" op2="rs1" op3="rd"/>
+    <asm format="FENCE.I %s, %s, %s" op1="imm12" op2="rs1" op3="rd"/>
   </I>
   <I name="FEQ.D" isa="RISCV" group="Float" extension="RV32D">
     <O name="const_bits" type="Constant" bits="31-25,14-12,6-0" value="10100010101010011"/>

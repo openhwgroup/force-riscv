@@ -31,6 +31,9 @@ namespace py = pybind11;
 namespace Force {
 
   PYBIND11_MODULE(StateTransition, mod) {
+    // Need to import the Enums module in order to specify a default state transition order mode.
+    py::module::import("Enums");
+
     std::vector<EStateElementType> empty_elem_type_order;
 
     mod

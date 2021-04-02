@@ -73,7 +73,6 @@ namespace Force
   {
     Register* containing_reg = nullptr;
 
-    // TODO(Noah): Specify Q as the containing register prefix when the Q extension is supported.
     const string& reg_name = pReg->Name();
     if (reg_name[0] == 'S') {
       string reg_name_copy = reg_name;
@@ -115,7 +114,6 @@ namespace Force
 
   Register* RegisterFileRISCV::RegisterLookupByIndex(uint32 index, const ERegisterType reg_type, uint32 size) const
   {
-    //TODO not complete for all cases
     char reg_prefix = 'x';
     char print_buffer[16];
     snprintf(print_buffer, 16, "%c%d", reg_prefix, index);

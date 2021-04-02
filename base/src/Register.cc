@@ -189,7 +189,6 @@ namespace Force
       if (nullptr != mpPhysicalRegister)
       {
         mpRegisterFile->AddPhyReg(mpPhysicalRegister, mLinkName);
-        //TODO need to add to index map too
         mpPhysicalRegister = nullptr;
         mLinkName = "";
       }
@@ -237,7 +236,6 @@ namespace Force
         } else if (strcmp(attr_name, "index") == 0) {
           mpRegister->mIndex = parse_uint32(attr.value());
         } else if (strcmp(attr_name, "type") == 0) {
-          //TODO change after supporting big registers.
           mpRegister->mRegisterType = string_to_ERegisterType(attr.value());
         } else if (strcmp(attr_name, "init_policy") == 0) {
           mpRegister->SetInitPolicy(attr.value());
@@ -256,7 +254,6 @@ namespace Force
       commit_register_field();
       if (nullptr != mpRegister) {
         mpRegisterFile->AddRegister(mpRegister);
-        //TODO need to add to index map too
         mpRegister = nullptr;
       }
     }
@@ -563,7 +560,6 @@ namespace Force
    */
   void ConfigureRegister::SetValue(uint64 value, uint64 mask)
   {
-    // TODO this doesn't work when reset value is not 0, but mValue=0 and initializing value to 0.
     //uint64 originalValue = mValue;
     PhysicalRegister::SetValue(value, mask);
     //if (originalValue != mValue)
@@ -1616,7 +1612,6 @@ namespace Force
    */
   void ReadOnlyRegister::SetValue(uint64 value)
   {
-    //TODO
     if (mTakeException) {
       //take exception when write to this register
     } else {
@@ -2208,7 +2203,6 @@ namespace Force
   void RegisterFile::SetPhysicalRegisterValueAndInit(PhysicalRegister* pPhysRegister, uint64 valueToSet, uint64 valueMask, uint64 initValue, bool notifyInit) const
   {
     if (notifyInit) {
-      // TODO currently not expecting use case with notifyInit=true.
       LOG(fail) << "{RegisterFile::SetPhysicalRegisterValueAndInit} notifyInit=true use case not expected currently." << endl;
       FAIL("unexpected-use-case");
     }

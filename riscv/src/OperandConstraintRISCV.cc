@@ -343,7 +343,6 @@ namespace Force {
     }
 
     // Notification for illegal instruction when EMUL * NFIELDS > 8 (Section 7.8)
-    // TODO (Chris): Handle this case when implementing generic generation control option later
     uint32 illegal_reg_limit = reg_count;
     if (reg_count > 8) {
       LOG(notice) << "{VectorRegisterOperandConstraintRISCV::Setup} EMUL * NFIELDS = " << reg_count << " > 8" << endl;

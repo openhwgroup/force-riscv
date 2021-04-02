@@ -56,25 +56,6 @@ namespace Force {
     return false;
   }
 
-  uint32 table_level_to_addr_high_bit(uint32 level)
-  {
-    switch(level)
-    {
-      case 3:
-        return 47;
-      case 2:
-        return 38;
-      case 1:
-        return 29;
-      case 0:
-        return 20;
-      default:
-        return 0;
-    }
-
-    return 0;
-  }
-
   EPagingExceptionType get_exception_type_from_access_type(bool isInstr, EMemAccessType memAccess)
   {
     if (isInstr)
@@ -87,6 +68,6 @@ namespace Force {
       return EPagingExceptionType::StoreAmoPageFault;
     }
 
-    return EPagingExceptionType::LoadPageFault; //TODO need to handle unknown memaccess potentially
+    return EPagingExceptionType::LoadPageFault;
   }
 }

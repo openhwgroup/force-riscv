@@ -20,12 +20,12 @@ unset NO_GIT
 pause() {
     #do things with parameters like $1 such as
     echo
-    echo $1
+    echo "$1"
     echo
 }
 
 function usage {
-    echo "Usage: $(basename $0) [-in]"
+    echo "Usage: $(basename "$0") [-in]"
     echo "    -i  interactive mode"
     echo "    -n  no-git mode"
     echo ""
@@ -39,7 +39,7 @@ while getopts ":in" opt; do
         pause() {
             #do things with parameters like $1 such as
             echo
-            read -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
+            read -r -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
             echo
         }
         ;;
@@ -75,9 +75,12 @@ fi
 
 echo "===== Preparing to remove DTC dependencies"
 
+# shellcheck disable=SC2016
 sed -i  '/^if test x"$DTC" == xno; then :/,/fi/ s/^/# /'  ./configure
 echo
 echo "vvvvv Begin auto-edit output vvvvv"
+
+# shellcheck disable=SC2016,SC2002
 cat ./configure | grep -B10 -A7 'if test x"$DTC" == xno; then :'
 echo "^^^^^ End auto-edit output ^^^^^"
 pause "===== Please review edit(s) above"
@@ -86,6 +89,7 @@ sed -i  '/^  if (dtb_pid == 0)/,/^  }/ s/^/\/\/ /'             ./riscv/dts.cc
 sed -i  '/^  waitpid(dts_pid, &status, 0);/,/^  }/ s/^/\/\/ /' ./riscv/dts.cc
 sed -i  '/^  waitpid(dtb_pid, &status, 0);/,/^  }/ s/^/\/\/ /' ./riscv/dts.cc
 echo "vvvvv Begin auto-edit output vvvvv"
+# shellcheck disable=SC2002
 cat ./riscv/dts.cc | grep -B9 -A10 -e"if (dtb_pid == 0) {" -e"waitpid(dts_pid, &status, 0);" -e"waitpid(dtb_pid, &status, 0);"
 echo "^^^^^ End auto-edit output ^^^^^"
 pause "Please review edit(s) above"
@@ -98,6 +102,7 @@ echo "===== Preparing to edit makefile"
 sed -i  '/^default-CFLAGS/ s/$/ -fno-var-tracking-assignments/'  Makefile
 echo
 echo "vvvvv Begin auto-edit output vvvvv"
+# shellcheck disable=SC2002
 cat Makefile | grep -B10 -A7 "^default-CFLAGS"
 echo "^^^^^ End auto-edit output ^^^^^"
 pause "===== Please review edit(s) above"

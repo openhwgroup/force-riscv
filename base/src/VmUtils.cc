@@ -29,9 +29,6 @@ using namespace std;
 
 namespace Force {
 
-  // TODO(Noah): Move all references to specific EPteType values to the architecture-specific layers
-  // when there is time to do so. Then, move the EPteType enum to the architecture-specific enum
-  // files.
   uint32 get_page_shift(EPteType pteType)
   {
     uint32 page_shift = 0;

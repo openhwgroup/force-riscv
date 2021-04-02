@@ -494,7 +494,6 @@ namespace Force {
       FAIL("failed-to-translate-not-taken-path");
     }
 
-    // TODO handle cases when the VA range stradle two pages.
     uint64 inter_start = 0;
     uint64 inter_size = 0;
     auto free_constr = mpGenerator->GetMemoryManager()->GetMemoryBank(bank)->Free();
@@ -861,7 +860,6 @@ namespace Force {
 
     GetLoadLargeRegisterSequence(reg_ptr, cast_req->RegisterValues(), req_seq, inter_reg_ptr, cast_req->ImmOffset());
 
-    // TODO: add SetRegister request for NoISS mode.
     mpGenerator->PrependRequests(req_seq);
   }
 

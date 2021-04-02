@@ -88,8 +88,6 @@ namespace Force
   {
     switch (regType) {
 
-    // TODO(Noah): Determine whether it is appropriate for the GPR range to exclude 0 when there is
-    // time to do so.
     case ERegisterType::GPR:
       pIndexConstr->AddRange(0, 31);
       break;
@@ -101,9 +99,6 @@ namespace Force
     case ERegisterType::ZR:
       pIndexConstr->AddValue(0);
       break;
-    // TODO: Implement a case for system registers when a mechanism for gathering all system
-    // register indices is created.
-
     default:
       LOG(fail) << "{RegisterReserverRISCV::GetRegisterIndexRange} unsupported register type: " << ERegisterType_to_string(regType) << endl;
       FAIL("unsupported-register-type");
@@ -113,8 +108,6 @@ namespace Force
   uint32 RegisterReserverRISCV::GetPhysicalRegisterIndex(const PhysicalRegister* pPhysReg, const ERegisterType regType) const
   {
     uint32 reg_index = pPhysReg->IndexValue();
-
-    // TODO handle any special cases here.
 
     return reg_index;
   }

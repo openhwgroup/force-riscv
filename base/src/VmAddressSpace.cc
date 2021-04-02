@@ -166,7 +166,6 @@ namespace Force {
 
     ptable_manager->CommitRootPageTable(mpControlBlock->GetRootPageTable());
 
-    //TODO: need to call into the page table manager to handle the root table setup which can then call into the control block if necessary to create a new root table
     unique_ptr<ConstraintSet> init_virtual_usable(mpControlBlock->InitialVirtualConstraint());
 
     // Exclude flat mapped page table region from the initial virtual constraint
@@ -257,10 +256,6 @@ namespace Force {
     LOG(trace) << "{VmAddressSpace::PopulateVirtualUsableConstraint} final vir_usable=" << cset_s_init_vir_usable.ToDebugString() << endl;
   }
 
-  //TODO possibly update to Page*, start, end -> not sure if we want to reference the mem_manager physical set always.
-  // TODO(Noah): Implement this method in a way that preserves reusability of addresses when it is determined how to do
-  // so. The current implementation loses this information.
-  //Can use init/reserve range when calling from update addr usage to save some time?
   void VmAddressSpace::UpdateVirtualUsableByPage(const Page* pPage)
   {
     if (!mpVirtualUsable->IsInitialized())
@@ -310,7 +305,6 @@ namespace Force {
 
     UpdateVirtualSharedByPage(pPage);
 
-    //TODO determine if need to get cached cset again before re-serializing
     //auto cset_s_vir_usable = ConstraintSetSerializer(*mpVirtualUsable->Usable(), FORCE_CSET_DEFAULT_PERLINE);
     //LOG(debug) << "{VmAddressSpace::UpdateVirtualUsableByPage} end vir_usable: " << cset_s_vir_usable.ToDebugString() << endl;
   }
@@ -403,7 +397,6 @@ namespace Force {
 
   void VmAddressSpace::Initialize()
   {
-    //TODO evaluate if we can avoid populating the virtual usable during init time
     if (!IsInitialized())
     {
       PopulateVirtualUsableConstraint();
@@ -501,7 +494,7 @@ namespace Force {
         start_va_set = true;
       }
 
-      //uint64 map_size = (map_page->Upper() - start_va + 1); TODO ensure page rollover targeted PA generation works as intended
+      //uint64 map_size = (map_page->Upper() - start_va + 1);
       uint64 map_size = (map_page->PhysicalUpper() - map_pa + 1);
 
       if (map_size >= size_remaining) break;
@@ -570,7 +563,6 @@ namespace Force {
     ETranslationResultType trans_result = ETranslationResultType::NotMapped;
     auto mem_manager       = mpGenerator->GetMemoryManager();
 
-    //TODO: doesnt handle case where multiple pages map to the same PA/bank
     const PhysicalPageManager* phys_page_manager = mem_manager->GetPhysicalPageManager(bank);
     const Page* trans_page = phys_page_manager->GetVirtualPage(PA, this);
 
@@ -709,7 +701,6 @@ namespace Force {
     //if it exists, but force new addr, see if we can alias. (!flatmap case)
     if (!force_new_addr)
     {
-      //TODO maybe optimize by returning page from the translate function, or making new interface to avoid additional lookup
       if (mapping_exists) return GetPage(VA);
     }
     else
@@ -961,7 +952,6 @@ namespace Force {
     mpGenerator->InitializeMemoryWithEndian(descrAddr, uint32(memBankType), descrSize, descrValue, false, mpControlBlock->IsBigEndian());
   }
 
-  //TODO may be able to remove this? - only called on root page table initialization.
   void VmAddressSpace::UpdatePageTableConstraint(uint64 low, uint64 high)
   {
     if (mVmConstraints[uint32(EVmConstraintType::PageTable)] == nullptr)

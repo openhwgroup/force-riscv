@@ -187,8 +187,6 @@ int initialize_simulator_memory(int target_id, const uint64_t* addr, int length,
 //
 int read_simulator_register(int target_id, const char* pRegName, uint8_t* value, int length);
 
-//TODO large register read
-//
 //  inputs:
 //
 //  outputs:
@@ -197,8 +195,6 @@ int read_simulator_register(int target_id, const char* pRegName, uint8_t* value,
 //      0
 int partial_read_large_register(int target_id, const char* pRegName, uint8_t* pValue, uint32_t length, uint32_t offset);
 
-//TODO large register read
-//
 //  inputs:
 //
 //  outputs:

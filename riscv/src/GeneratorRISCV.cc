@@ -176,7 +176,7 @@ namespace Force {
     case EResourceType::FPR:
       return 32;
     default:
-      return 1; // TODO temporary, should not getting inapplicable types in the first place.
+      return 1;
       //LOG(fail) << "{GeneratorRISCV::GetResourceCount} unexpected resource type: " << EResourceType_to_string(rResType) << endl;
       //FAIL("unexpected-resource-type");
     }

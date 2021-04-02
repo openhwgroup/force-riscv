@@ -19,6 +19,43 @@ COSIM_SRCS = $(shell find so_build/cosim/src -name '*.cc' -type f)
 FORCE_SRCS = $(shell find force_mod -name '*.cc' -type f)
 
 ALL_SRCS := $(BASE_SRCS) $(COSIM_SRCS) $(FORCE_SRCS)
+CLEAN_TARGETS = ./inc/arith.h\
+	./inc/byteorder.h\
+	./inc/cachesim.h\
+	./inc/common.h\
+	./inc/config.h\
+	./inc/decode.h\
+	./inc/devices.h\
+	./inc/disasm.h\
+	./inc/elf.h\
+	./inc/encoding.h\
+	./inc/extension.h\
+	./inc/fesvr/\
+	./inc/icache.h\
+	./inc/insn_list.h\
+	./inc/insn_template.h\
+	./inc/insns/\
+	./inc/internals.h\
+	./inc/memtracer.h\
+	./inc/mmu.h\
+	./inc/opcodes.h\
+	./inc/option_parser.h\
+	./inc/platform.h\
+	./inc/primitiveTypes.h\
+	./inc/primitives.h\
+	./inc/processor.h\
+	./inc/simif.h\
+	./inc/simlib.h\
+	./inc/softfloat_types.h\
+	./inc/specialize.h\
+	./inc/tracer.h\
+	./inc/trap.h\
+	./so_build/cosim/src/\
+	./spike_mod/\
+	./src/\
+	./standalone/\
+	./bin/\
+	./make_area
 
 include Makefile.common 
 
@@ -30,28 +67,13 @@ vpath %.cc src so_build/cosim/src force_mod
 vpath %.d $(DEP_DIR)
 
 all:
-	./filesurgeon.py
-	@$(MAKE) make_dir
-	@$(MAKE) bin/handcar_cosim.so
+	@$(MAKE) setup
+	@$(MAKE) handcar
+	@$(MAKE) install 
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 -include $(ALL_DEPS)
 endif
-
-#
-# Original Spike standalone build
-#
-#STANDALONE_BASE_PATH = standalone
-#STANDALONE_ORIGINAL_PATH = ../3rd_party/spike
-#STANDALONE_MODIFIED_PATH = standalone/patched_source
-#STANDALONE_REPLACEMENTS_PATH = standalone/spike_mod_standalone
-#
-#.PHONY: standalone
-#standalone: 
-#	cp -R $(STANDALONE_ORIGINAL_PATH)/* $(STANDALONE_MODIFIED_PATH);
-#	cp -R $(STANDALONE_REPLACEMENTS_PATH)/* $(STANDALONE_MODIFIED_PATH);
-#	cd $(STANDALONE_BASE_PATH); patched_source/configure --enable-commitlog; $(MAKE) -j10
-
 #
 # Needed for all the APIs
 # 
@@ -69,12 +91,36 @@ $(OBJ_DIR)/%.o: %.cc %.d
 bin/handcar_cosim.so: $(ALL_OBJS)  
 	$(CXX) -o $@ $^ $(LFLAGS) -shared -fPIC
 
-.PHONY: make_dir
-make_dir:
-	@mkdir -p make_area make_area/obj make_area/dep
+.PHONY: setup
+setup:
+	@mkdir -p bin src spike_mod/insns so_build/cosim/src make_area/obj make_area/dep
+
+.PHONY: handcar
+handcar:
+	@./scripts/regenerate_and_build.bash -n
+	@cd patcher && $(MAKE) && cd ..
+	@./scripts/filesurgeon.py
+	@$(MAKE) bin/handcar_cosim.so
+
+.PHONY: install
+install: ./bin/handcar_cosim.so
+	@cp bin/handcar_cosim.so ../utils/handcar
+
 
 .PHONY: clean
 clean:
-	rm -rf make_area
-	rm -rf bin/handcar*.so
-
+	rm -rf $(CLEAN_TARGETS)
+	@cd patcher && $(MAKE) clean && cd ..
+#
+# Original Spike standalone build
+#
+#STANDALONE_BASE_PATH = standalone
+#STANDALONE_ORIGINAL_PATH = ../3rd_party/spike
+#STANDALONE_MODIFIED_PATH = standalone/patched_source
+#STANDALONE_REPLACEMENTS_PATH = standalone/spike_mod_standalone
+#
+#.PHONY: standalone
+#standalone: 
+#	cp -R $(STANDALONE_ORIGINAL_PATH)/* $(STANDALONE_MODIFIED_PATH);
+#	cp -R $(STANDALONE_REPLACEMENTS_PATH)/* $(STANDALONE_MODIFIED_PATH);
+#	cd $(STANDALONE_BASE_PATH); patched_source/configure --enable-commitlog; $(MAKE) -j10

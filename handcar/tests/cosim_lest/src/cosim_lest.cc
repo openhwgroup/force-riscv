@@ -18,6 +18,7 @@
 //#include <Log.h>
 #include <map>
 #include <cstring>
+#include <algorithm>
 
 //------------------------------------------------
 // include necessary header files here
@@ -29,6 +30,7 @@
 //using namespace Force;
 
 std::vector<uint8_t> global_buffer(32);
+const char* handcar_path = "../../../utils/handcar/handcar_cosim.so";
 
 extern "C" {
   void update_generator_register(uint32_t cpuid, const char *pRegName, uint64_t rval, uint64_t mask, const char *pAccessType)
@@ -43,10 +45,7 @@ void update_vector_element(uint32_t cpuid, const char *pRegName, uint32_t vRegIn
 {
    //std::cout << "Update vector element called. cpuid: " << cpuid << " regname: " << pRegName << " vRegIndex: " << vRegIndex << " eltIndex: " << eltIndex << " eltByteWidth: " << eltByteWidth << " pAccessType: " << pAccessType << std::endl;
 
-   for(uint8_t & elt : global_buffer)
-   {    
-     elt = 0;
-   }
+   std::fill(global_buffer.begin(), global_buffer.end(), 0);
    for(size_t byte_number = 0; byte_number < byteLength; ++ byte_number)
    {
      global_buffer[byte_number] = value[byte_number];
@@ -71,7 +70,7 @@ CASE("Test 0, basics") {
     //-----------------------------------------
     // do some initial checking here
     //-----------------------------------------
-    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+    EXPECT(not open_sim_dll(handcar_path, &sim_api));
 
     SECTION("Test 0, 0: get_simulator_version") {
       //---------------------------------------------------------------
@@ -166,7 +165,7 @@ CASE("Test 0, basics") {
 //    //-----------------------------------------
 //    // do some initial checking here
 //    //-----------------------------------------
-//    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+//    EXPECT(not open_sim_dll(handcar_path, &sim_api));
 //
 //    SECTION("Test 1, 0: set_simulator_parameter(...), called before initialization") {
 //      sim_api.set_simulator_parameter("p", &num_procs, nullptr);
@@ -237,7 +236,7 @@ CASE("Test 0, basics") {
 //    // do some initial checking here
 //    //-----------------------------------------
 //    //
-//    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+//    EXPECT(not open_sim_dll(handcar_path, &sim_api));
 //
 //    SECTION("Test 2, 0: simulator_load_elf(...), called before initialization") {
 //      sim_api.simulator_load_elf(0, elf_path.c_str());
@@ -248,7 +247,7 @@ CASE("Test 0, basics") {
 //    }
 //
 //    SECTION("Test 2, 1: simulator_load_elf(...), called after initialization, with valid ELF file") {
-//      elf_path = "../../resources/multiply.riscv";
+//      elf_path = "../resources/multiply.riscv";
 //      sim_api.initialize_simulator(nullptr);
 //      sim_api.simulator_load_elf(0, elf_path.c_str());
 //      sim_api.terminate_simulator();
@@ -269,7 +268,7 @@ CASE("Test 0, basics") {
 //    SimDllApi sim_api;
 //    std::string options = "-p4 -l";
 //    uint64_t num_procs = 4;
-//    std::string elf_path = "../../resources/multiply.riscv";
+//    std::string elf_path = "../resources/multiply.riscv";
 //    int hart_id = 0;
 //    int num_steps = 10;
 //    int num_step_groups = 1000;
@@ -279,7 +278,7 @@ CASE("Test 0, basics") {
 //    //-----------------------------------------
 //    // do some initial checking here
 //    //-----------------------------------------
-//    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+//    EXPECT(not open_sim_dll(handcar_path, &sim_api));
 //
 //    SECTION("Test 3, 0: step_simulator(...)") {
 //      sim_api.initialize_simulator(nullptr);
@@ -320,7 +319,7 @@ CASE("Test 4, get_disassembly(...) api") {
     SimDllApi sim_api;
     std::string options = "-p4 -l";
     uint64_t num_procs = 4;
-    std::string elf_path = "../../resources/multiply.riscv";
+    std::string elf_path = "../resources/multiply.riscv";
     int num_steps = 10;
     int num_step_groups = 1;
     int stx_failed = 0;
@@ -337,7 +336,7 @@ CASE("Test 4, get_disassembly(...) api") {
     //-----------------------------------------
     // do some initial checking here
     //-----------------------------------------
-    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+    EXPECT(not open_sim_dll(handcar_path, &sim_api));
 
     SECTION("Test 4, 0: get_disassembly(...)") {
       sim_api.initialize_simulator(options.c_str());
@@ -374,7 +373,7 @@ CASE("Test 5, read_simulator_register(...) and write_simulator_register(...) api
     //-----------------------------------------
     // load the simulator DLL and pointers to API functions...
     SimDllApi sim_api;
-    //std::string elf_path = "../../resources/multiply.riscv";
+    //std::string elf_path = "../resources/multiply.riscv";
     std::vector<char> name_goes_here(128);
     char* name_ptr = name_goes_here.data();
     uint64_t value[2] = {0ull};
@@ -388,7 +387,7 @@ CASE("Test 5, read_simulator_register(...) and write_simulator_register(...) api
     //-----------------------------------------
     // do some initial checking here
     //-----------------------------------------
-    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+    EXPECT(not open_sim_dll(handcar_path, &sim_api));
     
     SECTION("Test 5, 0: read and write pc") {
       sim_api.initialize_simulator(nullptr);
@@ -590,7 +589,7 @@ CASE("Test 6, read_simulator_memory(...) and write_simulator_memory(...) api") {
     //-----------------------------------------
     // load the simulator DLL and pointers to API functions...
     SimDllApi sim_api;
-    std::string elf_path = "../../resources/multiply.riscv";
+    std::string elf_path = "../resources/multiply.riscv";
     uint64_t buffer = 0ull;
     uint64_t length = 4;
     uint64_t num_chunks_to_read = 150;
@@ -600,7 +599,7 @@ CASE("Test 6, read_simulator_memory(...) and write_simulator_memory(...) api") {
     //-----------------------------------------
     // do some initial checking here
     //-----------------------------------------
-    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+    EXPECT(not open_sim_dll(handcar_path, &sim_api));
 
     SECTION("Test 6, 0: read_simulator_memory(...)") {
       sim_api.initialize_simulator(nullptr);
@@ -662,7 +661,7 @@ CASE("Test 7, translate_virtual_address(...) api") {
     //-----------------------------------------
     // load the simulator DLL and pointers to API functions...
     SimDllApi sim_api;
-    std::string elf_path = "../../resources/multiply.riscv";
+    std::string elf_path = "../resources/multiply.riscv";
     uint64_t buffer = 0ull;
     uint64_t length = 8;
     uint64_t num_chunks_to_read = 150;
@@ -673,7 +672,7 @@ CASE("Test 7, translate_virtual_address(...) api") {
     //-----------------------------------------
     // do some initial checking here
     //-----------------------------------------
-    EXPECT(not open_sim_dll("../../../bin/handcar_cosim.so", &sim_api));
+    EXPECT(not open_sim_dll(handcar_path, &sim_api));
 
     SECTION("Test 7, 0: translate_virtual_address(...), vm off") {
       sim_api.initialize_simulator(nullptr);

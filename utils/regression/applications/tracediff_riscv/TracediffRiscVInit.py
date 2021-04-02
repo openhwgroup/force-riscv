@@ -1,49 +1,45 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
+# FORCE-RISCV is licensed under the Apache License, Version 2.0
+#  (the "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
 #
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+# OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from classes.ApplicationOption import CommandLineOption, ParameterProcessor
-from common.path_utils import PathUtils
+from classes.ApplicationOption import ParameterProcessor
 
-## Define additional TRACECMP specific command line parameters
+
+#  Define additional TRACECMP specific command line parameters
 #
 class TracediffRiscVCmdLineOptions(object):
-
     cGroupName = "Trace diff RiscV related options"
     cGroupDescription = "Useful TRACEDIFF options to control TRACEDIFF usage"
 
-    #                               "number of value arguments"
-    #                         "option name"               | "additional arguments"
-    #                               |    "default value"  |    |   "help text"
-    #                               |           |         |    |       |
-    cOptions = [ #CommandLineOption('tracediff_riscv', "",       0, {"action":"store_true"}, "- When present, overrides the default (False), and enables Compare tool on tests that have both\na sim.log and fpix_sim.log"),
-    ]
+    #             "number of value arguments"
+    #       "option name"               | "additional arguments"
+    #             |    "default value"  |    |   "help text"
+    #             |           |         |    |       |
+    cOptions = []
 
-        
-## Used to process application specific parameters
+
+#  Used to process application specific parameters
 #
 class TracediffRiscVParametersProcessor(ParameterProcessor):
-
     def __init__(self, aCmdLineOptions):
-        super().__init__(TracediffRiscVCmdLineOptions.cOptions, aCmdLineOptions)
+        super().__init__(
+            TracediffRiscVCmdLineOptions.cOptions, aCmdLineOptions
+        )
 
 
-## Process tracecmp control data
+#  Process tracecmp control data
 #
-def processTracediffRiscVControlData(aControlData, aAppParameters):
-    if aAppParameters is None: return # TODO Temporary, to avoid failing in forrest run, to remove.
-
-    #key = 'tracediff_riscv'
-    #if aAppParameters.parameter(key):
-    #    aControlData['run'] = aAppParameters.parameter(key)
+def process_tracediff_riscv_control_data(aControlData, aAppParameters):
+    if aAppParameters is None:
+        return
