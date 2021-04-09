@@ -19,7 +19,7 @@ import getopt
 import os
 import sys
 
-sys.path.insert(0, "../..")
+# sys.path.insert(0, "../..")
 
 import defusedxml.defusedxml.ElementTree as ET
 import defusedxml.defusedxml.minidom as DOM

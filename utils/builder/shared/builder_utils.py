@@ -15,6 +15,7 @@
 #
 import os.path
 import sys
+
 from shared.builder_exception import BuilderException
 
 
@@ -98,9 +99,6 @@ def update_bits_value(bits, value):
         start_loc += piece_sz
 
     bitval_list.sort(key=lambda x: x.high, reverse=True)
-    # print ("Sorted list")
-    # for bitval in bitval_list:
-    #     print (bitval.to_string())
 
     ret_bits = ""
     ret_value = ""
@@ -160,7 +158,7 @@ def update_bits(bits):
 
 
 def merge_imm_value(value1, value2):
-    if None == value1:
+    if None is value1:
         return value2
 
     if len(value1) != len(value2):
@@ -175,7 +173,6 @@ def merge_imm_value(value1, value2):
             merged_value += value2[i]
         else:
             merged_value += value1[i]
-    # print ("Merged value1 \"%s\" and value2 \"%s\" into \"%s\"" % (value1, value2, merged_value))
     return merged_value
 
 
@@ -192,9 +189,6 @@ def bit_string_to_list(bit_str):
             range_end = int(range_split[1])
             for bit in range(range_start, range_end - 1, -1):
                 bit_list.append(bit)
-
-    # print ("bit_str %s splitted into:" % bit_str)
-    # print (bit_list)
 
     return bit_list
 
@@ -231,10 +225,6 @@ def bit_list_to_string(bit_list):
         bit_str += "," + range_str
     else:
         bit_str = range_str
-
-    # print ("Converting list:")
-    # print (bit_list)
-    # print ("to string %s" % bit_str)
 
     return bit_str
 

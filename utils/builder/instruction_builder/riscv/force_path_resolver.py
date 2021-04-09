@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import sys, os
+import os
+import sys
 
 
 def get_force_path():
@@ -40,13 +41,13 @@ def locate_force_path():
         my_path = head
 
 
-def add_force_relative_path(relative_path):
-    force_path = get_force_path()
-    print("FORCE PATH: %s" % force_path)
-
-    force_relative_path = force_path + "/" + relative_path
-    print("Relative path: %s" % force_relative_path)
-
-    sys.path.append(force_relative_path)
-
-    print("sys path: %s" % sys.path)
+# def add_force_relative_path(relative_path):
+#     force_path = get_force_path()
+#     print("FORCE PATH: %s" % force_path)
+#
+#     force_relative_path = force_path + "/" + relative_path
+#     print("Relative path: %s" % force_relative_path)
+#
+#     sys.path.append(force_relative_path)
+#
+#     print("sys path: %s" % sys.path)

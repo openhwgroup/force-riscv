@@ -15,18 +15,17 @@
 # limitations under the License.
 #
 
-from shared.instruction import *
+import copy
+
+from shared.builder_utils import bit_string_to_list
 from shared.instruction_file import *
 from shared.instruction_file_parser import *
-from shared.builder_utils import bit_string_to_list
-import copy
-import types
 
 
 def change_to_index(bits_str_lst):
     res_lst = list()
-    for str in bits_str_lst:
-        num_lst = str.split("-")
+    for string in bits_str_lst:
+        num_lst = string.split("-")
         num_lst.sort()
         if len(num_lst) > 1:
             idx_range = range(int(num_lst[0]), int(num_lst[-1]) + 1)
@@ -98,8 +97,8 @@ def merge_instr_const_operand(instr, opr_data):
     str_tmp = " ".join(new_bit_lst)
     str_tmp = str_tmp.strip(",")
     bits_section = str_tmp.split(",")
-    for str in bits_section:
-        num_str = str.strip().split(" ")
+    for string in bits_section:
+        num_str = string.strip().split(" ")
         if len(num_str) > 1:
             if len(new_bit):
                 new_bit = new_bit + "," + num_str[0] + "-" + num_str[-1]
@@ -207,8 +206,6 @@ def arrange_operand_values(names, values):
 
         const_opr_val = [const_val]
 
-        # tmp_dict = dict()
-        # tmp_dict[const_opr_name] = const_opr_val
         const_opr_name_val = dict(zip(const_opr_name, const_opr_val))
         const_opr_name_val_lst.append(const_opr_name_val)
 
@@ -331,7 +328,6 @@ def build_tlbi_os_instructions(instr, op1_opr, extra_instrs):
         extra_instr.form = key
         extra_opr = copy.deepcopy(op1_opr)
         extra_opr.value = value
-        # extra_opr.width = len(value)
         extra_instr.change_operand(extra_opr, True)  # merge with the const
         extra_instr.asm.format = "TLBI %s" % key + " %s"
         extra_instrs.append(extra_instr)
@@ -390,8 +386,8 @@ def build_tlbi_rg_instructions(instr, op1_opr, extra_instrs):
     instr.asm.format = "TLBI RVAE1 %s"
 
 
-# Arranges the elements in instr_info_val and sets them into the corresponding instruction base,
-# and finalylly returns the set of instructions.
+# Arranges the elements in instr_info_val and sets them into the corresponding
+# instruction base, and finalylly returns the set of instructions.
 def differentiate_instruction(instr_val, instr_info_val=None):
     instr_lst = []
     if instr_info_val:
@@ -412,18 +408,19 @@ def differentiate_instruction(instr_val, instr_info_val=None):
     return instr_lst
 
 
-# Traverse the instruction file to find the instruction which has the same instruction name,
-#  form, isa as instr_name_form_isa.
-# For example: instruction_instance = get_referenced_instruction(instruction_file_instance, "ADD##RISCV")
+# Traverse the instruction file to find the instruction which has the same
+# instruction name, form, isa as instr_name_form_isa.
+# For example: instruction_instance = get_referenced_instruction(
+# instruction_file_instance, "ADD##RISCV")
 def get_referenced_instruction(instr_file, instr_name_form_isa):
     attr_lst = instr_name_form_isa.split("#")
     instr_form = None
     instr_isa = None
     if len(attr_lst) == 0:
         raise Exception(
-            "Get referenced instruction error.Input parameter 'instr_name_form_isa' format error."
+            "Get referenced instruction error.Input parameter "
+            "'instr_name_form_isa' format error."
         )
-        return
     if len(attr_lst) == 3:
         isa_str = attr_lst[2].strip()
         if len(isa_str):
@@ -448,7 +445,6 @@ def get_referenced_instruction(instr_file, instr_name_form_isa):
             ):
                 return instr
     raise Exception("The instruction not found:", instr_name_form_isa)
-    return None
 
 
 # parse a xml instruction file and return the instruction file instance
@@ -507,21 +503,21 @@ def set_instr_asm(instr, asm_val):
     for op_name in asm_op_idx_lst:
         val = asm_val[op_name]
         res = instr.rename_asm_attribute(op_name, val)
-        if res == False:
+        if res is False:
             instr.append_asm_op(val)
 
 
-# According to the instruction_name#form#isa to find instruction in referenced_xml_file_path
-# and reset the instruction's attribute according to instr_info.
-# Return a instruction file instance.
+# According to the instruction_name#form#isa to find instruction in
+# referenced_xml_file_path and reset the instruction's attribute according to
+# instr_info. Return a instruction file instance.
 def differentiate_referenced_instruction(instr_info, referenced_xml_file_path):
     instrs_file_referenced = parse_instruction_file(referenced_xml_file_path)
     instr_file_res = InstructionFile()
 
-    for key in instr_info.keys():
+    for key1 in instr_info.keys():
 
-        referenced_instr_name = key
-        var_item = instr_info[key]
+        referenced_instr_name = key1
+        var_item = instr_info[key1]
         instr_attr_val = None
         instr_opr_val = None
         if len(var_item) == 2:
@@ -541,9 +537,9 @@ def differentiate_referenced_instruction(instr_info, referenced_xml_file_path):
         if instr_attr_val:
             set_instr_attribute(instr, instr_attr_val)
 
-        for key in instr_opr_val.keys():
-            opr_name = key
-            opr_val = instr_opr_val[key]
+        for key2 in instr_opr_val.keys():
+            opr_name = key2
+            opr_val = instr_opr_val[key2]
             if opr_name == "asm":
                 set_instr_asm(instr, opr_val)
             else:

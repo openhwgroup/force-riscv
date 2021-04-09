@@ -24,7 +24,6 @@ class BuilderFactory:
         if arch == "RISCV":
             if builder_type == "instruction":
                 return InstructionReaderRISCV()
-            # if builder_type == "register": return RegisterReaderRISCV() TODO enable w/ chris' code
             raise ValueError(builder_type)
 
         raise ValueError(arch)
@@ -33,7 +32,6 @@ class BuilderFactory:
         if arch_type == "RISCV":
             if builder_type == "instruction":
                 return InstructionWriterRISCV()
-            # if builder_type == "register": return RegisterWriterRISCV() TODO enable w/ chris' code
             raise ValueError(builder_type)
 
         raise ValueError(arch)
@@ -49,12 +47,14 @@ class BaseParser:
         else:
             self.mInputFiles = input_files
 
-        # setting aggregate to true will collect all input data and output an individual output file
+        # setting aggregate to true will collect all input data and output an
+        # individual output file
         self.bAggregate = aggregate
         if self.bAggregate:
             self.sAggOutputFile = "{}_{}_out.xml".format(arch, builder_type)
 
-        # factory object to instantiate the reader/writer objects from the architecture/builder_type
+        # factory object to instantiate the reader/writer objects from the
+        # architecture/builder_type
         builder_factory = BuilderFactory(arch, builder_type)
         try:
             (self.mReader, self.mWriter) = builder_factory.get_rw_objets(
@@ -62,11 +62,9 @@ class BaseParser:
             )
         except ValueError as err:
             print(
-                "Builder object failed to create, invalid input specified: {}".format(
-                    err.args
-                )
+                "Builder object failed to create, invalid input "
+                "specified: {}".format(err.args)
             )
-
         # aggregation of output data for debug or aggregated output mode
         self.mOutputData = []
 
@@ -85,7 +83,8 @@ class BaseParser:
             if not self.bAggregate:
                 mWriter.write_output(output_name(f_name), reader_data)
 
-        # if aggregate mode - write all output data to the aggregate output file
+        # if aggregate mode - write all output data to the aggregate output
+        # file
         if self.bAggregate:
             mWriter.write_output(self.sAggOutputFile, mOutputData)
 

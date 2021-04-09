@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import re
 
 from operand_adjustor import *
 from shared.instruction import *
@@ -22,10 +21,7 @@ format_map = {}
 
 
 def priv_adjust_instruction_by_format(instr):
-
     instr_format = instr.get_format()
-
-    # print("XXX %s: '%s'" % (instr.name, instr_format))
 
     if instr_format == "rs2-rs1":
         return adjust_rs2_rs1(instr)
@@ -34,11 +30,9 @@ def priv_adjust_instruction_by_format(instr):
     elif instr_format == "":
         return adjust_const_only(instr)
     else:
-        # print ("TODO instruction format: %s" % instr_format)
         record_instruction_format(instr_format)
         pass
 
-    # dump_format_map()
     return False
 
 

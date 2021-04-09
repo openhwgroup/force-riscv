@@ -18,7 +18,7 @@
 # insert parent directory to access shared builder files
 import sys
 
-sys.path.insert(0, "..")
+# sys.path.insert(0, "..")
 
 
 class BaseTestBuilder:

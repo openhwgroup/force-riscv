@@ -19,8 +19,8 @@
 # insert parent dir to access base test builder class
 import sys
 
-sys.path.insert(0, "..")
-sys.path.insert(0, "../..")
+# sys.path.insert(0, "..")
+# sys.path.insert(0, "../..")
 
 from base_test_builder import BaseTestBuilder
 

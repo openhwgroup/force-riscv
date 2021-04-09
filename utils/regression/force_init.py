@@ -59,7 +59,7 @@ the_force_root = force_init()
 # next we need to set the import paths for the utils and tests directories
 # both of which are used for the rest of the module run, keep in mind the tests
 # may change in later releases
-sys.path.append(the_force_root + "utils/")
+# sys.path.append(the_force_root + "utils/")
 
 
 # sys.path.append( the_force_root + "tests/" )
@@ -72,9 +72,9 @@ def get_mod_root():
 
 
 # set the import paths all shared resources
-sys.path.append(get_mod_root())
+# sys.path.append(get_mod_root())
 
-sys.path.append(the_force_root + "/3rd_party/py")
+# sys.path.append(the_force_root + "/3rd_party/py")
 
 
 # if and when another utility is written that uses the same strategy then the

@@ -60,9 +60,7 @@ class CtrlFileBuilder:
                 )
                 ctrl_file_string += atomic_ctrl_item.gen_ctrl_item_string()
                 ctrl_file_string += ctrl_item_separator
-            elif ctrl_item_prefix == "genonly":
-                pass
-            else:
+            elif ctrl_item_prefix != "genonly":
                 print(
                     "ERROR: def fctrl not processing prefix: {}".format(
                         ctrl_item_prefix

@@ -13,22 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from shared.instruction import add_addressing_operand
-from vector_operand_adjustor import VectorOperandAdjustor
-from xml.sax.saxutils import escape
-
 import re
+
+from shared.instruction import add_addressing_operand
+
+from vector_operand_adjustor import VectorOperandAdjustor
 
 format_map = {}
 
 
 def v_ext_adjust_instruction_by_format(aInstruction):
-    # escaping < and > characters
-    aInstruction.name = escape(aInstruction.name)
-    aInstruction.asm.format = escape(aInstruction.asm.format)
-
-    # Get the format prior to adding the layout operand, so that it's not necessary to strip off the
-    # layout operand name.
+    # Get the format prior to adding the layout operand, so that it's not
+    # necessary to strip off the layout operand name.
     instruction_format = aInstruction.get_format()
 
     add_layout_operand(aInstruction)
@@ -120,8 +116,6 @@ def record_instruction_format(aInstructionFormat):
 
 
 def add_layout_operand(aInstruction):
-    # TODO(Noah): Add additional load/store whole register instructions when they are supported by
-    # Handcar.
     load_store_whole_register = ["VL1R.V", "VS1R.V"]
 
     operand_adjustor = VectorOperandAdjustor(aInstruction)

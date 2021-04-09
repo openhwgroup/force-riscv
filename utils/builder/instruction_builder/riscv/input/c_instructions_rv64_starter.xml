@@ -13,50 +13,86 @@
  FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
+ -->
+<!--
+Starter information for RISCV C extension instructions that decode correctly ONLY in 64 bit configurations.
 -->
 <instruction_file>
   <I name="C.ADDIW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
-    <O name="rd" type="GPR" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="12,6-2"/>
+    <O name="imm[5]" type="Immediate" bits="12-12"/>
+    <O name="rs1/rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="imm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.ADDIW"/>
   </I>
   <I name="C.ADDW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110101"/>
-    <O name="rd'" type="GPR" bits="9-7"/>
-    <O name="rs2'" type="GPR" bits="4-2"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.ADDW"/>
   </I>
-  <I name="C.LD" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.LD" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01100"/>
-    <O name="rd'" type="GPR" bits="4-2"/>
-    <O name="rs1'" type="GPR" bits="9-7"/>
-    <O name="imm5" type="Immediate" bits="6-5,12-10"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[7:6]" type="Immediate" bits="6-5"/>
+    <O name="rd'" type="Register" bits="4-2"/>
     <asm format="C.LD"/>
   </I>
-  <I name="C.LDSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.LDSP" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01110"/>
-    <O name="rd" type="GPR" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="4-2,12,6-5"/>
+    <O name="uimm[5]" type="Immediate" bits="12-12"/>
+    <O name="rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="uimm[4:3|8:6]" type="Immediate" bits="6-2"/>
     <asm format="C.LDSP"/>
   </I>
-  <I name="C.SD" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.LQ" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00100"/>
+    <O name="uimm[5:4|8]" type="Immediate" bits="12-10"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[7:6]" type="Immediate" bits="6-5"/>
+    <O name="rd'" type="Register" bits="4-2"/>
+    <asm format="C.LQ"/>
+  </I>
+  <I name="C.LQSP" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="00110"/>
+    <O name="uimm[5]" type="Immediate" bits="12-12"/>
+    <O name="rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="uimm[4|9:6]" type="Immediate" bits="6-2"/>
+    <asm format="C.LQSP"/>
+  </I>
+  <I name="C.SD" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11100"/>
-    <O name="rs2'" type="GPR" bits="4-2"/>
-    <O name="rs1'" type="GPR" bits="9-7"/>
-    <O name="imm5" type="Immediate" bits="6-5,12-10"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[7:6]" type="Immediate" bits="6-5"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.SD"/>
   </I>
-  <I name="C.SDSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  <I name="C.SDSP" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11110"/>
-    <O name="rs2" type="GPR" bits="6-2"/>
-    <O name="imm6" type="Immediate" bits="9-7,12-10"/>
+    <O name="uimm[5:3|8:6]" type="Immediate" bits="12-7"/>
+    <O name="rs2" type="Register" bits="6-2"/>
     <asm format="C.SDSP"/>
+  </I>
+  <I name="C.SQ" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="10100"/>
+    <O name="uimm[5:4|8]" type="Immediate" bits="12-10"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[7:6]" type="Immediate" bits="6-5"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
+    <asm format="C.SQ"/>
+  </I>
+  <I name="C.SQSP" isa="RISCV" group="General" extension="RV128C">
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="10110"/>
+    <O name="uimm[5:4|9:6]" type="Immediate" bits="12-7"/>
+    <O name="rs2" type="Register" bits="6-2"/>
+    <asm format="C.SQSP"/>
   </I>
   <I name="C.SUBW" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1001110001"/>
-    <O name="rd'" type="GPR" bits="9-7"/>
-    <O name="rs2'" type="GPR" bits="4-2"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.SUBW"/>
   </I>
 </instruction_file>

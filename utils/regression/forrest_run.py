@@ -44,7 +44,7 @@ from common.sys_utils import SysUtils
 from force_init import the_force_root
 from forrest_init import CmdLine, Defaults, CommandLineParameters
 
-sys.path.append(PathUtils.real_path("../../3rd_party/py"))
+# sys.path.append(PathUtils.real_path("../../3rd_party/py"))
 
 
 class ForrestRun(ModuleRun):
