@@ -22,13 +22,15 @@ class IGroupByNumber(object):
 
         # The name of the group should follow formatting "Grouping_X"
         self.name = format_name
-        # The max number of instructions that this group will contain. Will show up in its name.
+        # The max number of instructions that this group will contain. Will
+        # show up in its name.
         self.size = grpSize
         # Instructions added to this group
         self.instructions = list()
 
     def add_instruction(self, instr):
-        # If we try to add more instructions than we can handle, just raise an exception
+        # If we try to add more instructions than we can handle, just raise an
+        # exception
         if (len(self.instructions) + 1) > self.size:
             raise BuilderException(
                 'Adding instruction "%s" to full group "%s\, with size "%d".'
@@ -38,21 +40,25 @@ class IGroupByNumber(object):
         self.instructions.append(instr)
 
     def sizeUsed(self):
-        # Utilized by encapsulating class (InstructionNumGroup) to measure how full this grouping is
+        # Utilized by encapsulating class (InstructionNumGroup) to measure how
+        # full this grouping is
         return len(self.instructions)
 
     def maxSize(self):
-        # Utilized by encapsulating class (InstructionNumGroup) to get this group's maximum capacity
+        # Utilized by encapsulating class (InstructionNumGroup) to get this
+        # group's maximum capacity
         return self.size
 
     def write(self, file_handle):
-        # Same logic as the corresponding function in InstructionFormatGroup in instruction_format_group.py
+        # Same logic as the corresponding function in InstructionFormatGroup
+        # in instruction_format_group.py
         file_handle.write('Size group "%s"\n' % self.name)
         for instr in self.instructions:
             file_handle.write(instr.get_full_ID() + "\n")
 
     def print_test(self, use_standard_template=True):
-        # Same logic as the corresponding function in InstructionFormatGroup in instruction_format_group.py
+        # Same logic as the corresponding function in InstructionFormatGroup
+        # in instruction_format_group.py
         file_name = "T%d-" % len(self.instructions) + self.name
         file_name = file_name.replace(
             "|", "Or"
@@ -90,21 +96,25 @@ class IGroupByNumber(object):
 
 
 # Allows for user to group instructions by a set count
-# The class groups instructions that are added to it into a single file, until it hits this count.
-# Once it does so, it creates a new group and starts adding instructions into that. This cycle countinues.
-# Other than that, this function acts very similar to the InstructionFormatGroup class in instruction_format_group.py.
+# The class groups instructions that are added to it into a single file, until
+# it hits this count. Once it does so, it creates a new group and starts adding
+# instructions into that. This cycle countinues. Other than that, this function
+# acts very similar to the InstructionFormatGroup class in
+# instruction_format_group.py.
 class InstructionNumGroup(object):
 
-    # Some instructions use X17. If we're also using X17 as a system reg, we run into an issue.
-    # Use a non-basic template to get around it.
+    # Some instructions use X17. If we're also using X17 as a system reg, we
+    # run into an issue. Use a non-basic template to get around it.
     def __init__(self, grpSize, use_standard_template=True):
-        # List allows us to keep track of the various groups, encapsulated by the class IGroupByNumber
+        # List allows us to keep track of the various groups, encapsulated by
+        # the class IGroupByNumber
         self.IList = list()
         # Similar list for generate-only instructions
         self.IGenList = list()
         # Similar list for atomic instructions
         self.IAtomicList = list()
-        # Create the first empty group -- the group uses "Grouping_X" naming convention.
+        # Create the first empty group -- the group uses "Grouping_X" naming
+        # convention.
         self.IList.append(
             IGroupByNumber(
                 grpSize,
@@ -133,15 +143,16 @@ class InstructionNumGroup(object):
         self.use_standard_template = use_standard_template
 
     def add_instruction(self, instr, gen_only, atomic):
-        # Depending on what kind of instruction this is, we need to group it accordingly
-        if gen_only == True:
+        # Depending on what kind of instruction this is, we need to group it
+        # accordingly
+        if gen_only is True:
             activeIList = self.IGenList
             groupingPrefix = (
                 "GenOnly_Grouping_"
                 if self.use_standard_template
                 else "GenOnly_Grouping_NonStandard_"
             )
-        elif atomic == True:
+        elif atomic is True:
             activeIList = self.IAtomicList
             groupingPrefix = (
                 "Atomic_Grouping_"
@@ -156,14 +167,16 @@ class InstructionNumGroup(object):
                 else "Grouping_NonStandard_"
             )
         igrp = activeIList[len(activeIList) - 1]
-        # If the newest group of instructions is full, then create a new group w/ the same naming convention
+        # If the newest group of instructions is full, then create a new group
+        # w/ the same naming convention
         if igrp.sizeUsed() >= igrp.maxSize():
             activeIList.append(
                 IGroupByNumber(
                     igrp.maxSize(), groupingPrefix + str(len(activeIList))
                 )
             )
-            # Update reference to the newest group of instructions that we just added
+            # Update reference to the newest group of instructions that we just
+            # added
             igrp = activeIList[len(activeIList) - 1]
         igrp.add_instruction(instr)
 

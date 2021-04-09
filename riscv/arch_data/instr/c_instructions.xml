@@ -29,15 +29,15 @@
   </I>
   <I name="C.ADDI16SP" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,11-7,1-0" value="0110001001"/>
-    <O name="imm6" type="Immediate" bits="12,4-3,5,2,6" class="ImmediateExcludeOperand" exclude="0"/>
     <O name="x2" type="GPR" access="ReadWrite" class="ImpliedRegisterOperand"/>
+    <O name="imm6" type="Immediate" bits="12,4-3,5,2,6" class="ImmediateExcludeOperand" exclude="0"/>
     <asm format="C.ADDI16SP %s" op1="imm6"/>
   </I>
   <I name="C.ADDI4SPN" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00000"/>
-    <O name="rd'" type="GPR" bits="4-2" access="Write" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
     <O name="imm8" type="Immediate" bits="10-7,12-11,5,6" class="ImmediateExcludeOperand" exclude="0"/>
     <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
+    <O name="rd'" type="GPR" bits="4-2" access="Write" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
     <asm format="C.ADDI4SPN %s, %s" op1="rd'" op2="imm8"/>
   </I>
   <I name="C.AND" isa="RISCV" group="General" extension="RV64C">
@@ -59,7 +59,7 @@
     <O name="Branch-simm8" type="Branch" class="CompressedConditionalBranchOperandRISCV" condition="CBEQZ" offset="simm8" offset-scale="1">
       <O name="simm8" type="Immediate" bits="12,6-5,2,11-10,4-3" class="SignedImmediateOperand"/>
     </O>
-    <asm format="C.BEQZ %s, %s" op1="rs1'" op2="simm8"/>
+    <asm format="C.BEQZ %s, %s" op1="simm8" op2="rs1'"/>
   </I>
   <I name="C.BNEZ" isa="RISCV" class="BranchInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11101"/>
@@ -68,7 +68,7 @@
     <O name="Branch-simm8" type="Branch" class="CompressedConditionalBranchOperandRISCV" condition="CBNEZ" offset="simm8" offset-scale="1">
       <O name="simm8" type="Immediate" bits="12,6-5,2,11-10,4-3" class="SignedImmediateOperand"/>
     </O>
-    <asm format="C.BNEZ %s, %s" op1="rs1'" op2="simm8"/>
+    <asm format="C.BNEZ %s, %s" op1="simm8" op2="rs1'"/>
   </I>
   <I name="C.EBREAK" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-7,6-2,1-0" value="1001000000000010"/>
@@ -81,7 +81,7 @@
       <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
       <O name="imm5" type="Immediate" bits="6-5,12-10"/>
     </O>
-    <asm format="C.FLD %s, %s, %s" op1="rd'" op2="rs1'" op3="imm5"/>
+    <asm format="C.FLD %s, %s" op1="rs1'" op2="rd'"/>
   </I>
   <I name="C.FLDSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00110"/>
@@ -90,7 +90,7 @@
       <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
       <O name="imm6" type="Immediate" bits="4-2,12,6-5"/>
     </O>
-    <asm format="C.FLDSP %s, %s" op1="rd" op2="imm6"/>
+    <asm format="C.FLDSP %s" op1="rd"/>
   </I>
   <I name="C.FSD" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10100"/>
@@ -99,7 +99,7 @@
       <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
       <O name="imm5" type="Immediate" bits="6-5,12-10"/>
     </O>
-    <asm format="C.FSD %s, %s, %s" op1="rs2'" op2="rs1'" op3="imm5"/>
+    <asm format="C.FSD %s, %s" op1="rs1'" op2="rs2'"/>
   </I>
   <I name="C.FSDSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10110"/>
@@ -108,7 +108,7 @@
       <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
       <O name="imm6" type="Immediate" bits="9-7,12-10"/>
     </O>
-    <asm format="C.FSDSP %s, %s" op1="rs2" op2="imm6"/>
+    <asm format="C.FSDSP %s" op1="rs2"/>
   </I>
   <I name="C.J" isa="RISCV" class="BranchInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10101"/>
@@ -151,7 +151,7 @@
       <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
       <O name="imm5" type="Immediate" bits="5,12-10,6"/>
     </O>
-    <asm format="C.LW %s, %s, %s" op1="rd'" op2="rs1'" op3="imm5"/>
+    <asm format="C.LW %s, %s" op1="rs1'" op2="rd'"/>
   </I>
   <I name="C.LWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01010"/>
@@ -160,7 +160,7 @@
       <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
       <O name="imm6" type="Immediate" bits="3-2,12,6-4"/>
     </O>
-    <asm format="C.LWSP %s, %s" op1="rd" op2="imm6"/>
+    <asm format="C.LWSP %s" op1="rd"/>
   </I>
   <I name="C.MV" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,1-0" value="100010"/>
@@ -224,7 +224,7 @@
       <O name="rs1'" type="GPR" bits="9-7" access="Read" choices="Prime GPRs" class="CompressedRegisterOperandRISCV"/>
       <O name="imm5" type="Immediate" bits="5,12-10,6"/>
     </O>
-    <asm format="C.SW %s, %s, %s" op1="rs2'" op2="rs1'" op3="imm5"/>
+    <asm format="C.SW %s, %s" op1="rs1'" op2="rs2'"/>
   </I>
   <I name="C.SWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV128C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11010"/>
@@ -233,7 +233,7 @@
       <O name="x2" type="GPR" access="Read" class="ImpliedRegisterOperand"/>
       <O name="imm6" type="Immediate" bits="8-7,12-9"/>
     </O>
-    <asm format="C.SWSP %s, %s" op1="rs2" op2="imm6"/>
+    <asm format="C.SWSP %s" op1="rs2"/>
   </I>
   <I name="C.XOR" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1000110101"/>

@@ -21,9 +21,9 @@ class VectorOperandAdjustor(OperandAdjustor):
     def __init__(self, aInstruction):
         super().__init__(aInstruction)
 
-        # dictionary for instructions that use rd instead of vd where vd/rd is defined
-        self.rd_dictionary = {  #'VSETVLI', #TODO: VSETVLI and VSETVL are not arithmetic instructions and will be taken care of after arithmetic instructions are done
-            #'VSETVL',
+        # dictionary for instructions that use rd instead of vd where vd/rd is
+        # defined
+        self.rd_dictionary = {
             "VPOPC",
             "VFIRST",
             "VMV.X.S",

@@ -13,7 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-basic_template_str = """from riscv.EnvRISCV import EnvRISCV
+basic_template_str = """
+from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from riscv.ModifierUtils import PageMemoryAttributeModifier
 from base.Sequence import Sequence
@@ -27,16 +28,17 @@ class MainSequence(Sequence):
 def gen_thread_initialization(gen_thread):
     gen_thread.applyChoiceModifier(PageMemoryAttributeModifier)
 
-## Points to the generator thread initialization function defined in this file, optional
+# Points to the generator thread initialization function defined in this
+# file, optional
 GenThreadInitialization = gen_thread_initialization
 
-## Points to the MainSequence defined in this file
+#  Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+#  Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+#  Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
 """
 
@@ -49,23 +51,25 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         for instr in [%s]:
-            if (self.isRegisterReserved("X17", "Write") or self.isRegisterReserved("X16", "Read")):
-              self.genInstruction(instr, {"NoSkip":0})
+            if (self.isRegisterReserved("X17", "Write") or
+                    self.isRegisterReserved("X16", "Read")):
+                self.genInstruction(instr, {"NoSkip":0})
             else:
-              self.genInstruction(instr, {"NoSkip":1})
+                self.genInstruction(instr, {"NoSkip":1})
 
 def gen_thread_initialization(gen_thread):
     gen_thread.applyChoiceModifier(PageMemoryAttributeModifier)
 
-## Points to the generator thread initialization function defined in this file, optional
+# Points to the generator thread initialization function defined in this file,
+# optional
 GenThreadInitialization = gen_thread_initialization
 
-## Points to the MainSequence defined in this file
+#  Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+#  Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThreadRISCV
 
-## Using EnvRISCV by default, can be overriden with extended classes
+#  Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = EnvRISCV
 """

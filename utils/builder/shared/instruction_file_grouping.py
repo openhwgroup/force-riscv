@@ -140,7 +140,8 @@ class FormatInstructionGroup(BaseInstructionGroup):
     def add_instruction(self, instr):
         if instr.get_format() != self.sGroupName:
             print(
-                "ERROR: instruction format doesn't match group instr_name={} instr_format={} group_name={}".format(
+                "ERROR: instruction format doesn't match group instr_name={} "
+                "instr_format={} group_name={}".format(
                     instr.name, instr.get_format(), self.sGroupName
                 )
             )
@@ -199,7 +200,8 @@ class NumInstructionGroup(BaseInstructionGroup):
             self.mInstructions.append(instr)
         else:
             print(
-                "ERROR: attempting to add instruction to full group instr_name={} group_size={} group_name={} curr_len={}".format(
+                "ERROR: attempting to add instruction to full group "
+                "instr_name={} group_size={} group_name={} curr_len={}".format(
                     instr.name,
                     self.dGroupSize,
                     self.sGroupName,

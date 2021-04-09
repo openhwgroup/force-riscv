@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 from shared.builder_exception import BuilderException
-import sys
 
 
 class IGroupByName(object):
@@ -36,10 +35,9 @@ class IGroupByName(object):
         self.instructions.sort(key=lambda x: x.get_full_ID())
         extra_instrs = list()
         for instr in self.instructions:
-            # instr_adjustor.adjust_instruction(instr, extra_instrs)
-            instr_adjustor.adjust_instruction(instr)
-        # for extra_i in extra_instrs:
-        # self.add_instruction(extra_i)
+            instr_adjustor.adjust_instruction(instr, extra_instrs)
+        for extra_i in extra_instrs:
+            self.add_instruction(extra_i)
 
     def sort_instructions(self):
         self.instructions.sort(key=lambda x: x.get_full_ID())
@@ -56,7 +54,8 @@ class InstructionFile(object):
     def add_instruction(self, instr):
         if instr.name is None:
             print(
-                "WARNING [InstructionFile::add_instruction] instr.name = 'None'???"
+                "WARNING [InstructionFile::add_instruction] instr.name = "
+                "'None'???"
             )
             return
 

@@ -94,7 +94,6 @@ class Operand(object):
 
     def update_type(self):
         if self.value:
-            # print("opr %s len of value %d, width %d" % (self.name, len(self.value), self.width))
             if (
                 (len(self.value) == self.width)
                 and (self.value.find("x") == -1)
@@ -104,9 +103,7 @@ class Operand(object):
             elif self.value.find("(1)") != -1:
                 self.name = "RES1" + self.name
                 self.type = "Immediate"
-                if self.value == "(1)(1)(1)(1)(1)":
-                    pass
-                else:
+                if self.value != "(1)(1)(1)(1)(1)":
                     print("Unhandled RES1 %s" % self.value)
                     sys.exit(1)
                 self.value = None
@@ -166,7 +163,7 @@ class Operand(object):
         else:
             self.value = val
 
-    def merge_operand(self, opr, update_bits=False):
+    def merge_operand(self, opr, a_update_bits=False):
         if self.type != opr.type:
             raise BuilderException(
                 'Merging different types of operand "%s"=>"%s" and "%s"=>"%s".'
@@ -180,8 +177,8 @@ class Operand(object):
             self.value = opr.value
 
         self.width += opr.width
-        if update_bits:
-            self.bits = update_bits(self.bits)
+        if a_update_bits:
+            self.bits = a_update_bits(self.bits)
 
     def update_bits_value(self):
         self.bits, self.value = update_bits_value(self.bits, self.value)
@@ -232,8 +229,8 @@ class Operand(object):
             self.value = "x" * self.width
         if bit_loc >= self.width:
             raise BuilderException(
-                "set_constatnt_bit: bit location %d larger than operand width %d"
-                % (bit_loc, self.width)
+                "set_constatnt_bit: bit location %d larger than operand "
+                "width %d" % (bit_loc, self.width)
             )
         new_value = ""
         str_loc = self.width - bit_loc - 1
@@ -413,7 +410,8 @@ class Instruction(object):
             existing_opr = self.find_operand(opr.name)
             if existing_opr.value and existing_opr.value.find("!=") == 0:
                 print(
-                    'WARNING: need special handling of this instruction with constraint "%s" on operand "%s".'
+                    "WARNING: need special handling of this instruction with "
+                    'constraint "%s" on operand "%s".'
                     % (existing_opr.value, opr.name)
                 )
                 return
@@ -432,8 +430,8 @@ class Instruction(object):
                 pass
             else:
                 raise BuilderException(
-                    'Unexpected change_operand on Register type with value="%s".'
-                    % (opr.value)
+                    "Unexpected change_operand on Register type with "
+                    'value="%s".' % (opr.value)
                 )
         else:
             raise BuilderException(
@@ -487,7 +485,8 @@ class Instruction(object):
         return "-".join(opr_names)
 
     def merge_remove_operand(self, name_a, name_b):
-        # merge operand name_b with the operand name_a and remove operand name_b
+        # merge operand name_b with the operand name_a and remove operand
+        # name_b
         name_a_opr = self.find_operand(name_a)
         name_b_opr = self.find_operand(name_b)
         name_a_opr.merge_operand(name_b_opr)
@@ -574,10 +573,12 @@ class Instruction(object):
 # create an addressing operand
 # Parameters:
 # instr      => instruction object to operand on
-# opr_name   => name of the operand, can be None and created out of sub operand names
+# opr_name   => name of the operand, can be None and created out of sub
+#               operand names
 # opr_type   => operand type, Branch or LoadStore
 # class_name => operand class name
-# subop_dict => a dict of sub operand types and names will be moved from under the instruction into under the addressing operand
+# subop_dict => a dict of sub operand types and names will be moved from under
+#               the instruction into under the addressing operand
 # attr_dict  => additional addressing operand attributes
 
 

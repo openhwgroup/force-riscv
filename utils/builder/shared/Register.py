@@ -13,49 +13,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# **************************************************************************************************
 # RegisterDefinition.py
 #
-# This file defines the register and its associated register and bit fields and also handles
-# reading from and writing to XML files.
-# **************************************************************************************************
+# This file defines the register and its associated register and bit fields
+# and also handles reading from and writing to XML files.
 
-import sys
-import os
-import argparse
-import re
-import xml.etree.ElementTree as ET
+import defusedxml.defusedxml.ElementTree as ET
 
-# import boot_priority
-import copy
 
-# import registers_allow_writing as RW
-# import registers_allow_reading as RR
-# import update_register_class_reset as UR
-
-# **************************************************************************************************
-# A bit field has a size (# of bits) and a shift (# of bits to shift the bit-field left from the
-# least significant bit).
-# **************************************************************************************************
+# A bit field has a size (# of bits) and a shift (# of bits to shift the
+# bit-field left from the
 class BitField:
-    ## Constructor takes size and shift
+    # Constructor takes size and shift
     def __init__(self, aSize, aShift):
         self.mSize = aSize
         self.mShift = aShift
 
-    ## Prints the size and shift to stdout
+    # Prints the size and shift to stdout
     def print(self):
         print("\t  size:", self.mSize, "shift:", self.mShift)
 
-    ## Returns size
+    # Returns size
     def size(self):
         return self.mSize
 
-    ## Returns shift
+    # Returns shift
     def shift(self):
         return self.mShift
 
-    ## Return a string that is a XML file segment
+    # Return a string that is a XML file segment
     def toXmlString(self, aIndent):
         xml_str = aIndent + '<bit_field shift="%d" size="%d"/>\n' % (
             self.mShift,
@@ -64,35 +50,31 @@ class BitField:
         return xml_str
 
 
-# **************************************************************************************************
 # A field value has a value and description of that value.
-# **************************************************************************************************
 class FieldValue:
-    ## Constructor takes value and description
+    # Constructor takes value and description
     def __init__(self, aValue, aDescription):
         self.mValue = aValue
         self.mDescription = aDescription
 
-    ## Prints value and description to stdout
+    # Prints value and description to stdout
     def print(self):
         print(
             "\t  fieldValue:", self.mValue, "description:", self.mDescription
         )
 
-    ## Returns value
+    # Returns value
     def value(self):
         return self.mValue
 
-    ## Returns description
+    # Returns description
     def description(self):
         return self.mDescription
 
 
-# **************************************************************************************************
 # A register field has a name and is composed of one or more bit fields.
-# **************************************************************************************************
 class RegisterField:
-    ## Constructor takes a name and an optional ElementTree argument
+    # Constructor takes a name and an optional ElementTree argument
     def __init__(self, aName, aFieldEt=None):
         self.mName = aName
         self.mBitFields = []
@@ -102,27 +84,27 @@ class RegisterField:
         if aFieldEt is not None:
             self.parse(aFieldEt)
 
-    ## Sets register field shift
+    # Sets register field shift
     def setShift(self, aShift):
         self.mShift = aShift
 
-    ## Returns shift
+    # Returns shift
     def shift(self):
         return self.mShift
 
-    ## Returns name
+    # Returns name
     def name(self):
         return self.mName
 
-    ## Sets physical register
+    # Sets physical register
     def setPhysicalRegister(self, aPhysicalRegister):
         self.mPhysicalRegister = aPhysicalRegister
 
-    ## Returns physical register
+    # Returns physical register
     def physicalRegister(self):
         return self.mPhysicalRegister
 
-    ## Parses ElementTree to populate register field
+    # Parses ElementTree to populate register field
     def parse(self, aFieldEt):
         msb = None
         lsb = None
@@ -148,7 +130,7 @@ class RegisterField:
 
         self.addBitField(msb, lsb)
 
-    ## Parses values from ElementTree child
+    # Parses values from ElementTree child
     def parseValues(self, aValues):
         for value_instance in aValues.findall("value_instance"):
             for child in value_instance:
@@ -160,26 +142,26 @@ class RegisterField:
             field_value = FieldValue(value, description)
             self.mFieldValues.append(field_value)
 
-    ## Adds bit field explicitly by specifying most and least significant bits
+    # Adds bit field explicitly by specifying most and least significant bits
     def addBitField(self, aMsb, aLsb):
         size = aMsb - aLsb + 1
         bit_field = BitField(size, lsb)
         self.mBitFields.append(bit_field)
         return bit_field
 
-    ## Returns bit fields as size, shift pairs in a list
+    # Returns bit fields as size, shift pairs in a list
     def bitFields(self):
         bit_fields = []
         for bit_field in self.mBitFields:
             bit_fields.append((bit_field.size(), bit_field.shift()))
         return bit_fields
 
-    ## Merge existing register fields
+    # Merge existing register fields
     def merge(self, aRegisterField):
         for bit_field in aRegisterField.bit_fields:
             self.mBitFields.append(bit_field)
 
-    ## Prints register fields and bit fields to stdout
+    # Prints register fields and bit fields to stdout
     def print(self):
         print("\tname:", self.mName)
         for bit_field in self.mBitFields:
@@ -187,7 +169,7 @@ class RegisterField:
         for field_value in self.mFieldValues:
             field_value.print()
 
-    ## Returns size of register field in bits
+    # Returns size of register field in bits
     def size(self):
         size = 0
         for bit_field in self.mBitFields:
@@ -196,8 +178,8 @@ class RegisterField:
 
     def toXmlString(self, aIndent):
         xml_str = (
-            aIndent
-            + '<register_field name="%s" physical_register="%s" size="%d">\n'
+            aIndent + '<register_field name="%s" physical_register="%s" '
+            'size="%d">\n'
             % (self.name(), self.physicalRegister(), self.size())
         )
 
@@ -210,12 +192,10 @@ class RegisterField:
         return xml_str
 
 
-# **************************************************************************************************
-# A physical register has a name, size (# of bits), index, reset, physical register type, and
-# physical register class.
-# **************************************************************************************************
+# A physical register has a name, size (# of bits), index, reset, physical
+# register type, and physical register class.
 class PhysicalRegister:
-    ## Constructor takes in a name and defaults the other variables
+    # Constructor takes in a name and defaults the other variables
     def __init__(self, aName):
         self.mName = aName
         self.mSize = None
@@ -225,7 +205,7 @@ class PhysicalRegister:
         self.mPhysicalType = None
         self.mPhysicalClass = None
 
-    ## Sets size, index, reset, type, and class from a logical register
+    # Sets size, index, reset, type, and class from a logical register
     def setAttributesFromLogicalRegister(self, aLogicalRegister):
         self.mSize = aLogicalRegister.physicalLength()
         self.mReset = aLogicalRegister.reset()
@@ -235,7 +215,7 @@ class PhysicalRegister:
         if self.mPhysicalClass is None:
             self.mPhysicalClass = aLogicalRegister.physicalClass()
 
-    ## Returns all physical register attributes as a dictionary
+    # Returns all physical register attributes as a dictionary
     def getAttributes(self):
         attributes = {"name": self.mName}
         if self.mSize is not None:
@@ -252,7 +232,7 @@ class PhysicalRegister:
             attributes["class"] = self.mPhysicalClass
         return attributes
 
-    ## Create a PhysicalRegister object with all attributes provided
+    # Create a PhysicalRegister object with all attributes provided
     @classmethod
     def createPhysicalRegister(
         self,
@@ -273,7 +253,7 @@ class PhysicalRegister:
         phys_reg.mSubIndex = aSubIndex
         return phys_reg
 
-    ## Write out the PhysicalRegister as a XML file segment.
+    # Write out the PhysicalRegister as a XML file segment.
     def toXmlString(self, aIndent):
         xml_str = (
             aIndent
@@ -295,25 +275,24 @@ class PhysicalRegister:
         return xml_str
 
 
-# **************************************************************************************************
-# A physical register file contains a dictionary of existing physical registers.
-# **************************************************************************************************
+# A physical register file contains a dictionary of existing physical
+# registers.
 class PhysicalRegisterFile:
-    ## Constructor defines a(n empty) dictionary of physical registers
+    # Constructor defines a(n empty) dictionary of physical registers
     def __init__(self):
         self.mPhysicalRegisters = {}
         self.mOutputOrder = []
 
-    ## Returns a dictionary of physical registers
+    # Returns a dictionary of physical registers
     def physicalRegisters(self):
         return self.mPhysicalRegisters
 
-    ## Add a physical register
+    # Add a physical register
     def addPhysicalRegisterInOrder(self, aPhysRegister):
         self.mPhysicalRegisters[aPhysRegister.mName] = aPhysRegister
         self.mOutputOrder.append(aPhysRegister.mName)
 
-    ## Returns a physical register corresponding to the name provided
+    # Returns a physical register corresponding to the name provided
     def getPhysicalRegister(self, aName):
         if aName in self.mPhysicalRegisters:
             return self.mPhysicalRegisters[aName]
@@ -322,7 +301,7 @@ class PhysicalRegisterFile:
             self.mPhysicalRegisters[aName] = new_physical_register
             return new_physical_register
 
-    ## Write out physical registers as a XML file segment
+    # Write out physical registers as a XML file segment
     def toXmlString(self, aIndent):
         xml_str = aIndent + "<physical_registers>\n"
 
@@ -334,102 +313,100 @@ class PhysicalRegisterFile:
         return xml_str
 
 
-# **************************************************************************************************
-# A register has a name, length, index, boot priority, register type, register class, and a set of
-# register fields. It also contains privilege and description fields along with other attributes
-# that are defined via keyword arguments in the constructor like below:
+# A register has a name, length, index, boot priority, register type, register
+# class, and a set of register fields. It also contains privilege and
+# description fields along with other attributes that are defined via keyword
+# arguments in the constructor like below:
 #
 #   register = Register(name='example', length=64, boot=1)
-# **************************************************************************************************
+
+
 class Register:
-    ## Constructor defines an empty dictionary of register fields and takes in a variable amount of
-    #  keyword arguments that are initialized if defined as attributes
+    # Constructor defines an empty dictionary of register fields and takes in
+    # a variable amount of keyword arguments that are initialized if defined as
+    #  attributes
     def __init__(self, **kwargs):
         self.mName = kwargs.get("name", "")
-        # self.mPhysicalName = kwargs.get('physical_name', '')       #TODO: Do these physical fields
-        self.mIndex = kwargs.get(
-            "index", None
-        )  # need to be defined for RISCV?
-        self.mLength = kwargs.get("length", "")  # If so, add the required
-        # self.mPhysicalLength = kwargs.get('physical_length', None) # functionality for each.
+        self.mIndex = kwargs.get("index", None)
+        self.mLength = kwargs.get("length", "")
         self.mBoot = kwargs.get("boot", 0)
         self.mType = kwargs.get("type", None)
-        # self.mPhysicalType = kwargs.get('physical_type', None)
         self.mClass = kwargs.get("class", None)
-        # self.mPhysicalClass = kwargs.get('physical_class', None)
         self.mPrivilege = kwargs.get("privilege", None)
         self.mDescription = kwargs.get("description", "")
         self.mRegisterFields = {}
         self.mOutputOrder = []
 
-    ## Returns register name
+    # Returns register name
     def name(self):
         return self.mName
 
-    ## Sets register name
+    # Sets register name
     def setName(self, aName):
         self.mName = aName
 
-    ## Returns register index
+    # Returns register index
     def index(self):
         return self.mIndex
 
-    ## Returns register length
+    # Returns register length
     def length(self):
         return self.mLength
 
-    ## Sets register length
+    # Sets register length
     def setLength(self, aLength):
         self.mLength = aLength
 
-    ## Returns register boot priority
+    # Returns register boot priority
     def boot(self):
         return self.mBoot
 
-    ## Sets register boot priority
+    # Sets register boot priority
     def setBoot(self, aBoot):
         self.mBoot = aBoot
 
-    ## Returns register type
+    # Returns register type
     def type(self):
         return self.mType
 
-    ## Sets register type
+    # Sets register type
     def setType(self, aType):
         self.mType = aType
 
-    ## Returns register class
+    # Returns register class
     def registerClass(self):
         return self.mClass
 
-    ## Returns register privilege
+    # Returns register privilege
     def privilege(self):
         return self.mPrivilege
 
-    ## Sets register privilege
+    # Sets register privilege
     def setPrivilege(self, aPrivilege):
         self.mPrivilege = aPrivilege
 
-    ## Returns register description
+    # Returns register description
     def description(self):
         return self.mDescription
 
-    ## Sets register description
+    # Sets register description
     def setDescription(self, aDescription):
         self.mDescription = aDescription
 
-    ## Returns the dictionary of each register field for this register
+    # Returns the dictionary of each register field for this register
     def registerFields(self):
         return self.mRegisterFields
 
-    ## Returns total size of the register by adding together the sizes of all the register fields
+    # Returns total size of the register by adding together the sizes of all
+    # the register fields
     def size(self):
         size = 0
         for register_field in self.mRegisterFields:
             size += self.mRegisterFields[register_field].size()
         return size
 
-    ## Returns a register field according to the provided name or raises an exception if name does
+    # Returns a register field according to the provided name or raises an
+    # exception if name does
     #  not exist
     def getRegisterField(self, aRegisterFieldName):
         if aRegisterFieldName in self.mRegisterFields:
@@ -440,14 +417,14 @@ class Register:
                 % aRegisterFieldName
             )
 
-    ## Add a register field in order, record the field name in the ordering list
+    # Add a register field in order, record the field name in the ordering list
     #
     def addRegisterFieldInOrder(self, aRegisterField):
         self.mRegisterFields[aRegisterField.mName] = aRegisterField
         self.mOutputOrder.append(aRegisterField.mName)
 
-    ## Adds a new register field with the provided name and returns the new field (or the existing
-    #  register field if the name already exists)
+    # Adds a new register field with the provided name and returns the new
+    # field (or the existing register field if the name already exists)
     def addRegisterField(self, aRegisterFieldName):
         if aRegisterFieldName not in self.mRegisterFields:
             self.mRegisterFields[aRegisterFieldName] = RegisterField(
@@ -455,8 +432,8 @@ class Register:
             )
         return self.mRegisterFields[aRegisterFieldName]
 
-    ## Deletes a register field according to the provided name or raises an exception if name does
-    #  not exist
+    # Deletes a register field according to the provided name or raises an
+    # exception if name does not exist
     def deleteRegisterField(self, aRegisterFieldName):
         if aRegisterFieldName in self.mRegisterFields:
             del self.mRegisterFields[aRegisterFieldName]
@@ -466,11 +443,11 @@ class Register:
                 % aRegisterFieldName
             )
 
-    ## Return register structural information as an XML segment string.
+    # Return register structural information as an XML segment string.
     def toXmlString(self, aIndent):
         xml_str = (
-            aIndent
-            + '<register name="%s" index="%d" size="%d" type="%s" boot="0x%x"'
+            aIndent + '<register name="%s" index="%d" size="%d" type="%s" '
+            'boot="0x%x"'
             % (self.mName, self.mIndex, self.mLength, self.mType, self.mBoot)
         )
 
@@ -486,12 +463,10 @@ class Register:
         return xml_str
 
 
-# **************************************************************************************************
 # A register file contains a dictionary of registers.
-# **************************************************************************************************
 class RegisterFile:
-    ## Constructor defines a dictionary of registers and can take in an XML file with predefined
-    #  registers (and parse them into the dictionary)
+    # Constructor defines a dictionary of registers and can take in an XML file
+    # with predefined registers (and parse them into the dictionary)
     def __init__(self, aXmlFile=None):
         self.mName = None
         self.mRegisters = {}
@@ -506,7 +481,7 @@ class RegisterFile:
         if aXmlFile and len(aXmlFile) > 0:
             self.parseXmlFile(aXmlFile)
 
-    ## Parses the XML file provided to the constructor
+    # Parses the XML file provided to the constructor
     def parseXmlFile(self, aXmlFile):
         for key in aXmlFile:
             if key is "system":
@@ -525,20 +500,20 @@ class RegisterFile:
                     % key
                 )
 
-    ## Adds a register to registers dictionary and to implementation dictionary if implementation
-    #  is defined
+    # Adds a register to registers dictionary and to implementation dictionary
+    # if implementation is defined
     def addRegister(self, aRegister):
         self.mRegisters[aRegister.name()] = aRegister
         if "IMPLEMENTATION DEFINED" in aRegister.registerFields():
             self.mImplementations[aRegister.name()] = aRegister
 
-    ## Add a register and record its name in output order list
+    # Add a register and record its name in output order list
     def addRegisterInOrder(self, aRegister):
         self.mRegisters[aRegister.name()] = aRegister
         self.mOutputOrder.append(aRegister.name())
 
-    ## Returns a register according to the provided name or raises an exception if name does not
-    #  exist
+    # Returns a register according to the provided name or raises an exception
+    # if name does not exist
     def getRegister(self, aRegisterName):
         if aRegisterName in self.mRegisters:
             return self.mRegisters[aRegisterName]
@@ -548,8 +523,9 @@ class RegisterFile:
                 % aRegisterName
             )
 
-    ## Deletes a register (and associated register in the implementation dictionary) according to
-    #  the provided name or raises an exception if the register does not exist
+    # Deletes a register (and associated register in the implementation
+    # dictionary) according to the provided name or raises an exception if the
+    # register does not exist
     def deleteRegister(self, aRegisterName):
         if aRegisterName in self.mImplementations:
             del self.mImplementations[aRegisterName]
@@ -561,7 +537,8 @@ class RegisterFile:
                 % aRegisterName
             )
 
-    ## Return a XML segment string containing structural information for all the registers.
+    # Return a XML segment string containing structural information for all
+    # the registers.
     def toXmlString(self, aIndent):
         xml_str = aIndent + '<register_file name="%s">\n' % self.mName
 
@@ -573,12 +550,10 @@ class RegisterFile:
         return xml_str
 
 
-# ****************************************************************************************************
-# A register document container class that contains both the physical registers and the RegisterFile.
-# This container can also write out the XML file.
-# ****************************************************************************************************
+# A register document container class that contains both the physical
+# registers and the RegisterFile. This container can also write out the XML
+# file.
 class RegistersDocument(object):
-
     LICENSE_STRING = """<!--
  Copyright (C) [2020] Futurewei Technologies, Inc.
 
@@ -601,15 +576,15 @@ class RegistersDocument(object):
         self.mRegisterFile = RegisterFile()
         self.mRegisterFile.mName = aRegisterFileName
 
-    ## Add a PhysicalRegister
+    # Add a PhysicalRegister
     def addPhysicalRegister(self, aPhysRegister):
         self.mPhysicalRegisters.addPhysicalRegisterInOrder(aPhysRegister)
 
-    ## Add a Register
+    # Add a Register
     def addRegister(self, aRegister):
         self.mRegisterFile.addRegisterInOrder(aRegister)
 
-    ## Write out the physical register and register contents into an XML file
+    # Write out the physical register and register contents into an XML file
     def writeXmlFile(self, aFileName):
         with open(aFileName, "w") as f:
             f.write(self.LICENSE_STRING)

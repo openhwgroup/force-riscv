@@ -26,13 +26,13 @@ class MainSequence(Sequence):
 
 {4}
 
-## Points to the MainSequence defined in this file
+#  Points to the MainSequence defined in this file
 MainSequenceClass = MainSequence
 
-## Using GenThreadRISCV by default, can be overriden with extended classes
+#  Using GenThreadRISCV by default, can be overriden with extended classes
 GenThreadClass = GenThread{2}
 
-## Using EnvRISCV by default, can be overriden with extended classes
+#  Using EnvRISCV by default, can be overriden with extended classes
 EnvClass = Env{2}
 """
 
@@ -43,5 +43,6 @@ RISCVAdditionalImport = (
 RISCVGenThreadInit = """def gen_thread_initialization(gen_thread):
     gen_thread.applyChoiceModifier(PageMemoryAttributeModifier)
 
-## Points to the generator thread initialization function defined in this file, optional
+# Points to the generator thread initialization function defined in this
+# file, optional
 GenThreadInitialization = gen_thread_initialization"""

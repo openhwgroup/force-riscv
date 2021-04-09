@@ -13,12 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import xml.sax
+import defusedxml.defusedxml.sax
 import sys
 from shared.instruction import Instruction, Operand, GroupOperand, Asm
 import shared.builder_utils as builder_utils
 import copy
 from shared.builder_exception import BuilderException
+
+# Needed to create class to interpret parsed XML data
+from xml.sax.handler import ContentHandler
 
 
 def asm_op_index(op):
@@ -28,9 +31,9 @@ def asm_op_index(op):
         return 0
 
 
-class InstructionFileHandler(xml.sax.handler.ContentHandler, object):
+class InstructionFileHandler(ContentHandler, object):
     def __init__(self, file_path, instr_file):
-        xml.sax.ContentHandler.__init__(self)
+        super().__init__()
         self.instructionFile = instr_file
         self.filePath = file_path
         self.nameStack = list()
@@ -50,17 +53,13 @@ class InstructionFileHandler(xml.sax.handler.ContentHandler, object):
         self.nameStack.append(name)
         self.currentChars = ""
 
-        if name == "instruction_file":
-            pass
-        elif name in ["I", "O", "asm"]:
+        if name in ["I", "O", "asm"]:
             self.__getattribute__("start_" + name)(attrs)
 
     def endElement(self, name):
         self.nameStack.pop()
 
-        if name == "instruction_file":
-            pass
-        elif name in ["I", "O", "asm"]:
+        if name in ["I", "O", "asm"]:
             self.__getattribute__("end_" + name)()
 
     def characters(self, content):
@@ -183,12 +182,9 @@ class InstructionFileParser(object):
 
     def parse(self, file_path):
         ifile_handler = InstructionFileHandler(file_path, self.instrFile)
-        # import traceback
-        # print( "File Path: " + str( file_path ))
-        # traceback.print_stack()
         try:
-            xml.sax.parse(file_path, ifile_handler)
-        except:
+            defusedxml.defusedxml.sax.parse(file_path, ifile_handler)
+        except BaseException:
             e_type, e_value, e_tb = sys.exc_info()
             import traceback
 

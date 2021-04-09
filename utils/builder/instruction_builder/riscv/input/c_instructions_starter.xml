@@ -20,49 +20,55 @@ Add RISCV C extension instruction starter information in this file.
 <instruction_file>
   <I name="C.ADD" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,1-0" value="100110"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="rs2" type="Register" bits="6-2"/>
+    <O name="rs1/rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="rs2$\neq$0" type="Register" bits="6-2"/>
     <asm format="C.ADD"/>
   </I>
   <I name="C.ADDI" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00001"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="12,6-2"/>
+    <O name="nzimm[5]" type="Immediate" bits="12-12"/>
+    <O name="rs1/rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="nzimm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.ADDI"/>
   </I>
   <I name="C.ADDI16SP" isa="RISCV" group="General" extension="RV64C">
-    <O name="const_bits" type="Constant" bits="15-13,11-7,1-0" value="0110001001"/>
-    <O name="imm6" type="Immediate" bits="12,4-3,5,2,6"/>
+    <O name="const_bits" type="Constant" bits="15-13,1-0" value="01101"/>
+    <O name="nzimm[9]" type="Immediate" bits="12-12"/>
+    <O name="2" type="Immediate" bits="11-7"/>
+    <O name="nzimm[4|6|8:7|5]" type="Immediate" bits="6-2"/>
     <asm format="C.ADDI16SP"/>
   </I>
   <I name="C.ADDI4SPN" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00000"/>
+    <O name="nzuimm[5:4|9:6|2|3]" type="Immediate" bits="12-5"/>
     <O name="rd'" type="Register" bits="4-2"/>
-    <O name="imm8" type="Immediate" bits="10-7,12-11,5,6"/>
     <asm format="C.ADDI4SPN"/>
   </I>
   <I name="C.AND" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1000111101"/>
-    <O name="rd'" type="Register" bits="9-7"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
     <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.AND"/>
   </I>
   <I name="C.ANDI" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,11-10,1-0" value="1001001"/>
-    <O name="rd'" type="Register" bits="9-7"/>
-    <O name="imm6" type="Immediate" bits="12,6-2"/>
+    <O name="imm[5]" type="Immediate" bits="12-12"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
+    <O name="imm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.ANDI"/>
   </I>
   <I name="C.BEQZ" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11001"/>
+    <O name="imm[8|4:3]" type="Immediate" bits="12-10"/>
     <O name="rs1'" type="Register" bits="9-7"/>
-    <O name="simm8" type="Immediate" bits="12,6-5,2,11-10,4-3"/>
+    <O name="imm[7:6|2:1|5]" type="Immediate" bits="6-2"/>
     <asm format="C.BEQZ"/>
   </I>
   <I name="C.BNEZ" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11101"/>
+    <O name="imm[8|4:3]" type="Immediate" bits="12-10"/>
     <O name="rs1'" type="Register" bits="9-7"/>
-    <O name="simm8" type="Immediate" bits="12,6-5,2,11-10,4-3"/>
+    <O name="imm[7:6|2:1|5]" type="Immediate" bits="6-2"/>
     <asm format="C.BNEZ"/>
   </I>
   <I name="C.EBREAK" isa="RISCV" group="General" extension="RV64C">
@@ -71,141 +77,154 @@ Add RISCV C extension instruction starter information in this file.
   </I>
   <I name="C.FLD" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00100"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
     <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[7:6]" type="Immediate" bits="6-5"/>
     <O name="rd'" type="Register" bits="4-2"/>
-    <O name="imm5" type="Immediate" bits="6-5,12-10"/>
     <asm format="C.FLD"/>
   </I>
   <I name="C.FLDSP" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00110"/>
+    <O name="uimm[5]" type="Immediate" bits="12-12"/>
     <O name="rd" type="Register" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="4-2,12,6-5"/>
+    <O name="uimm[4:3|8:6]" type="Immediate" bits="6-2"/>
     <asm format="C.FLDSP"/>
   </I>
   <I name="C.FSD" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10100"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
     <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[7:6]" type="Immediate" bits="6-5"/>
     <O name="rs2'" type="Register" bits="4-2"/>
-    <O name="imm5" type="Immediate" bits="6-5,12-10"/>
     <asm format="C.FSD"/>
   </I>
   <I name="C.FSDSP" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10110"/>
+    <O name="uimm[5:3|8:6]" type="Immediate" bits="12-7"/>
     <O name="rs2" type="Register" bits="6-2"/>
-    <O name="imm6" type="Immediate" bits="9-7,12-10"/>
     <asm format="C.FSDSP"/>
   </I>
   <I name="C.J" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="10101"/>
-    <O name="simm11" type="Immediate" bits="12,8,10-9,6,7,2,11,5-3"/>
+    <O name="imm[11|4|9:8|10|6|7|3:1|5]" type="Immediate" bits="12-2"/>
     <asm format="C.J"/>
   </I>
   <I name="C.JALR" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,6-2,1-0" value="10010000010"/>
-    <O name="rs1" type="Register" bits="11-7"/>
+    <O name="rs1$\neq$0" type="Register" bits="11-7"/>
     <asm format="C.JALR"/>
   </I>
   <I name="C.JR" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,6-2,1-0" value="10000000010"/>
-    <O name="rs1" type="Register" bits="11-7"/>
+    <O name="rs1$\neq$0" type="Register" bits="11-7"/>
     <asm format="C.JR"/>
   </I>
   <I name="C.LI" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01001"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="12,6-2"/>
+    <O name="imm[5]" type="Immediate" bits="12-12"/>
+    <O name="rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="imm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.LI"/>
   </I>
   <I name="C.LUI" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01101"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="12,6-2"/>
+    <O name="nzimm[17]" type="Immediate" bits="12-12"/>
+    <O name="rd$\neq$$\{0,2\}$" type="Register" bits="11-7"/>
+    <O name="nzimm[16:12]" type="Immediate" bits="6-2"/>
     <asm format="C.LUI"/>
   </I>
   <I name="C.LW" isa="RISCV" group="General" extension="RV128C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01000"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
     <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[2|6]" type="Immediate" bits="6-5"/>
     <O name="rd'" type="Register" bits="4-2"/>
-    <O name="imm5" type="Immediate" bits="5,12-10,6"/>
     <asm format="C.LW"/>
   </I>
   <I name="C.LWSP" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01010"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="3-2,12,6-4"/>
+    <O name="uimm[5]" type="Immediate" bits="12-12"/>
+    <O name="rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="uimm[4:2|7:6]" type="Immediate" bits="6-2"/>
     <asm format="C.LWSP"/>
   </I>
   <I name="C.MV" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,1-0" value="100010"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="rs2" type="Register" bits="6-2"/>
+    <O name="rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="rs2$\neq$0" type="Register" bits="6-2"/>
     <asm format="C.MV"/>
   </I>
   <I name="C.NOP" isa="RISCV" group="General" extension="RV64C">
-    <O name="const_bits" type="Constant" bits="15-0" value="0000000000000001"/>
+    <O name="const_bits" type="Constant" bits="15-13,11-7,1-0" value="0000000001"/>
+    <O name="nzimm[5]" type="Immediate" bits="12-12"/>
+    <O name="nzimm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.NOP"/>
   </I>
   <I name="C.OR" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1000111001"/>
-    <O name="rd'" type="Register" bits="9-7"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
     <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.OR"/>
   </I>
   <I name="C.SLLI" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00010"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="shamt" type="Immediate" bits="12,6-2"/>
+    <O name="nzuimm[5]" type="Immediate" bits="12-12"/>
+    <O name="rs1/rd$\neq$0" type="Register" bits="11-7"/>
+    <O name="nzuimm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.SLLI"/>
   </I>
   <I name="C.SLLI64" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,6-2,1-0" value="00000000010"/>
-    <O name="rd" type="Register" bits="11-7"/>
+    <O name="rs1/rd$\neq$0" type="Register" bits="11-7"/>
     <asm format="C.SLLI64"/>
   </I>
   <I name="C.SRAI" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,11-10,1-0" value="1000101"/>
-    <O name="rd'" type="Register" bits="9-7"/>
-    <O name="shamt" type="Immediate" bits="12,6-2"/>
+    <O name="nzuimm[5]" type="Immediate" bits="12-12"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
+    <O name="nzuimm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.SRAI"/>
   </I>
   <I name="C.SRAI64" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-2,1-0" value="1000010000001"/>
-    <O name="rd'" type="Register" bits="9-7"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
     <asm format="C.SRAI64"/>
   </I>
   <I name="C.SRLI" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,11-10,1-0" value="1000001"/>
-    <O name="rd'" type="Register" bits="9-7"/>
-    <O name="shamt" type="Immediate" bits="12,6-2"/>
+    <O name="nzuimm[5]" type="Immediate" bits="12-12"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
+    <O name="nzuimm[4:0]" type="Immediate" bits="6-2"/>
     <asm format="C.SRLI"/>
   </I>
   <I name="C.SRLI64" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-2,1-0" value="1000000000001"/>
-    <O name="rd'" type="Register" bits="9-7"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
     <asm format="C.SRLI64"/>
   </I>
   <I name="C.SUB" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1000110001"/>
-    <O name="rd'" type="Register" bits="9-7"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
     <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.SUB"/>
   </I>
   <I name="C.SW" isa="RISCV" group="General" extension="RV128C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11000"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
     <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[2|6]" type="Immediate" bits="6-5"/>
     <O name="rs2'" type="Register" bits="4-2"/>
-    <O name="imm5" type="Immediate" bits="5,12-10,6"/>
     <asm format="C.SW"/>
   </I>
   <I name="C.SWSP" isa="RISCV" group="General" extension="RV128C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11010"/>
+    <O name="uimm[5:2|7:6]" type="Immediate" bits="12-7"/>
     <O name="rs2" type="Register" bits="6-2"/>
-    <O name="imm6" type="Immediate" bits="8-7,12-9"/>
     <asm format="C.SWSP"/>
   </I>
   <I name="C.XOR" isa="RISCV" group="General" extension="RV64C">
     <O name="const_bits" type="Constant" bits="15-13,12-12,11-10,6-5,1-0" value="1000110101"/>
-    <O name="rd'" type="Register" bits="9-7"/>
+    <O name="rs1'/rd'" type="Register" bits="9-7"/>
     <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.XOR"/>
   </I>

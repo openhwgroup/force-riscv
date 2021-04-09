@@ -13,37 +13,45 @@
  FIT FOR A PARTICULAR PURPOSE.
  See the License for the specific language governing permissions and
  limitations under the License.
--->
+ -->
 <instruction_file>
-  <I name="C.FLW" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+<I name="C.FLW" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01100"/>
-    <O name="rd'" type="Register" bits="4-2"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
     <O name="rs1'" type="Register" bits="9-7"/>
-    <O name="imm5" type="Immediate" bits="5,12-10,6"/>
+    <O name="uimm[2|6]" type="Immediate" bits="6-5"/>
+    <O name="rd'" type="Register" bits="4-2"/>
     <asm format="C.FLW"/>
   </I>
-  <I name="C.FLWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  
+<I name="C.FLWSP" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="01110"/>
+    <O name="uimm[5]" type="Immediate" bits="12-12"/>
     <O name="rd" type="Register" bits="11-7"/>
-    <O name="imm6" type="Immediate" bits="3-2,12,6-4"/>
+    <O name="uimm[4:2|7:6]" type="Immediate" bits="6-2"/>
     <asm format="C.FLWSP"/>
   </I>
-  <I name="C.FSW" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  
+<I name="C.FSW" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11100"/>
-    <O name="rs2'" type="FPR" bits="4-2"/>
-    <O name="rs1'" type="GPR" bits="9-7"/>
-    <O name="imm5" type="Immediate" bits="5,12-10,6"/>
+    <O name="uimm[5:3]" type="Immediate" bits="12-10"/>
+    <O name="rs1'" type="Register" bits="9-7"/>
+    <O name="uimm[2|6]" type="Immediate" bits="6-5"/>
+    <O name="rs2'" type="Register" bits="4-2"/>
     <asm format="C.FSW"/>
   </I>
-  <I name="C.FSWSP" isa="RISCV" class="LoadStoreInstruction" group="General" extension="RV64C">
+  
+<I name="C.FSWSP" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="11110"/>
-    <O name="rs2" type="FPR" bits="6-2"/>
-    <O name="imm6" type="Immediate" bits="9-7,12-10"/>
+    <O name="uimm[5:2|7:6]" type="Immediate" bits="12-7"/>
+    <O name="rs2" type="Register" bits="6-2"/>
     <asm format="C.FSWSP"/>
   </I>
-  <I name="C.JAL" isa="RISCV" class="BranchInstruction" group="General" extension="RV64C">
+  
+<I name="C.JAL" isa="RISCV" group="General" extension="RV32C">
     <O name="const_bits" type="Constant" bits="15-13,1-0" value="00101"/>
-    <O name="simm11" type="Immediate" bits="12,8,10-9,6,7,2,11,5-3"/>
+    <O name="imm[11|4|9:8|10|6|7|3:1|5]" type="Immediate" bits="12-2"/>
     <asm format="C.JAL"/>
   </I>
+  
 </instruction_file>
