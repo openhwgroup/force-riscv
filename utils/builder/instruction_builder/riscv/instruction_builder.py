@@ -134,6 +134,17 @@ def build_instructions():
             print("unsupported option: %s" % o)
             sys.exit(1)
 
+    from adjust_instruction_by_format import adjust_instruction_by_format
+    from c_ext_adjust_instruction_by_format import (
+        c_ext_adjust_instruction_by_format,
+    )
+    from v_ext_adjust_instruction_by_format import (
+        v_ext_adjust_instruction_by_format,
+    )
+    from priv_adjust_instruction_by_format import (
+        priv_adjust_instruction_by_format,
+    )
+
     if output_all or g_ext_only:
         process_instruction_file(
             "input/g_instructions_starter.xml",
