@@ -17,7 +17,6 @@
 
 import sys
 
-# sys.path.insert(0, "../../shared/")
 from Register import *
 
 

@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 import os
-import sys
 
 
 def get_force_path():
@@ -39,15 +38,3 @@ def locate_force_path():
             raise Exception("Reached the system root, force root not found")
         # not found and not at root move to the next directory up the chain
         my_path = head
-
-
-# def add_force_relative_path(relative_path):
-#     force_path = get_force_path()
-#     print("FORCE PATH: %s" % force_path)
-#
-#     force_relative_path = force_path + "/" + relative_path
-#     print("Relative path: %s" % force_relative_path)
-#
-#     sys.path.append(force_relative_path)
-#
-#     print("sys path: %s" % sys.path)

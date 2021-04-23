@@ -28,8 +28,6 @@
 
 import os
 import signal
-
-# Make third-party modules available for import
 import sys
 import traceback
 
@@ -43,8 +41,6 @@ from common.path_utils import PathUtils
 from common.sys_utils import SysUtils
 from force_init import the_force_root
 from forrest_init import CmdLine, Defaults, CommandLineParameters
-
-# sys.path.append(PathUtils.real_path("../../3rd_party/py"))
 
 
 class ForrestRun(ModuleRun):
@@ -256,8 +252,6 @@ def main():
         # sys.exit( 0 )
 
     except Exception as ex:
-        from force_init import force_usage
-
         Msg.err(
             "An Unhandled Error has Occurred during run of " + str(sys.argv[0])
         )
