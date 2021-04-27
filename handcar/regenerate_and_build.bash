@@ -18,7 +18,6 @@
 # SCRIPT DEFAULTS
 unset NO_GIT
 pause() {
-    #do things with parameters like $1 such as
     echo
     echo "$1"
     echo
@@ -34,10 +33,9 @@ function usage {
 
 while getopts ":in" opt; do
     case "$opt" in
-    i)  # interactive
+    i)  # interactive requested, so redefine 'pause'
         echo "===== option 'i' detected"
         pause() {
-            #do things with parameters like $1 such as
             echo
             read -r -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
             echo
@@ -123,11 +121,9 @@ cp -r ./headers/* .
 cp ../3rd_party/inc/softfloat/softfloat.h ./inc/.
 
 pause "===== Preparing to create handcar files"
-#./create_handcar_files.bash
-cd ./patcher
+cd ./patcher || exit 1
 ./patcher.py patch --clean
 cd ..
-# read -sn1 -p "finished patcher"
 
 pause "===== Preparing to run filesurgeon"
 ./filesurgeon.py

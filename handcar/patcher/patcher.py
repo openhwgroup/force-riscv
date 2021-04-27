@@ -198,9 +198,11 @@ def should_do_patch(src, patch, tgt):
 
 
 def patch_file(src, patch, tgt):
-    cmd = '%s %s -i %s -o %s' % (patch_cmd, src, patch, tgt)
+    cmd = [patch_cmd, src, '-i', patch, '-o', tgt]
     printout('Calling %s' % cmd)
-    os.system(cmd)
+    rc = subprocess.run(cmd)
+    if rc.returncode:
+        print("error encountered running %r" % cmd)
 
 
 def make_folders():
@@ -280,8 +282,7 @@ def generate_patches():
                 with open(patch, 'w') as fh:
                     fh.write(copyright_text % patch)
                     cmd = [diff_cmd, src, tgt]
-                    result = subprocess.Popen(cmd, stdout=fh)
-                    result.wait()
+                    subprocess.run(cmd, stdout=fh)
 
 
 def main():

@@ -5,16 +5,22 @@ python_req="3.6.1"
 
 . ./setenv.bash
 
+pause() {
+    echo
+    read -r -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
+    echo
+}
+
 gcc_ver=$(g++ --version|grep g++|awk '{print $NF}')
-if ! $(./version_chk.py "$gcc_ver" "$gcc_req"); then
+if ! $(./version_chk.py "$gcc_ver" "$gcc_req" ); then
   echo g++ version needs to be >= "$gcc_req"
-  exit 1
+  pause "g++ version may need updating."
 fi
 
-python_ver=$(g++ --version|grep g++|awk '{print $NF}')
+python_ver=$(python3 --version|grep Python|awk '{print $NF}')
 if ! $(./version_chk.py "$python_ver" "$python_req"); then
-  echo python version needs to be >= "$python_ver"
-  exit 1
+  echo python version needs to be >= "$python_req"
+  pause "python version may need updating."
 fi
 
 echo Current environment:

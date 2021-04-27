@@ -13,10 +13,12 @@ Options:
     -h --help       Show this screen
 
 """
+import re
 from docopt.docopt import docopt
 
 PASS = 0
 FAIL = 1
+RC={PASS: 'Passed', FAIL: 'Failed'}
 
 
 def compare_versions(value, required, verbose):
@@ -26,12 +28,14 @@ def compare_versions(value, required, verbose):
     :type required: str
 
     """
-    val = [int(x) for x in value.split(sep='.')]
+    # allow for unexpected input for value.
+    # required is within our control.
+    val = [int(x) for x in re.split(r'\D+', value) if x]
     req = [int(x) for x in required.split(sep='.')]
 
     def log_return(result):
         if verbose:
-            print('value = %s, required = %s, result = %s' % (val, req, result))
+            print('value = %14s, required = %14s, result = %s' % (val, req, RC[result]))
         return result
 
     for i, rev in enumerate(req):
@@ -53,6 +57,8 @@ def compare_versions(value, required, verbose):
 
 def self_test():
     test_data = [
+        [' 2.3-23f', '2.3.4'],
+        [' 10.2.3', '2.3.4'],
         [' 10.2.3', '2.3.4'],
         ['2.3.5', '2.3.4'],
         ['2.3.4', ' 2.3.4'],
@@ -66,7 +72,7 @@ def self_test():
         ['2.30.4', '2.3.4'],
     ]
     for v, r in test_data:
-        print(compare_versions(v, r, True))
+        compare_versions(v, r, True)
 
 
 def main():
