@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+gcc_req="5.1"
+python_req="3.6.1"
+
+. ./setenv.bash
+
+pause() {
+    echo
+    read -r -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
+    echo
+}
+
+gcc_ver=$(g++ --version|grep g++|awk '{print $NF}')
+if ! $(./version_chk.py "$gcc_ver" "$gcc_req" ); then
+  echo g++ version needs to be >= "$gcc_req"
+  pause "g++ version may need updating."
+fi
+
+python_ver=$(python3 --version|grep Python|awk '{print $NF}')
+if ! $(./version_chk.py "$python_ver" "$python_req"); then
+  echo python version needs to be >= "$python_req"
+  pause "python version may need updating."
+fi
+
+echo Current environment:
+echo FORCE_CC=$FORCE_CC
+echo FORCE_PYTHON_VER=$FORCE_PYTHON_VER
+echo FORCE_PYTHON_INC=$FORCE_PYTHON_INC
+echo FORCE_PYTHON_LIB=$FORCE_PYTHON_LIB
+
+make -j
+make -j tests
+./utils/regression/master_run.py
+./utils/regression/unit_tests.py
+

@@ -2,15 +2,15 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
+# FORCE-RISCV is licensed under the Apache License, Version 2.0
+#  (the "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
 #
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+# OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
@@ -18,7 +18,6 @@
 # SCRIPT DEFAULTS
 unset NO_GIT
 pause() {
-    #do things with parameters like $1 such as
     echo
     echo "$1"
     echo
@@ -34,10 +33,9 @@ function usage {
 
 while getopts ":in" opt; do
     case "$opt" in
-    i)  # interactive
+    i)  # interactive requested, so redefine 'pause'
         echo "===== option 'i' detected"
         pause() {
-            #do things with parameters like $1 such as
             echo
             read -r -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
             echo
@@ -107,24 +105,32 @@ cat Makefile | grep -B10 -A7 "^default-CFLAGS"
 echo "^^^^^ End auto-edit output ^^^^^"
 pause "===== Please review edit(s) above"
 
-echo "===== Preparing to run makefile"
+echo "===== Preparing to run makefile for standalone/"
 make -j
 cd ..
 
-# NOTE: so_build/cosim/inc contains the handcar_cosim_wrapper.h file.  Don't remove it.
-rm -rf src spike_mod so_build/cosim/src bin
+rm -rf  bin inc src so_build spike_mod
 
-mkdir src
-mkdir -p spike_mod/insns
-mkdir -p so_build/cosim/src
 mkdir bin
+mkdir inc
+mkdir src
+mkdir -p so_build/cosim/src
+mkdir -p spike_mod/insns
+
+cp -r ./headers/* .
+cp ../3rd_party/inc/softfloat/softfloat.h ./inc/.
 
 pause "===== Preparing to create handcar files"
-./create_handcar_files.bash
+cd ./patcher || exit 1
+./patcher.py patch --clean
+cd ..
+
 pause "===== Preparing to run filesurgeon"
 ./filesurgeon.py
+
 pause "===== Preparing to run handcar make"
 make -j
-pause "===== Preparing to copy handcaar_cosim.so"
-cp bin/handcar_cosim.so ../utils/handcar
 
+pause "===== Preparing to copy handcar_cosim.so"
+rsync -c ./bin/handcar_cosim.so ../utils/handcar/handcar_cosim.so
+echo $?

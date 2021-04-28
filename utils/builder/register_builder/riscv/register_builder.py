@@ -18,16 +18,13 @@
 import getopt
 import os
 import sys
-
-sys.path.insert(0, "../..")
-
-import defusedxml.defusedxml.ElementTree as ET
-import defusedxml.defusedxml.minidom as DOM
-import RiscVRegDef as RISCV
-from ModifyRegisterFile import Files
-
 # Needed to build output XML
 from xml.etree.ElementTree import Element
+
+import RiscVRegDef as RISCV
+import defusedxml.defusedxml.ElementTree as ET
+import defusedxml.defusedxml.minidom as DOM
+from ModifyRegisterFile import Files
 
 
 def usage():

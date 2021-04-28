@@ -65,12 +65,6 @@ def force_init():
 
 the_force_path = force_init()
 
-# next we need to set the import paths for the utils and tests directories
-# both of which are used for the rest of the module run, keep in mind the tests
-# may change in later releases
-sys.path.append(the_force_path + "utils/regression")
-sys.path.append(the_force_path + "utils/")
-
 
 # if and when another utility is written that uses the same strategy then the
 # following lines need to move to a file specific to master_run
