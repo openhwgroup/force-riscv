@@ -1135,13 +1135,15 @@ namespace Force {
     bool first_entry = true;
     os << "[";
     for (auto page : mPages) {
-      if (not first_entry) {
-        os << ",\n";
+      if (page->TranslationResultType() != ETranslationResultType::AddressError) {
+        if (not first_entry) {
+          os << ",\n";
+        }
+
+        DumpPageSummaryJson(os, page);
+
+        first_entry = false;
       }
-
-      DumpPageSummaryJson(os, page);
-
-      first_entry = false;
     }
 
     os << "]";
@@ -1161,20 +1163,20 @@ namespace Force {
     mpControlBlock->PopulatePageInfo(pPage->Lower(), this, pPage, page_info);
     const PageInfoRec& page_info_rec = page_info.GetPageInfo();
 
-    os << hex;
-    os << "Page: {";
-    os << "Lower: " << page_info_rec.lower << ", ";
-    os << "Upper: " << page_info_rec.upper << ", ";
-    os << "PhysLower: " << page_info_rec.physical_lower << ", ";
-    os << "PhysUpper: " << page_info_rec.physical_upper << ", ";
-    os << "Bank: " << EMemBankType_to_string(pPage->MemoryBank()) << ", ";
+    os << dec;
+    os << "{";
+    os << "\"Lower\": " << page_info_rec.lower << ", ";
+    os << "\"Upper\": " << page_info_rec.upper << ", ";
+    os << "\"PhysLower\": " << page_info_rec.physical_lower << ", ";
+    os << "\"PhysUpper\": " << page_info_rec.physical_upper << ", ";
+    os << "\"Bank\": \"" << EMemBankType_to_string(pPage->MemoryBank()) << "\", ";
 
     RootPageTable* root_page_table = pPage->GetRootPageTable();
-    os << "RootTable: " << root_page_table->TableBase() << ", ";
+    os << "\"RootTable\": " << root_page_table->TableBase() << ", ";
 
     // TODO(Noah): Implement dumping of the table walk information when a good way to do so is
     // determined.
-    os << "TableWalk: " << "To Be Determined";  // TableWalk – PA and descriptor value for each entry in the mapping’s walk (including final leaf node, to avoid replication of leaf descriptor value)
+    os << "\"TableWalk\": " << "\"To Be Determined\"";  // TableWalk – PA and descriptor value for each entry in the mapping’s walk (including final leaf node, to avoid replication of leaf descriptor value)
 
     os << "}";
   }
