@@ -36,8 +36,7 @@ ${to_enum_fail_tests}
 ${try_to_enum_tests}
     }
 
-    SECTION(
-    "test non-throwing string-to-enum conversion with unmatched string" ) {
+    SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
       bool okay = false;
 ${try_to_enum_fail_tests}
     }
