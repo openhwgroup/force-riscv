@@ -928,6 +928,7 @@ namespace Force {
     Page = 3,
     FailOnly = 4,
     Handlers = 5,
+    PageMemAttrJSON = 6,
   };
   extern unsigned char EDumpTypeSize;
   extern const std::string EDumpType_to_string(EDumpType in_enum); //!< Get string name for enum.
@@ -1306,6 +1307,20 @@ namespace Force {
   extern EEndianness string_to_EEndianness(const std::string& in_str); //!< Get enum value for string name.
   extern EEndianness try_string_to_EEndianness(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
   typedef unsigned char EEndiannessBaseType; //!< Define a type name for the enum base data type.
+
+
+  /*!
+    Format of dump output.
+  */
+  enum class EDumpFormat : unsigned char {
+    Text = 0,
+    JSON = 1,
+  };
+  extern unsigned char EDumpFormatSize;
+  extern const std::string EDumpFormat_to_string(EDumpFormat in_enum); //!< Get string name for enum.
+  extern EDumpFormat string_to_EDumpFormat(const std::string& in_str); //!< Get enum value for string name.
+  extern EDumpFormat try_string_to_EDumpFormat(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
+  typedef unsigned char EDumpFormatBaseType; //!< Define a type name for the enum base data type.
 
 }
 

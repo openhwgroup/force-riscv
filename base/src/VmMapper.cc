@@ -672,10 +672,10 @@ namespace Force {
     return mpCurrentAddressSpace->DefaultMemoryBank();
   }
 
-  void VmPagingMapper::DumpPage(ofstream& os) const
+  void VmPagingMapper::DumpPage(const EDumpFormat dumpFormat, ofstream& os) const
   {
     if (mpCurrentAddressSpace != nullptr)
-      mpCurrentAddressSpace->DumpPage(os);
+      mpCurrentAddressSpace->DumpPage(dumpFormat, os);
   }
 
   void VmPagingMapper::HandleNotification(const NotificationSender* sender, ENotificationType eventType, Object* payload)
@@ -802,10 +802,10 @@ namespace Force {
     mpDirectMapper->Deactivate();
   }
 
-  void VmPagingRegime::DumpPage(std::ofstream& os) const
+  void VmPagingRegime::DumpPage(const EDumpFormat dumpFormat, std::ofstream& os) const
   {
     if (mpPagingMapper != nullptr)
-      mpPagingMapper->DumpPage(os);
+      mpPagingMapper->DumpPage(dumpFormat, os);
   }
 
   VmMapper* VmPagingRegime::FindVmMapper(const VmContext& rVmContext)

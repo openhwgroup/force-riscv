@@ -45,7 +45,8 @@ namespace Force {
     void DumpPartialElf();  //!<  Dump Partial Elf
     void DumpPartialAsm();  //!< Dump partial asm
     void DumpMem(bool partial); //!< Dump memory
-    void DumpPage(); //!< Dump page
+    void DumpPage() const; //!< Dump page
+    void DumpPageAndMemoryAttributesJson() const; //!< Dump page table and memory attribute data in JSON format
     void DumpHandlerAddresses(); //!< Dump handler addresses
     void SetBaseName(); //!< set base name to dump
   private:

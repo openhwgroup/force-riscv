@@ -83,6 +83,8 @@ namespace Force {
       DumpMem(partial);
     if (mAttribute & (1 << uint32(EDumpType::Page)))
       DumpPage();
+    if (mAttribute & (1 << uint32(EDumpType::PageMemAttrJSON)))
+      DumpPageAndMemoryAttributesJson();
     if (mAttribute & (1 << uint32(EDumpType::Handlers)))
       DumpHandlerAddresses();
   }
@@ -185,11 +187,20 @@ namespace Force {
 
   }
 
-  void Dump::DumpPage()
+  void Dump::DumpPage() const
   {
     auto generators = mpScheduler->GetGenerators();
-    for (auto gen_item : generators)
-      gen_item.second->GetVmManager()->DumpPage();
+    for (auto gen_item : generators) {
+      gen_item.second->GetVmManager()->DumpPage(EDumpFormat::Text);
+    }
+  }
+
+  void Dump::DumpPageAndMemoryAttributesJson() const
+  {
+    auto generators = mpScheduler->GetGenerators();
+    for (auto gen_item : generators) {
+      gen_item.second->GetVmManager()->DumpPage(EDumpFormat::JSON);
+    }
   }
 
   void Dump::SetBaseName()

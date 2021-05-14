@@ -2682,6 +2682,7 @@ CASE( "tests for EDumpType" ) {
       EXPECT(EDumpType_to_string(EDumpType::Page) == "Page");
       EXPECT(EDumpType_to_string(EDumpType::FailOnly) == "FailOnly");
       EXPECT(EDumpType_to_string(EDumpType::Handlers) == "Handlers");
+      EXPECT(EDumpType_to_string(EDumpType::PageMemAttrJSON) == "PageMemAttrJSON");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -2691,6 +2692,7 @@ CASE( "tests for EDumpType" ) {
       EXPECT(string_to_EDumpType("Page") == EDumpType::Page);
       EXPECT(string_to_EDumpType("FailOnly") == EDumpType::FailOnly);
       EXPECT(string_to_EDumpType("Handlers") == EDumpType::Handlers);
+      EXPECT(string_to_EDumpType("PageMemAttrJSON") == EDumpType::PageMemAttrJSON);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -2710,6 +2712,8 @@ CASE( "tests for EDumpType" ) {
       EXPECT(try_string_to_EDumpType("FailOnly", okay) == EDumpType::FailOnly);
       EXPECT(okay);
       EXPECT(try_string_to_EDumpType("Handlers", okay) == EDumpType::Handlers);
+      EXPECT(okay);
+      EXPECT(try_string_to_EDumpType("PageMemAttrJSON", okay) == EDumpType::PageMemAttrJSON);
       EXPECT(okay);
     }
 
@@ -3700,6 +3704,41 @@ CASE( "tests for EEndianness" ) {
     SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
       bool okay = false;
       try_string_to_EEndianness("L_ttleEndian", okay);
+      EXPECT(!okay);
+    }
+  }
+},
+
+
+CASE( "tests for EDumpFormat" ) {
+
+  SETUP ( "setup EDumpFormat" )  {
+
+    SECTION( "test enum to string conversion" ) {
+      EXPECT(EDumpFormat_to_string(EDumpFormat::Text) == "Text");
+      EXPECT(EDumpFormat_to_string(EDumpFormat::JSON) == "JSON");
+    }
+
+    SECTION( "test string to enum conversion" ) {
+      EXPECT(string_to_EDumpFormat("Text") == EDumpFormat::Text);
+      EXPECT(string_to_EDumpFormat("JSON") == EDumpFormat::JSON);
+    }
+
+    SECTION( "test string to enum conversion with non-matching string" ) {
+      EXPECT_THROWS_AS(string_to_EDumpFormat("T_xt"), EnumTypeError);
+    }
+
+    SECTION( "test non-throwing string to enum conversion" ) {
+      bool okay = false;
+      EXPECT(try_string_to_EDumpFormat("Text", okay) == EDumpFormat::Text);
+      EXPECT(okay);
+      EXPECT(try_string_to_EDumpFormat("JSON", okay) == EDumpFormat::JSON);
+      EXPECT(okay);
+    }
+
+    SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
+      bool okay = false;
+      try_string_to_EDumpFormat("T_xt", okay);
       EXPECT(!okay);
     }
   }

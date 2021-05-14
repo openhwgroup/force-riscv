@@ -629,6 +629,7 @@ enum_classes_details = [
             ("Page", 3),
             ("FailOnly", 4),
             ("Handlers", 5),
+            ("PageMemAttrJSON", 6),
         ],
     ],
     [
@@ -822,5 +823,14 @@ enum_classes_details = [
         "unsigned char",
         "Byte order",
         [("LittleEndian", 0), ("BigEndian", 1)],
+    ],
+    [
+        "DumpFormat",
+        "unsigned char",
+        "Format of dump output.",
+        [
+            ("Text", 0),
+            ("JSON", 1),
+        ],
     ],
 ]

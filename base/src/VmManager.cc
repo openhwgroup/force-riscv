@@ -190,18 +190,32 @@ namespace Force {
     return nullptr;
   }
 
-  void VmManager::DumpPage() const
+  void VmManager::DumpPage(const EDumpFormat dumpFormat) const
   {
     ofstream os;
+
+    string file_ext;
+    switch (dumpFormat) {
+    case EDumpFormat::Text:
+      file_ext = ".txt";
+      break;
+    case EDumpFormat::JSON:
+      file_ext = ".json";
+      break;
+    default:
+      LOG(fail) << "{VmManager::DumpPage} Unknown dump format " << EDumpFormat_to_string(dumpFormat) << endl;
+      FAIL("unknown-dump-format");
+    }
+
     for (auto regime : mVmRegimes) {
       auto regime_type = regime->VmRegimeType();
-      string file_name = "Pages" + EVmRegimeType_to_string(regime_type) + ".txt";
+      string file_name = "Pages" + EVmRegimeType_to_string(regime_type) + file_ext;
       os.open(file_name);
       if (os.bad()) {
         LOG(fail) << "Can't open file " << file_name << std::endl;
         FAIL("Can't open file");
       }
-      regime->DumpPage(os);
+      regime->DumpPage(dumpFormat, os);
       os.close();
     }
   }

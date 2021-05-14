@@ -62,7 +62,7 @@ namespace Force {
 
     VmMapper* GetVmMapper(const VmInfo& rVmInfo) const; //!< Get VmMapper by using VmInfo for lookup.
     virtual VmInfo* VmInfoInstance() const { return nullptr; } //!< Return a VmInfo instance.
-    void DumpPage() const; //!< dump pages on Vm regimes
+    void DumpPage(const EDumpFormat dumpFormat) const; //!< dump pages on Vm regimes
   protected:
     VmManager(const VmManager& rOther); //!< Copy constructor.
     virtual VmFactory* VmFactoryInstance(EVmRegimeType vmRegimeType) const { return nullptr; } //!< Return an VmFactory object based on the VM architecture type.

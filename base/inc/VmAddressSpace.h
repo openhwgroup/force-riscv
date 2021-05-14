@@ -94,7 +94,7 @@ namespace Force {
     const Page* CreatePage(uint64 VA, uint64 size, GenPageRequest* pPageReq, PageSizeInfo& rSizeInfo, std::string& rErrMsg); //!< Try to create a page.
     void GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap) const override; //!< Find the delta map between the VmMapper and currect machine state.
     uint32 GenContextId() const override; //!< Return generator Context ID.
-    void DumpPage(std::ofstream& os) const override; //!< dump page
+    void DumpPage(const EDumpFormat dumpFormat, std::ofstream& os) const override; //!< dump page
 
     ASSIGNMENT_OPERATOR_ABSENT(VmAddressSpace);
 
@@ -120,7 +120,10 @@ namespace Force {
     void MapEssentialPhysicalRegions(); //!< Map essential physical regions.
     void MapPhysicalRegions(); //!< Map local physical regions, such as page tables.
     bool MapPhysicalRegion(const PhysicalRegion* pPhysRegion); //!< Map the specified physical region.
-    void DumpPageSummary(std::ofstream& os, const Page* pPage) const; //!< dump page summary
+    void DumpPageText(std::ofstream& os) const; //!< dump all page data in text format
+    void DumpPageJson(std::ofstream& os) const; //!< dump all page data in JSON format
+    void DumpPageSummaryText(std::ofstream& os, const Page* pPage) const; //!< dump page summary in text format
+    void DumpPageSummaryJson(std::ofstream& os, const Page* pPage) const; //!< dump page summary in JSON format
   protected:
     VmasControlBlock*       mpControlBlock; //!< VMAS control block.
     Page*                   mpLookUpPage; //!< Page object used for looking up the actual mapping page.

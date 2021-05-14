@@ -4715,7 +4715,7 @@ namespace Force {
   }
 
 
-  unsigned char EDumpTypeSize = 6;
+  unsigned char EDumpTypeSize = 7;
 
   const string EDumpType_to_string(EDumpType in_enum)
   {
@@ -4726,6 +4726,7 @@ namespace Force {
     case EDumpType::Page: return "Page";
     case EDumpType::FailOnly: return "FailOnly";
     case EDumpType::Handlers: return "Handlers";
+    case EDumpType::PageMemAttrJSON: return "PageMemAttrJSON";
     default:
       unknown_enum_value("EDumpType", (unsigned char)(in_enum));
     }
@@ -4735,7 +4736,8 @@ namespace Force {
   EDumpType string_to_EDumpType(const string& in_str)
   {
     string enum_type_name = "EDumpType";
-    char hash_value = in_str.at(0);
+    size_t size = in_str.size();
+    char hash_value = in_str.at(6 < size ? 6 : 6 % size);
 
     switch (hash_value) {
     case 65:
@@ -4744,18 +4746,21 @@ namespace Force {
     case 69:
       validate(in_str, "Elf", enum_type_name);
       return EDumpType::Elf;
-    case 70:
-      validate(in_str, "FailOnly", enum_type_name);
-      return EDumpType::FailOnly;
-    case 72:
-      validate(in_str, "Handlers", enum_type_name);
-      return EDumpType::Handlers;
     case 77:
       validate(in_str, "Mem", enum_type_name);
       return EDumpType::Mem;
-    case 80:
+    case 103:
       validate(in_str, "Page", enum_type_name);
       return EDumpType::Page;
+    case 108:
+      validate(in_str, "FailOnly", enum_type_name);
+      return EDumpType::FailOnly;
+    case 109:
+      validate(in_str, "PageMemAttrJSON", enum_type_name);
+      return EDumpType::PageMemAttrJSON;
+    case 114:
+      validate(in_str, "Handlers", enum_type_name);
+      return EDumpType::Handlers;
     default:
       unknown_enum_name(enum_type_name, in_str);
     }
@@ -4765,7 +4770,8 @@ namespace Force {
   EDumpType try_string_to_EDumpType(const string& in_str, bool& okay)
   {
     okay = true;
-    char hash_value = in_str.at(0);
+    size_t size = in_str.size();
+    char hash_value = in_str.at(6 < size ? 6 : 6 % size);
 
     switch (hash_value) {
     case 65:
@@ -4774,18 +4780,21 @@ namespace Force {
     case 69:
       okay = (in_str == "Elf");
       return EDumpType::Elf;
-    case 70:
-      okay = (in_str == "FailOnly");
-      return EDumpType::FailOnly;
-    case 72:
-      okay = (in_str == "Handlers");
-      return EDumpType::Handlers;
     case 77:
       okay = (in_str == "Mem");
       return EDumpType::Mem;
-    case 80:
+    case 103:
       okay = (in_str == "Page");
       return EDumpType::Page;
+    case 108:
+      okay = (in_str == "FailOnly");
+      return EDumpType::FailOnly;
+    case 109:
+      okay = (in_str == "PageMemAttrJSON");
+      return EDumpType::PageMemAttrJSON;
+    case 114:
+      okay = (in_str == "Handlers");
+      return EDumpType::Handlers;
     default:
       okay = false;
       return EDumpType::Asm;
@@ -6283,6 +6292,57 @@ namespace Force {
       return EEndianness::LittleEndian;
     }
     return EEndianness::LittleEndian;
+  }
+
+
+  unsigned char EDumpFormatSize = 2;
+
+  const string EDumpFormat_to_string(EDumpFormat in_enum)
+  {
+    switch (in_enum) {
+    case EDumpFormat::Text: return "Text";
+    case EDumpFormat::JSON: return "JSON";
+    default:
+      unknown_enum_value("EDumpFormat", (unsigned char)(in_enum));
+    }
+    return "";
+  }
+
+  EDumpFormat string_to_EDumpFormat(const string& in_str)
+  {
+    string enum_type_name = "EDumpFormat";
+    char hash_value = in_str.at(0);
+
+    switch (hash_value) {
+    case 74:
+      validate(in_str, "JSON", enum_type_name);
+      return EDumpFormat::JSON;
+    case 84:
+      validate(in_str, "Text", enum_type_name);
+      return EDumpFormat::Text;
+    default:
+      unknown_enum_name(enum_type_name, in_str);
+    }
+    return EDumpFormat::Text;
+  }
+
+  EDumpFormat try_string_to_EDumpFormat(const string& in_str, bool& okay)
+  {
+    okay = true;
+    char hash_value = in_str.at(0);
+
+    switch (hash_value) {
+    case 74:
+      okay = (in_str == "JSON");
+      return EDumpFormat::JSON;
+    case 84:
+      okay = (in_str == "Text");
+      return EDumpFormat::Text;
+    default:
+      okay = false;
+      return EDumpFormat::Text;
+    }
+    return EDumpFormat::Text;
   }
 
 }

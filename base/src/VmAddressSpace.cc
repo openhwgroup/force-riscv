@@ -1108,19 +1108,75 @@ namespace Force {
     return mpControlBlock->DefaultMemoryBank();
   }
 
-  void VmAddressSpace::DumpPage(ofstream& os) const
+  void VmAddressSpace::DumpPage(const EDumpFormat dumpFormat, ofstream& os) const
   {
-    for (auto page : mPages) {
-      DumpPageSummary(os, page);
+    switch (dumpFormat) {
+    case EDumpFormat::Text:
+      DumpPageText(os);
+      break;
+    case EDumpFormat::JSON:
+      DumpPageJson(os);
+      break;
+    default:
+      LOG(fail) << "{VmAddressSpace::DumpPage} Unknown dump format " << EDumpFormat_to_string(dumpFormat) << endl;
+      FAIL("unknown-dump-format");
     }
   }
 
-  void VmAddressSpace::DumpPageSummary(std::ofstream& os, const Page* pPage) const
+  void VmAddressSpace::DumpPageText(ofstream& os) const
+  {
+    for (auto page : mPages) {
+      DumpPageSummaryText(os, page);
+    }
+  }
+
+  void VmAddressSpace::DumpPageJson(ofstream& os) const
+  {
+    bool first_entry = true;
+    os << "[";
+    for (auto page : mPages) {
+      if (not first_entry) {
+        os << ",\n";
+      }
+
+      DumpPageSummaryJson(os, page);
+
+      first_entry = false;
+    }
+
+    os << "]";
+  }
+
+  void VmAddressSpace::DumpPageSummaryText(std::ofstream& os, const Page* pPage) const
   {
     os << pPage->VaRangeString() << endl;
     os << "Memory bank:" <<  EMemBankType_to_string(pPage->MemoryBank()) << ", PA range:0x" << hex << pPage->PhysicalLower() << " -- 0x" << pPage->PhysicalUpper() << endl;
 
     os << pPage->DescriptorDetails() << endl;
+  }
+
+  void VmAddressSpace::DumpPageSummaryJson(std::ofstream& os, const Page* pPage) const
+  {
+    PageInformation page_info;
+    mpControlBlock->PopulatePageInfo(pPage->Lower(), this, pPage, page_info);
+    const PageInfoRec& page_info_rec = page_info.GetPageInfo();
+
+    os << hex;
+    os << "Page: {";
+    os << "Lower: " << page_info_rec.lower << ", ";
+    os << "Upper: " << page_info_rec.upper << ", ";
+    os << "PhysLower: " << page_info_rec.physical_lower << ", ";
+    os << "PhysUpper: " << page_info_rec.physical_upper << ", ";
+    os << "Bank: " << EMemBankType_to_string(pPage->MemoryBank()) << ", ";
+
+    RootPageTable* root_page_table = pPage->GetRootPageTable();
+    os << "RootTable: " << root_page_table->TableBase() << ", ";
+
+    // TODO(Noah): Implement dumping of the table walk information when a good way to do so is
+    // determined.
+    os << "TableWalk: " << "To Be Determined";  // TableWalk – PA and descriptor value for each entry in the mapping’s walk (including final leaf node, to avoid replication of leaf descriptor value)
+
+    os << "}";
   }
 
   bool VmAddressSpace::UpdateContext(const VmContext* pVmContext)
