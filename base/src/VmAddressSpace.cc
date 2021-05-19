@@ -1123,6 +1123,41 @@ namespace Force {
     }
   }
 
+  bool VmAddressSpace::UpdateContext(const VmContext* pVmContext)
+  {
+    return mpControlBlock->UpdateContext(pVmContext);
+  }
+
+  void VmAddressSpace::UpdateVirtualSharedByPage(const Page* pPage)
+  {
+    MemoryManager* mem_manager = mpGenerator->GetMemoryManager();
+    MemoryBank* mem_bank = mem_manager->GetMemoryBank(EMemBankTypeBaseType(pPage->MemoryBank()));
+    const ConstraintSet* shared_constr = mem_bank->Shared();
+
+    if (not shared_constr->IsEmpty()) {
+      ConstraintSet page_shared_constr(pPage->PhysicalLower(), pPage->PhysicalUpper());
+      page_shared_constr.ApplyLargeConstraintSet(*shared_constr);
+
+      if (not page_shared_constr.IsEmpty())
+      {
+        uint64 mask = pPage->PageSize() - 0x1ull;
+        uint64 frame = pPage->Lower() & ~mask;
+        page_shared_constr.Translate(mask, frame);
+        mpVirtualUsable->MarkShared(page_shared_constr);
+      }
+    }
+  }
+
+  void VmAddressSpace::GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap) const
+  {
+    return mpControlBlock->GetContextDelta(rDeltaMap, mpGenerator);
+  }
+
+  uint32 VmAddressSpace::GenContextId() const
+  {
+    return mpControlBlock->GenContextId();
+  }
+
   void VmAddressSpace::DumpPageText(ofstream& os) const
   {
     for (auto page : mPages) {
@@ -1165,6 +1200,7 @@ namespace Force {
 
     os << dec;
     os << "{";
+
     os << "\"Lower\": " << page_info_rec.lower << ", ";
     os << "\"Upper\": " << page_info_rec.upper << ", ";
     os << "\"PhysLower\": " << page_info_rec.physical_lower << ", ";
@@ -1174,46 +1210,35 @@ namespace Force {
     RootPageTable* root_page_table = pPage->GetRootPageTable();
     os << "\"RootTable\": " << root_page_table->TableBase() << ", ";
 
-    // TODO(Noah): Implement dumping of the table walk information when a good way to do so is
-    // determined.
-    os << "\"TableWalk\": " << "\"To Be Determined\"";  // TableWalk – PA and descriptor value for each entry in the mapping’s walk (including final leaf node, to avoid replication of leaf descriptor value)
+    os << "\"TableWalk\": ";
+    DumpPageTableWalkJson(os, page_info);
 
     os << "}";
   }
 
-  bool VmAddressSpace::UpdateContext(const VmContext* pVmContext)
+  void VmAddressSpace::DumpPageTableWalkJson(std::ofstream& os, const PageInformation& rPageInfo) const
   {
-    return mpControlBlock->UpdateContext(pVmContext);
-  }
+    bool first_entry = true;
+    os << dec;
+    os << "[";
 
-  void VmAddressSpace::UpdateVirtualSharedByPage(const Page* pPage)
-  {
-    MemoryManager* mem_manager = mpGenerator->GetMemoryManager();
-    MemoryBank* mem_bank = mem_manager->GetMemoryBank(EMemBankTypeBaseType(pPage->MemoryBank()));
-    const ConstraintSet* shared_constr = mem_bank->Shared();
-
-    if (not shared_constr->IsEmpty()) {
-      ConstraintSet page_shared_constr(pPage->PhysicalLower(), pPage->PhysicalUpper());
-      page_shared_constr.ApplyLargeConstraintSet(*shared_constr);
-
-      if (not page_shared_constr.IsEmpty())
-      {
-        uint64 mask = pPage->PageSize() - 0x1ull;
-        uint64 frame = pPage->Lower() & ~mask;
-        page_shared_constr.Translate(mask, frame);
-        mpVirtualUsable->MarkShared(page_shared_constr);
+    for (const PageTableInfoRec& page_table_info_rec : rPageInfo.GetPageTableRecord()) {
+      if (not first_entry) {
+        os << ", ";
       }
+
+      os << "{";
+
+      os << "\"Level\": " << page_table_info_rec.level << ", ";
+      os << "\"DescriptorAddr\": " << page_table_info_rec.descr_addr << ", ";
+      os << "\"Descriptor\": " << page_table_info_rec.descr_value;
+
+      os << "}";
+
+      first_entry = false;
     }
-  }
 
-  void VmAddressSpace::GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap) const
-  {
-    return mpControlBlock->GetContextDelta(rDeltaMap, mpGenerator);
-  }
-
-  uint32 VmAddressSpace::GenContextId() const
-  {
-    return mpControlBlock->GenContextId();
+    os << "]";
   }
 
 }

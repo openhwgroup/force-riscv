@@ -120,10 +120,6 @@ namespace Force {
     void MapEssentialPhysicalRegions(); //!< Map essential physical regions.
     void MapPhysicalRegions(); //!< Map local physical regions, such as page tables.
     bool MapPhysicalRegion(const PhysicalRegion* pPhysRegion); //!< Map the specified physical region.
-    void DumpPageText(std::ofstream& os) const; //!< dump all page data in text format
-    void DumpPageJson(std::ofstream& os) const; //!< dump all page data in JSON format
-    void DumpPageSummaryText(std::ofstream& os, const Page* pPage) const; //!< dump page summary in text format
-    void DumpPageSummaryJson(std::ofstream& os, const Page* pPage) const; //!< dump page summary in JSON format
   protected:
     VmasControlBlock*       mpControlBlock; //!< VMAS control block.
     Page*                   mpLookUpPage; //!< Page object used for looking up the actual mapping page.
@@ -140,6 +136,11 @@ namespace Force {
     friend class VmPagingMapper;
   private:
     void UpdateVirtualSharedByPage(const Page* pPage); //!< Update shared memory in the virtual constraint corresponding to the specified page's virtual address range.
+    void DumpPageText(std::ofstream& os) const; //!< dump all page data in text format
+    void DumpPageJson(std::ofstream& os) const; //!< dump all page data in JSON format
+    void DumpPageSummaryText(std::ofstream& os, const Page* pPage) const; //!< dump page summary in text format
+    void DumpPageSummaryJson(std::ofstream& os, const Page* pPage) const; //!< dump page summary in JSON format
+    void DumpPageTableWalkJson(std::ofstream& os, const PageInformation& rPageInfo) const; //!< dump page table walk in JSON format
   };
 
 }
