@@ -33,8 +33,7 @@ new_registers = [
             "name": "fcsr",
             "value": "0x3",
             "weight": "0",
-            "description": "URW; Floating-point control and "
-            "status register.",
+            "description": "URW; Floating-point control and " "status register.",
         },
     }
 ]

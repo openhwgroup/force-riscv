@@ -50,9 +50,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VSEW", choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", choice_weights)
 
         # Ensure vector register group size is no more than 2, as larger values
         # are not legal for quad-widening instructions
@@ -66,9 +64,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 10,
             "0x7": 10,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VLMUL", vlmul_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VLMUL", vlmul_choice_weights)
 
         choices_mod.commitSet()
 
@@ -84,14 +80,10 @@ class MainSequence(VectorTestSequence):
         vd_val = aInstrRecord["Dests"]["vd"]
         vs1_val = aInstrRecord["Srcs"].get("vs1")
         if vs1_val:
-            self.assertNoRegisterOverlap(
-                aInstr, vd_val, vs1_val, aRegCountMultipleA=4
-            )
+            self.assertNoRegisterOverlap(aInstr, vd_val, vs1_val, aRegCountMultipleA=4)
 
         vs2_val = aInstrRecord["Srcs"]["vs2"]
-        self.assertNoRegisterOverlap(
-            aInstr, vd_val, vs2_val, aRegCountMultipleA=4
-        )
+        self.assertNoRegisterOverlap(aInstr, vd_val, vs2_val, aRegCountMultipleA=4)
 
 
 MainSequenceClass = MainSequence

@@ -112,9 +112,7 @@ class GenThreadSetupSeqRISCV(GenThreadSetupSequence):
 class GenThreadRISCV(GenThread):
     def __init__(self, gen_id, interface):
         super().__init__(gen_id, interface)
-        self.exceptionHandlerManager = ExceptionHandlerManagerRISCV(
-            self, ExceptionsFactoryRISCV()
-        )
+        self.exceptionHandlerManager = ExceptionHandlerManagerRISCV(self, ExceptionsFactoryRISCV())
         self.addressTableManager = None
         self.fastMode = False
 
@@ -125,9 +123,7 @@ class GenThreadRISCV(GenThread):
     # Called to install exception handlers.
     def installHandlers(self):
         # generate exception handlers...
-        self.exceptionHandlerManager.run(
-            address_table_manager=self.addressTableManager
-        )
+        self.exceptionHandlerManager.run(address_table_manager=self.addressTableManager)
 
         # assign SystemCallSequence to handle system call
         from riscv.SystemCallSequence import SystemCallSequence

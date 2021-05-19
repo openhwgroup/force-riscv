@@ -54,9 +54,7 @@ class StateTransitionHandlerTest(StateTransitionHandler):
                     % aStateElem.getStartAddress()
                 )
         elif state_elem_type == EStateElementType.SystemRegister:
-            expected_sys_reg_state_data = self.mExpectedStateData[
-                state_elem_type
-            ]
+            expected_sys_reg_state_data = self.mExpectedStateData[state_elem_type]
 
             sys_reg_val = expected_sys_reg_state_data[aStateElem.getName()]
             if aStateElem.getValues()[0] != sys_reg_val:
@@ -70,9 +68,7 @@ class StateTransitionHandlerTest(StateTransitionHandler):
                     )
                 )
         elif state_elem_type == EStateElementType.FloatingPointRegister:
-            expected_fp_reg_state_data = self.mExpectedStateData[
-                state_elem_type
-            ]
+            expected_fp_reg_state_data = self.mExpectedStateData[state_elem_type]
 
             fp_reg_name = "D%d" % aStateElem.getRegisterIndex()
             fp_reg_val = expected_fp_reg_state_data[fp_reg_name]
@@ -83,9 +79,7 @@ class StateTransitionHandlerTest(StateTransitionHandler):
                     % (fp_reg_name, fp_reg_val, aStateElem.getValues()[0])
                 )
         elif state_elem_type == EStateElementType.VectorRegister:
-            expected_vec_reg_state_data = self.mExpectedStateData[
-                state_elem_type
-            ]
+            expected_vec_reg_state_data = self.mExpectedStateData[state_elem_type]
 
             vec_reg_name = "v%d" % aStateElem.getRegisterIndex()
             vec_reg_values = expected_vec_reg_state_data[vec_reg_name]
@@ -130,9 +124,7 @@ class MainSequence(Sequence):
     def _createState(self):
         state = State()
 
-        self._mExpectedStateData[
-            EStateElementType.Memory
-        ] = self._createMemoryStateElements(state)
+        self._mExpectedStateData[EStateElementType.Memory] = self._createMemoryStateElements(state)
         self._mExpectedStateData[
             EStateElementType.SystemRegister
         ] = self._createSystemRegisterStateElements(state)
@@ -172,9 +164,7 @@ class MainSequence(Sequence):
                 mem_start_addr, state_elem_size
             )
             bytes_remaining = mem_size
-            chunk_size = state_elem_size - (
-                mem_start_addr - aligned_mem_start_addr
-            )
+            chunk_size = state_elem_size - (mem_start_addr - aligned_mem_start_addr)
             while bytes_remaining > 0:
                 expected_mem_state_data.add(aligned_mem_start_addr)
                 aligned_mem_start_addr += state_elem_size
@@ -235,19 +225,11 @@ class MainSequence(Sequence):
 
             containing_fp_reg_name = "D%d" % fp_reg_index
             self.randomInitializeRegister(containing_fp_reg_name)
-            (orig_fp_reg_val, valid) = self.readRegister(
-                containing_fp_reg_name
-            )
-            utils.assert_valid_register_value(
-                self, containing_fp_reg_name, valid
-            )
+            (orig_fp_reg_val, valid) = self.readRegister(containing_fp_reg_name)
+            utils.assert_valid_register_value(self, containing_fp_reg_name, valid)
 
-            combined_fp_reg_val = (
-                orig_fp_reg_val & (0xFFFFFFFF << 32)
-            ) | fp_reg_val
-            expected_fp_reg_state_data[
-                containing_fp_reg_name
-            ] = combined_fp_reg_val
+            combined_fp_reg_val = (orig_fp_reg_val & (0xFFFFFFFF << 32)) | fp_reg_val
+            expected_fp_reg_state_data[containing_fp_reg_name] = combined_fp_reg_val
 
         return expected_fp_reg_state_data
 
@@ -268,9 +250,7 @@ class MainSequence(Sequence):
         for vec_reg_index in vec_reg_indices:
             vec_reg_values = []
 
-            state_elem_reg_val_count = RandomUtils.random32(
-                1, max_reg_val_count
-            )
+            state_elem_reg_val_count = RandomUtils.random32(1, max_reg_val_count)
             for val_index in range(state_elem_reg_val_count):
                 vec_reg_values.append(RandomUtils.random64())
 
@@ -278,13 +258,9 @@ class MainSequence(Sequence):
             self.randomInitializeRegister(vec_reg_name)
             aState.addRegisterStateElement(vec_reg_name, vec_reg_values)
 
-            for val_index in range(
-                state_elem_reg_val_count, max_reg_val_count
-            ):
+            for val_index in range(state_elem_reg_val_count, max_reg_val_count):
                 field_name = "%s_%d" % (vec_reg_name, val_index)
-                (field_val, valid) = self.readRegister(
-                    vec_reg_name, field=field_name
-                )
+                (field_val, valid) = self.readRegister(vec_reg_name, field=field_name)
                 utils.assert_valid_register_value(self, vec_reg_name, valid)
                 vec_reg_values.append(field_val)
 

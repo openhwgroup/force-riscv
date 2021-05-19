@@ -73,9 +73,7 @@ class MainSequence(Sequence):
         for i in range(0, 3):
             fp_reg_index = fp_reg_indices[i]
             fp_reg_name = "D%d" % fp_reg_index
-            state.addRegisterStateElement(
-                fp_reg_name, [RandomUtils.random64()]
-            )
+            state.addRegisterStateElement(fp_reg_name, [RandomUtils.random64()])
 
         state.addRegisterStateElement("mscratch", [RandomUtils.random64()])
         mepc_val = UtilityFunctions.getAlignedValue(RandomUtils.random64(), 4)
@@ -84,9 +82,7 @@ class MainSequence(Sequence):
         for i in range(3, 6):
             fp_reg_index = fp_reg_indices[i]
             fp_reg_name = "D%d" % fp_reg_index
-            state.addRegisterStateElement(
-                fp_reg_name, [RandomUtils.random64()]
-            )
+            state.addRegisterStateElement(fp_reg_name, [RandomUtils.random64()])
 
         return state
 

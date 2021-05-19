@@ -31,8 +31,7 @@ class StdLauncher(Launcher):
         Msg.user("Timeout: %s" % (str(self.timeout)), "STD-LAUNCHER")
         self.process_cmd, self.process_log = self.build()
         Msg.user(
-            "Process Cmd: %s, Process Log: %s"
-            % (str(self.process_cmd), str(self.process_log)),
+            "Process Cmd: %s, Process Log: %s" % (str(self.process_cmd), str(self.process_log)),
             "STD-LAUNCHER",
         )
         Msg.user("Launcher Id 1: %s" % (str(id(self))), "STD-LAUNCHER")
@@ -48,9 +47,7 @@ class StdLauncher(Launcher):
             self.set_process,
         )
         Msg.user("Launcher Id 2: %s" % (str(id(self))), "STD-LAUNCHER")
-        Msg.user(
-            "Process Results: %s" % (str(self.process_result)), "STD-LAUNCHER"
-        )
+        Msg.user("Process Results: %s" % (str(self.process_result)), "STD-LAUNCHER")
 
     def validate(self):
         pass
@@ -63,9 +60,7 @@ class StdLauncher(Launcher):
         Msg.user("Saved Process: %s" % (str(self.process)), "STD-LAUNCHER")
 
     def terminate(self):
-        Msg.user(
-            "Terminating Process: %s" % (str(self.process)), "STD-LAUNCHER"
-        )
+        Msg.user("Terminating Process: %s" % (str(self.process)), "STD-LAUNCHER")
         if self.process is not None:
             self.process.kill()
 

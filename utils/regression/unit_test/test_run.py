@@ -22,9 +22,7 @@
 #
 #
 
-print(
-    "\n=======================\n\tInitializing ....\n=======================\n"
-)
+print("\n=======================\n\tInitializing ....\n=======================\n")
 
 import getopt
 import sys
@@ -76,9 +74,7 @@ class UnitTestRun(ModuleRun):
     # command line
     def check_usage(self):
         # validate arguments
-        if self.option_def(
-            CmdLine.Switches[CmdLine.help_index], False, CmdLine.Help
-        ):
+        if self.option_def(CmdLine.Switches[CmdLine.help_index], False, CmdLine.Help):
             from force_init import force_usage
 
             force_usage(UsageStr)
@@ -100,9 +96,7 @@ if __name__ == "__main__":
 
         Msg.dbg("Directory set to %s" % (PathUtils.current_dir()))
         if not PathUtils.chdir(the_force_root, False):
-            Msg.dbg(
-                "Directory Unchanged, using the current directory for output"
-            )
+            Msg.dbg("Directory Unchanged, using the current directory for output")
 
         my_module.run()
         Msg.dbg("Test Completed ....\n")
@@ -121,10 +115,7 @@ if __name__ == "__main__":
 
         from force_init import force_usage
 
-        Msg.err(
-            "[ERROR] - An Unhandled Error has Occurred during run of "
-            + str(sys.argv[0])
-        )
+        Msg.err("[ERROR] - An Unhandled Error has Occurred during run of " + str(sys.argv[0]))
         traceback.print_exc(file=sys.stdout)
         Msg.error_trace(str(arg_ex))
         force_usage(UsageStr)

@@ -93,9 +93,7 @@ def gen_thread_initialization(gen_thread):
     gen_thread.initializeRegister(
         name="mstatus", value=1, field="TVM"
     )  # set 'Trap Virtual Memory',
-    gen_thread.initializeRegister(
-        name="mstatus", value=1, field="TSR"
-    )  # 'Trap SRET'
+    gen_thread.initializeRegister(name="mstatus", value=1, field="TSR")  # 'Trap SRET'
 
 
 GenThreadInitialization = gen_thread_initialization

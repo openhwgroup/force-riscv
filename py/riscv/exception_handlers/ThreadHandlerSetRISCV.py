@@ -21,12 +21,8 @@ from riscv.exception_handlers.ExceptionClass import ExceptionClassRISCV
 
 
 class ThreadHandlerSetRISCV(ThreadHandlerSet):
-    def __init__(
-        self, gen_thread, memBankHandlerRegistryRepo, factory, exceptionsStack
-    ):
-        super().__init__(
-            gen_thread, memBankHandlerRegistryRepo, factory, exceptionsStack
-        )
+    def __init__(self, gen_thread, memBankHandlerRegistryRepo, factory, exceptionsStack):
+        super().__init__(gen_thread, memBankHandlerRegistryRepo, factory, exceptionsStack)
 
         self.currentPrivLevel = None
 
@@ -41,12 +37,8 @@ class ThreadHandlerSetRISCV(ThreadHandlerSet):
             SecurityStateRISCV.DEFAULT,
             ExceptionClassRISCV.ENV_CALL_FROM_U_MODE,
         )
-        scratch_register_sets[
-            "DataBlockAddrRegIndex"
-        ] = handler.mDataBlockAddrRegIndex
-        scratch_register_sets[
-            "ActionCodeRegIndex"
-        ] = handler.mActionCodeRegIndex
+        scratch_register_sets["DataBlockAddrRegIndex"] = handler.mDataBlockAddrRegIndex
+        scratch_register_sets["ActionCodeRegIndex"] = handler.mActionCodeRegIndex
 
         return scratch_register_sets
 
@@ -64,8 +56,7 @@ class ThreadHandlerSetRISCV(ThreadHandlerSet):
                 raise ValueError("Unexpected privilege level %s" % priv_level)
 
             vector_base_addr_sets[
-                "%s%sVector"
-                % (security_state.name.capitalize(), priv_level_str)
+                "%s%sVector" % (security_state.name.capitalize(), priv_level_str)
             ] = vector_offset_table
 
         return vector_base_addr_sets
@@ -126,6 +117,4 @@ class ThreadHandlerSetRISCV(ThreadHandlerSet):
         (br_offset, is_valid, num_hw) = self.getBranchOffset(
             self.getPEstate("PC"), br_target_address, 20, 1
         )
-        self.genInstruction(
-            "JAL##RISCV", {"rd": 0, "simm20": br_offset, "NoRestriction": 1}
-        )
+        self.genInstruction("JAL##RISCV", {"rd": 0, "simm20": br_offset, "NoRestriction": 1})

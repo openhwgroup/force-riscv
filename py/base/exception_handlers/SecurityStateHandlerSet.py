@@ -59,16 +59,12 @@ class SecurityStateHandlerSet(object):
         )
 
         if aAssignmentRequest.mSubexcClass is not None:
-            self._assignSynchronousSubexceptionHandler(
-                aAssignmentRequest, mem_bank
-            )
+            self._assignSynchronousSubexceptionHandler(aAssignmentRequest, mem_bank)
         else:
             if aAssignmentRequest.mExcClass not in self._mHandlerAssignments:
                 self._mHandlerAssignments[
                     aAssignmentRequest.mExcClass
-                ] = ExceptionHandlerAssignment(
-                    mem_bank, aAssignmentRequest.mHandlerClassName
-                )
+                ] = ExceptionHandlerAssignment(mem_bank, aAssignmentRequest.mHandlerClassName)
 
     # Return all exception handler assignments.
     def getSynchronousExceptionHandlerAssignments(self):
@@ -88,9 +84,7 @@ class SecurityStateHandlerSet(object):
     #       an excpetion handler class and when it should be executed.
     #  @param aMemBank The memory bank in which the handler should be
     #       generated.
-    def _assignSynchronousSubexceptionHandler(
-        self, aAssignmentRequest, aMemBank
-    ):
+    def _assignSynchronousSubexceptionHandler(self, aAssignmentRequest, aMemBank):
         handler_assignment = self._mHandlerAssignments.get(
             aAssignmentRequest.mExcClass,
             ExceptionHandlerAssignment(aMemBank),
@@ -105,6 +99,4 @@ class SecurityStateHandlerSet(object):
                 aMemBank,
             )
 
-        self._mHandlerAssignments[
-            aAssignmentRequest.mExcClass
-        ] = handler_assignment
+        self._mHandlerAssignments[aAssignmentRequest.mExcClass] = handler_assignment

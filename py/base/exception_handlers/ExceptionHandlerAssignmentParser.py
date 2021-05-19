@@ -42,12 +42,8 @@ class ExceptionHandlerAssignmentParser(object):
                     handler_assignments.update(subhandler_assignments)
                 else:
                     exception_class_name = assignment["ExceptionCode"]
-                    handler_module_name = assignment["ExceptionHandler"][
-                        "ExceptionHandlerModule"
-                    ]
-                    handler_class_name = assignment["ExceptionHandler"][
-                        "ExceptionHandlerClass"
-                    ]
+                    handler_module_name = assignment["ExceptionHandler"]["ExceptionHandlerModule"]
+                    handler_class_name = assignment["ExceptionHandler"]["ExceptionHandlerClass"]
                     handler_assignments[(exception_class_name, None)] = (
                         handler_module_name,
                         handler_class_name,
@@ -61,25 +57,22 @@ class ExceptionHandlerAssignmentParser(object):
     #
     #  @param aParentAssignmentFilePath The path to the parent assignment file.
     #  @param aParentAssignment The parent exception handler assignment.
-    def _parseSubhandlerAssignments(
-        self, aParentAssignmentFilePath, aParentAssignment
-    ):
+    def _parseSubhandlerAssignments(self, aParentAssignmentFilePath, aParentAssignment):
         subhandler_assignments = {}
         subassignment_file_path = os.path.join(
             os.path.dirname(aParentAssignmentFilePath),
             aParentAssignment["ExceptionSubhandlers"],
         )
-        handler_subassignments = self.parseHandlerAssignments(
-            subassignment_file_path
-        )
+        handler_subassignments = self.parseHandlerAssignments(subassignment_file_path)
 
         exception_class_name = aParentAssignment["ExceptionCode"]
         for (
             (subexception_class_name, _),
             (handler_module_name, handler_class_name),
         ) in handler_subassignments.items():
-            subhandler_assignments[
-                (exception_class_name, subexception_class_name)
-            ] = (handler_module_name, handler_class_name)
+            subhandler_assignments[(exception_class_name, subexception_class_name)] = (
+                handler_module_name,
+                handler_class_name,
+            )
 
         return subhandler_assignments

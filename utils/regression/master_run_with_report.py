@@ -106,10 +106,7 @@ class RunWithReport(object):
     def _getScmRev(self, aPath):
         rev, err_msg = VersionCtrlUtils.get_svn_revision(aPath)
         if err_msg:
-            print(
-                "ERROR: failed to get SVN version for %s : %s"
-                % (aPath, err_msg)
-            )
+            print("ERROR: failed to get SVN version for %s : %s" % (aPath, err_msg))
             sys.exit(1)
 
         return rev
@@ -150,9 +147,7 @@ class RunWithReport(object):
         else:
             tag_str = self._mRunParameters.tag
 
-        test_dir += (
-            "_" + label_str + "_" + tag_str + "_r%d" % self._getForceRev()
-        )
+        test_dir += "_" + label_str + "_" + tag_str + "_r%d" % self._getForceRev()
         return test_dir
 
     def _getDateTimeStr(self):
@@ -169,15 +164,12 @@ class RunWithReport(object):
 
     def _getMasterRunCommand(self):
         if self._mRunParameters.ctrl_file is None:
-            print(
-                "ERROR: A control file should be specified to run master_run"
-            )
+            print("ERROR: A control file should be specified to run master_run")
             sys.exit(1)
 
-        mr_command = (
-            self._mDirName
-            + "/master_run.py --target-dir %s -f %s"
-            % (self._mTestDir, self._mRunParameters.ctrl_file)
+        mr_command = self._mDirName + "/master_run.py --target-dir %s -f %s" % (
+            self._mTestDir,
+            self._mRunParameters.ctrl_file,
         )
         extra_parms = " ".join(self._mRunParameters.xargs)
         if len(extra_parms):
@@ -195,8 +187,7 @@ class RunWithReport(object):
 
     def _getReportCommand(self):
         report_cmd = (
-            self._mDirName
-            + "/../misc/gen_report_force.pl -m regress_sim -l %s -n "
+            self._mDirName + "/../misc/gen_report_force.pl -m regress_sim -l %s -n "
             "regress_sim -v off -u top -s -svn %d --report_name %s"
             % (self._mTestDir, self._mRtlRev, self._mReportName)
         )
@@ -208,8 +199,7 @@ class RunWithReport(object):
     def _getGatherCommand(self):
         gather_cmd = (
             self._mDirName
-            + "/../misc/gather_force.pl -u top %s/top_regress_sim.rpt -q"
-            % self._mTestDir
+            + "/../misc/gather_force.pl -u top %s/top_regress_sim.rpt -q" % self._mTestDir
         )
         if self._mRunParameters.dump_xml:
             gather_cmd += " --dump"

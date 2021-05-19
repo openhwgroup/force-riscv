@@ -30,12 +30,8 @@ class RtlReporter(object):
         # "even though this was a standard module, was it actually used?"
         self.m_rtl_was_enabled = None
 
-        self.m_reporting_was_skipped = (
-            None  # "if the user deliberately said no reporting?"
-        )
-        self.m_report_dump_xml = (
-            None  # "do we want an xml dump instead of an upload?"
-        )
+        self.m_reporting_was_skipped = None  # "if the user deliberately said no reporting?"
+        self.m_report_dump_xml = None  # "do we want an xml dump instead of an upload?"
         self.m_regression_output_directory = (
             None  # "where is that data we are using to generate the report"
         )
@@ -48,13 +44,9 @@ class RtlReporter(object):
         mr_info = a_apps_info.mTagToReportInfo.get("master_run", None)
         if mr_info:
             self.m_total_cycle_count = mr_info.get("total_cycle_count", None)
-            self.m_total_instruction_count = mr_info.get(
-                "total_instruction_count", None
-            )
+            self.m_total_instruction_count = mr_info.get("total_instruction_count", None)
             self.m_report_name_base = mr_info.get("initial_control_file", None)
-            self.m_regression_output_directory = mr_info.get(
-                "output_dir", None
-            )
+            self.m_regression_output_directory = mr_info.get("output_dir", None)
 
         force_info = a_apps_info.mTagToReportInfo.get("generator", None)
         if force_info:  # force info was in the report info dictionary
@@ -73,9 +65,7 @@ class RtlReporter(object):
         if not self.m_rtl_was_enabled:
             return False
 
-        self.m_reporting_was_skipped = self.rtl_config.parameter(
-            "rtl.report.skip"
-        )
+        self.m_reporting_was_skipped = self.rtl_config.parameter("rtl.report.skip")
 
         # If reporting was enabled, continue to resolve information
         if self.m_reporting_was_skipped:
@@ -126,18 +116,12 @@ class RtlReporter(object):
         report_script_path = PathUtils.real_path(
             a_apps_info.mMainAppPath + "/" + report_script_path
         )
-        report_directory = PathUtils.real_path(
-            self.m_regression_output_directory + "/../../"
-        )
+        report_directory = PathUtils.real_path(self.m_regression_output_directory + "/../../")
 
         # What about the report path?  We get that from the
         # master_run output_dir
         report_command = (
-            report_script_path
-            + " --report-dir "
-            + report_directory
-            + " --name "
-            + rtl_report_name
+            report_script_path + " --report-dir " + report_directory + " --name " + rtl_report_name
         )
         if self.m_report_dump_xml:
             report_command += " --dump-xml"

@@ -36,8 +36,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
             )
 
         self.debug(
-            "[EnvironmentCallHandlerRISCV] generate handler address: 0x%x"
-            % self.getPEstate("PC")
+            "[EnvironmentCallHandlerRISCV] generate handler address: 0x%x" % self.getPEstate("PC")
         )
 
         self._mAppRegSize = self.getGlobalState("AppRegisterWidth")
@@ -47,9 +46,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
         (
             _,
             self.mActionCodeRegIndex,
-        ) = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.ARGUMENT, 2
-        )
+        ) = handler_context.getScratchRegisterIndices(RegisterCallRole.ARGUMENT, 2)
         priv_level_reg_index = handler_context.getScratchRegisterIndices(
             RegisterCallRole.PRIV_LEVEL_VALUE
         )
@@ -103,9 +100,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
         (
             self.mDataBlockAddrRegIndex,
             _,
-        ) = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.ARGUMENT, 2
-        )
+        ) = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.ARGUMENT, 2)
         priv_level_reg_index = aHandlerContext.getScratchRegisterIndices(
             RegisterCallRole.PRIV_LEVEL_VALUE
         )
@@ -113,9 +108,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
             scratch_reg_index,
             xstatus_reg_index,
             inverse_mask_reg_index,
-        ) = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.TEMPORARY, 3
-        )
+        ) = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 3)
 
         for priv_level in self.mAssemblyHelper.genPrivilegeLevelInstructions(
             aPrivLevels=tuple(PrivilegeLevelRISCV)[1:],
@@ -129,30 +122,20 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
 
             self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 1)
             if priv_level == PrivilegeLevelRISCV.S:
-                self.mAssemblyHelper.genShiftLeftImmediate(
-                    scratch_reg_index, 8
-                )
+                self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index, 8)
             elif priv_level == PrivilegeLevelRISCV.M:
-                self.mAssemblyHelper.genShiftLeftImmediate(
-                    scratch_reg_index, 11
-                )
+                self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index, 11)
 
             self.mAssemblyHelper.genNotRegister(
                 inverse_mask_reg_index, aSrcRegIndex=scratch_reg_index
             )
-            self.mAssemblyHelper.genAndRegister(
-                xstatus_reg_index, inverse_mask_reg_index
-            )
-            self.mAssemblyHelper.genOrRegister(
-                xstatus_reg_index, scratch_reg_index
-            )
+            self.mAssemblyHelper.genAndRegister(xstatus_reg_index, inverse_mask_reg_index)
+            self.mAssemblyHelper.genOrRegister(xstatus_reg_index, scratch_reg_index)
             self.mAssemblyHelper.genWriteSystemRegister(
                 ("%sstatus" % priv_level.name.lower()), xstatus_reg_index
             )
 
-            self._genLoadRegFromDataBlock(
-                scratch_reg_index, self.mDataBlockAddrRegIndex, 0
-            )
+            self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 0)
             self.mAssemblyHelper.genWriteSystemRegister(
                 ("%sepc" % priv_level.name.lower()), scratch_reg_index
             )
@@ -170,9 +153,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
         (
             self.mDataBlockAddrRegIndex,
             _,
-        ) = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.ARGUMENT, 2
-        )
+        ) = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.ARGUMENT, 2)
         priv_level_reg_index = aHandlerContext.getScratchRegisterIndices(
             RegisterCallRole.PRIV_LEVEL_VALUE
         )
@@ -186,29 +167,19 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
             aScratchRegIndex=scratch_reg_index,
             aPrivLevelRegIndex=priv_level_reg_index,
         ):
-            self._genLoadRegFromDataBlock(
-                scratch_reg_index, self.mDataBlockAddrRegIndex, 0
-            )
+            self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 0)
             self.mAssemblyHelper.genWriteSystemRegister(
                 ("%sstatus" % priv_level.name.lower()), scratch_reg_index
             )
-            self._genLoadRegFromDataBlock(
-                scratch_reg_index, self.mDataBlockAddrRegIndex, 1
-            )
+            self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 1)
             self.mAssemblyHelper.genWriteSystemRegister(
                 ("%sepc" % priv_level.name.lower()), scratch_reg_index
             )
 
-        self._genLoadRegFromDataBlock(
-            scratch_reg_index, self.mDataBlockAddrRegIndex, 2
-        )
+        self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 2)
         self.mAssemblyHelper.genWriteSystemRegister("satp", scratch_reg_index)
-        self._genLoadRegFromDataBlock(
-            self.mActionCodeRegIndex, self.mDataBlockAddrRegIndex, 3
-        )
-        self._genLoadRegFromDataBlock(
-            self.mDataBlockAddrRegIndex, self.mDataBlockAddrRegIndex, 4
-        )
+        self._genLoadRegFromDataBlock(self.mActionCodeRegIndex, self.mDataBlockAddrRegIndex, 3)
+        self._genLoadRegFromDataBlock(self.mDataBlockAddrRegIndex, self.mDataBlockAddrRegIndex, 4)
 
         self.mAssemblyHelper.genRelativeBranchToLabel(20, "RETURN")
 

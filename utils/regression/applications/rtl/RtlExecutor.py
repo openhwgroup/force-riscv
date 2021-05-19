@@ -106,10 +106,7 @@ class RtlExecutor(IssExecutor):
 
     def skip(self):
         if not self.use_rtl():
-            Msg.user(
-                "[RtlExecutor::skip] skipping due to no rtl information "
-                "specified"
-            )
+            Msg.user("[RtlExecutor::skip] skipping due to no rtl information " "specified")
             return True
 
         return False
@@ -215,38 +212,18 @@ class RtlExecutor(IssExecutor):
 
         my_task_name = my_elf.replace(".Default.ELF", "")
 
-        Msg.user(
-            "Default Elf: %s, Secondary: %s" % (str(my_elf), str(my_elfns))
-        )
+        Msg.user("Default Elf: %s, Secondary: %s" % (str(my_elf), str(my_elfns)))
 
         self.rtl_log = "%s.log" % my_task_name
 
         my_params = list()
-        my_params.append(
-            RtlOption(
-                "+", "skyros_mem_default", RtlDefaults.skyros_mem_default
-            )
-        )
-        my_params.append(
-            RtlOption(
-                "+", "tbench_elf64", RtlDefaults.tbench_elf64 % my_task_name
-            )
-        )
+        my_params.append(RtlOption("+", "skyros_mem_default", RtlDefaults.skyros_mem_default))
+        my_params.append(RtlOption("+", "tbench_elf64", RtlDefaults.tbench_elf64 % my_task_name))
         my_params.append(RtlOption("+", "s_mem_init", RtlDefaults.s_mem_init))
-        my_params.append(
-            RtlOption("+", "ns_mem_init", RtlDefaults.ns_mem_init)
-        )
-        my_params.append(
-            RtlOption("+", "goldmem_level", RtlDefaults.goldmem_level)
-        )
-        my_params.append(
-            RtlOption("+", "UVM_TC_PATH", RtlDefaults.UVM_TC_PATH)
-        )
-        my_params.append(
-            RtlOption(
-                "+", "UVM_TC_NAME", RtlDefaults.UVM_TC_NAME % my_task_name
-            )
-        )
+        my_params.append(RtlOption("+", "ns_mem_init", RtlDefaults.ns_mem_init))
+        my_params.append(RtlOption("+", "goldmem_level", RtlDefaults.goldmem_level))
+        my_params.append(RtlOption("+", "UVM_TC_PATH", RtlDefaults.UVM_TC_PATH))
+        my_params.append(RtlOption("+", "UVM_TC_NAME", RtlDefaults.UVM_TC_NAME % my_task_name))
         my_params.append(
             RtlOption(
                 "+",
@@ -261,16 +238,13 @@ class RtlExecutor(IssExecutor):
                 RtlDefaults.ntb_random_seed % self.ctrl_item.seed,
             )
         )
-        my_params.append(
-            RtlOption("+", "UVM_TEST_DIR", RtlDefaults.UVM_TEST_DIR)
-        )
+        my_params.append(RtlOption("+", "UVM_TEST_DIR", RtlDefaults.UVM_TEST_DIR))
 
         # next one is a bit of an oddball
         my_params.append(
             RtlOption(
                 "-",
-                "reportstats -assert %s -l %s"
-                % (RtlDefaults.assert_proc, self.rtl_log),
+                "reportstats -assert %s -l %s" % (RtlDefaults.assert_proc, self.rtl_log),
                 None,
             )
         )
@@ -279,13 +253,7 @@ class RtlExecutor(IssExecutor):
         # NOTE: DO NOT USE format to assemble string  ##
         #################################################
 
-        self.rtl_cmd = (
-            rtl_executable
-            + " "
-            + plus_args
-            + " "
-            + self.assemble_cmd(my_params)
-        )
+        self.rtl_cmd = rtl_executable + " " + plus_args + " " + self.assemble_cmd(my_params)
 
         # If FORCE_INIT is a detected argument we are preloading the boot code,
         # assemble the appropriate commands
@@ -351,10 +319,7 @@ class RtlExecutor(IssExecutor):
         if isinstance(dofile_path, str):
             shutil.copyfile(
                 dofile_path,
-                (
-                    "%s/%s_waves_fsdb.do"
-                    % (PathUtils.current_dir(), self.task_name)
-                ),
+                ("%s/%s_waves_fsdb.do" % (PathUtils.current_dir(), self.task_name)),
             )
 
     ##
@@ -369,9 +334,7 @@ class RtlExecutor(IssExecutor):
         # allows rerun of at least the RTL portion of the test.
         output_directory = PathUtils.current_dir()
 
-        rerun_script_path = PathUtils.append_path(
-            output_directory, RtlDefaults.RERUN_CMD_FILENAME
-        )
+        rerun_script_path = PathUtils.append_path(output_directory, RtlDefaults.RERUN_CMD_FILENAME)
         rerun_dump_script_path = PathUtils.append_path(
             output_directory, RtlDefaults.RERUN_DUMP_CMD_FILENAME
         )
@@ -387,8 +350,7 @@ class RtlExecutor(IssExecutor):
             self.rtl.get("exe"), self.rtl.get("debug_exe")
         )
         rerun_dump_cmd = base_rerun_dump_cmd + str(
-            " +fsdbfile+./%s.fsdb -ucli -do ./%s_waves_fsdb.do"
-            % (self.task_name, self.task_name)
+            " +fsdbfile+./%s.fsdb -ucli -do ./%s_waves_fsdb.do" % (self.task_name, self.task_name)
         )
 
         class LsfDefaults(object):
@@ -433,10 +395,7 @@ class RtlExecutor(IssExecutor):
             print("IO error({0}): {1}".format(e.errno, e.strerror))
             raise
         except BaseException:
-            print(
-                "[RTL-SIM] Unhandled exception while attempting to write "
-                "rerun command files"
-            )
+            print("[RTL-SIM] Unhandled exception while attempting to write " "rerun command files")
             raise
 
     def extract_results(self, a_result, a_log, a_elog):
@@ -452,8 +411,7 @@ class RtlExecutor(IssExecutor):
         if (process_ret_code == 0) and not test_passed:
             Msg.warn(
                 "[RTL-SIM] Test Passed=%s, but process return code is %d, "
-                "changing return code to 1"
-                % (str(test_passed), process_ret_code)
+                "changing return code to 1" % (str(test_passed), process_ret_code)
             )
             process_ret_code = 1
 
@@ -493,9 +451,7 @@ class RtlExecutor(IssExecutor):
             )
 
             Msg.user("Results: %s" % (str(my_result)), "RTLEX-RESULT")
-            my_extract_results = self.extract_results(
-                my_result, "./" + self.rtl_log, None
-            )
+            my_extract_results = self.extract_results(my_result, "./" + self.rtl_log, None)
 
             # report the results
             Msg.info("RTLResult = " + str(my_extract_results))

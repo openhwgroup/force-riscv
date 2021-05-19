@@ -48,9 +48,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VSEW", choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", choice_weights)
 
         choices_mod.commitSet()
 
@@ -76,10 +74,7 @@ class MainSequence(VectorTestSequence):
 
         vm_val = aInstrRecord["Imms"]["vm"]
         if (vm_val == 0) and (vd_val == 0):
-            self.error(
-                "Instruction %s is masked with v0 as the destination register"
-                % aInstr
-            )
+            self.error("Instruction %s is masked with v0 as the destination register" % aInstr)
 
 
 MainSequenceClass = MainSequence

@@ -68,9 +68,7 @@ class LoadGPR64(Sequence):
 
         # Always execute the LUI, even when top 20 bits are 0, because it will
         # clear the remaining register bits, as desired.
-        self.genInstruction(
-            "LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": top_20_bits}
-        )
+        self.genInstruction("LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": top_20_bits})
 
         bottom_12_bits = aValue & 0xFFF
         if bottom_12_bits != 0:
@@ -158,9 +156,7 @@ class LoadGPR64(Sequence):
     #
     #  @param aValue A value with the top 53 bits set.
     def _loadValueTop53BitsSet(self, aValue):
-        self.genInstruction(
-            "LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": 0}
-        )
+        self.genInstruction("LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": 0})
         bottom_12_bits = aValue & 0xFFF
         self.genInstruction(
             "ADDIW##RISCV",

@@ -142,9 +142,7 @@ def add_layout_operand(aInstruction):
         else:
             elem_width = ints[0]
 
-        operand_adjustor.add_custom_layout_operand(
-            aRegCount=reg_count, aElemWidth=elem_width
-        )
+        operand_adjustor.add_custom_layout_operand(aRegCount=reg_count, aElemWidth=elem_width)
     else:
         operand_adjustor.add_vtype_layout_operand()
 
@@ -153,9 +151,7 @@ def add_layout_operand(aInstruction):
 def adjust_register_layout(aInstruction):
     adjust_dest = False
     dest_layout_multiple = 2
-    if aInstruction.name.startswith("VW") or aInstruction.name.startswith(
-        "VFW"
-    ):
+    if aInstruction.name.startswith("VW") or aInstruction.name.startswith("VFW"):
         adjust_dest = True
     elif aInstruction.name.startswith("VQMACC"):
         adjust_dest = True
@@ -165,9 +161,7 @@ def adjust_register_layout(aInstruction):
     source_layout_multiple = 2
     if ".W" in aInstruction.name:
         adjust_source = True
-    elif aInstruction.name.startswith(
-        "VSEXT.VF"
-    ) or aInstruction.name.startswith("VZEXT.VF"):
+    elif aInstruction.name.startswith("VSEXT.VF") or aInstruction.name.startswith("VZEXT.VF"):
         adjust_source = True
         layout_divisor = int(aInstruction.name[-1])
         source_layout_multiple = 1 / layout_divisor

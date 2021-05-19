@@ -79,14 +79,10 @@ class ForceExecutor(GenerateExecutor):
             ),
             True,
         )
-        my_return = SysUtils.exec_process(
-            my_cmd, my_log, my_elog, self.ctrl_item.timeout, True
-        )
+        my_return = SysUtils.exec_process(my_cmd, my_log, my_elog, self.ctrl_item.timeout, True)
         # the return from exec_process is a tuple, see generate_executor.py,
         # retcode, stdout, stderr, start-time, end-time
-        my_results = self.extract_results(
-            my_return, "./" + my_log, "./" + my_elog
-        )
+        my_results = self.extract_results(my_return, "./" + my_log, "./" + my_elog)
         Msg.info("GenResult = " + str(my_results))
         Msg.flush()
 
@@ -123,18 +119,9 @@ class ForceExecutor(GenerateExecutor):
                 Msg.user("Total Instructions: %d" % my_total)
 
             if "Initial seed" in my_line:
-                my_seed = (
-                    my_line.replace("[notice]", "")
-                    .replace("Initial seed = ", "")
-                    .strip()
-                )
+                my_seed = my_line.replace("[notice]", "").replace("Initial seed = ", "").strip()
 
-            if (
-                my_seed is None
-                or my_total == 0
-                or my_secondary == 0
-                or my_default == 0
-            ):
+            if my_seed is None or my_total == 0 or my_secondary == 0 or my_default == 0:
                 continue
 
         return my_seed, my_total, my_secondary, my_default

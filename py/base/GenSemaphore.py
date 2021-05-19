@@ -20,9 +20,7 @@ from base.Sequence import Sequence
 
 
 class GenSemaphore(Sequence):
-    def __init__(
-        self, aGenThread, aName, aCounter, aMemAttrImpl, aBank=0, aSize=8
-    ):
+    def __init__(self, aGenThread, aName, aCounter, aMemAttrImpl, aBank=0, aSize=8):
         super().__init__(aGenThread)
         self.mAddrReg = None  # register for address
         self.mSemaVA = None  # semaphore virtual address
@@ -43,11 +41,7 @@ class GenSemaphore(Sequence):
         raise NotImplementedError
 
     def _reloadSemaphore(self):
-        (
-            self.mSharedPA,
-            self.mReverseEndian,
-            valid,
-        ) = self.genThread.genSemaphore(
+        (self.mSharedPA, self.mReverseEndian, valid,) = self.genThread.genSemaphore(
             self.mName, self.mCounter, self.mBank, self.mSize
         )  # Shared PA has been initialized with the counter
         if not valid:
@@ -69,9 +63,7 @@ class GenSemaphore(Sequence):
             self.error("ERROR VA=%x is invalid" % self.mSemaVA)
 
         shared_va_page_info = self.getPageInfo(self.mSemaVA, "VA", self.mBank)
-        if shared_va_page_info and (
-            shared_va_page_info["Page"]["MemoryAttr"] != self.mVaAttr
-        ):
+        if shared_va_page_info and (shared_va_page_info["Page"]["MemoryAttr"] != self.mVaAttr):
             self.error(
                 "ERROR VA=%x is set to %s instead of %s"
                 % (

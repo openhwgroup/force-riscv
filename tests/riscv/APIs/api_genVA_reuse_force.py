@@ -30,9 +30,7 @@ class MainSequence(Sequence):
         for _ in range(RandomUtils.random32(50, 100)):
             size = RandomUtils.random32(8, 32)
             alignment = self.choice((1, 2, 4, 8, 16, 32))
-            addr = self.genVA(
-                Size=size, Align=alignment, Type="D", Range=str(addr_constr)
-            )
+            addr = self.genVA(Size=size, Align=alignment, Type="D", Range=str(addr_constr))
 
             if not addr_constr.containsValue(addr):
                 self.error(

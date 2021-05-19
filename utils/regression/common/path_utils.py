@@ -161,9 +161,7 @@ class PathUtils(object):
         my_rawinfo = list(os.walk(arg_path))
         Msg.dbg(str(my_rawinfo))
         my_dirinfo = my_rawinfo[0]
-        my_dirs = list(
-            filter(lambda my_dir: not my_dir.startswith("."), my_dirinfo[1])
-        )
+        my_dirs = list(filter(lambda my_dir: not my_dir.startswith("."), my_dirinfo[1]))
 
         return my_dirs
 
@@ -178,9 +176,7 @@ class PathUtils(object):
 
     @classmethod
     def file_count(cls, arg_path):
-        return len(
-            list(filter(os.path.isfile, PathUtils.list_files(arg_path)))
-        )
+        return len(list(filter(os.path.isfile, PathUtils.list_files(arg_path))))
 
     # returns the fully qualified working directory
     @classmethod
@@ -206,13 +202,10 @@ class PathUtils(object):
     def chdir(cls, arg_dir, arg_force=False):
 
         Msg.dbg("PathUtils::chdir( %s, %s )" % (arg_dir, str(arg_force)))
-        if not PathUtils.check_dir(
-            PathUtils.exclude_trailing_path_delimiter(arg_dir)
-        ):
+        if not PathUtils.check_dir(PathUtils.exclude_trailing_path_delimiter(arg_dir)):
             if arg_force:
                 Msg.dbg(
-                    "Directory Does Not Exist, "
-                    "Attempting to Create Directory: %s" % (arg_dir)
+                    "Directory Does Not Exist, " "Attempting to Create Directory: %s" % (arg_dir)
                 )
                 if not PathUtils.mkdir(arg_dir):
                     Msg.dbg("Failed Create: %s" % (arg_dir))
@@ -224,10 +217,7 @@ class PathUtils(object):
         try:
             real_path = PathUtils.real_path(arg_dir)
             os.chdir(arg_dir)
-            Msg.dbg(
-                "Success Changed Directory: %s (real path: %s)"
-                % (arg_dir, real_path)
-            )
+            Msg.dbg("Success Changed Directory: %s (real path: %s)" % (arg_dir, real_path))
         except BaseException:
             return False
 
@@ -264,9 +254,7 @@ class PathUtils(object):
             if PathUtils.check_dir(arg_dir):
                 Msg.err("Fail, Unable to Remove Directory: %s" % (arg_dir))
                 return False
-            Msg.warn(
-                "Directory does not exists, Remove Failed: %s " % (arg_dir)
-            )
+            Msg.warn("Directory does not exists, Remove Failed: %s " % (arg_dir))
         return True
 
     @classmethod
@@ -326,8 +314,7 @@ class PathUtils(object):
             for my_dir in my_dirlist:
                 # PathUtils.rmdir( my_dir, True )
                 PathUtils.rmdir(
-                    PathUtils.include_trailing_path_delimiter(arg_basedir)
-                    + my_dir,
+                    PathUtils.include_trailing_path_delimiter(arg_basedir) + my_dir,
                     True,
                 )
 
@@ -420,8 +407,7 @@ class PathUtils(object):
         Msg.dbg("Current Directory: %s " % (PathUtils.current_dir()))
 
         my_flist = PathUtils.list_files(
-            PathUtils.include_trailing_path_delimiter(PathUtils.current_dir())
-            + "*.*"
+            PathUtils.include_trailing_path_delimiter(PathUtils.current_dir()) + "*.*"
         )
         for my_file in my_flist:
             Msg.dbg("Source: %s, Target: %s" % (my_file, my_target))
@@ -469,14 +455,9 @@ class PathUtils(object):
     @classmethod
     def resolvePath(cls, aFilePath):
         try:
-            return str(
-                Path(aFilePath).resolve()
-            )  # return as a string instead of a Path object
+            return str(Path(aFilePath).resolve())  # return as a string instead of a Path object
         except FileNotFoundError:
-            Msg.err(
-                "Unable to locate %s. Please ensure that it exists."
-                % aFilePath
-            )
+            Msg.err("Unable to locate %s. Please ensure that it exists." % aFilePath)
             # Quit to prevent continuing with a file that was probably
             # improperly specified
             sys.exit(1)

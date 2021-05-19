@@ -81,8 +81,7 @@ class SingleGenThreadExecutor(GenThreadExecutor):
         # the main thread
         if len(aGenThreads) != 1:
             raise AssertionError(
-                "SingleGenThreadExecutor was used to execute more than one "
-                "GenThread!"
+                "SingleGenThreadExecutor was used to execute more than one " "GenThread!"
             )
 
         return GenThreadExecutor.executeGenThread(aGenThreads[0])
@@ -120,12 +119,8 @@ class MultiGenThreadExecutor(GenThreadExecutor):
                 ex_thread.join()
 
     @staticmethod
-    def executeGenThreadControlledStart(
-        aGenThread, aDispatcher, aStartBarrier
-    ):
-        with ExecutionContextManager(
-            aGenThread.genThreadID, aDispatcher, aStartBarrier
-        ):
+    def executeGenThreadControlledStart(aGenThread, aDispatcher, aStartBarrier):
+        with ExecutionContextManager(aGenThread.genThreadID, aDispatcher, aStartBarrier):
             GenThreadExecutor.executeGenThread(aGenThread)
 
 
@@ -139,13 +134,9 @@ class ThreadingEnableContextManager:
     # Iterate through all GenThread objects to set their dispatcher to the
     # multi-thread one.
     def __enter__(self):
-        ThreadDispatcher.setCurrentDispatcher(
-            self.mExecutor.mMultiThreadDispatcher
-        )
+        ThreadDispatcher.setCurrentDispatcher(self.mExecutor.mMultiThreadDispatcher)
         for gen_thread in self.mExecutor.mGenThreads:
-            self.mExecutor.mMultiThreadDispatcher.addThreadId(
-                gen_thread.genThreadID
-            )
+            self.mExecutor.mMultiThreadDispatcher.addThreadId(gen_thread.genThreadID)
 
         self.mExecutor.mMultiThreadDispatcher.start()
         Log.noticeNoBlock("Multi-threading phase entered.")
@@ -156,9 +147,7 @@ class ThreadingEnableContextManager:
     def __exit__(self, *unused):
         self.mExecutor.mMultiThreadDispatcher.stop()
         Log.noticeNoBlock("Multi-threading phase exited.")
-        ThreadDispatcher.setCurrentDispatcher(
-            self.mExecutor.mSingleThreadDispatcher
-        )
+        ThreadDispatcher.setCurrentDispatcher(self.mExecutor.mSingleThreadDispatcher)
         return False
 
 

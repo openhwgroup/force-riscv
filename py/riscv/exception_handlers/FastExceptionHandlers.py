@@ -56,9 +56,7 @@ class FastSkipInstructionHandlerRISCV(FastExceptionHandlersBaseRISCV):
 
         self.mAssemblyHelper.genReadSystemRegister(scratch_reg_index, epc_name)
         self.mAssemblyHelper.genAddImmediate(scratch_reg_index, 4)
-        self.mAssemblyHelper.genWriteSystemRegister(
-            epc_name, scratch_reg_index
-        )
+        self.mAssemblyHelper.genWriteSystemRegister(epc_name, scratch_reg_index)
 
 
 class FastRecoveryAddressHandlerRISCV(FastExceptionHandlersBaseRISCV):
@@ -83,6 +81,4 @@ class FastRecoveryAddressHandlerRISCV(FastExceptionHandlersBaseRISCV):
             else "unknown_pc_error"
         )
 
-        self.mAssemblyHelper.genWriteSystemRegister(
-            epc_name, recovery_reg_index
-        )
+        self.mAssemblyHelper.genWriteSystemRegister(epc_name, recovery_reg_index)

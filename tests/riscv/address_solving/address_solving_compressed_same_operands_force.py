@@ -41,9 +41,7 @@ class MainSequence(Sequence):
             )
 
         for _ in range(50):
-            instr_id = self.genInstruction(
-                self.choice(instructions), {"NoPreamble": 1}
-            )
+            instr_id = self.genInstruction(self.choice(instructions), {"NoPreamble": 1})
 
             if instr_id:
                 instr_record = self.queryInstructionRecord(instr_id)

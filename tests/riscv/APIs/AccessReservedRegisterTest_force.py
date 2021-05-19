@@ -39,10 +39,7 @@ class MainSequence(Sequence):
 
             # lets try read 1st...
             if not self.isRegisterReserved(reserved_gpr, "Read"):
-                print(
-                    "[DEBUG] next 'Read' reserved register is %s (ID: %d)\n"
-                    % (reserved_gpr, i)
-                )
+                print("[DEBUG] next 'Read' reserved register is %s (ID: %d)\n" % (reserved_gpr, i))
                 self.reserveRegister(reserved_gpr, "Read")
                 self.accessReservedReg(i)
                 self.unreserveRegister(reserved_gpr, "Read")
@@ -50,8 +47,7 @@ class MainSequence(Sequence):
             # then write...
             if not self.isRegisterReserved(reserved_gpr, "Write"):
                 print(
-                    "[DEBUG] next 'Write' reserved register is %s (ID: %d)\n"
-                    % (reserved_gpr, i)
+                    "[DEBUG] next 'Write' reserved register is %s (ID: %d)\n" % (reserved_gpr, i)
                 )
                 self.reserveRegister(reserved_gpr, "Write")
                 self.accessReservedReg(i)
@@ -122,9 +118,7 @@ class MainSequence(Sequence):
         rnd_set = []
         for j in range(100):
             rnd_set.append(self.getRandomGPR())
-            (r1, r2, r3, r4, r5) = self.getRandomRegisters(
-                5, "GPR", "%d" % reserved_reg_id
-            )
+            (r1, r2, r3, r4, r5) = self.getRandomRegisters(5, "GPR", "%d" % reserved_reg_id)
             if r1 not in rnd_set:
                 rnd_set.append(r1)
             if r2 not in rnd_set:
@@ -137,14 +131,10 @@ class MainSequence(Sequence):
                 rnd_set.append(r5)
         print("\t[DEBUG] random gprs: ", rnd_set)
         if reserved_reg_id in rnd_set:
-            print(
-                "[DEBUG] OOPS! RandomGPR returned reserved register (X%d) ???"
-                % reserved_reg_id
-            )
+            print("[DEBUG] OOPS! RandomGPR returned reserved register (X%d) ???" % reserved_reg_id)
             sys.stdout.flush()
             raise ValueError(
-                "OOPS! RandomGPR returned reserved register (X%d) ???"
-                % reserved_reg_id
+                "OOPS! RandomGPR returned reserved register (X%d) ???" % reserved_reg_id
             )
 
     def reservedRandomRegCheck(self, access_to_deny):

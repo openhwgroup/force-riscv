@@ -36,9 +36,7 @@ class AssemblyHelper(ABC):
     #  @param aPrivLevelRegIndex The index of a register containing a value
     #                           representing the current privilege level.
     @abstractmethod
-    def genIncrementExceptionReturnAddress(
-        self, aScratchRegIndex, aPrivLevelRegIndex
-    ):
+    def genIncrementExceptionReturnAddress(self, aScratchRegIndex, aPrivLevelRegIndex):
         raise NotImplementedError
 
     # Generate a relative branch instruction to the specified address.
@@ -103,9 +101,7 @@ class AssemblyHelper(ABC):
     #       shift. May be omitted if the destination register is also the
     #       source register.
     @abstractmethod
-    def genShiftLeftImmediate(
-        self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None
-    ):
+    def genShiftLeftImmediate(self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None):
         raise NotImplementedError
 
     # Generate an instruction to shift the specified register to the right.
@@ -116,9 +112,7 @@ class AssemblyHelper(ABC):
     #       shift. May be omitted if the destination register is also the
     #       source register.
     @abstractmethod
-    def genShiftRightImmediate(
-        self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None
-    ):
+    def genShiftRightImmediate(self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None):
         raise NotImplementedError
 
     # Generate an instruction to AND a specified register with an immediate
@@ -234,9 +228,7 @@ class AssemblyHelper(ABC):
     #       value to be subtracted from. May be omitted if the destination
     #       register is also used as the minuend.
     @abstractmethod
-    def genSubRegister(
-        self, aDestRegIndex, aSubtrahendRegIndex, aMinuendRegIndex=None
-    ):
+    def genSubRegister(self, aDestRegIndex, aSubtrahendRegIndex, aMinuendRegIndex=None):
         raise NotImplementedError
 
     # Generate an instruction to load a register with the value in the
@@ -293,8 +285,7 @@ class AssemblyHelper(ABC):
                 )
                 self.mSequence.error(
                     "INTERNAL ERROR (%s) LABEL ADDRESS: 0x%x, LABEL OFFSET "
-                    "(# OF INSTRS): %d"
-                    % (self._mLabelRoutineName, cur_pc, label_offset)
+                    "(# OF INSTRS): %d" % (self._mLabelRoutineName, cur_pc, label_offset)
                 )
 
         self.logDebugSymbol(aLabel)
@@ -335,8 +326,7 @@ class AssemblyHelper(ABC):
         )
         if not valid:
             self.error(
-                "Unable to generate branch instruction from 0x%x to 0x%x"
-                % (cur_pc, aTargetAddr)
+                "Unable to generate branch instruction from 0x%x to 0x%x" % (cur_pc, aTargetAddr)
             )
 
         return br_offset
@@ -354,7 +344,5 @@ class AssemblyHelper(ABC):
     #  @param aBrOffset The branch offset.
     def recordBranchToLabel(self, aLabel, aBrOffset):
         label_branch_records = self._mBranchRecords.get(aLabel, list())
-        label_branch_records.append(
-            (self.mSequence.getPEstate("PC"), aBrOffset)
-        )
+        label_branch_records.append((self.mSequence.getPEstate("PC"), aBrOffset))
         self._mBranchRecords[aLabel] = label_branch_records

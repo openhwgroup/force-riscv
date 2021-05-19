@@ -76,12 +76,8 @@ class Sequence(object):
     def beginLinearBlock(self):
         return self.genThread.beginLinearBlock()
 
-    def endLinearBlock(
-        self, block_id, execute=True, max_re_execution_instructions=0
-    ):
-        self.genThread.endLinearBlock(
-            block_id, execute, max_re_execution_instructions
-        )
+    def endLinearBlock(self, block_id, execute=True, max_re_execution_instructions=0):
+        self.genThread.endLinearBlock(block_id, execute, max_re_execution_instructions)
 
     def genMacro(self, item, param):
         return self._genInstructionSequenceFromMacro(Macro(item, param))
@@ -93,9 +89,7 @@ class Sequence(object):
             else:
                 return self._genInstructionSequence(item, kargs)
         except TypeError:
-            self.error(
-                "genInstrOrSequence: given item type or format is incorrect"
-            )
+            self.error("genInstrOrSequence: given item type or format is incorrect")
 
         return None
 
@@ -164,9 +158,7 @@ class Sequence(object):
         return self.genThread.getPEstate(state_name)
 
     def initializeMemory(self, addr, bank, size, data, is_instr, is_virtual):
-        self.genThread.initializeMemory(
-            addr, bank, size, data, is_instr, is_virtual
-        )
+        self.genThread.initializeMemory(addr, bank, size, data, is_instr, is_virtual)
 
     # Page related API
     def genPA(self, **kargs):
@@ -185,8 +177,7 @@ class Sequence(object):
     # val = self.random32(min_v=0, max_v=MAX_UINT32)
     def random32(self, min_v=0, max_v=0xFFFFFFFF):
         warnings.warn(
-            "Sequence.random32() is deprecated; "
-            "please use RandomUtils.random32()",
+            "Sequence.random32() is deprecated; " "please use RandomUtils.random32()",
             DeprecationWarning,
         )
 
@@ -194,8 +185,7 @@ class Sequence(object):
 
     def random64(self, min_v=0, max_v=0xFFFFFFFFFFFFFFFF):
         warnings.warn(
-            "Sequence.random64() is deprecated; "
-            "please use RandomUtils.random64()",
+            "Sequence.random64() is deprecated; " "please use RandomUtils.random64()",
             DeprecationWarning,
         )
 
@@ -203,8 +193,7 @@ class Sequence(object):
 
     def shuffleList(self, myList):
         warnings.warn(
-            "Sequence.shuffleList() is deprecated; "
-            "please use UtilityFunctions.shuffle_list()",
+            "Sequence.shuffleList() is deprecated; " "please use UtilityFunctions.shuffle_list()",
             DeprecationWarning,
         )
 
@@ -236,28 +225,16 @@ class Sequence(object):
     # (reg1, reg2, reg3) = self.getRandomRegisters(Number=3, Type="GPR",
     # Exclude="31"), Exclude is optional, default is empty string ""
     def getRandomRegisters(self, number, reg_type, exclude="", no_skip=False):
-        reg_indices = self.genThread.getRandomRegisters(
-            number, reg_type, exclude
-        )
+        reg_indices = self.genThread.getRandomRegisters(number, reg_type, exclude)
         if no_skip and (reg_indices is None):
-            self.error(
-                "Failed to obtain %d random %s register(s)"
-                % (number, reg_type)
-            )
+            self.error("Failed to obtain %d random %s register(s)" % (number, reg_type))
 
         return reg_indices
 
-    def getRandomRegistersForAccess(
-        self, number, reg_type, access, exclude="", no_skip=False
-    ):
-        reg_indices = self.genThread.getRandomRegistersForAccess(
-            number, reg_type, access, exclude
-        )
+    def getRandomRegistersForAccess(self, number, reg_type, access, exclude="", no_skip=False):
+        reg_indices = self.genThread.getRandomRegistersForAccess(number, reg_type, access, exclude)
         if no_skip and (reg_indices is None):
-            self.error(
-                "Failed to obtain %d random %s register(s)"
-                % (number, reg_type)
-            )
+            self.error("Failed to obtain %d random %s register(s)" % (number, reg_type))
 
         return reg_indices
 
@@ -269,17 +246,13 @@ class Sequence(object):
 
         return self.getRandomRegisters(number, "GPR", exclude, no_skip)
 
-    def getRandomGPRsForAccess(
-        self, number, access, exclude="", no_skip=False
-    ):
+    def getRandomGPRsForAccess(self, number, access, exclude="", no_skip=False):
         if len(exclude):
             exclude += ",31"
         else:
             exclude = "31"
 
-        return self.getRandomRegistersForAccess(
-            number, "GPR", access, exclude, no_skip
-        )
+        return self.getRandomRegistersForAccess(number, "GPR", access, exclude, no_skip)
 
     def getRandomGPR(self, exclude="", no_skip=False):
         return self.getRandomGPRs(1, exclude, no_skip)[0]
@@ -291,17 +264,13 @@ class Sequence(object):
         return self.genThread.isRegisterReserved(name, access, resv_type)
 
     def reserveRegisterByIndex(self, size, index, reg_type, access="Write"):
-        self.genThread.reserveRegisterByIndex(
-            size, index, reg_type, access
-        )  # input name
+        self.genThread.reserveRegisterByIndex(size, index, reg_type, access)  # input name
 
     def reserveRegister(self, name, access="Write"):
         self.genThread.reserveRegister(name, access)
 
     def unreserveRegisterByIndex(self, size, index, my_type, access="Write"):
-        self.genThread.unreserveRegisterByIndex(
-            size, index, my_type, access
-        )  # input index
+        self.genThread.unreserveRegisterByIndex(size, index, my_type, access)  # input index
 
     def unreserveRegister(self, name, access="Write", reserve_type="User"):
         self.genThread.unreserveRegister(name, access, reserve_type)
@@ -322,9 +291,7 @@ class Sequence(object):
         self.genThread.randomInitializeRegister(name, field)
 
     def randomInitializeRegisterFields(self, register_name, field_list):
-        self.genThread.randomInitializeRegisterFields(
-            register_name, field_list
-        )
+        self.genThread.randomInitializeRegisterFields(register_name, field_list)
 
     def getRegisterFieldMask(self, register_name, field_list):
         return self.genThread.getRegisterFieldMask(register_name, field_list)
@@ -355,15 +322,11 @@ class Sequence(object):
 
     # get branch offset
     def getBranchOffset(self, br_addr, target_addr, offset_size, shift):
-        return self.genThread.getBranchOffset(
-            br_addr, target_addr, offset_size, shift
-        )
+        return self.genThread.getBranchOffset(br_addr, target_addr, offset_size, shift)
 
     def validAddressMask(self, addr, is_instr):
         # Tuple of (is_instr, addr)
-        return self.genThread.validAddressMask(
-            "ValidAddressMask", addr, is_instr
-        )
+        return self.genThread.validAddressMask("ValidAddressMask", addr, is_instr)
 
     def pickWeighted(self, weighted_dict):
         return self.genThread.pickWeighted(weighted_dict)
@@ -385,9 +348,7 @@ class Sequence(object):
         # first shuffle the given dictionary
         sorted_items = sorted(weighted_dict.items())
         if not skip_weight_check:
-            sorted_items = filter(
-                lambda item, weight: weight > 0, sorted_items
-            )
+            sorted_items = filter(lambda item, weight: weight > 0, sorted_items)
 
         permuted_list = list(sorted_items)
         index_list = list(range(len(permuted_list)))
@@ -395,9 +356,7 @@ class Sequence(object):
 
         # iterate the shuffled list
         for index in shuffled_index_list:
-            yield from self._getPermutatedItems(
-                permuted_list[index][0], skip_weight_check
-            )
+            yield from self._getPermutatedItems(permuted_list[index][0], skip_weight_check)
 
     # self.error("failed to setup scenario at address 0x%x" % addr)
     def error(self, err_msg):
@@ -454,15 +413,11 @@ class Sequence(object):
 
     # self.getRegisterReloadValue(registerName, fieldConstraints)
     def getRegisterReloadValue(self, registerName, fieldConstraints={}):
-        return self.genThread.getRegisterReloadValue(
-            registerName, fieldConstraints
-        )
+        return self.genThread.getRegisterReloadValue(registerName, fieldConstraints)
 
     # self.genRegisterFieldInfo(registerName, fieldConstraints)
     def genRegisterFieldInfo(self, registerName, fieldConstraints):
-        return self.genThread.getRegisterFieldInfo(
-            registerName, fieldConstraints
-        )
+        return self.genThread.getRegisterFieldInfo(registerName, fieldConstraints)
 
     # self.virtualMemoryRequest(requestName, parameters)
     def virtualMemoryRequest(self, requestName, parameters={}):
@@ -513,9 +468,7 @@ class Sequence(object):
         return self.genThread.revertBntHook(bnt_id)
 
     def setEretPreambleSequence(self, eretSequence, eretGlobal=True):
-        self.modifyVariable(
-            "Eret Preamble Sequence Class", eretSequence, "String"
-        )
+        self.modifyVariable("Eret Preamble Sequence Class", eretSequence, "String")
         if eretGlobal:
             self.globalEretPreambleSequence = eretSequence
 
@@ -642,10 +595,7 @@ class Sequence(object):
         try:
             enum_val = aEnumClass.__members__[aString]
         except KeyError:
-            self.error(
-                "%s is not a valid value of %s"
-                % (aString, aEnumClass.__name__)
-            )
+            self.error("%s is not a valid value of %s" % (aString, aEnumClass.__name__))
 
         return enum_val
 

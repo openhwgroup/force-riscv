@@ -101,12 +101,8 @@ class CmdLineParser(object):
                     parm_dict = {"help": help_text}
                     if num_args != 0:
                         parm_dict["nargs"] = num_args
-                    parm_dict.update(
-                        additional_specs
-                    )  # pass along additional specifications
-                    self.argument_groups[-1].add_argument(
-                        *parm_list, **parm_dict
-                    )
+                    parm_dict.update(additional_specs)  # pass along additional specifications
+                    self.argument_groups[-1].add_argument(*parm_list, **parm_dict)
         else:
             # parameters variable is required
             for (
@@ -120,9 +116,7 @@ class CmdLineParser(object):
                 parm_dict = {"help": help_text}
                 if num_args != 0:
                     parm_dict["nargs"] = num_args
-                parm_dict.update(
-                    additional_specs
-                )  # pass along additional specifications
+                parm_dict.update(additional_specs)  # pass along additional specifications
                 self.parser.add_argument(*parm_list, **parm_dict)
 
         # catch all for remainder arguments
@@ -188,9 +182,7 @@ class CmdLineOpts(object):
             self.CommandLineParameters.group_parameters,
             add_help=True,
         )
-        self.ap_args, self.ap_unknown = self.cmd_line_parser.parse_known_args(
-            aSysArgv[1:]
-        )
+        self.ap_args, self.ap_unknown = self.cmd_line_parser.parse_known_args(aSysArgv[1:])
         self.cmd_line_parser.set_parameters(self.ap_opts)
         try:
             if len(self.ap_unknown) > 0:
@@ -232,9 +224,7 @@ class CmdLineOpts(object):
 #
 # Retrieves command line arguments and returns them as a list (or None if it
 # does not exist)
-def basic_command_line_argument_retrieval(
-    aArguments, aShort, aLong, aType, aNumArgs
-):
+def basic_command_line_argument_retrieval(aArguments, aShort, aLong, aType, aNumArgs):
     basic_parser = argparse.ArgumentParser(add_help=False)
     basic_parser.add_argument(aShort, aLong, type=aType, nargs=aNumArgs)
     (known_arguments, _) = basic_parser.parse_known_args(aArguments)

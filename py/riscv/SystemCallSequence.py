@@ -41,10 +41,7 @@ class SystemCallSequence(Sequence):
         if function == "SwitchPrivilegeLevel":
             ret_code = self._switchPrivilegeLevel(kwargs)
         else:
-            self.error(
-                "SystemCallSequence does not support the %s function"
-                % function
-            )
+            self.error("SystemCallSequence does not support the %s function" % function)
 
         self._processReturnCode(ret_code, function)
 
@@ -109,9 +106,7 @@ class SystemCallSequence(Sequence):
 
         self._unassignRegisters()
 
-        self.genSequence(
-            "UpdatePeState", {"RecordId": except_request_results["RecordId"]}
-        )
+        self.genSequence("UpdatePeState", {"RecordId": except_request_results["RecordId"]})
         self.updateVm()
 
         return ret_code
@@ -123,10 +118,7 @@ class SystemCallSequence(Sequence):
     #  @param aFunction The operation performed by the system call.
     def _processReturnCode(self, aRetCode, aFunction):
         if aRetCode == 0:
-            self.notice(
-                "SystemCallSequence request %s processed succesfully"
-                % aFunction
-            )
+            self.notice("SystemCallSequence request %s processed succesfully" % aFunction)
         else:
             self.notice(
                 "SystemCallSequence request %s could not be processed "
@@ -136,8 +128,7 @@ class SystemCallSequence(Sequence):
         (no_skip, valid) = self.genThread.getOption("NoSkip")
         if valid and (no_skip == 1) and (aRetCode != 0):
             self.error(
-                "Unable to process SystemCallSequence request and NoSkip "
-                "option was specified"
+                "Unable to process SystemCallSequence request and NoSkip " "option was specified"
             )
 
     # Generate the instructions required to execute the privilege level switch.
@@ -162,9 +153,7 @@ class SystemCallSequence(Sequence):
         elif aInstrSeqCode == 1:
             # Generate 1 ECALL instruction
             action_code = 2  # Load From Data Block
-            self._mAssemblyHelper.genMoveImmediate(
-                self._mActionCodeRegIndex, action_code
-            )
+            self._mAssemblyHelper.genMoveImmediate(self._mActionCodeRegIndex, action_code)
             self._genEcall()
         elif aInstrSeqCode == 2:
             # Generate xRET instruction
@@ -172,9 +161,7 @@ class SystemCallSequence(Sequence):
         elif aInstrSeqCode == 3:
             # Generate 2 ECALL instructions
             action_code = 1  # Return to S Mode
-            self._mAssemblyHelper.genMoveImmediate(
-                self._mActionCodeRegIndex, action_code
-            )
+            self._mAssemblyHelper.genMoveImmediate(self._mActionCodeRegIndex, action_code)
             self._genEcall()
             self.setPEstate("PrivilegeLevel", 1)
             self.setPEstate("PC", aIntermediateRetAddr)
@@ -185,9 +172,7 @@ class SystemCallSequence(Sequence):
             # data block as usual in the second ECALL
             self._genIncrementDataBlockPointer()
             action_code = 2  # Load From Data Block
-            self._mAssemblyHelper.genMoveImmediate(
-                self._mActionCodeRegIndex, action_code
-            )
+            self._mAssemblyHelper.genMoveImmediate(self._mActionCodeRegIndex, action_code)
             self._genEcall()
         else:
             self.error("Unexpected InstrSeqCode value %d" % aInstrSeqCode)
@@ -226,50 +211,31 @@ class SystemCallSequence(Sequence):
         else:
             self.error(
                 "Unexpected request to execute xRET instruction to transition "
-                "from privilege level %s to privilege level %s"
-                % (priv_level, aTargetPrivLevel)
+                "from privilege level %s to privilege level %s" % (priv_level, aTargetPrivLevel)
             )
 
         # The action code register is used as a scratch register here to reduce
         # the number of required registers
-        self._genLoadGPR(
-            self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 0
-        )
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 0)
         self._mAssemblyHelper.genWriteSystemRegister(
             ("%sstatus" % priv_level_prefix.lower()), self._mActionCodeRegIndex
         )
-        self._genLoadGPR(
-            self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 1
-        )
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 1)
         self._mAssemblyHelper.genWriteSystemRegister(
             ("%sepc" % priv_level_prefix.lower()), self._mActionCodeRegIndex
         )
-        self._genLoadGPR(
-            self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 2
-        )
-        self._mAssemblyHelper.genWriteSystemRegister(
-            "satp", self._mActionCodeRegIndex
-        )
-        self._genLoadGPR(
-            self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 3
-        )
-        self._genLoadGPR(
-            self._mDataBlockAddrRegIndex, self._mDataBlockAddrRegIndex, 4
-        )
-        self.genInstruction(
-            ("%sRET##RISCV" % priv_level_prefix), {"NoRestriction": 1}
-        )
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 2)
+        self._mAssemblyHelper.genWriteSystemRegister("satp", self._mActionCodeRegIndex)
+        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 3)
+        self._genLoadGPR(self._mDataBlockAddrRegIndex, self._mDataBlockAddrRegIndex, 4)
+        self.genInstruction(("%sRET##RISCV" % priv_level_prefix), {"NoRestriction": 1})
 
     # Generate an instruction to increment the data block address pointer.
     def _genIncrementDataBlockPointer(self):
         if self._mAppRegSize == 32:
-            self._mAssemblyHelper.genAddImmediate(
-                self._mDataBlockAddrRegIndex, 4
-            )
+            self._mAssemblyHelper.genAddImmediate(self._mDataBlockAddrRegIndex, 4)
         else:
-            self._mAssemblyHelper.genAddImmediate(
-                self._mDataBlockAddrRegIndex, 8
-            )
+            self._mAssemblyHelper.genAddImmediate(self._mDataBlockAddrRegIndex, 8)
 
     # Generate instruction to load a single GPR
     #

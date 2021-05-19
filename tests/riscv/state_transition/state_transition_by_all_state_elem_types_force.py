@@ -53,9 +53,7 @@ class MainSequence(Sequence):
             state_elem_type_order,
         )
 
-        state_transition_test_utils.verify_state(
-            self, self._mExpectedStateData
-        )
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a random State to test an explicit StateTransition.
     def _createState(self):
@@ -63,43 +61,33 @@ class MainSequence(Sequence):
 
         test_utils = state_transition_test_utils
 
-        self._mExpectedStateData[
-            EStateElementType.PC
-        ] = test_utils.add_random_pc_state_element(self, state)
+        self._mExpectedStateData[EStateElementType.PC] = test_utils.add_random_pc_state_element(
+            self, state
+        )
         self._mExpectedStateData[
             EStateElementType.FloatingPointRegister
         ] = test_utils.add_random_floating_point_register_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
-        self._mExpectedStateData[
-            EStateElementType.GPR
-        ] = test_utils.add_random_gpr_state_elements(
+        self._mExpectedStateData[EStateElementType.GPR] = test_utils.add_random_gpr_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
         self._mExpectedStateData[
             EStateElementType.Memory
-        ] = test_utils.add_random_memory_state_elements(
-            self, state, RandomUtils.random32(0, 20)
-        )
+        ] = test_utils.add_random_memory_state_elements(self, state, RandomUtils.random32(0, 20))
 
         expected_sys_reg_state_data = []
         max_rand = (
-            0xFFFFFFFF
-            if self.getGlobalState("AppRegisterWidth") == 32
-            else 0xFFFFFFFFFFFFFFFF
+            0xFFFFFFFF if self.getGlobalState("AppRegisterWidth") == 32 else 0xFFFFFFFFFFFFFFFF
         )
 
         mscratch_val = RandomUtils.random64(0, max_rand)
         state.addRegisterStateElement("mscratch", (mscratch_val,))
         expected_sys_reg_state_data.append(("mscratch", mscratch_val))
-        mepc_val = UtilityFunctions.getAlignedValue(
-            RandomUtils.random64(0, max_rand), 4
-        )
+        mepc_val = UtilityFunctions.getAlignedValue(RandomUtils.random64(0, max_rand), 4)
         state.addRegisterStateElement("mepc", (mepc_val,))
         expected_sys_reg_state_data.append(("mepc", mepc_val))
-        self._mExpectedStateData[
-            EStateElementType.SystemRegister
-        ] = expected_sys_reg_state_data
+        self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
 
         expected_vm_context_state_data = []
         mode_val = (
@@ -115,9 +103,7 @@ class MainSequence(Sequence):
         sum_val = RandomUtils.random32(0, 1)
         state.addVmContextStateElement("mstatus", "SUM", sum_val)
         expected_vm_context_state_data.append(("mstatus", "SUM", sum_val))
-        self._mExpectedStateData[
-            EStateElementType.VmContext
-        ] = expected_vm_context_state_data
+        self._mExpectedStateData[EStateElementType.VmContext] = expected_vm_context_state_data
 
         self._mExpectedStateData[
             EStateElementType.VectorRegister

@@ -188,10 +188,7 @@ class AppPathCmdLineOption(AppCmdLineOption):
         opt_value = aValue
 
         if (len(opt_value) > 0) and (opt_value[0] != "/"):
-            opt_value = (
-                PathUtils.include_trailing_path_delimiter(aProgramPath)
-                + opt_value
-            )
+            opt_value = PathUtils.include_trailing_path_delimiter(aProgramPath) + opt_value
         opt_value = PathUtils.real_path(opt_value)
 
         if not PathUtils.valid_path(opt_value):
@@ -212,13 +209,9 @@ class AppPathCmdLineOption(AppCmdLineOption):
         new_opt_value = []
         if isinstance(opt_value, list):
             for value in opt_value:
-                new_opt_value.append(
-                    self._optPathChecks(value, aCmdLineOptions.mProgramPath)
-                )
+                new_opt_value.append(self._optPathChecks(value, aCmdLineOptions.mProgramPath))
         else:
-            new_opt_value = self._optPathChecks(
-                opt_value, aCmdLineOptions.mProgramPath
-            )
+            new_opt_value = self._optPathChecks(opt_value, aCmdLineOptions.mProgramPath)
 
         return new_opt_value, specified
 

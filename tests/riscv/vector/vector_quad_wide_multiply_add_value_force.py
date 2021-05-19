@@ -48,9 +48,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VSEW", vsew_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", vsew_choice_weights)
         vlmul_choice_weights = {
             "0x0": 10,
             "0x1": 0,
@@ -61,9 +59,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VLMUL", vlmul_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VLMUL", vlmul_choice_weights)
         choices_mod.commitSet()
 
         self._initializeVectorRegisters()
@@ -93,9 +89,7 @@ class MainSequence(VectorTestSequence):
             for elem64_index in range(8):
                 field_name = "%s_%d" % (reg_name, elem64_index)
                 field_val = RandomUtils.random64()
-                self.initializeRegisterFields(
-                    reg_name, {field_name: field_val}
-                )
+                self.initializeRegisterFields(reg_name, {field_name: field_val})
                 self._mElem64Vals[reg_index].append(field_val)
 
     # Verify that the destination registers of a quad-widening multiply-add
@@ -111,29 +105,22 @@ class MainSequence(VectorTestSequence):
             elem64_index = elem16_index % 8
             dest_reg_index = vd_val + elem16_index // 8
 
-            expected_field_val = self._mElem64Vals[dest_reg_index][
-                elem64_index
-            ]
-            expected_field_val += self._getElem16Val(
-                vs1_val, elem16_index
-            ) * self._getElem16Val(vs2_val, elem16_index)
+            expected_field_val = self._mElem64Vals[dest_reg_index][elem64_index]
+            expected_field_val += self._getElem16Val(vs1_val, elem16_index) * self._getElem16Val(
+                vs2_val, elem16_index
+            )
             expected_field_val &= 0xFFFFFFFFFFFFFFFF
-            self._mElem64Vals[dest_reg_index][
-                elem64_index
-            ] = expected_field_val
+            self._mElem64Vals[dest_reg_index][elem64_index] = expected_field_val
 
             dest_reg_name = "v%d" % dest_reg_index
             field_name = "%s_%d" % (dest_reg_name, elem64_index)
-            (field_val, valid) = self.readRegister(
-                dest_reg_name, field=field_name
-            )
+            (field_val, valid) = self.readRegister(dest_reg_name, field=field_name)
             self.assertValidRegisterValue(dest_reg_name, valid)
 
             if field_val != expected_field_val:
                 self.error(
                     "Register field %s has unexpected value; "
-                    "Expected=0x%x, Actual=0x%x"
-                    % (field_name, expected_field_val, field_val)
+                    "Expected=0x%x, Actual=0x%x" % (field_name, expected_field_val, field_val)
                 )
 
     # Get the value of a 16-bit element for the specified register and element

@@ -27,39 +27,27 @@ class MainSequence(Sequence):
         if index != 0x1:
             self.error("Index value for fflags should always be 0x1")
         reloadValue = self.getRegisterReloadValue("fflags")
-        self.notice(
-            ">>>>>>>>>>>>   The fflags reload value is {:16X}".format(
-                reloadValue
-            )
-        )
+        self.notice(">>>>>>>>>>>>   The fflags reload value is {:16X}".format(reloadValue))
 
         # Check the frm
         index = self.getRegisterIndex("frm")
         if index != 0x2:
             self.error("Index value for frm should always be 0x2")
         reloadValue = self.getRegisterReloadValue("frm")
-        self.notice(
-            ">>>>>>>>>>>>   The frm reload value is {:16X}".format(reloadValue)
-        )
+        self.notice(">>>>>>>>>>>>   The frm reload value is {:16X}".format(reloadValue))
 
         # Check the fcsr
         index = self.getRegisterIndex("fcsr")
         if index != 0x3:
             self.error("Index value for fcsr should always be 0x3")
         reloadValue = self.getRegisterReloadValue("fcsr")
-        self.notice(
-            ">>>>>>>>>>>>   The fcsr reload value is {:16X}".format(
-                reloadValue
-            )
-        )
+        self.notice(">>>>>>>>>>>>   The fcsr reload value is {:16X}".format(reloadValue))
 
         # Randomly generate instructions that access the fcsr and its fields
         # csr addresses for fcsr:  0x1=fflags, 0x2=frm, 0x3=fcsr
         fcsr_addresses = [0x1, 0x2, 0x3]
         # create a random list of csr access instructions
-        list_of_csr_instructions = self.sample(
-            list(Zicsr_instructions.keys()), 2
-        )
+        list_of_csr_instructions = self.sample(list(Zicsr_instructions.keys()), 2)
 
         for instr in list_of_csr_instructions:
             csr_address = self.choice(fcsr_addresses)

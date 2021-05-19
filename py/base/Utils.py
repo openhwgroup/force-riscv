@@ -36,10 +36,7 @@ class InitMemoryBlock(Sequence):
 
     def generate(self, **kargs):
         if self.size <= 8:
-            self.error(
-                "Should call this API with size > 8, provided size=%d"
-                % self.size
-            )
+            self.error("Should call this API with size > 8, provided size=%d" % self.size)
 
         aligned_addr = self.startAddress
         aligned_size = self.size
@@ -98,15 +95,9 @@ class LoopControlBase(Sequence):
     #  @param LoopCount The number of iterations to execute the loop.
     def start(self, LoopReg=None, LoopCount=None):
         if self.mLoopId is not None:
-            self.error(
-                "Unable to start a loop before ending Loop %d." % self.mLoopId
-            )
+            self.error("Unable to start a loop before ending Loop %d." % self.mLoopId)
 
-        self.mLoopRegIndex = (
-            LoopReg
-            if LoopReg is not None
-            else self.getRandomGprForLoopControl()
-        )
+        self.mLoopRegIndex = LoopReg if LoopReg is not None else self.getRandomGprForLoopControl()
         self.mLoopCount = LoopCount
 
         self._reserveLoopRegister()
@@ -173,13 +164,9 @@ class LoopControlBase(Sequence):
     # Reserve the loop register if it has not already been reserved.
     def _reserveLoopRegister(self):
         loop_reg_name = self.getGprName(self.mLoopRegIndex)
-        self._mLoopRegReservationAccess = self._getRegisterReservationAccess(
-            loop_reg_name
-        )
+        self._mLoopRegReservationAccess = self._getRegisterReservationAccess(loop_reg_name)
         if self._mLoopRegReservationAccess is not None:
-            self.reserveRegister(
-                loop_reg_name, access=self._mLoopRegReservationAccess
-            )
+            self.reserveRegister(loop_reg_name, access=self._mLoopRegReservationAccess)
 
     # Unreserve the loop register if the loop control reserved it.
     def _unreserveLoopRegister(self):

@@ -110,11 +110,7 @@ class MainSequence(Sequence):
         )
 
         if validCheck == 0:
-            self.error(
-                ">>>>>>>>>>>>   Read of Register ID {} was not valid.".format(
-                    aRegId
-                )
-            )
+            self.error(">>>>>>>>>>>>   Read of Register ID {} was not valid.".format(aRegId))
 
         if readValue == (aInitialData & aRegMask):
             self.notice(

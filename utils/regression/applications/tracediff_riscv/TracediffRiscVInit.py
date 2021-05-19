@@ -33,9 +33,7 @@ class TracediffRiscVCmdLineOptions(object):
 #
 class TracediffRiscVParametersProcessor(ParameterProcessor):
     def __init__(self, aCmdLineOptions):
-        super().__init__(
-            TracediffRiscVCmdLineOptions.cOptions, aCmdLineOptions
-        )
+        super().__init__(TracediffRiscVCmdLineOptions.cOptions, aCmdLineOptions)
 
 
 #  Process tracecmp control data

@@ -53,10 +53,7 @@ class LsfLauncher(Launcher):
         # check to see if operating in the red zone
         if self.red_zone:
             # Red Zone with LSF Enabled requires some extra work
-            my_lsf_log = (
-                PathUtils.include_trailing_path_delimiter(self.frun_dir)
-                + self.lsf_log
-            )
+            my_lsf_log = PathUtils.include_trailing_path_delimiter(self.frun_dir) + self.lsf_log
             Msg.user("lsf.log: %s" % (my_lsf_log))
 
             # first build the bsub command line
@@ -80,14 +77,11 @@ class LsfLauncher(Launcher):
             my_process_cmd = my_bsub % (my_lsf_log, my_cmd)
             self.process_log = my_process_log
             my_process_log = (
-                PathUtils.include_trailing_path_delimiter(self.frun_dir)
-                + self.shell_log
+                PathUtils.include_trailing_path_delimiter(self.frun_dir) + self.shell_log
             )
 
         Msg.user("Process Log: %s" % (str(my_process_log)), "LSF-LAUNCHER")
-        Msg.user(
-            "Process Command Line: %s" % (str(my_process_cmd)), "LSF-LAUNCHER"
-        )
+        Msg.user("Process Command Line: %s" % (str(my_process_cmd)), "LSF-LAUNCHER")
 
         return my_process_cmd, my_process_log
 
@@ -98,9 +92,7 @@ class LsfLauncher(Launcher):
         self.process_result = SysUtils.exec_process(
             self.process_cmd, my_process_log, my_process_log, my_timeout
         )
-        Msg.user(
-            "Process Results: %s" % (str(self.process_result)), "LSF-LAUNCHER"
-        )
+        Msg.user("Process Results: %s" % (str(self.process_result)), "LSF-LAUNCHER")
 
         # insert the message:
 

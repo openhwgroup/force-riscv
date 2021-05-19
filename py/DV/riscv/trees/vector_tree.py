@@ -219,9 +219,7 @@ vreduction_instructions = {
     "VFWREDSUM.VV##RISCV": 10,  # ISA has .vs instead of .vv
 }
 
-vreduction_map = InstructionMap(
-    "vreduction_instructions", vreduction_instructions
-)
+vreduction_map = InstructionMap("vreduction_instructions", vreduction_instructions)
 
 
 vfloating_point_instructions = {
@@ -319,9 +317,7 @@ vfloating_point_instructions = {
     "VFNCVT.XU.F.W##RISCV": 10,
 }
 
-vfloating_point_map = InstructionMap(
-    "vfloating_point_instructions", vfloating_point_instructions
-)
+vfloating_point_map = InstructionMap("vfloating_point_instructions", vfloating_point_instructions)
 
 
 vconfig_instructions = {
@@ -367,9 +363,7 @@ vfixed_point_instructions = {
     "VNCLIPU.VX##RISCV": 10,  # ISA has vnclipu.wx
 }
 
-vfixed_point_map = InstructionMap(
-    "vfixed_point_instructions", vfixed_point_instructions
-)
+vfixed_point_map = InstructionMap("vfixed_point_instructions", vfixed_point_instructions)
 
 
 Zvediv_instructions = {

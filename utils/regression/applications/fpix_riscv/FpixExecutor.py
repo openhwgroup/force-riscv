@@ -24,9 +24,7 @@ import re
 
 class FpixExecutor(IssExecutor):
 
-    cInstrNumPattern = re.compile(
-        r"Executed (\d+) instructions, exit status \(([\w: ]+)\)"
-    )
+    cInstrNumPattern = re.compile(r"Executed (\d+) instructions, exit status \(([\w: ]+)\)")
 
     # The default options that will be appended to the command line if they
     # haven't been specified already.
@@ -64,16 +62,11 @@ class FpixExecutor(IssExecutor):
 
         if "skip" in self.ctrl_item.fpix_riscv.keys():
             if self.ctrl_item.fpix_riscv["skip"]:
-                Msg.user(
-                    "[FpixExecutor::skip] skipping due to "
-                    "--fpix_riscv.skip specified"
-                )
+                Msg.user("[FpixExecutor::skip] skipping due to " "--fpix_riscv.skip specified")
             return True
 
         if "fpix_path" not in self.ctrl_item.fpix_riscv.keys():
-            Msg.user(
-                "[FpixExecutor::skip] skipping due to no fpix_path specified"
-            )
+            Msg.user("[FpixExecutor::skip] skipping due to no fpix_path specified")
             return True
 
         return False
@@ -95,8 +88,7 @@ class FpixExecutor(IssExecutor):
 
             if "cfg" not in self.ctrl_item.fpix_riscv.keys():
                 Msg.err(
-                    "Fpix_ISS did not properly execute, "
-                    "Reason: Fpix config was not specified"
+                    "Fpix_ISS did not properly execute, " "Reason: Fpix config was not specified"
                 )
                 return False
 
@@ -137,9 +129,7 @@ class FpixExecutor(IssExecutor):
                 my_cmd, my_log, my_elog, self.ctrl_item.timeout, True
             )
 
-            my_extract_results = self.extract_results(
-                my_result, my_log, my_elog
-            )
+            my_extract_results = self.extract_results(my_result, my_log, my_elog)
 
             # report the results
             Msg.info("ISSResult = " + str(my_extract_results))
@@ -150,9 +140,7 @@ class FpixExecutor(IssExecutor):
 
         except Exception as arg_ex:
             Msg.error_trace("Fpix_ISS Execute Failure")
-            Msg.err(
-                "Fpix_ISS did not properly execute, Reason: %s" % (str(arg_ex))
-            )
+            Msg.err("Fpix_ISS did not properly execute, Reason: %s" % (str(arg_ex)))
             return False
 
         return SysUtils.success(int(my_result[IssResult.process_retcode]))

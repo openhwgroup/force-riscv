@@ -45,9 +45,7 @@ class VectorTestSequence(Sequence):
         self._setUpTest()
 
         max_instr_count = self._getMaxInstructionCount()
-        instr_count = RandomUtils.random32(
-            (max_instr_count // 2), max_instr_count
-        )
+        instr_count = RandomUtils.random32((max_instr_count // 2), max_instr_count)
         for _ in range(instr_count):
             instr = self.choice(self._getInstructionList())
             instr_params = self._getInstructionParameters()
@@ -79,14 +77,12 @@ class VectorTestSequence(Sequence):
         reg_count_b = self.getRegisterCount(aRegCountMultipleB)
         if aRegIndexB <= aRegIndexA < (aRegIndexB + reg_count_b):
             self.error(
-                "Instruction %s used overlapping registers of different "
-                "formats" % aInstr
+                "Instruction %s used overlapping registers of different " "formats" % aInstr
             )
 
         if aRegIndexA <= aRegIndexB < (aRegIndexA + reg_count_a):
             self.error(
-                "Instruction %s used overlapping registers of different "
-                "formats" % aInstr
+                "Instruction %s used overlapping registers of different " "formats" % aInstr
             )
 
     # Get the register count for a register group with the specified multiple.
@@ -167,9 +163,7 @@ class VectorTestSequence(Sequence):
                 if except_code in self._getAllowedExceptionCodes(aInstr):
                     self._mExceptCounts[except_code] = new_except_count
                 else:
-                    self.error(
-                        "Instruction %s did not execute correctly" % aInstr
-                    )
+                    self.error("Instruction %s did not execute correctly" % aInstr)
 
     # Return true if it is permissible for the generation to skip this
     # instruction.
@@ -227,12 +221,8 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
             elif target_choice == 2:
                 va_range_size = RandomUtils.random32()
                 min_target_addr = self.genVA(Size=512, Align=8, Type="D")
-                max_target_addr = mask_to_size(
-                    (min_target_addr + RandomUtils.random32()), 64
-                )
-                self._mTargetAddrConstr = ConstraintSet(
-                    min_target_addr, max_target_addr
-                )
+                max_target_addr = mask_to_size((min_target_addr + RandomUtils.random32()), 64)
+                self._mTargetAddrConstr = ConstraintSet(min_target_addr, max_target_addr)
                 instr_params["LSTarget"] = str(self._mTargetAddrConstr)
 
         return instr_params
@@ -256,16 +246,11 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         if (
             (self._mTargetAddrConstr is not None)
             and (0x2 not in self._getAllowedExceptionCodes(aInstr))
-            and (
-                not self._mTargetAddrConstr.containsValue(
-                    aInstrRecord["LSTarget"]
-                )
-            )
+            and (not self._mTargetAddrConstr.containsValue(aInstrRecord["LSTarget"]))
         ):
             self.error(
                 "Target address 0x%x was outside of the specified "
-                "constraint %s"
-                % (aInstrRecord["LSTarget"], self._mTargetAddrConstr)
+                "constraint %s" % (aInstrRecord["LSTarget"], self._mTargetAddrConstr)
             )
 
     # Get allowed exception codes.
@@ -368,17 +353,13 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         self.assertValidRegisterValue("vtype", valid)
         if vsew_val != self._mVsew:
             self.error(
-                "Unexpected vtype.VSEW value; Expected=0x%x, Actual=0x%x"
-                % (self._mVsew, vsew_val)
+                "Unexpected vtype.VSEW value; Expected=0x%x, Actual=0x%x" % (self._mVsew, vsew_val)
             )
 
         (vl_val, valid) = self.readRegister("vl")
         self.assertValidRegisterValue("vl", valid)
         if vl_val != self._mVl:
-            self.error(
-                "Unexpected vl value; Expected=0x%x, Actual=0x%x"
-                % (self._mVl, vl_val)
-            )
+            self.error("Unexpected vl value; Expected=0x%x, Actual=0x%x" % (self._mVl, vl_val))
 
     # Generate randomized values for vtype and vl fields.
     def _generateRegisterFieldValues(self):
@@ -386,11 +367,7 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         self._mVsew = RandomUtils.random32(0, max_vsew_val)
 
         self._mVlmul = self.choice(self._getVlmulChoices())
-        self.mVtype = (
-            ((self._mVlmul & 0x4) << 3)
-            | (self._mVsew << 2)
-            | (self._mVlmul & 0x3)
-        )
+        self.mVtype = ((self._mVlmul & 0x4) << 3) | (self._mVsew << 2) | (self._mVlmul & 0x3)
 
         vlmax = self._calculateVlmax()
         if RandomUtils.random32(0, 1) == 1:

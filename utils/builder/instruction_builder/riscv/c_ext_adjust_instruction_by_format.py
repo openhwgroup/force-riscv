@@ -204,9 +204,7 @@ def adjust_imm_branch(aInstr):
     attr_dict["offset-scale"] = "1"
     class_name = "PcRelativeBranchOperand"
 
-    add_addressing_operand(
-        aInstr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(aInstr, None, "Branch", class_name, subop_dict, attr_dict)
 
     # C.JAL is RV32 only instruction whose opcode overlap with C.ADDIW
     if aInstr.name == "C.JAL":
@@ -224,9 +222,7 @@ def adjust_cond_branch(aInstr):
     aInstr.remove_operand("imm[8|4:3]")
 
     opr_adjustor.set_rs1p_int()
-    opr_adjustor.add_implied_register(
-        "x0", "GPR", "Read", 1
-    )  # insert after the rs1' operand
+    opr_adjustor.add_implied_register("x0", "GPR", "Read", 1)  # insert after the rs1' operand
 
     #     12  11-10  6-5   4-3   2
     # imm[8 | 4:3  | 7:6 | 2:1 | 5]
@@ -246,9 +242,7 @@ def adjust_cond_branch(aInstr):
     elif aInstr.name == "C.BNEZ":
         attr_dict["condition"] = "CBNEZ"
 
-    add_addressing_operand(
-        aInstr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(aInstr, None, "Branch", class_name, subop_dict, attr_dict)
     return True
 
 
@@ -385,9 +379,7 @@ def adjust_jalr_jr(aInstr):
     attr_dict["base"] = "rs1"
     class_name = "RegisterBranchOperand"
 
-    add_addressing_operand(
-        aInstr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(aInstr, None, "Branch", class_name, subop_dict, attr_dict)
 
     if aInstr.name == "C.JALR":
         # insert after the addressing mode operand
@@ -456,9 +448,7 @@ def adjust_store_sp(aInstr, aImmName, aImmBits, aSize, aScale):
     attr_dict["element-size"] = aSize
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        aInstr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(aInstr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -509,9 +499,7 @@ def adjust_load_sp(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
     attr_dict["element-size"] = aSize
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(
-        aInstr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(aInstr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -562,9 +550,7 @@ def adjust_load(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
     attr_dict["element-size"] = aSize
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(
-        aInstr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(aInstr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -615,7 +601,5 @@ def adjust_store(aInstr, aImm1, aImm2, aImmBits, aSize, aScale):
     attr_dict["element-size"] = aSize
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        aInstr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(aInstr, None, "LoadStore", None, subop_dict, attr_dict)
     return True

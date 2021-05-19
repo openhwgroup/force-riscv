@@ -27,21 +27,16 @@ class MetaArgsConversion(object):
     def __init__(self, aRtlRoot, aMakefile):
         self._mRtlRoot = aRtlRoot
         self._mMakefile = aMakefile
-        self._mBaseResultSet = (
-            None  # Raw result produced with an empty meta args string
-        )
+        self._mBaseResultSet = None  # Raw result produced with an empty meta args string
         self._mMakeCommand = "make -f %s output_run_opts " % self._mMakefile
         self._mTopSimPath = (
-            PathUtils.include_trailing_path_delimiter(self._mRtlRoot)
-            + "verif/top/sim"
+            PathUtils.include_trailing_path_delimiter(self._mRtlRoot) + "verif/top/sim"
         )
 
     def convertRawResult(self, aMetaArgs, aFilter=False):
         current_dir = PathUtils.current_dir()
         PathUtils.chdir(self._mTopSimPath)
-        result, is_valid = SysUtils.get_command_output(
-            self._mMakeCommand + aMetaArgs
-        )
+        result, is_valid = SysUtils.get_command_output(self._mMakeCommand + aMetaArgs)
         PathUtils.chdir(current_dir)
 
         if not is_valid:
@@ -128,8 +123,7 @@ class MetaArgsConversion(object):
 
 def convert_meta_args(aConversionParms):
     if (aConversionParms.meta_args is None) and (
-        (aConversionParms.plusargs is None)
-        or (not len(aConversionParms.cmp_plusargs))
+        (aConversionParms.plusargs is None) or (not len(aConversionParms.cmp_plusargs))
     ):
         print("Meta args not specified.")
         sys.exit(1)
@@ -148,12 +142,9 @@ def convert_meta_args(aConversionParms):
         print("RTL root does not exist or is not a directory: %s" % rtl_root)
         sys.exit(1)
 
-    script_dir, script_name = PathUtils.split_path(
-        PathUtils.real_path(sys.argv[0])
-    )
+    script_dir, script_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
     make_file_path = (
-        PathUtils.include_trailing_path_delimiter(script_dir)
-        + "applications/rtl/MetaArgs.make"
+        PathUtils.include_trailing_path_delimiter(script_dir) + "applications/rtl/MetaArgs.make"
     )
     if not PathUtils.check_file(make_file_path):
         print("File not exist: %s" % make_file_path)
@@ -163,9 +154,7 @@ def convert_meta_args(aConversionParms):
     if aConversionParms.net:
         conversion_result = meta_args_conv.convertNetResult(meta_args)
     elif len(aConversionParms.cmp_plusargs):
-        if (aConversionParms.plusargs is not None) and len(
-            aConversionParms.plusargs
-        ) > 0:
+        if (aConversionParms.plusargs is not None) and len(aConversionParms.plusargs) > 0:
             conversion_result = meta_args_conv.comparePlusAndPlus(
                 aConversionParms.plusargs, aConversionParms.cmp_plusargs
             )

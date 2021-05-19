@@ -53,9 +53,7 @@ class MainSequence(Sequence):
                     )
                     self.notice(
                         ">>>>>> Requested Alignment:  {:6d}     Requested "
-                        "Size:  {:6d}     gen target VA={:12X}".format(
-                            theAlign, theSize, rand_VA
-                        )
+                        "Size:  {:6d}     gen target VA={:12X}".format(theAlign, theSize, rand_VA)
                     )
 
                     instr_id = self.genInstruction(
@@ -69,9 +67,7 @@ class MainSequence(Sequence):
                         instr_id = self.genInstruction(
                             self.choice(ldstr_word_ops), {"LSTarget": rand_VA}
                         )
-                    if (theAlign % 8 == 0) and (
-                        self.getGlobalState("AppRegisterWidth") != 32
-                    ):
+                    if (theAlign % 8 == 0) and (self.getGlobalState("AppRegisterWidth") != 32):
                         instr_id = self.genInstruction(
                             self.choice(ldstr_double_ops),
                             {"LSTarget": rand_VA},
@@ -98,9 +94,7 @@ class MainSequence(Sequence):
                     )
                     self.notice(
                         ">>>>>> Requested Alignment:  {:6d}     Requested "
-                        "Size:  {:6d}     gen target VA={:12X}".format(
-                            theAlign, theSize, rand_VA
-                        )
+                        "Size:  {:6d}     gen target VA={:12X}".format(theAlign, theSize, rand_VA)
                     )
 
                     instr_id = self.genInstruction(
@@ -114,9 +108,7 @@ class MainSequence(Sequence):
                         instr_id = self.genInstruction(
                             self.choice(ldstr_word_ops), {"LSTarget": rand_VA}
                         )
-                    if (theAlign % 8 == 0) and (
-                        self.getGlobalState("AppRegisterWidth") != 32
-                    ):
+                    if (theAlign % 8 == 0) and (self.getGlobalState("AppRegisterWidth") != 32):
                         instr_id = self.genInstruction(
                             self.choice(ldstr_double_ops),
                             {"LSTarget": rand_VA},

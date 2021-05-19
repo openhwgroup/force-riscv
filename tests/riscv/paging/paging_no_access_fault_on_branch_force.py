@@ -26,9 +26,7 @@ from riscv.ModifierUtils import PageFaultModifier
 # access faults on branch instructions.
 class MainSequence(Sequence):
     def generate(self, **kwargs):
-        page_fault_mod = PageFaultModifier(
-            self.genThread, self.getGlobalState("AppRegisterWidth")
-        )
+        page_fault_mod = PageFaultModifier(self.genThread, self.getGlobalState("AppRegisterWidth"))
         page_fault_mod.apply(**{"All": 1})
 
         # The PageFaultModifier alters the page size choices, so we need to
@@ -36,9 +34,7 @@ class MainSequence(Sequence):
         choices_mod = ChoicesModifier(self.genThread)
         satp_info = self.getRegisterInfo("satp", self.getRegisterIndex("satp"))
         if satp_info["Width"] == 32:
-            choices_mod.modifyPagingChoices(
-                "Page size#4K granule#S#stage 1", {"4K": 1, "4M": 10}
-            )
+            choices_mod.modifyPagingChoices("Page size#4K granule#S#stage 1", {"4K": 1, "4M": 10})
         else:
             choices_mod.modifyPagingChoices(
                 "Page size#4K granule#S#stage 1",

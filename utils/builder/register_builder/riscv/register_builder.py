@@ -18,6 +18,7 @@
 import getopt
 import os
 import sys
+
 # Needed to build output XML
 from xml.etree.ElementTree import Element
 
@@ -160,8 +161,7 @@ def output_system_register_choices(aTree, aOutputFile, aPrefixLicenseFile):
             choice = Element("choice")
             choice.set(
                 "description",
-                "%s; %s"
-                % (register.get("privilege"), register.get("description")),
+                "%s; %s" % (register.get("privilege"), register.get("description")),
             )
             choice.set("name", register.get("name"))
             choice.set("value", register.get("index"))
@@ -198,16 +198,12 @@ def output_register_field_choices(aTree, aOutputFile, aPrefixLicenseFile):
             choices = field.findall(".//choice")
             if choices:
                 choices_element = Element("choices")
-                choices_element.set(
-                    "name", "%s.%s" % (register.get("name"), field.get("name"))
-                )
+                choices_element.set("name", "%s.%s" % (register.get("name"), field.get("name")))
                 choices_element.set("type", "RegisterFieldValue")
 
                 for choice in choices:
                     choice_element = Element("choice")
-                    choice_element.set(
-                        "description", choice.get("description")
-                    )
+                    choice_element.set("description", choice.get("description"))
                     choice_element.set("value", choice.get("value"))
                     choice_element.set("weight", choice.get("weight", "10"))
                     choices_element.append(choice_element)
@@ -224,9 +220,7 @@ def output_register_field_choices(aTree, aOutputFile, aPrefixLicenseFile):
 
 
 def pretty_print_xml(aOutputFile, aOutputRoot, aPrefixLicenseFile):
-    xml_str = DOM.parseString(ET.tostring(aOutputRoot)).toprettyxml(
-        indent="  "
-    )
+    xml_str = DOM.parseString(ET.tostring(aOutputRoot)).toprettyxml(indent="  ")
     with open(aOutputFile, "w") as f:
         if aPrefixLicenseFile:
             f.write(license_string)
@@ -247,9 +241,7 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
     else:
         register.set("boot", "0")
 
-    if aRegister.get("class") and (
-        aRegister.get("class") != "ConfigureRegister"
-    ):
+    if aRegister.get("class") and (aRegister.get("class") != "ConfigureRegister"):
         register.set("class", aRegister.get("class"))
     else:
         priv = aRegister.get("privilege")
@@ -264,9 +256,7 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
     for field in fields:
         register_field = Element("register_field")
         register_field.set("name", field.get("name"))
-        register_field.set(
-            "physical_register", aRegister.get("physical_register")
-        )
+        register_field.set("physical_register", aRegister.get("physical_register"))
         register_field.set("size", field.get("size"))
         if field.get("init_policy"):
             register_field.set("init_policy", field.get("init_policy"))
@@ -287,14 +277,10 @@ def generate_register(aRegister, aPhysicalRegisters, aRegisterFile, aSize):
     ):
         physical_register = Element("physical_register")
         physical_register.set("index", aRegister.get("index"))
-        physical_register.set(
-            "name", aRegister.get("physical_register", aRegister.get("name"))
-        )
+        physical_register.set("name", aRegister.get("physical_register", aRegister.get("name")))
         physical_register.set(
             "size",
-            aSize
-            if str(aRegister.get("size")) == "0"
-            else aRegister.get("size"),
+            aSize if str(aRegister.get("size")) == "0" else aRegister.get("size"),
         )
         physical_register.set("type", aRegister.get("type"))
         if aRegister.get("class") == "ConfigureRegister":
@@ -379,10 +365,7 @@ def build_registers(
             output_all = False
         elif o in ["-m", "--modifications_script"]:
             modifications_script = a
-            print(
-                "\tRegister/field/choices modifications script: "
-                "'%s'" % modifications_script
-            )
+            print("\tRegister/field/choices modifications script: " "'%s'" % modifications_script)
             prefix_license_file = False
             do_mods = True
         elif o in ["-R", "--system_register_choices"]:
@@ -393,16 +376,10 @@ def build_registers(
             output_all = False
         elif o in ["-i", "--system_registers_starter"]:
             xml_starter_file = a
-            print(
-                "\tUser-specified system registers starter file: "
-                "'%s'" % xml_starter_file
-            )
+            print("\tUser-specified system registers starter file: " "'%s'" % xml_starter_file)
         elif o in ["-s", "--system_registers_file"]:
             system_registers_file = a
-            print(
-                "\tUser-specified system registers file: "
-                "'%s'" % system_registers_file
-            )
+            print("\tUser-specified system registers file: " "'%s'" % system_registers_file)
         elif o in ["-r", "--system_register_choices_file"]:
             system_register_choices_file = a
             print(
@@ -459,10 +436,7 @@ def build_registers(
                 src_mod_files["system"] = system_registers_file
                 dest_mod_files["system"] = post_mod_system_registers_file
             else:
-                print(
-                    "\tSystem register definitions written to: "
-                    "%s\n" % system_registers_file
-                )
+                print("\tSystem register definitions written to: " "%s\n" % system_registers_file)
         if output_all or system_register_choices:
             output_system_register_choices(
                 systemRegisterDefinitions,
@@ -474,16 +448,11 @@ def build_registers(
                     "\tIntermediate system register choices written to: "
                     "%s" % system_register_choices_file
                 )
-                src_mod_files[
-                    "register_choices"
-                ] = system_register_choices_file
-                dest_mod_files[
-                    "register_choices"
-                ] = post_mod_system_register_choices_file
+                src_mod_files["register_choices"] = system_register_choices_file
+                dest_mod_files["register_choices"] = post_mod_system_register_choices_file
             else:
                 print(
-                    "\tSystem register choices written to: "
-                    "%s\n" % system_register_choices_file
+                    "\tSystem register choices written to: " "%s\n" % system_register_choices_file
                 )
         if output_all or register_field_choices:
             output_register_field_choices(
@@ -497,20 +466,12 @@ def build_registers(
                     "%s" % register_field_choices_file
                 )
                 src_mod_files["field_choices"] = register_field_choices_file
-                dest_mod_files[
-                    "field_choices"
-                ] = post_mod_register_field_choices_file
+                dest_mod_files["field_choices"] = post_mod_register_field_choices_file
             else:
-                print(
-                    "\tRegister field choices written to: "
-                    "%s\n" % register_field_choices_file
-                )
+                print("\tRegister field choices written to: " "%s\n" % register_field_choices_file)
     except ValueError as ex:
         print("\nERROR:", ex)
-        print(
-            "\n---> Aborting register builder. Correct errors in starter "
-            "file; try again.\n"
-        )
+        print("\n---> Aborting register builder. Correct errors in starter " "file; try again.\n")
         sys.exit(1)
 
     if do_mods:

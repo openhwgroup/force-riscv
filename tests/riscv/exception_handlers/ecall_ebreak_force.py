@@ -62,9 +62,7 @@ def gen_thread_initialization(gen_thread):
     (delegate_opt, valid) = gen_thread.getOption("DelegateExceptions")
 
     if valid and delegate_opt == 1:
-        traps_modifier.update(
-            ExceptionCode="Breakpoint", TrapChoice="Delegate", Weight=50
-        )
+        traps_modifier.update(ExceptionCode="Breakpoint", TrapChoice="Delegate", Weight=50)
         traps_modifier.update(
             ExceptionCode="Environment call from U-mode",
             TrapChoice="Delegate",
@@ -80,9 +78,7 @@ def gen_thread_initialization(gen_thread):
     (redirect_opt, valid) = gen_thread.getOption("RedirectTraps")
 
     if valid and redirect_opt == 1:
-        traps_modifier.update(
-            ExceptionCode="Breakpoint", TrapChoice="Redirect", Weight=100
-        )
+        traps_modifier.update(ExceptionCode="Breakpoint", TrapChoice="Redirect", Weight=100)
         traps_modifier.update(
             ExceptionCode="Environment call from U-mode",
             TrapChoice="Redirect",

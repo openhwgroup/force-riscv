@@ -203,9 +203,7 @@ class OperandAdjustor(object):
         self.mInstr.asm.ops.append(opr.name)
 
     # add an implied register operand to the instruction.
-    def add_implied_register(
-        self, aOpName, aOpType, aAccessType, aInsertIndex
-    ):
+    def add_implied_register(self, aOpName, aOpType, aAccessType, aInsertIndex):
         implied_opr = Operand()
         implied_opr.name = aOpName
         implied_opr.type = aOpType

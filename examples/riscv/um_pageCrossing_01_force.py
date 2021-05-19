@@ -43,11 +43,7 @@ class MyMainSequence(Sequence):
 
             self.genInstruction(instr, {"LSTarget": target_addr})
 
-            self.notice(
-                ">>>>>  Instruction: {}   Target addr: {:012x}".format(
-                    instr, target_addr
-                )
-            )
+            self.notice(">>>>>  Instruction: {}   Target addr: {:012x}".format(instr, target_addr))
 
     def _get_min_address_offset(self, instr):
         # To generate page crossings, for the target address to be at the
@@ -57,20 +53,14 @@ class MyMainSequence(Sequence):
         # page crossings and some accesses that are at the end of the page,
         # but not crossing the page.
         min_addr_offset = 0
-        if (instr in LDST_Byte_instructions) or (
-            instr in LDST_Half_instructions
-        ):
+        if (instr in LDST_Byte_instructions) or (instr in LDST_Half_instructions):
             min_addr_offset = 0xFFC
         elif instr in LDST_Word_instructions:
             min_addr_offset = 0xFFA
         elif instr in LDST_Double_instructions:
             min_addr_offset = 0xFF6
         else:
-            self.error(
-                ">>>>>  Hmmm...  {} is an unexpected instruction.".format(
-                    instr
-                )
-            )
+            self.error(">>>>>  Hmmm...  {} is an unexpected instruction.".format(instr))
 
         return min_addr_offset
 

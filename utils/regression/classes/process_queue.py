@@ -52,10 +52,7 @@ class ProcessAction:
             return ProcessAction.Delay
         if arg_str == "no-write":
             return ProcessAction.NoWrite
-        raise Execption(
-            "Unable to translate string value: %s, to ProcessAction"
-            % (arg_str)
-        )
+        raise Execption("Unable to translate string value: %s, to ProcessAction" % (arg_str))
 
     @classmethod
     def asstr(cls, arg_val):
@@ -68,8 +65,7 @@ class ProcessAction:
         if arg_val == ProcessAction.NoWrite:
             return "no-write"
         raise Execption(
-            "Unable to translate value to string  %s, to ProcessAction"
-            % (str(arg_val))
+            "Unable to translate value to string  %s, to ProcessAction" % (str(arg_val))
         )
 
 
@@ -111,15 +107,11 @@ class ProcessWorkerThread(HiOldThread):
         work_dir = self.queue_item.work_dir
         PathUtils.mkdir(work_dir)
         # write out the control file
-        PathUtils.touch(
-            "%sSTARTED" % PathUtils.include_trailing_path_delimiter(work_dir)
-        )
+        PathUtils.touch("%sSTARTED" % PathUtils.include_trailing_path_delimiter(work_dir))
         if not PathUtils.write_file(
             self.queue_item.frun_path, self.queue_item.content, "Frun Control"
         ):
-            raise Exception(
-                "Failed to write frun file: %s" % self.queue_item.frun_path
-            )
+            raise Exception("Failed to write frun file: %s" % self.queue_item.frun_path)
 
     def run(self):
 
@@ -128,18 +120,12 @@ class ProcessWorkerThread(HiOldThread):
             self.setupWorkDir()
 
             my_launcher = self.create_launcher()
-            Msg.user(
-                "Launcher Id 1: %s" % (str(id(my_launcher))), "WORK-THREAD"
-            )
+            Msg.user("Launcher Id 1: %s" % (str(id(my_launcher))), "WORK-THREAD")
             my_launcher.launch()
-            Msg.user(
-                "Launcher Id 2: %s" % (str(id(my_launcher))), "WORK-THREAD"
-            )
+            Msg.user("Launcher Id 2: %s" % (str(id(my_launcher))), "WORK-THREAD")
             my_process_result = my_launcher.extract_results()
             Msg.user("Process Result: %s" % (my_process_result), "WORK-THREAD")
-            Msg.user(
-                "Launcher Id 3: %s" % (str(id(my_launcher))), "WORK-THREAD"
-            )
+            Msg.user("Launcher Id 3: %s" % (str(id(my_launcher))), "WORK-THREAD")
             #
             self.launcher = my_launcher
 
@@ -150,10 +136,7 @@ class ProcessWorkerThread(HiOldThread):
         except Exception as arg_ex:
 
             Msg.error_trace(str(arg_ex))
-            Msg.err(
-                "Message: %s, Control File Path: %s"
-                % (str(arg_ex), self.queue_item.work_dir)
-            )
+            Msg.err("Message: %s, Control File Path: %s" % (str(arg_ex), self.queue_item.work_dir))
             my_sum_qitem = SummaryErrorQueueItem(
                 {
                     "error": arg_ex,
@@ -170,28 +153,21 @@ class ProcessWorkerThread(HiOldThread):
                 # heartbeat
                 my_attempt += 1
                 if (my_attempt % 10) == 0:
-                    Msg.dbg(
-                        "Attempt %d to insert into summary queue"
-                        % (my_attempt)
-                    )
+                    Msg.dbg("Attempt %d to insert into summary queue" % (my_attempt))
 
             self.thread_count.add(-1)
             Msg.user("Thread Count Decremented", "WORK-THREAD")
 
             self.done_semaphore.release()
             Msg.user("Semaphore Released", "WORK-THREAD")
-            Msg.user(
-                "Launcher Id 5: %s" % (str(id(self.launcher))), "WORK-THREAD"
-            )
+            Msg.user("Launcher Id 5: %s" % (str(id(self.launcher))), "WORK-THREAD")
 
     # Basically a psudeo launcher factory
     def create_launcher(self):
 
         my_launcher = None
         if self.mUseLsf:
-            my_launcher = LsfLauncher(
-                self.mProcessorName, self.queue_item.mAppsInfo.mLsfInfo
-            )
+            my_launcher = LsfLauncher(self.mProcessorName, self.queue_item.mAppsInfo.mLsfInfo)
         else:
             my_launcher = StdLauncher(self.mProcessorName)
 
@@ -260,9 +236,7 @@ class ProcessMonitorThread(HiThread):
 
 
 class ProcessThread(HiOldThread):
-    def __init__(
-        self, arg_process_queue, arg_summary, max_process_count, arg_done_event
-    ):
+    def __init__(self, arg_process_queue, arg_summary, max_process_count, arg_done_event):
 
         self.max_process_count = max_process_count
         self.semaphore = threading.BoundedSemaphore(max_process_count)
@@ -282,10 +256,7 @@ class ProcessThread(HiOldThread):
         try:
             while (not self.process_queue.fully_loaded) or (
                 self.process_queue.fully_loaded
-                and (
-                    self.thread_count.value() > 0
-                    or self.process_queue.size() > 0
-                )
+                and (self.thread_count.value() > 0 or self.process_queue.size() > 0)
             ):
                 try:
                     # if something tiggered a shutdown then exit the
@@ -370,12 +341,8 @@ class ProcessQueue(HiThreadedProducerConsumerQueue):
         # Create the Process Thread and lock ???
         Msg.user("Done Event: %s" % str(self.done_event), "PROCESS-QUEUE")
 
-        self.process_thread = ProcessThread(
-            self, self.summary, self.process_max, self.done_event
-        )
-        Msg.user(
-            "F-Run Command Line: %s" % (self.process_cmd), "PROCESS-QUEUE"
-        )
+        self.process_thread = ProcessThread(self, self.summary, self.process_max, self.done_event)
+        Msg.user("F-Run Command Line: %s" % (self.process_cmd), "PROCESS-QUEUE")
 
     def use_lsf(self):
         return str(self.launcher_type).strip() == LauncherType.Lsf

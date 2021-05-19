@@ -84,8 +84,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to generateTableWalk() "
-                "method missing."
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
             )
 
         self._assignScratchRegisterIndices(handler_context)
@@ -102,20 +101,12 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         self._pushExceptionSpecificRegisters()
 
         if self.getGlobalState("AppRegisterWidth") == 32:
-            self._genLoadAllContextRegisters(
-                self._mR1, self.PTE_SHIFT, self.LEVELS[32]
-            )
+            self._genLoadAllContextRegisters(self._mR1, self.PTE_SHIFT, self.LEVELS[32])
         else:
-            self._genLoadAllContextRegisters(
-                self._mR1, self.PTE_SHIFT, self.LEVELS[48]
-            )
+            self._genLoadAllContextRegisters(self._mR1, self.PTE_SHIFT, self.LEVELS[48])
 
-        self.mAssemblyHelper.logDebugSymbol(
-            "Current Privilege Level: X%d" % self._mPrivRegIndex
-        )
-        self.mAssemblyHelper.logDebugSymbol(
-            "Fault Address: X%d" % self._mFaultAddrRegIndex
-        )
+        self.mAssemblyHelper.logDebugSymbol("Current Privilege Level: X%d" % self._mPrivRegIndex)
+        self.mAssemblyHelper.logDebugSymbol("Fault Address: X%d" % self._mFaultAddrRegIndex)
 
         # self.mAssemblyHelper.addLabel('ATP MODE check')
         if self.getGlobalState("AppRegisterWidth") == 32:
@@ -124,16 +115,12 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             self.callRoutine("TableWalkSV48")
 
         # save walk level value in temp register so we don't lose value on pop
-        self.mAssemblyHelper.genMoveRegister(
-            self._mR1, self._mWalkLevelRegIndex
-        )
+        self.mAssemblyHelper.genMoveRegister(self._mR1, self._mWalkLevelRegIndex)
         self._popExceptionSpecificRegisters()
 
         # transfer fault level back to page fault handler via error code
         # register
-        ec_code_reg_index = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.EC_VALUE
-        )
+        ec_code_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.EC_VALUE)
         self.mAssemblyHelper.genMoveRegister(ec_code_reg_index, self._mR1)
 
         self.mAssemblyHelper.genReturn()
@@ -143,8 +130,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to generateTableWalk() "
-                "method missing."
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
             )
         self._assignScratchRegisterIndices(handler_context)
         self._genTableWalk(
@@ -163,8 +149,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to generateTableWalk() "
-                "method missing."
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
             )
         self._assignScratchRegisterIndices(handler_context)
         self._genTableWalk(
@@ -193,12 +178,8 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
     #       register indices can be retrieved by role.
     def _assignScratchRegisterIndices(self, aHandlerContext):
         context = aHandlerContext
-        self._mPrivRegIndex = context.getScratchRegisterIndices(
-            RegisterCallRole.PRIV_LEVEL_VALUE
-        )
-        self._mCauseRegIndex = context.getScratchRegisterIndices(
-            RegisterCallRole.CAUSE_VALUE
-        )
+        self._mPrivRegIndex = context.getScratchRegisterIndices(RegisterCallRole.PRIV_LEVEL_VALUE)
+        self._mCauseRegIndex = context.getScratchRegisterIndices(RegisterCallRole.CAUSE_VALUE)
         (
             self._mPteAddrRegIndex,
             self._mPteRegIndex,
@@ -235,9 +216,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
     #  @param aPteShift  - 2**pte-shift equals the size of page table entry
     #       in bytes
     #  @param aNumLevels - # of levels a paging mode supports
-    def _genLoadAllContextRegisters(
-        self, aScratchRegIndex, aPteShift, aNumLevels
-    ):
+    def _genLoadAllContextRegisters(self, aScratchRegIndex, aPteShift, aNumLevels):
         # load ATP register for mode/ppn
         self.mAssemblyHelper.logDebugSymbol("_genLoadAllContextRegisters")
         self.mAssemblyHelper.genReadSystemRegister(self._mAtpRegIndex, "satp")
@@ -247,28 +226,20 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         self.mAssemblyHelper.genConditionalBranchToLabel(
             self._mR1, self._mPrivRegIndex, 6, "NE", "S PRIV"
         )
-        self.mAssemblyHelper.genReadSystemRegister(
-            self._mFaultAddrRegIndex, "mtval"
-        )
+        self.mAssemblyHelper.genReadSystemRegister(self._mFaultAddrRegIndex, "mtval")
         self.mAssemblyHelper.genRelativeBranchToLabel(4, "PPN MASK")
 
         self.mAssemblyHelper.addLabel("S PRIV")
-        self.mAssemblyHelper.genReadSystemRegister(
-            self._mFaultAddrRegIndex, "stval"
-        )
+        self.mAssemblyHelper.genReadSystemRegister(self._mFaultAddrRegIndex, "stval")
 
         # mask and shift root PPN into address from atp register
         self.mAssemblyHelper.addLabel("PPN MASK")
         # self.mAssemblyHelper.genAndImmediate(self._mAtpRegIndex,
         # 0xfffffffffff)
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            self._mAtpRegIndex, aPteShift
-        )
+        self.mAssemblyHelper.genShiftLeftImmediate(self._mAtpRegIndex, aPteShift)
 
         # set up register to count levels walked
-        self.mAssemblyHelper.genMoveImmediate(
-            self._mWalkLevelRegIndex, aNumLevels - 1
-        )
+        self.mAssemblyHelper.genMoveImmediate(self._mWalkLevelRegIndex, aNumLevels - 1)
 
     def _genTableWalk(
         self,
@@ -282,10 +253,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         aPpnShift,
     ):
         self.mAssemblyHelper.logDebugSymbol("Gen Table Walk Start")
-        self.debug(
-            "[_genTableWalk] PC before generating walk levels 0x%x"
-            % self.getPEstate("PC")
-        )
+        self.debug("[_genTableWalk] PC before generating walk levels 0x%x" % self.getPEstate("PC"))
         start_level = aNumLevels - 1
         self.debug("[_genTableWalk] start level 0x%x" % start_level)
 
@@ -364,9 +332,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
 
         self.mAssemblyHelper.genMoveRegister(self._mR1, self._mPteRegIndex)
         self.mAssemblyHelper.genShiftRightImmediate(self._mR1, aPpnShift)
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            self._mAtpRegIndex, aPteShift, self._mR1
-        )
+        self.mAssemblyHelper.genShiftLeftImmediate(self._mAtpRegIndex, aPteShift, self._mR1)
 
     # Generate an instruction to load a value from a memory location defined
     # in a GPR w/ a 12 bit immediate offset. Value loaded into GPR.

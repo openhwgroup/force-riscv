@@ -34,9 +34,7 @@ class MainSequence(Sequence):
         self.randomInitializeRegister("D0")
         for reg_index in range(1, 32):
             self.randomInitializeRegister("D%d" % reg_index)
-            self.initializeRegister(
-                "x%d" % reg_index, RandomUtils.random64(0x0, 0x7FFFFFFFFFFF)
-            )
+            self.initializeRegister("x%d" % reg_index, RandomUtils.random64(0x0, 0x7FFFFFFFFFFF))
 
         if self.getGlobalState("AppRegisterWidth") == 32:
             instructions = ("LW##RISCV", "SW##RISCV")

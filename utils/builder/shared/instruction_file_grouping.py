@@ -100,15 +100,11 @@ class BaseGroupedInstructionFile(ABC):
     def create_instruction_grouping(self):
         for instr in self.mInstrFile.instruction_iterator():
             instr_id = instr.get_full_ID()
-            if self.is_instruction_valid(
-                instr_id
-            ) and not self.is_instruction_skipped(instr_id):
+            if self.is_instruction_valid(instr_id) and not self.is_instruction_skipped(instr_id):
                 self.add_instruction(instr)
 
     def is_instruction_valid(self, instrId):
-        return not self.mValidInstructions or (
-            instrId in self.mValidInstructions
-        )
+        return not self.mValidInstructions or (instrId in self.mValidInstructions)
 
     def is_instruction_skipped(self, instrId):
         return self.mSkipInstructions and (instrId in self.mSkipInstructions)
@@ -189,9 +185,7 @@ class FormatGroupedInstructionFile(BaseGroupedInstructionFile):
 
 
 class NumInstructionGroup(BaseInstructionGroup):
-    def __init__(
-        self, groupName, archName, groupSize, additionalImport, postMainSeq
-    ):
+    def __init__(self, groupName, archName, groupSize, additionalImport, postMainSeq):
         super().__init__(groupName, archName, additionalImport, postMainSeq)
         self.dGroupSize = groupSize
 
@@ -245,10 +239,7 @@ class NumGroupedInstructionFile(BaseGroupedInstructionFile):
         self.create_instruction_grouping()
 
     def add_instruction(self, instr):
-        if (
-            len(self.mInstructionDict[self.dGroupIndex].mInstructions)
-            >= self.dGroupSize
-        ):
+        if len(self.mInstructionDict[self.dGroupIndex].mInstructions) >= self.dGroupSize:
             self.dGroupIndex += 1
             self.mInstructionDict[self.dGroupIndex] = NumInstructionGroup(
                 "{}Group{:d}".format(self.sSubgroupPrefix, self.dGroupIndex),

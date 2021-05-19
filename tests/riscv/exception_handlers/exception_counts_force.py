@@ -41,9 +41,7 @@ class MainSequence(Sequence):
 
         rv32 = self.getGlobalState("AppRegisterWidth") == 32
 
-        orig_gpr_values = exception_handlers_test_utils.reserve_random_gprs(
-            self, 20
-        )
+        orig_gpr_values = exception_handlers_test_utils.reserve_random_gprs(self, 20)
         ecall_except_codes = {0: 8, 1: 9, 3: 11}
         for _ in range(100):
             priv_level = self.getPEstate("PrivilegeLevel")
@@ -51,43 +49,25 @@ class MainSequence(Sequence):
             except_code = self.choice((4, 6, ecall_except_code))
 
             if except_code == 4:
-                unaligned_target_addr = (
-                    self.genVA(Size=16, Align=8, Type="D") + 1
-                )
+                unaligned_target_addr = self.genVA(Size=16, Align=8, Type="D") + 1
                 if rv32:
-                    self.genInstruction(
-                        "LW##RISCV", {"LSTarget": unaligned_target_addr}
-                    )
+                    self.genInstruction("LW##RISCV", {"LSTarget": unaligned_target_addr})
                 else:
-                    self.genInstruction(
-                        "LD##RISCV", {"LSTarget": unaligned_target_addr}
-                    )
+                    self.genInstruction("LD##RISCV", {"LSTarget": unaligned_target_addr})
                 self._verifyExceptionCount(4)
-                exception_handlers_test_utils.assert_gpr_values_unchanged(
-                    self, orig_gpr_values
-                )
+                exception_handlers_test_utils.assert_gpr_values_unchanged(self, orig_gpr_values)
             elif except_code == 6:
-                unaligned_target_addr = (
-                    self.genVA(Size=16, Align=8, Type="D") + 1
-                )
+                unaligned_target_addr = self.genVA(Size=16, Align=8, Type="D") + 1
                 if rv32:
-                    self.genInstruction(
-                        "SW##RISCV", {"LSTarget": unaligned_target_addr}
-                    )
+                    self.genInstruction("SW##RISCV", {"LSTarget": unaligned_target_addr})
                 else:
-                    self.genInstruction(
-                        "SD##RISCV", {"LSTarget": unaligned_target_addr}
-                    )
+                    self.genInstruction("SD##RISCV", {"LSTarget": unaligned_target_addr})
                 self._verifyExceptionCount(6)
-                exception_handlers_test_utils.assert_gpr_values_unchanged(
-                    self, orig_gpr_values
-                )
+                exception_handlers_test_utils.assert_gpr_values_unchanged(self, orig_gpr_values)
             elif except_code == ecall_except_code:
                 self.genInstruction("ECALL##RISCV")
                 self._verifyExceptionCount(ecall_except_code)
-                exception_handlers_test_utils.assert_gpr_values_unchanged(
-                    self, orig_gpr_values
-                )
+                exception_handlers_test_utils.assert_gpr_values_unchanged(self, orig_gpr_values)
             else:
                 self.error("Unexpected exception code: %d" % except_code)
 
@@ -129,9 +109,7 @@ class MainSequence(Sequence):
         if new_except_count > self._mExceptCounts[aExceptCode]:
             self._mExceptCounts[aExceptCode] = new_except_count
         else:
-            self.error(
-                "An exception with code %d was not triggered" % aExceptCode
-            )
+            self.error("An exception with code %d was not triggered" % aExceptCode)
 
 
 MainSequenceClass = MainSequence

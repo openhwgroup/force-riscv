@@ -40,12 +40,8 @@ class ExceptionsFactoryRISCV(ExceptionsFactory):
     #  @param aMemBankHandlerRegistryRepo A reference to the memory bank
     #       handler registry repository.
     #  @param aStack The exception handler stack.
-    def createThreadHandlerSet(
-        self, aGenThread, aMemBankHandlerRegistryRepo, aStack
-    ):
-        return ThreadHandlerSetRISCV(
-            aGenThread, aMemBankHandlerRegistryRepo, self, aStack
-        )
+    def createThreadHandlerSet(self, aGenThread, aMemBankHandlerRegistryRepo, aStack):
+        return ThreadHandlerSetRISCV(aGenThread, aMemBankHandlerRegistryRepo, self, aStack)
 
     # Create a set of exception handlers for a given privilege level.
     #

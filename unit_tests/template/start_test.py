@@ -55,12 +55,8 @@ def start_test_with_name(test_dir, test_name):
 
     os.mkdir(test_path)
     shutil.copyfile("template/Makefile.template", ("%s/Makefile" % test_path))
-    shutil.copyfile(
-        "template/test.cc.template", ("%s/%s_test.cc" % (test_path, test_name))
-    )
-    shutil.copyfile(
-        "template/Makefile.target.template", ("%s/Makefile.target" % test_path)
-    )
+    shutil.copyfile("template/test.cc.template", ("%s/%s_test.cc" % (test_path, test_name)))
+    shutil.copyfile("template/Makefile.target.template", ("%s/Makefile.target" % test_path))
     replace_file_var("%s/Makefile.target" % test_path, test_name)
 
 

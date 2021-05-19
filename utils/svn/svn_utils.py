@@ -160,10 +160,7 @@ def parse_svn_author_line(line):
     version_raw = parts[0].strip()
     match = re.match(r"r([0-9]+)", version_raw)
     if match is None:
-        print(
-            'svn authro line mal-formed: %s, not finding version in "%s"'
-            % (line, version_raw)
-        )
+        print('svn authro line mal-formed: %s, not finding version in "%s"' % (line, version_raw))
         sys.exit()
     svn_version = int(match.group(1))
 
@@ -179,9 +176,7 @@ def get_svn_log(ver1, ver2, svn_path, log_file_name):
     log_file_handle = open(log_file_name, "w")
     log_file_handle.write("[MERGE] versions %d:%d\n" % (ver1, ver2))
     log_cmd = ["svn", "log", svn_path, ("-r%d:%d" % (ver2, ver1))]
-    ps = subprocess.Popen(
-        log_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-    )
+    ps = subprocess.Popen(log_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     output = ps.communicate()[0]
     log_str = str(output, "utf-8")
     lines = log_str.split("\n")
@@ -231,10 +226,7 @@ def get_svn_log(ver1, ver2, svn_path, log_file_name):
 def separate_path_top(full_file_name):
     slash_pos = full_file_name.find("/")
     if slash_pos == -1:
-        print(
-            'File name in diff file not in expected format: "%s".'
-            % full_file_name
-        )
+        print('File name in diff file not in expected format: "%s".' % full_file_name)
         sys.exit()
 
     dir_name = full_file_name[:slash_pos]
@@ -287,8 +279,7 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
             if plus_file_name != minus_file_name:
                 print(
                     "Expecting minus and plus line has the same file name, "
-                    'but getting "%s" and "%s".'
-                    % (minus_file_name, plus_file_name)
+                    'but getting "%s" and "%s".' % (minus_file_name, plus_file_name)
                 )
                 sys.exit()
             last_line_plus = True
@@ -311,8 +302,7 @@ def create_special_file_lists(diff_file_name, exe_list_name, bin_list_name):
             bin_line_parts = line.split(" ")
             if len(bin_line_parts) != 6:
                 print(
-                    "Expecting binary file diff line to have 6 parts, the "
-                    'line is "%s".' % line
+                    "Expecting binary file diff line to have 6 parts, the " 'line is "%s".' % line
                 )
                 sys.exit()
             bin_file_to_copy = bin_line_parts[-2]

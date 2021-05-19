@@ -86,9 +86,7 @@ class MainSequence(Sequence):
 
         self.debug(
             "_getExpectedTargetAddress base reg X{:d}={:#x}, "
-            "aOffsetOprValue:{:#x}".format(
-                aBaseRegIndex, reg_val, aOffsetOprValue
-            )
+            "aOffsetOprValue:{:#x}".format(aBaseRegIndex, reg_val, aOffsetOprValue)
         )
 
         # process negative/positive 12b simm value | JALR sets bit 0 of

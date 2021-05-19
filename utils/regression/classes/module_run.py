@@ -34,9 +34,7 @@ class ModuleRun(ABC):
     def __init__(self, arg_msg_lev, arg_def_lev):
         self.m_app_setup = None
         self.m_app_info = None
-        self.module_dir, self.module_name = PathUtils.split_path(
-            PathUtils.real_path(sys.argv[0])
-        )
+        self.module_dir, self.module_name = PathUtils.split_path(PathUtils.real_path(sys.argv[0]))
         self.init_app_setup()
         self.load_message_levels(arg_msg_lev, arg_def_lev)
 
@@ -70,9 +68,7 @@ class ModuleRun(ABC):
     # Reflects the supplied default value in arg_def_val if none matching the
     # arg_switch can be found in the parsed options.
     def option_def(self, aSwitch, aDefVal=None, aConversionFunc=None):
-        return_value = self.m_app_info.mCmdLineOpts.option_def(
-            aSwitch, aDefVal
-        )
+        return_value = self.m_app_info.mCmdLineOpts.option_def(aSwitch, aDefVal)
         if aConversionFunc and return_value is not None:
             try:
                 return_value = aConversionFunc(return_value)

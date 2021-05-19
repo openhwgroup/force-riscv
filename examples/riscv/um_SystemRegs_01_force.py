@@ -21,12 +21,8 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 class MyMainSequence(Sequence):
     def generate(self, **kargs):
         for _ in range(20):
-            instr_record_id = self.genInstruction(
-                "CSRRW#register#RISCV", {"rd": 0, "csr": 0x140}
-            )
-            instr_record_id = self.genInstruction(
-                "CSRRC#register#RISCV", {"rs1": 0, "csr": 0x140}
-            )
+            instr_record_id = self.genInstruction("CSRRW#register#RISCV", {"rd": 0, "csr": 0x140})
+            instr_record_id = self.genInstruction("CSRRC#register#RISCV", {"rs1": 0, "csr": 0x140})
 
 
 MainSequenceClass = MyMainSequence

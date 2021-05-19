@@ -89,11 +89,7 @@ class BaseTestBuilder:
         except FileExistsError:
             pass
         except OSError:
-            self.debug(
-                "Error creating directory {}{}, exiting".format(
-                    self.mOutputPath, dir_name
-                )
-            )
+            self.debug("Error creating directory {}{}, exiting".format(self.mOutputPath, dir_name))
             sys.exit(1)
 
         return self.mOutputPath + dir_name + "/"
@@ -138,14 +134,10 @@ class BaseTestBuilder:
             validInstructions,
         )
         if instr_grp.has_any_instructions():
-            with open(
-                testOutputDir + "instruction_grouping.txt", "w"
-            ) as group_handle:
+            with open(testOutputDir + "instruction_grouping.txt", "w") as group_handle:
                 instr_grp.write(group_handle)
 
-            with open(
-                testOutputDir + instrFileName + ".txt", "w"
-            ) as test_handle:
+            with open(testOutputDir + instrFileName + ".txt", "w") as test_handle:
                 instr_grp.print_tests(test_handle)
 
             return True
@@ -222,9 +214,7 @@ class BaseTestBuilder:
             self.write_ctrl_files(valid_subgroups, test_output_dir)
 
     def write_ctrl_files(self, subgroupNames, outputDir):
-        ctrl_file_builder = CtrlFileBuilder(
-            self.mArchName.lower(), subgroupNames
-        )
+        ctrl_file_builder = CtrlFileBuilder(self.mArchName.lower(), subgroupNames)
         ctrl_file_builder.gen_ctrl_files(outputDir)
 
     def run(self):

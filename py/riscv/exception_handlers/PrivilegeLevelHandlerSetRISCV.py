@@ -57,13 +57,10 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
                 excluded_regs,
             )
 
-        self.scratchRegs = self.getRandomGPRs(
-            self._scratchRegisterCount(), exclude=excluded_regs
-        )
+        self.scratchRegs = self.getRandomGPRs(self._scratchRegisterCount(), exclude=excluded_regs)
         if not self.scratchRegs:
             raise RuntimeError(
-                "Unable to allocate scratch registers required by exception "
-                "handlers."
+                "Unable to allocate scratch registers required by exception " "handlers."
             )
 
     def generateHandlerSubroutines(self, aSecurityState):
@@ -75,14 +72,10 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
             self.setPEstate("PC", start_addr)
             repo = self.memBankHandlerRegistryRepo
             registry = repo.getMemoryBankHandlerRegistry(default_mem_bank)
-            handler_context = self.createExceptionHandlerContext(
-                0, default_mem_bank
-            )
+            handler_context = self.createExceptionHandlerContext(0, default_mem_bank)
 
             generator = registry.mHandlerSubroutineGenerator
-            generator.generateRoutine(
-                "TableWalk", handler_context=handler_context
-            )
+            generator.generateRoutine("TableWalk", handler_context=handler_context)
 
             end_addr = self.getPEstate("PC")
             self.setPEstate("PC", save_pc)
@@ -97,9 +90,7 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
     def getExceptionCodeClass(self):
         return ExceptionClassRISCV
 
-    def recordSpecificHandlerBoundary(
-        self, mem_bank, handler_name, start_addr, end_addr
-    ):
+    def recordSpecificHandlerBoundary(self, mem_bank, handler_name, start_addr, end_addr):
         self.handlersBoundaries.append((handler_name, start_addr, end_addr))
 
     def getAsynchronousHandlerErrorCode(self):

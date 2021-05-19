@@ -27,9 +27,7 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 class MainSequence(Sequence):
     def generate(self, **kargs):
 
-        instrCount = (
-            10  # How many instructions should be generated in the test case.
-        )
+        instrCount = 10  # How many instructions should be generated in the test case.
 
         # "ALL" indicates randomly select from the set of instructions in
         # the instructionSubset.

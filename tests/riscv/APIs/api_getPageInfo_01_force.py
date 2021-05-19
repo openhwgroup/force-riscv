@@ -77,8 +77,7 @@ class MainSequence(Sequence):
                     # second and third level dictionaries.
                     if "Page" in page_info.keys():
                         self.notice(
-                            ">>>>>>>>>>  VA Page info   <<<<<<<<<<<<<<<<<<<<"
-                            "<<<<<<<<<<<<<"
+                            ">>>>>>>>>>  VA Page info   <<<<<<<<<<<<<<<<<<<<" "<<<<<<<<<<<<<"
                         )
                         for k in page_info["Page"]:
                             if k != "DescriptorDetails":
@@ -90,9 +89,7 @@ class MainSequence(Sequence):
                                 else:
                                     self.notice(
                                         ">>>>>>>>>>  Key:  {:15}   Value:  "
-                                        "0x{:x}".format(
-                                            k, page_info["Page"][k]
-                                        )
+                                        "0x{:x}".format(k, page_info["Page"][k])
                                     )
                             else:
                                 for j in page_info["Page"][
@@ -107,14 +104,12 @@ class MainSequence(Sequence):
                                     )
                     else:
                         self.error(
-                            ">>>>>>>>>>  VA Page info:  Nothing returned "
-                            'from getPageInfo "VA"'
+                            ">>>>>>>>>>  VA Page info:  Nothing returned " 'from getPageInfo "VA"'
                         )
 
                     if "Table" in page_info.keys():
                         self.notice(
-                            ">>>>>>>>>>  VA Table info   <<<<<<<<<<<<<<<<<"
-                            "<<<<<<<<<<<<<<<<"
+                            ">>>>>>>>>>  VA Table info   <<<<<<<<<<<<<<<<<" "<<<<<<<<<<<<<<<<"
                         )
                         for k in page_info["Table"]:
                             self.notice(

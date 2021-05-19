@@ -58,9 +58,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VSEW", vsew_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", vsew_choice_weights)
         vlmul_choice_weights = {
             "0x0": 10,
             "0x1": 0,
@@ -71,14 +69,10 @@ class MainSequence(VectorTestSequence):
             "0x6": 10,
             "0x7": 10,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VLMUL", vlmul_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VLMUL", vlmul_choice_weights)
         choices_mod.commitSet()
 
-        (self._mRegIndex1, self._mRegIndex2) = self.getRandomRegisters(
-            2, "VECREG", exclude="0"
-        )
+        (self._mRegIndex1, self._mRegIndex2) = self.getRandomRegisters(2, "VECREG", exclude="0")
         self._initializeVectorRegister("v%d" % self._mRegIndex1)
         self._initializeVectorRegister("v%d" % self._mRegIndex2)
 

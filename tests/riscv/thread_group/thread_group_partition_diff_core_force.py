@@ -35,8 +35,7 @@ class MainSequence(Sequence):
         thread_groups = self.queryThreadGroup()
         if len(thread_groups) != 2:
             self.error(
-                "Unexpected thread group count; Expected=%d, Actual=%d"
-                % (2, len(thread_groups))
+                "Unexpected thread group count; Expected=%d, Actual=%d" % (2, len(thread_groups))
             )
 
         total_thread_count = self.getThreadNumber()
@@ -63,8 +62,7 @@ class MainSequence(Sequence):
         free_threads = self.getFreeThreads()
         if len(free_threads) != 0:
             self.error(
-                "Unexpected free thread count; Expected=%d, Actual=%d"
-                % (0, len(free_threads))
+                "Unexpected free thread count; Expected=%d, Actual=%d" % (0, len(free_threads))
             )
 
 

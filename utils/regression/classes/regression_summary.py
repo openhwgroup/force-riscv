@@ -68,9 +68,7 @@ class RegressionSummaryItem(SummaryItem):
                 self.iss_level = SummaryLevel.Any
                 return 1
 
-            self.iss_result = SysUtils.ifthen(
-                self.signal_id is None, "FAIL", "INCOMPLETE"
-            )
+            self.iss_result = SysUtils.ifthen(self.signal_id is None, "FAIL", "INCOMPLETE")
             self.iss_level = SummaryLevel.Fail
             return 0
         finally:
@@ -105,9 +103,7 @@ class RegressionSummaryItem(SummaryItem):
 
         if SysUtils.failed(self.trace_cmp_retcode):
             self.trace_cmp_level = SummaryLevel.Fail
-            Msg.user(
-                "self.trace_cmp_retcode = %s" % (str(self.trace_cmp_retcode))
-            )
+            Msg.user("self.trace_cmp_retcode = %s" % (str(self.trace_cmp_retcode)))
 
         Msg.user("self.trace_cmp_level = %s" % (str(SummaryLevel.Fail)))
         return SysUtils.ifthen(SysUtils.success(self.trace_cmp_retcode), 1, 0)
@@ -210,9 +206,7 @@ class RegressionSummaryItem(SummaryItem):
         my_msg = self.trace_cmp_msg
         Msg.user("RegressionSummaryItem::get_trace_cmp_line - 2", "GOT HERE")
         if my_msg is not None:
-            Msg.user(
-                "RegressionSummaryItem::get_trace_cmp_line - 3", "GOT HERE"
-            )
+            Msg.user("RegressionSummaryItem::get_trace_cmp_line - 3", "GOT HERE")
             my_tline += ", Message: %s" % (str(my_msg))
         # show the seed if one exists
         my_tline += "\n"
@@ -287,9 +281,7 @@ class RegressionSummary(Summary):
                 my_instr_count, my_cycle_count = self.process_summary_tasks(
                     my_ofile, arg_sum_level
                 )
-                self.process_summary_totals(
-                    my_ofile, my_instr_count, my_cycle_count
-                )
+                self.process_summary_totals(my_ofile, my_instr_count, my_cycle_count)
 
             except Exception as arg_ex:
                 Msg.error_trace()
@@ -376,9 +368,7 @@ class RegressionSummary(Summary):
         return my_instr_count, my_cycle_count
 
     # output the tasks summary and echo to stdout
-    def process_summary_totals(
-        self, arg_ofile, arg_instr_count, arg_cycle_count
-    ):
+    def process_summary_totals(self, arg_ofile, arg_instr_count, arg_cycle_count):
         Msg.blank("info")
 
         # generator totals
@@ -401,9 +391,7 @@ class RegressionSummary(Summary):
             )
             my_lines += "\n"
 
-            my_lines += "Total Instructions Emulated: %3d\n" % (
-                arg_instr_count
-            )
+            my_lines += "Total Instructions Emulated: %3d\n" % (arg_instr_count)
             my_lines += "\n"
 
         my_rfails = 0
@@ -440,9 +428,7 @@ class RegressionSummary(Summary):
             SysUtils.percent(my_task_total - my_total_fails, (my_task_total))
         )
         my_lines += "\n"
-        my_lines += "Total Run Time: %0.5f Seconds" % (
-            DateTime.Time() - self.start_time
-        )
+        my_lines += "Total Run Time: %0.5f Seconds" % (DateTime.Time() - self.start_time)
 
         Msg.blank("info")
         Msg.info(my_lines)

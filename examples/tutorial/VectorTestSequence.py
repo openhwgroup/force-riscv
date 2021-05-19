@@ -46,9 +46,7 @@ class VectorTestSequence(Sequence):
         self._setUpTest()
 
         max_instr_count = self._getMaxInstructionCount()
-        instr_count = RandomUtils.random32(
-            (max_instr_count // 2), max_instr_count
-        )
+        instr_count = RandomUtils.random32((max_instr_count // 2), max_instr_count)
         for _ in range(instr_count):
             instr = self.choice(self._getInstructionList())
             instr_params = self._getInstructionParameters()
@@ -195,16 +193,11 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         if (
             (self._mTargetAddrConstr is not None)
             and (0x2 not in self._getAllowedExceptionCodes(aInstr))
-            and (
-                not self._mTargetAddrConstr.containsValue(
-                    aInstrRecord["LSTarget"]
-                )
-            )
+            and (not self._mTargetAddrConstr.containsValue(aInstrRecord["LSTarget"]))
         ):
             self.error(
                 "Target address 0x%x was outside of the specified "
-                "constraint %s"
-                % (aInstrRecord["LSTarget"], self._mTargetAddrConstr)
+                "constraint %s" % (aInstrRecord["LSTarget"], self._mTargetAddrConstr)
             )
 
     # Generate parameters for a load or store instruction.
@@ -221,12 +214,8 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         elif target_choice == 2:
             va_range_size = RandomUtils.random32()
             min_target_addr = self.genVA(Size=512, Align=8, Type="D")
-            max_target_addr = mask_to_size(
-                (min_target_addr + RandomUtils.random32()), 64
-            )
-            self._mTargetAddrConstr = ConstraintSet(
-                min_target_addr, max_target_addr
-            )
+            max_target_addr = mask_to_size((min_target_addr + RandomUtils.random32()), 64)
+            self._mTargetAddrConstr = ConstraintSet(min_target_addr, max_target_addr)
             instr_params["LSTarget"] = str(self._mTargetAddrConstr)
 
         return instr_params

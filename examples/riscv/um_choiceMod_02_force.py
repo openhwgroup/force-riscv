@@ -81,18 +81,14 @@ class MyMainSequence(Sequence):
 def gen_thread_initialization(gen_thread):
 
     # when satp csr width is 32 bits then Sv32 is only paging mode possible...
-    satp_info = gen_thread.getRegisterInfo(
-        "satp", gen_thread.getRegisterIndex("satp")
-    )
+    satp_info = gen_thread.getRegisterInfo("satp", gen_thread.getRegisterIndex("satp"))
     rv32 = satp_info["Width"] == 32
 
     choices_mod = ChoicesModifier(gen_thread)
 
     if rv32:
         # Sv32 only choices...
-        choices_mod.modifyPagingChoices(
-            "Page size#4K granule#S#stage 1", {"4K": 10, "4M": 10}
-        )
+        choices_mod.modifyPagingChoices("Page size#4K granule#S#stage 1", {"4K": 10, "4M": 10})
     else:
         # Sv48 otherwise...
         choices_mod.modifyPagingChoices(

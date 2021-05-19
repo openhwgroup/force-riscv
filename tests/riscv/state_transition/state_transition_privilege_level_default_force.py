@@ -38,23 +38,17 @@ class MainSequence(Sequence):
             state = State()
 
             if RandomUtils.random32(0, 1) == 1:
-                state.addPrivilegeLevelStateElementByName(
-                    priv_level_names[priv_level]
-                )
+                state.addPrivilegeLevelStateElementByName(priv_level_names[priv_level])
             else:
                 state.addPrivilegeLevelStateElement(priv_level)
 
-            self._mExpectedStateData[
-                EStateElementType.PrivilegeLevel
-            ] = priv_level
+            self._mExpectedStateData[EStateElementType.PrivilegeLevel] = priv_level
 
             StateTransition.transitionToState(state)
             for _ in range(10):
                 self.genInstruction("ADDI##RISCV")
 
-            state_transition_test_utils.verify_state(
-                self, self._mExpectedStateData
-            )
+            state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
 
 MainSequenceClass = MainSequence

@@ -64,9 +64,7 @@ class MainSequence(Sequence):
         for gpr_index in reserved_gpr_indices:
             self.reserveRegister("x%d" % gpr_index)
 
-        self._mSpecGprIndices = self._mSpecGprIndices.union(
-            reserved_gpr_indices
-        )
+        self._mSpecGprIndices = self._mSpecGprIndices.union(reserved_gpr_indices)
 
         state_trans_handler = StateTransitionHandlerTest(self.genThread)
         StateTransition.registerStateTransitionHandler(
@@ -85,13 +83,9 @@ class MainSequence(Sequence):
     def _createState(self):
         state = State()
 
-        gpr_indices = self.getRandomGPRs(
-            RandomUtils.random32(0, 15), exclude="0"
-        )
+        gpr_indices = self.getRandomGPRs(RandomUtils.random32(0, 15), exclude="0")
         for gpr_index in gpr_indices:
-            state.addRegisterStateElement(
-                ("x%d" % gpr_index), (RandomUtils.random64(),)
-            )
+            state.addRegisterStateElement(("x%d" % gpr_index), (RandomUtils.random64(),))
 
         self._mSpecGprIndices = self._mSpecGprIndices.union(gpr_indices)
 

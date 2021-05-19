@@ -98,18 +98,14 @@ class MainSequence(Sequence):
         )
         expected_sys_reg_state_data.append((mtvec_name, mtvec_val))
 
-        self._mExpectedStateData[
-            EStateElementType.SystemRegister
-        ] = expected_sys_reg_state_data
+        self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
 
-        self._mExpectedStateData[
-            EStateElementType.GPR
-        ] = utils.add_random_gpr_state_elements(
+        self._mExpectedStateData[EStateElementType.GPR] = utils.add_random_gpr_state_elements(
             self, state, RandomUtils.random32(0, 5)
         )
-        self._mExpectedStateData[
-            EStateElementType.PC
-        ] = utils.add_random_pc_state_element(self, state)
+        self._mExpectedStateData[EStateElementType.PC] = utils.add_random_pc_state_element(
+            self, state
+        )
 
         return state
 

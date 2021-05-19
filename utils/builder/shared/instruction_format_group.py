@@ -38,9 +38,7 @@ class IGroupByFormat(object):
 
     def print_test(self):
         file_name = "T%d-" % len(self.instructions) + self.name
-        file_name = file_name.replace(
-            "|", "Or"
-        )  # | will be mistaken as file pipe in bash
+        file_name = file_name.replace("|", "Or")  # | will be mistaken as file pipe in bash
         file_name = file_name.replace(
             "[", "+"
         )  # [] will be mistaken as regular expression in file name

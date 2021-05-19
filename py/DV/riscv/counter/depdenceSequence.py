@@ -63,9 +63,7 @@ class depSequence(Sequence):
                 "From the farthest to the nearest": 50,
             },
         }
-        self.myChoiceMod.apply(
-            self.myChoiceMod.modifyDependenceChoices, **generalDepDicts
-        )
+        self.myChoiceMod.apply(self.myChoiceMod.modifyDependenceChoices, **generalDepDicts)
 
         self.modifyVariable("Inter-Dependency Window", "1-30:10", "Choice")
 
@@ -73,18 +71,14 @@ class depSequence(Sequence):
             "Use addressing preamble": {"no": 999999, "yes": 1},
             "Ordered data alignment": {"Aligned": 100, "Unaligned": 0},
         }
-        self.myChoiceMod.apply(
-            self.myChoiceMod.modifyOperandChoices, **operandDicts
-        )
+        self.myChoiceMod.apply(self.myChoiceMod.modifyOperandChoices, **operandDicts)
 
     def alu2ldChoice(self, **kargs):
         operandDicts = {
             "ALU result": {"Load store address": 100, "Random": 0},
             "Data processing result": {"Load store address": 100, "Random": 0},
         }
-        self.myChoiceMod.apply(
-            self.myChoiceMod.modifyOperandChoices, **operandDicts
-        )
+        self.myChoiceMod.apply(self.myChoiceMod.modifyOperandChoices, **operandDicts)
 
     def ld2ldChoice(self, **kargs):
         operandDicts = {
@@ -94,9 +88,7 @@ class depSequence(Sequence):
                 "Random": 0,
             },
         }
-        self.myChoiceMod.apply(
-            self.myChoiceMod.modifyOperandChoices, **operandDicts
-        )
+        self.myChoiceMod.apply(self.myChoiceMod.modifyOperandChoices, **operandDicts)
 
     def ld2brChoice(self, **kargs):
         operandDicts = {
@@ -106,9 +98,7 @@ class depSequence(Sequence):
                 "Random": 0,
             },
         }
-        self.myChoiceMod.apply(
-            self.myChoiceMod.modifyOperandChoices, **operandDicts
-        )
+        self.myChoiceMod.apply(self.myChoiceMod.modifyOperandChoices, **operandDicts)
 
     def pointerchaseChoice(self, **kargs):
         generalDepDicts = {
@@ -138,17 +128,13 @@ class depSequence(Sequence):
                 "From the farthest to the nearest": 50,
             },
         }
-        self.myChoiceMod.apply(
-            self.myChoiceMod.modifyDependenceChoices, **generalDepDicts
-        )
+        self.myChoiceMod.apply(self.myChoiceMod.modifyDependenceChoices, **generalDepDicts)
 
         operandDicts = {
             "Use addressing preamble": {"no": 999999, "yes": 1},
             "Ordered data alignment": {"Aligned": 100, "Unaligned": 0},
         }
-        self.myChoiceMod.apply(
-            self.myChoiceMod.modifyOperandChoices, **operandDicts
-        )
+        self.myChoiceMod.apply(self.myChoiceMod.modifyOperandChoices, **operandDicts)
         self.ld2ldChoice()
         self.modifyVariable("Inter-Dependency Window", "1:10,2-30:0", "Choice")
 

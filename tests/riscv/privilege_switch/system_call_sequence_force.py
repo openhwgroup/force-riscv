@@ -73,13 +73,10 @@ class MainSequence(Sequence):
         }
 
         for reg_field_name in ("MIE", "SIE", "UIE", "SUM", "MXR", "MPRV"):
-            (state[reg_field_name], valid) = self.readRegister(
-                "mstatus", reg_field_name
-            )
+            (state[reg_field_name], valid) = self.readRegister("mstatus", reg_field_name)
             if not valid:
                 self.error(
-                    "Register field mstatus.%s does not have a valid value"
-                    % reg_field_name
+                    "Register field mstatus.%s does not have a valid value" % reg_field_name
                 )
 
         return state
@@ -148,13 +145,10 @@ class MainSequence(Sequence):
             )
 
         expected_target_addr = aSysCallParams.get("TargetAddr")
-        if (expected_target_addr is not None) and (
-            aCurrentState["PC"] != expected_target_addr
-        ):
+        if (expected_target_addr is not None) and (aCurrentState["PC"] != expected_target_addr):
             self.error(
                 "Current PC does not match the expected value. "
-                "Expected=0x%x, Actual=0x%x"
-                % (expected_target_addr, aCurrentState["PC"])
+                "Expected=0x%x, Actual=0x%x" % (expected_target_addr, aCurrentState["PC"])
             )
 
         priv_level_name = None
@@ -180,10 +174,7 @@ class MainSequence(Sequence):
             if (
                 (expected_interrupt_mask is not None)
                 and (aCurrentState["PrivilegeLevel"] != 0)
-                and (
-                    aCurrentState[interrupt_field_name]
-                    != expected_interrupt_mask
-                )
+                and (aCurrentState[interrupt_field_name] != expected_interrupt_mask)
             ):
                 self.error(
                     "Current mstatus.%s does not match the expected "
@@ -240,9 +231,7 @@ class MainSequence(Sequence):
             # Don't specify a target address if we don't know which privilege
             # level we're targeting; otherwise we can't be sure our target
             # address is valid
-            if (aTargetPrivLevel is not None) and (
-                aTargetPrivLevel != "Random"
-            ):
+            if (aTargetPrivLevel is not None) and (aTargetPrivLevel != "Random"):
                 target_addr = self.genVA(
                     Size=4, Align=4, Type="I", PrivilegeLevel=aTargetPrivLevel
                 )
@@ -259,9 +248,7 @@ class MainSequence(Sequence):
     #       register field for the privilege level switch.
     #  @param aOrigState The register field value prior to the privilege level
     #       switch.
-    def _getExpectedRegisterFieldValue(
-        self, aRegFieldName, aRegFieldParam, aOrigState
-    ):
+    def _getExpectedRegisterFieldValue(self, aRegFieldName, aRegFieldParam, aOrigState):
         expected_field_val = None
         if aRegFieldParam == 0:
             expected_field_val = 0

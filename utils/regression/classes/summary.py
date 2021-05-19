@@ -78,11 +78,7 @@ class SummaryErrorItem(object):
         self.error_item = arg_error_qitem.error_info
 
     def get_err_line(self):
-        my_err_type = (
-            str(self.error_item["type"])
-            .replace("<class '", "")
-            .replace("'>", "")
-        )
+        my_err_type = str(self.error_item["type"]).replace("<class '", "").replace("'>", "")
 
         return '[ERROR] Type: %s, Error: %s, Path: "%s", Message: %s' % (
             my_err_type,
@@ -232,55 +228,30 @@ class SummaryItem(object):
         if self.total is None:
             self.total = 0
 
-        Msg.info(
-            "Task Id: %s, Task Index: %d" % (self.task_id, self.task_index)
-        )
+        Msg.info("Task Id: %s, Task Index: %d" % (self.task_id, self.task_index))
 
         my_msg = "Process Log Contains "
-        if (
-            self.detail_flags & SummaryDetail.AnyDetail
-            == SummaryDetail.Nothing
-        ):
+        if self.detail_flags & SummaryDetail.AnyDetail == SummaryDetail.Nothing:
             my_msg = "Process No Found or is Empty"
         else:
-            if (
-                self.detail_flags & SummaryDetail.GenCmd
-                == SummaryDetail.GenCmd
-            ):
+            if self.detail_flags & SummaryDetail.GenCmd == SummaryDetail.GenCmd:
                 my_msg += "GenCmd, "
-            if (
-                self.detail_flags & SummaryDetail.GenResult
-                == SummaryDetail.GenResult
-            ):
+            if self.detail_flags & SummaryDetail.GenResult == SummaryDetail.GenResult:
                 my_msg += "GenResult, "
-            if (
-                self.detail_flags & SummaryDetail.IssCmd
-                == SummaryDetail.IssCmd
-            ):
+            if self.detail_flags & SummaryDetail.IssCmd == SummaryDetail.IssCmd:
                 my_msg += "IssCommand, "
-            if (
-                self.detail_flags & SummaryDetail.IssResult
-                == SummaryDetail.IssResult
-            ):
+            if self.detail_flags & SummaryDetail.IssResult == SummaryDetail.IssResult:
                 my_msg += "IssResult, "
-            if (
-                self.detail_flags & SummaryDetail.TraceCmpCmd
-                == SummaryDetail.TraceCmpCmd
-            ):
+            if self.detail_flags & SummaryDetail.TraceCmpCmd == SummaryDetail.TraceCmpCmd:
                 my_msg += "TraceCmpCommand, "
-            if (
-                self.detail_flags & SummaryDetail.TraceCmpResult
-                == SummaryDetail.TraceCmpResult
-            ):
+            if self.detail_flags & SummaryDetail.TraceCmpResult == SummaryDetail.TraceCmpResult:
                 my_msg += "TraceCmpResult, "
 
             # remove the trailing comma
             my_msg = my_msg[:-2]
 
         Msg.user(my_msg, "SUM-RPT")
-        Msg.user(
-            "Force Return Code: %s" % (str(self.force_retcode)), "SUM-RPT"
-        )
+        Msg.user("Force Return Code: %s" % (str(self.force_retcode)), "SUM-RPT")
         # Msg.trace()
 
         # Msg.info( "Originating Control File: %s"  % ( self.parent_fctrl ))
@@ -296,9 +267,7 @@ class SummaryItem(object):
                 % (self.default, self.secondary, self.total)
             )
         elif self.signal_id is not None:
-            Msg.info(
-                "[INCOMPLETE] Generate Command: %s" % (str(self.force_cmd))
-            )
+            Msg.info("[INCOMPLETE] Generate Command: %s" % (str(self.force_cmd)))
             Msg.info("No Instructions Generated")
         else:
             Msg.info("[FAILED] Generate Command: %s" % (str(self.force_cmd)))
@@ -322,26 +291,14 @@ class SummaryItem(object):
             else:
                 Msg.info("[FAILED] RTL Command: %s" % (str(self.rtl_cmd)))
 
-        if (
-            self.detail_flags & SummaryDetail.TraceCmpCmd
-            == SummaryDetail.TraceCmpCmd
-        ):
+        if self.detail_flags & SummaryDetail.TraceCmpCmd == SummaryDetail.TraceCmpCmd:
             Msg.info("Comparing Simulation output .... ")
             if SysUtils.success(self.trace_cmp_retcode):
-                Msg.info(
-                    "[SUCCESS] Trace Compare Command: %s"
-                    % (str(self.trace_cmp_cmd))
-                )
+                Msg.info("[SUCCESS] Trace Compare Command: %s" % (str(self.trace_cmp_cmd)))
             elif self.signal_id is not None:
-                Msg.info(
-                    "[INCOMPLETE] Trace Compare Command: %s"
-                    % (str(self.trace_cmp_cmd))
-                )
+                Msg.info("[INCOMPLETE] Trace Compare Command: %s" % (str(self.trace_cmp_cmd)))
             else:
-                Msg.info(
-                    "[FAILED] Trace Compare Command: %s"
-                    % (str(self.trace_cmp_cmd))
-                )
+                Msg.info("[FAILED] Trace Compare Command: %s" % (str(self.trace_cmp_cmd)))
 
         Msg.blank()
 
@@ -361,17 +318,13 @@ class SummaryItem(object):
             Msg.user("Files: %s" % (str(my_file_list)), "FILES-TO-REMOVE")
 
             process_log_base = PathUtils.base_name(self.process_log)
-            clean_up_rules.setBaseNamesToKeep(
-                ["_def_frun.py", "PASS", process_log_base]
-            )
+            clean_up_rules.setBaseNamesToKeep(["_def_frun.py", "PASS", process_log_base])
 
             for my_file in my_file_list:
                 if clean_up_rules.shouldKeepFile(my_file):
                     Msg.user("File: %s KEPT" % clean_up_rules.lastBaseName())
                 else:
-                    Msg.user(
-                        "File: %s REMOVED" % clean_up_rules.lastBaseName()
-                    )
+                    Msg.user("File: %s REMOVED" % clean_up_rules.lastBaseName())
                     PathUtils.remove(my_file)
 
     def iss_success(self):
@@ -392,10 +345,7 @@ class SummaryItem(object):
     # extract the client process information
     def load_process_info(self, arg_process_info):
 
-        Msg.dbg(
-            "self.process_result: (%s)"
-            % (str(arg_process_info.get("process-result", None)))
-        )
+        Msg.dbg("self.process_result: (%s)" % (str(arg_process_info.get("process-result", None))))
 
         self.process_cmd = arg_process_info.get("process-cmd", None)
         self.process_log = arg_process_info.get("process-log", None)
@@ -417,9 +367,7 @@ class SummaryItem(object):
         my_tmp, my_index = PathUtils.split_dir(self.work_dir)
         my_tmp, self.task_id = PathUtils.split_dir(my_tmp)
         self.task_index = int(my_index)
-        self.task_path = PathUtils.include_trailing_path_delimiter(
-            str(self.work_dir)
-        )
+        self.task_path = PathUtils.include_trailing_path_delimiter(str(self.work_dir))
 
     def check_missing_result(self, aProcessResult, aModuleName):
         message = aProcessResult[2]
@@ -462,9 +410,7 @@ class SummaryItem(object):
         if (self.detail_flags & SummaryDetail.GenCmd) and not (
             self.detail_flags & SummaryDetail.GenResult
         ):
-            retcode, message = self.check_missing_result(
-                self.process_result, "generator"
-            )
+            retcode, message = self.check_missing_result(self.process_result, "generator")
             self.load_gen_result(
                 {
                     "retcode": retcode,
@@ -480,20 +426,14 @@ class SummaryItem(object):
         elif (self.detail_flags & SummaryDetail.IssCmd) and not (
             self.detail_flags & SummaryDetail.IssResult
         ):
-            retcode, message = self.check_missing_result(
-                self.process_result, "iss"
-            )
-            self.load_iss_result(
-                {"retcode": retcode, "log": None, "message": message}
-            )
+            retcode, message = self.check_missing_result(self.process_result, "iss")
+            self.load_iss_result({"retcode": retcode, "log": None, "message": message})
 
         # check for compare pair
         elif (self.detail_flags & SummaryDetail.TraceCmpCmd) and not (
             self.detail_flags & SummaryDetail.TraceCmpResult
         ):
-            retcode, message = self.check_missing_result(
-                self.process_result, "trace-cmp"
-            )
+            retcode, message = self.check_missing_result(self.process_result, "trace-cmp")
             self.load_trace_cmp_result(
                 {
                     "trace-cmp-retcode": retcode,
@@ -506,12 +446,8 @@ class SummaryItem(object):
         elif (self.detail_flags & SummaryDetail.RtlCmd) and not (
             self.detail_flags & SummaryDetail.RtlResult
         ):
-            retcode, message = self.check_missing_result(
-                self.process_result, "rtl"
-            )
-            self.load_rtl_result(
-                {"retcode": retcode, "log": None, "message": message}
-            )
+            retcode, message = self.check_missing_result(self.process_result, "rtl")
+            self.load_rtl_result({"retcode": retcode, "log": None, "message": message})
 
     def load_process_line(self, arg_line):
         Msg.user("Process Result Line: %s" % (str(arg_line)), "SUM-TUPLE")

@@ -58,9 +58,7 @@ class MainSequence(Sequence):
                     FlatMap=opt_value,
                 )
             else:
-                rand_VA = self.genVA(
-                    Size=size, Align=align, Type="I", Bank="Default"
-                )
+                rand_VA = self.genVA(Size=size, Align=align, Type="I", Bank="Default")
 
             self.notice("gen target VA={:#x}".format(rand_VA))
             self.genInstruction(branch_instr, {"BRTarget": rand_VA})

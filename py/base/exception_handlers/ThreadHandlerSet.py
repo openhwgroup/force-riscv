@@ -60,9 +60,7 @@ from base.Sequence import Sequence
 
 
 class ThreadHandlerSet(Sequence):
-    def __init__(
-        self, gen_thread, memBankHandlerRegistryRepo, factory, exceptionsStack
-    ):
+    def __init__(self, gen_thread, memBankHandlerRegistryRepo, factory, exceptionsStack):
         super().__init__(gen_thread)
 
         self.memBankHandlerRegistryRepo = memBankHandlerRegistryRepo
@@ -80,9 +78,7 @@ class ThreadHandlerSet(Sequence):
 
         self.priv_level_handler_sets = {}
         for priv_level in self.getPrivilegeLevels():
-            self.priv_level_handler_sets[
-                priv_level
-            ] = self.factory.createPrivilegeLevelHandlerSet(
+            self.priv_level_handler_sets[priv_level] = self.factory.createPrivilegeLevelHandlerSet(
                 gen_thread,
                 priv_level,
                 memBankHandlerRegistryRepo,
@@ -139,9 +135,7 @@ class ThreadHandlerSet(Sequence):
             # Trim the last separator
             handler_boundaries = handler_boundaries.rstrip(";")
 
-            info_set[
-                ("%s_bounds" % mem_bank_handler_registry.mMemBank.name)
-            ] = handler_boundaries
+            info_set[("%s_bounds" % mem_bank_handler_registry.mMemBank.name)] = handler_boundaries
 
         info_set["Function"] = "RecordExceptionSpecificAddressBounds"
         self.exceptionRequest("UpdateHandlerInfo", info_set)
@@ -159,15 +153,15 @@ class ThreadHandlerSet(Sequence):
                 )
             )
 
-            self.priv_level_handler_sets[
-                priv_level
-            ].assignSynchronousExceptionHandler(aAssignmentRequest)
+            self.priv_level_handler_sets[priv_level].assignSynchronousExceptionHandler(
+                aAssignmentRequest
+            )
 
     def assignAsynchronousExceptionHandler(self, aHandlerClassName):
         for priv_level in self.getPrivilegeLevels():
-            self.priv_level_handler_sets[
-                priv_level
-            ].assignAsynchronousExceptionHandler(aHandlerClassName)
+            self.priv_level_handler_sets[priv_level].assignAsynchronousExceptionHandler(
+                aHandlerClassName
+            )
 
     # return set of scratch (gpr) registers for a handler set.
     # NOTE: call this method after handlers are generated
@@ -236,32 +230,22 @@ class ThreadHandlerSet(Sequence):
         for priv_level in reversed(self.getPrivilegeLevels()):
             for security_state in self.getSupportedSecurityStates(priv_level):
                 self.setPrivilegeLevel(security_state)
-                self._genPrivilegeLevelSecurityStateHandlerSet(
-                    priv_level, security_state
-                )
+                self._genPrivilegeLevelSecurityStateHandlerSet(priv_level, security_state)
 
         if self.fastMode():
             self._reserveScratchRegisters()
 
         self.restorePrivilegeLevel()
 
-    def _genPrivilegeLevelSecurityStateHandlerSet(
-        self, privLevel, securityState
-    ):
+    def _genPrivilegeLevelSecurityStateHandlerSet(self, privLevel, securityState):
         default_mem_bank = securityState.getDefaultMemoryBank()
         priv_level_security_state = (privLevel, securityState)
 
         # exception vectors and handlers all in same block of memory, to allow
         # PC-relative branches to be used at each exception vector.
-        vector_base_address = self.getNextVectorBaseAddress(
-            self.handler_memory[default_mem_bank]
-        )
-        self.vector_offset_tables[
-            priv_level_security_state
-        ] = vector_base_address
-        self.handler_memory[default_mem_bank] = (
-            vector_base_address + self.getVectorTableSize()
-        )
+        vector_base_address = self.getNextVectorBaseAddress(self.handler_memory[default_mem_bank])
+        self.vector_offset_tables[priv_level_security_state] = vector_base_address
+        self.handler_memory[default_mem_bank] = vector_base_address + self.getVectorTableSize()
 
         self.debug(
             "HANDLER MEM(%s): 0x%x"
@@ -297,17 +281,11 @@ class ThreadHandlerSet(Sequence):
                     securityState, dispatcher
                 )
         else:
-            dispatcher = factory.createDefaultSynchronousExceptionDispatcher(
-                self.genThread
-            )
-            sync_dispatch_addr = handler_set.generateSynchronousHandlers(
-                securityState, dispatcher
-            )
+            dispatcher = factory.createDefaultSynchronousExceptionDispatcher(self.genThread)
+            sync_dispatch_addr = handler_set.generateSynchronousHandlers(securityState, dispatcher)
 
         for mem_bank in self.getMemoryBanks():
-            self.handler_memory[mem_bank] = handler_set.getNextCodeAddress(
-                mem_bank
-            )
+            self.handler_memory[mem_bank] = handler_set.getNextCodeAddress(mem_bank)
 
         # at each exception vector offset, generate branch to either the
         # synchronous exception dispatcher, or to an asynchronous exception
@@ -372,9 +350,7 @@ class ThreadHandlerSet(Sequence):
                 handler_name,
                 handler_start_addr,
                 handler_end_addr,
-            ) in handler_set.getHandlerBoundaries(
-                mem_bank_handler_registry.mMemBank
-            ):
+            ) in handler_set.getHandlerBoundaries(mem_bank_handler_registry.mMemBank):
                 self._recordSpecificHandlerBoundary(
                     mem_bank_handler_registry.mMemBank,
                     handler_name,
@@ -388,11 +364,7 @@ class ThreadHandlerSet(Sequence):
         for scratch_reg in self.scratch_registers:
             self.reserveRegisterByIndex(64, scratch_reg, "GPR", "ReadWrite")
 
-    def _recordSpecificHandlerBoundary(
-        self, memBank, handler_name, start_addr, end_addr
-    ):
+    def _recordSpecificHandlerBoundary(self, memBank, handler_name, start_addr, end_addr):
         repo = self.memBankHandlerRegistryRepo
         mem_bank_handler_registry = repo.getMemoryBankHandlerRegistry(memBank)
-        mem_bank_handler_registry.addHandlerBoundary(
-            handler_name, start_addr, end_addr
-        )
+        mem_bank_handler_registry.addHandlerBoundary(handler_name, start_addr, end_addr)

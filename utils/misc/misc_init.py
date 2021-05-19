@@ -44,9 +44,7 @@ def force_init():
     # wrong and recovery from second case is impossible raise a fatal exception
     if not (os.path.exists(my_force_path + "/utils/")):
         raise OSError(
-            '"'
-            + my_force_path
-            + '/utils/" does not exists, check that it exists as a sub '
+            '"' + my_force_path + '/utils/" does not exists, check that it exists as a sub '
             "directory of Force"
         )
 
@@ -54,9 +52,7 @@ def force_init():
     # wrong and recovery from second case is impossible raise a fatal exception
     if not (os.path.exists(my_force_path + "/tests/")):
         raise OSError(
-            '"'
-            + my_force_path
-            + '/tests/" does not exists, check that it exists as a sub '
+            '"' + my_force_path + '/tests/" does not exists, check that it exists as a sub '
             "directory of Force"
         )
 

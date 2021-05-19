@@ -39,17 +39,13 @@ class MyMainSequence(Sequence):
         # Use the Sequence.choice method with a dictionary input which returns
         # one dictionary item as a (key, value) tuple
         instr = self.choice(ALU_Int32_instructions)
-        self.notice(
-            ">>>>>  Instruction from self.choice:  {}".format(instr[0])
-        )
+        self.notice(">>>>>  Instruction from self.choice:  {}".format(instr[0]))
         self.genInstruction(instr[0])
 
         # Use Sequence.choice with a tuple as the input
         small_tuple = (sublist[0], sublist[1], sublist[2])
         instr = self.choice(small_tuple)
-        self.notice(
-            ">>>>>  Instruction from self.choice using tuple: {}".format(instr)
-        )
+        self.notice(">>>>>  Instruction from self.choice using tuple: {}".format(instr))
         self.genInstruction(instr)
 
 

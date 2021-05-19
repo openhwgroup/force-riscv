@@ -30,9 +30,7 @@ class MemoryBankHandlerRegistryRepository(object):
     #
     #  @param aMemBank A memory bank.
     def addMemoryBankHandlerRegistry(self, aMemBankHandlerRegistry):
-        self._mMemBankHandlerRegistries[
-            aMemBankHandlerRegistry.mMemBank
-        ] = aMemBankHandlerRegistry
+        self._mMemBankHandlerRegistries[aMemBankHandlerRegistry.mMemBank] = aMemBankHandlerRegistry
 
     # Return the memory bank handler registry for the specified memory bank.
     #
@@ -59,9 +57,7 @@ class MemoryBankHandlerRegistry(object):
     #
     #  @param aExceptionHandlerClassName The exception handler class name.
     def getExceptionHandler(self, aExceptionHandlerClassName):
-        return self._mHandlerRegistry.getExceptionHandler(
-            aExceptionHandlerClassName
-        )
+        return self._mHandlerRegistry.getExceptionHandler(aExceptionHandlerClassName)
 
     # Search for the specified exception handler by name. If an instance
     # exists, return it; otherwise, create a new instance and store it for
@@ -92,12 +88,8 @@ class MemoryBankHandlerRegistry(object):
     #
     #  @param aExceptionHandlerClassName The exception handler class name.
     #  @param aExceptionHandler The exception handler instance.
-    def registerExceptionHandlerWithInstance(
-        self, aExceptionHandlerClassName, aExceptionHandler
-    ):
-        self._mHandlerRegistry.addExceptionHandler(
-            aExceptionHandlerClassName, aExceptionHandler
-        )
+    def registerExceptionHandlerWithInstance(self, aExceptionHandlerClassName, aExceptionHandler):
+        self._mHandlerRegistry.addExceptionHandler(aExceptionHandlerClassName, aExceptionHandler)
 
     # Create an instance of the specified exception handler class and store
     # it for future retrieval. It is assumed that no two exception handler

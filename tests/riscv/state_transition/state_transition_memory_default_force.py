@@ -49,14 +49,10 @@ class MainSequence(Sequence):
 
         for _ in range(RandomUtils.random32(2, 5)):
             for _ in range(RandomUtils.random32(50, 100)):
-                self.genInstruction(
-                    self.choice(instructions), {"LSTarget": target_addr_range}
-                )
+                self.genInstruction(self.choice(instructions), {"LSTarget": target_addr_range})
 
             StateTransition.transitionToState(state)
-            state_transition_test_utils.verify_state(
-                self, self._mExpectedStateData
-            )
+            state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
@@ -64,9 +60,7 @@ class MainSequence(Sequence):
 
         expected_mem_state_data = []
         mem_block_size = RandomUtils.random32(0x8, 0x20) * 16
-        self._mMemBlockStartAddr = self.genVA(
-            Size=mem_block_size, Align=16, Type="D"
-        )
+        self._mMemBlockStartAddr = self.genVA(Size=mem_block_size, Align=16, Type="D")
         self._mMemBlockEndAddr = self._mMemBlockStartAddr + mem_block_size - 1
         cur_addr = self._mMemBlockStartAddr
         while cur_addr <= self._mMemBlockEndAddr:
@@ -81,9 +75,7 @@ class MainSequence(Sequence):
                 expected_mem_state_data.append((cur_addr, mem_val))
                 cur_addr += 8
 
-        self._mExpectedStateData[
-            EStateElementType.Memory
-        ] = expected_mem_state_data
+        self._mExpectedStateData[EStateElementType.Memory] = expected_mem_state_data
 
         return state
 

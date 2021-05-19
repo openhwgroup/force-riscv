@@ -138,17 +138,13 @@ class InstructionFileHandler(ContentHandler, object):
         if not self.currentOperand.bits:
             self.currentOperand.width = 0
         else:
-            self.currentOperand.width = builder_utils.get_bits_size(
-                self.currentOperand.bits
-            )
+            self.currentOperand.width = builder_utils.get_bits_size(self.currentOperand.bits)
 
     def end_O(self):
         if self.currentOperand:
             if self.currentGroupOperand:
                 if self.currentGroupOperand == self.currentOperand:
-                    self.currentInstruction.add_operand(
-                        self.currentGroupOperand
-                    )
+                    self.currentInstruction.add_operand(self.currentGroupOperand)
                     self.currentGroupOperand = None
                 else:
                     self.currentGroupOperand.add_operand(self.currentOperand)

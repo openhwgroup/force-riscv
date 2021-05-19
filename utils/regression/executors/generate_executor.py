@@ -71,24 +71,14 @@ class GenerateExecutor(AppExecutor):
         self.ctrl_item.seed = my_result[GenerateResult.gen_seed]
 
         my_process_data = {
-            GenerateKeys.gen_retcode: int(
-                arg_result[GenerateResult.process_retcode]
-            ),
-            GenerateKeys.gen_stdout: str(
-                arg_result[GenerateResult.process_stdout]
-            ),
-            GenerateKeys.gen_stderr: str(
-                arg_result[GenerateResult.process_stderr]
-            ),
-            GenerateKeys.gen_start: str(
-                arg_result[GenerateResult.process_start]
-            ),
+            GenerateKeys.gen_retcode: int(arg_result[GenerateResult.process_retcode]),
+            GenerateKeys.gen_stdout: str(arg_result[GenerateResult.process_stdout]),
+            GenerateKeys.gen_stderr: str(arg_result[GenerateResult.process_stderr]),
+            GenerateKeys.gen_start: str(arg_result[GenerateResult.process_start]),
             GenerateKeys.gen_end: str(arg_result[GenerateResult.process_end]),
             GenerateKeys.gen_seed: self.ctrl_item.seed,
             GenerateKeys.gen_total: my_result[GenerateResult.gen_total],
-            GenerateKeys.gen_secondary: my_result[
-                GenerateResult.gen_secondary
-            ],
+            GenerateKeys.gen_secondary: my_result[GenerateResult.gen_secondary],
             GenerateKeys.gen_default: my_result[GenerateResult.gen_default],
         }
 
@@ -107,13 +97,10 @@ class GenerateExecutor(AppExecutor):
             Msg.lout(my_match_files, "user", "Simulate File List")
             for my_src_file in my_match_files:
                 Msg.user(
-                    "Match File: %s, Suffix: %s"
-                    % (str(my_src_file), str(arg_suffix)),
+                    "Match File: %s, Suffix: %s" % (str(my_src_file), str(arg_suffix)),
                     "MATCH",
                 )
-                if SysUtils.found(
-                    my_src_file.find("_%s_force" % (str(arg_suffix)))
-                ):
+                if SysUtils.found(my_src_file.find("_%s_force" % (str(arg_suffix)))):
                     PathUtils.remove(my_src_file)
                     continue
 
@@ -121,9 +108,7 @@ class GenerateExecutor(AppExecutor):
         for my_mask in ["*.ELF", "*.S", "*.img"]:
             my_match_files = PathUtils.list_files(my_mask)
             for my_src_file in my_match_files:
-                my_tgt_file = my_src_file.replace(
-                    "_force", "_%s_force" % (str(arg_suffix))
-                )
+                my_tgt_file = my_src_file.replace("_force", "_%s_force" % (str(arg_suffix)))
                 PathUtils.rename(my_src_file, my_tgt_file)
 
         return True

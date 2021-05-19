@@ -463,15 +463,11 @@ ST_Float_map = InstructionMap("ST_Float_instructions", ST_Float_instructions)
 
 LDST_Byte_instructions = {"SB##RISCV": 10, "LB##RISCV": 10, "LBU##RISCV": 10}
 
-LDST_Byte_map = InstructionMap(
-    "LDST_Byte_instructions", LDST_Byte_instructions
-)
+LDST_Byte_map = InstructionMap("LDST_Byte_instructions", LDST_Byte_instructions)
 
 LDST_Half_instructions = {"SH##RISCV": 10, "LH##RISCV": 10, "LHU##RISCV": 10}
 
-LDST_Half_map = InstructionMap(
-    "LDST_Half_instructions", LDST_Half_instructions
-)
+LDST_Half_map = InstructionMap("LDST_Half_instructions", LDST_Half_instructions)
 
 LDST_Word_instructions = {
     "FLW##RISCV": 10,
@@ -485,9 +481,7 @@ LDST_Word_instructions = {
     "C.SWSP##RISCV": 10,
 }
 
-LDST_Word_map = InstructionMap(
-    "LDST_Word_instructions", LDST_Word_instructions
-)
+LDST_Word_map = InstructionMap("LDST_Word_instructions", LDST_Word_instructions)
 
 LDST_Double_instructions = {
     "FLD##RISCV": 10,
@@ -504,37 +498,23 @@ LDST_Double_instructions = {
     "C.SDSP##RISCV": 10,
 }
 
-LDST_Double_map = InstructionMap(
-    "LDST_Double_instructions", LDST_Double_instructions
-)
+LDST_Double_map = InstructionMap("LDST_Double_instructions", LDST_Double_instructions)
 
 # Combine groups
 LDST_Int_instructions = merge(LD_Int_instructions, ST_Int_instructions)
 LDST_Int_map = InstructionMap("LDST_Int_instructions", LDST_Int_instructions)
 
 LDST_Int32_instructions = merge(LD_Int32_instructions, ST_Int32_instructions)
-LDST_Int32_map = InstructionMap(
-    "LDST_Int32_instructions", LDST_Int32_instructions
-)
+LDST_Int32_map = InstructionMap("LDST_Int32_instructions", LDST_Int32_instructions)
 
 LDST_Float_instructions = merge(LD_Float_instructions, ST_Float_instructions)
-LDST_Float_map = InstructionMap(
-    "LDST_Float_instructions", LDST_Float_instructions
-)
+LDST_Float_map = InstructionMap("LDST_Float_instructions", LDST_Float_instructions)
 
-LDST_IntFloat_instructions = merge(
-    LDST_Float_instructions, LDST_Int_instructions
-)
-LDST_IntFloat_map = InstructionMap(
-    "LDST_IntFloat_instructions", LDST_IntFloat_instructions
-)
+LDST_IntFloat_instructions = merge(LDST_Float_instructions, LDST_Int_instructions)
+LDST_IntFloat_map = InstructionMap("LDST_IntFloat_instructions", LDST_IntFloat_instructions)
 
-LDST32_IntFloat_instructions = merge(
-    LDST_Float_instructions, LDST_Int32_instructions
-)
-LDST32_IntFloat_map = InstructionMap(
-    "LDST_IntFloat_instructions", LDST32_IntFloat_instructions
-)
+LDST32_IntFloat_instructions = merge(LDST_Float_instructions, LDST_Int32_instructions)
+LDST32_IntFloat_map = InstructionMap("LDST_IntFloat_instructions", LDST32_IntFloat_instructions)
 
 LD_C_instructions = {
     "C.FLD##RISCV": 10,
@@ -586,21 +566,15 @@ LDST_C32_map = InstructionMap("LDST_C32_instructions", LDST_C32_instructions)
 LDST_IFC_instructions = merge(LDST_IntFloat_instructions, LDST_C_instructions)
 LDST_IFC_map = InstructionMap("LDST_IFC_instructions", LDST_IFC_instructions)
 
-LDST32_IFC_instructions = merge(
-    LDST32_IntFloat_instructions, LDST_C32_instructions
-)
-LDST32_IFC_map = InstructionMap(
-    "LDST32_IFC_instructions", LDST32_IFC_instructions
-)
+LDST32_IFC_instructions = merge(LDST32_IntFloat_instructions, LDST_C32_instructions)
+LDST32_IFC_map = InstructionMap("LDST32_IFC_instructions", LDST32_IFC_instructions)
 
 # All LDST -   >>>> Needs V added <<<<<<
 LDST_All_instructions = merge(LDST_IFC_instructions)
 LDST_All_map = InstructionMap("LDST_All_instructions", LDST_All_instructions)
 
 LDST32_All_instructions = merge(LDST32_IFC_instructions)
-LDST32_All_map = InstructionMap(
-    "LDST32_All_instructions", LDST32_All_instructions
-)
+LDST32_All_map = InstructionMap("LDST32_All_instructions", LDST32_All_instructions)
 
 BranchJump_instructions = {
     "BEQ##RISCV": 10,
@@ -613,9 +587,7 @@ BranchJump_instructions = {
     "JALR##RISCV": 10,
 }
 
-BranchJump_map = InstructionMap(
-    "BranchJump_instructions", BranchJump_instructions
-)
+BranchJump_map = InstructionMap("BranchJump_instructions", BranchJump_instructions)
 
 ALU_Int32_instructions = {
     "ADD##RISCV": 10,
@@ -641,9 +613,7 @@ ALU_Int32_instructions = {
     "XORI##RISCV": 10,
 }
 
-ALU_Int32_map = InstructionMap(
-    "ALU_Int32_instructions", ALU_Int32_instructions
-)
+ALU_Int32_map = InstructionMap("ALU_Int32_instructions", ALU_Int32_instructions)
 
 ALU_Int64_instructions = {
     "ADDIW##RISCV": 10,
@@ -660,9 +630,7 @@ ALU_Int64_instructions = {
     "SUBW##RISCV": 10,
 }
 
-ALU_Int64_map = InstructionMap(
-    "ALU_Int64_instructions", ALU_Int64_instructions
-)
+ALU_Int64_map = InstructionMap("ALU_Int64_instructions", ALU_Int64_instructions)
 
 ALU_Float_Single_instructions = {
     "FADD.S##RISCV": 10,
@@ -741,12 +709,8 @@ FCVT_instructions = {
 
 FCVT_map = InstructionMap("FCVT_instructions", FCVT_instructions)
 
-ALU_Float_All_instructions = merge(
-    ALU_Float_Single_instructions, ALU_Float_Double_instructions
-)
-ALU_Float_All_map = InstructionMap(
-    "ALU_Float_All_instructions", ALU_Float_All_instructions
-)
+ALU_Float_All_instructions = merge(ALU_Float_Single_instructions, ALU_Float_Double_instructions)
+ALU_Float_All_map = InstructionMap("ALU_Float_All_instructions", ALU_Float_All_instructions)
 
 BranchJump_C_instructions = {
     "C.BEQZ##RISCV": 10,
@@ -756,9 +720,7 @@ BranchJump_C_instructions = {
     "C.JR##RISCV": 10,
 }
 
-BranchJump_C_map = InstructionMap(
-    "BranchJump_C_instructions", BranchJump_C_instructions
-)
+BranchJump_C_map = InstructionMap("BranchJump_C_instructions", BranchJump_C_instructions)
 
 ALU_Int_C_instructions = {
     "C.ADD##RISCV": 10,
@@ -800,13 +762,9 @@ ALU_Int32_C_instructions = {
     "C.XOR##RISCV": 10,
 }
 
-ALU_Int_C_map = InstructionMap(
-    "ALU_Int_C_instructions", ALU_Int_C_instructions
-)
+ALU_Int_C_map = InstructionMap("ALU_Int_C_instructions", ALU_Int_C_instructions)
 
-RV_C_instructions = merge(
-    ALU_Int_C_instructions, BranchJump_C_instructions, LDST_C_instructions
-)
+RV_C_instructions = merge(ALU_Int_C_instructions, BranchJump_C_instructions, LDST_C_instructions)
 
 RV_C_map = {ALU_Int_C_map: 10, BranchJump_C_map: 10, LDST_C_map: 10}
 
@@ -816,13 +774,9 @@ ALU_Int_All_instructions = merge(
     ALU_M_instructions,
     ALU_Int_C_instructions,
 )
-ALU_Int_All_map = InstructionMap(
-    "ALU_Int_All_instructions", ALU_Int_All_instructions
-)
+ALU_Int_All_map = InstructionMap("ALU_Int_All_instructions", ALU_Int_All_instructions)
 
 ALU_Int32_All_instructions = merge(
     ALU_Int32_instructions, RV32M_instructions, ALU_Int32_C_instructions
 )
-ALU_Int32_All_map = InstructionMap(
-    "ALU_Int32_All_instructions", ALU_Int32_All_instructions
-)
+ALU_Int32_All_map = InstructionMap("ALU_Int32_All_instructions", ALU_Int32_All_instructions)

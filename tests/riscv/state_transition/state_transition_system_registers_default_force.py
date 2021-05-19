@@ -70,9 +70,7 @@ class MainSequence(Sequence):
 
         stvec_name = "stvec"
         mode_val = RandomUtils.random32(0, 1)
-        state.addSystemRegisterStateElementByField(
-            stvec_name, "MODE", mode_val
-        )
+        state.addSystemRegisterStateElementByField(stvec_name, "MODE", mode_val)
         self.randomInitializeRegister(stvec_name)
         (stvec_val, valid) = self.readRegister(stvec_name)
         utils.assert_valid_register_value(self, stvec_name, valid)
@@ -81,9 +79,7 @@ class MainSequence(Sequence):
         )
         expected_sys_reg_state_data.append((stvec_name, stvec_val))
 
-        self._mExpectedStateData[
-            EStateElementType.SystemRegister
-        ] = expected_sys_reg_state_data
+        self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
 
         return state
 

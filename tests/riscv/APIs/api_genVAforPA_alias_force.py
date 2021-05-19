@@ -20,12 +20,8 @@ from base.Sequence import Sequence
 
 class MainSequence(Sequence):
     def generate(self, **kargs):
-        rand_PA = self.genPA(
-            Size=8, Align=8, Type="D", Bank="Default", CanAlias=1
-        )
-        rand_VA_1 = self.genVAforPA(
-            PA=rand_PA, Bank="Default", FlatMap=0, Type="D", Size=8
-        )
+        rand_PA = self.genPA(Size=8, Align=8, Type="D", Bank="Default", CanAlias=1)
+        rand_VA_1 = self.genVAforPA(PA=rand_PA, Bank="Default", FlatMap=0, Type="D", Size=8)
         rand_VA_2 = self.genVAforPA(
             PA=rand_PA,
             Bank="Default",

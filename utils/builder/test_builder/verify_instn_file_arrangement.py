@@ -148,9 +148,7 @@ class ParseFiles:
                 # Parse the force file and get just the instructions
                 try:
                     all_instns = self.parseFileIntoArray(open(force_file, "r"))
-                    self.master_instns_in_force_file_dict[
-                        force_file
-                    ] = all_instns
+                    self.master_instns_in_force_file_dict[force_file] = all_instns
                 except LookupError:
                     print(
                         "ALERT: %s was improperly formatted. Ignoring this "
@@ -172,9 +170,7 @@ class ParseFiles:
             raise LookupError("Force file improperly formatted.")
 
         # Skip over to the actual instn array
-        instn_array_start_index = (
-            instn_array_index + self.FORCE_FILE_START_SENTINEL_LEN
-        )
+        instn_array_start_index = instn_array_index + self.FORCE_FILE_START_SENTINEL_LEN
 
         # Find the end of the instn array
         file_data = file_data[instn_array_start_index:]
@@ -183,9 +179,7 @@ class ParseFiles:
             raise LookupError("Force file improperly formatted.")
 
         # Get the instn array only
-        instn_array_end_index = (
-            instn_array_index + self.FORCE_FILE_END_SENTINEL_LEN
-        )
+        instn_array_end_index = instn_array_index + self.FORCE_FILE_END_SENTINEL_LEN
         instn_array_str = file_data[:instn_array_end_index]
 
         instn_array_str = instn_array_str.replace(" ", "").replace("\t", "")
@@ -198,9 +192,7 @@ class ParseFiles:
             os.chdir("%s" % (dirName))
             print("Parsing %s" % dirName)
 
-            self.master_force_files_dict[dirName] = glob(
-                os.getcwd() + "/*_force.py"
-            )
+            self.master_force_files_dict[dirName] = glob(os.getcwd() + "/*_force.py")
 
     def constructDirMappings(self):
         self.master_force_files_dict = dict()
@@ -244,15 +236,10 @@ class ParseFiles:
                     other.master_instns_in_force_file_dict[force_file]
                 )
 
-            if sorted(all_instns_in_this_dir_for_this) != sorted(
-                all_instns_in_this_dir_for_other
-            ):
+            if sorted(all_instns_in_this_dir_for_this) != sorted(all_instns_in_this_dir_for_other):
                 return False
 
-        print(
-            "Organization of instructions within the directory structure "
-            "looks correct."
-        )
+        print("Organization of instructions within the directory structure " "looks correct.")
         return True
 
 

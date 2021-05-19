@@ -44,9 +44,7 @@ class ThreadSplitterSequence(Sequence):
             )  # Get the thread ID
 
             load_gpr64_seq = LoadGPR64(self.genThread)
-            load_gpr64_seq.load(
-                pc_offset_reg_index, PcConfig.get_boot_pc_offset()
-            )
+            load_gpr64_seq.load(pc_offset_reg_index, PcConfig.get_boot_pc_offset())
             self.genInstruction(
                 "MUL##RISCV",
                 {

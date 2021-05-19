@@ -54,9 +54,7 @@ class SequenceLibrary(object):
         for item in shuffled_list:
             name = item[0]
             path = item[1]
-            yield from self._getPermutatedFromName(
-                name, path, skip_weight_check
-            )
+            yield from self._getPermutatedFromName(name, path, skip_weight_check)
 
     #
     # Note: The following methods are called within Sequence Library
@@ -91,9 +89,7 @@ class SequenceLibrary(object):
     def _getPermutatedFromName(self, name, path, skip_weight_check):
         myClass = self._getClass(name, path)
         if myClass is not None:
-            yield from self._getPermutatedFromClass(
-                name, path, myClass, skip_weight_check
-            )
+            yield from self._getPermutatedFromClass(name, path, myClass, skip_weight_check)
 
     # import a reference class based on given class name and module path
     def _getClass(self, name, path):
@@ -111,9 +107,7 @@ class SequenceLibrary(object):
     def _chooseSequenceFromClass(self, name, path, my_class):
         if issubclass(my_class, Sequence):
             key = name + path
-            mySeq = self.seqDict.setdefault(
-                key, self._generateSeqInstance(my_class)
-            )
+            mySeq = self.seqDict.setdefault(key, self._generateSeqInstance(my_class))
             return mySeq
         elif issubclass(my_class, SequenceLibrary):
             mySeqLib = self._generateSeqLibInstance(my_class)
@@ -124,9 +118,7 @@ class SequenceLibrary(object):
     def _getPermutatedFromClass(self, name, path, my_class, skip_weight_check):
         if issubclass(my_class, Sequence):
             key = name + path
-            mySeq = self.seqDict.setdefault(
-                key, self._generateSeqInstance(my_class)
-            )
+            mySeq = self.seqDict.setdefault(key, self._generateSeqInstance(my_class))
             yield mySeq
         elif issubclass(my_class, SequenceLibrary):
             mySeqLib = self._generateSeqLibInstance(my_class)

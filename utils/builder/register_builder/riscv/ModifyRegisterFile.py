@@ -40,28 +40,18 @@ class Files:
         if aArguments is None:
             return
 
-        (self.mSystemRegisterFile, self.mSystemFlag) = self.setupFile(
-            aArguments.system, "system"
-        )
-        (self.mAppRegisterFile, self.mAppFlag) = self.setupFile(
-            aArguments.app, "app"
-        )
-        (self.mImplRegisterFile, self.mImplFlag) = self.setupFile(
-            aArguments.impl, "impl"
-        )
+        (self.mSystemRegisterFile, self.mSystemFlag) = self.setupFile(aArguments.system, "system")
+        (self.mAppRegisterFile, self.mAppFlag) = self.setupFile(aArguments.app, "app")
+        (self.mImplRegisterFile, self.mImplFlag) = self.setupFile(aArguments.impl, "impl")
         (self.mRegisterChoicesFile, _) = self.setupFile(
             aArguments.register_choices, "register_choices"
         )
-        (self.mFieldChoicesFile, _) = self.setupFile(
-            aArguments.field_choices, "field_choices"
-        )
+        (self.mFieldChoicesFile, _) = self.setupFile(aArguments.field_choices, "field_choices")
 
         self.mRegisterChangeFile = aArguments.data
 
         if self.mRegisterChangeFile:
-            print(
-                "Using '%s' as register change file" % self.mRegisterChangeFile
-            )
+            print("Using '%s' as register change file" % self.mRegisterChangeFile)
 
         self.mRegisterFile = RISCV.RegisterFile(self.mInput)
 
@@ -77,13 +67,9 @@ class Files:
                 aFilesToAdd["system"], "system"
             )
         if "app" in aFilesToAdd:
-            (self.mAppRegisterFile, self.mAppFlag) = self.setupFile(
-                aFilesToAdd["app"], "app"
-            )
+            (self.mAppRegisterFile, self.mAppFlag) = self.setupFile(aFilesToAdd["app"], "app")
         if "impl" in aFilesToAdd:
-            (self.mImplRegisterFile, self.mImplFlag) = self.setupFile(
-                aFilesToAdd["impl"], "impl"
-            )
+            (self.mImplRegisterFile, self.mImplFlag) = self.setupFile(aFilesToAdd["impl"], "impl")
         if "register_choices" in aFilesToAdd:
             (self.mRegisterChoicesFile, _) = self.setupFile(
                 aFilesToAdd["register_choices"], "register_choices"
@@ -96,10 +82,7 @@ class Files:
         self.mRegisterChangeFile = aModsFile
 
         if self.mRegisterChangeFile:
-            print(
-                "\tUsing '%s' as register change file"
-                % self.mRegisterChangeFile
-            )
+            print("\tUsing '%s' as register change file" % self.mRegisterChangeFile)
 
         self.mRegisterFile = RISCV.RegisterFile(self.mInput)
 
@@ -129,14 +112,10 @@ class Files:
                 self.mRegisterFile.deleteRegisterFromFile(register)
         if hasattr(data, "new_physical_registers"):
             for physical_register in data.new_physical_registers:
-                self.mRegisterFile.addPhysicalRegisterFromFile(
-                    physical_register
-                )
+                self.mRegisterFile.addPhysicalRegisterFromFile(physical_register)
         if hasattr(data, "delete_register_choices"):
             for register_choice in data.delete_register_choices:
-                self.mRegisterFile.deleteRegisterChoiceFromFile(
-                    register_choice
-                )
+                self.mRegisterFile.deleteRegisterChoiceFromFile(register_choice)
         if hasattr(data, "copy_registers"):
             for register in data.copy_registers:
                 self.mRegisterFile.copyRegisterFromFile(register)
@@ -145,9 +124,7 @@ class Files:
                 self.mRegisterFile.updateRegisterAttributeFromFile(attribute)
         if hasattr(data, "changed_physical_reg_attr"):
             for attribute in data.changed_physical_reg_attr:
-                self.mRegisterFile.updatePhysicalRegisterAttributeFromFile(
-                    attribute
-                )
+                self.mRegisterFile.updatePhysicalRegisterAttributeFromFile(attribute)
         if hasattr(data, "new_field_choices"):
             for choice in data.new_field_choices:
                 self.mRegisterFile.updateFieldChoices(choice)
@@ -176,13 +153,9 @@ class Files:
                 self.mSystemRegisterFile, aLicenseText
             )
         if self.mAppFlag:
-            self.mRegisterFile.outputAppRegisterFileFromTree(
-                self.mAppRegisterFile, aLicenseText
-            )
+            self.mRegisterFile.outputAppRegisterFileFromTree(self.mAppRegisterFile, aLicenseText)
         if self.mImplFlag:
-            self.mRegisterFile.outputImplRegisterFileFromTree(
-                self.mImplRegisterFile, aLicenseText
-            )
+            self.mRegisterFile.outputImplRegisterFileFromTree(self.mImplRegisterFile, aLicenseText)
         if self.mRegisterChoicesFile:
             self.mRegisterFile.outputRiscVRegisterChoicesFile(
                 self.mRegisterChoicesFile, aLicenseText
@@ -195,24 +168,16 @@ class Files:
 
 #  Parsing arguments and modifying files according to the modification file
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Processes file location arguments"
-    )
+    parser = argparse.ArgumentParser(description="Processes file location arguments")
 
-    parser.add_argument(
-        "--system", help="Path to existing system register XML file"
-    )
+    parser.add_argument("--system", help="Path to existing system register XML file")
     parser.add_argument("--app", help="Path to existing app register XML file")
     parser.add_argument(
         "--impl",
         help="Path to existing implementation defined " "register XML file",
     )
-    parser.add_argument(
-        "--register_choices", help="Path to existing register choices XML file"
-    )
-    parser.add_argument(
-        "--field_choices", help="Path to existing field choices XML file"
-    )
+    parser.add_argument("--register_choices", help="Path to existing register choices XML file")
+    parser.add_argument("--field_choices", help="Path to existing field choices XML file")
     parser.add_argument(
         "--data",
         help="Path to modification file for already defined " "registers",

@@ -214,9 +214,7 @@ def adjust_imm12_rs1_rd(instr):
         attr_dict["element-size"] = size
         attr_dict["mem-access"] = "Read"
 
-        add_addressing_operand(
-            instr, None, "LoadStore", None, subop_dict, attr_dict
-        )
+        add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
         return True
 
     # print ("instruction: %s" % instr.get_full_ID())
@@ -317,9 +315,7 @@ def adjust_jal(instr):
     attr_dict["offset-scale"] = "1"
     class_name = "PcRelativeBranchOperand"
 
-    add_addressing_operand(
-        instr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
     return True
 
 
@@ -341,9 +337,7 @@ def adjust_jalr(instr):
     attr_dict["base"] = "rs1"
     class_name = "BaseOffsetBranchOperand"
 
-    add_addressing_operand(
-        instr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
     return True
 
 
@@ -380,9 +374,7 @@ def adjust_branches(instr):
     elif instr.name == "BNE":
         attr_dict["condition"] = "BNE"
 
-    add_addressing_operand(
-        instr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
     return True
 
 
@@ -415,9 +407,7 @@ def adjust_int_load(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -467,9 +457,7 @@ def adjust_int_stores(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -512,9 +500,7 @@ def adjust_fp_stores(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
 
     return True
 
@@ -556,9 +542,7 @@ def adjust_aq_rs2(instr):
         attr_dict["sorder"] = order
         attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -590,9 +574,7 @@ def adjust_aq_rs1(instr):
     attr_dict["mem-access"] = "Read"
     attr_dict["lorder"] = "Ordered"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 

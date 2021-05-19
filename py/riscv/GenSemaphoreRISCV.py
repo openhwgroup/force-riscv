@@ -42,9 +42,7 @@ class GenSemaphoreRISCV(GenSemaphore):
             self.unreserveRegister("x%d" % self.mAddrReg)
 
     def _acquireSemaphore(self):
-        (self._mCounterReg, self._mStatusReg) = self.getRandomGPRs(
-            2, exclude="0"
-        )
+        (self._mCounterReg, self._mStatusReg) = self.getRandomGPRs(2, exclude="0")
 
         block_id = self.beginLinearBlock()
 

@@ -81,9 +81,7 @@ class MainSequence(Sequence):
             myInstrList.append(instr_rec)
 
         self.notice("Query generated instruction information...")
-        self.notice(
-            "!!! Randomly pick from the instruction record to print !!!"
-        )
+        self.notice("!!! Randomly pick from the instruction record to print !!!")
 
         for instr in myInstrList:
             instr_query_result = self.queryInstructionRecord(instr)
@@ -136,9 +134,7 @@ class MainSequence(Sequence):
                     index = v
                 # get status register information
                 if name:
-                    self.notice(
-                        "Randomly pick one status register information..."
-                    )
+                    self.notice("Randomly pick one status register information...")
                     reg_dict = self.getRegisterInfo(name, index)
                     a, b = self.choice(reg_dict)
                     if a == "Type":

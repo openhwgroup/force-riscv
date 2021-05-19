@@ -28,13 +28,11 @@ class MyMainSequence(Sequence):
 
         if not valid:
             self.error(
-                ">>>>>  No 'loopCount' option was specified.  "
-                "Value is {}.".format(loopCount)
+                ">>>>>  No 'loopCount' option was specified.  " "Value is {}.".format(loopCount)
             )
         else:
             self.notice(
-                ">>>>>  Value specified for 'loopCount' option is:  "
-                "{}".format(loopCount)
+                ">>>>>  Value specified for 'loopCount' option is:  " "{}".format(loopCount)
             )
 
         instrs = (

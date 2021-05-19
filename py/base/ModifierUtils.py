@@ -19,18 +19,10 @@ from base.ChoicesModifier import ChoicesModifier
 class AddressReuseEnabledChoicesModifier(ChoicesModifier):
     def apply(self, **kwargs):
         reuse_mod_dict = {"No reuse": 0, "Reuse": 100}
-        self.modifyOperandChoices(
-            "Read after read address reuse", reuse_mod_dict
-        )
-        self.modifyOperandChoices(
-            "Read after write address reuse", reuse_mod_dict
-        )
-        self.modifyOperandChoices(
-            "Write after read address reuse", reuse_mod_dict
-        )
-        self.modifyOperandChoices(
-            "Write after write address reuse", reuse_mod_dict
-        )
+        self.modifyOperandChoices("Read after read address reuse", reuse_mod_dict)
+        self.modifyOperandChoices("Read after write address reuse", reuse_mod_dict)
+        self.modifyOperandChoices("Write after read address reuse", reuse_mod_dict)
+        self.modifyOperandChoices("Write after write address reuse", reuse_mod_dict)
         self.commitSet()
 
 
@@ -59,9 +51,7 @@ class UnalignedDataOnlyChoicesModifier(ChoicesModifier):
 class DataProcessingAddressResultChoicesModifier(ChoicesModifier):
     def apply(self, **kwargs):
         data_proc_result_mod_dict = {"Load store address": 100, "Random": 0}
-        self.modifyOperandChoices(
-            "Data processing result", data_proc_result_mod_dict
-        )
+        self.modifyOperandChoices("Data processing result", data_proc_result_mod_dict)
         self.commitSet()
 
 

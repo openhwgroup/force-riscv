@@ -71,9 +71,7 @@ class PrivilegeLevelHandlerSet(Sequence):
         self.default_set_name = kwargs[
             "default_set_name"
         ]  # impacts scratch registers, handler generation
-        self.nextCodeAddresses = kwargs[
-            "handler_memory"
-        ]  # code allocated sequentially, from here
+        self.nextCodeAddresses = kwargs["handler_memory"]  # code allocated sequentially, from here
 
         for (mem_bank, addr) in self.nextCodeAddresses.items():
             self._debugPrint("NEXT %s CODE ADDR: 0x%x" % (mem_bank, addr))
@@ -99,9 +97,9 @@ class PrivilegeLevelHandlerSet(Sequence):
                 )
             )
 
-            self.security_state_handler_sets[
-                security_state
-            ].assignSynchronousExceptionHandler(aAssignmentRequest)
+            self.security_state_handler_sets[security_state].assignSynchronousExceptionHandler(
+                aAssignmentRequest
+            )
 
     # assignAsynchronousExceptionHandler - assign asynchronous exception
     #       handler code-generator
@@ -120,18 +118,12 @@ class PrivilegeLevelHandlerSet(Sequence):
         self.setPEstate("PC", start_addr)
 
         err_code = self.getDispatchErrorCode()
-        handler_context = self.createExceptionHandlerContext(
-            err_code, default_mem_bank
-        )
+        handler_context = self.createExceptionHandlerContext(err_code, default_mem_bank)
         aSyncDispatcher.generatePreDispatch(handler_context)
 
-        security_state_handler_set = self.security_state_handler_sets[
-            aSecurityState
-        ]
+        security_state_handler_set = self.security_state_handler_sets[aSecurityState]
         ss_handlers = security_state_handler_set
-        handler_assignments = (
-            ss_handlers.getSynchronousExceptionHandlerAssignments()
-        )
+        handler_assignments = ss_handlers.getSynchronousExceptionHandlerAssignments()
         self._generateSynchronousDispatchLevel(
             self.getExceptionCodeClass(),
             handler_assignments,
@@ -148,20 +140,14 @@ class PrivilegeLevelHandlerSet(Sequence):
 
     # method used to generate asynchronous handlers
     def generateAsynchronousHandler(self, security_state):
-        self.debug(
-            "[GENHANDLER] [%s] err-code: asynchronous\n" % self.privLevel
-        )
+        self.debug("[GENHANDLER] [%s] err-code: asynchronous\n" % self.privLevel)
 
         default_mem_bank = security_state.getDefaultMemoryBank()
 
         # generate asynchronous exception handler, indexed by exc vector offset
         repo = self.memBankHandlerRegistryRepo
-        mem_bank_handler_registry = repo.getMemoryBankHandlerRegistry(
-            default_mem_bank
-        )
-        handler = mem_bank_handler_registry.getExceptionHandler(
-            self.master_async_handler_name
-        )
+        mem_bank_handler_registry = repo.getMemoryBankHandlerRegistry(default_mem_bank)
+        handler = mem_bank_handler_registry.getExceptionHandler(self.master_async_handler_name)
 
         # generate the handler; record its address
         save_pc = self.getPEstate("PC")
@@ -171,18 +157,14 @@ class PrivilegeLevelHandlerSet(Sequence):
         err_code = self.getAsynchronousHandlerErrorCode()
         handler.generateRoutine(
             self._getHandlerRoutineName(handler),
-            handler_context=self.createExceptionHandlerContext(
-                err_code, default_mem_bank
-            ),
+            handler_context=self.createExceptionHandlerContext(err_code, default_mem_bank),
         )
 
         end_addr = self.getPEstate("PC")
         self.setPEstate("PC", save_pc)
         self.nextCodeAddresses[default_mem_bank] = end_addr
 
-        self.recordSpecificHandlerBoundary(
-            default_mem_bank, err_code, start_addr, end_addr
-        )
+        self.recordSpecificHandlerBoundary(default_mem_bank, err_code, start_addr, end_addr)
 
     # method used to generate synchronous exception dispatcher
     def generateUserSyncDispatch(self, security_state, sync_dispatcher):
@@ -194,18 +176,14 @@ class PrivilegeLevelHandlerSet(Sequence):
 
         err_code = self.getDispatchErrorCode()
         sync_dispatch_addr = sync_dispatcher.generate(
-            handler_context=self.createExceptionHandlerContext(
-                err_code, default_mem_bank
-            )
+            handler_context=self.createExceptionHandlerContext(err_code, default_mem_bank)
         )
 
         end_addr = self.getPEstate("PC")
         self.setPEstate("PC", save_pc)
         self.nextCodeAddresses[default_mem_bank] = end_addr
 
-        self.recordSpecificHandlerBoundary(
-            default_mem_bank, err_code, start_addr, end_addr
-        )
+        self.recordSpecificHandlerBoundary(default_mem_bank, err_code, start_addr, end_addr)
         return start_addr
 
     def getNextCodeAddress(self, aMemBank):
@@ -213,28 +191,18 @@ class PrivilegeLevelHandlerSet(Sequence):
 
     def genJumpToAsynchronousHandler(self, aSecurityState):
         repo = self.memBankHandlerRegistryRepo
-        registry = repo.getMemoryBankHandlerRegistry(
-            aSecurityState.getDefaultMemoryBank()
-        )
+        registry = repo.getMemoryBankHandlerRegistry(aSecurityState.getDefaultMemoryBank())
         handler = registry.getExceptionHandler(self.master_async_handler_name)
         handler.jumpToRoutine(self._getHandlerRoutineName(handler))
 
     def getSynchronousExceptionHandler(self, security_state, exception_class):
-        security_state_handler_set = self.security_state_handler_sets[
-            security_state
-        ]
+        security_state_handler_set = self.security_state_handler_sets[security_state]
 
         ss_handlers = security_state_handler_set
-        assignment = ss_handlers.getSynchronousExceptionHandlerAssignment(
-            exception_class
-        )
+        assignment = ss_handlers.getSynchronousExceptionHandlerAssignment(exception_class)
         repo = self.memBankHandlerRegistryRepo
-        mem_bank_handler_registry = repo.getMemoryBankHandlerRegistry(
-            assignment.mMemBank
-        )
-        handler = mem_bank_handler_registry.getExceptionHandler(
-            assignment.mHandlerClassName
-        )
+        mem_bank_handler_registry = repo.getMemoryBankHandlerRegistry(assignment.mMemBank)
+        handler = mem_bank_handler_registry.getExceptionHandler(assignment.mHandlerClassName)
         return handler
 
     def getHandlerBoundaries(self, mem_bank):
@@ -246,9 +214,7 @@ class PrivilegeLevelHandlerSet(Sequence):
     def getExceptionCodeClass(self):
         raise NotImplementedError
 
-    def recordSpecificHandlerBoundary(
-        self, mem_bank, handler_name, start_addr, end_addr
-    ):
+    def recordSpecificHandlerBoundary(self, mem_bank, handler_name, start_addr, end_addr):
         raise NotImplementedError
 
     def getAsynchronousHandlerErrorCode(self):
@@ -282,10 +248,7 @@ class PrivilegeLevelHandlerSet(Sequence):
 
         # Leave space to generate a jump table after generating the handlers
         jump_table_pc = self.getPEstate("PC")
-        handler_pc = (
-            jump_table_pc
-            + len(aHandlerAssignments) * self.getInstructionLength()
-        )
+        handler_pc = jump_table_pc + len(aHandlerAssignments) * self.getInstructionLength()
         self.setPEstate("PC", handler_pc)
 
         dispatch_addresses = {}
@@ -322,10 +285,7 @@ class PrivilegeLevelHandlerSet(Sequence):
     def _generateSynchronousHandler(
         self, aExceptionClass, aHandlerClassName, aMemBank, aSecurityState
     ):
-        self.debug(
-            "[GENHANDLER] [%s] err-code: 0x%x\n"
-            % (self.privLevel, aExceptionClass.value)
-        )
+        self.debug("[GENHANDLER] [%s] err-code: 0x%x\n" % (self.privLevel, aExceptionClass.value))
 
         # generate synchronous exception handler, indexed by error code
         repo = self.memBankHandlerRegistryRepo
@@ -339,9 +299,7 @@ class PrivilegeLevelHandlerSet(Sequence):
         handler_routine_name = self._getHandlerRoutineName(handler)
         if not handler.hasGeneratedRoutine(handler_routine_name):
             start_addr = self.getPEstate("PC")
-            self._generateSynchronousHandlerRoutine(
-                aMemBank, aSecurityState, err_code, handler
-            )
+            self._generateSynchronousHandlerRoutine(aMemBank, aSecurityState, err_code, handler)
 
             self.debug(
                 "[GENHANDLER] [%s] NEW CUSTOM SYNC HANDLER AT ADDR: "
@@ -357,27 +315,21 @@ class PrivilegeLevelHandlerSet(Sequence):
             info_set = {"Function": "AddrTableEC", "EC": err_code}
             self.exceptionRequest("UpdateHandlerInfo", info_set)
 
-    def _generateJumpTable(
-        self, aSortedHandlerAssignments, aDispatchAddresses
-    ):
+    def _generateJumpTable(self, aSortedHandlerAssignments, aDispatchAddresses):
         assembly_helper = self.factory.createAssemblyHelper(self)
         for (
             exception_class,
             handler_assignment,
         ) in aSortedHandlerAssignments:
             if handler_assignment.hasSubassignments():
-                assembly_helper.genRelativeBranchToAddress(
-                    aDispatchAddresses[exception_class]
-                )
+                assembly_helper.genRelativeBranchToAddress(aDispatchAddresses[exception_class])
             else:
                 self._genJumpToSynchronousHandler(
                     handler_assignment.mHandlerClassName,
                     handler_assignment.mMemBank,
                 )
 
-    def _generateSynchronousHandlerRoutine(
-        self, aMemBank, aSecurityState, aErrCode, aHandler
-    ):
+    def _generateSynchronousHandlerRoutine(self, aMemBank, aSecurityState, aErrCode, aHandler):
         start_addr = self.getPEstate("PC")
 
         # The dispatch code and jump tables will be generated in the
@@ -394,9 +346,7 @@ class PrivilegeLevelHandlerSet(Sequence):
         handler_routine_name = self._getHandlerRoutineName(aHandler)
         aHandler.generateRoutine(
             handler_routine_name,
-            handler_context=self.createExceptionHandlerContext(
-                aErrCode, aMemBank
-            ),
+            handler_context=self.createExceptionHandlerContext(aErrCode, aMemBank),
         )
 
         end_addr = self.getPEstate("PC")
@@ -405,9 +355,7 @@ class PrivilegeLevelHandlerSet(Sequence):
             self.nextCodeAddresses[aMemBank] = end_addr
 
         # Update the dictionary with the new addresses
-        self.recordSpecificHandlerBoundary(
-            aMemBank, aErrCode, start_addr, end_addr
-        )
+        self.recordSpecificHandlerBoundary(aMemBank, aErrCode, start_addr, end_addr)
 
     def _genJumpToSynchronousHandler(self, aHandlerClassName, aMemBank):
         repo = self.memBankHandlerRegistryRepo

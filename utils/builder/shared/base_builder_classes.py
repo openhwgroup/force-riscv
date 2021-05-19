@@ -38,9 +38,7 @@ class BuilderFactory:
 
 
 class BaseParser:
-    def __init__(
-        self, input_files=None, arch="", builder_type="", aggregate=False
-    ):
+    def __init__(self, input_files=None, arch="", builder_type="", aggregate=False):
         # ensure input files not empty for parser class
         if input_files is None:
             raise ValueError(input_files)
@@ -57,13 +55,10 @@ class BaseParser:
         # architecture/builder_type
         builder_factory = BuilderFactory(arch, builder_type)
         try:
-            (self.mReader, self.mWriter) = builder_factory.get_rw_objets(
-                arch, builder_type
-            )
+            (self.mReader, self.mWriter) = builder_factory.get_rw_objets(arch, builder_type)
         except ValueError as err:
             print(
-                "Builder object failed to create, invalid input "
-                "specified: {}".format(err.args)
+                "Builder object failed to create, invalid input " "specified: {}".format(err.args)
             )
         # aggregation of output data for debug or aggregated output mode
         self.mOutputData = []

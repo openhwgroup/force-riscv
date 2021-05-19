@@ -60,9 +60,7 @@ class IGroupByNumber(object):
         # Same logic as the corresponding function in InstructionFormatGroup
         # in instruction_format_group.py
         file_name = "T%d-" % len(self.instructions) + self.name
-        file_name = file_name.replace(
-            "|", "Or"
-        )  # | will be mistaken as file pipe in bash
+        file_name = file_name.replace("|", "Or")  # | will be mistaken as file pipe in bash
         file_name = file_name.replace(
             "[", "+"
         )  # [] will be mistaken as regular expression in file name
@@ -118,9 +116,7 @@ class InstructionNumGroup(object):
         self.IList.append(
             IGroupByNumber(
                 grpSize,
-                "Grouping_0"
-                if use_standard_template
-                else "Grouping_NonStandard_0",
+                "Grouping_0" if use_standard_template else "Grouping_NonStandard_0",
             )
         )
         self.IGenList.append(
@@ -134,9 +130,7 @@ class InstructionNumGroup(object):
         self.IAtomicList.append(
             IGroupByNumber(
                 grpSize,
-                "Atomic_Grouping_0"
-                if use_standard_template
-                else "Atomic_Grouping_NonStandard_0",
+                "Atomic_Grouping_0" if use_standard_template else "Atomic_Grouping_NonStandard_0",
             )
         )
 
@@ -161,19 +155,13 @@ class InstructionNumGroup(object):
             )
         else:
             activeIList = self.IList
-            groupingPrefix = (
-                "Grouping_"
-                if self.use_standard_template
-                else "Grouping_NonStandard_"
-            )
+            groupingPrefix = "Grouping_" if self.use_standard_template else "Grouping_NonStandard_"
         igrp = activeIList[len(activeIList) - 1]
         # If the newest group of instructions is full, then create a new group
         # w/ the same naming convention
         if igrp.sizeUsed() >= igrp.maxSize():
             activeIList.append(
-                IGroupByNumber(
-                    igrp.maxSize(), groupingPrefix + str(len(activeIList))
-                )
+                IGroupByNumber(igrp.maxSize(), groupingPrefix + str(len(activeIList)))
             )
             # Update reference to the newest group of instructions that we just
             # added

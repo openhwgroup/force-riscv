@@ -42,17 +42,11 @@ class DefaultSyncDispatcher(SyncDispatcherBaseRISCV):
         priv_level_reg_index = aHandlerContext.getScratchRegisterIndices(
             RegisterCallRole.PRIV_LEVEL_VALUE
         )
-        cause_reg_index = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.CAUSE_VALUE
-        )
-        err_code_reg_index = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.EC_VALUE
-        )
+        cause_reg_index = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.CAUSE_VALUE)
+        err_code_reg_index = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.EC_VALUE)
 
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
-        self.mAssemblyHelper.genMoveImmediate(
-            priv_level_reg_index, priv_level.value
-        )
+        self.mAssemblyHelper.genMoveImmediate(priv_level_reg_index, priv_level.value)
         self.mAssemblyHelper.genReadSystemRegister(
             cause_reg_index, ("%scause" % priv_level.name.lower())
         )
@@ -86,16 +80,10 @@ class DefaultSyncDispatcher(SyncDispatcherBaseRISCV):
         (
             base_reg_index,
             offset_reg_index,
-        ) = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.TEMPORARY, 2
-        )
-        err_code_reg_index = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.EC_VALUE
-        )
+        ) = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 2)
+        err_code_reg_index = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.EC_VALUE)
 
-        self.genInstruction(
-            "AUIPC##RISCV", {"rd": base_reg_index, "simm20": 0}
-        )
+        self.genInstruction("AUIPC##RISCV", {"rd": base_reg_index, "simm20": 0})
         self.mAssemblyHelper.genAddImmediate(base_reg_index, 20)
 
         # Use error code as word offset into the table

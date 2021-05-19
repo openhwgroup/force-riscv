@@ -23,9 +23,7 @@ from common.sys_utils import SysUtils
 class DateTime(object):
     @classmethod
     def YMD(cls, arg_utcdt=None):
-        my_utcdt = SysUtils.ifthen(
-            arg_utcdt is None, datetime.utcnow(), arg_utcdt
-        )
+        my_utcdt = SysUtils.ifthen(arg_utcdt is None, datetime.utcnow(), arg_utcdt)
         return "%0.4d%0.2d%0.2d" % (
             my_utcdt.year,
             my_utcdt.month,
@@ -34,9 +32,7 @@ class DateTime(object):
 
     @classmethod
     def HMS(cls, arg_utcdt=None):
-        my_utcdt = SysUtils.ifthen(
-            arg_utcdt is None, datetime.utcnow(), arg_utcdt
-        )
+        my_utcdt = SysUtils.ifthen(arg_utcdt is None, datetime.utcnow(), arg_utcdt)
         return "%0.2d%0.2d%0.2d" % (
             my_utcdt.hour,
             my_utcdt.minute,
@@ -45,9 +41,7 @@ class DateTime(object):
 
     @classmethod
     def YMD_HMS(cls, arg_utcdt=None):
-        my_utcdt = SysUtils.ifthen(
-            arg_utcdt is None, datetime.utcnow(), arg_utcdt
-        )
+        my_utcdt = SysUtils.ifthen(arg_utcdt is None, datetime.utcnow(), arg_utcdt)
         return "%0.4d%0.2d%0.2d-%0.2d%0.2d%0.2d" % (
             my_utcdt.year,
             my_utcdt.month,
@@ -59,16 +53,12 @@ class DateTime(object):
 
     @classmethod
     def DateAsStr(cls, arg_utcdt=None):
-        my_utcdt = SysUtils.ifthen(
-            arg_utcdt is None, datetime.utcnow(), arg_utcdt
-        )
+        my_utcdt = SysUtils.ifthen(arg_utcdt is None, datetime.utcnow(), arg_utcdt)
         return str(my_utcdt.date())
 
     @classmethod
     def TimeAsStr(cls, arg_utcdt=None):
-        my_utcdt = SysUtils.ifthen(
-            arg_utcdt is None, datetime.utcnow(), arg_utcdt
-        )
+        my_utcdt = SysUtils.ifthen(arg_utcdt is None, datetime.utcnow(), arg_utcdt)
         return str(my_utcdt.time())
 
     @classmethod

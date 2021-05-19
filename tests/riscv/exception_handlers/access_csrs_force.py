@@ -46,9 +46,7 @@ class MainSequence(Sequence):
     def genRandomInstrs(self, min_cnt, max_cnt):
         # select random instructions from this group:
         instruction_group = (
-            RV32I_instructions
-            if self.getGlobalState("AppRegisterWidth")
-            else RV_A_instructions
+            RV32I_instructions if self.getGlobalState("AppRegisterWidth") else RV_A_instructions
         )
 
         for _ in range(RandomUtils.random32(min_cnt, max_cnt)):
@@ -107,9 +105,7 @@ class MainSequence(Sequence):
             # watch out for 'zero biased' CSR tree...
             return (None, False)
 
-        self.notice(
-            "ACCESS CSRS tree: '%s' csr: '%s'" % (csr_group_index, csr)
-        )
+        self.notice("ACCESS CSRS tree: '%s' csr: '%s'" % (csr_group_index, csr))
         return (csr, is_writable)
 
     # -----------------------------------------------------------------------
@@ -155,9 +151,7 @@ class MainSequence(Sequence):
             # generate some number of random instrs between the CSR read,
             # and a write to the same CSR...
 
-            self.reserveRegister(
-                scratch_reg_name
-            )  # but don't disturb the CSR read value
+            self.reserveRegister(scratch_reg_name)  # but don't disturb the CSR read value
 
             self.genRandomInstrs(0, 5)
 
@@ -173,9 +167,7 @@ class MainSequence(Sequence):
 
             exceptions_history = self.queryExceptions(EC="1,2")
             if len(exceptions_history) > 0:
-                self.error(
-                    "Unexpected exception on write access to CSR '%s'" % csr
-                )
+                self.error("Unexpected exception on write access to CSR '%s'" % csr)
 
 
 MainSequenceClass = MainSequence

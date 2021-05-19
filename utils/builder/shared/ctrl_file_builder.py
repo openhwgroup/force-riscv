@@ -40,9 +40,7 @@ class CtrlFileBuilder:
     def gen_def_ctrl_file(self):
         ctrl_file_string = ""
         ctrl_file_string += ctrl_items_template
-        ctrl_item = CtrlItem(
-            False, False, False, self.sArchName, "", "default", [], [], []
-        )
+        ctrl_item = CtrlItem(False, False, False, self.sArchName, "", "default", [], [], [])
         ctrl_file_string += ctrl_item.gen_ctrl_item_string()
         ctrl_file_string += ctrl_item_separator
         for ctrl_item_prefix in self.mCtrlItemPrefixes:
@@ -61,11 +59,7 @@ class CtrlFileBuilder:
                 ctrl_file_string += atomic_ctrl_item.gen_ctrl_item_string()
                 ctrl_file_string += ctrl_item_separator
             elif ctrl_item_prefix != "genonly":
-                print(
-                    "ERROR: def fctrl not processing prefix: {}".format(
-                        ctrl_item_prefix
-                    )
-                )
+                print("ERROR: def fctrl not processing prefix: {}".format(ctrl_item_prefix))
         ctrl_file_string += "]"
         return ctrl_file_string
 
@@ -115,11 +109,7 @@ class CtrlFileBuilder:
                 ctrl_file_string += genonly_ctrl_item.gen_ctrl_item_string()
                 ctrl_file_string += ctrl_item_separator
             else:
-                print(
-                    "ERROR: noiss fctrl not processing prefix: {}".format(
-                        ctrl_item_prefix
-                    )
-                )
+                print("ERROR: noiss fctrl not processing prefix: {}".format(ctrl_item_prefix))
         ctrl_file_string += "]"
         return ctrl_file_string
 
@@ -169,11 +159,7 @@ class CtrlFileBuilder:
                 ctrl_file_string += genonly_ctrl_item.gen_ctrl_item_string()
                 ctrl_file_string += ctrl_item_separator
             else:
-                print(
-                    "ERROR: perf fctrl not processing prefix: {}".format(
-                        ctrl_item_prefix
-                    )
-                )
+                print("ERROR: perf fctrl not processing prefix: {}".format(ctrl_item_prefix))
         ctrl_file_string += "]"
         return ctrl_file_string
 

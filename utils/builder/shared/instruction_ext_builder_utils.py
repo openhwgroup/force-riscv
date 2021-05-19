@@ -239,18 +239,12 @@ def differentiate_attr_info(inst_info):
 
     for names in names_lst:
         values = values_lst[index]
-        const_opr_name_val_lst, opr_name_val_lst = arrange_operand_values(
-            names, values
-        )
+        const_opr_name_val_lst, opr_name_val_lst = arrange_operand_values(names, values)
         if len(res_const_lst):
             last_const_opr_name_item = res_const_lst[-1]
             last_opr_name_val_item = res_name_val_lst[-1]
-            arranged_const_opr_lst = arrange_item(
-                const_opr_name_val_lst, last_const_opr_name_item
-            )
-            arranged_opr_lst = arrange_item(
-                opr_name_val_lst, last_opr_name_val_item
-            )
+            arranged_const_opr_lst = arrange_item(const_opr_name_val_lst, last_const_opr_name_item)
+            arranged_opr_lst = arrange_item(opr_name_val_lst, last_opr_name_val_item)
 
             res_const_lst.append(arranged_const_opr_lst)
             res_name_val_lst.append(arranged_opr_lst)
@@ -279,23 +273,17 @@ def merge_instr(instr, instr_info):
 
                 op1_opr = instr_x.find_operand("tlbi_os")
                 op1_opr.width = len(bit_string_to_list(op1_opr.bits))
-                instr_x.set_operand_attribute(
-                    "tlbi_os", "width", op1_opr.width
-                )
+                instr_x.set_operand_attribute("tlbi_os", "width", op1_opr.width)
 
                 build_tlbi_os_instructions(instr_x, op1_opr, instr_lst)
             elif instr_x.form == "range":
                 op1_opr = instr_x.find_operand("tlbi_rg")
                 op1_opr.width = len(bit_string_to_list(op1_opr.bits))
-                instr_x.set_operand_attribute(
-                    "tlbi_rg", "width", op1_opr.width
-                )
+                instr_x.set_operand_attribute("tlbi_rg", "width", op1_opr.width)
 
                 build_tlbi_rg_instructions(instr_x, op1_opr, instr_lst)
             else:
-                raise Exception(
-                    "Didn't know the choices operand of TLBI instruction."
-                )
+                raise Exception("Didn't know the choices operand of TLBI instruction.")
 
         instr_lst.append(instr_x)
 
@@ -434,15 +422,9 @@ def get_referenced_instruction(instr_file, instr_name_form_isa):
     for instr in instr_file.instruction_iterator():
         if instr_name == instr.name:
             if instr_form and instr.form.lower() == instr_form.lower():
-                if (
-                    instr_isa and instr.isa.lower() == instr_isa.lower()
-                ) or instr_isa is None:
+                if (instr_isa and instr.isa.lower() == instr_isa.lower()) or instr_isa is None:
                     return instr
-            elif (
-                instr_form is None
-                and instr_isa
-                and instr.isa.lower() == instr_isa.lower()
-            ):
+            elif instr_form is None and instr_isa and instr.isa.lower() == instr_isa.lower():
                 return instr
     raise Exception("The instruction not found:", instr_name_form_isa)
 
@@ -527,9 +509,7 @@ def differentiate_referenced_instruction(instr_info, referenced_xml_file_path):
             instr_opr_val = var_item[0]
 
         instr = copy.deepcopy(
-            get_referenced_instruction(
-                instrs_file_referenced, referenced_instr_name
-            )
+            get_referenced_instruction(instrs_file_referenced, referenced_instr_name)
         )
         print("referenced instrution:\n")
         print(instr.to_string())

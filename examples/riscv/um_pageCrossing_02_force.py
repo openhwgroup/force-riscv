@@ -38,11 +38,7 @@ class MyMainSequence(Sequence):
 
             target_addr = page_addr + self._get_address_offset(instr)
 
-            self.notice(
-                ">>>>>  Instruction: {}   Target addr: {:012x}".format(
-                    instr, target_addr
-                )
-            )
+            self.notice(">>>>>  Instruction: {}   Target addr: {:012x}".format(instr, target_addr))
             self.genInstruction(instr, {"LSTarget": target_addr})
 
     def _get_address_offset(self, instr):
@@ -59,11 +55,7 @@ class MyMainSequence(Sequence):
         elif instr in LDST_Double_instructions:
             addr_offset = 0xFF8
         else:
-            self.error(
-                ">>>>>  Hmmm...  {} is an unexpected instruction.".format(
-                    instr
-                )
-            )
+            self.error(">>>>>  Hmmm...  {} is an unexpected instruction.".format(instr))
 
         return addr_offset
 

@@ -49,11 +49,7 @@ class MyMainSequence(Sequence):
             # on half-word boundary. should yield a fair amount of misaligned
             # load/stores...
             target_addr = self.genVA(Align=0x1000) | 0xFFE
-            self.notice(
-                ">>>>>  Instruction: {} Target addr: {:012x}".format(
-                    instr, target_addr
-                )
-            )
+            self.notice(">>>>>  Instruction: {} Target addr: {:012x}".format(instr, target_addr))
             self.genInstruction(instr, {"LSTarget": target_addr})
 
 

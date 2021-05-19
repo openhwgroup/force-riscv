@@ -77,9 +77,7 @@ def main():
         # modify the top level control line item dictionary and render to
         # string, removing special characters and excessive spaces.
         control_line_item.update({"options": options_dict})
-        control_line_item.update(
-            {"fruntoctrl": {}}
-        )  # Don't automatically run fruntoctrl again
+        control_line_item.update({"fruntoctrl": {}})  # Don't automatically run fruntoctrl again
         string_form = (
             print_vals(control_line_item)
             .replace("\n", "")

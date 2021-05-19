@@ -35,9 +35,7 @@ class MainSequence(Sequence):
     def generate(self, **kargs):
         state = self._createState()
         StateTransition.transitionToState(state)
-        state_transition_test_utils.verify_state(
-            self, self._mExpectedStateData
-        )
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
@@ -57,16 +55,10 @@ class MainSequence(Sequence):
 
         for reg_field_name in ("MPRV", "SPP", "MXR", "SUM", "TVM"):
             reg_field_val = RandomUtils.random32(0, 1)
-            state.addVmContextStateElement(
-                "mstatus", reg_field_name, reg_field_val
-            )
-            expected_vm_context_state_data.append(
-                ("mstatus", reg_field_name, reg_field_val)
-            )
+            state.addVmContextStateElement("mstatus", reg_field_name, reg_field_val)
+            expected_vm_context_state_data.append(("mstatus", reg_field_name, reg_field_val))
 
-        self._mExpectedStateData[
-            EStateElementType.VmContext
-        ] = expected_vm_context_state_data
+        self._mExpectedStateData[EStateElementType.VmContext] = expected_vm_context_state_data
 
         return state
 

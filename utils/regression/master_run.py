@@ -150,8 +150,7 @@ class MasterRun(ModuleRun):
             )
             self.m_app_info = self.m_app_setup.getApplicationsInfo()
             self.m_app_info.mMainAppPath = (
-                PathUtils.include_trailing_path_delimiter(self.module_dir)
-                + "../.."
+                PathUtils.include_trailing_path_delimiter(self.module_dir) + "../.."
             )
             self.m_app_info.mProcessMax = self.option_def(
                 CmdLine.Switches[CmdLine.process_max], None, self.to_int
@@ -241,10 +240,7 @@ class MasterRun(ModuleRun):
             )
 
         if self.terminated:
-            Msg.info(
-                "####\n#### Reached max fails limit before test was "
-                "completed.\n####"
-            )
+            Msg.info("####\n#### Reached max fails limit before test was " "completed.\n####")
 
         self.writeVersionInfo()
         self.modulesReport()
@@ -287,9 +283,7 @@ class MasterRun(ModuleRun):
         self.initialize_directories()
         self.initialize_output()
         # self.initialize_tools( )
-        Msg.dbg(
-            " ----------------------------------------------------------------"
-        )
+        Msg.dbg(" ----------------------------------------------------------------")
         self.initialize_processor_cmd()
 
         self.populate_options()
@@ -301,9 +295,7 @@ class MasterRun(ModuleRun):
         self.initialize_process_queue()
 
     def check_config(self):
-        my_config_file = self.option_def(
-            CmdLine.Switches[CmdLine.config], None
-        )
+        my_config_file = self.option_def(CmdLine.Switches[CmdLine.config], None)
 
         if my_config_file is None:
             self.iss = {}
@@ -341,9 +333,7 @@ class MasterRun(ModuleRun):
             self.load_config_data(my_loc)
 
         except Exception as arg_ex:
-            Msg.err(
-                "Unable to Process Config File, Message: %s" % (str(arg_ex))
-            )
+            Msg.err("Unable to Process Config File, Message: %s" % (str(arg_ex)))
             raise
 
         return True
@@ -355,12 +345,8 @@ class MasterRun(ModuleRun):
         self.iss = self.master_config.get("iss", {})
         self.generator = self.master_config.get("generator", {})
         self.rtl = self.master_config.get("rtl", {})
-        self.performance = self.master_config.get(
-            CtrlItmKeys.performance, CtrlItmDefs.performance
-        )
-        self.regression = self.master_config.get(
-            CtrlItmKeys.regression, CtrlItmDefs.regression
-        )
+        self.performance = self.master_config.get(CtrlItmKeys.performance, CtrlItmDefs.performance)
+        self.regression = self.master_config.get(CtrlItmKeys.regression, CtrlItmDefs.regression)
 
         Msg.user("iss        : %s" % (str(self.iss)))
         Msg.user("generator  : %s" % (str(self.generator)))
@@ -381,20 +367,12 @@ class MasterRun(ModuleRun):
         self.m_app_info.mTestBaseDir = self.locate_directory(
             CmdLine.Switches[CmdLine.test_base],
             EnVars.test_base,
-            self.fctrl_dir
-            if self.fctrl_dir is not None
-            else Defaults.test_base,
+            self.fctrl_dir if self.fctrl_dir is not None else Defaults.test_base,
         )
 
-        Msg.user(
-            "Module Path      : %s" % (str(self.module_dir)), "INITIAL_DIRS"
-        )
-        Msg.user(
-            "Main Control File: %s" % (str(self.fctrl_name)), "INITIAL_DIRS"
-        )
-        Msg.user(
-            "Main Control Dir : %s" % (str(self.fctrl_dir)), "INITIAL_DIRS"
-        )
+        Msg.user("Module Path      : %s" % (str(self.module_dir)), "INITIAL_DIRS")
+        Msg.user("Main Control File: %s" % (str(self.fctrl_name)), "INITIAL_DIRS")
+        Msg.user("Main Control Dir : %s" % (str(self.fctrl_dir)), "INITIAL_DIRS")
         Msg.user(
             "Test Root        : %s" % (str(self.m_app_info.mTestBaseDir)),
             "INITIAL_DIRS",
@@ -455,10 +433,7 @@ class MasterRun(ModuleRun):
             # module path. Since all full paths begin with a path delimiter
             # this is a valid test
             if my_tmp[0] != "/":
-                my_tmp = (
-                    PathUtils.include_trailing_path_delimiter(self.module_dir)
-                    + my_tmp
-                )
+                my_tmp = PathUtils.include_trailing_path_delimiter(self.module_dir) + my_tmp
 
         # OK here is where it gets a bit tricky, when passed on the command
         # line the path is calculated from the current directory, in all other
@@ -487,9 +462,7 @@ class MasterRun(ModuleRun):
 
         self.mode = self.option_def(CmdLine.Switches[CmdLine.mode], None)
         self.output_root = PathUtils.exclude_trailing_path_delimiter(
-            self.option_def(
-                CmdLine.Switches[CmdLine.target_dir], PathUtils.current_dir()
-            )
+            self.option_def(CmdLine.Switches[CmdLine.target_dir], PathUtils.current_dir())
         )
         Msg.user("Output Root: %s" % (str(self.output_root)))
 
@@ -514,9 +487,7 @@ class MasterRun(ModuleRun):
 
         if my_expire is not None:
             self.handle_expire(my_expire, my_session_type)
-            raise Exception(
-                "Problem with handle_expire, should have terminated ....."
-            )
+            raise Exception("Problem with handle_expire, should have terminated .....")
 
         # Continuing create the full output directory which if exists should
         # be archived or removed
@@ -535,12 +506,8 @@ class MasterRun(ModuleRun):
             # recently, delay a bit when running on LSF.
             # since client machines might hold a stale directory handler still.
             mod_time = PathUtils.time_modified(self.output_dir)
-            if self.option_def(
-                CmdLine.Switches[CmdLine.no_archive], Defaults.no_archive
-            ):
-                PathUtils.rmdir(
-                    self.output_dir, True
-                )  # remove output directory tree
+            if self.option_def(CmdLine.Switches[CmdLine.no_archive], Defaults.no_archive):
+                PathUtils.rmdir(self.output_dir, True)  # remove output directory tree
             else:
                 PathUtils.archive_dir(self.output_dir)
 
@@ -566,9 +533,7 @@ class MasterRun(ModuleRun):
                 Msg.info("Waiting done, resumed master run")
 
     def writeVersionInfo(self):
-        out_line_fmt = (
-            "{}, scm_system: {}, revision number: {}, location: {}, url: {}\n"
-        )
+        out_line_fmt = "{}, scm_system: {}, revision number: {}, location: {}, url: {}\n"
         version_info = ""
         for app_tag, app_config in self.m_app_info.mTagToApp.items():
             Msg.user("app_tag: %s, app_config: %s" % (app_tag, app_config))
@@ -665,9 +630,7 @@ class MasterRun(ModuleRun):
     # create the proper summary
     def initialize_summary(self):
 
-        my_keep = self.option_def(
-            CmdLine.Switches[CmdLine.keep], Defaults.keep
-        )
+        my_keep = self.option_def(CmdLine.Switches[CmdLine.keep], Defaults.keep)
         clean_up_rules = CleanUpRules(my_keep)
 
         if SysUtils.found(self.mode.find(Modes.perf)):
@@ -728,8 +691,7 @@ class MasterRun(ModuleRun):
         if my_run_path is not None:
             my_run_dir, my_run_name = PathUtils.split_path(my_run_path)
             Msg.user(
-                "Client Dir: %s, Client Name: %s (1)"
-                % (str(my_run_dir), str(my_run_name)),
+                "Client Dir: %s, Client Name: %s (1)" % (str(my_run_dir), str(my_run_name)),
                 "PROCESS_CMD",
             )
 
@@ -746,9 +708,7 @@ class MasterRun(ModuleRun):
                 my_run_dir = my_tmp_path
 
         if my_run_name is None:
-            my_run_name = (
-                my_tmp_name if my_tmp_name is not None else Defaults.run_name
-            )
+            my_run_name = my_tmp_name if my_tmp_name is not None else Defaults.run_name
 
         my_process_cmd = PathUtils.real_path(
             PathUtils.append_path(
@@ -758,9 +718,7 @@ class MasterRun(ModuleRun):
         )
         Msg.user("Process Cmd: %s (1)" % (str(my_process_cmd)), "PROCESS_CMD")
 
-        my_msg_lev = self.option_def(
-            CmdLine.Switches[CmdLine.client_lev], None
-        )
+        my_msg_lev = self.option_def(CmdLine.Switches[CmdLine.client_lev], None)
 
         if my_msg_lev is not None:
             if my_msg_lev:
@@ -768,17 +726,13 @@ class MasterRun(ModuleRun):
 
             else:
                 my_process_cmd += " -l " + my_msg_lev
-                Msg.user(
-                    "Process Cmd: %s" % (str(my_process_cmd)), "PROCESS_CMD"
-                )
+                Msg.user("Process Cmd: %s" % (str(my_process_cmd)), "PROCESS_CMD")
 
         if self.m_app_info.mConfigPath is not None:
             my_process_cmd += " -w %s" % self.m_app_info.mConfigPath
         my_process_cmd += " -f %s"
 
-        self.processor_name = my_run_name.replace(".py", "").replace(
-            "_run", ""
-        )
+        self.processor_name = my_run_name.replace(".py", "").replace("_run", "")
         self.process_cmd = my_process_cmd
 
         Msg.dbg("Process Cmd: %s" % (str(self.process_cmd)))
@@ -805,9 +759,7 @@ class MasterRun(ModuleRun):
                 "EXPIRE",
             )
             my_output_base = Formats.main_output_dir % self.output_root
-            Msg.user(
-                "Expire [1], Output Base: %s" % (str(my_output_base)), "EXPIRE"
-            )
+            Msg.user("Expire [1], Output Base: %s" % (str(my_output_base)), "EXPIRE")
             Msg.info("Output Directories Cleanup, Please wait ...")
 
             if int(arg_expire) == Expire.all:
@@ -819,9 +771,7 @@ class MasterRun(ModuleRun):
                 for my_dir in my_dirs:
                     if my_dir.startswith(arg_mask):
                         my_full_dir = "%s%s" % (
-                            PathUtils.include_trailing_path_delimiter(
-                                my_output_base
-                            ),
+                            PathUtils.include_trailing_path_delimiter(my_output_base),
                             my_dir,
                         )
                         Msg.info("Removing: %s" % (my_full_dir))
@@ -829,9 +779,7 @@ class MasterRun(ModuleRun):
 
             else:
 
-                Msg.info(
-                    "Checking for Expired Directories: %s" % (my_full_dir)
-                )
+                Msg.info("Checking for Expired Directories: %s" % (my_full_dir))
                 my_expiredate = DateTime.DateDelta(int(my_expire))
                 PathUtils.expire(my_full_dir, my_expiredate)
 
@@ -876,9 +824,7 @@ def main():
     signal.signal(signal.SIGINT, sig_interrupt_handler)
     my_pwd = None
 
-    print(
-        "\n====================\n\tInitializing ....\n====================\n"
-    )
+    print("\n====================\n\tInitializing ....\n====================\n")
     try:
         my_module = MasterRun()
 
@@ -896,10 +842,7 @@ def main():
                 + ", using the current directory for output"
             )
 
-        Msg.info(
-            "\nConcurrent Operations: %s"
-            % (str(my_module.m_app_info.mProcessMax))
-        )
+        Msg.info("\nConcurrent Operations: %s" % (str(my_module.m_app_info.mProcessMax)))
         my_module.run()
 
         Msg.info("Test Completed ....\n")
@@ -913,10 +856,7 @@ def main():
         Msg.blank()
 
     except Exception:
-        Msg.err(
-            "[ERROR] - An Unhandled Error has Occurred during run of "
-            + str(sys.argv[0])
-        )
+        Msg.err("[ERROR] - An Unhandled Error has Occurred during run of " + str(sys.argv[0]))
         traceback.print_exc(file=sys.stdout)
 
     finally:

@@ -47,15 +47,9 @@ class MainSequence(Sequence):
             {"rd": gpr1, "rs1": 0, "csr": self.getRegisterIndex("misa")},
         )
 
-        self.genInstruction(
-            "ADDI##RISCV", {"rd": gpr2, "rs1": 0, "simm12": 0x4}
-        )
-        self.genInstruction(
-            "XORI##RISCV", {"rd": gpr2, "rs1": gpr2, "simm12": 0xFFF}
-        )
-        self.genInstruction(
-            "AND##RISCV", {"rd": gpr1, "rs1": gpr1, "rs2": gpr2}
-        )
+        self.genInstruction("ADDI##RISCV", {"rd": gpr2, "rs1": 0, "simm12": 0x4})
+        self.genInstruction("XORI##RISCV", {"rd": gpr2, "rs1": gpr2, "simm12": 0xFFF})
+        self.genInstruction("AND##RISCV", {"rd": gpr1, "rs1": gpr1, "rs2": gpr2})
 
         self.genInstruction(
             "CSRRW#register#RISCV",
@@ -73,9 +67,7 @@ class MainSequence(Sequence):
             # didn't get a misaligned address? help it along...
             target_addr = target_addr | self.random32(1, 3)
 
-        self.notice(
-            ">>>>>  Misaligned target addr: {:012x}".format(target_addr)
-        )
+        self.notice(">>>>>  Misaligned target addr: {:012x}".format(target_addr))
 
         return target_addr
 
@@ -142,9 +134,7 @@ class MainSequence(Sequence):
             # got one...
             pass
         else:
-            self.error(
-                "ERROR: Test did not generate any misaligned exceptions???"
-            )
+            self.error("ERROR: Test did not generate any misaligned exceptions???")
 
         # try to issue an exception return instr, with misaligned address
         # we don't expect an exception...

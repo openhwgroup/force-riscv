@@ -31,15 +31,11 @@ class PageFaultSequence(Sequence):
     def generate(self, **kwargs):
         (paging_opt, valid) = self.getOption("PagingDisabled")
         if valid and (paging_opt == 1):
-            self.error(
-                "'PagingDisabled' option set, can't generate page faults."
-            )
+            self.error("'PagingDisabled' option set, can't generate page faults.")
 
         self.generatePreFaultInstructions()
 
-        self.notice(
-            "Applying all valid level and exception level page fault choices"
-        )
+        self.notice("Applying all valid level and exception level page fault choices")
         page_fault_mod = self.createPageFaultModifier()
         page_fault_mod.apply(**{"All": 1})
         # page_fault_mod.apply(**{"Type":"Invalid V"})

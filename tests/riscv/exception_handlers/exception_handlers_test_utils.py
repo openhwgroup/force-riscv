@@ -57,8 +57,7 @@ def assert_gpr_has_value(aSequence, aGprIndex, aExpectedGprVal):
     if gpr_val != aExpectedGprVal:
         aSequence.error(
             "Value of register x%d did not match the expected value. "
-            "Expected=0x%x, Actual=0x%x"
-            % (aGprIndex, aExpectedGprVal, gpr_val)
+            "Expected=0x%x, Actual=0x%x" % (aGprIndex, aExpectedGprVal, gpr_val)
         )
 
 

@@ -77,9 +77,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VSEW", choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", choice_weights)
 
         # Ensure vector register group size is no more than 4, as larger values
         # are not legal for widening and narrowing instructions
@@ -93,9 +91,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 10,
             "0x7": 10,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VLMUL", vlmul_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VLMUL", vlmul_choice_weights)
 
         choices_mod.commitSet()
 
@@ -117,18 +113,12 @@ class MainSequence(VectorTestSequence):
         vs2_val = aInstrRecord["Srcs"]["vs2"]
         if aInstr.startswith("VW"):
             if vs1_val:
-                self.assertNoRegisterOverlap(
-                    aInstr, vd_val, vs1_val, aRegCountMultipleA=2
-                )
+                self.assertNoRegisterOverlap(aInstr, vd_val, vs1_val, aRegCountMultipleA=2)
 
             if ".W" not in aInstr:
-                self.assertNoRegisterOverlap(
-                    aInstr, vd_val, vs2_val, aRegCountMultipleA=2
-                )
+                self.assertNoRegisterOverlap(aInstr, vd_val, vs2_val, aRegCountMultipleA=2)
         elif aInstr.startswith("VN"):
-            self.assertNoRegisterOverlap(
-                aInstr, vd_val, vs2_val, aRegCountMultipleB=2
-            )
+            self.assertNoRegisterOverlap(aInstr, vd_val, vs2_val, aRegCountMultipleB=2)
         else:
             self.error("Unexpected instruction %s" % aInstr)
 

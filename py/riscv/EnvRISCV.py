@@ -75,11 +75,7 @@ class GlobalInitSeqRISCV(GlobalInitSequence):
         for thread_id in range(self.getThreadNumber()):
             handler_memory_constr.subRange(
                 PcConfig.get_boot_pc(thread_id),
-                (
-                    PcConfig.get_boot_pc(thread_id)
-                    + PcConfig.get_boot_region_size()
-                    - 1
-                ),
+                (PcConfig.get_boot_pc(thread_id) + PcConfig.get_boot_region_size() - 1),
             )
             handler_memory_constr.subValue(PcConfig.get_initial_pc(thread_id))
 

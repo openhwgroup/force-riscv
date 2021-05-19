@@ -34,9 +34,7 @@ class ItemMap(SortableObject):
         if self.isCompatible(aOther):
             newDict = {k: v for k, v in self.mItemDict.items()}
             newDict.update(aOther.mItemDict)
-            return self.__class__(
-                self._mSortableName + aOther.mSortableName, newDict
-            )
+            return self.__class__(self._mSortableName + aOther.mSortableName, newDict)
         else:
             return NotImplemented
 
@@ -57,13 +55,9 @@ class ItemMap(SortableObject):
         return "%sMap(%s)" % (self.itemType(), self._mSortableName)
 
     def toSimpleString(self):
-        simple_string = (
-            " %s map name: " % self.itemType() + self._mSortableName + "\n"
-        )
+        simple_string = " %s map name: " % self.itemType() + self._mSortableName + "\n"
         if len(self.mItemDict) == 0:
-            raise Exception(
-                "Empty %s map %s", (self.itemType(), self._mSortableName)
-            )
+            raise Exception("Empty %s map %s", (self.itemType(), self._mSortableName))
 
         for k, v in self.mItemDict.items():
             simple_string += self._getItemString(k, v)

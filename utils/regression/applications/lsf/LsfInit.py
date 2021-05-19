@@ -34,12 +34,8 @@ class LsfCmdLineOptions(object):
             None,
             "- Specify LSF serice class for scheduling polcy",
         ),
-        AppCmdLineOption(
-            "group", "trg", 1, None, "- Specify LSF service group"
-        ),
-        AppCmdLineOption(
-            "queue", "normal", 1, None, "- Specify LSF queue to use"
-        ),
+        AppCmdLineOption("group", "trg", 1, None, "- Specify LSF service group"),
+        AppCmdLineOption("queue", "normal", 1, None, "- Specify LSF queue to use"),
     ]
 
 

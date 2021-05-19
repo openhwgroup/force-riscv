@@ -29,8 +29,7 @@ class ComprehensiveRecoveryAddressHandler(ReusableSequence):
             )
 
         self.debug(
-            "[FastRecoveryAddressHandler] generate handler address: 0x%x"
-            % self.getPEstate("PC")
+            "[FastRecoveryAddressHandler] generate handler address: 0x%x" % self.getPEstate("PC")
         )
 
         priv_level_reg_index = handler_context.getScratchRegisterIndices(
@@ -39,13 +38,9 @@ class ComprehensiveRecoveryAddressHandler(ReusableSequence):
         (
             scratch_reg_index,
             recovery_reg_index,
-        ) = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.TEMPORARY, 2
-        )
+        ) = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 2)
 
-        handler_context.mAddrTable.getAddress(
-            recovery_reg_index, scratch_reg_index
-        )
+        handler_context.mAddrTable.getAddress(recovery_reg_index, scratch_reg_index)
 
         self.mAssemblyHelper.genProvidedExceptionReturnAddress(
             scratch_reg_index, recovery_reg_index, priv_level_reg_index

@@ -94,16 +94,12 @@ class PageFaultModifier(ChoicesModifier):
     def updateFaultTypeChoices(self, aType, **kwargs):
         table_levels = kwargs.get("Level", self._mValidFaultLevels[aType])
         self._validateTableLevels(aType, table_levels)
-        priv_levels = kwargs.get(
-            "Privilege", self._mValidPrivilegeLevels[aType]
-        )
+        priv_levels = kwargs.get("Privilege", self._mValidPrivilegeLevels[aType])
         self._validatePrivilegeLevels(aType, priv_levels)
         weight = kwargs.get("Weight", 100)
         self._validateWeight(aType, weight)
 
-        for (table_level, priv_level) in itertools.product(
-            table_levels, priv_levels
-        ):
+        for (table_level, priv_level) in itertools.product(table_levels, priv_levels):
             self.updatePageFaultChoice(aType, table_level, priv_level, weight)
 
         self.modifyExceptionRegulation()
@@ -115,9 +111,7 @@ class PageFaultModifier(ChoicesModifier):
         elif aType == "Misaligned Superpage":
             self.updateSuperpageSizeChoices(100)  # needs superpage descriptor
         elif aType == "Last Level Pointer":
-            self.updateSuperpageSizeChoices(
-                0
-            )  # needs level 0 (4K) table descriptor
+            self.updateSuperpageSizeChoices(0)  # needs level 0 (4K) table descriptor
 
     def updateAllFaultChoices(self, **kwargs):
         for fault_type in self._mValidFaultTypes:
@@ -142,20 +136,12 @@ class PageFaultModifier(ChoicesModifier):
     def _validateTableLevels(self, aType, aTableLevels):
         for table_level in aTableLevels:
             if table_level not in self._mValidFaultLevels[aType]:
-                Log.error(
-                    "invalid table level={} for fault type={}".format(
-                        table_level, aType
-                    )
-                )
+                Log.error("invalid table level={} for fault type={}".format(table_level, aType))
 
     def _validatePrivilegeLevels(self, aType, aPrivLevels):
         for priv_level in aPrivLevels:
             if priv_level not in self._mValidPrivilegeLevels[aType]:
-                Log.error(
-                    "invalid priv level={} for fault type={}".format(
-                        priv_level, aType
-                    )
-                )
+                Log.error("invalid priv level={} for fault type={}".format(priv_level, aType))
 
     def _validateWeight(self, aType, aWeight):
         if not (0 <= aWeight <= 100):
@@ -196,9 +182,7 @@ class TrapsRedirectModifier(ChoicesModifier):
                     kwargs["Weight"],
                 )
             else:
-                self.updateChoices(
-                    kwargs["ExceptionCode"], kwargs["TrapChoice"]
-                )
+                self.updateChoices(kwargs["ExceptionCode"], kwargs["TrapChoice"])
         except KeyError:
             Log.error(
                 "TrapDelegationRedirectionModifier: 'ExceptionCode' or "
@@ -210,8 +194,7 @@ class TrapsRedirectModifier(ChoicesModifier):
             rcode = self.mSupportedExceptions[aExceptionCode]
         except KeyError:
             Log.error(
-                "TrapDelegationRedirectionModifier: ExceptionCode '%s' is "
-                "not supported.",
+                "TrapDelegationRedirectionModifier: ExceptionCode '%s' is " "not supported.",
                 aExceptionCode,
             )
 
@@ -251,6 +234,7 @@ class TrapsRedirectModifier(ChoicesModifier):
 # - MainSequence object from test template
 # - Page object returned from the self.getPageInfo()
 
+
 def displayPageInfo(seq, page_obj):
 
     seq.notice(">>>>>>>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
@@ -258,33 +242,58 @@ def displayPageInfo(seq, page_obj):
 
     for key, value in page_obj.items():
         if key == "Page":
-            if value["PageSize"] == 2**12:  page_size_string = "4KB"
-            elif value["PageSize"] == 2** 21:  page_size_string = "2MB"
-            elif value["PageSize"] == 2** 30:  page_size_string = "1GB"
-            elif value["PageSize"] == 2** 39:  page_size_string = "512GB"
-            else:                              page_size_string = "unknown"
+            if value["PageSize"] == 2 ** 12:
+                page_size_string = "4KB"
+            elif value["PageSize"] == 2 ** 21:
+                page_size_string = "2MB"
+            elif value["PageSize"] == 2 ** 30:
+                page_size_string = "1GB"
+            elif value["PageSize"] == 2 ** 39:
+                page_size_string = "512GB"
+            else:
+                page_size_string = "unknown"
             seq.notice(">>>>>>>      Page Size:  {}".format(page_size_string))
-            seq.notice(">>>>>>>      Virtual Address Range:    {:#018x} - {:#018x}".format(value["Lower"], value["Upper"]))
-            seq.notice(">>>>>>>      Physical Address Range:   {:#018x} - {:#018x}".format(value["PhysicalLower"], value["PhysicalUpper"]))
+            seq.notice(
+                ">>>>>>>      Virtual Address Range:    {:#018x} - {:#018x}".format(
+                    value["Lower"], value["Upper"]
+                )
+            )
+            seq.notice(
+                ">>>>>>>      Physical Address Range:   {:#018x} - {:#018x}".format(
+                    value["PhysicalLower"], value["PhysicalUpper"]
+                )
+            )
             seq.notice(">>>>>>>      Descriptor:  {:#018x}".format(value["Descriptor"]))
-            seq.notice(">>>>>>>      Descriptor Address:  {}".format(value["DescriptorDetails"]["Address"]))
-            seq.notice(">>>>>>>      Descriptor Details:    DA         G          U          X          WR         V")
-            seq.notice((">>>>>>>      Descriptor Details:    " + "{:<10} "*6 + " ").format(              \
-                                                                       value["DescriptorDetails"]["DA"], \
-                                                                       value["DescriptorDetails"]["G"],  \
-                                                                       value["DescriptorDetails"]["U"],  \
-                                                                       value["DescriptorDetails"]["X"],  \
-                                                                       value["DescriptorDetails"]["WR"], \
-                                                                       value["DescriptorDetails"]["V"]))
+            seq.notice(
+                ">>>>>>>      Descriptor Address:  {}".format(
+                    value["DescriptorDetails"]["Address"]
+                )
+            )
+            seq.notice(
+                ">>>>>>>      Descriptor Details:    DA         G          U          X          WR         V"
+            )
+            seq.notice(
+                (">>>>>>>      Descriptor Details:    " + "{:<10} " * 6 + " ").format(
+                    value["DescriptorDetails"]["DA"],
+                    value["DescriptorDetails"]["G"],
+                    value["DescriptorDetails"]["U"],
+                    value["DescriptorDetails"]["X"],
+                    value["DescriptorDetails"]["WR"],
+                    value["DescriptorDetails"]["V"],
+                )
+            )
 
         if key.startswith("Table"):
             for field, info in value.items():
-                if (field == "DescriptorAddr" or field == "Descriptor"):
+                if field == "DescriptorAddr" or field == "Descriptor":
                     seq.notice(">>>>>>>      {:<20}:    {:#018x}".format(field, info))
                 if field == "Level":
                     seq.notice(">>>>>>>    {}  {}".format(field, info))
                 if field == "DescriptorDetails":
-                    seq.notice(">>>>>>>      PPN of Next PTE     :    {}".format(value["DescriptorDetails"]["Address"]))
+                    seq.notice(
+                        ">>>>>>>      PPN of Next PTE     :    {}".format(
+                            value["DescriptorDetails"]["Address"]
+                        )
+                    )
 
     seq.notice(">>>>>>>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-

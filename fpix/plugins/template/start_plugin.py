@@ -54,12 +54,8 @@ def start_plugin_with_name(plugin_name):
 
     os.mkdir(plugin_path)
     shutil.copyfile("Makefile.template", ("%s/Makefile" % plugin_path))
-    shutil.copyfile(
-        "plugin.cc.template", ("%s/%s.cc" % (plugin_path, plugin_name))
-    )
-    shutil.copyfile(
-        "Makefile.target.template", ("%s/Makefile.target" % plugin_path)
-    )
+    shutil.copyfile("plugin.cc.template", ("%s/%s.cc" % (plugin_path, plugin_name)))
+    shutil.copyfile("Makefile.target.template", ("%s/Makefile.target" % plugin_path))
     replace_file_var("%s/Makefile.target" % plugin_path, plugin_name)
 
 

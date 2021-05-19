@@ -118,9 +118,7 @@ class MainSequence(VectorTestSequence):
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
         for sub_index in range(8):
             v0_field_name = "v0_%d" % sub_index
-            (v0_field_val, valid) = self.readRegister(
-                "v0", field=v0_field_name
-            )
+            (v0_field_val, valid) = self.readRegister("v0", field=v0_field_name)
             self.assertValidRegisterValue("v0", valid)
 
 

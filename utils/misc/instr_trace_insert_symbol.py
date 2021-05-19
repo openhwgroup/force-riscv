@@ -86,9 +86,7 @@ def insert_symbols(simtrace_trace, symbols_dict):
 
 def simtrace_insert_symbol():
     try:
-        opts, args = getopt.getopt(
-            sys.argv[1:], "hl:t:", ["help", "log=", "simtrace="]
-        )
+        opts, args = getopt.getopt(sys.argv[1:], "hl:t:", ["help", "log=", "simtrace="])
     except getopt.GetoptError as err:
         print(err)
         usage()

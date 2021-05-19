@@ -168,10 +168,7 @@ class GenThread(object):
             if name in GenThread.sharedThreadObjects:
                 return GenThread.sharedThreadObjects[name]
             else:
-                Log.fail(
-                    "[getSharedThreadObject] shared object not found name=%s"
-                    % (name)
-                )
+                Log.fail("[getSharedThreadObject] shared object not found name=%s" % (name))
 
     def hasSharedThreadObject(self, name):
         with ThreadRequestContextManager():
@@ -181,19 +178,13 @@ class GenThread(object):
                 return False
 
     def genInstruction(self, instr_name, kargs):
-        return self.interface.genInstruction(
-            self.genThreadID, instr_name, kargs
-        )
+        return self.interface.genInstruction(self.genThreadID, instr_name, kargs)
 
     def genMetaInstruction(self, instr_name, kargs):
-        return self.interface.genMetaInstruction(
-            self.genThreadID, instr_name, kargs
-        )
+        return self.interface.genMetaInstruction(self.genThreadID, instr_name, kargs)
 
     def queryInstructionRecord(self, rec_id):
-        return self.interface.query(
-            self.genThreadID, "InstructionRecord", rec_id, {}
-        )
+        return self.interface.query(self.genThreadID, "InstructionRecord", rec_id, {})
 
     def queryExceptionRecords(self, exception_id):
         return self.interface.query(
@@ -210,19 +201,13 @@ class GenThread(object):
         for (key, val) in kargs.items():
             kargs[key] = str(val)
 
-        return self.interface.query(
-            self.genThreadID, "AdvancedExceptionsHistory", "", kargs
-        )
+        return self.interface.query(self.genThreadID, "AdvancedExceptionsHistory", "", kargs)
 
     # Install a custom synchronous handler
     def registerSynchronousExceptionHandler(self, assignment_request):
-        self.exceptionHandlerManager.registerSynchronousExceptionHandler(
-            assignment_request
-        )
+        self.exceptionHandlerManager.registerSynchronousExceptionHandler(assignment_request)
 
-    def registerAsynchronousExceptionHandler(
-        self, handler_module_name, handler_class_name
-    ):
+    def registerAsynchronousExceptionHandler(self, handler_module_name, handler_class_name):
         """Install a custom asynchronous handler. Unlike registering a s
         ynchronous exception handler, this method will assign the specified
         handler to handle all asynchronous exceptions in all execution states.
@@ -234,41 +219,27 @@ class GenThread(object):
     def registerSynchronousExceptionDispatcher(self, dispatcher):
         """Install a custom synchronous dispatcher. The specified dispatcher
         should handle all possible synchronous exceptions."""
-        self.exceptionHandlerManager.registerSynchronousExceptionDispatcher(
-            dispatcher
-        )
+        self.exceptionHandlerManager.registerSynchronousExceptionDispatcher(dispatcher)
 
     # Specify default exception handler set to use
     def specifyExceptionHandlerSet(self, handler_set_name):
-        self.exceptionHandlerManager.setDefaultExceptionHandlerSet(
-            handler_set_name
-        )
+        self.exceptionHandlerManager.setDefaultExceptionHandlerSet(handler_set_name)
         self.fastMode = handler_set_name == "Fast"
 
     def getVmContextDelta(self, kargs):
-        return self.interface.query(
-            self.genThreadID, "GetVmContextDelta", "", kargs
-        )
+        return self.interface.query(self.genThreadID, "GetVmContextDelta", "", kargs)
 
     def genVmContext(self, kargs):
-        return self.interface.virtualMemoryRequest(
-            self.genThreadID, "GenVmContext", kargs
-        )
+        return self.interface.virtualMemoryRequest(self.genThreadID, "GenVmContext", kargs)
 
     def getVmCurrentContext(self, kargs):
-        return self.interface.query(
-            self.genThreadID, "GetVmCurrentContext", "", kargs
-        )
+        return self.interface.query(self.genThreadID, "GetVmCurrentContext", "", kargs)
 
     def updateVm(self, kargs):
-        return self.interface.virtualMemoryRequest(
-            self.genThreadID, "UpdateVm", kargs
-        )
+        return self.interface.virtualMemoryRequest(self.genThreadID, "UpdateVm", kargs)
 
     def queryHandlerSetMemory(self, bank):
-        return self.interface.query(
-            self.genThreadID, "HandlerSetMemory", str(bank), {}
-        )
+        return self.interface.query(self.genThreadID, "HandlerSetMemory", str(bank), {})
 
     def queryExceptionVectorBaseAddress(self, vector_type):
         return self.interface.query(
@@ -276,19 +247,13 @@ class GenThread(object):
         )
 
     def queryResourceEntropy(self, resource_type):
-        return self.interface.query(
-            self.genThreadID, "ResourceEntropy", str(resource_type), {}
-        )
+        return self.interface.query(self.genThreadID, "ResourceEntropy", str(resource_type), {})
 
     def setPEstate(self, state_name, state_value):
-        self.interface.stateRequest(
-            self.genThreadID, "Set", state_name, state_value, {}
-        )
+        self.interface.stateRequest(self.genThreadID, "Set", state_name, state_value, {})
 
     def getPEstate(self, state_name):
-        return self.interface.query(
-            self.genThreadID, "GenState", state_name, {}
-        )
+        return self.interface.query(self.genThreadID, "GenState", state_name, {})
 
     def initializeMemory(self, addr, bank, size, data, is_instr, is_virtual):
         self.interface.initializeMemory(
@@ -306,9 +271,7 @@ class GenThread(object):
 
     # Add a sequence to be run in the cleanup stage of the generator thread
     def addCleanUpSequence(self, cleanup_class):
-        self.cleanUpSequences.append(
-            cleanup_class(self, cleanup_class.__name__)
-        )
+        self.cleanUpSequences.append(cleanup_class(self, cleanup_class.__name__))
 
     # Add a sequence to be run before generating the main sequences.
     def addBeforeSequence(self, before_class):
@@ -324,24 +287,16 @@ class GenThread(object):
         )
 
     def commitModificationSet(self, choices_type, set_id):
-        self.interface.commitModificationSet(
-            self.genThreadID, choices_type, set_id
-        )
+        self.interface.commitModificationSet(self.genThreadID, choices_type, set_id)
 
     def revertModificationSet(self, choices_type, set_id):
-        self.interface.revertModificationSet(
-            self.genThreadID, choices_type, set_id
-        )
+        self.interface.revertModificationSet(self.genThreadID, choices_type, set_id)
 
     def beginLoop(self, loop_count, kargs):
-        return self.interface.stateRequest(
-            self.genThreadID, "Push", "Loop", loop_count, kargs
-        )
+        return self.interface.stateRequest(self.genThreadID, "Push", "Loop", loop_count, kargs)
 
     def endLoop(self, loop_id):
-        self.interface.stateRequest(
-            self.genThreadID, "Pop", "Loop", 0, {"LoopId": loop_id}
-        )
+        self.interface.stateRequest(self.genThreadID, "Pop", "Loop", 0, {"LoopId": loop_id})
 
     def reportLoopReconvergeAddress(self, loop_id, address):
         self.interface.stateRequest(
@@ -361,9 +316,7 @@ class GenThread(object):
             {"LoopId": loop_id},
         )
 
-    def beginStateRestoreLoop(
-        self, loopRegIndex, simCount, restoreCount, restoreExclusions
-    ):
+    def beginStateRestoreLoop(self, loopRegIndex, simCount, restoreCount, restoreExclusions):
         self.interface.beginStateRestoreLoop(
             self.genThreadID,
             loopRegIndex,
@@ -371,29 +324,19 @@ class GenThread(object):
             restoreCount,
             restoreExclusions,
         )
-        return self.interface.query(
-            self.genThreadID, "RestoreLoopContext", "", {}
-        )
+        return self.interface.query(self.genThreadID, "RestoreLoopContext", "", {})
 
     def endStateRestoreLoop(self, loopId):
         self.interface.endStateRestoreLoop(self.genThreadID, loopId)
 
     def generateLoopRestoreInstructions(self, loopId):
-        self.interface.generateLoopRestoreInstructions(
-            self.genThreadID, loopId
-        )
+        self.interface.generateLoopRestoreInstructions(self.genThreadID, loopId)
 
     def beginLinearBlock(self):
-        return self.interface.stateRequest(
-            self.genThreadID, "Push", "LinearBlock", 0, {}
-        )
+        return self.interface.stateRequest(self.genThreadID, "Push", "LinearBlock", 0, {})
 
     def endLinearBlock(self, block_id, execute, max_re_execution_instructions):
-        (
-            block_start_addr,
-            block_end_addr,
-            empty,
-        ) = self.interface.stateRequest(
+        (block_start_addr, block_end_addr, empty,) = self.interface.stateRequest(
             self.genThreadID,
             "Pop",
             "LinearBlock",
@@ -408,9 +351,7 @@ class GenThread(object):
                 "MaxReExecutionInstructions": max_re_execution_instructions,
             }
             while pc_val != block_end_addr:
-                self.interface.genSequence(
-                    self.genThreadID, "ReExecution", dict_arg
-                )
+                self.interface.genSequence(self.genThreadID, "ReExecution", dict_arg)
                 pc_val = self.getPEstate("PC")
 
     # Page related API
@@ -458,9 +399,7 @@ class GenThread(object):
 
     # Register module API
     def getRandomRegisters(self, number, reg_type, exclude):
-        return self.interface.getRandomRegisters(
-            self.genThreadID, number, reg_type, exclude
-        )
+        return self.interface.getRandomRegisters(self.genThreadID, number, reg_type, exclude)
 
     def getRandomRegistersForAccess(self, number, access, reg_type, exclude):
         return self.interface.getRandomRegistersForAccess(
@@ -468,65 +407,47 @@ class GenThread(object):
         )
 
     def isRegisterReserved(self, name, access, resv_type):
-        return self.interface.isRegisterReserved(
-            self.genThreadID, name, access, resv_type
-        )
+        return self.interface.isRegisterReserved(self.genThreadID, name, access, resv_type)
 
     def reserveRegisterByIndex(self, size, index, reg_type, access):
-        self.interface.reserveRegisterByIndex(
-            self.genThreadID, size, index, reg_type, access
-        )
+        self.interface.reserveRegisterByIndex(self.genThreadID, size, index, reg_type, access)
 
     def reserveRegister(self, name, access):
         self.interface.reserveRegister(self.genThreadID, name, access)
 
     def unreserveRegisterByIndex(self, size, index, reg_type, access):
-        self.interface.unreserveRegisterByIndex(
-            self.genThreadID, size, index, reg_type, access
-        )
+        self.interface.unreserveRegisterByIndex(self.genThreadID, size, index, reg_type, access)
 
     def unreserveRegister(self, name, access, reserve_type):
-        self.interface.unreserveRegister(
-            self.genThreadID, name, access, reserve_type
-        )
+        self.interface.unreserveRegister(self.genThreadID, name, access, reserve_type)
 
     def readRegister(self, name, field):
         return self.interface.readRegister(self.genThreadID, name, field)
 
     def writeRegister(self, name, field, value, update):
-        self.interface.writeRegister(
-            self.genThreadID, name, field, value, update
-        )
+        self.interface.writeRegister(self.genThreadID, name, field, value, update)
 
     def initializeRegister(self, name, field, value):
         self.interface.initializeRegister(self.genThreadID, name, field, value)
 
     def initializeRegisterFields(self, registerName, field_value_map):
-        self.interface.initializeRegisterFields(
-            self.genThreadID, registerName, field_value_map
-        )
+        self.interface.initializeRegisterFields(self.genThreadID, registerName, field_value_map)
 
     def randomInitializeRegister(self, name, field):
         self.interface.randomInitializeRegister(self.genThreadID, name, field)
 
     def randomInitializeRegisterFields(self, registerName, fieldList):
-        self.interface.randomInitializeRegisterFields(
-            self.genThreadID, registerName, fieldList
-        )
+        self.interface.randomInitializeRegisterFields(self.genThreadID, registerName, fieldList)
 
     def getRegisterFieldMask(self, registerName, fieldList):
-        return self.interface.getRegisterFieldMask(
-            self.genThreadID, registerName, fieldList
-        )
+        return self.interface.getRegisterFieldMask(self.genThreadID, registerName, fieldList)
 
     def genSequence(self, my_type, kargs={}):
         self.interface.genSequence(self.genThreadID, my_type, kargs)
 
     def getRegisterInfo(self, name, index):
         myDict = {"Index": index}
-        return self.interface.query(
-            self.genThreadID, "RegisterInfo", name, myDict
-        )
+        return self.interface.query(self.genThreadID, "RegisterInfo", name, myDict)
 
     def getPageInfo(self, addr, addr_type, bank):
         myDict = {"Addr": addr, "Type": addr_type, "Bank": bank}
@@ -539,21 +460,15 @@ class GenThread(object):
             "OffsetSize": offset_size,
             "Shift": shift,
         }
-        return self.interface.query(
-            self.genThreadID, "BranchOffset", "", myDict
-        )
+        return self.interface.query(self.genThreadID, "BranchOffset", "", myDict)
 
     def validAddressMask(self, util_name, intarg1=0, intarg2=0):
         myDict = {"arg1": intarg1, "arg2": intarg2}
-        return self.interface.query(
-            self.genThreadID, "ValidAddressMask", util_name, myDict
-        )
+        return self.interface.query(self.genThreadID, "ValidAddressMask", util_name, myDict)
 
     def getMaxAddress(self, util_name):
         myDict = {}
-        return self.interface.query(
-            self.genThreadID, "MaxAddress", util_name, myDict
-        )
+        return self.interface.query(self.genThreadID, "MaxAddress", util_name, myDict)
 
     def notice(self, msg):
         warnings.warn(
@@ -567,9 +482,7 @@ class GenThread(object):
         return self.interface.getOption(optName)
 
     def getRegisterIndex(self, registerName):
-        return self.interface.query(
-            self.genThreadID, "RegisterIndex", registerName, {}
-        )
+        return self.interface.query(self.genThreadID, "RegisterIndex", registerName, {})
 
     def getRegisterReloadValue(self, registerName, fieldConstraints={}):
         return self.interface.query(
@@ -588,9 +501,7 @@ class GenThread(object):
         )
 
     def virtualMemoryRequest(self, requestName, parameters={}):
-        return self.interface.virtualMemoryRequest(
-            self.genThreadID, requestName, parameters
-        )
+        return self.interface.virtualMemoryRequest(self.genThreadID, requestName, parameters)
 
     def systemCall(self, callDetails):
         """Issue system call (callDetails must be a string with ','
@@ -618,41 +529,27 @@ class GenThread(object):
         return None
 
     def exceptionRequest(self, requestName, kargs):
-        return self.interface.exceptionRequest(
-            self.genThreadID, requestName, kargs
-        )
+        return self.interface.exceptionRequest(self.genThreadID, requestName, kargs)
 
     def modifyGenMode(self, mode):
-        self.interface.stateRequest(
-            self.genThreadID, "Push", "GenMode", mode, {}
-        )
+        self.interface.stateRequest(self.genThreadID, "Push", "GenMode", mode, {})
 
     def revertGenMode(self, mode):
-        self.interface.stateRequest(
-            self.genThreadID, "Pop", "GenMode", mode, {}
-        )
+        self.interface.stateRequest(self.genThreadID, "Pop", "GenMode", mode, {})
 
     def reserveMemory(self, Name, Range, Bank, IsVirtual=False):
-        self.interface.reserveMemory(
-            self.genThreadID, Name, Range, Bank, IsVirtual
-        )
+        self.interface.reserveMemory(self.genThreadID, Name, Range, Bank, IsVirtual)
 
     def reserveMemoryRange(self, Name, Start, Size, Bank, IsVirtual=False):
         range_str = "0x%x-0x%x" % (Start, Start + (Size - 1))
-        self.interface.reserveMemory(
-            self.genThreadID, Name, range_str, Bank, IsVirtual
-        )
+        self.interface.reserveMemory(self.genThreadID, Name, range_str, Bank, IsVirtual)
 
     def unreserveMemory(self, Name, Range="", Bank=0, IsVirtual=False):
-        self.interface.unreserveMemory(
-            self.genThreadID, Name, Range, Bank, IsVirtual
-        )
+        self.interface.unreserveMemory(self.genThreadID, Name, Range, Bank, IsVirtual)
 
     def unreserveMemoryRange(self, Name, Start, Size, Bank, IsVirtual=False):
         range_str = "0x%x-0x%x" % (Start, Start + (Size - 1))
-        self.interface.unreserveMemory(
-            self.genThreadID, Name, range_str, Bank, IsVirtual
-        )
+        self.interface.unreserveMemory(self.genThreadID, Name, range_str, Bank, IsVirtual)
 
     def modifyVariable(self, name, value, var_type):
         self.interface.modifyVariable(self.genThreadID, name, value, var_type)
@@ -661,14 +558,9 @@ class GenThread(object):
         return self.interface.getVariable(self.genThreadID, name, var_type)
 
     def pickWeighted(self, weighted_dict):
-        total_weight = functools.reduce(
-            lambda total, val: total + val, weighted_dict.values()
-        )
+        total_weight = functools.reduce(lambda total, val: total + val, weighted_dict.values())
         if total_weight <= 0:
-            raise TestException(
-                "Sum of all weights in weighted-dict incorrect %d"
-                % total_weight
-            )
+            raise TestException("Sum of all weights in weighted-dict incorrect %d" % total_weight)
 
         picked_value = RandomUtils.random64(0, total_weight - 1)
 
@@ -699,21 +591,15 @@ class GenThread(object):
 
     def getChoicesTreeInfo(self, treeName, treeType):
         myDict = {"Type": treeType}
-        return self.interface.query(
-            self.genThreadID, "ChoicesTreeInfo", treeName, myDict
-        )
+        return self.interface.query(self.genThreadID, "ChoicesTreeInfo", treeName, myDict)
 
     # register modification set to control target privilege level
     def registerModificationSet(self, choice_type, set_id):
-        self.interface.registerModificationSet(
-            self.genThreadID, choice_type, set_id
-        )
+        self.interface.registerModificationSet(self.genThreadID, choice_type, set_id)
 
     def runBntSequence(self, function, param_dict):
         try:
-            self.bntSequenceObject.setBntCallback(
-                getattr(self.bntSequenceObject, function)
-            )
+            self.bntSequenceObject.setBntCallback(getattr(self.bntSequenceObject, function))
         except AttributeError:
             Log.fail("unknown bnt function:%s" % function)
 
@@ -733,9 +619,7 @@ class GenThread(object):
         self.bntSequenceObject = bntSequenceClass(self)
 
     def verifyVirtualAddress(self, vaddr, size, is_instr):
-        return self.interface.verifyVirtualAddress(
-            self.genThreadID, vaddr, size, is_instr
-        )
+        return self.interface.verifyVirtualAddress(self.genThreadID, vaddr, size, is_instr)
 
     def confirmSpace(self, size):
         myDict = {"arg1_size": size}
@@ -751,9 +635,7 @@ class GenThread(object):
         mod_class(self, mod_class.__name__).apply()
 
     def setBntHook(self, **kargs):
-        return self.interface.stateRequest(
-            self.genThreadID, "Push", "BntHook", 0, kargs
-        )
+        return self.interface.stateRequest(self.genThreadID, "Push", "BntHook", 0, kargs)
 
     def revertBntHook(self, bnt_id):
         return self.interface.stateRequest(
@@ -812,14 +694,10 @@ class GenThread(object):
 
     # Generate data using user specifed data pattern.
     def genData(self, aPattern):
-        return self.interface.query(
-            self.genThreadID, "GenData", "GenData", {"arg1": aPattern}
-        )
+        return self.interface.query(self.genThreadID, "GenData", "GenData", {"arg1": aPattern})
 
     def genSemaphore(self, aName, aCounter, aBank, aSize):
-        return self.interface.genSemaphore(
-            self.genThreadID, aName, aCounter, aBank, aSize
-        )
+        return self.interface.genSemaphore(self.genThreadID, aName, aCounter, aBank, aSize)
 
     def synchronizeWithBarrier(self, kwargs):
         return self.interface.synchronizeWithBarrier(self.genThreadID, kwargs)

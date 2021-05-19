@@ -65,15 +65,9 @@ class CSRTreeBuilder:
     def __init__(self, aSysRegsStarterFile=None, aCSRTreeFile=None):
         self.mCSRTypesByIndex = {}
         if aSysRegsStarterFile is None:
-            raise ValueError(
-                "Internal error (CSRTreeBuilder): "
-                "No starter file specified."
-            )
+            raise ValueError("Internal error (CSRTreeBuilder): " "No starter file specified.")
         if aCSRTreeFile is None:
-            raise ValueError(
-                "Internal error (CSRTreeBuilder): "
-                "No starter file specified."
-            )
+            raise ValueError("Internal error (CSRTreeBuilder): " "No starter file specified.")
 
         self.mSysRegsStarterFile = aSysRegsStarterFile
         self.mCSRTreeFile = aCSRTreeFile
@@ -104,29 +98,17 @@ class CSRTreeBuilder:
             elif 0xC00 <= i < 0xCBF:
                 self.mCSRTypesByIndex[i] = ("User", "R")
             # standard supervisor CSRs...
-            if (
-                (0x100 <= i < 0x1FF)
-                or (0x500 <= i < 0x5BF)
-                or (0x900 <= i < 0x9BF)
-            ):
+            if (0x100 <= i < 0x1FF) or (0x500 <= i < 0x5BF) or (0x900 <= i < 0x9BF):
                 self.mCSRTypesByIndex[i] = ("Supervisor", "RW")
             elif 0xD00 <= i < 0xDBF:
                 self.mCSRTypesByIndex[i] = ("Supervisor", "R")
             # standard hypervisor CSRs...
-            if (
-                (0x200 <= i < 0x2FF)
-                or (0x600 <= i < 0x6BF)
-                or (0xA00 <= i < 0xABF)
-            ):
+            if (0x200 <= i < 0x2FF) or (0x600 <= i < 0x6BF) or (0xA00 <= i < 0xABF):
                 self.mCSRTypesByIndex[i] = ("Hypervisor", "RW")
             elif 0xE00 <= i < 0xEBF:
                 self.mCSRTypesByIndex[i] = ("Hypervisor", "R")
             # standard machine CSRs...
-            if (
-                (0x300 <= i < 0x3FF)
-                or (0x700 <= i < 0x7AF)
-                or (0xB00 <= i < 0xBBF)
-            ):
+            if (0x300 <= i < 0x3FF) or (0x700 <= i < 0x7AF) or (0xB00 <= i < 0xBBF):
                 self.mCSRTypesByIndex[i] = ("Machine", "RW")
             elif 0xF00 <= i < 0xFBF:
                 self.mCSRTypesByIndex[i] = ("Machine", "R")
@@ -181,18 +163,10 @@ class CSRTreeBuilder:
             f.write("# CSRs, grouped by Mode and access rights...\n")
             self.dumpOneCSRTree(f, "User_RW_CSRs", self.mUserRW_CSRs)
             self.dumpOneCSRTree(f, "User_RO_CSRs", self.mUserRO_CSRs)
-            self.dumpOneCSRTree(
-                f, "Supervisor_RW_CSRs", self.mSupervisorRW_CSRs
-            )
-            self.dumpOneCSRTree(
-                f, "Supervisor_RO_CSRs", self.mSupervisorRO_CSRs
-            )
-            self.dumpOneCSRTree(
-                f, "Hypervisor_RW_CSRs", self.mHypervisorRW_CSRs
-            )
-            self.dumpOneCSRTree(
-                f, "Hypervisor_RO_CSRs", self.mHypervisorRO_CSRs
-            )
+            self.dumpOneCSRTree(f, "Supervisor_RW_CSRs", self.mSupervisorRW_CSRs)
+            self.dumpOneCSRTree(f, "Supervisor_RO_CSRs", self.mSupervisorRO_CSRs)
+            self.dumpOneCSRTree(f, "Hypervisor_RW_CSRs", self.mHypervisorRW_CSRs)
+            self.dumpOneCSRTree(f, "Hypervisor_RO_CSRs", self.mHypervisorRO_CSRs)
             self.dumpOneCSRTree(f, "Machine_RW_CSRs", self.mMachineRW_CSRs)
             self.dumpOneCSRTree(f, "Machine_RO_CSRs", self.mMachineRO_CSRs)
             f.write(merge_trees_string)

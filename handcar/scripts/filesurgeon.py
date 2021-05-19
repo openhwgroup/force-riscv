@@ -1686,10 +1686,7 @@ def copy(src, dest):
 
 
 def copy_files(prefix_path_string, filenames_list, destination_dir):
-    printout(
-        "\nCopying specific files from: %s to %s"
-        % (prefix_path_string, destination_dir)
-    )
+    printout("\nCopying specific files from: %s to %s" % (prefix_path_string, destination_dir))
 
     for filename in filenames_list:
         # Take all the c code and label it as c++ code

@@ -76,20 +76,12 @@ class MainSequence(Sequence):
         shared_phys_addr_name = "Shared PA"
         with self.threadLockingContext():
             if not self.hasSharedThreadObject(shared_phys_addr_name):
-                shared_phys_addr = self.genPA(
-                    Size=8, Align=8, Type="D", Shared=1
-                )
-                self.setSharedThreadObject(
-                    shared_phys_addr_name, shared_phys_addr
-                )
+                shared_phys_addr = self.genPA(Size=8, Align=8, Type="D", Shared=1)
+                self.setSharedThreadObject(shared_phys_addr_name, shared_phys_addr)
             else:
-                shared_phys_addr = self.getSharedThreadObject(
-                    shared_phys_addr_name
-                )
+                shared_phys_addr = self.getSharedThreadObject(shared_phys_addr_name)
 
-        target_addr = self.genVAforPA(
-            Size=8, Align=8, Type="D", PA=shared_phys_addr
-        )
+        target_addr = self.genVAforPA(Size=8, Align=8, Type="D", PA=shared_phys_addr)
         for _ in range(RandomUtils.random32(10, 20)):
             instr = LDST_Int_map.pick(self.genThread)
             self.genInstruction(instr, {"LSTarget": target_addr})

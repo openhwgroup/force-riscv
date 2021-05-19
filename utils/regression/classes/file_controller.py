@@ -54,10 +54,7 @@ class FileController(Controller):
             # Msg.user( "FileController::load(3)" )
         except Exception as arg_ex:
             # Msg.user( "FileController::load(4)" )
-            Msg.err(
-                "Message: %s, Control File Path: %s"
-                % (str(arg_ex), self.parent_fctrl)
-            )
+            Msg.err("Message: %s, Control File Path: %s" % (str(arg_ex), self.parent_fctrl))
             my_err_queue_item = SummaryErrorQueueItem(
                 {
                     "error": arg_ex,
@@ -77,9 +74,7 @@ class FileController(Controller):
 
         try:
             # Msg.user( "FileController::load(7)" )
-            my_glb, my_loc = SysUtils.exec_content(
-                my_content, False, self.mControlFileLocals
-            )
+            my_glb, my_loc = SysUtils.exec_content(my_content, False, self.mControlFileLocals)
             # Msg.user( "FileController::load(8)" )
 
         except Exception as arg_ex:
@@ -87,10 +82,7 @@ class FileController(Controller):
             my_exc_type, my_exc_val, my_exc_tb = sys.exc_info()
             my_ex = arg_ex
 
-            Msg.err(
-                "Message: %s, Control File Path: %s"
-                % (str(arg_ex), self.parent_fctrl)
-            )
+            Msg.err("Message: %s, Control File Path: %s" % (str(arg_ex), self.parent_fctrl))
             Msg.blank()
 
             # Msg.user( "FileController::load(10)" )
@@ -153,9 +145,7 @@ class FileController(Controller):
                         my_controller = None
 
                         if my_item_type == ControlItemType.TaskItem:
-                            my_controller = TaskController(
-                                self.mProcessQueue, self.mAppsInfo
-                            )
+                            my_controller = TaskController(self.mProcessQueue, self.mAppsInfo)
 
                         elif my_item_type == ControlItemType.FileItem:
                             my_controller = FileController(
@@ -166,9 +156,7 @@ class FileController(Controller):
 
                         else:
                             raise Exception(
-                                '"'
-                                + my_fctrl_name
-                                + '": Unknown Item Type ...\n'
+                                '"' + my_fctrl_name + '": Unknown Item Type ...\n'
                                 "Unable to Process ... "
                             )
 
@@ -191,9 +179,7 @@ class FileController(Controller):
                         )
 
                         if self.mProcessQueue.summary is not None:
-                            self.mProcessQueue.summary.queue.enqueue(
-                                my_err_queue_item
-                            )
+                            self.mProcessQueue.summary.queue.enqueue(my_err_queue_item)
                         Msg.blank()
 
                     except FileNotFoundError as arg_ex:
@@ -209,9 +195,7 @@ class FileController(Controller):
                         )
 
                         if self.mProcessQueue.summary is not None:
-                            self.mProcessQueue.summary.queue.enqueue(
-                                my_err_queue_item
-                            )
+                            self.mProcessQueue.summary.queue.enqueue(my_err_queue_item)
                         Msg.blank()
 
                     except Exception as arg_ex:

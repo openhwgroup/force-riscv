@@ -63,14 +63,10 @@ class MainSequence(Sequence):
             if self.hasSharedThreadObject(aAddrName):
                 shared_phys_addr = self.getSharedThreadObject(aAddrName)
             else:
-                shared_phys_addr = self.genPA(
-                    Size=8, Align=8, Type="D", Shared=1
-                )
+                shared_phys_addr = self.genPA(Size=8, Align=8, Type="D", Shared=1)
                 self.setSharedThreadObject(aAddrName, shared_phys_addr)
 
-        return self.genVAforPA(
-            Size=8, Align=8, Type="D", PA=shared_phys_addr, CanAlias=1
-        )
+        return self.genVAforPA(Size=8, Align=8, Type="D", PA=shared_phys_addr, CanAlias=1)
 
     # Verify that a stored value can be subsequently retrieved by a load from
     # the same address. This method assumes execution in the context of a
@@ -92,9 +88,7 @@ class MainSequence(Sequence):
             test_val = RandomUtils.random32()
             load_gpr32_seq.load(src_reg_index, test_val)
             instr = "SW##RISCV"
-        self.genInstruction(
-            instr, {"rs2": src_reg_index, "LSTarget": aTargetAddr}
-        )
+        self.genInstruction(instr, {"rs2": src_reg_index, "LSTarget": aTargetAddr})
 
         self.unreserveRegister("x%d" % src_reg_index)
 

@@ -62,14 +62,10 @@ class ReusableSequence(Sequence):
         routine_start_addr = self._mRoutineStartAddresses.get(aRoutineName)
         if routine_start_addr is not None:
             self.mStack.newStackFrame(save_reg_indices)
-            self.mAssemblyHelper.genRelativeBranchWithLinkToAddress(
-                routine_start_addr
-            )
+            self.mAssemblyHelper.genRelativeBranchWithLinkToAddress(routine_start_addr)
             self.mStack.freeStackFrame()
         else:
-            raise ValueError(
-                "Routine %s has not been generated" % aRoutineName
-            )
+            raise ValueError("Routine %s has not been generated" % aRoutineName)
 
     # Jump to a routine that has previously been generated. A branch
     # instruction will be generated to jump to the routine.
@@ -80,9 +76,7 @@ class ReusableSequence(Sequence):
         if routine_start_addr:
             self.mAssemblyHelper.genRelativeBranchToAddress(routine_start_addr)
         else:
-            raise ValueError(
-                "Routine %s has not been generated" % aRoutineName
-            )
+            raise ValueError("Routine %s has not been generated" % aRoutineName)
 
     # Return whether the specified routine has been generated
     #
@@ -109,9 +103,7 @@ class ReusableSequence(Sequence):
     #  @param aRoutineNames A list of routine names to append the prerequisite
     #       routine names to.
     def _appendPrerequisiteRoutineNames(self, aRoutineName, aRoutineNames):
-        for prereq_routine_name in self.getPrerequisiteRoutineNames(
-            aRoutineName
-        ):
+        for prereq_routine_name in self.getPrerequisiteRoutineNames(aRoutineName):
             if prereq_routine_name not in aRoutineNames:
                 aRoutineNames.append(prereq_routine_name)
 

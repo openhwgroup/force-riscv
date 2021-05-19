@@ -31,22 +31,16 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       modified.
     #  @param aPrivLevelRegIndex The index of a register containing a value
     #       representing the current privilege level.
-    def genIncrementExceptionReturnAddress(
-        self, aScratchRegIndex, aPrivLevelRegIndex
-    ):
+    def genIncrementExceptionReturnAddress(self, aScratchRegIndex, aPrivLevelRegIndex):
         for priv_level in self.genPrivilegeLevelInstructions(
             aPrivLevels=tuple(PrivilegeLevelRISCV)[1:],
             aInstrCountPerLevel=3,
             aScratchRegIndex=aScratchRegIndex,
             aPrivLevelRegIndex=aPrivLevelRegIndex,
         ):
-            self.genReadSystemRegister(
-                aScratchRegIndex, ("%sepc" % priv_level.name.lower())
-            )
+            self.genReadSystemRegister(aScratchRegIndex, ("%sepc" % priv_level.name.lower()))
             self.genAddImmediate(aScratchRegIndex, 4)
-            self.genWriteSystemRegister(
-                ("%sepc" % priv_level.name.lower()), aScratchRegIndex
-            )
+            self.genWriteSystemRegister(("%sepc" % priv_level.name.lower()), aScratchRegIndex)
 
     # Generate instructions to set the system register containing the
     # exception return address to the provided recovery address. This will
@@ -68,9 +62,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
             aScratchRegIndex=aScratchRegIndex,
             aPrivLevelRegIndex=aPrivLevelRegIndex,
         ):
-            self.genWriteSystemRegister(
-                ("%sepc" % priv_level.name.lower()), aRecoveryRegIndex
-            )
+            self.genWriteSystemRegister(("%sepc" % priv_level.name.lower()), aRecoveryRegIndex)
 
     # Generate a relative branch instruction to the specified address.
     #
@@ -137,12 +129,8 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #  @param aSrcRegIndex The index of the register containing the value to
     #       shift. May be omitted if the destination register is also the
     #       source register.
-    def genShiftLeftImmediate(
-        self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None
-    ):
-        src_reg_index = (
-            aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        )
+    def genShiftLeftImmediate(self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None):
+        src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
         instr = "SLLI#%s#RISCV" % (self.getInstrForm())
         self.mSequence.genInstruction(
             instr,
@@ -156,12 +144,8 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #  @param aSrcRegIndex The index of the register containing the value to
     #       shift. May be omitted if the destination register is also the
     #       source register.
-    def genShiftRightImmediate(
-        self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None
-    ):
-        src_reg_index = (
-            aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        )
+    def genShiftRightImmediate(self, aDestRegIndex, aShiftAmount, aSrcRegIndex=None):
+        src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
         instr = "SRLI#%s#RISCV" % (self.getInstrForm())
         self.mSequence.genInstruction(
             instr,
@@ -170,11 +154,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
 
     def getInstrForm(self):
 
-        return (
-            "RV32I"
-            if (self.mSequence.getGlobalState("AppRegisterWidth") == 32)
-            else "RV64I"
-        )
+        return "RV32I" if (self.mSequence.getGlobalState("AppRegisterWidth") == 32) else "RV64I"
 
     # Generate an instruction to AND a specified register with an immediate
     # value.
@@ -185,9 +165,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       AND. May be omitted if the destination register is also the source
     #       register.
     def genAndImmediate(self, aDestRegIndex, aImmVal, aSrcRegIndex=None):
-        src_reg_index = (
-            aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        )
+        src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "ANDI##RISCV",
             {"rd": aDestRegIndex, "rs1": src_reg_index, "simm12": aImmVal},
@@ -202,9 +180,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       OR. May be omitted if the destination register is also the source
     #       register.
     def genOrImmediate(self, aDestRegIndex, aImmVal, aSrcRegIndex=None):
-        src_reg_index = (
-            aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        )
+        src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "ORI##RISCV",
             {"rd": aDestRegIndex, "rs1": src_reg_index, "simm12": aImmVal},
@@ -219,9 +195,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       XOR. May be omitted if the destination register is also the source
     #       register.
     def genXorImmediate(self, aDestRegIndex, aImmVal, aSrcRegIndex=None):
-        src_reg_index = (
-            aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        )
+        src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "XORI##RISCV",
             {"rd": aDestRegIndex, "rs1": src_reg_index, "simm12": aImmVal},
@@ -236,9 +210,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       be added to. May be omitted if the destination register is also
     #       the source register.
     def genAddImmediate(self, aDestRegIndex, aImmVal, aSrcRegIndex=None):
-        src_reg_index = (
-            aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
-        )
+        src_reg_index = aSrcRegIndex if aSrcRegIndex is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "ADDI##RISCV",
             {"rd": aDestRegIndex, "rs1": src_reg_index, "simm12": aImmVal},
@@ -262,9 +234,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       values to AND. May be omitted if the destination register is also
     #       one of the source registers.
     def genAndRegister(self, aDestRegIndex, aSrcRegIndex1, aSrcRegIndex2=None):
-        src_reg_index_2 = (
-            aSrcRegIndex2 if aSrcRegIndex2 is not None else aDestRegIndex
-        )
+        src_reg_index_2 = aSrcRegIndex2 if aSrcRegIndex2 is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "AND##RISCV",
             {
@@ -283,9 +253,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       values to OR. May be omitted if the destination register is also
     #       one of the source registers.
     def genOrRegister(self, aDestRegIndex, aSrcRegIndex1, aSrcRegIndex2=None):
-        src_reg_index_2 = (
-            aSrcRegIndex2 if aSrcRegIndex2 is not None else aDestRegIndex
-        )
+        src_reg_index_2 = aSrcRegIndex2 if aSrcRegIndex2 is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "OR##RISCV",
             {
@@ -313,9 +281,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       values to add. May be omitted if the destination register is also
     #       one of the source registers.
     def genAddRegister(self, aDestRegIndex, aSrcRegIndex1, aSrcRegIndex2=None):
-        src_reg_index_2 = (
-            aSrcRegIndex2 if aSrcRegIndex2 is not None else aDestRegIndex
-        )
+        src_reg_index_2 = aSrcRegIndex2 if aSrcRegIndex2 is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "ADD##RISCV",
             {
@@ -333,12 +299,8 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #  @param aMinuendRegIndex The index of the register containing the value
     #       to be subtracted from. May be omitted if the destination register
     #       is also used as the minuend.
-    def genSubRegister(
-        self, aDestRegIndex, aSubtrahendRegIndex, aMinuendRegIndex=None
-    ):
-        minuend_reg_index = (
-            aMinuendRegIndex if aMinuendRegIndex is not None else aDestRegIndex
-        )
+    def genSubRegister(self, aDestRegIndex, aSubtrahendRegIndex, aMinuendRegIndex=None):
+        minuend_reg_index = aMinuendRegIndex if aMinuendRegIndex is not None else aDestRegIndex
         self.mSequence.genInstruction(
             "SUB##RISCV",
             {
@@ -387,13 +349,9 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       side of the comparison.
     #  @param aTargetAddr The target address of the branch.
     #  @param aCondition A two-letter string encoding the branch condition.
-    def genConditionalBranchToAddress(
-        self, aLhRegIndex, aRhRegIndex, aTargetAddr, aCondition
-    ):
+    def genConditionalBranchToAddress(self, aLhRegIndex, aRhRegIndex, aTargetAddr, aCondition):
         br_offset = self.getBranchOffset(aTargetAddr, 12)
-        self.genConditionalBranch(
-            aLhRegIndex, aRhRegIndex, br_offset, aCondition
-        )
+        self.genConditionalBranch(aLhRegIndex, aRhRegIndex, br_offset, aCondition)
 
     # Generate a conditional branch instruction targeting a labeled address.
     # Record the branch for later verification that the expected address was
@@ -406,13 +364,9 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #  @param aBrOffset The branch offset.
     #  @param aCondition A two-letter string encoding the branch condition.
     #  @param aLabel The label the branch is targeting.
-    def genConditionalBranchToLabel(
-        self, aLhRegIndex, aRhRegIndex, aBrOffset, aCondition, aLabel
-    ):
+    def genConditionalBranchToLabel(self, aLhRegIndex, aRhRegIndex, aBrOffset, aCondition, aLabel):
         self.recordBranchToLabel(aLabel, aBrOffset)
-        self.genConditionalBranch(
-            aLhRegIndex, aRhRegIndex, aBrOffset, aCondition
-        )
+        self.genConditionalBranch(aLhRegIndex, aRhRegIndex, aBrOffset, aCondition)
 
     # Generate a conditional branch instruction.
     #
@@ -422,9 +376,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #       side of the comparison.
     #  @param aBrOffset The branch offset.
     #  @param aCondition A two-letter string encoding the branch condition.
-    def genConditionalBranch(
-        self, aLhRegIndex, aRhRegIndex, aBrOffset, aCondition
-    ):
+    def genConditionalBranch(self, aLhRegIndex, aRhRegIndex, aBrOffset, aCondition):
         CONDITIONS = {"EQ": 0, "NE": 1, "LT": 2, "LTU": 3, "GE": 4, "GEU": 5}
 
         instr = "B%s##RISCV" % aCondition
@@ -445,9 +397,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
     #  @param aPrivLevel The privilege level in which the exception return
     #       will be executed.
     def genExceptionReturn(self, aPrivLevel):
-        self.mSequence.genInstruction(
-            "%sRET##RISCV" % aPrivLevel.name, {"NoRestriction": 1}
-        )
+        self.mSequence.genInstruction("%sRET##RISCV" % aPrivLevel.name, {"NoRestriction": 1})
 
     # Generate branch instructions to determine the current privilege level.
     # This method yields at the appropriate locations in the branch instruction
@@ -481,9 +431,7 @@ class AssemblyHelperRISCV(AssemblyHelper):
 
             yield priv_level
 
-            rel_branch_offset = (
-                (3 + aInstrCountPerLevel) * (len(aPrivLevels) - i - 1) - 2
-            ) * 2
+            rel_branch_offset = ((3 + aInstrCountPerLevel) * (len(aPrivLevels) - i - 1) - 2) * 2
             self.genRelativeBranch(rel_branch_offset)
 
         # Generate code for the last privilege level.

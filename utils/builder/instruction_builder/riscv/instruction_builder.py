@@ -68,17 +68,13 @@ license_string = """<!--
 """
 
 
-def process_instruction_file(
-    aInputFile, aOutputFile, aSupportedFile, aAdjustByFormatFunc
-):
+def process_instruction_file(aInputFile, aOutputFile, aSupportedFile, aAdjustByFormatFunc):
     starter_file = aInputFile
     instr_file = InstructionFile()
     file_parser = InstructionFileParser(instr_file)
     file_parser.parse(starter_file)
 
-    instr_adjustor = instruction_adjustor.RiscV_InstructionAdjustor(
-        aAdjustByFormatFunc
-    )
+    instr_adjustor = instruction_adjustor.RiscV_InstructionAdjustor(aAdjustByFormatFunc)
     instr_file.adjust_instructions(instr_adjustor)
 
     out_file_name = aOutputFile
