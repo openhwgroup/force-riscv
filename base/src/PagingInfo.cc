@@ -73,6 +73,9 @@ namespace Force {
       if (strcmp(node_name, "page_tables") == 0) {
         // known node names.
       }
+      else if (strcmp(node_name, "paging_mode") == 0) {
+        process_paging_mode_node(node);
+      }
       else if (strcmp(node_name, "pte") == 0) {
         process_pte_node(node);
       }
@@ -94,6 +97,30 @@ namespace Force {
     {
       commit_pte_structure();
       return true;
+    }
+
+    /*!
+      Process attributes of \<paging_mode\> element.
+     */
+    void process_paging_mode_node(pugi::xml_node& node)
+    {
+      try {
+        for (pugi::xml_attribute const& attr: node.attributes()) {
+          const char* attr_name = attr.name();
+
+          if (strcmp(attr.name(), "name") == 0) {
+            mpPagingInfo->mPagingMode = string_to_EPagingMode(attr.value());
+          }
+          else {
+            LOG(fail) << "Unknown paging_mode attribute \'" << attr_name << "\'" << endl;
+            FAIL("unknown-paging-mode-attribute");
+          }
+        }
+      }
+      catch (const EnumTypeError& enum_error) {
+        LOG(fail) << "Error interpeting enum: " << enum_error.what() << " when processing paging_mode node." << endl;
+        FAIL("error-interpeting-paging-mode");
+      }
     }
 
     /*!
@@ -123,14 +150,14 @@ namespace Force {
           else if (strcmp(attr_name, "stage") == 0) mpPteStructure->mStage = parse_uint32(attr.value());
           else if (strcmp(attr_name, "class") == 0) mpPteStructure->mClass = attr.value();
           else {
-            LOG(fail) << "Unknown PTE attribute \'" << attr_name << endl;
+            LOG(fail) << "Unknown PTE attribute \'" << attr_name << "\'" << endl;
             FAIL("unknown-pte-attribute");
           }
         }
       }
       catch (const EnumTypeError& enum_error) {
-        LOG(fail) << "Error interpretting enum: " << enum_error.what() << " when processing PTE node." << endl;
-        FAIL("error-interpretting-pte-enum");
+        LOG(fail) << "Error interpeting enum: " << enum_error.what() << " when processing PTE node." << endl;
+        FAIL("error-interpeting-pte-enum");
       }
     }
 
@@ -173,14 +200,14 @@ namespace Force {
             mpPteAttributeStructure->mFactory = (parse_uint32(attr.value()) > 0);
           }
           else {
-            LOG(fail) << "Unknown PteAttributeStructure attribute \'" << attr_name << endl;
+            LOG(fail) << "Unknown PteAttributeStructure attribute \'" << attr_name << "\'" << endl;
             FAIL("unknown-pte-attribute-structure-attribute");
           }
         }
       }
       catch (const EnumTypeError& enum_error) {
-        LOG(fail) << "Error interpretting enum: " << enum_error.what() << " when processing PTE attribute node." << endl;
-        FAIL("error-interpretting-pte-attribute-enum");
+        LOG(fail) << "Error interpeting enum: " << enum_error.what() << " when processing PTE attribute node." << endl;
+        FAIL("error-interpeting-pte-attribute-enum");
       }
     }
 

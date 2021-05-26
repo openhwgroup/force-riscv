@@ -22,6 +22,7 @@
 #include <Register.h>
 #include <VmInfo.h>
 #include <Memory.h>
+#include <PagingInfo.h>
 
 #include <memory>
 #include <algorithm>
@@ -141,11 +142,19 @@ namespace Force {
 
     //satp init
     field_map.clear();
-    if (rv32) {
-      field_map["MODE"] = 0x1;  // satp.mode is single-bit field. set to 1 to enable Sv32 paging
-    } else {
-      field_map["MODE"] = 0x9;  // paging mode value is 0x9 for Sv48
+    const PagingInfo* paging_info = mpGenerator->GetPagingInfo();
+    switch (paging_info->GetPagingMode()) {
+      case EPagingMode::Sv32:
+        field_map["MODE"] = 0x1;
+        break;
+      case EPagingMode::Sv39:
+        field_map["MODE"] = 0x8;
+        break;
+      case EPagingMode::Sv48:
+      default:
+        field_map["MODE"] = 0x9;
     }
+
     if (mpDisablePagingOption->mValid && (mpDisablePagingOption->mValue != 0))
     {
       LOG(debug) << "[InitialSetupRISCV::Process] Paging IS disabled..." << std::endl;

@@ -599,6 +599,73 @@ namespace Force {
   }
 
 
+  unsigned char EPagingModeSize = 4;
+
+  const string EPagingMode_to_string(EPagingMode in_enum)
+  {
+    switch (in_enum) {
+    case EPagingMode::Bare: return "Bare";
+    case EPagingMode::Sv32: return "Sv32";
+    case EPagingMode::Sv39: return "Sv39";
+    case EPagingMode::Sv48: return "Sv48";
+    default:
+      unknown_enum_value("EPagingMode", (unsigned char)(in_enum));
+    }
+    return "";
+  }
+
+  EPagingMode string_to_EPagingMode(const string& in_str)
+  {
+    string enum_type_name = "EPagingMode";
+    size_t size = in_str.size();
+    char hash_value = in_str.at(3 < size ? 3 : 3 % size);
+
+    switch (hash_value) {
+    case 50:
+      validate(in_str, "Sv32", enum_type_name);
+      return EPagingMode::Sv32;
+    case 56:
+      validate(in_str, "Sv48", enum_type_name);
+      return EPagingMode::Sv48;
+    case 57:
+      validate(in_str, "Sv39", enum_type_name);
+      return EPagingMode::Sv39;
+    case 101:
+      validate(in_str, "Bare", enum_type_name);
+      return EPagingMode::Bare;
+    default:
+      unknown_enum_name(enum_type_name, in_str);
+    }
+    return EPagingMode::Bare;
+  }
+
+  EPagingMode try_string_to_EPagingMode(const string& in_str, bool& okay)
+  {
+    okay = true;
+    size_t size = in_str.size();
+    char hash_value = in_str.at(3 < size ? 3 : 3 % size);
+
+    switch (hash_value) {
+    case 50:
+      okay = (in_str == "Sv32");
+      return EPagingMode::Sv32;
+    case 56:
+      okay = (in_str == "Sv48");
+      return EPagingMode::Sv48;
+    case 57:
+      okay = (in_str == "Sv39");
+      return EPagingMode::Sv39;
+    case 101:
+      okay = (in_str == "Bare");
+      return EPagingMode::Bare;
+    default:
+      okay = false;
+      return EPagingMode::Bare;
+    }
+    return EPagingMode::Bare;
+  }
+
+
   unsigned char EPageGenBoolAttrTypeSize = 12;
 
   const string EPageGenBoolAttrType_to_string(EPageGenBoolAttrType in_enum)

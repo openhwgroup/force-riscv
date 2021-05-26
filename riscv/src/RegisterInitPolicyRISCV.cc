@@ -28,6 +28,7 @@
 #include <Register.h>
 #include <UtilityFunctions.h>
 #include <VectorLayoutSetupRISCV.h>
+#include <PagingInfo.h>
 
 #include <cmath>
 #include <memory>
@@ -55,11 +56,19 @@ namespace Force {
     std::unique_ptr<ConstraintSet> usable_constr_ptr(usable_constr);
 
     RootPageTable root_table;
+    const PagingInfo* paging_info = mpGenerator->GetPagingInfo();
+    switch (paging_info->GetPagingMode()) {
+      case EPagingMode::Sv32:
+        root_table.Setup(10, 31, 22, "", 2, 1);
+        break;
+      case EPagingMode::Sv39:
+        root_table.Setup(9, 38, 30, "", 3, 2);
+        break;
+      case EPagingMode::Sv48:
+      default:
+        root_table.Setup(9, 47, 39, "", 3, 3);
+    }
 
-    if (Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32)
-      root_table.Setup(10, 31, 22, "", 2, 1);  // Sv32
-    else
-      root_table.Setup(9, 47, 39, "", 3, 3);   // Sv48
     uint32 tb_size = root_table.RootTableSize();
 
     SetupRootPageTableRISCV setup_page_table;

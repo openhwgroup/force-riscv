@@ -151,6 +151,22 @@ namespace Force {
 
 
   /*!
+    Paging mode
+  */
+  enum class EPagingMode : unsigned char {
+    Bare = 0,
+    Sv32 = 1,
+    Sv39 = 2,
+    Sv48 = 3,
+  };
+  extern unsigned char EPagingModeSize;
+  extern const std::string EPagingMode_to_string(EPagingMode in_enum); //!< Get string name for enum.
+  extern EPagingMode string_to_EPagingMode(const std::string& in_str); //!< Get enum value for string name.
+  extern EPagingMode try_string_to_EPagingMode(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
+  typedef unsigned char EPagingModeBaseType; //!< Define a type name for the enum base data type.
+
+
+  /*!
     Boolean type GenPageRequest attributes for configuring page generation
   */
   enum class EPageGenBoolAttrType : unsigned char {

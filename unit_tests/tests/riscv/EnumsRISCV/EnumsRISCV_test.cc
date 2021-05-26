@@ -376,6 +376,49 @@ CASE( "tests for EPageGranuleType" ) {
 },
 
 
+CASE( "tests for EPagingMode" ) {
+
+  SETUP ( "setup EPagingMode" )  {
+
+    SECTION( "test enum to string conversion" ) {
+      EXPECT(EPagingMode_to_string(EPagingMode::Bare) == "Bare");
+      EXPECT(EPagingMode_to_string(EPagingMode::Sv32) == "Sv32");
+      EXPECT(EPagingMode_to_string(EPagingMode::Sv39) == "Sv39");
+      EXPECT(EPagingMode_to_string(EPagingMode::Sv48) == "Sv48");
+    }
+
+    SECTION( "test string to enum conversion" ) {
+      EXPECT(string_to_EPagingMode("Bare") == EPagingMode::Bare);
+      EXPECT(string_to_EPagingMode("Sv32") == EPagingMode::Sv32);
+      EXPECT(string_to_EPagingMode("Sv39") == EPagingMode::Sv39);
+      EXPECT(string_to_EPagingMode("Sv48") == EPagingMode::Sv48);
+    }
+
+    SECTION( "test string to enum conversion with non-matching string" ) {
+      EXPECT_THROWS_AS(string_to_EPagingMode("B_re"), EnumTypeError);
+    }
+
+    SECTION( "test non-throwing string to enum conversion" ) {
+      bool okay = false;
+      EXPECT(try_string_to_EPagingMode("Bare", okay) == EPagingMode::Bare);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPagingMode("Sv32", okay) == EPagingMode::Sv32);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPagingMode("Sv39", okay) == EPagingMode::Sv39);
+      EXPECT(okay);
+      EXPECT(try_string_to_EPagingMode("Sv48", okay) == EPagingMode::Sv48);
+      EXPECT(okay);
+    }
+
+    SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
+      bool okay = false;
+      try_string_to_EPagingMode("B_re", okay);
+      EXPECT(!okay);
+    }
+  }
+},
+
+
 CASE( "tests for EPageGenBoolAttrType" ) {
 
   SETUP ( "setup EPageGenBoolAttrType" )  {

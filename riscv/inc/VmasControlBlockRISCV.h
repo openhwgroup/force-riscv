@@ -51,7 +51,6 @@ namespace Force {
     void CommitPageTable(uint64 VA, const PageTable* pParentTable, const TablePte* pTablePte, std::vector<ConstraintSet* >& rVmConstraints) override;
     void CommitPage(const Page* pPage, std::vector<ConstraintSet* >& rVmConstraints) override;
 
-    bool SV32() const; //!< Return true if riscv paging mode is Sv32
     uint32 PteShift() const override; //!< Return PTE shift based on PTE size.
     uint32 HighestVaBitCurrent(uint32 rangeNum = 0ul) const override; //!< Return current highest VA bit.
     ConstraintSet* GetPageTableUsableConstraint(EMemBankType memBank) const override; //!< Returns the page table physical usable constraint as determined by max phys address and variable.

@@ -16,6 +16,8 @@
 #ifndef Force_PagingInfo_H
 #define Force_PagingInfo_H
 
+#include ARCH_ENUM_HEADER
+
 #include <string>
 #include <map>
 
@@ -33,15 +35,17 @@ namespace Force {
 
   class PagingInfo {
   public:
-    PagingInfo(): mPteSet() { } //!< Constructor.
+    PagingInfo(): mPagingMode(EPagingMode(0)), mPteSet() { } //!< Constructor.
     virtual ~PagingInfo(); //!< Destructor.
 
     void Setup(const ArchInfo& archInfo); //!< Setup PagingInfo container, load paging files.
+    EPagingMode GetPagingMode() const { return mPagingMode; } //!< Get paging mode.
     const PteStructure* LookUpPte(const std::string& pteName) const; //!< Look up PteStructure object by PTE ID.
   protected:
     void AddPte(PteStructure* pteStruct); //!< Add a new instance of PteStructure.
 
   private:
+    EPagingMode mPagingMode; //!< Paging mode
     std::map<std::string, PteStructure* > mPteSet; //!< Map containing all PteStructure objects.
     friend class PagingParser;
   };

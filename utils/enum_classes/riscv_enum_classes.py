@@ -79,6 +79,17 @@ enum_classes_details = [
     ],
     ["PageGranuleType", "unsigned char", "Page granule types", [("G4K", 0)]],
     [
+        "PagingMode",
+        "unsigned char",
+        "Paging mode",
+        [
+            ("Bare", 0),
+            ("Sv32", 1),
+            ("Sv39", 2),
+            ("Sv48", 3),
+        ],
+    ],
+    [
         "PageGenBoolAttrType",
         "unsigned char",
         "Boolean type GenPageRequest attributes for configuring page " "generation",
