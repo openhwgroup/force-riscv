@@ -117,7 +117,7 @@ class RunWithReport(object):
         return report_cmd
 
     def runReportCommand(self):
-        subprocess.run(shlex.split(self._mReportCommand))
+        subprocess.call(shlex.split(self._mReportCommand))
 
     def _getGatherCommand(self):
         # Always XML dump regardless of command line arguments for now.
@@ -132,7 +132,7 @@ class RunWithReport(object):
         return gather_cmd
 
     def runGatherCommand(self):
-        subprocess.run(shlex.split(self._mGatherCommand))
+        subprocess.call(shlex.split(self._mGatherCommand))
 
     def dump(self):
         print(vars(self))

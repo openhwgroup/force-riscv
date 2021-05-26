@@ -213,12 +213,14 @@ def run_one_unit_test(nopicky, clean_build, arg_tuple):
 def execute_command(cmd):
     # Measure the amount of time it took to run this test
     start_time = time.time()
-    process = subprocess.run(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process.wait()
     end_time = time.time()
-    process_stdout = process.stdout.decode("utf-8")
+
+    process_stdout = process.stdout.read()
     ret_code = process.returncode
 
-    trace = ExecutionTrace(process_stdout, ret_code, cmd, end_time - start_time)
+    trace = ExecutionTrace(process_stdout.decode("utf-8"), ret_code, cmd, end_time - start_time)
     return trace
 
 

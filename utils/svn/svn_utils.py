@@ -103,7 +103,7 @@ def check_out_revision(svn_path, ver, base_name, clean_up=False):
 
     svn_command += " %s" % dir_name
 
-    subprocess.run(shlex.split(svn_command))
+    subprocess.call(shlex.split(svn_command))
 
     # remove .svn directories, to facilitate diff file making
     if clean_up:
@@ -115,7 +115,7 @@ def check_out_revision(svn_path, ver, base_name, clean_up=False):
 def create_diff_file(dir_name1, dir_name2, diff_file_name):
     diff_cmd = "diff -ruN %s %s > %s" % (dir_name1, dir_name2, diff_file_name)
     print(diff_cmd)
-    subprocess.run(shlex.split(diff_cmd))
+    subprocess.call(shlex.split(diff_cmd))
     print("Created diff file: %s." % diff_file_name)
 
 
@@ -136,7 +136,7 @@ def create_merge_dir(base_name, rev):
 def apply_patch_file(diff_file):
     patch_cmd = "patch -p1 < %s" % diff_file
     print("Executing: %s" % patch_cmd)
-    subprocess.run(shlex.split(patch_cmd))
+    subprocess.call(shlex.split(patch_cmd))
 
 
 def is_svn_separator_line(line):

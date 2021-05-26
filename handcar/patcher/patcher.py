@@ -200,8 +200,8 @@ def should_do_patch(src, patch, tgt):
 def patch_file(src, patch, tgt):
     cmd = [patch_cmd, src, "-i", patch, "-o", tgt]
     printout("Calling %s" % cmd)
-    rc = subprocess.run(cmd)
-    if rc.returncode:
+    returncode = subprocess.call(cmd)
+    if returncode:
         print("error encountered running %r" % cmd)
 
 
@@ -274,7 +274,7 @@ def generate_patches():
                 with open(patch, "w") as fh:
                     fh.write(copyright_text % patch)
                     cmd = [diff_cmd, src, tgt]
-                    subprocess.run(cmd, stdout=fh)
+                    subprocess.call(cmd, stdout=fh)
 
 
 def main():

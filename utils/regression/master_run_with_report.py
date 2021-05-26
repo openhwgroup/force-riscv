@@ -179,7 +179,7 @@ class RunWithReport(object):
     def runMasterRun(self):
         self._mMasterRunCommand = self._getMasterRunCommand()
         self.printMasterRunConfig()
-        subprocess.run(shlex.split(self._mMasterRunCommand))
+        subprocess.call(shlex.split(self._mMasterRunCommand))
 
     def _getReportName(self):
         report_name = "top_force_" + PathUtils.base_name(self._mTestDir)
@@ -194,7 +194,7 @@ class RunWithReport(object):
         return report_cmd
 
     def runReportCommand(self):
-        subprocess.run(shlex.split(self._mReportCommand))
+        subprocess.call(shlex.split(self._mReportCommand))
 
     def _getGatherCommand(self):
         gather_cmd = (
@@ -207,7 +207,7 @@ class RunWithReport(object):
         return gather_cmd
 
     def runGatherCommand(self):
-        subprocess.run(shlex.split(self._mGatherCommand))
+        subprocess.call(shlex.split(self._mGatherCommand))
 
     def dump(self):
         print(vars(self))

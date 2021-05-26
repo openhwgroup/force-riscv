@@ -246,7 +246,7 @@ class ParseFiles:
 if __name__ == "__main__":
     # Do make new
     os.chdir(the_force_path)
-    subprocess.run(["make", "tests_old"])
+    subprocess.call(["make", "tests_old"])
 
     # Parse the results
     parseNew = ParseFiles(the_force_path)
@@ -254,7 +254,7 @@ if __name__ == "__main__":
 
     # Do make old
     os.chdir(the_force_path)
-    subprocess.run(["make", "tests"])
+    subprocess.call(["make", "tests"])
 
     # Parse the results
     parseOld = ParseFiles(the_force_path)
