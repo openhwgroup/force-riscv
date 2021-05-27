@@ -16,6 +16,8 @@
 from base.exception_handlers.ReusableSequence import ReusableSequence
 from riscv.exception_handlers.ExceptionHandlerContext import RegisterCallRole
 from riscv.PrivilegeLevel import PrivilegeLevelRISCV
+from EnumsRISCV import EPagingMode
+import VirtualMemory
 
 
 # using defined subroutine register usage, setup set of registers used within
@@ -147,7 +149,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.mAssemblyHelper.logDebugSymbol("PAGE_FAULT_HANDLER entered...")
 
-        if self.getGlobalState("AppRegisterWidth") == 32:
+        if VirtualMemory.getPagingMode() == EPagingMode.Sv32:
             # not relevant for Sv32...
             pass
         else:
@@ -209,7 +211,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         self.mAssemblyHelper.logDebugSymbol("Returned from ClearPageFault.")
 
-        if self.getGlobalState("AppRegisterWidth") != 32:
+        if VirtualMemory.getPagingMode() != EPagingMode.Sv32:
             self.mAssemblyHelper.addLabel("PAGE_FAULT_HANDLER_EXIT")
 
         # restore 'handler-saved' registers,
@@ -222,7 +224,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
     # mtv 01/05/2021 - add switch to exclude CheckFaultAddress if RV32
     def getPrerequisiteRoutineNames(self, aRoutineName):
         if aRoutineName == "Handler":
-            if self.getGlobalState("AppRegisterWidth") == 32:
+            if VirtualMemory.getPagingMode() == EPagingMode.Sv32:
                 return ["ClearPageFault"]
             else:
                 return ["CheckFaultAddress", "ClearPageFault"]
@@ -733,7 +735,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
         # Sv32:       ppn[0] is bits 19..10
         # Sv39, Sv48: ppn[0] is bits 18..10
-        if self.getGlobalState("AppRegisterWidth") == 32:
+        if VirtualMemory.getPagingMode() == EPagingMode.Sv32:
             self.mAssemblyHelper.genMoveImmediate(
                 scratch_reg2_index, 0x3FF
             )  # for Sv32, each pte.ppn field is ten bits

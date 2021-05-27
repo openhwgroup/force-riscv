@@ -26,6 +26,7 @@
 #include <py_modules/PyStateTransition.h>
 #include <py_modules/PyThreadDispatcher.h>
 #include <py_modules/PyUtilityFunctions.h>
+#include <py_modules/PyVirtualMemory.h>
 
 #include <pybind11/embed.h>
 
@@ -49,6 +50,7 @@ namespace PyEnvironment {
     PyImport_AppendInittab("StateTransition", PyInit_StateTransition);
     PyImport_AppendInittab("ThreadDispatcher", PyInit_ThreadDispatcher);
     PyImport_AppendInittab("UtilityFunctions", PyInit_UtilityFunctions);
+    PyImport_AppendInittab("VirtualMemory", PyInit_VirtualMemory);
 
     py::initialize_interpreter();
   }

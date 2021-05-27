@@ -15,6 +15,8 @@
 #
 from base.exception_handlers.ReusableSequence import ReusableSequence
 from riscv.exception_handlers.ExceptionHandlerContext import RegisterCallRole
+from EnumsRISCV import EPagingMode
+import VirtualMemory
 
 
 #  This class generates reusable subroutines that exception handlers can call.
@@ -25,7 +27,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
     # max levels in walk
     LEVELS = {
         32: 2,
-        39: 4,
+        39: 3,
         48: 4,
     }
 
@@ -100,8 +102,10 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         # Before modifying registers, save their old values
         self._pushExceptionSpecificRegisters()
 
-        if self.getGlobalState("AppRegisterWidth") == 32:
+        if VirtualMemory.getPagingMode() == EPagingMode.Sv32:
             self._genLoadAllContextRegisters(self._mR1, self.PTE_SHIFT, self.LEVELS[32])
+        elif VirtualMemory.getPagingMode() == EPagingMode.Sv39:
+            self._genLoadAllContextRegisters(self._mR1, self.PTE_SHIFT, self.LEVELS[39])
         else:
             self._genLoadAllContextRegisters(self._mR1, self.PTE_SHIFT, self.LEVELS[48])
 
@@ -109,8 +113,10 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
         self.mAssemblyHelper.logDebugSymbol("Fault Address: X%d" % self._mFaultAddrRegIndex)
 
         # self.mAssemblyHelper.addLabel('ATP MODE check')
-        if self.getGlobalState("AppRegisterWidth") == 32:
+        if VirtualMemory.getPagingMode() == EPagingMode.Sv32:
             self.callRoutine("TableWalkSV32")
+        elif VirtualMemory.getPagingMode() == EPagingMode.Sv39:
+            self.callRoutine("TableWalkSV39")
         else:
             self.callRoutine("TableWalkSV48")
 
@@ -144,6 +150,25 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             self.PPN_SHIFT,
         )
 
+    def generateTableWalkSV39(self, **kwargs):
+        try:
+            handler_context = kwargs["handler_context"]
+        except KeyError:
+            self.error(
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
+            )
+        self._assignScratchRegisterIndices(handler_context)
+        self._genTableWalk(
+            self.LEVELS[39],
+            self.LEVEL_BITS[39],
+            self.LEVEL_MASK[39],
+            self.PTESIZE_SHIFT[39],
+            self.PTE_PTR_VAL,
+            self.PTE_XWRV_MASK,
+            self.PTE_SHIFT,
+            self.PPN_SHIFT,
+        )
+
     def generateTableWalkSV48(self, **kwargs):
         try:
             handler_context = kwargs["handler_context"]
@@ -165,8 +190,10 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
 
     def getPrerequisiteRoutineNames(self, aRoutineName):
         if aRoutineName == "TableWalk":
-            if self.getGlobalState("AppRegisterWidth") == 32:
+            if VirtualMemory.getPagingMode() == EPagingMode.Sv32:
                 return ("TableWalkSV32",)
+            elif VirtualMemory.getPagingMode() == EPagingMode.Sv39:
+                return ("TableWalkSV39",)
             else:
                 return ("TableWalkSV48",)
         else:

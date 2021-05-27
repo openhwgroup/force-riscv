@@ -25,6 +25,7 @@
 #include <RetOperandRISCV.h>
 #include <OperandRISCV.h>
 #include <PteAttributeRISCV.h>
+#include <PyEnvironmentRISCV.h>
 
 using namespace std;
 
@@ -42,6 +43,11 @@ namespace Force {
   {
     vector<ArchInfo*> arch_info_objs;
     arch_info_objs.push_back(new ArchInfoRISCV("RiscV"));
+
+    // The architecture-level Python modules must be initialized prior to calling the base
+    // initialize_top_level_resources() function
+    PyEnvironmentRISCV::initialize_python_modules();
+
     initialize_top_level_resources(argc, argv, arch_info_objs);
 
     // Register various RISCV objects.
