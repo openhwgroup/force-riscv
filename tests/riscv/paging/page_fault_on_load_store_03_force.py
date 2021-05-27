@@ -18,6 +18,8 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 from PageFaultSequence import PageFaultSequence
 from base.ChoicesModifier import ChoicesModifier
 from riscv.ModifierUtils import PageFaultModifier, displayPageInfo
+from EnumsRISCV import EPagingMode
+import VirtualMemory
 
 
 class MainSequence(PageFaultSequence):
@@ -94,7 +96,7 @@ class MainSequence(PageFaultSequence):
         ## - PagingDisabled   = [0, 1]
         ## - IterCount        = integer
         ## - PageFaultType    = ["Invalid_DA", "Invalid_U", "Invalid_X", "Invalid_WR", "Invalid_V"]
-        ## - PageFaultLevel   = [0,1] for sv32; [0, 1, 2, 3] for sv39, sv48.
+        ## - PageFaultLevel   = [0, 1] for sv32; [0, 1, 2] for sv39; [0, 1, 2, 3] for sv48.
 
         # Check to make sure paging is not disabled in the options
         (paging_disabled, valid) = self.getOption("PagingDisabled")
@@ -127,6 +129,8 @@ class MainSequence(PageFaultSequence):
         (self._page_fault_level, valid) = self.getOption("PageFaultLevel")
         if not valid:
             self._page_fault_level = None
+        elif (self._page_fault_level == 3) and (VirtualMemory.getPagingMode() == EPagingMode.Sv39):
+            self._page_fault_level = 2
 
         # Get the iteration count
         (self._iter_count, valid) = self.getOption("IterCount")

@@ -16,8 +16,10 @@
 import itertools
 
 from base.ChoicesModifier import ChoicesModifier
+from EnumsRISCV import EPagingMode
 import Log
 import RandomUtils
+import VirtualMemory
 
 
 class PageFaultModifier(ChoicesModifier):
@@ -32,38 +34,28 @@ class PageFaultModifier(ChoicesModifier):
             "Invalid V",
         ]
 
+        table_levels = 0
+        if VirtualMemory.getPagingMode() == EPagingMode.Sv32:
+            table_levels = 2
+        elif VirtualMemory.getPagingMode() == EPagingMode.Sv39:
+            table_levels = 3
+        else:
+            table_levels = 4
+
         self._mValidFaultLevels = {
-            "Invalid DA": [0, 1, 2, 3],
-            "Invalid U": [0, 1, 2, 3],
-            "Invalid X": [0, 1, 2, 3],
-            "Invalid WR": [0, 1, 2, 3],
-            "Invalid V": [3, 2, 1, 0],
-            # 'Va Address Error':[3,2,1,0]
-            # 'Misaligned Superpage':[3,2,1],
-            # 'Last Level Pointer':[0],
+            "Invalid DA": range(0, table_levels),
+            "Invalid U": range(0, table_levels),
+            "Invalid X": range(0, table_levels),
+            "Invalid WR": range(0, table_levels),
+            "Invalid V": range((table_levels - 1), -1, -1),
         }
 
-        if aAppRegWidth == 32:
-            # Sv32...
-            self._mValidFaultLevels = {
-                "Invalid DA": [0, 1],
-                "Invalid U": [0, 1],
-                "Invalid X": [0, 1],
-                "Invalid WR": [0, 1],
-                "Invalid V": [1, 0],
-                # 'Va Address Error':[3,2,1,0]
-                # 'Misaligned Superpage':[3,2,1],
-                # 'Last Level Pointer':[0],
-            }
         self._mValidPrivilegeLevels = {
             "Invalid DA": ["S"],
             "Invalid U": ["S"],
             "Invalid X": ["S"],
             "Invalid WR": ["S"],
             "Invalid V": ["S"],
-            # 'Va Address Error':['S']
-            # 'Misaligned Superpage':['S'],
-            # 'Last Level Pointer':['S'],
         }
 
     def getValidFaultTypes(self):

@@ -111,6 +111,14 @@ control_items = [
         "generator": {"--cfg": "config/riscv_rv64.config"},
     },
     {
+        "fname": "paging/_def_fctrl.py",
+        "generator": {"--cfg": "config/riscv_rv64_sv39.config"},
+    },
+    {
+        "fname": "paging/_noiss_fctrl.py",
+        "generator": {"--cfg": "config/riscv_rv64_sv39.config"},
+    },
+    {
         "fname": "privilege_switch/_def_fctrl.py",
         "generator": {"--cfg": "config/riscv_rv64.config"},
     },
