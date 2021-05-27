@@ -117,7 +117,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
     def generateHandler(self, **kwargs):
         self.notice(
-            "[PageFaultExceptionHandlerRISC] generating 'comprehensive' page " "fault handler..."
+            "[PageFaultExceptionHandlerRISC] generating 'comprehensive' page fault handler..."
         )
 
         try:
@@ -425,7 +425,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
 
     def generateClearPageFault(self, **kwargs):
         self.notice(
-            "[PageFaultExceptionHandlerRISC] generating code to clear page" "fault condition..."
+            "[PageFaultExceptionHandlerRISC] generating code to clear page fault condition..."
         )
 
         try:

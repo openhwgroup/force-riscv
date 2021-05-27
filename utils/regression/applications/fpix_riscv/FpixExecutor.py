@@ -62,7 +62,7 @@ class FpixExecutor(IssExecutor):
 
         if "skip" in self.ctrl_item.fpix_riscv.keys():
             if self.ctrl_item.fpix_riscv["skip"]:
-                Msg.user("[FpixExecutor::skip] skipping due to " "--fpix_riscv.skip specified")
+                Msg.user("[FpixExecutor::skip] skipping due to --fpix_riscv.skip specified")
             return True
 
         if "fpix_path" not in self.ctrl_item.fpix_riscv.keys():
@@ -87,9 +87,7 @@ class FpixExecutor(IssExecutor):
             my_elog = self.sim_log
 
             if "cfg" not in self.ctrl_item.fpix_riscv.keys():
-                Msg.err(
-                    "Fpix_ISS did not properly execute, " "Reason: Fpix config was not specified"
-                )
+                Msg.err("Fpix_ISS did not properly execute, Reason: Fpix config was not specified")
                 return False
 
             if "fpix_path" not in self.ctrl_item.fpix_riscv.keys():

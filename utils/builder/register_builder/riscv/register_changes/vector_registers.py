@@ -33,7 +33,7 @@ new_registers = [
             "name": "vtype",
             "value": "0xc21",
             "weight": "0",
-            "description": "URO; Vector data type " "register.",
+            "description": "URO; Vector data type register.",
         },
     },
     {
@@ -64,7 +64,7 @@ new_registers = [
             "name": "vxsat",
             "value": "0x9",
             "weight": "0",
-            "description": "URW; Fixed-point Saturate " "Flag.",
+            "description": "URW; Fixed-point Saturate Flag.",
         },
     },
     {
@@ -81,7 +81,7 @@ new_registers = [
             "name": "vxrm",
             "value": "0xa",
             "weight": "0",
-            "description": "URW; Fixed-point Rounding " "Mode.",
+            "description": "URW; Fixed-point Rounding Mode.",
         },
     },
     {
@@ -99,7 +99,7 @@ new_registers = [
             "name": "vcsr",
             "value": "0xf",
             "weight": "0",
-            "description": "URW; Vector control and status " "register.",
+            "description": "URW; Vector control and status register.",
         },
     },
     {
@@ -131,7 +131,7 @@ new_registers = [
             "name": "vlenb",
             "value": "0xc22",
             "weight": "0",
-            "description": "URO; VLEN/8 (vector register " "length in bytes).",
+            "description": "URO; VLEN/8 (vector register length in bytes).",
         },
     },
 ]

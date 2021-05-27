@@ -61,7 +61,7 @@ class ExceptionHandlerContext(object):
             )
         elif aCount and (aCount != 1):
             raise ValueError(
-                "More scratch registers requested than are available " "for %s." % aRegCallRole
+                "More scratch registers requested than are available for %s." % aRegCallRole
             )
 
         return call_role_reg_indices
@@ -73,7 +73,7 @@ class ExceptionHandlerContext(object):
         call_role_reg_indices = aCallRoleRegIndices
         if aCount > len(call_role_reg_indices):
             raise ValueError(
-                "More scratch registers requested than are available " "for %s." % aRegCallRole
+                "More scratch registers requested than are available for %s." % aRegCallRole
             )
 
         if aCount == 1:

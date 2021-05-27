@@ -174,13 +174,13 @@ if __name__ == "__main__":
     parser.add_argument("--app", help="Path to existing app register XML file")
     parser.add_argument(
         "--impl",
-        help="Path to existing implementation defined " "register XML file",
+        help="Path to existing implementation defined register XML file",
     )
     parser.add_argument("--register_choices", help="Path to existing register choices XML file")
     parser.add_argument("--field_choices", help="Path to existing field choices XML file")
     parser.add_argument(
         "--data",
-        help="Path to modification file for already defined " "registers",
+        help="Path to modification file for already defined registers",
     )
 
     arguments = parser.parse_args()

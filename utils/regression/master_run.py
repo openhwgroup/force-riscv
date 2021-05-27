@@ -240,7 +240,7 @@ class MasterRun(ModuleRun):
             )
 
         if self.terminated:
-            Msg.info("####\n#### Reached max fails limit before test was " "completed.\n####")
+            Msg.info("####\n#### Reached max fails limit before test was completed.\n####")
 
         self.writeVersionInfo()
         self.modulesReport()

@@ -59,7 +59,7 @@ class MainSequence(Sequence):
                     )
 
                     if rand_PA in set_of_PAs:
-                        self.error(">>>>>>>>> Error -- Received a duplicate PA" "from self.genPA.")
+                        self.error(">>>>>>>>> Error -- Received a duplicate PA from self.genPA.")
                     else:
                         set_of_PAs.add(rand_PA)
 

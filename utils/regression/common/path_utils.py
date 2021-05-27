@@ -204,9 +204,7 @@ class PathUtils(object):
         Msg.dbg("PathUtils::chdir( %s, %s )" % (arg_dir, str(arg_force)))
         if not PathUtils.check_dir(PathUtils.exclude_trailing_path_delimiter(arg_dir)):
             if arg_force:
-                Msg.dbg(
-                    "Directory Does Not Exist, " "Attempting to Create Directory: %s" % (arg_dir)
-                )
+                Msg.dbg("Directory Does Not Exist, Attempting to Create Directory: %s" % (arg_dir))
                 if not PathUtils.mkdir(arg_dir):
                     Msg.dbg("Failed Create: %s" % (arg_dir))
                     return False

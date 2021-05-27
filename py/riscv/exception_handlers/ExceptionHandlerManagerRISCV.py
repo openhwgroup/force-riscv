@@ -60,16 +60,16 @@ class ExceptionHandlerManagerRISCV(ExceptionHandlerManager):
         # translate exception class name into redirect-trap choices tree...
         (class_prefix, exception_name) = exceptionClassName.split(".")
         exc_choice_trees = {
-            "INSTRUCTION_ADDRESS_MISALIGNED": "Redirect Trap - Instruction " "address misaligned",
-            "INSTRUCTION_ACCESS_FAULT": "Redirect Trap - Instruction access " "fault",
+            "INSTRUCTION_ADDRESS_MISALIGNED": "Redirect Trap - Instruction address misaligned",
+            "INSTRUCTION_ACCESS_FAULT": "Redirect Trap - Instruction access fault",
             "ILLEGAL_INSTRUCTION": "Redirect Trap - Illegal instruction",
             "BREAKPOINT": "Redirect Trap - Breakpoint",
-            "LOAD_ADDRESS_MISALIGNED": "Redirect Trap - Load address " "misaligned",
+            "LOAD_ADDRESS_MISALIGNED": "Redirect Trap - Load address misaligned",
             "LOAD_ACCESS_FAULT": "Redirect Trap - Load access fault",
-            "STORE_AMO_ADDRESS_MISALIGNED": "Redirect Trap - Store/AMO " "address misaligned",
+            "STORE_AMO_ADDRESS_MISALIGNED": "Redirect Trap - Store/AMO address misaligned",
             "STORE_AMO_ACCESS_FAULT": "Redirect Trap - Store/AMO access fault",
-            "ENV_CALL_FROM_U_MODE": "Redirect Trap - Environment call from " "U-mode",
-            "ENV_CALL_FROM_S_MODE": "Redirect Trap - Environment call from " "S-mode",
+            "ENV_CALL_FROM_U_MODE": "Redirect Trap - Environment call from U-mode",
+            "ENV_CALL_FROM_S_MODE": "Redirect Trap - Environment call from S-mode",
             "INSTRUCTION_PAGE_FAULT": "Redirect Trap - Instruction page fault",
             "LOAD_PAGE_FAULT": "Redirect Trap - Load page fault",
             "STORE_AMO_PAGE_FAULT": "Redirect Trap - Store/AMO page fault",

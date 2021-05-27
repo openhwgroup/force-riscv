@@ -92,7 +92,7 @@ enum_classes_details = [
     [
         "PageGenBoolAttrType",
         "unsigned char",
-        "Boolean type GenPageRequest attributes for configuring page " "generation",
+        "Boolean type GenPageRequest attributes for configuring page generation",
         [
             ("FlatMap", 0),
             ("InstrAddr", 1),

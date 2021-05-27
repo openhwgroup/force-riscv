@@ -52,7 +52,7 @@ class InstructionFile(object):
 
     def add_instruction(self, instr):
         if instr.name is None:
-            print("WARNING [InstructionFile::add_instruction] instr.name = " "'None'???")
+            print("WARNING [InstructionFile::add_instruction] instr.name = 'None'???")
             return
 
         # print("[add_instruction] instr.name = '%s'" % instr.name)

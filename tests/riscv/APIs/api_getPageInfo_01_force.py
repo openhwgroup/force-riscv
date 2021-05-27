@@ -76,9 +76,7 @@ class MainSequence(Sequence):
                     # This section displays the keys and values for the
                     # second and third level dictionaries.
                     if "Page" in page_info.keys():
-                        self.notice(
-                            ">>>>>>>>>>  VA Page info   <<<<<<<<<<<<<<<<<<<<" "<<<<<<<<<<<<<"
-                        )
+                        self.notice(">>>>>>>>>>  VA Page info   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
                         for k in page_info["Page"]:
                             if k != "DescriptorDetails":
                                 if k == "MemoryType" or k == "MemoryAttr":
@@ -109,7 +107,7 @@ class MainSequence(Sequence):
 
                     if "Table" in page_info.keys():
                         self.notice(
-                            ">>>>>>>>>>  VA Table info   <<<<<<<<<<<<<<<<<" "<<<<<<<<<<<<<<<<"
+                            ">>>>>>>>>>  VA Table info   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
                         )
                         for k in page_info["Table"]:
                             self.notice(

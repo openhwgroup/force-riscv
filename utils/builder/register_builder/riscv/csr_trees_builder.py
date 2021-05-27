@@ -65,9 +65,9 @@ class CSRTreeBuilder:
     def __init__(self, aSysRegsStarterFile=None, aCSRTreeFile=None):
         self.mCSRTypesByIndex = {}
         if aSysRegsStarterFile is None:
-            raise ValueError("Internal error (CSRTreeBuilder): " "No starter file specified.")
+            raise ValueError("Internal error (CSRTreeBuilder): No starter file specified.")
         if aCSRTreeFile is None:
-            raise ValueError("Internal error (CSRTreeBuilder): " "No starter file specified.")
+            raise ValueError("Internal error (CSRTreeBuilder): No starter file specified.")
 
         self.mSysRegsStarterFile = aSysRegsStarterFile
         self.mCSRTreeFile = aCSRTreeFile

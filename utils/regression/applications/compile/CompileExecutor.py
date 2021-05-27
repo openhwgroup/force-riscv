@@ -65,7 +65,7 @@ class CompileExecutor(AppExecutor):
 
     def pre(self):
         if self.ctrl_item.compile_rtl.get("mp"):
-            cmd = "%s/script/lsu_resize.py -scd_num %d -sca_num " "%d -scb_starve %d" % (
+            cmd = "%s/script/lsu_resize.py -scd_num %d -sca_num %d -scb_starve %d" % (
                 self.mMakefilePath,
                 randint(1, 16),
                 randint(1, 12),

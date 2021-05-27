@@ -77,7 +77,7 @@ class MainSequence(Sequence):
             else:
                 theAddressRange += ["0xF220000000-0xFFFFFFFFFF"]
                 theAddressRange += ["0xFFF00000000-0xFFFFFFFFFFF"]
-                theAddressRange += ["0x1000-0x1FFF,0x88000-0x89800," "0xFFF00000000-0xFFFFFFFFFFF"]
+                theAddressRange += ["0x1000-0x1FFF,0x88000-0x89800,0xFFF00000000-0xFFFFFFFFFFF"]
 
             for addrRange in theAddressRange:
 

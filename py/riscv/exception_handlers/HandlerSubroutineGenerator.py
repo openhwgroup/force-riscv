@@ -86,7 +86,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() method missing."
             )
 
         self._assignScratchRegisterIndices(handler_context)
@@ -136,7 +136,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() method missing."
             )
         self._assignScratchRegisterIndices(handler_context)
         self._genTableWalk(
@@ -155,7 +155,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() method missing."
             )
         self._assignScratchRegisterIndices(handler_context)
         self._genTableWalk(
@@ -174,7 +174,7 @@ class HandlerSubroutineGeneratorRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to generateTableWalk() " "method missing."
+                "INTERNAL ERROR: one or more arguments to generateTableWalk() method missing."
             )
         self._assignScratchRegisterIndices(handler_context)
         self._genTableWalk(

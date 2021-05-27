@@ -32,10 +32,10 @@ class TracediffRiscVExecutor(ToolExecutor):
 
     def execute(self):
         if not PathUtils.check_file("sim.log"):
-            Msg.info("[TracediffRiscVExecutor::skip] skipping since no sim.log " "found")
+            Msg.info("[TracediffRiscVExecutor::skip] skipping since no sim.log found")
             return True
         if not PathUtils.check_file("fpix_sim.log"):
-            Msg.info("[TracediffRiscVExecutor::skip] skipping since fpx_sim.log " "not found")
+            Msg.info("[TracediffRiscVExecutor::skip] skipping since fpx_sim.log not found")
             return True
 
         my_cmd = (

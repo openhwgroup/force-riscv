@@ -365,7 +365,7 @@ def build_registers(
             output_all = False
         elif o in ["-m", "--modifications_script"]:
             modifications_script = a
-            print("\tRegister/field/choices modifications script: " "'%s'" % modifications_script)
+            print("\tRegister/field/choices modifications script: '%s'" % modifications_script)
             prefix_license_file = False
             do_mods = True
         elif o in ["-R", "--system_register_choices"]:
@@ -376,10 +376,10 @@ def build_registers(
             output_all = False
         elif o in ["-i", "--system_registers_starter"]:
             xml_starter_file = a
-            print("\tUser-specified system registers starter file: " "'%s'" % xml_starter_file)
+            print("\tUser-specified system registers starter file: '%s'" % xml_starter_file)
         elif o in ["-s", "--system_registers_file"]:
             system_registers_file = a
-            print("\tUser-specified system registers file: " "'%s'" % system_registers_file)
+            print("\tUser-specified system registers file: '%s'" % system_registers_file)
         elif o in ["-r", "--system_register_choices_file"]:
             system_register_choices_file = a
             print(
@@ -436,7 +436,7 @@ def build_registers(
                 src_mod_files["system"] = system_registers_file
                 dest_mod_files["system"] = post_mod_system_registers_file
             else:
-                print("\tSystem register definitions written to: " "%s\n" % system_registers_file)
+                print("\tSystem register definitions written to: %s\n" % system_registers_file)
         if output_all or system_register_choices:
             output_system_register_choices(
                 systemRegisterDefinitions,
@@ -451,9 +451,7 @@ def build_registers(
                 src_mod_files["register_choices"] = system_register_choices_file
                 dest_mod_files["register_choices"] = post_mod_system_register_choices_file
             else:
-                print(
-                    "\tSystem register choices written to: " "%s\n" % system_register_choices_file
-                )
+                print("\tSystem register choices written to: %s\n" % system_register_choices_file)
         if output_all or register_field_choices:
             output_register_field_choices(
                 systemRegisterDefinitions,
@@ -468,10 +466,10 @@ def build_registers(
                 src_mod_files["field_choices"] = register_field_choices_file
                 dest_mod_files["field_choices"] = post_mod_register_field_choices_file
             else:
-                print("\tRegister field choices written to: " "%s\n" % register_field_choices_file)
+                print("\tRegister field choices written to: %s\n" % register_field_choices_file)
     except ValueError as ex:
         print("\nERROR:", ex)
-        print("\n---> Aborting register builder. Correct errors in starter " "file; try again.\n")
+        print("\n---> Aborting register builder. Correct errors in starter file; try again.\n")
         sys.exit(1)
 
     if do_mods:

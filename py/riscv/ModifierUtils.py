@@ -186,7 +186,7 @@ class TrapsRedirectModifier(ChoicesModifier):
             rcode = self.mSupportedExceptions[aExceptionCode]
         except KeyError:
             Log.error(
-                "TrapDelegationRedirectionModifier: ExceptionCode '%s' is " "not supported.",
+                "TrapDelegationRedirectionModifier: ExceptionCode '%s' is not supported.",
                 aExceptionCode,
             )
 

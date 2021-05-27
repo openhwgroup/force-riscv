@@ -81,7 +81,7 @@ class SingleGenThreadExecutor(GenThreadExecutor):
         # the main thread
         if len(aGenThreads) != 1:
             raise AssertionError(
-                "SingleGenThreadExecutor was used to execute more than one " "GenThread!"
+                "SingleGenThreadExecutor was used to execute more than one GenThread!"
             )
 
         return GenThreadExecutor.executeGenThread(aGenThreads[0])

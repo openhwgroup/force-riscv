@@ -57,9 +57,7 @@ class BaseParser:
         try:
             (self.mReader, self.mWriter) = builder_factory.get_rw_objets(arch, builder_type)
         except ValueError as err:
-            print(
-                "Builder object failed to create, invalid input " "specified: {}".format(err.args)
-            )
+            print("Builder object failed to create, invalid input specified: {}".format(err.args))
         # aggregation of output data for debug or aggregated output mode
         self.mOutputData = []
 

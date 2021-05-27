@@ -353,7 +353,7 @@ class Register:
             return self.mRegisterFields[aRegisterFieldName]
         else:
             raise KeyError(
-                "Register.getRegisterField():" "Register field '%s' not found" % aRegisterFieldName
+                "Register.getRegisterField(): Register field '%s' not found" % aRegisterFieldName
             )
 
     # Adds a new register field with the provided name and returns the new
@@ -418,7 +418,7 @@ class RegisterFile:
                 elif key == "field_choices_tree":
                     self.mFieldChoicesTree = aXmlFile[key]
                 else:
-                    print("Unable to initiate RegisterFile with XML file " "type: '%s'" % key)
+                    print("Unable to initiate RegisterFile with XML file type: '%s'" % key)
             else:
                 print("Key '%s' is not associated with a file" % key)
 
@@ -435,9 +435,7 @@ class RegisterFile:
         if aRegisterName in self.mRegisters:
             return self.mRegisters[aRegisterName]
         else:
-            raise KeyError(
-                "RegisterFile.getRegister(): Register '%s' not " "found" % aRegisterName
-            )
+            raise KeyError("RegisterFile.getRegister(): Register '%s' not found" % aRegisterName)
 
     # Deletes a register (and associated register in the implementation
     # dictionary) according to the provided name or raises an exception if the
@@ -449,7 +447,7 @@ class RegisterFile:
             del self.mRegisters[aRegisterName]
         else:
             raise KeyError(
-                "RegisterFile.deleteRegister(): " "Register '%s' not found" % aRegisterName
+                "RegisterFile.deleteRegister(): Register '%s' not found" % aRegisterName
             )
 
     # Validates a register's field sizes
@@ -1003,7 +1001,7 @@ class RegisterFile:
             elif aLabel == "impl":
                 self.prettyPrint(self.mImplementationTree, "index", aRegisterFile)
             else:
-                print("Label '%s' unrecognized while writing register " "file" % aLabel)
+                print("Label '%s' unrecognized while writing register file" % aLabel)
         self.mLicenseText = None
 
     # Writes xml file with some internal formatting

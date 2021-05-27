@@ -60,7 +60,7 @@ class PrivilegeLevelHandlerSetRISCV(PrivilegeLevelHandlerSet):
         self.scratchRegs = self.getRandomGPRs(self._scratchRegisterCount(), exclude=excluded_regs)
         if not self.scratchRegs:
             raise RuntimeError(
-                "Unable to allocate scratch registers required by exception " "handlers."
+                "Unable to allocate scratch registers required by exception handlers."
             )
 
     def generateHandlerSubroutines(self, aSecurityState):

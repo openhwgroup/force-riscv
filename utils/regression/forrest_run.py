@@ -85,7 +85,7 @@ class ForrestRun(ModuleRun):
         my_frun_path = self.option_def(CmdLine.Switches[CmdLine.control_name], None)
         if my_frun_path is None:
             raise Exception(
-                "F-Run Control File Not Found on the Forrest Run Command " "Line: Given Path: %s",
+                "F-Run Control File Not Found on the Forrest Run Command Line: Given Path: %s",
                 str((my_frun_path)),
             )
 

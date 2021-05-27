@@ -131,7 +131,7 @@ def run_cpp_check(a_args):
 
 if __name__ == "__main__":
     if "CPPCHECK_BIN" not in os.environ:
-        print("Please set the CPPCHECK_BIN environment variable to point to " "Cppcheck.")
+        print("Please set the CPPCHECK_BIN environment variable to point to Cppcheck.")
         sys.exit(1)
 
     parser = setup_arguments()

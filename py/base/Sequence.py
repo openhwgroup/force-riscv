@@ -177,7 +177,7 @@ class Sequence(object):
     # val = self.random32(min_v=0, max_v=MAX_UINT32)
     def random32(self, min_v=0, max_v=0xFFFFFFFF):
         warnings.warn(
-            "Sequence.random32() is deprecated; " "please use RandomUtils.random32()",
+            "Sequence.random32() is deprecated; please use RandomUtils.random32()",
             DeprecationWarning,
         )
 
@@ -185,7 +185,7 @@ class Sequence(object):
 
     def random64(self, min_v=0, max_v=0xFFFFFFFFFFFFFFFF):
         warnings.warn(
-            "Sequence.random64() is deprecated; " "please use RandomUtils.random64()",
+            "Sequence.random64() is deprecated; please use RandomUtils.random64()",
             DeprecationWarning,
         )
 
@@ -193,7 +193,7 @@ class Sequence(object):
 
     def shuffleList(self, myList):
         warnings.warn(
-            "Sequence.shuffleList() is deprecated; " "please use UtilityFunctions.shuffle_list()",
+            "Sequence.shuffleList() is deprecated; please use UtilityFunctions.shuffle_list()",
             DeprecationWarning,
         )
 

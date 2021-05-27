@@ -81,7 +81,7 @@ def create_reproduce_directory(a_output_directory):
         new_dir = os.path.join(os.path.sep, os.getcwd(), a_output_directory)
         os.mkdir(new_dir)
     except BaseException:
-        print("Failed to create reproduce directory. " "Check if it exists already.")
+        print("Failed to create reproduce directory. Check if it exists already.")
         exit(1)
     return new_dir
 

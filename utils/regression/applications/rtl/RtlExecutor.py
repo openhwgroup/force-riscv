@@ -106,7 +106,7 @@ class RtlExecutor(IssExecutor):
 
     def skip(self):
         if not self.use_rtl():
-            Msg.user("[RtlExecutor::skip] skipping due to no rtl information " "specified")
+            Msg.user("[RtlExecutor::skip] skipping due to no rtl information specified")
             return True
 
         return False
@@ -395,7 +395,7 @@ class RtlExecutor(IssExecutor):
             print("IO error({0}): {1}".format(e.errno, e.strerror))
             raise
         except BaseException:
-            print("[RTL-SIM] Unhandled exception while attempting to write " "rerun command files")
+            print("[RTL-SIM] Unhandled exception while attempting to write rerun command files")
             raise
 
     def extract_results(self, a_result, a_log, a_elog):

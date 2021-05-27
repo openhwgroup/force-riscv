@@ -148,7 +148,7 @@ enum_classes_details = [
     [
         "ConstraintMoveDirection",
         "unsigned char",
-        "In ConstraintSet assembling, the direction toward which to move " "involved Constraints.",
+        "In ConstraintSet assembling, the direction toward which to move involved Constraints.",
         [("Shrink", 0), ("Expand", 1)],
     ],
     [
@@ -408,7 +408,7 @@ enum_classes_details = [
     [
         "PageGenAttributeType",
         "unsigned char",
-        "Paging attribute of generated page that is useful in later test " "generation.",
+        "Paging attribute of generated page that is useful in later test generation.",
         [
             ("MemAttrImpl", 0),
             ("Invalid", 1),

@@ -128,7 +128,7 @@ class SystemCallSequence(Sequence):
         (no_skip, valid) = self.genThread.getOption("NoSkip")
         if valid and (no_skip == 1) and (aRetCode != 0):
             self.error(
-                "Unable to process SystemCallSequence request and NoSkip " "option was specified"
+                "Unable to process SystemCallSequence request and NoSkip option was specified"
             )
 
     # Generate the instructions required to execute the privilege level switch.

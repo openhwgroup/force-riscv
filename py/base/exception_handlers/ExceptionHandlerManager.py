@@ -76,12 +76,12 @@ class ExceptionHandlerManager(Sequence):
     def setup(self, **kargs):
         super().setup()
 
-        self.genThread.modifyGenMode("NoEscape,SimOff,NoJump,NoSkip," "DelayInit")
+        self.genThread.modifyGenMode("NoEscape,SimOff,NoJump,NoSkip,DelayInit")
 
     def cleanUp(self, **kargs):
         super().cleanUp()
 
-        self.genThread.revertGenMode("NoEscape,SimOff,NoJump,NoSkip," "DelayInit")
+        self.genThread.revertGenMode("NoEscape,SimOff,NoJump,NoSkip,DelayInit")
 
     def debugPrint(self, msg):
         self.debug("DEBUG [ExceptionHandlerManager]: %s" % msg)

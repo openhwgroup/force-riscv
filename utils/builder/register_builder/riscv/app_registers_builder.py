@@ -216,7 +216,7 @@ if __name__ == "__main__":
                 print("ERROR: Only valid 'xlen' values are 32 or 64")
                 sys.exit(1)
         else:
-            print("Only valid option is '--xlen N', where N is " "either 32 or 64")
+            print("Only valid option is '--xlen N', where N is either 32 or 64")
             sys.exit(1)
 
     print("\tApp registers file: %s, xlen: %d" % (app_registers_file, xlen))

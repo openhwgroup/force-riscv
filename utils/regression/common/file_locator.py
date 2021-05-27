@@ -35,7 +35,7 @@ class FileLocator(object):
             raise Exception("Input to FileLocator.checkNestedPath must be a list")
         if len(aPathList) < 2:
             raise Exception(
-                "Input to FileLocator.checkNesterPath needs to be a list" "more than 1 item long"
+                "Input to FileLocator.checkNesterPath needs to be a list more than 1 item long"
             )
 
         joined_path = str(aPathList[0])

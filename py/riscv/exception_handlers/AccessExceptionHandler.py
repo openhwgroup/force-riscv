@@ -137,7 +137,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
         if self.hasGeneratedRoutine("ClearAccessFault"):
             self.callRoutine("ClearAccessFault")
         else:
-            self.error("INTERNAL ERROR: ClearAccessFault subroutine has NOT " "generated?")
+            self.error("INTERNAL ERROR: ClearAccessFault subroutine has NOT generated?")
 
         # restore 'handler-saved' registers
         self.mHandlerStack.freeStackFrame()
@@ -290,7 +290,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to genPMPfixup" "generate method missing."
+                "INTERNAL ERROR: one or more arguments to generatePMPfixup() method missing."
             )
 
         handler_regs = AccessExceptionHandlerRegisters(

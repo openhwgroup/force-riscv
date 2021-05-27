@@ -239,7 +239,7 @@ class ParseFiles:
             if sorted(all_instns_in_this_dir_for_this) != sorted(all_instns_in_this_dir_for_other):
                 return False
 
-        print("Organization of instructions within the directory structure " "looks correct.")
+        print("Organization of instructions within the directory structure looks correct.")
         return True
 
 

@@ -50,9 +50,7 @@ class MainSequence(Sequence):
         (data_size, data_size_valid) = self.getOption("data_size")
 
         if not prec_valid or prec not in self.VALID_PRECISIONS:
-            Log.warn(
-                "precision option invalid or missing, using single " "precision (S) as default"
-            )
+            Log.warn("precision option invalid or missing, using single precision (S) as default")
             prec = "S"
 
         if not data_type_valid or data_type not in self.VALID_DATA_TYPES:

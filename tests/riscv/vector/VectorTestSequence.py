@@ -76,14 +76,10 @@ class VectorTestSequence(Sequence):
         reg_count_a = self.getRegisterCount(aRegCountMultipleA)
         reg_count_b = self.getRegisterCount(aRegCountMultipleB)
         if aRegIndexB <= aRegIndexA < (aRegIndexB + reg_count_b):
-            self.error(
-                "Instruction %s used overlapping registers of different " "formats" % aInstr
-            )
+            self.error("Instruction %s used overlapping registers of different formats" % aInstr)
 
         if aRegIndexA <= aRegIndexB < (aRegIndexA + reg_count_a):
-            self.error(
-                "Instruction %s used overlapping registers of different " "formats" % aInstr
-            )
+            self.error("Instruction %s used overlapping registers of different formats" % aInstr)
 
     # Get the register count for a register group with the specified multiple.
     #

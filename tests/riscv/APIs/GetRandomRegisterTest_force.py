@@ -47,7 +47,7 @@ class MainSequence(Sequence):
             assert_equal(
                 source_regs["rs1"],
                 rs1,
-                "The generated instruction does not have the requested " "index value for rs1.",
+                "The generated instruction does not have the requested index value for rs1.",
             )
 
         for rs1 in free_regs_float:
@@ -66,7 +66,7 @@ class MainSequence(Sequence):
             assert_equal(
                 source_regs["rs1"],
                 rs1,
-                "The generated instruction does not have the requested " "index value for rs1.",
+                "The generated instruction does not have the requested index value for rs1.",
             )
 
 
