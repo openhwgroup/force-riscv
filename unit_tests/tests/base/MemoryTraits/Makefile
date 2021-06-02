@@ -16,6 +16,8 @@
 FORCE_DIR = ../../../..
 INC_PATHS = -I$(FORCE_DIR)/riscv/inc -I$(FORCE_DIR)/base/inc -I$(FORCE_DIR)/3rd_party/inc -I../../../utils/inc
 
+ARCH_ENUM=RISCV
+
 include Makefile.target
 include $(FORCE_DIR)/utils/make/Makefile.common
 include ../../Makefile_unit_tests.common

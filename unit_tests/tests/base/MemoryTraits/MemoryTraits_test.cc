@@ -18,6 +18,11 @@
 
 #include <MemoryTraits.h>
 
+#include ARCH_ENUM_HEADER
+
+#include <set>
+#include <vector>
+
 using text = std::string;
 using namespace Force;
 
@@ -64,6 +69,87 @@ CASE("Test MemoryTraits") {
       EXPECT(mem_traits_range.GenEndAddress() == 0xf8500ull);
     }
 */
+  }
+},
+
+CASE("Test MemoryTraitsRegistry") {
+
+  SETUP("Setup MemoryTraitsRegistry")  {
+    MemoryTraitsRegistry mem_traits_registry;
+
+    SECTION("Test adding traits") {
+      uint32 device_trait_id = mem_traits_registry.AddTrait(EMemoryAttributeType::Device);
+      uint32 trait_1_id = mem_traits_registry.AddTrait("Trait 1");
+      EXPECT(mem_traits_registry.GetTraitId(EMemoryAttributeType::Device) == device_trait_id);
+      EXPECT(mem_traits_registry.GetTraitId("Trait 1") == trait_1_id);
+    }
+
+    SECTION("Test adding duplicate traits") {
+      mem_traits_registry.AddTrait(EMemoryAttributeType::NormalCacheable);
+      mem_traits_registry.AddTrait("Trait 2");
+      EXPECT_FAIL(mem_traits_registry.AddTrait(EMemoryAttributeType::NormalCacheable), "trait-already-exists");
+      EXPECT_FAIL(mem_traits_registry.AddTrait("Trait 2"), "trait-already-exists");
+    }
+
+    SECTION("Test getting non-existent trait IDs") {
+      EXPECT(mem_traits_registry.GetTraitId(EMemoryAttributeType::Device) == 0u);
+      EXPECT(mem_traits_registry.GetTraitId("Trait 7") == 0u);
+    }
+
+    SECTION("Test requesting trait IDs") {
+      uint32 non_cacheable_trait_id = mem_traits_registry.RequestTraitId(EMemoryAttributeType::NormalNonCacheable);
+      uint32 trait_3_id = mem_traits_registry.RequestTraitId("Trait 3");
+      EXPECT(mem_traits_registry.RequestTraitId(EMemoryAttributeType::NormalNonCacheable) == non_cacheable_trait_id);
+      EXPECT(mem_traits_registry.RequestTraitId("Trait 3") == trait_3_id);
+    }
+
+    SECTION("Test adding mutually exclusive traits") {
+      mem_traits_registry.AddMutuallyExclusiveTraits({EMemoryAttributeType::NormalCacheable, EMemoryAttributeType::NormalNonCacheable});
+      mem_traits_registry.AddMutuallyExclusiveTraits({"Trait 4", "Trait 5", "Trait 6"});
+
+      std::vector<uint32> cacheable_trait_exclusive_ids;
+      mem_traits_registry.GetMutuallyExclusiveTraitIds(mem_traits_registry.GetTraitId(EMemoryAttributeType::NormalCacheable), cacheable_trait_exclusive_ids);
+      uint32 non_cacheable_trait_id = mem_traits_registry.GetTraitId(EMemoryAttributeType::NormalNonCacheable);
+      EXPECT(cacheable_trait_exclusive_ids.size() == 1ull);
+      EXPECT(cacheable_trait_exclusive_ids[0] == non_cacheable_trait_id);
+
+      std::vector<uint32> trait_5_exclusive_ids;
+      mem_traits_registry.GetMutuallyExclusiveTraitIds(mem_traits_registry.GetTraitId("Trait 5"), trait_5_exclusive_ids);
+      uint32 trait_4_id = mem_traits_registry.GetTraitId("Trait 4");
+      uint32 trait_6_id = mem_traits_registry.GetTraitId("Trait 6");
+      EXPECT(trait_5_exclusive_ids.size() == 2ull);
+
+      bool found_trait_4_id = any_of(trait_5_exclusive_ids.begin(), trait_5_exclusive_ids.end(),
+        [trait_4_id](cuint32 traitId) { return (traitId == trait_4_id); });
+
+      EXPECT(found_trait_4_id);
+
+      bool found_trait_6_id = any_of(trait_5_exclusive_ids.begin(), trait_5_exclusive_ids.end(),
+        [trait_6_id](cuint32 traitId) { return (traitId == trait_6_id); });
+
+      EXPECT(found_trait_6_id);
+    }
+
+    SECTION("Test adding empty list of mutually exclusive traits") {
+      std::vector<EMemoryAttributeType> enum_traits;
+      mem_traits_registry.AddMutuallyExclusiveTraits(enum_traits);
+      std::vector<std::string> string_traits;
+      mem_traits_registry.AddMutuallyExclusiveTraits(string_traits);
+
+      std::vector<uint32> exclusive_ids;
+      mem_traits_registry.GetMutuallyExclusiveTraitIds(1, exclusive_ids);
+      EXPECT(exclusive_ids.empty());
+    }
+  }
+},
+
+CASE("Test MemoryTraitsManager") {
+
+  SETUP("Setup MemoryTraitsManager")  {
+    MemoryTraitsManager mem_traits_manager;
+
+    SECTION("Test adding traits") {
+    }
   }
 },
 
