@@ -73,22 +73,27 @@ namespace Force {
 
   /*!
     \class MemoryTraitsManager
-    \brief Class to track global and thread-specific memory characteristics associated with physical addresses.
+    \brief Class to track global and thread-specific memory characteristics associated with physical addresses. This class assumes that a given trait is either applied globally or on a thread-specific basis, but not both.
   */
   class MemoryTraitsManager {
   public:
-    MemoryTraitsManager() { }
+    MemoryTraitsManager();
     COPY_CONSTRUCTOR_ABSENT(MemoryTraitsManager);
-    ~MemoryTraitsManager() { }
+    ~MemoryTraitsManager();
     ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsManager);
 
-    //void AddGlobalTrait(const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
-    //void AddGlobalTrait(const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
-    //void AddThreadTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
-    //void AddThreadTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
-    //bool HasTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
-    //bool HasTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
+    void AddGlobalTrait(const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
+    void AddGlobalTrait(const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
+    void AddThreadTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
+    void AddThreadTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
+    bool HasTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
+    bool HasTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
   private:
+    void AddTrait(const std::string& trait, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits); //!< Associate the specified trait with the specified address range in the given MemoryTraits object.
+  private:
+    MemoryTraits mGlobalMemTraits; //!< Global memory traits
+    std::map<uint32, MemoryTraits*> mThreadMemTraits; //!< Thread-specific memory traits
+    MemoryTraitsRegistry mMemTraitsRegistry; //!< Mapping between descriptive memory trait identifiers and simple IDs
   };
 
 }

@@ -148,7 +148,27 @@ CASE("Test MemoryTraitsManager") {
   SETUP("Setup MemoryTraitsManager")  {
     MemoryTraitsManager mem_traits_manager;
 
-    SECTION("Test adding traits") {
+    SECTION("Test adding global traits") {
+      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::Device, 0x7300, 0x7400);
+      mem_traits_manager.AddGlobalTrait("Trait 1", 0x7200, 0x7380);
+
+      EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::Device, 0x7300, 0x7400));
+      EXPECT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::Device, 0x7300, 0x7400));
+      EXPECT(mem_traits_manager.HasTrait(0, "Trait 1", 0x7200, 0x7380));
+      EXPECT(mem_traits_manager.HasTrait(1, "Trait 1", 0x7200, 0x7380));
+    }
+
+    SECTION("Test adding thread-specific traits") {
+      mem_traits_manager.AddThreadTrait(0, EMemoryAttributeType::NormalCacheable, 0x3920, 0x3950);
+      mem_traits_manager.AddThreadTrait(1, "Trait 2", 0x7ff28, 0x7ff2f);
+      mem_traits_manager.AddThreadTrait(1, "Trait 3", 0x850, 0x870);
+
+      EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::NormalCacheable, 0x3920, 0x3950));
+      EXPECT_NOT(mem_traits_manager.HasTrait(0, "Trait 2", 0x7ff28, 0x7ff2f));
+      EXPECT_NOT(mem_traits_manager.HasTrait(0, "Trait 3", 0x850, 0x870));
+      EXPECT_NOT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::NormalCacheable, 0x3920, 0x3950));
+      EXPECT(mem_traits_manager.HasTrait(1, "Trait 2", 0x7ff28, 0x7ff2f));
+      EXPECT(mem_traits_manager.HasTrait(1, "Trait 3", 0x850, 0x870));
     }
   }
 },
