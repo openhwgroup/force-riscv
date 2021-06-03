@@ -53,7 +53,7 @@ namespace Force {
   public:
     MemoryTraitsRegistry();
     COPY_CONSTRUCTOR_ABSENT(MemoryTraitsRegistry);
-    DESTRUCTOR_DEFAULT(MemoryTraitsRegistry);
+    SUPERCLASS_DESTRUCTOR_DEFAULT(MemoryTraitsRegistry);
     ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsRegistry);
 
     uint32 AddTrait(const EMemoryAttributeType trait); //!< Generate an ID for the specified trait. Fails if the trait already has an associated ID.
@@ -77,7 +77,7 @@ namespace Force {
   */
   class MemoryTraitsManager {
   public:
-    MemoryTraitsManager();
+    explicit MemoryTraitsManager(MemoryTraitsRegistry* pMemTraitsRegistry);
     COPY_CONSTRUCTOR_ABSENT(MemoryTraitsManager);
     ~MemoryTraitsManager();
     ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsManager);
@@ -93,7 +93,7 @@ namespace Force {
   private:
     MemoryTraits mGlobalMemTraits; //!< Global memory traits
     std::map<uint32, MemoryTraits*> mThreadMemTraits; //!< Thread-specific memory traits
-    MemoryTraitsRegistry mMemTraitsRegistry; //!< Mapping between descriptive memory trait identifiers and simple IDs
+    MemoryTraitsRegistry* mpMemTraitsRegistry; //!< Mapping between descriptive memory trait identifiers and simple IDs
   };
 
 }

@@ -170,8 +170,8 @@ namespace Force {
     }
   }
 
-  MemoryTraitsManager::MemoryTraitsManager()
-    : mGlobalMemTraits(), mThreadMemTraits(), mMemTraitsRegistry()
+  MemoryTraitsManager::MemoryTraitsManager(MemoryTraitsRegistry* pMemTraitsRegistry)
+    : mGlobalMemTraits(), mThreadMemTraits(), mpMemTraitsRegistry(pMemTraitsRegistry)
   {
   }
 
@@ -180,6 +180,8 @@ namespace Force {
     for (auto mem_traits : mThreadMemTraits) {
       delete mem_traits.second;
     }
+
+    delete mpMemTraitsRegistry;
   }
 
   void MemoryTraitsManager::AddGlobalTrait(const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr)
@@ -220,7 +222,7 @@ namespace Force {
 
   bool MemoryTraitsManager::HasTrait(cuint32 threadId, const string& trait, cuint64 startAddr, cuint64 endAddr) const
   {
-    uint32 trait_id = mMemTraitsRegistry.GetTraitId(trait);
+    uint32 trait_id = mpMemTraitsRegistry->GetTraitId(trait);
     if (trait_id == 0) {
       return false;
     }
@@ -239,9 +241,9 @@ namespace Force {
 
   void MemoryTraitsManager::AddTrait(const string& trait, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits)
   {
-    uint32 trait_id = mMemTraitsRegistry.RequestTraitId(trait);
+    uint32 trait_id = mpMemTraitsRegistry->RequestTraitId(trait);
     vector<uint32> exclusive_ids;
-    mMemTraitsRegistry.GetMutuallyExclusiveTraitIds(trait_id, exclusive_ids);
+    mpMemTraitsRegistry->GetMutuallyExclusiveTraitIds(trait_id, exclusive_ids);
     for (uint32 exclusive_id : exclusive_ids) {
       if (memTraits.HasTraitPartial(exclusive_id, startAddr, endAddr)) {
         LOG(fail) << "{MemoryTraitsManager::AddTrait} a trait mutually exclusive with " << trait << " is already associated with an address in the range 0x" << hex << startAddr << "-0x" << endAddr << endl;

@@ -26,6 +26,20 @@
 using text = std::string;
 using namespace Force;
 
+namespace Force {
+
+  class MemoryTraitsRegistryTest : public MemoryTraitsRegistry {
+  public:
+    MemoryTraitsRegistryTest()
+      : MemoryTraitsRegistry()
+    {
+      AddMutuallyExclusiveTraits({EMemoryAttributeType::Device, EMemoryAttributeType::NormalCacheable, EMemoryAttributeType::NormalNonCacheable});
+    }
+
+  };
+
+}
+
 const lest::test specification[] = {
 
 CASE("Test MemoryTraits") {
@@ -146,7 +160,7 @@ CASE("Test MemoryTraitsRegistry") {
 CASE("Test MemoryTraitsManager") {
 
   SETUP("Setup MemoryTraitsManager")  {
-    MemoryTraitsManager mem_traits_manager;
+    MemoryTraitsManager mem_traits_manager(new MemoryTraitsRegistryTest());
 
     SECTION("Test adding global traits") {
       mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::Device, 0x7300, 0x7400);
@@ -169,6 +183,11 @@ CASE("Test MemoryTraitsManager") {
       EXPECT_NOT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::NormalCacheable, 0x3920, 0x3950));
       EXPECT(mem_traits_manager.HasTrait(1, "Trait 2", 0x7ff28, 0x7ff2f));
       EXPECT(mem_traits_manager.HasTrait(1, "Trait 3", 0x850, 0x870));
+    }
+
+    SECTION("Test adding mutually-exclusive traits") {
+      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::Device, 0x6320, 0x637f);
+      EXPECT_FAIL(mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::NormalNonCacheable, 0x6250, 0x6350), "trait-conflict");
     }
   }
 },
