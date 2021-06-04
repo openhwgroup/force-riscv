@@ -33,7 +33,7 @@ namespace Force {
     MemoryTraitsRegistryTest()
       : MemoryTraitsRegistry()
     {
-      AddMutuallyExclusiveTraits({EMemoryAttributeType::Device, EMemoryAttributeType::NormalCacheable, EMemoryAttributeType::NormalNonCacheable});
+      AddMutuallyExclusiveTraits({EMemoryAttributeType::MainRegion, EMemoryAttributeType::IORegion, EMemoryAttributeType::EmptyRegion});
     }
 
   };
@@ -92,40 +92,40 @@ CASE("Test MemoryTraitsRegistry") {
     MemoryTraitsRegistry mem_traits_registry;
 
     SECTION("Test adding traits") {
-      uint32 device_trait_id = mem_traits_registry.AddTrait(EMemoryAttributeType::Device);
+      uint32 io_trait_id = mem_traits_registry.AddTrait(EMemoryAttributeType::IORegion);
       uint32 trait_1_id = mem_traits_registry.AddTrait("Trait 1");
-      EXPECT(mem_traits_registry.GetTraitId(EMemoryAttributeType::Device) == device_trait_id);
+      EXPECT(mem_traits_registry.GetTraitId(EMemoryAttributeType::IORegion) == io_trait_id);
       EXPECT(mem_traits_registry.GetTraitId("Trait 1") == trait_1_id);
     }
 
     SECTION("Test adding duplicate traits") {
-      mem_traits_registry.AddTrait(EMemoryAttributeType::NormalCacheable);
+      mem_traits_registry.AddTrait(EMemoryAttributeType::MainRegion);
       mem_traits_registry.AddTrait("Trait 2");
-      EXPECT_FAIL(mem_traits_registry.AddTrait(EMemoryAttributeType::NormalCacheable), "trait-already-exists");
+      EXPECT_FAIL(mem_traits_registry.AddTrait(EMemoryAttributeType::MainRegion), "trait-already-exists");
       EXPECT_FAIL(mem_traits_registry.AddTrait("Trait 2"), "trait-already-exists");
     }
 
     SECTION("Test getting non-existent trait IDs") {
-      EXPECT(mem_traits_registry.GetTraitId(EMemoryAttributeType::Device) == 0u);
+      EXPECT(mem_traits_registry.GetTraitId(EMemoryAttributeType::IORegion) == 0u);
       EXPECT(mem_traits_registry.GetTraitId("Trait 7") == 0u);
     }
 
     SECTION("Test requesting trait IDs") {
-      uint32 non_cacheable_trait_id = mem_traits_registry.RequestTraitId(EMemoryAttributeType::NormalNonCacheable);
+      uint32 uncacheable_trait_id = mem_traits_registry.RequestTraitId(EMemoryAttributeType::Uncacheable);
       uint32 trait_3_id = mem_traits_registry.RequestTraitId("Trait 3");
-      EXPECT(mem_traits_registry.RequestTraitId(EMemoryAttributeType::NormalNonCacheable) == non_cacheable_trait_id);
+      EXPECT(mem_traits_registry.RequestTraitId(EMemoryAttributeType::Uncacheable) == uncacheable_trait_id);
       EXPECT(mem_traits_registry.RequestTraitId("Trait 3") == trait_3_id);
     }
 
     SECTION("Test adding mutually exclusive traits") {
-      mem_traits_registry.AddMutuallyExclusiveTraits({EMemoryAttributeType::NormalCacheable, EMemoryAttributeType::NormalNonCacheable});
+      mem_traits_registry.AddMutuallyExclusiveTraits({EMemoryAttributeType::CacheableShared, EMemoryAttributeType::Uncacheable});
       mem_traits_registry.AddMutuallyExclusiveTraits({"Trait 4", "Trait 5", "Trait 6"});
 
       std::vector<uint32> cacheable_trait_exclusive_ids;
-      mem_traits_registry.GetMutuallyExclusiveTraitIds(mem_traits_registry.GetTraitId(EMemoryAttributeType::NormalCacheable), cacheable_trait_exclusive_ids);
-      uint32 non_cacheable_trait_id = mem_traits_registry.GetTraitId(EMemoryAttributeType::NormalNonCacheable);
+      mem_traits_registry.GetMutuallyExclusiveTraitIds(mem_traits_registry.GetTraitId(EMemoryAttributeType::CacheableShared), cacheable_trait_exclusive_ids);
+      uint32 uncacheable_trait_id = mem_traits_registry.GetTraitId(EMemoryAttributeType::Uncacheable);
       EXPECT(cacheable_trait_exclusive_ids.size() == 1ull);
-      EXPECT(cacheable_trait_exclusive_ids[0] == non_cacheable_trait_id);
+      EXPECT(cacheable_trait_exclusive_ids[0] == uncacheable_trait_id);
 
       std::vector<uint32> trait_5_exclusive_ids;
       mem_traits_registry.GetMutuallyExclusiveTraitIds(mem_traits_registry.GetTraitId("Trait 5"), trait_5_exclusive_ids);
@@ -142,6 +142,39 @@ CASE("Test MemoryTraitsRegistry") {
         [trait_6_id](cuint32 traitId) { return (traitId == trait_6_id); });
 
       EXPECT(found_trait_6_id);
+    }
+
+    SECTION("Test adding intersecting sets of mutually exclusive traits") {
+      mem_traits_registry.AddMutuallyExclusiveTraits(std::vector<std::string>({"Trait 1", "Trait 2"}));
+      mem_traits_registry.AddMutuallyExclusiveTraits(std::vector<std::string>({"Trait 1", "Trait 3"}));
+
+      uint32 trait_1_id = mem_traits_registry.GetTraitId("Trait 1");
+      uint32 trait_2_id = mem_traits_registry.GetTraitId("Trait 2");
+      uint32 trait_3_id = mem_traits_registry.GetTraitId("Trait 3");
+
+      std::vector<uint32> trait_1_exclusive_ids;
+      mem_traits_registry.GetMutuallyExclusiveTraitIds(trait_1_id, trait_1_exclusive_ids);
+      EXPECT(trait_1_exclusive_ids.size() == 2ull);
+
+      bool found_trait_2_id = any_of(trait_1_exclusive_ids.begin(), trait_1_exclusive_ids.end(),
+        [trait_2_id](cuint32 traitId) { return (traitId == trait_2_id); });
+
+      EXPECT(found_trait_2_id);
+
+      bool found_trait_3_id = any_of(trait_1_exclusive_ids.begin(), trait_1_exclusive_ids.end(),
+        [trait_3_id](cuint32 traitId) { return (traitId == trait_3_id); });
+
+      EXPECT(found_trait_3_id);
+
+      std::vector<uint32> trait_2_exclusive_ids;
+      mem_traits_registry.GetMutuallyExclusiveTraitIds(trait_2_id, trait_2_exclusive_ids);
+      EXPECT(trait_2_exclusive_ids.size() == 1ull);
+      EXPECT(trait_2_exclusive_ids[0] == trait_1_id);
+
+      std::vector<uint32> trait_3_exclusive_ids;
+      mem_traits_registry.GetMutuallyExclusiveTraitIds(trait_3_id, trait_3_exclusive_ids);
+      EXPECT(trait_3_exclusive_ids.size() == 1ull);
+      EXPECT(trait_3_exclusive_ids[0] == trait_1_id);
     }
 
     SECTION("Test adding empty list of mutually exclusive traits") {
@@ -163,31 +196,31 @@ CASE("Test MemoryTraitsManager") {
     MemoryTraitsManager mem_traits_manager(new MemoryTraitsRegistryTest());
 
     SECTION("Test adding global traits") {
-      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::Device, 0x7300, 0x7400);
+      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::IORegion, 0x7300, 0x7400);
       mem_traits_manager.AddGlobalTrait("Trait 1", 0x7200, 0x7380);
 
-      EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::Device, 0x7300, 0x7400));
-      EXPECT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::Device, 0x7300, 0x7400));
+      EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::IORegion, 0x7300, 0x7400));
+      EXPECT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::IORegion, 0x7300, 0x7400));
       EXPECT(mem_traits_manager.HasTrait(0, "Trait 1", 0x7200, 0x7380));
       EXPECT(mem_traits_manager.HasTrait(1, "Trait 1", 0x7200, 0x7380));
     }
 
     SECTION("Test adding thread-specific traits") {
-      mem_traits_manager.AddThreadTrait(0, EMemoryAttributeType::NormalCacheable, 0x3920, 0x3950);
+      mem_traits_manager.AddThreadTrait(0, EMemoryAttributeType::CacheableShared, 0x3920, 0x3950);
       mem_traits_manager.AddThreadTrait(1, "Trait 2", 0x7ff28, 0x7ff2f);
       mem_traits_manager.AddThreadTrait(1, "Trait 3", 0x850, 0x870);
 
-      EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::NormalCacheable, 0x3920, 0x3950));
+      EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::CacheableShared, 0x3920, 0x3950));
       EXPECT_NOT(mem_traits_manager.HasTrait(0, "Trait 2", 0x7ff28, 0x7ff2f));
       EXPECT_NOT(mem_traits_manager.HasTrait(0, "Trait 3", 0x850, 0x870));
-      EXPECT_NOT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::NormalCacheable, 0x3920, 0x3950));
+      EXPECT_NOT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::CacheableShared, 0x3920, 0x3950));
       EXPECT(mem_traits_manager.HasTrait(1, "Trait 2", 0x7ff28, 0x7ff2f));
       EXPECT(mem_traits_manager.HasTrait(1, "Trait 3", 0x850, 0x870));
     }
 
     SECTION("Test adding mutually-exclusive traits") {
-      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::Device, 0x6320, 0x637f);
-      EXPECT_FAIL(mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::NormalNonCacheable, 0x6250, 0x6350), "trait-conflict");
+      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::IORegion, 0x6320, 0x637f);
+      EXPECT_FAIL(mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::MainRegion, 0x6250, 0x6350), "trait-conflict");
     }
   }
 },

@@ -140,24 +140,20 @@ namespace Force {
   {
     set<uint32> exclusive_ids;
     for (EMemoryAttributeType trait : traits) {
-      exclusive_ids.insert(AddTrait(trait));
+      exclusive_ids.insert(RequestTraitId(trait));
     }
 
-    for (uint32 trait_id : exclusive_ids) {
-      mExclusiveTraitIds.emplace(trait_id, exclusive_ids);
-    }
+    AddMutuallyExclusiveTraitIds(exclusive_ids);
   }
 
   void MemoryTraitsRegistry::AddMutuallyExclusiveTraits(const vector<string>& traits)
   {
     set<uint32> exclusive_ids;
     for (const string& trait : traits) {
-      exclusive_ids.insert(AddTrait(trait));
+      exclusive_ids.insert(RequestTraitId(trait));
     }
 
-    for (uint32 trait_id : exclusive_ids) {
-      mExclusiveTraitIds.emplace(trait_id, exclusive_ids);
-    }
+    AddMutuallyExclusiveTraitIds(exclusive_ids);
   }
 
   void MemoryTraitsRegistry::GetMutuallyExclusiveTraitIds(cuint32 traitId, vector<uint32>& exclusiveIds) const
@@ -167,6 +163,20 @@ namespace Force {
       // Don't include the specified trait ID in the output
       copy_if(itr->second.begin(), itr->second.end(), back_inserter(exclusiveIds),
         [traitId](cuint32 exclusiveId) { return (exclusiveId != traitId); });
+    }
+  }
+
+  void MemoryTraitsRegistry::AddMutuallyExclusiveTraitIds(const set<uint32>& exclusiveIds)
+  {
+    for (uint32 trait_id : exclusiveIds) {
+      auto itr = mExclusiveTraitIds.find(trait_id);
+
+      if (itr != mExclusiveTraitIds.end()) {
+        copy(exclusiveIds.begin(), exclusiveIds.end(), inserter(itr->second, itr->second.begin()));
+      }
+      else {
+        mExclusiveTraitIds.emplace(trait_id, exclusiveIds);
+      }
     }
   }
 

@@ -41,6 +41,7 @@ namespace Force {
   class MemoryConstraint;
   class AddressReuseMode;
   class SymbolManager;
+  class MemoryTraitsManager;
 
   /*!
     \class MemoryBank
@@ -49,12 +50,6 @@ namespace Force {
   class MemoryBank {
   public:
     explicit MemoryBank(EMemBankType bankType); //!< Constructor with memory bank type given.
-
-    MemoryBank() //!< Default constructor.
-      : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr)
-    {
-    }
-
     COPY_CONSTRUCTOR_ABSENT(MemoryBank);
     ~MemoryBank(); //!< Destructor.
 
@@ -90,6 +85,7 @@ namespace Force {
     PhysicalPageManager* mpPhysicalPageManager; //!< Pointer to physical page manager object
     PageTableManager* mpPageTableManager; //!< Pointer to the page table manager object
     SymbolManager* mpSymbolManager; //!< Pointer to the symbol manager object.
+    MemoryTraitsManager* mpMemTraitsManager; //!< Pointer to the memory traits manager object.
   };
 
   /*!

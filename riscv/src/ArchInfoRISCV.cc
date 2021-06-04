@@ -37,6 +37,7 @@
 #include <VmManagerRISCV.h>
 #include <AddressTableManagerRISCV.h>
 #include <PhysicalPageManagerRISCV.h>
+#include <MemoryTraitsRISCV.h>
 #include <PageRequestRegulatorRISCV.h>
 #include <Log.h>
 
@@ -120,6 +121,11 @@ namespace Force {
   PhysicalPageManager* ArchInfoRISCV::InstantiatePhysicalPageManager(EMemBankType bankType) const
   {
     return new PhysicalPageManagerRISCV(bankType);
+  }
+
+  MemoryTraitsRegistry* ArchInfoRISCV::InstantiateMemoryTraitsRegistry() const
+  {
+    return new MemoryTraitsRegistryRISCV();
   }
 
   PageRequestRegulator* ArchInfoRISCV::InstantiatePageRequestRegulator() const

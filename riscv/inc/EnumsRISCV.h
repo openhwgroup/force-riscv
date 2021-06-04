@@ -407,9 +407,33 @@ namespace Force {
     Types of memory attributes for physical memory segments
   */
   enum class EMemoryAttributeType : unsigned char {
-    Device = 0,
-    NormalCacheable = 1,
-    NormalNonCacheable = 2,
+    MainRegion = 0,
+    IORegion = 1,
+    EmptyRegion = 2,
+    LRSC = 3,
+    AMONone = 4,
+    AMOSwap = 5,
+    AMOLogical = 6,
+    AMOArithmetic = 7,
+    AMOAligned = 8,
+    AMOMisaligned = 9,
+    RVWMO = 10,
+    RVTSO = 11,
+    RelaxedOrdering = 12,
+    StrongOrderingChannel0 = 13,
+    StrongOrderingChannel1 = 14,
+    CoherentL1 = 15,
+    CoherentL2 = 16,
+    CoherentL3 = 17,
+    Incoherent = 18,
+    CacheableMasterPrivate = 19,
+    CacheableShared = 20,
+    CacheableSlavePrivate = 21,
+    Uncacheable = 22,
+    ReadIdempotent = 23,
+    ReadNonIdempotent = 24,
+    WriteIdempotent = 25,
+    WriteNonIdempotent = 26,
   };
   extern unsigned char EMemoryAttributeTypeSize;
   extern const std::string EMemoryAttributeType_to_string(EMemoryAttributeType in_enum); //!< Get string name for enum.

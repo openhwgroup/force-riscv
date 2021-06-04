@@ -1777,14 +1777,38 @@ namespace Force {
   }
 
 
-  unsigned char EMemoryAttributeTypeSize = 3;
+  unsigned char EMemoryAttributeTypeSize = 27;
 
   const string EMemoryAttributeType_to_string(EMemoryAttributeType in_enum)
   {
     switch (in_enum) {
-    case EMemoryAttributeType::Device: return "Device";
-    case EMemoryAttributeType::NormalCacheable: return "NormalCacheable";
-    case EMemoryAttributeType::NormalNonCacheable: return "NormalNonCacheable";
+    case EMemoryAttributeType::MainRegion: return "MainRegion";
+    case EMemoryAttributeType::IORegion: return "IORegion";
+    case EMemoryAttributeType::EmptyRegion: return "EmptyRegion";
+    case EMemoryAttributeType::LRSC: return "LRSC";
+    case EMemoryAttributeType::AMONone: return "AMONone";
+    case EMemoryAttributeType::AMOSwap: return "AMOSwap";
+    case EMemoryAttributeType::AMOLogical: return "AMOLogical";
+    case EMemoryAttributeType::AMOArithmetic: return "AMOArithmetic";
+    case EMemoryAttributeType::AMOAligned: return "AMOAligned";
+    case EMemoryAttributeType::AMOMisaligned: return "AMOMisaligned";
+    case EMemoryAttributeType::RVWMO: return "RVWMO";
+    case EMemoryAttributeType::RVTSO: return "RVTSO";
+    case EMemoryAttributeType::RelaxedOrdering: return "RelaxedOrdering";
+    case EMemoryAttributeType::StrongOrderingChannel0: return "StrongOrderingChannel0";
+    case EMemoryAttributeType::StrongOrderingChannel1: return "StrongOrderingChannel1";
+    case EMemoryAttributeType::CoherentL1: return "CoherentL1";
+    case EMemoryAttributeType::CoherentL2: return "CoherentL2";
+    case EMemoryAttributeType::CoherentL3: return "CoherentL3";
+    case EMemoryAttributeType::Incoherent: return "Incoherent";
+    case EMemoryAttributeType::CacheableMasterPrivate: return "CacheableMasterPrivate";
+    case EMemoryAttributeType::CacheableShared: return "CacheableShared";
+    case EMemoryAttributeType::CacheableSlavePrivate: return "CacheableSlavePrivate";
+    case EMemoryAttributeType::Uncacheable: return "Uncacheable";
+    case EMemoryAttributeType::ReadIdempotent: return "ReadIdempotent";
+    case EMemoryAttributeType::ReadNonIdempotent: return "ReadNonIdempotent";
+    case EMemoryAttributeType::WriteIdempotent: return "WriteIdempotent";
+    case EMemoryAttributeType::WriteNonIdempotent: return "WriteNonIdempotent";
     default:
       unknown_enum_value("EMemoryAttributeType", (unsigned char)(in_enum));
     }
@@ -1795,45 +1819,229 @@ namespace Force {
   {
     string enum_type_name = "EMemoryAttributeType";
     size_t size = in_str.size();
-    char hash_value = in_str.at(6 < size ? 6 : 6 % size);
+    char hash_value = in_str.at(0) ^ in_str.at(19 < size ? 19 : 19 % size) ^ in_str.at(21 < size ? 21 : 21 % size);
 
     switch (hash_value) {
-    case 67:
-      validate(in_str, "NormalCacheable", enum_type_name);
-      return EMemoryAttributeType::NormalCacheable;
+    case 6:
+      validate(in_str, "StrongOrderingChannel0", enum_type_name);
+      return EMemoryAttributeType::StrongOrderingChannel0;
+    case 7:
+      validate(in_str, "StrongOrderingChannel1", enum_type_name);
+      return EMemoryAttributeType::StrongOrderingChannel1;
+    case 29:
+      validate(in_str, "CoherentL1", enum_type_name);
+      return EMemoryAttributeType::CoherentL1;
+    case 30:
+      validate(in_str, "CoherentL2", enum_type_name);
+      return EMemoryAttributeType::CoherentL2;
+    case 31:
+      validate(in_str, "CoherentL3", enum_type_name);
+      return EMemoryAttributeType::CoherentL3;
+    case 66:
+      {
+        char hash_value_66 = in_str.at(0);
+
+        switch (hash_value_66) {
+        case 69:
+          validate(in_str, "EmptyRegion", enum_type_name);
+          return EMemoryAttributeType::EmptyRegion;
+        case 77:
+          validate(in_str, "MainRegion", enum_type_name);
+          return EMemoryAttributeType::MainRegion;
+        default:
+          unknown_enum_name(enum_type_name, in_str);
+        }
+      }
     case 68:
-      validate(in_str, "Device", enum_type_name);
-      return EMemoryAttributeType::Device;
+      validate(in_str, "CacheableShared", enum_type_name);
+      return EMemoryAttributeType::CacheableShared;
+    case 69:
+      validate(in_str, "IORegion", enum_type_name);
+      return EMemoryAttributeType::IORegion;
+    case 71:
+      validate(in_str, "CacheableMasterPrivate", enum_type_name);
+      return EMemoryAttributeType::CacheableMasterPrivate;
+    case 73:
+      validate(in_str, "AMOMisaligned", enum_type_name);
+      return EMemoryAttributeType::AMOMisaligned;
+    case 75:
+      {
+        size_t size_75 = in_str.size();
+        char hash_value_75 = in_str.at(2 < size_75 ? 2 : 2 % size_75);
+
+        switch (hash_value_75) {
+        case 84:
+          validate(in_str, "RVTSO", enum_type_name);
+          return EMemoryAttributeType::RVTSO;
+        case 87:
+          validate(in_str, "RVWMO", enum_type_name);
+          return EMemoryAttributeType::RVWMO;
+        default:
+          unknown_enum_name(enum_type_name, in_str);
+        }
+      }
     case 78:
-      validate(in_str, "NormalNonCacheable", enum_type_name);
-      return EMemoryAttributeType::NormalNonCacheable;
+      validate(in_str, "RelaxedOrdering", enum_type_name);
+      return EMemoryAttributeType::RelaxedOrdering;
+    case 81:
+      validate(in_str, "WriteNonIdempotent", enum_type_name);
+      return EMemoryAttributeType::WriteNonIdempotent;
+    case 82:
+      validate(in_str, "Uncacheable", enum_type_name);
+      return EMemoryAttributeType::Uncacheable;
+    case 83:
+      validate(in_str, "Incoherent", enum_type_name);
+      return EMemoryAttributeType::Incoherent;
+    case 86:
+      validate(in_str, "WriteIdempotent", enum_type_name);
+      return EMemoryAttributeType::WriteIdempotent;
+    case 88:
+      validate(in_str, "AMOArithmetic", enum_type_name);
+      return EMemoryAttributeType::AMOArithmetic;
+    case 91:
+      validate(in_str, "ReadIdempotent", enum_type_name);
+      return EMemoryAttributeType::ReadIdempotent;
+    case 93:
+      validate(in_str, "LRSC", enum_type_name);
+      return EMemoryAttributeType::LRSC;
+    case 96:
+      validate(in_str, "AMOLogical", enum_type_name);
+      return EMemoryAttributeType::AMOLogical;
+    case 97:
+      validate(in_str, "AMOSwap", enum_type_name);
+      return EMemoryAttributeType::AMOSwap;
+    case 104:
+      validate(in_str, "AMOAligned", enum_type_name);
+      return EMemoryAttributeType::AMOAligned;
+    case 110:
+      validate(in_str, "AMONone", enum_type_name);
+      return EMemoryAttributeType::AMONone;
+    case 116:
+      validate(in_str, "CacheableSlavePrivate", enum_type_name);
+      return EMemoryAttributeType::CacheableSlavePrivate;
+    case 125:
+      validate(in_str, "ReadNonIdempotent", enum_type_name);
+      return EMemoryAttributeType::ReadNonIdempotent;
     default:
       unknown_enum_name(enum_type_name, in_str);
     }
-    return EMemoryAttributeType::Device;
+    return EMemoryAttributeType::MainRegion;
   }
 
   EMemoryAttributeType try_string_to_EMemoryAttributeType(const string& in_str, bool& okay)
   {
     okay = true;
     size_t size = in_str.size();
-    char hash_value = in_str.at(6 < size ? 6 : 6 % size);
+    char hash_value = in_str.at(0) ^ in_str.at(19 < size ? 19 : 19 % size) ^ in_str.at(21 < size ? 21 : 21 % size);
 
     switch (hash_value) {
-    case 67:
-      okay = (in_str == "NormalCacheable");
-      return EMemoryAttributeType::NormalCacheable;
+    case 6:
+      okay = (in_str == "StrongOrderingChannel0");
+      return EMemoryAttributeType::StrongOrderingChannel0;
+    case 7:
+      okay = (in_str == "StrongOrderingChannel1");
+      return EMemoryAttributeType::StrongOrderingChannel1;
+    case 29:
+      okay = (in_str == "CoherentL1");
+      return EMemoryAttributeType::CoherentL1;
+    case 30:
+      okay = (in_str == "CoherentL2");
+      return EMemoryAttributeType::CoherentL2;
+    case 31:
+      okay = (in_str == "CoherentL3");
+      return EMemoryAttributeType::CoherentL3;
+    case 66:
+      {
+        char hash_value_66 = in_str.at(0);
+
+        switch (hash_value_66) {
+        case 69:
+          okay = (in_str == "EmptyRegion");
+          return EMemoryAttributeType::EmptyRegion;
+        case 77:
+          okay = (in_str == "MainRegion");
+          return EMemoryAttributeType::MainRegion;
+        default:
+          okay = false;
+          return EMemoryAttributeType::MainRegion;
+        }
+      }
     case 68:
-      okay = (in_str == "Device");
-      return EMemoryAttributeType::Device;
+      okay = (in_str == "CacheableShared");
+      return EMemoryAttributeType::CacheableShared;
+    case 69:
+      okay = (in_str == "IORegion");
+      return EMemoryAttributeType::IORegion;
+    case 71:
+      okay = (in_str == "CacheableMasterPrivate");
+      return EMemoryAttributeType::CacheableMasterPrivate;
+    case 73:
+      okay = (in_str == "AMOMisaligned");
+      return EMemoryAttributeType::AMOMisaligned;
+    case 75:
+      {
+        size_t size_75 = in_str.size();
+        char hash_value_75 = in_str.at(2 < size_75 ? 2 : 2 % size_75);
+
+        switch (hash_value_75) {
+        case 84:
+          okay = (in_str == "RVTSO");
+          return EMemoryAttributeType::RVTSO;
+        case 87:
+          okay = (in_str == "RVWMO");
+          return EMemoryAttributeType::RVWMO;
+        default:
+          okay = false;
+          return EMemoryAttributeType::MainRegion;
+        }
+      }
     case 78:
-      okay = (in_str == "NormalNonCacheable");
-      return EMemoryAttributeType::NormalNonCacheable;
+      okay = (in_str == "RelaxedOrdering");
+      return EMemoryAttributeType::RelaxedOrdering;
+    case 81:
+      okay = (in_str == "WriteNonIdempotent");
+      return EMemoryAttributeType::WriteNonIdempotent;
+    case 82:
+      okay = (in_str == "Uncacheable");
+      return EMemoryAttributeType::Uncacheable;
+    case 83:
+      okay = (in_str == "Incoherent");
+      return EMemoryAttributeType::Incoherent;
+    case 86:
+      okay = (in_str == "WriteIdempotent");
+      return EMemoryAttributeType::WriteIdempotent;
+    case 88:
+      okay = (in_str == "AMOArithmetic");
+      return EMemoryAttributeType::AMOArithmetic;
+    case 91:
+      okay = (in_str == "ReadIdempotent");
+      return EMemoryAttributeType::ReadIdempotent;
+    case 93:
+      okay = (in_str == "LRSC");
+      return EMemoryAttributeType::LRSC;
+    case 96:
+      okay = (in_str == "AMOLogical");
+      return EMemoryAttributeType::AMOLogical;
+    case 97:
+      okay = (in_str == "AMOSwap");
+      return EMemoryAttributeType::AMOSwap;
+    case 104:
+      okay = (in_str == "AMOAligned");
+      return EMemoryAttributeType::AMOAligned;
+    case 110:
+      okay = (in_str == "AMONone");
+      return EMemoryAttributeType::AMONone;
+    case 116:
+      okay = (in_str == "CacheableSlavePrivate");
+      return EMemoryAttributeType::CacheableSlavePrivate;
+    case 125:
+      okay = (in_str == "ReadNonIdempotent");
+      return EMemoryAttributeType::ReadNonIdempotent;
     default:
       okay = false;
-      return EMemoryAttributeType::Device;
+      return EMemoryAttributeType::MainRegion;
     }
-    return EMemoryAttributeType::Device;
+    return EMemoryAttributeType::MainRegion;
   }
 
 

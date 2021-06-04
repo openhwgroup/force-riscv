@@ -1120,34 +1120,130 @@ CASE( "tests for EMemoryAttributeType" ) {
   SETUP ( "setup EMemoryAttributeType" )  {
 
     SECTION( "test enum to string conversion" ) {
-      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::Device) == "Device");
-      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::NormalCacheable) == "NormalCacheable");
-      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::NormalNonCacheable) == "NormalNonCacheable");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::MainRegion) == "MainRegion");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::IORegion) == "IORegion");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::EmptyRegion) == "EmptyRegion");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::LRSC) == "LRSC");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::AMONone) == "AMONone");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::AMOSwap) == "AMOSwap");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::AMOLogical) == "AMOLogical");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::AMOArithmetic) == "AMOArithmetic");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::AMOAligned) == "AMOAligned");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::AMOMisaligned) == "AMOMisaligned");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::RVWMO) == "RVWMO");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::RVTSO) == "RVTSO");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::RelaxedOrdering) == "RelaxedOrdering");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::StrongOrderingChannel0) == "StrongOrderingChannel0");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::StrongOrderingChannel1) == "StrongOrderingChannel1");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::CoherentL1) == "CoherentL1");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::CoherentL2) == "CoherentL2");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::CoherentL3) == "CoherentL3");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::Incoherent) == "Incoherent");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::CacheableMasterPrivate) == "CacheableMasterPrivate");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::CacheableShared) == "CacheableShared");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::CacheableSlavePrivate) == "CacheableSlavePrivate");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::Uncacheable) == "Uncacheable");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::ReadIdempotent) == "ReadIdempotent");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::ReadNonIdempotent) == "ReadNonIdempotent");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::WriteIdempotent) == "WriteIdempotent");
+      EXPECT(EMemoryAttributeType_to_string(EMemoryAttributeType::WriteNonIdempotent) == "WriteNonIdempotent");
     }
 
     SECTION( "test string to enum conversion" ) {
-      EXPECT(string_to_EMemoryAttributeType("Device") == EMemoryAttributeType::Device);
-      EXPECT(string_to_EMemoryAttributeType("NormalCacheable") == EMemoryAttributeType::NormalCacheable);
-      EXPECT(string_to_EMemoryAttributeType("NormalNonCacheable") == EMemoryAttributeType::NormalNonCacheable);
+      EXPECT(string_to_EMemoryAttributeType("MainRegion") == EMemoryAttributeType::MainRegion);
+      EXPECT(string_to_EMemoryAttributeType("IORegion") == EMemoryAttributeType::IORegion);
+      EXPECT(string_to_EMemoryAttributeType("EmptyRegion") == EMemoryAttributeType::EmptyRegion);
+      EXPECT(string_to_EMemoryAttributeType("LRSC") == EMemoryAttributeType::LRSC);
+      EXPECT(string_to_EMemoryAttributeType("AMONone") == EMemoryAttributeType::AMONone);
+      EXPECT(string_to_EMemoryAttributeType("AMOSwap") == EMemoryAttributeType::AMOSwap);
+      EXPECT(string_to_EMemoryAttributeType("AMOLogical") == EMemoryAttributeType::AMOLogical);
+      EXPECT(string_to_EMemoryAttributeType("AMOArithmetic") == EMemoryAttributeType::AMOArithmetic);
+      EXPECT(string_to_EMemoryAttributeType("AMOAligned") == EMemoryAttributeType::AMOAligned);
+      EXPECT(string_to_EMemoryAttributeType("AMOMisaligned") == EMemoryAttributeType::AMOMisaligned);
+      EXPECT(string_to_EMemoryAttributeType("RVWMO") == EMemoryAttributeType::RVWMO);
+      EXPECT(string_to_EMemoryAttributeType("RVTSO") == EMemoryAttributeType::RVTSO);
+      EXPECT(string_to_EMemoryAttributeType("RelaxedOrdering") == EMemoryAttributeType::RelaxedOrdering);
+      EXPECT(string_to_EMemoryAttributeType("StrongOrderingChannel0") == EMemoryAttributeType::StrongOrderingChannel0);
+      EXPECT(string_to_EMemoryAttributeType("StrongOrderingChannel1") == EMemoryAttributeType::StrongOrderingChannel1);
+      EXPECT(string_to_EMemoryAttributeType("CoherentL1") == EMemoryAttributeType::CoherentL1);
+      EXPECT(string_to_EMemoryAttributeType("CoherentL2") == EMemoryAttributeType::CoherentL2);
+      EXPECT(string_to_EMemoryAttributeType("CoherentL3") == EMemoryAttributeType::CoherentL3);
+      EXPECT(string_to_EMemoryAttributeType("Incoherent") == EMemoryAttributeType::Incoherent);
+      EXPECT(string_to_EMemoryAttributeType("CacheableMasterPrivate") == EMemoryAttributeType::CacheableMasterPrivate);
+      EXPECT(string_to_EMemoryAttributeType("CacheableShared") == EMemoryAttributeType::CacheableShared);
+      EXPECT(string_to_EMemoryAttributeType("CacheableSlavePrivate") == EMemoryAttributeType::CacheableSlavePrivate);
+      EXPECT(string_to_EMemoryAttributeType("Uncacheable") == EMemoryAttributeType::Uncacheable);
+      EXPECT(string_to_EMemoryAttributeType("ReadIdempotent") == EMemoryAttributeType::ReadIdempotent);
+      EXPECT(string_to_EMemoryAttributeType("ReadNonIdempotent") == EMemoryAttributeType::ReadNonIdempotent);
+      EXPECT(string_to_EMemoryAttributeType("WriteIdempotent") == EMemoryAttributeType::WriteIdempotent);
+      EXPECT(string_to_EMemoryAttributeType("WriteNonIdempotent") == EMemoryAttributeType::WriteNonIdempotent);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
-      EXPECT_THROWS_AS(string_to_EMemoryAttributeType("D_vice"), EnumTypeError);
+      EXPECT_THROWS_AS(string_to_EMemoryAttributeType("M_inRegion"), EnumTypeError);
     }
 
     SECTION( "test non-throwing string to enum conversion" ) {
       bool okay = false;
-      EXPECT(try_string_to_EMemoryAttributeType("Device", okay) == EMemoryAttributeType::Device);
+      EXPECT(try_string_to_EMemoryAttributeType("MainRegion", okay) == EMemoryAttributeType::MainRegion);
       EXPECT(okay);
-      EXPECT(try_string_to_EMemoryAttributeType("NormalCacheable", okay) == EMemoryAttributeType::NormalCacheable);
+      EXPECT(try_string_to_EMemoryAttributeType("IORegion", okay) == EMemoryAttributeType::IORegion);
       EXPECT(okay);
-      EXPECT(try_string_to_EMemoryAttributeType("NormalNonCacheable", okay) == EMemoryAttributeType::NormalNonCacheable);
+      EXPECT(try_string_to_EMemoryAttributeType("EmptyRegion", okay) == EMemoryAttributeType::EmptyRegion);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("LRSC", okay) == EMemoryAttributeType::LRSC);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("AMONone", okay) == EMemoryAttributeType::AMONone);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("AMOSwap", okay) == EMemoryAttributeType::AMOSwap);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("AMOLogical", okay) == EMemoryAttributeType::AMOLogical);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("AMOArithmetic", okay) == EMemoryAttributeType::AMOArithmetic);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("AMOAligned", okay) == EMemoryAttributeType::AMOAligned);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("AMOMisaligned", okay) == EMemoryAttributeType::AMOMisaligned);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("RVWMO", okay) == EMemoryAttributeType::RVWMO);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("RVTSO", okay) == EMemoryAttributeType::RVTSO);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("RelaxedOrdering", okay) == EMemoryAttributeType::RelaxedOrdering);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("StrongOrderingChannel0", okay) == EMemoryAttributeType::StrongOrderingChannel0);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("StrongOrderingChannel1", okay) == EMemoryAttributeType::StrongOrderingChannel1);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("CoherentL1", okay) == EMemoryAttributeType::CoherentL1);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("CoherentL2", okay) == EMemoryAttributeType::CoherentL2);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("CoherentL3", okay) == EMemoryAttributeType::CoherentL3);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("Incoherent", okay) == EMemoryAttributeType::Incoherent);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("CacheableMasterPrivate", okay) == EMemoryAttributeType::CacheableMasterPrivate);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("CacheableShared", okay) == EMemoryAttributeType::CacheableShared);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("CacheableSlavePrivate", okay) == EMemoryAttributeType::CacheableSlavePrivate);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("Uncacheable", okay) == EMemoryAttributeType::Uncacheable);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("ReadIdempotent", okay) == EMemoryAttributeType::ReadIdempotent);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("ReadNonIdempotent", okay) == EMemoryAttributeType::ReadNonIdempotent);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("WriteIdempotent", okay) == EMemoryAttributeType::WriteIdempotent);
+      EXPECT(okay);
+      EXPECT(try_string_to_EMemoryAttributeType("WriteNonIdempotent", okay) == EMemoryAttributeType::WriteNonIdempotent);
       EXPECT(okay);
     }
 
     SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
       bool okay = false;
-      try_string_to_EMemoryAttributeType("D_vice", okay);
+      try_string_to_EMemoryAttributeType("M_inRegion", okay);
       EXPECT(!okay);
     }
   }

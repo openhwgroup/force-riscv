@@ -62,9 +62,11 @@ namespace Force {
     uint32 GetTraitId(const std::string& trait) const; //!< Get the ID associated with the specified trait. Returns 0 if the specified trait is not found.
     uint32 RequestTraitId(const EMemoryAttributeType trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
     uint32 RequestTraitId(const std::string& trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
-    void AddMutuallyExclusiveTraits(const std::vector<EMemoryAttributeType>& traits); //!< Generate IDs for the specified traits and mark them as mutually exclusive. Fails if any of the traits already has an associated ID.
-    void AddMutuallyExclusiveTraits(const std::vector<std::string>& traits); //!< Generate IDs for the specified traits and mark them as mutually exclusive. Fails if any of the traits already has an associated ID.
+    void AddMutuallyExclusiveTraits(const std::vector<EMemoryAttributeType>& traits); //!< Generate IDs for the specified traits, if needed, and mark them as mutually exclusive.
+    void AddMutuallyExclusiveTraits(const std::vector<std::string>& traits); //!< Generate IDs for the specified traits, if needed, and mark them as mutually exclusive.
     void GetMutuallyExclusiveTraitIds(cuint32 traitId, std::vector<uint32>& exclusiveIds) const; //!< Returns a list of IDs of other memory traits that are mutually exclusive with the specified trait. The ID of the specified trait is not included in the returned list.
+  private:
+    void AddMutuallyExclusiveTraitIds(const std::set<uint32>& traitIds); //!< Mark the specified traits as mutually exclusive.
   private:
     std::map<std::string, uint32> mTraitIds; //!< Map from descriptive memory trait identifiers to simple IDs
     std::map<uint32, std::set<uint32>> mExclusiveTraitIds; //!< Map from memory trait ID to set of IDs for mutually exclusive memory traits

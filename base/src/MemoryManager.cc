@@ -31,6 +31,7 @@
 #include <AddressReuseMode.h>
 #include <ImageIO.h>
 #include <SymbolManager.h>
+#include <MemoryTraits.h>
 #include <Log.h>
 
 #include <algorithm>
@@ -41,7 +42,7 @@ using namespace std;
 namespace Force {
 
   MemoryBank::MemoryBank(EMemBankType bankType)
-    : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr)
+    : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr), mpMemTraitsManager(nullptr)
   {
     mpMemory = new Memory(bankType);
     mpBaseConstraint = new ConstraintSet();
@@ -49,6 +50,10 @@ namespace Force {
     Config* config = Config::Instance();
     mpUsable = new MultiThreadMemoryConstraint(config->NumChips() * config->NumCores() * config->NumThreads());
     mpSymbolManager = new SymbolManager(bankType);
+
+    Architectures* arch = Architectures::Instance();
+    ArchInfo* arch_info = arch->DefaultArchInfo();
+    mpMemTraitsManager = new MemoryTraitsManager(arch_info->InstantiateMemoryTraitsRegistry());
   }
 
   MemoryBank::~MemoryBank()
@@ -60,6 +65,7 @@ namespace Force {
     delete mpPhysicalPageManager;
     delete mpPageTableManager;
     delete mpSymbolManager;
+    delete mpMemTraitsManager;
   }
 
   EMemBankType MemoryBank::MemoryBankType() const

@@ -38,6 +38,7 @@ namespace Force {
   class ExceptionRecordManager;
   class GenConditionSet;
   class PhysicalPageManager;
+  class MemoryTraitsRegistry;
   class PageRequestRegulator;
   class AddressFilteringRegulator;
   class AddressSolutionFilter;
@@ -86,6 +87,7 @@ namespace Force {
     virtual uint32 ElfMachineType() const { return 0; } //!< Return ELF machine type.
     virtual const std::string FindOperandShortName(const std::string& longName) const { return ""; } //!< return operand short name
     virtual PhysicalPageManager* InstantiatePhysicalPageManager(EMemBankType bankType) const { return nullptr; } //!< Instantiate a PhysicalPageManager object based on the ArchInfo type.
+    virtual MemoryTraitsRegistry* InstantiateMemoryTraitsRegistry() const { return nullptr; } //!< Instantiate a MemoryTraitsRegistry object based on the ArchInfo type.
     virtual void SetupSimAPIs() { } //!< Setup simulator APIs.
   protected:
     explicit ArchInfo(const std::string& name);
