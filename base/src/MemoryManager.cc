@@ -175,7 +175,7 @@ namespace Force {
     //avoid allocating pages in predefined/unsupported physical memory ranges.
     Architectures* arch = Architectures::Instance();
     ArchInfo* arch_info = arch->DefaultArchInfo();
-    mpPhysicalPageManager = arch_info->InstantiatePhysicalPageManager(MemoryBankType());
+    mpPhysicalPageManager = arch_info->InstantiatePhysicalPageManager(MemoryBankType(), mpMemTraitsManager);
     uint64 pa_limit = Config::Instance()->LimitValue(ELimitType::PhysicalAddressLimit);
     ConstraintSet phys_range(0x0ull, pa_limit);
     mpPhysicalPageManager->Initialize(&phys_range, mpBaseConstraint);

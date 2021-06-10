@@ -880,7 +880,7 @@ namespace Force {
     auto mem_manager   = mpGenerator->GetMemoryManager();
     auto phys_page_manager = mem_manager->GetPhysicalPageManager(memBank);
 
-    return phys_page_manager->AllocatePage(VA, size, pPageReq, rSizeInfo, pChoicesAdapter);
+    return phys_page_manager->AllocatePage(mpGenerator->ThreadId(), VA, size, pPageReq, rSizeInfo, pChoicesAdapter);
   }
 
   GenPageRequest* VmAddressSpace::DefaultPageRequest(bool isInstr) const

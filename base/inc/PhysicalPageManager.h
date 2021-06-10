@@ -32,6 +32,8 @@ namespace Force
   class  VmAddressSpace;
   class  PagingChoicesAdapter;
   class  MemoryConstraintUpdate;
+  class  MemoryTraitsManager;
+  class  MemoryTraitsRange;
   struct PageSizeInfo;
 
   /*!
@@ -42,28 +44,25 @@ namespace Force
   class PhysicalPageManager
   {
   public:
-    explicit PhysicalPageManager(EMemBankType bankType);         //!< Constructor, sets mem bank type defaults all others
+    PhysicalPageManager(EMemBankType bankType, MemoryTraitsManager* pMemTraitsManager);
     COPY_CONSTRUCTOR_ABSENT(PhysicalPageManager);
     virtual ~PhysicalPageManager();                        //!< Destructor, cleans up cloned objects and managed structures
     ASSIGNMENT_OPERATOR_ABSENT(PhysicalPageManager);
 
     void Initialize(const ConstraintSet* pUsableMem, const ConstraintSet* pBoundary); //!< call to setup initial constraint set objects based on the usable physical memory
-    bool AllocatePage(uint64 VA, uint64 size, GenPageRequest* pPageReq, PageSizeInfo& rSizeInfo, const PagingChoicesAdapter* pChoicesAdapter); //!< Allocate page if VA lies in free range, return true if allocated
+    bool AllocatePage(cuint32 threadId, uint64 VA, uint64 size, GenPageRequest* pPageReq, PageSizeInfo& rSizeInfo, const PagingChoicesAdapter* pChoicesAdapter); //!< Allocate page if VA lies in free range, return true if allocated
     void CommitPage(const Page* pPage, uint64 size); //!< Commit page to appropriate physical page object
     void SubFromBoundary(const ConstraintSet& rConstr); //!< Subtract constraint from memory boundary.
     void AddToBoundary(const ConstraintSet& rConstr); //!< Add constraint to memory boundary.
     const ConstraintSet* GetUsable() const { return mpFreeRanges; } //!< Return the free ranges.
     void HandleMemoryConstraintUpdate(const MemoryConstraintUpdate& rMemConstrUpdate) const; //!< Update objects dependent on the physical memory constraint.
     const Page* GetVirtualPage(uint64 PA, const VmAddressSpace* pVmas) const;
-    inline const std::vector<ConstraintSet* >& GetAttributeConstraints() const { return mAttributeConstraints; } //!< Return vector of constraint sets representing attributes for memory
   protected:
     virtual const std::vector<EPteType>& GetPteTypes() const = 0; //! Return vector of EPteTypes
-    virtual void ConvertMemoryAttributes(const ConstraintSet* pMemAttrs, std::vector<EMemoryAttributeType>& memConstraintTypes) = 0; //!< Propagate the memory attributes into the memory constraint types for use in the aliasing logic
-    virtual void GetIncompatibleAttributes(const ConstraintSet* pMemAttrs, std::vector<EMemoryAttributeType>& memConstraintTypes) = 0; //!< Propagate a list of incompatible memory attributes types for use in the aliasing logic
   private:
     bool NewAllocation(uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq); //!< Function to attempt a new page allocation, returns true on successful allocation
-    bool AliasAllocation(uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq); //!< Function to attempt an aliased allocation, returns true on successful allocation
-    bool SolveAliasConstraints(const PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq, uint64& physTarget); //!< Function to attempt to solve for a valid random physical target for aliasing
+    bool AliasAllocation(cuint32 threadId, uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq); //!< Function to attempt an aliased allocation, returns true on successful allocation
+    bool SolveAliasConstraints(cuint32 threadId, const PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq, uint64& physTarget); //!< Function to attempt to solve for a valid random physical target for aliasing
 
     //Note: Initialize must be called before GetUsablePageAligned and UpdateUsablePageAligned are to be called
     ConstraintSet* GetUsablePageAligned(EPteType pteType);            //!< return the free ranges aligned based on page size
@@ -74,9 +73,11 @@ namespace Force
 
     //utility functions for page allocation
     void UpdateMemoryAttributes(GenPageRequest* pPageReq, PhysicalPage* pPhysPage); //!< update the memory attribute constraint sets based on newly allocated page
-    bool MemAttrCompatibility(const ConstraintSet* pAllocAttrs, const ConstraintSet* pAliasAttrs); //!< check to see if the two attribute constraint sets are compatible for aliasing
+    void UpdateMemoryAttributesForAliasing(GenPageRequest* pPageReq, PhysicalPage* pPhysPage); //!< update the memory attribute constraint sets based on an aliased page
+    bool MemAttrCompatibility(const MemoryTraitsRange& rAllocAttrs, const MemoryTraitsRange& rAliasAttrs); //!< check to see if the two attribute sets are compatible for aliasing
     //Note: GetPageAttrConstraints returns nullptr if page attributes are not set in the page request
-    const ConstraintSet* GetPageAttrConstraints(GenPageRequest* pPageReq) const; //!< get the pointer to either arch/impl constraints from the page request
+    void GetPageMemoryAttributes(GenPageRequest* pPageReq, std::vector<uint32>& rPageMemAttributes) const; //!< get the memory attributes from the page request for a new page allocation
+    void GetPageMemoryAttributesForAliasing(GenPageRequest* pPageReq, std::vector<uint32>& rPageAliasMemAttributes) const; //!< get the memory attributes from the page request for an aliased page allocation
 
     static uint64 msPageId;                                           //!< Used for setting up unique physical page IDs
     EMemBankType mMemoryBankType;                                     //!< Bank type of the physical memory manager
@@ -86,7 +87,7 @@ namespace Force
     ConstraintSet* mpAliasExcludeRanges;                              //!< Managed set of ranges to avoid aliasing in.
     mutable std::map<EPteType, ConstraintSet* > mUsablePageAligned;   //!< Map of page sizes to page aligned free ranges
     std::vector<PhysicalPage*> mPhysicalPages;                        //!< Vector of PhysicalPages allocated by this PPM
-    std::vector<ConstraintSet* > mAttributeConstraints;               //!< Vector of constraint sets representing attributes for memory
+    MemoryTraitsManager* mpMemTraitsManager;                          //!< Tracking for various memory characteristics
   };
 
   bool phys_page_less_than(const PhysicalPage* lhs, const PhysicalPage* rhs); //!< comp function for physical pages sort/search algos

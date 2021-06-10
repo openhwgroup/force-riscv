@@ -19,6 +19,7 @@
 #include <Log.h>
 
 #include <algorithm>
+#include <memory>
 
 using namespace std;
 
@@ -28,6 +29,111 @@ using namespace std;
 */
 
 namespace Force {
+
+  MemoryTraitsRange::MemoryTraitsRange(const map<uint32, ConstraintSet*>& rTraitRanges, cuint64 startAddr, cuint64 endAddr)
+    : mTraitRanges(), mpEmptyRanges(new ConstraintSet(startAddr, endAddr)), mStartAddr(startAddr), mEndAddr(endAddr)
+  {
+    for (const auto& trait_range : rTraitRanges) {
+      auto trait_addresses = new ConstraintSet();
+      trait_range.second->CopyInRange(mStartAddr, mEndAddr, *trait_addresses);
+      mTraitRanges.emplace(trait_range.first, trait_addresses);
+
+      mpEmptyRanges->SubConstraintSet(*trait_addresses);
+    }
+  }
+
+  MemoryTraitsRange::MemoryTraitsRange(const vector<uint32>& rTraitIds, cuint64 startAddr, cuint64 endAddr)
+    : mTraitRanges(), mpEmptyRanges(new ConstraintSet()), mStartAddr(startAddr), mEndAddr(endAddr)
+  {
+    for (uint32 trait_id : rTraitIds) {
+      mTraitRanges.emplace(trait_id, new ConstraintSet(startAddr, endAddr));
+    }
+  }
+
+  MemoryTraitsRange::MemoryTraitsRange(const MemoryTraitsRange& rOther)
+    : mTraitRanges(), mpEmptyRanges(rOther.mpEmptyRanges->Clone()), mStartAddr(rOther.mStartAddr), mEndAddr(rOther.mEndAddr)
+  {
+    for (const auto& trait_range : rOther.mTraitRanges) {
+      mTraitRanges.emplace(trait_range.first, trait_range.second->Clone());
+    }
+  }
+
+  MemoryTraitsRange::~MemoryTraitsRange()
+  {
+    for (auto trait_range : mTraitRanges) {
+      delete trait_range.second;
+    }
+
+    delete mpEmptyRanges;
+  }
+
+  MemoryTraitsRange* MemoryTraitsRange::CreateMergedMemoryTraitsRange(const MemoryTraitsRange& rOther) const
+  {
+    if ((mStartAddr != rOther.mStartAddr) or (mEndAddr != rOther.mEndAddr)) {
+      LOG(fail) << "{MemoryTraitsRange::CreateMergedMemoryTraitsRange} the starting and ending addresses for both MemoryTraitsRanges must be equal" << endl;
+      FAIL("address-ranges-not-equal");
+    }
+
+    MemoryTraitsRange* merged_mem_traits_range = new MemoryTraitsRange(rOther);
+
+    for (const auto& trait_range : mTraitRanges) {
+      auto itr = merged_mem_traits_range->mTraitRanges.find(trait_range.first);
+      if (itr != merged_mem_traits_range->mTraitRanges.end()) {
+        itr->second->MergeConstraintSet(*(trait_range.second));
+      }
+      else {
+        merged_mem_traits_range->mTraitRanges.emplace(trait_range.first, trait_range.second->Clone());
+      }
+
+      merged_mem_traits_range->mpEmptyRanges->SubConstraintSet(*(trait_range.second));
+    }
+
+    return merged_mem_traits_range;
+  }
+
+  bool MemoryTraitsRange::IsCompatible(const MemoryTraitsRange& rOther) const
+  {
+    bool compatible = HasCompatibleTraits(rOther);
+    if (compatible) {
+      compatible = rOther.HasCompatibleTraits(*this);
+    }
+
+    return compatible;
+  }
+
+  bool MemoryTraitsRange::Empty() const
+  {
+    return mTraitRanges.empty();
+  }
+
+  bool MemoryTraitsRange::HasCompatibleTraits(const MemoryTraitsRange& rOther) const
+  {
+    bool compatible = true;
+
+    for (const auto& trait_range : mTraitRanges) {
+      // Get the addresses associated with the trait in this MemoryTraitsRange, but remove addresses
+      // that are beyond the boundaries of the other MemoryTraitsRange
+      ConstraintSet trait_addresses;
+      trait_range.second->CopyInRange(rOther.mStartAddr, rOther.mEndAddr, trait_addresses);
+
+      // Get the addresses associated with the trait in the other MemoryTraitsRange, and combine
+      // them with the addresses with no associated traits
+      unique_ptr<ConstraintSet> other_compatible_addresses(rOther.mpEmptyRanges->Clone());
+      auto itr = rOther.mTraitRanges.find(trait_range.first);
+      if (itr != rOther.mTraitRanges.end()) {
+        other_compatible_addresses->MergeConstraintSet(*(itr->second));
+      }
+
+      // If the first set of addresses are not entirely contained in the second set of addresses,
+      // then there is a mismatch, and the traits are not compatible
+      if (not other_compatible_addresses->ContainsConstraintSet(trait_addresses)) {
+        compatible = false;
+        break;
+      }
+    }
+
+    return compatible;
+  }
 
   MemoryTraits::MemoryTraits()
     : mTraitRanges()
@@ -75,6 +181,23 @@ namespace Force {
     }
 
     return has_trait_partial;
+  }
+
+  const ConstraintSet* MemoryTraits::GetTraitAddressRanges(cuint32 traitId) const
+  {
+    const ConstraintSet* trait_addresses = nullptr;
+
+    auto itr = mTraitRanges.find(traitId);
+    if (itr != mTraitRanges.end()) {
+      trait_addresses = itr->second;
+    }
+
+    return trait_addresses;
+  }
+
+  MemoryTraitsRange* MemoryTraits::CreateMemoryTraitsRange(cuint64 startAddr, cuint64 endAddr) const
+  {
+    return new MemoryTraitsRange(mTraitRanges, startAddr, endAddr);
   }
 
   MemoryTraitsRegistry::MemoryTraitsRegistry()
@@ -201,7 +324,12 @@ namespace Force {
 
   void MemoryTraitsManager::AddGlobalTrait(const string& trait, cuint64 startAddr, cuint64 endAddr)
   {
-    AddTrait(trait, startAddr, endAddr, mGlobalMemTraits);
+    AddTrait(mpMemTraitsRegistry->RequestTraitId(trait), startAddr, endAddr, mGlobalMemTraits);
+  }
+
+  void MemoryTraitsManager::AddGlobalTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr)
+  {
+    AddTrait(traitId, startAddr, endAddr, mGlobalMemTraits);
   }
 
   void MemoryTraitsManager::AddThreadTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr)
@@ -222,7 +350,7 @@ namespace Force {
       mThreadMemTraits.emplace(threadId, thread_mem_traits);
     }
 
-    AddTrait(trait, startAddr, endAddr, *thread_mem_traits);
+    AddTrait(mpMemTraitsRegistry->RequestTraitId(trait), startAddr, endAddr, *thread_mem_traits);
   }
 
   bool MemoryTraitsManager::HasTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr) const
@@ -249,19 +377,59 @@ namespace Force {
     return has_trait;
   }
 
-  void MemoryTraitsManager::AddTrait(const string& trait, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits)
+  void MemoryTraitsManager::AddTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits)
   {
-    uint32 trait_id = mpMemTraitsRegistry->RequestTraitId(trait);
     vector<uint32> exclusive_ids;
-    mpMemTraitsRegistry->GetMutuallyExclusiveTraitIds(trait_id, exclusive_ids);
+    mpMemTraitsRegistry->GetMutuallyExclusiveTraitIds(traitId, exclusive_ids);
     for (uint32 exclusive_id : exclusive_ids) {
       if (memTraits.HasTraitPartial(exclusive_id, startAddr, endAddr)) {
-        LOG(fail) << "{MemoryTraitsManager::AddTrait} a trait mutually exclusive with " << trait << " is already associated with an address in the range 0x" << hex << startAddr << "-0x" << endAddr << endl;
+        LOG(fail) << "{MemoryTraitsManager::AddTrait} a trait mutually exclusive with the specified trait is already associated with an address in the range 0x" << hex << startAddr << "-0x" << endAddr << endl;
         FAIL("trait-conflict");
       }
     }
 
-    memTraits.AddTrait(trait_id, startAddr, endAddr);
+    memTraits.AddTrait(traitId, startAddr, endAddr);
+  }
+
+  const ConstraintSet* MemoryTraitsManager::GetTraitAddressRanges(cuint32 threadId, cuint32 traitId) const
+  {
+    const ConstraintSet* trait_addresses = mGlobalMemTraits.GetTraitAddressRanges(traitId);
+    if (trait_addresses == nullptr) {
+      auto itr = mThreadMemTraits.find(threadId);
+
+      if (itr != mThreadMemTraits.end()) {
+        trait_addresses = itr->second->GetTraitAddressRanges(traitId);
+      }
+    }
+
+    return trait_addresses;
+  }
+
+  uint32 MemoryTraitsManager::RequestTraitId(const EMemoryAttributeType trait)
+  {
+    return mpMemTraitsRegistry->RequestTraitId(trait);
+  }
+
+  uint32 MemoryTraitsManager::RequestTraitId(const std::string& trait)
+  {
+    return mpMemTraitsRegistry->RequestTraitId(trait);
+  }
+
+  MemoryTraitsRange* MemoryTraitsManager::CreateMemoryTraitsRange(cuint32 threadId, cuint64 startAddr, cuint64 endAddr) const
+  {
+    MemoryTraitsRange* mem_traits_range = nullptr;
+
+    unique_ptr<MemoryTraitsRange> global_mem_traits_range(mGlobalMemTraits.CreateMemoryTraitsRange(startAddr, endAddr));
+    auto itr = mThreadMemTraits.find(threadId);
+    if (itr != mThreadMemTraits.end()) {
+      unique_ptr<MemoryTraitsRange> thread_mem_traits_range(itr->second->CreateMemoryTraitsRange(startAddr, endAddr));
+      mem_traits_range = global_mem_traits_range->CreateMergedMemoryTraitsRange(*thread_mem_traits_range);
+    }
+    else {
+      mem_traits_range = global_mem_traits_range.release();
+    }
+
+    return mem_traits_range;
   }
 
 }

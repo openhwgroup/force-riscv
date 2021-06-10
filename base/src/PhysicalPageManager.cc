@@ -24,6 +24,7 @@
 #include <MemoryConstraintUpdate.h>
 #include <UtilityFunctions.h>
 #include <VmMappingStrategy.h>
+#include <MemoryTraits.h>
 #include <Log.h>
 
 #include <algorithm>
@@ -37,8 +38,8 @@ namespace Force
   //msPageId starts at 1 to allow for 0 to serve as an invalid ID
   uint64 PhysicalPageManager::msPageId = 1;
 
-  PhysicalPageManager::PhysicalPageManager(EMemBankType bankType)
-    : mMemoryBankType(bankType), mpBoundary(nullptr), mpFreeRanges(nullptr), mpAllocatedRanges(nullptr), mpAliasExcludeRanges(nullptr), mUsablePageAligned(), mPhysicalPages(), mAttributeConstraints(EMemoryAttributeTypeSize, nullptr)
+  PhysicalPageManager::PhysicalPageManager(EMemBankType bankType, MemoryTraitsManager* pMemTraitsManager)
+    : mMemoryBankType(bankType), mpBoundary(nullptr), mpFreeRanges(nullptr), mpAllocatedRanges(nullptr), mpAliasExcludeRanges(nullptr), mUsablePageAligned(), mPhysicalPages(), mpMemTraitsManager(pMemTraitsManager)
   {
   }
 
@@ -56,15 +57,8 @@ namespace Force
       page = nullptr;
     }
 
-    for (auto& cset : mAttributeConstraints)
-    {
-      delete cset;
-      cset = nullptr;
-    }
-
     mUsablePageAligned.clear();
     mPhysicalPages.clear();
-    mAttributeConstraints.clear();
 
     delete mpBoundary;
     delete mpFreeRanges;
@@ -84,9 +78,6 @@ namespace Force
     mpFreeRanges         = pUsableMem->Clone(); //free ranges will be updated as memory is mapped by vmas
     mpAllocatedRanges    = new ConstraintSet(); //allocated ranges starts empty, will reflect the allocated physical page ranges
     mpAliasExcludeRanges = new ConstraintSet(); //alias exlcudes start empty, but contain non aliasable locations
-
-    generate(mAttributeConstraints.begin(), mAttributeConstraints.end(),
-      []() { return new ConstraintSet(); });
 
     if (mpFreeRanges->IsEmpty())
     {
@@ -134,7 +125,7 @@ namespace Force
     return ret_val;
   }
 
-  bool PhysicalPageManager::AliasAllocation(uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq)
+  bool PhysicalPageManager::AliasAllocation(cuint32 threadId, uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq)
   {
     //step 1 - determine physical address target of aliasing
     //         flatMap case: VA,
@@ -194,7 +185,7 @@ namespace Force
       }
       else
       {
-        bool alias_found = SolveAliasConstraints(rSizeInfo, pPageReq, phys_target);
+        bool alias_found = SolveAliasConstraints(threadId, rSizeInfo, pPageReq, phys_target);
         if (!alias_found) return ret_val;
       }
     }
@@ -206,7 +197,8 @@ namespace Force
     auto          range_pair = std::equal_range(mPhysicalPages.begin(), mPhysicalPages.end(), alloc_page, &phys_page_less_than);
     uint32       num_overlap = std::distance(range_pair.first, range_pair.second);
 
-    const ConstraintSet* alloc_mem_attrs = pPageReq->MemAttrImplConstraint();
+    vector<uint32> alloc_mem_attrs;
+    GetPageMemoryAttributesForAliasing(pPageReq, alloc_mem_attrs);
 
     if (num_overlap == 0) //picked a target w/ no overlap, error case
     {
@@ -219,13 +211,10 @@ namespace Force
       //--------MEMORY ATTRIBUTE CHECKS--------
       if (!force_mem_attrs)
       {
-        ConstraintSet* page_mem_attrs = (*range_pair.first)->GetMemoryAttributes();
-        std::unique_ptr<ConstraintSet> page_mem_attrs_storage(page_mem_attrs);
-        if (!page_mem_attrs_storage.get()->IsEmpty())
-        {
-          bool mem_attr_compatibility = MemAttrCompatibility(alloc_mem_attrs, page_mem_attrs);
-          if (!mem_attr_compatibility) return ret_val;
-        }
+        unique_ptr<MemoryTraitsRange> page_mem_traits_range(mpMemTraitsManager->CreateMemoryTraitsRange(threadId, (*range_pair.first)->Lower(), (*range_pair.first)->Upper()));
+        MemoryTraitsRange alloc_mem_traits_range(alloc_mem_attrs, alloc_page->Lower(), alloc_page->Upper());
+        bool mem_attr_compatibility = MemAttrCompatibility(alloc_mem_traits_range, *page_mem_traits_range);
+        if (!mem_attr_compatibility) return ret_val;
       }
       //--------PAGE MERGING--------
       if (alloc_page->Lower() < (*range_pair.first)->Lower() || alloc_page->Upper() > (*range_pair.first)->Upper())
@@ -242,7 +231,7 @@ namespace Force
         alloc_page->Merge(*(range_pair.first));
         mPhysicalPages.erase(range_pair.first);
         rSizeInfo.UpdatePhysPageId(alloc_page->PageId());
-        UpdateMemoryAttributes(pPageReq, alloc_page);
+        UpdateMemoryAttributesForAliasing(pPageReq, alloc_page);
         AddPhysicalPage(alloc_page);
 
         LOG(trace) << "{PhysicalPageManager::AliasAllocation} single overlap new page merged new_page_lower=0x" << hex
@@ -281,13 +270,10 @@ namespace Force
       {
         for (auto it = range_pair.first; it != range_pair.second; ++it)
         {
-          ConstraintSet* page_mem_attrs = (*range_pair.first)->GetMemoryAttributes();
-          std::unique_ptr<ConstraintSet> page_mem_attrs_storage(page_mem_attrs);
-          if (!page_mem_attrs_storage.get()->IsEmpty())
-          {
-            bool mem_attr_compatibility = MemAttrCompatibility(alloc_mem_attrs, page_mem_attrs);
-            if (!mem_attr_compatibility) return ret_val;
-          }
+          unique_ptr<MemoryTraitsRange> page_mem_traits_range(mpMemTraitsManager->CreateMemoryTraitsRange(threadId, (*it)->Lower(), (*it)->Upper()));
+          MemoryTraitsRange alloc_mem_traits_range(alloc_mem_attrs, alloc_page->Lower(), alloc_page->Upper());
+          bool mem_attr_compatibility = MemAttrCompatibility(alloc_mem_traits_range, *page_mem_traits_range);
+          if (!mem_attr_compatibility) return ret_val;
 
           if (!is_flat_map)
           {
@@ -307,7 +293,7 @@ namespace Force
       }
       mPhysicalPages.erase(range_pair.first, range_pair.second);
       rSizeInfo.UpdatePhysPageId(alloc_page->PageId());
-      UpdateMemoryAttributes(pPageReq, alloc_page);
+      UpdateMemoryAttributesForAliasing(pPageReq, alloc_page);
       AddPhysicalPage(alloc_page);
       ret_val = true;
     }
@@ -316,39 +302,9 @@ namespace Force
   }
 
   //NOTE: handling aliasing with regimes/threads with MMU=off
-  bool PhysicalPageManager::SolveAliasConstraints(const PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq, uint64& physTarget)
+  bool PhysicalPageManager::SolveAliasConstraints(cuint32 threadId, const PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq, uint64& physTarget)
   {
     uint64 max_physical = rSizeInfo.MaxPhysical() + 1ull;
-
-    bool force_mem_attrs = false;
-    pPageReq->GetGenBoolAttribute(EPageGenBoolAttrType::ForceMemAttrs, force_mem_attrs);
-
-    // ---- ACQUIRE ATTRIBUTE TYPES ----
-    bool use_target_alias_attrs = false;
-    const ConstraintSet* target_alias_attrs = pPageReq->TargetAliasAttrsConstraint();
-    const ConstraintSet* page_attrs = GetPageAttrConstraints(pPageReq);
-
-    if (target_alias_attrs != nullptr)
-    {
-      if (!target_alias_attrs->IsEmpty())
-      {
-        use_target_alias_attrs = true;
-      }
-    }
-
-    std::vector<EMemoryAttributeType> mem_constr_types;
-    std::vector<EMemoryAttributeType> incompatible_mem_constr_types;
-
-    if (use_target_alias_attrs)
-    {
-      ConvertMemoryAttributes(target_alias_attrs, mem_constr_types);
-      GetIncompatibleAttributes(target_alias_attrs, incompatible_mem_constr_types);
-    }
-    else if (page_attrs != nullptr)
-    {
-      ConvertMemoryAttributes(page_attrs, mem_constr_types);
-      GetIncompatibleAttributes(page_attrs, incompatible_mem_constr_types);
-    }
 
     // ---- INITIAL CONSTRAINT SETUP ----
     ConstraintSet* page_alias_constr = mpAllocatedRanges->Clone();
@@ -359,28 +315,24 @@ namespace Force
       page_alias_constr->SubRange(max_physical, page_alias_constr->UpperBound());
     }
 
-    for (auto attr_type : mem_constr_types) //form constraint set of combined set of attributes;
+    // ---- ACQUIRE ATTRIBUTE TYPES ----
+    vector<uint32> page_attrs;
+    GetPageMemoryAttributesForAliasing(pPageReq, page_attrs);
+
+    // form constraint set of combined set of attributes
+    for (uint32 attr_id : page_attrs)
     {
-      ConstraintSet* attr_constr = mAttributeConstraints.at(uint32(attr_type));
-      page_alias_constr->ApplyConstraintSet(*attr_constr);
+      const ConstraintSet* attr_constr = mpMemTraitsManager->GetTraitAddressRanges(threadId, attr_id);
+
+      if (attr_constr != nullptr) {
+        page_alias_constr->ApplyConstraintSet(*attr_constr);
+      }
     }
 
     // ---- NORMALIZE ATTRIBUTE CONSTRAINT WITH PAGE SIZE ----
     uint64 page_size = get_page_shift(rSizeInfo.mType);
     uint64 page_mask = get_mask64(page_size);
     page_alias_constr->AlignWithPage(~page_mask);
-
-    // ---- EXPANDED RANGE CONFLICT CHECKING ----
-    ConstraintSet* conflict_constr = mpAliasExcludeRanges->Clone();
-    std::unique_ptr<ConstraintSet> conflict_constr_storage(conflict_constr);
-
-    for (auto attr_type : incompatible_mem_constr_types)
-    {
-      ConstraintSet* attr_constr = mAttributeConstraints.at(uint32(attr_type));
-      conflict_constr->MergeConstraintSet(*attr_constr);
-    }
-    conflict_constr->AlignWithPage(~page_mask);
-    page_alias_constr->SubConstraintSet(*conflict_constr);
 
     // ---- PHYSICAL TARGET SELECTION ----
     if (page_alias_constr->IsEmpty())
@@ -394,53 +346,23 @@ namespace Force
     return true;
   }
 
-  bool PhysicalPageManager::MemAttrCompatibility(const ConstraintSet* pAllocAttrs, const ConstraintSet* pAliasAttrs)
+  bool PhysicalPageManager::MemAttrCompatibility(const MemoryTraitsRange& rAllocAttrs, const MemoryTraitsRange& rAliasAttrs)
   {
-    if (pAllocAttrs == nullptr)
+    if (rAllocAttrs.Empty())
     {
       LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} alloc page has no attributes, should match any page. can alias" << endl;
       return true;
     }
 
-    if (pAliasAttrs == nullptr)
+    if (rAliasAttrs.Empty())
     {
       LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} alias page has no attributes, can alias." << endl;
       return true;
     }
 
-    std::vector<EMemoryAttributeType> alloc_constr_types;
-    std::vector<EMemoryAttributeType> alias_constr_types;
-    ConvertMemoryAttributes(pAllocAttrs, alloc_constr_types);
-    ConvertMemoryAttributes(pAliasAttrs, alias_constr_types);
-
-    //two types of comparisons:
-    //  1) compare attributes in each set against each other, make sure they are valid. I.E. size of each vector should be 1 w/ current implementation
-    //    if alloc_constr_types are invalid, should fail as this would be invalid use case of the attrs in the page req.
-    //    if alias_constr_types are invalid, could have been forced earlier in the case so just return false indicating we can't alias to that location.
-    //
-    //  2) compare attributes between the two vectors to make sure they match. currently can do a 1 to 1 check if failing on size > 1
-
-    if ((alloc_constr_types.size() == 0) || (alias_constr_types.size() == 0))
+    if (rAliasAttrs.IsCompatible(rAllocAttrs))
     {
-      LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} attr constraints either empty, or no valid constraints contained. should allow aliasing" << endl;
-      return true;
-    }
-
-    if (alloc_constr_types.size() > 1)
-    {
-      LOG(fail) << "{PhysicalPageManager::MemAttrCompatibility} specified invalid attributes in page request w/o forcing mem attrs." << endl;
-      FAIL("phys_page_req_has_invalid_mem_attrs");
-    }
-
-    if (alias_constr_types.size() > 1)
-    {
-      LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} page being aliased to was forced to invalid state, not aliasing without forcing mem attrs" << endl;
-      return false;
-    }
-
-    if (alloc_constr_types[0] == alias_constr_types[0])
-    {
-      LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} pages memory attributes match. allow aliasing" << endl;
+      LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} pages memory attributes are compatible. allow aliasing" << endl;
       return true;
     }
 
@@ -448,7 +370,7 @@ namespace Force
     return false;
   }
 
-  bool PhysicalPageManager::AllocatePage(uint64 VA, uint64 size, GenPageRequest* pPageReq, PageSizeInfo& rSizeInfo, const PagingChoicesAdapter* pChoicesAdapter)
+  bool PhysicalPageManager::AllocatePage(cuint32 threadId, uint64 VA, uint64 size, GenPageRequest* pPageReq, PageSizeInfo& rSizeInfo, const PagingChoicesAdapter* pChoicesAdapter)
   {
     //control flow
     // -check for instr/data choices to check for alias priority.
@@ -462,7 +384,7 @@ namespace Force
     // -if force_alias true
     //   -call AliasAllocation and return its return value.
     if (pPageReq->GenBoolAttributeDefaultFalse(EPageGenBoolAttrType::ForceAlias))
-      return AliasAllocation(VA, rSizeInfo, pPageReq);
+      return AliasAllocation(threadId, VA, rSizeInfo, pPageReq);
 
     bool alloc_result = false;
 
@@ -475,13 +397,13 @@ namespace Force
 
     if (alias_first)
     {
-      alloc_result = AliasAllocation(VA, rSizeInfo, pPageReq);
+      alloc_result = AliasAllocation(threadId, VA, rSizeInfo, pPageReq);
       if (not alloc_result) alloc_result = NewAllocation(VA, rSizeInfo, pPageReq);
       return alloc_result;
     }
 
     alloc_result = NewAllocation(VA, rSizeInfo, pPageReq);
-    if (not alloc_result) alloc_result = AliasAllocation(VA, rSizeInfo, pPageReq);
+    if (not alloc_result) alloc_result = AliasAllocation(threadId, VA, rSizeInfo, pPageReq);
     return alloc_result;
   }
 
@@ -494,18 +416,6 @@ namespace Force
       FAIL("unable_to_find_phys_page_for_commit");
     }
     phys_page->AddPage(pPage);
-
-    std::unique_ptr<ConstraintSet> page_mem_attrs_storage(phys_page->GetMemoryAttributes());
-
-    if (!page_mem_attrs_storage.get()->IsEmpty())
-    {
-      std::vector<EMemoryAttributeType> mem_constr_types;
-      ConvertMemoryAttributes(page_mem_attrs_storage.get(), mem_constr_types);
-      for (const auto attr_type : mem_constr_types)
-      {
-        mAttributeConstraints.at(uint32(attr_type))->AddRange(phys_page->Lower(), phys_page->Upper());
-      }
-    }
   }
 
   void PhysicalPageManager::HandleMemoryConstraintUpdate(const MemoryConstraintUpdate& rMemConstrUpdate) const
@@ -604,34 +514,46 @@ namespace Force
 
   void PhysicalPageManager::UpdateMemoryAttributes(GenPageRequest* pPageReq, PhysicalPage* pPhysPage)
   {
-    const ConstraintSet* mem_attrs = GetPageAttrConstraints(pPageReq);
-    std::vector<EMemoryAttributeType> mem_constr_types;
-    if (mem_attrs != nullptr)
+    vector<uint32> mem_attrs;
+    GetPageMemoryAttributes(pPageReq, mem_attrs);
+    for (uint32 attr_id : mem_attrs) //update each applicable constraint set with the page range of the applicable page
     {
-      ConvertMemoryAttributes(mem_attrs, mem_constr_types); 
-      for (auto attr_type : mem_constr_types) //update each applicable constraint set with the page range of the applicable page
-      {
-        mAttributeConstraints.at(uint32(attr_type))->AddRange(pPhysPage->Lower(), pPhysPage->Upper());
-      }
+      mpMemTraitsManager->AddGlobalTrait(attr_id, pPhysPage->Lower(), pPhysPage->Upper());
     }
   }
 
-  const ConstraintSet* PhysicalPageManager::GetPageAttrConstraints(GenPageRequest* pPageReq) const
+  void PhysicalPageManager::UpdateMemoryAttributesForAliasing(GenPageRequest* pPageReq, PhysicalPage* pPhysPage)
   {
-    const ConstraintSet* mem_attr_arch = pPageReq->MemAttrArchConstraint();
-    const ConstraintSet* mem_attr_impl = pPageReq->MemAttrImplConstraint();
-    const ConstraintSet* mem_attrs = nullptr;
-
-    if (mem_attr_impl != nullptr)
+    vector<uint32> mem_attrs;
+    GetPageMemoryAttributesForAliasing(pPageReq, mem_attrs);
+    for (uint32 attr_id : mem_attrs) //update each applicable constraint set with the page range of the applicable page
     {
-      mem_attrs = mem_attr_impl;
+      mpMemTraitsManager->AddGlobalTrait(attr_id, pPhysPage->Lower(), pPhysPage->Upper());
     }
-    else if (mem_attr_arch != nullptr)
-    {
-      mem_attrs = mem_attr_arch;
+  }
+
+  void PhysicalPageManager::GetPageMemoryAttributes(GenPageRequest* pPageReq, vector<uint32>& rPageMemAttributes) const
+  {
+    for (EMemoryAttributeType arch_mem_attr : pPageReq->ArchitectureMemoryAttributes()) {
+      rPageMemAttributes.push_back(mpMemTraitsManager->RequestTraitId(arch_mem_attr));
     }
 
-    return mem_attrs;
+    for (const string& impl_mem_attr : pPageReq->ImplementationMemoryAttributes()) {
+      rPageMemAttributes.push_back(mpMemTraitsManager->RequestTraitId(impl_mem_attr));
+    }
+  }
+
+  void PhysicalPageManager::GetPageMemoryAttributesForAliasing(GenPageRequest* pPageReq, vector<uint32>& rPageAliasMemAttributes) const
+  {
+    const vector<string>& alias_impl_mem_attributes = pPageReq->AliasImplementationMemoryAttributes();
+    if (not alias_impl_mem_attributes.empty()) {
+      for (const string& alias_impl_mem_attr : alias_impl_mem_attributes) {
+        rPageAliasMemAttributes.push_back(mpMemTraitsManager->RequestTraitId(alias_impl_mem_attr));
+      }
+    }
+    else {
+      GetPageMemoryAttributes(pPageReq, rPageAliasMemAttributes);
+    }
   }
 
   bool phys_page_less_than(const PhysicalPage* lhs, const PhysicalPage* rhs)

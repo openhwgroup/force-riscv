@@ -28,6 +28,30 @@ namespace Force {
   class ConstraintSet;
 
   /*!
+    \class MemoryTraitsRange
+    \brief Class to represent memory characteristics associated with a limited range of physical addresses.
+  */
+  class MemoryTraitsRange {
+  public:
+    MemoryTraitsRange(const std::map<uint32, ConstraintSet*>& rTraitRanges, cuint64 startAddr, cuint64 endAddr);
+    MemoryTraitsRange(const std::vector<uint32>& rTraitIds, cuint64 startAddr, cuint64 endAddr);
+    MemoryTraitsRange(const MemoryTraitsRange& rOther);
+    ~MemoryTraitsRange();
+    ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsRange);
+
+    MemoryTraitsRange* CreateMergedMemoryTraitsRange(const MemoryTraitsRange& rOther) const; //!< Returns new MemoryTraitsRange object that combines the memory trait mappings of this and the other MemoryTraitsRange. Both this and the other MemoryTraitsRange must have equal starting and ending addresses.
+    bool IsCompatible(const MemoryTraitsRange& rOther) const; //!< Returns true if the following holds true for any given address: either at least one of the MemoryTraitsRanges has no traits specified for that address or both MemoryTraitsRanges have the same traits specified for that address.
+    bool Empty() const; //!< Returns true if there are no assigned traits.
+  private:
+    bool HasCompatibleTraits(const MemoryTraitsRange& rOther) const; //!< Returns true if for every address associated with every trait in this MemoryTraitsRange, the other MemoryTraitsRange has the same trait associated with the address or no trait associated with the address.
+  private:
+    std::map<uint32, ConstraintSet*> mTraitRanges; //!< Map from memory trait IDs to associated address ranges
+    ConstraintSet* mpEmptyRanges; //!< Address ranges with no associated memory traits
+    cuint64 mStartAddr; //!< Starting address
+    cuint64 mEndAddr; //!< Ending address
+  };
+
+  /*!
     \class MemoryTraits
     \brief Class to track memory characteristics associated with physical addresses.
   */
@@ -41,6 +65,8 @@ namespace Force {
     void AddTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range. If the specified trait already applies to an overlapping address range, the two ranges are merged.
     bool HasTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range.
     bool HasTraitPartial(cuint32 traitId, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to any address within the specified address range.
+    const ConstraintSet* GetTraitAddressRanges(cuint32 traitId) const; //!< Returns the address ranges associated with the specified trait.
+    MemoryTraitsRange* CreateMemoryTraitsRange(cuint64 startAddr, cuint64 endAddr) const; //!< Returns new MemoryTraitsRange object representing memory traits associated with addresses in the specified range.
   private:
     std::map<uint32, ConstraintSet*> mTraitRanges; //!< Map from memory trait IDs to associated address ranges
   };
@@ -86,12 +112,17 @@ namespace Force {
 
     void AddGlobalTrait(const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
     void AddGlobalTrait(const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
+    void AddGlobalTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
     void AddThreadTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
     void AddThreadTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
     bool HasTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
     bool HasTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
+    const ConstraintSet* GetTraitAddressRanges(cuint32 threadId, cuint32 traitId) const; //!< Returns the address ranges associated with the specified trait for the specified thread.
+    uint32 RequestTraitId(const EMemoryAttributeType trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
+    uint32 RequestTraitId(const std::string& trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
+    MemoryTraitsRange* CreateMemoryTraitsRange(cuint32 threadId, cuint64 startAddr, cuint64 endAddr) const; //!< Returns new MemoryTraitsRange object representing memory traits associated with addresses in the specified range for the specified thread.
   private:
-    void AddTrait(const std::string& trait, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits); //!< Associate the specified trait with the specified address range in the given MemoryTraits object.
+    void AddTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits); //!< Associate the specified trait with the specified address range in the given MemoryTraits object.
   private:
     MemoryTraits mGlobalMemTraits; //!< Global memory traits
     std::map<uint32, MemoryTraits*> mThreadMemTraits; //!< Thread-specific memory traits

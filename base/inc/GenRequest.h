@@ -645,11 +645,12 @@ namespace Force {
     bool CanAlias() const { return mCanAlias; } //!< Return the flag corresponding to whether the page allocated can be aliased in the future
     bool ForceNewAddr() const { return mForceNewAddr; } //!< Return the flag which forces the request to return a new mapping instead of an existing mapping
     bool SharedMemory() const { return mSharedMemory; } //!< Return the flag to indicate whether the returned memory range should be marked shared.
-    void SetMemAttrImplConstraint(const ConstraintSet* constrSet); //!< Set impl memory attribute type constraint.
-    void SetTargetAliasAttrsConstraint(const ConstraintSet* constrSet); //!< Set impl memory attribute type constraint.
-    const ConstraintSet* MemAttrImplConstraint() const { return mpMemAttrImplConstraint; } //!< Return memory ranges constraint.
-    const ConstraintSet* MemAttrArchConstraint() const { return mpMemAttrArchConstraint; } //!< Return arch memory attribute type constraint.
-    const ConstraintSet* TargetAliasAttrsConstraint() const { return mpTargetAliasAttrsConstraint; } //!< Return memory ranges constraint.
+    void SetImplementationMemoryAttributes(const std::vector<std::string>& rImplMemAttributes); //!< Set implementation memory attributes.
+    void SetArchitectureMemoryAttributes(const std::vector<EMemoryAttributeType>& rArchMemAttributes); //!< Set architecture memory attributes.
+    void SetAliasImplementationMemoryAttributes(const std::vector<std::string>& rAliasImplMemAttributes); //!< Set alias implementation memory attributes.
+    const std::vector<std::string>& ImplementationMemoryAttributes() const { return mImplMemAttributes; } //!< Return implementation memory attributes.
+    const std::vector<EMemoryAttributeType>& ArchitectureMemoryAttributes() const { return mArchMemAttributes; } //!< Return architecture memory attributes.
+    const std::vector<std::string>& AliasImplementationMemoryAttributes() const { return mAliasImplMemAttributes; } //!< Return alias implementation memory attributes.
     const ConstraintSet* MemoryRangesConstraint() const { return mpMemoryRangesConstraint; } //!< Return memory ranges constraint.
     void SetVmInfoBoolType(EVmInfoBoolType reqType, bool isSet); //!< Set VmInfo attributes.
     bool VmSpecified() const; //!< Return whether target VM is specified.
@@ -685,13 +686,16 @@ namespace Force {
     bool mCanAlias; //!< Flag to indicate if allocated/aliased page can be aliasable in the future.
     bool mForceNewAddr; //!< Flag to force request to return a newly mapped address, not an existing mapping.
     bool mSharedMemory; //!< Flag to indicate whether the returned memory range should be marked shared.
-    ConstraintSet* mpMemAttrImplConstraint; //!< Constraint for impl memory attribute type.
-    ConstraintSet* mpMemAttrArchConstraint; //!< Constraint for arch memory attribute type.
-    ConstraintSet* mpTargetAliasAttrsConstraint; //!< Constraint for alias target memory attribute type (impl type).
+    std::vector<std::string> mImplMemAttributes; //!< Implementation memory attributes.
+    std::vector<EMemoryAttributeType> mArchMemAttributes; //!< Architecture memory attributes.
+    std::vector<std::string> mAliasImplMemAttributes; //!< Alias implementation memory attributes.
     ConstraintSet* mpMemoryRangesConstraint; //!< Constraint Set for Range
     std::map<EVmContextParamType,uint64> mVmContextParams;
     uint64 mVmInfoBoolTypes; //!< VmInfo boolean types attributes.
     uint64 mVmInfoBoolTypeMask; //!< VmInfo boolean type set mask.
+  private:
+    void AddImplementationMemoryAttributes(const std::string& rValueStr, std::vector<std::string>& rMemAttributes); //!< Add implementation memory attributes. rValueStr should be a comma-separated list of memory attribute names.
+    void AddArchitectureMemoryAttributes(const std::string& rValueStr, std::vector<EMemoryAttributeType>& rMemAttributes); //! Add architecture memory attributes. rValueStr should be either a comma-separated list of memory attribute names or a comma-separated list of integers.
   };
 
   /*!

@@ -118,9 +118,9 @@ namespace Force {
     // return new GenConditionSetRISCV();
   }
 
-  PhysicalPageManager* ArchInfoRISCV::InstantiatePhysicalPageManager(EMemBankType bankType) const
+  PhysicalPageManager* ArchInfoRISCV::InstantiatePhysicalPageManager(EMemBankType bankType, MemoryTraitsManager* pMemTraitsManager) const
   {
-    return new PhysicalPageManagerRISCV(bankType);
+    return new PhysicalPageManagerRISCV(bankType, pMemTraitsManager);
   }
 
   MemoryTraitsRegistry* ArchInfoRISCV::InstantiateMemoryTraitsRegistry() const

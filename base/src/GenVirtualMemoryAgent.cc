@@ -489,16 +489,25 @@ namespace Force {
 
   void GenVirtualMemoryAgent::SetCommonPageRequestAttributes(const GenVirtualMemoryRequest& rGenVmReq, GenPageRequest* pPageReq)
   {
-    if (nullptr != rGenVmReq.MemAttrImplConstraint())
+    const vector<string>& impl_mem_attributes = rGenVmReq.ImplementationMemoryAttributes();
+    if (not impl_mem_attributes.empty())
     {
-      pPageReq->SetMemAttrImplConstraint(rGenVmReq.MemAttrImplConstraint());
-      LOG(trace) << "{GenVirtualMemoryAgent::SetPageRequestAttributes} setting mem attr impl from request to: " << hex << pPageReq->MemAttrImplConstraint()->ToSimpleString() << endl;
+      pPageReq->SetImplementationMemoryAttributes(impl_mem_attributes);
+      LOG(trace) << "{GenVirtualMemoryAgent::SetCommonPageRequestAttributes} setting implementation memory attributes" << endl;
     }
 
-    if (nullptr != rGenVmReq.TargetAliasAttrsConstraint())
+    const vector<EMemoryAttributeType>& arch_mem_attributes = rGenVmReq.ArchitectureMemoryAttributes();
+    if (not arch_mem_attributes.empty())
     {
-      pPageReq->SetTargetAliasAttrsConstraint(rGenVmReq.MemAttrImplConstraint());
-      LOG(trace) << "{GenVirtualMemoryAgent::GenVA} setting target alias attrs from request to: " << hex << pPageReq->TargetAliasAttrsConstraint()->ToSimpleString() << endl;
+      pPageReq->SetArchitectureMemoryAttributes(arch_mem_attributes);
+      LOG(trace) << "{GenVirtualMemoryAgent::SetCommonPageRequestAttributes} setting architecture memory attributes" << endl;
+    }
+
+    const vector<string>& alias_impl_mem_attributes = rGenVmReq.AliasImplementationMemoryAttributes();
+    if (not alias_impl_mem_attributes.empty())
+    {
+      pPageReq->SetAliasImplementationMemoryAttributes(alias_impl_mem_attributes);
+      LOG(trace) << "{GenVirtualMemoryAgent::SetCommonPageRequestAttributes} setting alias implementation memory attributes" << endl;
     }
 
     if (rGenVmReq.PrivilegeLevelSpecified()) {
