@@ -36,17 +36,27 @@ namespace Force {
     for (const auto& trait_range : rTraitRanges) {
       auto trait_addresses = new ConstraintSet();
       trait_range.second->CopyInRange(mStartAddr, mEndAddr, *trait_addresses);
-      mTraitRanges.emplace(trait_range.first, trait_addresses);
 
-      mpEmptyRanges->SubConstraintSet(*trait_addresses);
+      if (not trait_addresses->IsEmpty()) {
+        mTraitRanges.emplace(trait_range.first, trait_addresses);
+        mpEmptyRanges->SubConstraintSet(*trait_addresses);
+      }
+      else {
+        delete trait_addresses;
+      }
     }
   }
 
   MemoryTraitsRange::MemoryTraitsRange(const vector<uint32>& rTraitIds, cuint64 startAddr, cuint64 endAddr)
     : mTraitRanges(), mpEmptyRanges(new ConstraintSet()), mStartAddr(startAddr), mEndAddr(endAddr)
   {
-    for (uint32 trait_id : rTraitIds) {
-      mTraitRanges.emplace(trait_id, new ConstraintSet(startAddr, endAddr));
+    if (not rTraitIds.empty()) {
+      for (uint32 trait_id : rTraitIds) {
+        mTraitRanges.emplace(trait_id, new ConstraintSet(startAddr, endAddr));
+      }
+    }
+    else {
+      mpEmptyRanges->AddRange(startAddr, endAddr);
     }
   }
 
@@ -101,7 +111,7 @@ namespace Force {
     return compatible;
   }
 
-  bool MemoryTraitsRange::Empty() const
+  bool MemoryTraitsRange::IsEmpty() const
   {
     return mTraitRanges.empty();
   }
@@ -377,20 +387,6 @@ namespace Force {
     return has_trait;
   }
 
-  void MemoryTraitsManager::AddTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits)
-  {
-    vector<uint32> exclusive_ids;
-    mpMemTraitsRegistry->GetMutuallyExclusiveTraitIds(traitId, exclusive_ids);
-    for (uint32 exclusive_id : exclusive_ids) {
-      if (memTraits.HasTraitPartial(exclusive_id, startAddr, endAddr)) {
-        LOG(fail) << "{MemoryTraitsManager::AddTrait} a trait mutually exclusive with the specified trait is already associated with an address in the range 0x" << hex << startAddr << "-0x" << endAddr << endl;
-        FAIL("trait-conflict");
-      }
-    }
-
-    memTraits.AddTrait(traitId, startAddr, endAddr);
-  }
-
   const ConstraintSet* MemoryTraitsManager::GetTraitAddressRanges(cuint32 threadId, cuint32 traitId) const
   {
     const ConstraintSet* trait_addresses = mGlobalMemTraits.GetTraitAddressRanges(traitId);
@@ -430,6 +426,20 @@ namespace Force {
     }
 
     return mem_traits_range;
+  }
+
+  void MemoryTraitsManager::AddTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits)
+  {
+    vector<uint32> exclusive_ids;
+    mpMemTraitsRegistry->GetMutuallyExclusiveTraitIds(traitId, exclusive_ids);
+    for (uint32 exclusive_id : exclusive_ids) {
+      if (memTraits.HasTraitPartial(exclusive_id, startAddr, endAddr)) {
+        LOG(fail) << "{MemoryTraitsManager::AddTrait} a trait mutually exclusive with the specified trait is already associated with an address in the range 0x" << hex << startAddr << "-0x" << endAddr << endl;
+        FAIL("trait-conflict");
+      }
+    }
+
+    memTraits.AddTrait(traitId, startAddr, endAddr);
   }
 
 }

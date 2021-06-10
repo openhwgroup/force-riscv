@@ -41,7 +41,7 @@ namespace Force {
 
     MemoryTraitsRange* CreateMergedMemoryTraitsRange(const MemoryTraitsRange& rOther) const; //!< Returns new MemoryTraitsRange object that combines the memory trait mappings of this and the other MemoryTraitsRange. Both this and the other MemoryTraitsRange must have equal starting and ending addresses.
     bool IsCompatible(const MemoryTraitsRange& rOther) const; //!< Returns true if the following holds true for any given address: either at least one of the MemoryTraitsRanges has no traits specified for that address or both MemoryTraitsRanges have the same traits specified for that address.
-    bool Empty() const; //!< Returns true if there are no assigned traits.
+    bool IsEmpty() const; //!< Returns true if there are no assigned traits.
   private:
     bool HasCompatibleTraits(const MemoryTraitsRange& rOther) const; //!< Returns true if for every address associated with every trait in this MemoryTraitsRange, the other MemoryTraitsRange has the same trait associated with the address or no trait associated with the address.
   private:

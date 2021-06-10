@@ -18,8 +18,11 @@
 
 #include <MemoryTraits.h>
 
+#include <Constraint.h>
 #include ARCH_ENUM_HEADER
 
+#include <map>
+#include <memory>
 #include <set>
 #include <vector>
 
@@ -41,6 +44,51 @@ namespace Force {
 }
 
 const lest::test specification[] = {
+
+CASE("Test MemoryTraitsRange") {
+
+  SETUP("Setup MemoryTraitsRange")  {
+    std::map<uint32, ConstraintSet*> trait_ranges;
+    std::unique_ptr<ConstraintSet> trait_range_1(new ConstraintSet(0x5490, 0x54f0));
+    trait_ranges.emplace(1, trait_range_1.get());
+    std::unique_ptr<ConstraintSet> trait_range_2(new ConstraintSet(0x489b, 0x51c0));
+    trait_ranges.emplace(2, trait_range_2.get());
+
+    MemoryTraitsRange mem_traits_range(trait_ranges, 0x4900, 0x54c0);
+
+    SECTION("Test copying a MemoryTraitsRange") {
+      MemoryTraitsRange mem_traits_range_copy(mem_traits_range);
+      EXPECT(mem_traits_range.IsCompatible(mem_traits_range_copy));
+      EXPECT(mem_traits_range_copy.IsCompatible(mem_traits_range));
+      EXPECT_NOT(mem_traits_range_copy.IsEmpty());
+    }
+
+    SECTION("Test merging two MemoryTraitsRanges") {
+      MemoryTraitsRange other_mem_traits_range({1}, 0x4900, 0x54c0);
+      std::unique_ptr<MemoryTraitsRange> merged_mem_traits_range(mem_traits_range.CreateMergedMemoryTraitsRange(other_mem_traits_range));
+      EXPECT_NOT(mem_traits_range.IsCompatible(*merged_mem_traits_range));
+      EXPECT_NOT(merged_mem_traits_range->IsCompatible(mem_traits_range));
+      EXPECT_NOT(other_mem_traits_range.IsCompatible(*merged_mem_traits_range));
+      EXPECT_NOT(merged_mem_traits_range->IsCompatible(other_mem_traits_range));
+      EXPECT_NOT(merged_mem_traits_range->IsEmpty());
+    }
+
+    SECTION("Test merging two MemoryTraitsRanges with different address ranges") {
+      MemoryTraitsRange other_mem_traits_range(std::vector<uint32>({2, 3}), 0x4000, 0x54c0);
+      EXPECT_FAIL(mem_traits_range.CreateMergedMemoryTraitsRange(other_mem_traits_range), "address-ranges-not-equal");
+    }
+
+    SECTION("Test merging two MemoryTraitsRanges when one is empty") {
+      MemoryTraitsRange other_mem_traits_range(std::vector<uint32>(), 0x4900, 0x54c0);
+      std::unique_ptr<MemoryTraitsRange> merged_mem_traits_range(other_mem_traits_range.CreateMergedMemoryTraitsRange(mem_traits_range));
+      EXPECT(mem_traits_range.IsCompatible(*merged_mem_traits_range));
+      EXPECT(merged_mem_traits_range->IsCompatible(mem_traits_range));
+      EXPECT(other_mem_traits_range.IsCompatible(*merged_mem_traits_range));
+      EXPECT(merged_mem_traits_range->IsCompatible(other_mem_traits_range));
+      EXPECT_NOT(merged_mem_traits_range->IsEmpty());
+    }
+  }
+},
 
 CASE("Test MemoryTraits") {
 
@@ -74,15 +122,27 @@ CASE("Test MemoryTraits") {
       EXPECT_NOT(mem_traits.HasTraitPartial(4, 0x300, 0x350));
     }
 
-/*
-    SECTION("Test getting memory attributes for a specified address range") {
+    SECTION("Test getting address ranges associated with a trait") {
+      mem_traits.AddTrait(5, 0x5926, 0x5a30);
+      mem_traits.AddTrait(5, 0x4280, 0x4290);
+      const ConstraintSet* address_ranges = mem_traits.GetTraitAddressRanges(5);
+      EXPECT(address_ranges->ToSimpleString() == "0x4280-0x4290,0x5926-0x5a30");
+    }
+
+    SECTION("Test getting address ranges associated with a trait that has no associated address ranges") {
+      EXPECT(mem_traits.GetTraitAddressRanges(6) == nullptr);
+    }
+
+    SECTION("Test getting memory traits for a specified address range") {
       mem_traits.AddTrait(5, 0x33000, 0x34000);
       mem_traits.AddTrait(6, 0xf8900, 0xf9000);
-      MemoryTraitsRange mem_traits_range = mem_traits.GetMemoryTraitsRange(0x32000, 0xf8500);
-      EXPECT(mem_traits_range.GetStartAddress() == 0x33000ull);
-      EXPECT(mem_traits_range.GenEndAddress() == 0xf8500ull);
+
+      std::unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits.CreateMemoryTraitsRange(0x32000, 0xf8500));
+      EXPECT_NOT(mem_traits_range->IsEmpty());
+
+      std::unique_ptr<MemoryTraitsRange> empty_mem_traits_range(mem_traits.CreateMemoryTraitsRange(0x24000, 0x32000));
+      EXPECT(empty_mem_traits_range->IsEmpty());
     }
-*/
   }
 },
 
@@ -199,10 +259,15 @@ CASE("Test MemoryTraitsManager") {
       mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::IORegion, 0x7300, 0x7400);
       mem_traits_manager.AddGlobalTrait("Trait 1", 0x7200, 0x7380);
 
+      uint32 uncacheable_trait_id = mem_traits_manager.RequestTraitId(EMemoryAttributeType::Uncacheable);
+      mem_traits_manager.AddGlobalTrait(uncacheable_trait_id, 0x3200, 0x3240);
+
       EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::IORegion, 0x7300, 0x7400));
       EXPECT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::IORegion, 0x7300, 0x7400));
       EXPECT(mem_traits_manager.HasTrait(0, "Trait 1", 0x7200, 0x7380));
       EXPECT(mem_traits_manager.HasTrait(1, "Trait 1", 0x7200, 0x7380));
+      EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::Uncacheable, 0x3200, 0x3240));
+      EXPECT(mem_traits_manager.HasTrait(1, EMemoryAttributeType::Uncacheable, 0x3200, 0x3240));
     }
 
     SECTION("Test adding thread-specific traits") {
@@ -221,6 +286,44 @@ CASE("Test MemoryTraitsManager") {
     SECTION("Test adding mutually-exclusive traits") {
       mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::IORegion, 0x6320, 0x637f);
       EXPECT_FAIL(mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::MainRegion, 0x6250, 0x6350), "trait-conflict");
+    }
+
+    SECTION("Test getting address ranges associated with a global trait") {
+      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::EmptyRegion, 0xff94, 0xffb0);
+      const ConstraintSet* address_ranges = mem_traits_manager.GetTraitAddressRanges(0, mem_traits_manager.RequestTraitId(EMemoryAttributeType::EmptyRegion));
+      EXPECT(address_ranges->ToSimpleString() == "0xff94-0xffb0");
+    }
+
+    SECTION("Test getting address ranges associated with a thread-specific trait") {
+      mem_traits_manager.AddThreadTrait(1, "Trait 4", 0x330, 0x37f);
+      const ConstraintSet* address_ranges = mem_traits_manager.GetTraitAddressRanges(1, mem_traits_manager.RequestTraitId("Trait 4"));
+      EXPECT(address_ranges->ToSimpleString() == "0x330-0x37f");
+    }
+
+    SECTION("Test getting address ranges associated with a trait that has no associated address ranges") {
+      EXPECT(mem_traits_manager.GetTraitAddressRanges(2, 7) == nullptr);
+    }
+
+    SECTION("Test getting memory traits for a specified address range") {
+      mem_traits_manager.AddGlobalTrait(EMemoryAttributeType::MainRegion, 0x4420, 0x4460);
+      mem_traits_manager.AddGlobalTrait("Trait 5", 0x7800, 0xff00);
+
+      std::unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits_manager.CreateMemoryTraitsRange(2, 0x4420, 0xff00));
+      EXPECT_NOT(mem_traits_range->IsEmpty());
+
+      std::unique_ptr<MemoryTraitsRange> empty_mem_traits_range(mem_traits_manager.CreateMemoryTraitsRange(2, 0x4461, 0x77ff));
+      EXPECT(empty_mem_traits_range->IsEmpty());
+    }
+
+    SECTION("Test getting memory traits for a specified address range with thread-specific traits") {
+      mem_traits_manager.AddGlobalTrait("Trait 6", 0xb20, 0xb80);
+      mem_traits_manager.AddThreadTrait(1, EMemoryAttributeType::IORegion, 0x900, 0x9ff);
+
+      std::unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits_manager.CreateMemoryTraitsRange(1, 0x930, 0xac0));
+      EXPECT_NOT(mem_traits_range->IsEmpty());
+
+      std::unique_ptr<MemoryTraitsRange> empty_mem_traits_range(mem_traits_manager.CreateMemoryTraitsRange(1, 0x800, 0x8ff));
+      EXPECT(empty_mem_traits_range->IsEmpty());
     }
   }
 },

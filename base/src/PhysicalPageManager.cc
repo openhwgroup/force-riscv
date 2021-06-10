@@ -348,13 +348,13 @@ namespace Force
 
   bool PhysicalPageManager::MemAttrCompatibility(const MemoryTraitsRange& rAllocAttrs, const MemoryTraitsRange& rAliasAttrs)
   {
-    if (rAllocAttrs.Empty())
+    if (rAllocAttrs.IsEmpty())
     {
       LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} alloc page has no attributes, should match any page. can alias" << endl;
       return true;
     }
 
-    if (rAliasAttrs.Empty())
+    if (rAliasAttrs.IsEmpty())
     {
       LOG(trace) << "{PhysicalPageManager::MemAttrCompatibility} alias page has no attributes, can alias." << endl;
       return true;
