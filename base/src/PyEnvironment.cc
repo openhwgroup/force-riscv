@@ -19,6 +19,7 @@
 #include <py_modules/PyConstraint.h>
 #include <py_modules/PyEnums.h>
 #include <py_modules/PyLog.h>
+#include <py_modules/PyMemoryTraits.h>
 #include <py_modules/PyPyInterface.h>
 #include <py_modules/PyRandomUtils.h>
 #include <py_modules/PyState.h>
@@ -44,6 +45,7 @@ namespace PyEnvironment {
     PyImport_AppendInittab("Constraint", PyInit_Constraint);
     PyImport_AppendInittab("Enums", PyInit_Enums);
     PyImport_AppendInittab("Log", PyInit_Log);
+    PyImport_AppendInittab("MemoryTraits", PyInit_MemoryTraits);
     PyImport_AppendInittab("RandomUtils", PyInit_RandomUtils);
     PyImport_AppendInittab("State", PyInit_State);
     PyImport_AppendInittab("StateElement", PyInit_StateElement);

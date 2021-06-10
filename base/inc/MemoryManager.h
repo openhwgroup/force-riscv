@@ -54,7 +54,7 @@ namespace Force {
     ~MemoryBank(); //!< Destructor.
 
     ASSIGNMENT_OPERATOR_ABSENT(MemoryBank);
-    inline Memory* MemoryInstance() { return mpMemory; } //!< Return pointer to memory object
+    Memory* MemoryInstance() { return mpMemory; } //!< Return pointer to memory object
     EMemBankType MemoryBankType() const; //!< Return name of memory bank.
     void AddMemoryRange(uint64 start, uint64 end); //!< Add usable physical memory range.
     void SubMemoryRange(uint64 start, uint64 end); //!< Subtract usable physical memory range.
@@ -73,10 +73,11 @@ namespace Force {
     void SetupPageTableRegion(); //!< Setup page table region in the memory bank.
     void ReserveMemory(const ConstraintSet& memConstr); //!< Reserve memory ranges.
     void UnreserveMemory(const ConstraintSet& memConstr); //!< Unreserve memory ranges
-    bool AllocatePageTableBlock(uint64 align, uint64 size, const ConstraintSet* range, uint64& start); //!< Allocate page table block in a certain memory bank.
-    inline PhysicalPageManager* GetPhysicalPageManager() const { return mpPhysicalPageManager; } //!< Return the physical page manager for the specified memory bank.
-    inline PageTableManager* GetPageTableManager() const { return mpPageTableManager; } //!< Return page table manager for the specified memory bank.
-    inline SymbolManager* GetSymbolManager() const { return mpSymbolManager; } //!< Return symbol manager for the specified memory bank.
+    bool AllocatePageTableBlock(uint64 align, uint64 size, const ConstraintSet* range, uint64& start); //!< Allocate page table block.
+    PhysicalPageManager* GetPhysicalPageManager() const { return mpPhysicalPageManager; } //!< Return the physical page manager.
+    PageTableManager* GetPageTableManager() const { return mpPageTableManager; } //!< Return the page table manager.
+    SymbolManager* GetSymbolManager() const { return mpSymbolManager; } //!< Return the symbol manager.
+    MemoryTraitsManager* GetMemoryTraitsManager() const { return mpMemTraitsManager; } //!< Return the memory traits manager.
   private:
     Memory* mpMemory; //!< Pointer to memory object.
     ConstraintSet* mpBaseConstraint; //!< Pointer to base memory constraint.

@@ -30,6 +30,14 @@ control_items = [
         },
     },
     {
+        "fname": "paging_memory_attributes_basic_force.py",
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+            "--dump": "PageMemAttrJSON",
+        },
+    },
+    {
         "fname": "paging_force.py",
         "options": {"max-instr": 10000},
         "generator": {
@@ -70,6 +78,14 @@ control_items = [
         "options": {"max-instr": 10000},
         "generator": {
             "--options": '"PrivilegeLevel=1,FlatMap=1"',
+        },
+    },
+    {
+        "fname": "paging_memory_attributes_basic_force.py",
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1"',
+            "--dump": "PageMemAttrJSON",
         },
     },
     {

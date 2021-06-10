@@ -31,6 +31,7 @@
 #include <UtilityFunctions.h>
 #include <FreePageRangeClaimer.h>
 #include <Architectures.h>
+#include <MemoryTraits.h>
 #include <Log.h>
 
 #include <memory>
@@ -232,6 +233,8 @@ namespace Force {
     if (pa_req->SharedMemory()) {
       mem_man->MarkShared(PaTuple(ret_pa, EMemBankTypeBaseType(mem_bank_type)), pa_req->Size());
     }
+
+    AddMemoryTraits(*pa_req, ret_pa, pa_req->Size(), *(mem_bank->GetMemoryTraitsManager()));
 
     // << "genpa pa=0x" << hex << ret_pa << " bank=" << EMemBankType_to_string(mem_bank_type) << " size=0x" << pa_req->Size() << endl;
 
@@ -518,6 +521,22 @@ namespace Force {
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::ForceMemAttrs, rGenVmReq.ForceMemAttrs());
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::CanAlias, rGenVmReq.CanAlias());
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::ForceNewAddr, rGenVmReq.ForceNewAddr());
+  }
+
+  void GenVirtualMemoryAgent::AddMemoryTraits(const GenVirtualMemoryRequest& rGenVmReq, cuint64 startAddr, cuint64 size, MemoryTraitsManager& rMemTraitsManager)
+  {
+    uint64 end_addr = startAddr + size - 1;
+    for (const string& impl_mem_attr : rGenVmReq.ImplementationMemoryAttributes()) {
+      // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
+      // pushing these changes.
+      rMemTraitsManager.AddGlobalTrait(impl_mem_attr, startAddr, end_addr);
+    }
+
+    for (EMemoryAttributeType arch_mem_attr : rGenVmReq.ArchitectureMemoryAttributes()) {
+      // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
+      // pushing these changes.
+      rMemTraitsManager.AddGlobalTrait(arch_mem_attr, startAddr, end_addr);
+    }
   }
 
 }

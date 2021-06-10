@@ -518,6 +518,8 @@ namespace Force
     GetPageMemoryAttributes(pPageReq, mem_attrs);
     for (uint32 attr_id : mem_attrs) //update each applicable constraint set with the page range of the applicable page
     {
+      // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
+      // pushing these changes.
       mpMemTraitsManager->AddGlobalTrait(attr_id, pPhysPage->Lower(), pPhysPage->Upper());
     }
   }
@@ -528,6 +530,8 @@ namespace Force
     GetPageMemoryAttributesForAliasing(pPageReq, mem_attrs);
     for (uint32 attr_id : mem_attrs) //update each applicable constraint set with the page range of the applicable page
     {
+      // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
+      // pushing these changes.
       mpMemTraitsManager->AddGlobalTrait(attr_id, pPhysPage->Lower(), pPhysPage->Upper());
     }
   }
