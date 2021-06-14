@@ -527,15 +527,11 @@ namespace Force {
   {
     uint64 end_addr = startAddr + size - 1;
     for (const string& impl_mem_attr : rGenVmReq.ImplementationMemoryAttributes()) {
-      // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
-      // pushing these changes.
-      rMemTraitsManager.AddGlobalTrait(impl_mem_attr, startAddr, end_addr);
+      rMemTraitsManager.AddTrait(mpGenerator->ThreadId(), impl_mem_attr, startAddr, end_addr);
     }
 
     for (EMemoryAttributeType arch_mem_attr : rGenVmReq.ArchitectureMemoryAttributes()) {
-      // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
-      // pushing these changes.
-      rMemTraitsManager.AddGlobalTrait(arch_mem_attr, startAddr, end_addr);
+      rMemTraitsManager.AddTrait(mpGenerator->ThreadId(), arch_mem_attr, startAddr, end_addr);
     }
   }
 

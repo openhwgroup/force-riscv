@@ -60,7 +60,7 @@ namespace Force
   protected:
     virtual const std::vector<EPteType>& GetPteTypes() const = 0; //! Return vector of EPteTypes
   private:
-    bool NewAllocation(uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq); //!< Function to attempt a new page allocation, returns true on successful allocation
+    bool NewAllocation(cuint32 threadId, uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq); //!< Function to attempt a new page allocation, returns true on successful allocation
     bool AliasAllocation(cuint32 threadId, uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq); //!< Function to attempt an aliased allocation, returns true on successful allocation
     bool SolveAliasConstraints(cuint32 threadId, const PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq, uint64& physTarget); //!< Function to attempt to solve for a valid random physical target for aliasing
 
@@ -72,8 +72,8 @@ namespace Force
     void AddPhysicalPage(PhysicalPage* physPage);                     //!< add physical page in sorted order to mPhysicalPages
 
     //utility functions for page allocation
-    void UpdateMemoryAttributes(GenPageRequest* pPageReq, PhysicalPage* pPhysPage); //!< update the memory attribute constraint sets based on newly allocated page
-    void UpdateMemoryAttributesForAliasing(GenPageRequest* pPageReq, PhysicalPage* pPhysPage); //!< update the memory attribute constraint sets based on an aliased page
+    void UpdateMemoryAttributes(cuint32 threadId, GenPageRequest* pPageReq, PhysicalPage* pPhysPage); //!< update the memory attribute constraint sets based on newly allocated page
+    void UpdateMemoryAttributesForAliasing(cuint32 threadId, GenPageRequest* pPageReq, PhysicalPage* pPhysPage); //!< update the memory attribute constraint sets based on an aliased page
     bool MemAttrCompatibility(const MemoryTraitsRange& rAllocAttrs, const MemoryTraitsRange& rAliasAttrs); //!< check to see if the two attribute sets are compatible for aliasing
     //Note: GetPageAttrConstraints returns nullptr if page attributes are not set in the page request
     void GetPageMemoryAttributes(GenPageRequest* pPageReq, std::vector<uint32>& rPageMemAttributes) const; //!< get the memory attributes from the page request for a new page allocation

@@ -103,7 +103,7 @@ namespace Force
     mpBoundary->MergeConstraintSet(rConstr);
   }
 
-  bool PhysicalPageManager::NewAllocation(uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq)
+  bool PhysicalPageManager::NewAllocation(cuint32 threadId, uint64 VA, PageSizeInfo& rSizeInfo, GenPageRequest* pPageReq)
   {
     bool   ret_val       = false;
 
@@ -117,7 +117,7 @@ namespace Force
       bool can_alias = pPageReq->GenBoolAttributeDefaultTrue(EPageGenBoolAttrType::CanAlias);
       PhysicalPage* phys_page = new PhysicalPage(rSizeInfo.PhysicalStart(), rSizeInfo.PhysicalEnd(), can_alias, msPageId++);
       rSizeInfo.UpdatePhysPageId(phys_page->PageId());
-      UpdateMemoryAttributes(pPageReq, phys_page);
+      UpdateMemoryAttributes(threadId, pPageReq, phys_page);
       AddPhysicalPage(phys_page);
       ret_val = true;
     }
@@ -231,7 +231,7 @@ namespace Force
         alloc_page->Merge(*(range_pair.first));
         mPhysicalPages.erase(range_pair.first);
         rSizeInfo.UpdatePhysPageId(alloc_page->PageId());
-        UpdateMemoryAttributesForAliasing(pPageReq, alloc_page);
+        UpdateMemoryAttributesForAliasing(threadId, pPageReq, alloc_page);
         AddPhysicalPage(alloc_page);
 
         LOG(trace) << "{PhysicalPageManager::AliasAllocation} single overlap new page merged new_page_lower=0x" << hex
@@ -293,7 +293,7 @@ namespace Force
       }
       mPhysicalPages.erase(range_pair.first, range_pair.second);
       rSizeInfo.UpdatePhysPageId(alloc_page->PageId());
-      UpdateMemoryAttributesForAliasing(pPageReq, alloc_page);
+      UpdateMemoryAttributesForAliasing(threadId, pPageReq, alloc_page);
       AddPhysicalPage(alloc_page);
       ret_val = true;
     }
@@ -398,11 +398,11 @@ namespace Force
     if (alias_first)
     {
       alloc_result = AliasAllocation(threadId, VA, rSizeInfo, pPageReq);
-      if (not alloc_result) alloc_result = NewAllocation(VA, rSizeInfo, pPageReq);
+      if (not alloc_result) alloc_result = NewAllocation(threadId, VA, rSizeInfo, pPageReq);
       return alloc_result;
     }
 
-    alloc_result = NewAllocation(VA, rSizeInfo, pPageReq);
+    alloc_result = NewAllocation(threadId, VA, rSizeInfo, pPageReq);
     if (not alloc_result) alloc_result = AliasAllocation(threadId, VA, rSizeInfo, pPageReq);
     return alloc_result;
   }
@@ -512,7 +512,7 @@ namespace Force
     UpdateUsablePageAligned(physPage->Lower(), physPage->Upper());
   }
 
-  void PhysicalPageManager::UpdateMemoryAttributes(GenPageRequest* pPageReq, PhysicalPage* pPhysPage)
+  void PhysicalPageManager::UpdateMemoryAttributes(cuint32 threadId, GenPageRequest* pPageReq, PhysicalPage* pPhysPage)
   {
     vector<uint32> mem_attrs;
     GetPageMemoryAttributes(pPageReq, mem_attrs);
@@ -520,19 +520,17 @@ namespace Force
     {
       // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
       // pushing these changes.
-      mpMemTraitsManager->AddGlobalTrait(attr_id, pPhysPage->Lower(), pPhysPage->Upper());
+      mpMemTraitsManager->AddTrait(threadId, attr_id, pPhysPage->Lower(), pPhysPage->Upper());
     }
   }
 
-  void PhysicalPageManager::UpdateMemoryAttributesForAliasing(GenPageRequest* pPageReq, PhysicalPage* pPhysPage)
+  void PhysicalPageManager::UpdateMemoryAttributesForAliasing(cuint32 threadId, GenPageRequest* pPageReq, PhysicalPage* pPhysPage)
   {
     vector<uint32> mem_attrs;
     GetPageMemoryAttributesForAliasing(pPageReq, mem_attrs);
     for (uint32 attr_id : mem_attrs) //update each applicable constraint set with the page range of the applicable page
     {
-      // TODO(Noah): Accurately ascertain whether the trait is global or thread-specific before
-      // pushing these changes.
-      mpMemTraitsManager->AddGlobalTrait(attr_id, pPhysPage->Lower(), pPhysPage->Upper());
+      mpMemTraitsManager->AddTrait(threadId, attr_id, pPhysPage->Lower(), pPhysPage->Upper());
     }
   }
 

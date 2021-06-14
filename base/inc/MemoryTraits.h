@@ -83,19 +83,22 @@ namespace Force {
     ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsRegistry);
 
     uint32 AddTrait(const EMemoryAttributeType trait); //!< Generate an ID for the specified trait. Fails if the trait already has an associated ID.
-    uint32 AddTrait(const std::string& trait); //!< Generate an ID for the specified trait. Fails if the trait already has an associated ID.
+    uint32 AddTrait(const std::string& rTrait); //!< Generate an ID for the specified trait. Fails if the trait already has an associated ID.
     uint32 GetTraitId(const EMemoryAttributeType trait) const; //!< Get the ID associated with the specified trait. Returns 0 if the specified trait is not found.
-    uint32 GetTraitId(const std::string& trait) const; //!< Get the ID associated with the specified trait. Returns 0 if the specified trait is not found.
+    uint32 GetTraitId(const std::string& rTrait) const; //!< Get the ID associated with the specified trait. Returns 0 if the specified trait is not found.
     uint32 RequestTraitId(const EMemoryAttributeType trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
-    uint32 RequestTraitId(const std::string& trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
-    void AddMutuallyExclusiveTraits(const std::vector<EMemoryAttributeType>& traits); //!< Generate IDs for the specified traits, if needed, and mark them as mutually exclusive.
-    void AddMutuallyExclusiveTraits(const std::vector<std::string>& traits); //!< Generate IDs for the specified traits, if needed, and mark them as mutually exclusive.
-    void GetMutuallyExclusiveTraitIds(cuint32 traitId, std::vector<uint32>& exclusiveIds) const; //!< Returns a list of IDs of other memory traits that are mutually exclusive with the specified trait. The ID of the specified trait is not included in the returned list.
+    uint32 RequestTraitId(const std::string& rTrait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
+    void GetMutuallyExclusiveTraitIds(cuint32 traitId, std::vector<uint32>& rExclusiveIds) const; //!< Returns a list of IDs of other memory traits that are mutually exclusive with the specified trait. The ID of the specified trait is not included in the returned list.
+    bool IsThreadTrait(cuint32 threadId); //!< Returns true if the specified trait is thread-specific.
+  protected:
+    void AddMutuallyExclusiveTraits(const std::vector<EMemoryAttributeType>& rTraits); //!< Generate IDs for the specified traits, if needed, and mark them as mutually exclusive.
+    void AddThreadTraits(const std::vector<EMemoryAttributeType>& rTraits); //!< Generate IDs for the specified traits, if needed, and mark them as thread-specific.
   private:
-    void AddMutuallyExclusiveTraitIds(const std::set<uint32>& traitIds); //!< Mark the specified traits as mutually exclusive.
+    void AddMutuallyExclusiveTraitIds(const std::set<uint32>& rTraitIds); //!< Mark the specified traits as mutually exclusive.
   private:
     std::map<std::string, uint32> mTraitIds; //!< Map from descriptive memory trait identifiers to simple IDs
     std::map<uint32, std::set<uint32>> mExclusiveTraitIds; //!< Map from memory trait ID to set of IDs for mutually exclusive memory traits
+    std::set<uint32> mThreadTraitIds; //!< Set of thread-specific memory trait IDs
     uint32 mNextTraitId; //!< Next available ID
   };
 
@@ -110,19 +113,19 @@ namespace Force {
     ~MemoryTraitsManager();
     ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsManager);
 
-    void AddGlobalTrait(const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
-    void AddGlobalTrait(const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
-    void AddGlobalTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait globally with the specified address range.
-    void AddThreadTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
-    void AddThreadTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
+    void AddTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range. If the trait is thread-specific, it is further associated only with the indicated thread; otherwise, the association applies to all threads.
+    void AddTrait(cuint32 threadId, const std::string& rTrait, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range. If the trait is thread-specific, it is further associated only with the indicated thread; otherwise, the association applies to all threads.
+    void AddTrait(cuint32 threadId, cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range. If the trait is thread-specific, it is further associated only with the indicated thread; otherwise, the association applies to all threads.
     bool HasTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
-    bool HasTrait(cuint32 threadId, const std::string& trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
+    bool HasTrait(cuint32 threadId, const std::string& rTrait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
     const ConstraintSet* GetTraitAddressRanges(cuint32 threadId, cuint32 traitId) const; //!< Returns the address ranges associated with the specified trait for the specified thread.
     uint32 RequestTraitId(const EMemoryAttributeType trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
-    uint32 RequestTraitId(const std::string& trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
+    uint32 RequestTraitId(const std::string& rTrait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
     MemoryTraitsRange* CreateMemoryTraitsRange(cuint32 threadId, cuint64 startAddr, cuint64 endAddr) const; //!< Returns new MemoryTraitsRange object representing memory traits associated with addresses in the specified range for the specified thread.
   private:
-    void AddTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits); //!< Associate the specified trait with the specified address range in the given MemoryTraits object.
+    void AddGlobalTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range globally.
+    void AddThreadTrait(cuint32 threadId, cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
+    void AddToMemoryTraits(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& rMemTraits); //!< Associate the specified trait with the specified address range in the given MemoryTraits object.
   private:
     MemoryTraits mGlobalMemTraits; //!< Global memory traits
     std::map<uint32, MemoryTraits*> mThreadMemTraits; //!< Thread-specific memory traits

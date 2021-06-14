@@ -211,7 +211,7 @@ namespace Force {
   }
 
   MemoryTraitsRegistry::MemoryTraitsRegistry()
-    : mTraitIds(), mExclusiveTraitIds(), mNextTraitId(1)
+    : mTraitIds(), mExclusiveTraitIds(), mThreadTraitIds(), mNextTraitId(1)
   {
   }
 
@@ -220,17 +220,17 @@ namespace Force {
     return AddTrait(EMemoryAttributeType_to_string(trait));
   }
 
-  uint32 MemoryTraitsRegistry::AddTrait(const string& trait)
+  uint32 MemoryTraitsRegistry::AddTrait(const string& rTrait)
   {
     uint32 trait_id = 0;
 
-    auto itr = mTraitIds.find(trait);
+    auto itr = mTraitIds.find(rTrait);
     if (itr == mTraitIds.end()) {
       trait_id = mNextTraitId++;
-      mTraitIds.emplace(trait, trait_id);
+      mTraitIds.emplace(rTrait, trait_id);
     }
     else {
-      LOG(fail) << "{MemoryTraitsRegistry::AddTrait} trait " << trait << " has already been added" << endl;
+      LOG(fail) << "{MemoryTraitsRegistry::AddTrait} trait " << rTrait << " has already been added" << endl;
       FAIL("trait-already-exists");
     }
 
@@ -242,11 +242,11 @@ namespace Force {
     return GetTraitId(EMemoryAttributeType_to_string(trait));
   }
 
-  uint32 MemoryTraitsRegistry::GetTraitId(const string& trait) const
+  uint32 MemoryTraitsRegistry::GetTraitId(const string& rTrait) const
   {
     uint32 trait_id = 0;
 
-    auto itr = mTraitIds.find(trait);
+    auto itr = mTraitIds.find(rTrait);
     if (itr != mTraitIds.end()) {
       trait_id = itr->second;
     }
@@ -259,56 +259,65 @@ namespace Force {
     return RequestTraitId(EMemoryAttributeType_to_string(trait));
   }
 
-  uint32 MemoryTraitsRegistry::RequestTraitId(const string& trait)
+  uint32 MemoryTraitsRegistry::RequestTraitId(const string& rTrait)
   {
-    uint32 trait_id = GetTraitId(trait);
+    uint32 trait_id = GetTraitId(rTrait);
     if (trait_id == 0) {
-      trait_id = AddTrait(trait);
+      trait_id = AddTrait(rTrait);
     }
 
     return trait_id;
   }
 
-  void MemoryTraitsRegistry::AddMutuallyExclusiveTraits(const vector<EMemoryAttributeType>& traits)
+  void MemoryTraitsRegistry::AddMutuallyExclusiveTraits(const vector<EMemoryAttributeType>& rTraits)
   {
     set<uint32> exclusive_ids;
-    for (EMemoryAttributeType trait : traits) {
+    for (EMemoryAttributeType trait : rTraits) {
       exclusive_ids.insert(RequestTraitId(trait));
     }
 
     AddMutuallyExclusiveTraitIds(exclusive_ids);
   }
 
-  void MemoryTraitsRegistry::AddMutuallyExclusiveTraits(const vector<string>& traits)
+  void MemoryTraitsRegistry::AddThreadTraits(const vector<EMemoryAttributeType>& rTraits)
   {
-    set<uint32> exclusive_ids;
-    for (const string& trait : traits) {
-      exclusive_ids.insert(RequestTraitId(trait));
+    for (EMemoryAttributeType trait : rTraits) {
+      mThreadTraitIds.insert(RequestTraitId(trait));
     }
-
-    AddMutuallyExclusiveTraitIds(exclusive_ids);
   }
 
-  void MemoryTraitsRegistry::GetMutuallyExclusiveTraitIds(cuint32 traitId, vector<uint32>& exclusiveIds) const
+  void MemoryTraitsRegistry::GetMutuallyExclusiveTraitIds(cuint32 traitId, vector<uint32>& rExclusiveIds) const
   {
     auto itr = mExclusiveTraitIds.find(traitId);
     if (itr != mExclusiveTraitIds.end()) {
       // Don't include the specified trait ID in the output
-      copy_if(itr->second.begin(), itr->second.end(), back_inserter(exclusiveIds),
+      copy_if(itr->second.begin(), itr->second.end(), back_inserter(rExclusiveIds),
         [traitId](cuint32 exclusiveId) { return (exclusiveId != traitId); });
     }
   }
 
-  void MemoryTraitsRegistry::AddMutuallyExclusiveTraitIds(const set<uint32>& exclusiveIds)
+  bool MemoryTraitsRegistry::IsThreadTrait(cuint32 threadId)
   {
-    for (uint32 trait_id : exclusiveIds) {
+    bool is_thread_trait = false;
+
+    auto itr = mThreadTraitIds.find(threadId);
+    if (itr != mThreadTraitIds.end()) {
+      is_thread_trait = true;
+    }
+
+    return is_thread_trait;
+  }
+
+  void MemoryTraitsRegistry::AddMutuallyExclusiveTraitIds(const set<uint32>& rExclusiveIds)
+  {
+    for (uint32 trait_id : rExclusiveIds) {
       auto itr = mExclusiveTraitIds.find(trait_id);
 
       if (itr != mExclusiveTraitIds.end()) {
-        copy(exclusiveIds.begin(), exclusiveIds.end(), inserter(itr->second, itr->second.begin()));
+        copy(rExclusiveIds.begin(), rExclusiveIds.end(), inserter(itr->second, itr->second.begin()));
       }
       else {
-        mExclusiveTraitIds.emplace(trait_id, exclusiveIds);
+        mExclusiveTraitIds.emplace(trait_id, rExclusiveIds);
       }
     }
   }
@@ -327,40 +336,24 @@ namespace Force {
     delete mpMemTraitsRegistry;
   }
 
-  void MemoryTraitsManager::AddGlobalTrait(const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr)
+  void MemoryTraitsManager::AddTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr)
   {
-    AddGlobalTrait(EMemoryAttributeType_to_string(trait), startAddr, endAddr);
+    AddTrait(threadId, mpMemTraitsRegistry->RequestTraitId(trait), startAddr, endAddr);
   }
 
-  void MemoryTraitsManager::AddGlobalTrait(const string& trait, cuint64 startAddr, cuint64 endAddr)
+  void MemoryTraitsManager::AddTrait(cuint32 threadId, const string& rTrait, cuint64 startAddr, cuint64 endAddr)
   {
-    AddTrait(mpMemTraitsRegistry->RequestTraitId(trait), startAddr, endAddr, mGlobalMemTraits);
+    AddTrait(threadId, mpMemTraitsRegistry->RequestTraitId(rTrait), startAddr, endAddr);
   }
 
-  void MemoryTraitsManager::AddGlobalTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr)
+  void MemoryTraitsManager::AddTrait(cuint32 threadId, cuint32 traitId, cuint64 startAddr, cuint64 endAddr)
   {
-    AddTrait(traitId, startAddr, endAddr, mGlobalMemTraits);
-  }
-
-  void MemoryTraitsManager::AddThreadTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr)
-  {
-    AddThreadTrait(threadId, EMemoryAttributeType_to_string(trait), startAddr, endAddr);
-  }
-
-  void MemoryTraitsManager::AddThreadTrait(cuint32 threadId, const string& trait, cuint64 startAddr, cuint64 endAddr)
-  {
-    MemoryTraits* thread_mem_traits = nullptr;
-
-    auto itr = mThreadMemTraits.find(threadId);
-    if (itr != mThreadMemTraits.end()) {
-      thread_mem_traits = itr->second;
+    if (mpMemTraitsRegistry->IsThreadTrait(traitId)) {
+      AddThreadTrait(threadId, traitId, startAddr, endAddr);
     }
     else {
-      thread_mem_traits = new MemoryTraits();
-      mThreadMemTraits.emplace(threadId, thread_mem_traits);
+      AddGlobalTrait(traitId, startAddr, endAddr);
     }
-
-    AddTrait(mpMemTraitsRegistry->RequestTraitId(trait), startAddr, endAddr, *thread_mem_traits);
   }
 
   bool MemoryTraitsManager::HasTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr) const
@@ -368,9 +361,9 @@ namespace Force {
     return HasTrait(threadId, EMemoryAttributeType_to_string(trait), startAddr, endAddr);
   }
 
-  bool MemoryTraitsManager::HasTrait(cuint32 threadId, const string& trait, cuint64 startAddr, cuint64 endAddr) const
+  bool MemoryTraitsManager::HasTrait(cuint32 threadId, const string& rTrait, cuint64 startAddr, cuint64 endAddr) const
   {
-    uint32 trait_id = mpMemTraitsRegistry->GetTraitId(trait);
+    uint32 trait_id = mpMemTraitsRegistry->GetTraitId(rTrait);
     if (trait_id == 0) {
       return false;
     }
@@ -406,9 +399,9 @@ namespace Force {
     return mpMemTraitsRegistry->RequestTraitId(trait);
   }
 
-  uint32 MemoryTraitsManager::RequestTraitId(const std::string& trait)
+  uint32 MemoryTraitsManager::RequestTraitId(const std::string& rTrait)
   {
-    return mpMemTraitsRegistry->RequestTraitId(trait);
+    return mpMemTraitsRegistry->RequestTraitId(rTrait);
   }
 
   MemoryTraitsRange* MemoryTraitsManager::CreateMemoryTraitsRange(cuint32 threadId, cuint64 startAddr, cuint64 endAddr) const
@@ -428,18 +421,39 @@ namespace Force {
     return mem_traits_range;
   }
 
-  void MemoryTraitsManager::AddTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& memTraits)
+  void MemoryTraitsManager::AddGlobalTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr)
+  {
+    AddToMemoryTraits(traitId, startAddr, endAddr, mGlobalMemTraits);
+  }
+
+  void MemoryTraitsManager::AddThreadTrait(cuint32 threadId, cuint32 traitId, cuint64 startAddr, cuint64 endAddr)
+  {
+    MemoryTraits* thread_mem_traits = nullptr;
+
+    auto itr = mThreadMemTraits.find(threadId);
+    if (itr != mThreadMemTraits.end()) {
+      thread_mem_traits = itr->second;
+    }
+    else {
+      thread_mem_traits = new MemoryTraits();
+      mThreadMemTraits.emplace(threadId, thread_mem_traits);
+    }
+
+    AddToMemoryTraits(traitId, startAddr, endAddr, *thread_mem_traits);
+  }
+
+  void MemoryTraitsManager::AddToMemoryTraits(cuint32 traitId, cuint64 startAddr, cuint64 endAddr, MemoryTraits& rMemTraits)
   {
     vector<uint32> exclusive_ids;
     mpMemTraitsRegistry->GetMutuallyExclusiveTraitIds(traitId, exclusive_ids);
     for (uint32 exclusive_id : exclusive_ids) {
-      if (memTraits.HasTraitPartial(exclusive_id, startAddr, endAddr)) {
-        LOG(fail) << "{MemoryTraitsManager::AddTrait} a trait mutually exclusive with the specified trait is already associated with an address in the range 0x" << hex << startAddr << "-0x" << endAddr << endl;
+      if (rMemTraits.HasTraitPartial(exclusive_id, startAddr, endAddr)) {
+        LOG(fail) << "{MemoryTraitsManager::AddToMemoryTraits} a trait mutually exclusive with the specified trait is already associated with an address in the range 0x" << hex << startAddr << "-0x" << endAddr << endl;
         FAIL("trait-conflict");
       }
     }
 
-    memTraits.AddTrait(traitId, startAddr, endAddr);
+    rMemTraits.AddTrait(traitId, startAddr, endAddr);
   }
 
 }
