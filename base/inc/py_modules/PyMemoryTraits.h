@@ -22,6 +22,7 @@
 #include <MemoryManager.h>
 #include <Scheduler.h>
 #include <ThreadContext.h>
+#include ARCH_ENUM_HEADER
 
 #include <pybind11/pybind11.h>
 
@@ -32,20 +33,18 @@ namespace Force {
   PYBIND11_MODULE(MemoryTraits, mod) {
     mod
       .def("hasMemoryAttribute",
-        [](const std::string& memAttr, cuint64 startAddr, cuint64 endAddr) {
+        [](const std::string& rMemAttr, cuint64 startAddr, cuint64 endAddr, const EMemBankType bankType) {
           ThreadContext thread_context;
 
           Scheduler* scheduler = Scheduler::Instance();
           Generator* generator = scheduler->LookUpGenerator(thread_context.GetThreadId());
-          MemoryManager* mam_manager = generator->GetMemoryManager();
-
-          // TODO(Noah): Get the correct memory bank prior to pushing these changes.
-          MemoryBank* mem_bank = mam_manager->GetMemoryBank(EMemBankTypeBaseType(0));
-
+          MemoryManager* mem_manager = generator->GetMemoryManager();
+          MemoryBank* mem_bank = mem_manager->GetMemoryBank(EMemBankTypeBaseType(bankType));
           MemoryTraitsManager* mem_traits_manager = mem_bank->GetMemoryTraitsManager();
 
-          return mem_traits_manager->HasTrait(thread_context.GetThreadId(), memAttr, startAddr, endAddr);
-        })
+          return mem_traits_manager->HasTrait(thread_context.GetThreadId(), rMemAttr, startAddr, endAddr);
+        },
+        py::arg(), py::arg(), py::arg(), py::arg("Bank") = EMemBankType(0))
       ;
   }
 

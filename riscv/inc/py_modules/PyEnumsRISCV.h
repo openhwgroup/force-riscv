@@ -25,6 +25,10 @@ namespace py = pybind11;
 namespace Force {
 
   PYBIND11_MODULE(EnumsRISCV, mod) {
+    py::enum_<EMemBankType>(mod, "EMemBankType")
+      .value("Default", EMemBankType::Default)
+      ;
+
     py::enum_<EPagingMode>(mod, "EPagingMode")
       .value("Bare", EPagingMode::Bare)
       .value("Sv32", EPagingMode::Sv32)
