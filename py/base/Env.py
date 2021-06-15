@@ -75,6 +75,8 @@ class Env(object):
 
         mem_module = importlib.import_module(memfile_module)
         mem_module.configure_memory(self.interface)
+        if hasattr(mem_module, "configure_memory_attributes"):
+            mem_module.configure_memory_attributes(self.interface)
 
     def configureChoicesModifier(self, modfile_module):
         import importlib

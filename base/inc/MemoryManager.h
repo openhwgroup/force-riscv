@@ -58,6 +58,8 @@ namespace Force {
     EMemBankType MemoryBankType() const; //!< Return name of memory bank.
     void AddMemoryRange(uint64 start, uint64 end); //!< Add usable physical memory range.
     void SubMemoryRange(uint64 start, uint64 end); //!< Subtract usable physical memory range.
+    void AddArchitectureMemoryAttributes(cuint32 threadId, cuint64 start, cuint64 end, const std::vector<EMemoryAttributeType>& rMemAttributes); //!< Assign architecture memory attributes to the specified physical memory range.
+    void AddImplementationMemoryAttributes(cuint32 threadId, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes); //!< Assign implementation memory attributes to the specified physical memory range.
     void Configure(); //!< Configure base line memory constraints.
     void InitializeMemory(const MemoryInitRecord& memInitRecord);  //!< Initialize memory.
     void ReadMemoryPartiallyInitialized(cuint64 address, cuint32 nBytes, uint8* data) const; //!< Read data from memory that may not be fully initialized.
@@ -108,6 +110,8 @@ namespace Force {
     void OutputTest(const std::map<uint32, Generator *>& generators, uint64 resetPC, uint32 machineType); //!< Output test.
     void AddMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Add usable physical memory range.
     void SubMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Subtract usable physical memory range.
+    void AddArchitectureMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<EMemoryAttributeType>& rMemAttributes); //!< Assign architecture memory attributes to the specified physical memory range.
+    void AddImplementationMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes); //!< Assign implementation memory attributes to the specified physical memory range.
     void ConfigureMemoryBanks(); //!< Configure base line memory constraints.
     uint32 NumberBanks() const { return mMemoryBanks.size(); } //!< Return number of memory banks.
 

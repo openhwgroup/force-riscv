@@ -607,6 +607,31 @@ namespace Force {
     mpScheduler->SubMemoryRange(bank, start, end);
   }
 
+  void PyInterface::AddArchitectureMemoryAttributes(cuint32 bank, cuint64 start, cuint64 end, const string& rMemAttributes, cuint32 threadId)
+  {
+    vector<EMemoryAttributeType> mem_attributes;
+
+    StringSplitter ss(rMemAttributes, ',');
+    while (!ss.EndOfString()) {
+      string sub_str = ss.NextSubString();
+      mem_attributes.push_back(string_to_EMemoryAttributeType(sub_str));
+    }
+
+    mpScheduler->AddArchitectureMemoryAttributes(threadId, bank, start, end, mem_attributes);
+  }
+
+  void PyInterface::AddImplementationMemoryAttributes(cuint32 bank, cuint64 start, cuint64 end, const string& rMemAttributes, cuint32 threadId)
+  {
+    vector<string> mem_attributes;
+
+    StringSplitter ss(rMemAttributes, ',');
+    while (!ss.EndOfString()) {
+      mem_attributes.push_back(ss.NextSubString());
+    }
+
+    mpScheduler->AddImplementationMemoryAttributes(threadId, bank, start, end, mem_attributes);
+  }
+
   py::object PyInterface::Query(uint32 threadId, const string& queryName, const string& primaryString, const py::dict& rParams) const
   {
     // instantiate query object.
