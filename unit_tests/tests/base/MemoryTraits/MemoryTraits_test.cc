@@ -21,6 +21,8 @@
 #include <Constraint.h>
 #include ARCH_ENUM_HEADER
 
+#include <cstdio>
+#include <fstream>
 #include <map>
 #include <memory>
 #include <set>
@@ -180,6 +182,15 @@ CASE("Test MemoryTraitsRegistry") {
       EXPECT(mem_traits_registry.GetTraitId("Trait 7") == 0u);
     }
 
+    SECTION("Test getting trait name") {
+      uint32 main_region_trait_id = mem_traits_registry.GetTraitId(EMemoryAttributeType::MainRegion);
+      EXPECT(mem_traits_registry.GetTraitName(main_region_trait_id) == "MainRegion");
+    }
+
+    SECTION("Test getting non-existent trait name") {
+      EXPECT(mem_traits_registry.GetTraitName(MAX_UINT32) == "");
+    }
+
     SECTION("Test requesting trait IDs") {
       uint32 uncacheable_trait_id = mem_traits_registry.RequestTraitId(EMemoryAttributeType::Uncacheable);
       uint32 trait_3_id = mem_traits_registry.RequestTraitId("Trait 3");
@@ -223,7 +234,8 @@ CASE("Test MemoryTraitsManager") {
       mem_traits_manager.AddTrait(0, EMemoryAttributeType::IORegion, 0x7300, 0x7400);
       mem_traits_manager.AddTrait(1, "Trait 1", 0x7200, 0x7380);
 
-      uint32 main_region_trait_id = mem_traits_manager.RequestTraitId(EMemoryAttributeType::MainRegion);
+      MemoryTraitsRegistry* mem_traits_registry = mem_traits_manager.GetMemoryTraitsRegistry();
+      uint32 main_region_trait_id = mem_traits_registry->GetTraitId(EMemoryAttributeType::MainRegion);
       mem_traits_manager.AddTrait(0, main_region_trait_id, 0x3200, 0x3240);
 
       EXPECT(mem_traits_manager.HasTrait(0, EMemoryAttributeType::IORegion, 0x7300, 0x7400));
@@ -258,13 +270,15 @@ CASE("Test MemoryTraitsManager") {
 
     SECTION("Test getting address ranges associated with a global trait") {
       mem_traits_manager.AddTrait(0, EMemoryAttributeType::EmptyRegion, 0xff94, 0xffb0);
-      const ConstraintSet* address_ranges = mem_traits_manager.GetTraitAddressRanges(0, mem_traits_manager.RequestTraitId(EMemoryAttributeType::EmptyRegion));
+      MemoryTraitsRegistry* mem_traits_registry = mem_traits_manager.GetMemoryTraitsRegistry();
+      const ConstraintSet* address_ranges = mem_traits_manager.GetTraitAddressRanges(0, mem_traits_registry->GetTraitId(EMemoryAttributeType::EmptyRegion));
       EXPECT(address_ranges->ToSimpleString() == "0xff94-0xffb0");
     }
 
     SECTION("Test getting address ranges associated with a thread-specific trait") {
       mem_traits_manager.AddTrait(1, EMemoryAttributeType::CacheableShared, 0x330, 0x37f);
-      const ConstraintSet* address_ranges = mem_traits_manager.GetTraitAddressRanges(1, mem_traits_manager.RequestTraitId(EMemoryAttributeType::CacheableShared));
+      MemoryTraitsRegistry* mem_traits_registry = mem_traits_manager.GetMemoryTraitsRegistry();
+      const ConstraintSet* address_ranges = mem_traits_manager.GetTraitAddressRanges(1, mem_traits_registry->GetTraitId(EMemoryAttributeType::CacheableShared));
       EXPECT(address_ranges->ToSimpleString() == "0x330-0x37f");
     }
 
@@ -292,6 +306,57 @@ CASE("Test MemoryTraitsManager") {
 
       std::unique_ptr<MemoryTraitsRange> empty_mem_traits_range(mem_traits_manager.CreateMemoryTraitsRange(1, 0x800, 0x8ff));
       EXPECT(empty_mem_traits_range->IsEmpty());
+    }
+  }
+},
+
+CASE("Test MemoryTraitsJson") {
+
+  SETUP("Setup MemoryTraitsJson")  {
+    std::unique_ptr<MemoryTraitsRegistry> mem_traits_registry(new MemoryTraitsRegistryTest());
+    MemoryTraitsJson mem_traits_json(mem_traits_registry.get());
+
+    MemoryTraits mem_traits;
+    mem_traits.AddTrait(mem_traits_registry->GetTraitId(EMemoryAttributeType::CacheableShared), 0x7360, 0x7c80);
+    mem_traits.AddTrait(mem_traits_registry->GetTraitId(EMemoryAttributeType::Uncacheable), 0x2680, 0x2970);
+    mem_traits.AddTrait(mem_traits_registry->GetTraitId(EMemoryAttributeType::Uncacheable), 0x3220, 0x3b20);
+    mem_traits.AddTrait(mem_traits_registry->RequestTraitId("Trait 1"), 0x2400, 0x2a00);
+    mem_traits.AddTrait(mem_traits_registry->RequestTraitId("Trait 2"), 0x93d0, 0x9b30);
+
+    std::unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits.CreateMemoryTraitsRange(0x2800, 0x97ff));
+
+    std::string out_file_path = "./memory_traits_json_text.txt";
+
+    SECTION("Test dumping a MemoryTraitsRange to JSON") {
+      std::ofstream out_file(out_file_path);
+
+      mem_traits_json.DumpTraits(out_file, *mem_traits_range);
+      out_file.close();
+
+      std::ifstream in_file(out_file_path);
+      std::string output;
+      getline(in_file, output);
+      EXPECT(output == "\"ArchMemAttributes\": [{\"Name\": \"CacheableShared\", \"Ranges\": [{\"StartPhysAddr\": 29536, \"EndPhysAddr\": 31872}]}, {\"Name\": \"Uncacheable\", \"Ranges\": [{\"StartPhysAddr\": 10240, \"EndPhysAddr\": 10608}, {\"StartPhysAddr\": 12832, \"EndPhysAddr\": 15136}]}], \"ImplMemAttributes\": [{\"Name\": \"Trait 1\", \"Ranges\": [{\"StartPhysAddr\": 10240, \"EndPhysAddr\": 10752}]}, {\"Name\": \"Trait 2\", \"Ranges\": [{\"StartPhysAddr\": 37840, \"EndPhysAddr\": 38911}]}]");
+
+      in_file.close();
+      remove(out_file_path.c_str());
+    }
+
+    SECTION("Test dumping an empty MemoryTraitsRange to JSON") {
+      std::unique_ptr<MemoryTraitsRange> empty_mem_traits_range(mem_traits.CreateMemoryTraitsRange(0xc0c00, 0xe4800));
+
+      std::ofstream out_file(out_file_path);
+
+      mem_traits_json.DumpTraits(out_file, *empty_mem_traits_range);
+      out_file.close();
+
+      std::ifstream in_file(out_file_path);
+      std::string output;
+      getline(in_file, output);
+      EXPECT(output == "\"ArchMemAttributes\": [], \"ImplMemAttributes\": []");
+
+      in_file.close();
+      remove(out_file_path.c_str());
     }
   }
 },

@@ -536,21 +536,23 @@ namespace Force
 
   void PhysicalPageManager::GetPageMemoryAttributes(GenPageRequest* pPageReq, vector<uint32>& rPageMemAttributes) const
   {
+    MemoryTraitsRegistry* mem_traits_registry = mpMemTraitsManager->GetMemoryTraitsRegistry();
     for (EMemoryAttributeType arch_mem_attr : pPageReq->ArchitectureMemoryAttributes()) {
-      rPageMemAttributes.push_back(mpMemTraitsManager->RequestTraitId(arch_mem_attr));
+      rPageMemAttributes.push_back(mem_traits_registry->RequestTraitId(arch_mem_attr));
     }
 
     for (const string& impl_mem_attr : pPageReq->ImplementationMemoryAttributes()) {
-      rPageMemAttributes.push_back(mpMemTraitsManager->RequestTraitId(impl_mem_attr));
+      rPageMemAttributes.push_back(mem_traits_registry->RequestTraitId(impl_mem_attr));
     }
   }
 
   void PhysicalPageManager::GetPageMemoryAttributesForAliasing(GenPageRequest* pPageReq, vector<uint32>& rPageAliasMemAttributes) const
   {
     const vector<string>& alias_impl_mem_attributes = pPageReq->AliasImplementationMemoryAttributes();
+    MemoryTraitsRegistry* mem_traits_registry = mpMemTraitsManager->GetMemoryTraitsRegistry();
     if (not alias_impl_mem_attributes.empty()) {
       for (const string& alias_impl_mem_attr : alias_impl_mem_attributes) {
-        rPageAliasMemAttributes.push_back(mpMemTraitsManager->RequestTraitId(alias_impl_mem_attr));
+        rPageAliasMemAttributes.push_back(mem_traits_registry->RequestTraitId(alias_impl_mem_attr));
       }
     }
     else {

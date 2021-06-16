@@ -254,6 +254,20 @@ namespace Force {
     return trait_id;
   }
 
+  std::string MemoryTraitsRegistry::GetTraitName(cuint32 traitId) const
+  {
+    string trait_name;
+
+    auto itr = find_if(mTraitIds.cbegin(), mTraitIds.cend(),
+      [traitId](const pair<string, uint32>& traitIdEntry) { return (traitIdEntry.second == traitId); });
+
+    if (itr != mTraitIds.end()) {
+      trait_name = itr->first;
+    }
+
+    return trait_name;
+  }
+
   uint32 MemoryTraitsRegistry::RequestTraitId(const EMemoryAttributeType trait)
   {
     return RequestTraitId(EMemoryAttributeType_to_string(trait));
@@ -291,7 +305,7 @@ namespace Force {
     auto itr = mExclusiveTraitIds.find(traitId);
     if (itr != mExclusiveTraitIds.end()) {
       // Don't include the specified trait ID in the output
-      copy_if(itr->second.begin(), itr->second.end(), back_inserter(rExclusiveIds),
+      copy_if(itr->second.cbegin(), itr->second.cend(), back_inserter(rExclusiveIds),
         [traitId](cuint32 exclusiveId) { return (exclusiveId != traitId); });
     }
   }
@@ -314,7 +328,7 @@ namespace Force {
       auto itr = mExclusiveTraitIds.find(trait_id);
 
       if (itr != mExclusiveTraitIds.end()) {
-        copy(rExclusiveIds.begin(), rExclusiveIds.end(), inserter(itr->second, itr->second.begin()));
+        copy(rExclusiveIds.cbegin(), rExclusiveIds.cend(), inserter(itr->second, itr->second.begin()));
       }
       else {
         mExclusiveTraitIds.emplace(trait_id, rExclusiveIds);
@@ -394,16 +408,6 @@ namespace Force {
     return trait_addresses;
   }
 
-  uint32 MemoryTraitsManager::RequestTraitId(const EMemoryAttributeType trait)
-  {
-    return mpMemTraitsRegistry->RequestTraitId(trait);
-  }
-
-  uint32 MemoryTraitsManager::RequestTraitId(const std::string& rTrait)
-  {
-    return mpMemTraitsRegistry->RequestTraitId(rTrait);
-  }
-
   MemoryTraitsRange* MemoryTraitsManager::CreateMemoryTraitsRange(cuint32 threadId, cuint64 startAddr, cuint64 endAddr) const
   {
     MemoryTraitsRange* mem_traits_range = nullptr;
@@ -454,6 +458,85 @@ namespace Force {
     }
 
     rMemTraits.AddTrait(traitId, startAddr, endAddr);
+  }
+
+  MemoryTraitsJson::MemoryTraitsJson(const MemoryTraitsRegistry* pMemTraitsRegistry)
+    : mpMemTraitsRegistry(pMemTraitsRegistry)
+  {
+  }
+
+  void MemoryTraitsJson::DumpTraits(ofstream& rOutFile, const MemoryTraitsRange& rMemTraitsRange) const
+  {
+    DumpTraitRanges(rOutFile, rMemTraitsRange.mTraitRanges);
+  }
+
+  void MemoryTraitsJson::DumpTraitRanges(ofstream& rOutFile, const map<uint32, ConstraintSet*>& rTraitRanges) const
+  {
+    map<string, const ConstraintSet*> arch_mem_attr_ranges;
+    map<string, const ConstraintSet*> impl_mem_attr_ranges;
+    for (const auto& trait_range : rTraitRanges) {
+      string trait_name = mpMemTraitsRegistry->GetTraitName(trait_range.first);
+
+      bool is_arch_mem_attr = false;
+      try_string_to_EMemoryAttributeType(trait_name, is_arch_mem_attr);
+      if (is_arch_mem_attr) {
+        arch_mem_attr_ranges.emplace(trait_name, trait_range.second);
+      }
+      else {
+        impl_mem_attr_ranges.emplace(trait_name, trait_range.second);
+      }
+    }
+
+    rOutFile << "\"ArchMemAttributes\": ";
+    DumpCategorizedTraitRanges(rOutFile, arch_mem_attr_ranges);
+    rOutFile << ", ";
+
+    rOutFile << "\"ImplMemAttributes\": ";
+    DumpCategorizedTraitRanges(rOutFile, impl_mem_attr_ranges);
+  }
+
+  void MemoryTraitsJson::DumpCategorizedTraitRanges(ofstream& rOutFile, const map<string, const ConstraintSet*>& rTraitRanges) const
+  {
+    bool first_trait = true;
+    rOutFile << dec;
+    rOutFile << "[";
+
+    for (const auto& trait_range : rTraitRanges) {
+      if (not first_trait) {
+        rOutFile << ", ";
+      }
+
+      rOutFile << "{";
+
+      rOutFile << "\"Name\": \"" << trait_range.first << "\", ";
+
+      bool first_range = true;
+      rOutFile << "\"Ranges\": ";
+      rOutFile << "[";
+
+      for (Constraint* constr : trait_range.second->GetConstraints()) {
+        if (not first_range) {
+          rOutFile << ", ";
+        }
+
+        rOutFile << "{";
+
+        rOutFile << "\"StartPhysAddr\": " << constr->LowerBound() << ", ";
+        rOutFile << "\"EndPhysAddr\": " << constr->UpperBound();
+
+        rOutFile << "}";
+
+        first_range = false;
+      }
+
+      rOutFile << "]";
+
+      rOutFile << "}";
+
+      first_trait = false;
+    }
+
+    rOutFile << "]";
   }
 
 }

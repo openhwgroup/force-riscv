@@ -19,6 +19,7 @@
 #include <Defines.h>
 #include ARCH_ENUM_HEADER
 
+#include <fstream>
 #include <map>
 #include <set>
 #include <vector>
@@ -49,6 +50,8 @@ namespace Force {
     ConstraintSet* mpEmptyRanges; //!< Address ranges with no associated memory traits
     cuint64 mStartAddr; //!< Starting address
     cuint64 mEndAddr; //!< Ending address
+
+    friend class MemoryTraitsJson; // Accesses mTraitRanges in order to dump data without having to otherwise expose mTraitRanges.
   };
 
   /*!
@@ -69,6 +72,8 @@ namespace Force {
     MemoryTraitsRange* CreateMemoryTraitsRange(cuint64 startAddr, cuint64 endAddr) const; //!< Returns new MemoryTraitsRange object representing memory traits associated with addresses in the specified range.
   private:
     std::map<uint32, ConstraintSet*> mTraitRanges; //!< Map from memory trait IDs to associated address ranges
+
+    friend class MemoryTraitsJson; // Accesses mTraitRanges in order to dump data without having to otherwise expose mTraitRanges.
   };
 
   /*!
@@ -86,6 +91,7 @@ namespace Force {
     uint32 AddTrait(const std::string& rTrait); //!< Generate an ID for the specified trait. Fails if the trait already has an associated ID.
     uint32 GetTraitId(const EMemoryAttributeType trait) const; //!< Get the ID associated with the specified trait. Returns 0 if the specified trait is not found.
     uint32 GetTraitId(const std::string& rTrait) const; //!< Get the ID associated with the specified trait. Returns 0 if the specified trait is not found.
+    std::string GetTraitName(cuint32 traitId) const; //!< Get the name associated with the specified trait. Returns an empty string if the specified trait is not found.
     uint32 RequestTraitId(const EMemoryAttributeType trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
     uint32 RequestTraitId(const std::string& rTrait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
     void GetMutuallyExclusiveTraitIds(cuint32 traitId, std::vector<uint32>& rExclusiveIds) const; //!< Returns a list of IDs of other memory traits that are mutually exclusive with the specified trait. The ID of the specified trait is not included in the returned list.
@@ -119,9 +125,8 @@ namespace Force {
     bool HasTrait(cuint32 threadId, const EMemoryAttributeType trait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
     bool HasTrait(cuint32 threadId, const std::string& rTrait, cuint64 startAddr, cuint64 endAddr) const; //!< Returns true if the specified trait applies to the entire specified address range for the specified thread.
     const ConstraintSet* GetTraitAddressRanges(cuint32 threadId, cuint32 traitId) const; //!< Returns the address ranges associated with the specified trait for the specified thread.
-    uint32 RequestTraitId(const EMemoryAttributeType trait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
-    uint32 RequestTraitId(const std::string& rTrait); //!< Get the ID associated with the specified trait. Generate an ID if the specified trait doesn't already have an associated ID.
     MemoryTraitsRange* CreateMemoryTraitsRange(cuint32 threadId, cuint64 startAddr, cuint64 endAddr) const; //!< Returns new MemoryTraitsRange object representing memory traits associated with addresses in the specified range for the specified thread.
+    MemoryTraitsRegistry* GetMemoryTraitsRegistry() const { return mpMemTraitsRegistry; } //!< Returns the mapping between descriptive memory trait identifiers and simple IDs.
   private:
     void AddGlobalTrait(cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range globally.
     void AddThreadTrait(cuint32 threadId, cuint32 traitId, cuint64 startAddr, cuint64 endAddr); //!< Associate the specified trait with the specified address range for the specified thread.
@@ -130,6 +135,25 @@ namespace Force {
     MemoryTraits mGlobalMemTraits; //!< Global memory traits
     std::map<uint32, MemoryTraits*> mThreadMemTraits; //!< Thread-specific memory traits
     MemoryTraitsRegistry* mpMemTraitsRegistry; //!< Mapping between descriptive memory trait identifiers and simple IDs
+  };
+
+  /*!
+    \class MemoryTraitsJson
+    \brief Class to dump memory characteristics in JSON format.
+  */
+  class MemoryTraitsJson {
+  public:
+    MemoryTraitsJson(const MemoryTraitsRegistry* pMemTraitsRegistry);
+    COPY_CONSTRUCTOR_ABSENT(MemoryTraitsJson);
+    DESTRUCTOR_DEFAULT(MemoryTraitsJson);
+    ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsJson);
+
+    void DumpTraits(std::ofstream& rOutFile, const MemoryTraitsRange& rMemTraitsRange) const; //!< Dumps memory trait associations in a MemoryTraitsRange object into a JSON format.
+  private:
+    void DumpTraitRanges(std::ofstream& rOutFile, const std::map<uint32, ConstraintSet*>& rTraitRanges) const; //!< Dumps memory trait associations in the specified map into a partial JSON format. The output is meant to be further enclosed in a JSON object or JSON array in order to represent a fully-formatted JSON file. This method breaks the traits up into constituent categories.
+    void DumpCategorizedTraitRanges(std::ofstream& rOutFile, const std::map<std::string, const ConstraintSet*>& rTraitRanges) const; //!< Dumps memory trait associations in the specified map into a JSON format. This method is meant to be called with maps containing traits of a given category, e.g. architecture memory attributes.
+  private:
+    const MemoryTraitsRegistry* mpMemTraitsRegistry; //!< Mapping between descriptive memory trait identifiers and simple IDs
   };
 
 }

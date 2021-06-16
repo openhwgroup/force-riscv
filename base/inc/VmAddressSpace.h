@@ -141,6 +141,7 @@ namespace Force {
     void DumpPageSummaryText(std::ofstream& os, const Page* pPage) const; //!< dump page summary in text format
     void DumpPageSummaryJson(std::ofstream& os, const Page* pPage) const; //!< dump page summary in JSON format
     void DumpPageTableWalkJson(std::ofstream& os, const PageInformation& rPageInfo) const; //!< dump page table walk in JSON format
+    void DumpMemoryTraitsJson(std::ofstream& os, const Page& rPage) const; //!< dump page memory traits in JSON format
   };
 
 }
