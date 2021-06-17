@@ -42,6 +42,25 @@ namespace Force {
     return has_trait;
   }
 
+  std::string read_file_contents(const std::string& rFilePath)
+  {
+    std::string file_contents;
+
+    std::ifstream in_file(rFilePath);
+    std::string line;
+    while (getline(in_file, line)) {
+      if (not file_contents.empty()) {
+        file_contents += "\n";
+      }
+
+      file_contents += line;
+    }
+
+    in_file.close();
+
+    return file_contents;
+  }
+
   class MemoryTraitsRegistryTest : public MemoryTraitsRegistry {
   public:
     MemoryTraitsRegistryTest()
@@ -313,49 +332,55 @@ CASE("Test MemoryTraitsManager") {
 CASE("Test MemoryTraitsJson") {
 
   SETUP("Setup MemoryTraitsJson")  {
-    std::unique_ptr<MemoryTraitsRegistry> mem_traits_registry(new MemoryTraitsRegistryTest());
-    MemoryTraitsJson mem_traits_json(mem_traits_registry.get());
+    auto mem_traits_registry = new MemoryTraitsRegistryTest();
+    MemoryTraitsJson mem_traits_json(mem_traits_registry);
 
-    MemoryTraits mem_traits;
-    mem_traits.AddTrait(mem_traits_registry->GetTraitId(EMemoryAttributeType::CacheableShared), 0x7360, 0x7c80);
-    mem_traits.AddTrait(mem_traits_registry->GetTraitId(EMemoryAttributeType::Uncacheable), 0x2680, 0x2970);
-    mem_traits.AddTrait(mem_traits_registry->GetTraitId(EMemoryAttributeType::Uncacheable), 0x3220, 0x3b20);
-    mem_traits.AddTrait(mem_traits_registry->RequestTraitId("Trait 1"), 0x2400, 0x2a00);
-    mem_traits.AddTrait(mem_traits_registry->RequestTraitId("Trait 2"), 0x93d0, 0x9b30);
-
-    std::unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits.CreateMemoryTraitsRange(0x2800, 0x97ff));
+    MemoryTraitsManager mem_traits_manager(mem_traits_registry);
+    mem_traits_manager.AddTrait(0, EMemoryAttributeType::CacheableShared, 0x7360, 0x7c80);
+    mem_traits_manager.AddTrait(1, EMemoryAttributeType::Uncacheable, 0x2680, 0x2970);
+    mem_traits_manager.AddTrait(1, EMemoryAttributeType::Uncacheable, 0x3220, 0x3b20);
+    mem_traits_manager.AddTrait(0, "Trait 1", 0x2400, 0x2a00);
+    mem_traits_manager.AddTrait(1, "Trait 2", 0x93d0, 0x9b30);
 
     std::string out_file_path = "./memory_traits_json_text.txt";
 
-    SECTION("Test dumping a MemoryTraitsRange to JSON") {
+    SECTION("Test dumping memory traits to JSON") {
       std::ofstream out_file(out_file_path);
 
-      mem_traits_json.DumpTraits(out_file, *mem_traits_range);
+      mem_traits_json.DumpTraits(out_file, 1, mem_traits_manager);
       out_file.close();
 
-      std::ifstream in_file(out_file_path);
-      std::string output;
-      getline(in_file, output);
-      EXPECT(output == "\"ArchMemAttributes\": [{\"Name\": \"CacheableShared\", \"Ranges\": [{\"StartPhysAddr\": 29536, \"EndPhysAddr\": 31872}]}, {\"Name\": \"Uncacheable\", \"Ranges\": [{\"StartPhysAddr\": 10240, \"EndPhysAddr\": 10608}, {\"StartPhysAddr\": 12832, \"EndPhysAddr\": 15136}]}], \"ImplMemAttributes\": [{\"Name\": \"Trait 1\", \"Ranges\": [{\"StartPhysAddr\": 10240, \"EndPhysAddr\": 10752}]}, {\"Name\": \"Trait 2\", \"Ranges\": [{\"StartPhysAddr\": 37840, \"EndPhysAddr\": 38911}]}]");
+      std::string output = read_file_contents(out_file_path);
+      EXPECT(output == "\"ArchMemAttributes\": [{\"Name\": \"Uncacheable\", \"Ranges\": [{\"StartPhysAddr\": 9856, \"EndPhysAddr\": 10608}, {\"StartPhysAddr\": 12832, \"EndPhysAddr\": 15136}]}],\n\"ImplMemAttributes\": [{\"Name\": \"Trait 1\", \"Ranges\": [{\"StartPhysAddr\": 9216, \"EndPhysAddr\": 10752}]}, {\"Name\": \"Trait 2\", \"Ranges\": [{\"StartPhysAddr\": 37840, \"EndPhysAddr\": 39728}]}]");
 
-      in_file.close();
       remove(out_file_path.c_str());
     }
 
-    SECTION("Test dumping an empty MemoryTraitsRange to JSON") {
-      std::unique_ptr<MemoryTraitsRange> empty_mem_traits_range(mem_traits.CreateMemoryTraitsRange(0xc0c00, 0xe4800));
+    SECTION("Test dumping memory traits for a particular address range to JSON") {
+      std::unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits_manager.CreateMemoryTraitsRange(0, 0x2800, 0x97ff));
 
       std::ofstream out_file(out_file_path);
 
-      mem_traits_json.DumpTraits(out_file, *empty_mem_traits_range);
+      mem_traits_json.DumpTraitsRange(out_file, *mem_traits_range);
       out_file.close();
 
-      std::ifstream in_file(out_file_path);
-      std::string output;
-      getline(in_file, output);
-      EXPECT(output == "\"ArchMemAttributes\": [], \"ImplMemAttributes\": []");
+      std::string output = read_file_contents(out_file_path);
+      EXPECT(output == "\"ArchMemAttributes\": [{\"Name\": \"CacheableShared\", \"Ranges\": [{\"StartPhysAddr\": 29536, \"EndPhysAddr\": 31872}]}],\n\"ImplMemAttributes\": [{\"Name\": \"Trait 1\", \"Ranges\": [{\"StartPhysAddr\": 10240, \"EndPhysAddr\": 10752}]}, {\"Name\": \"Trait 2\", \"Ranges\": [{\"StartPhysAddr\": 37840, \"EndPhysAddr\": 38911}]}]");
 
-      in_file.close();
+      remove(out_file_path.c_str());
+    }
+
+    SECTION("Test dumping memory traits for an address range with no associated memory traits to JSON") {
+      std::unique_ptr<MemoryTraitsRange> empty_mem_traits_range(mem_traits_manager.CreateMemoryTraitsRange(1, 0xc0c00, 0xe4800));
+
+      std::ofstream out_file(out_file_path);
+
+      mem_traits_json.DumpTraitsRange(out_file, *empty_mem_traits_range);
+      out_file.close();
+
+      std::string output = read_file_contents(out_file_path);
+      EXPECT(output == "\"ArchMemAttributes\": [],\n\"ImplMemAttributes\": []");
+
       remove(out_file_path.c_str());
     }
   }

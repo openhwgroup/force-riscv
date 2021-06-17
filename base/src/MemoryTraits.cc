@@ -465,37 +465,56 @@ namespace Force {
   {
   }
 
-  void MemoryTraitsJson::DumpTraits(ofstream& rOutFile, const MemoryTraitsRange& rMemTraitsRange) const
-  {
-    DumpTraitRanges(rOutFile, rMemTraitsRange.mTraitRanges);
-  }
-
-  void MemoryTraitsJson::DumpTraitRanges(ofstream& rOutFile, const map<uint32, ConstraintSet*>& rTraitRanges) const
+  void MemoryTraitsJson::DumpTraits(ofstream& rOutFile, cuint32 threadId, const MemoryTraitsManager& rMemTraitsManager) const
   {
     map<string, const ConstraintSet*> arch_mem_attr_ranges;
     map<string, const ConstraintSet*> impl_mem_attr_ranges;
+
+    CategorizeTraitRanges(rMemTraitsManager.mGlobalMemTraits.mTraitRanges, arch_mem_attr_ranges, impl_mem_attr_ranges);
+    auto itr = rMemTraitsManager.mThreadMemTraits.find(threadId);
+    if (itr != rMemTraitsManager.mThreadMemTraits.end()) {
+      CategorizeTraitRanges(itr->second->mTraitRanges, arch_mem_attr_ranges, impl_mem_attr_ranges);
+    }
+
+    DumpCategorizedTraitRanges(rOutFile, arch_mem_attr_ranges, impl_mem_attr_ranges);
+  }
+
+  void MemoryTraitsJson::DumpTraitsRange(ofstream& rOutFile, const MemoryTraitsRange& rMemTraitsRange) const
+  {
+    map<string, const ConstraintSet*> arch_mem_attr_ranges;
+    map<string, const ConstraintSet*> impl_mem_attr_ranges;
+
+    CategorizeTraitRanges(rMemTraitsRange.mTraitRanges, arch_mem_attr_ranges, impl_mem_attr_ranges);
+    DumpCategorizedTraitRanges(rOutFile, arch_mem_attr_ranges, impl_mem_attr_ranges);
+  }
+
+  void MemoryTraitsJson::CategorizeTraitRanges(const map<uint32, ConstraintSet*>& rTraitRanges, map<string, const ConstraintSet*>& rArchMemAttributeRanges, map<string, const ConstraintSet*>& rImplMemAttributeRanges) const
+  {
     for (const auto& trait_range : rTraitRanges) {
       string trait_name = mpMemTraitsRegistry->GetTraitName(trait_range.first);
 
       bool is_arch_mem_attr = false;
       try_string_to_EMemoryAttributeType(trait_name, is_arch_mem_attr);
       if (is_arch_mem_attr) {
-        arch_mem_attr_ranges.emplace(trait_name, trait_range.second);
+        rArchMemAttributeRanges.emplace(trait_name, trait_range.second);
       }
       else {
-        impl_mem_attr_ranges.emplace(trait_name, trait_range.second);
+        rImplMemAttributeRanges.emplace(trait_name, trait_range.second);
       }
     }
-
-    rOutFile << "\"ArchMemAttributes\": ";
-    DumpCategorizedTraitRanges(rOutFile, arch_mem_attr_ranges);
-    rOutFile << ", ";
-
-    rOutFile << "\"ImplMemAttributes\": ";
-    DumpCategorizedTraitRanges(rOutFile, impl_mem_attr_ranges);
   }
 
-  void MemoryTraitsJson::DumpCategorizedTraitRanges(ofstream& rOutFile, const map<string, const ConstraintSet*>& rTraitRanges) const
+  void MemoryTraitsJson::DumpCategorizedTraitRanges(ofstream& rOutFile, const map<string, const ConstraintSet*>& rArchMemAttributeRanges, const map<string, const ConstraintSet*>& rImplMemAttributeRanges) const
+  {
+    rOutFile << "\"ArchMemAttributes\": ";
+    DumpTraitRangeCategory(rOutFile, rArchMemAttributeRanges);
+    rOutFile << "," << endl;
+
+    rOutFile << "\"ImplMemAttributes\": ";
+    DumpTraitRangeCategory(rOutFile, rImplMemAttributeRanges);
+  }
+
+  void MemoryTraitsJson::DumpTraitRangeCategory(ofstream& rOutFile, const map<string, const ConstraintSet*>& rTraitRanges) const
   {
     bool first_trait = true;
     rOutFile << dec;

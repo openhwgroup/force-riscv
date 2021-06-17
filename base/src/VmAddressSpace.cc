@@ -1169,11 +1169,10 @@ namespace Force {
   void VmAddressSpace::DumpPageJson(ofstream& os) const
   {
     bool first_entry = true;
-    os << "[";
     for (auto page : mPages) {
       if (page->TranslationResultType() != ETranslationResultType::AddressError) {
         if (not first_entry) {
-          os << ",\n";
+          os << "," << endl;
         }
 
         DumpPageSummaryJson(os, page);
@@ -1181,8 +1180,6 @@ namespace Force {
         first_entry = false;
       }
     }
-
-    os << "]";
   }
 
   void VmAddressSpace::DumpPageSummaryText(ofstream& os, const Page* pPage) const
@@ -1254,7 +1251,7 @@ namespace Force {
     unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits_manager->CreateMemoryTraitsRange(mpGenerator->ThreadId(), rPage.PhysicalLower(), rPage.PhysicalUpper()));
 
     MemoryTraitsJson mem_traits_json(mem_traits_manager->GetMemoryTraitsRegistry());
-    mem_traits_json.DumpTraits(os, *mem_traits_range);
+    mem_traits_json.DumpTraitsRange(os, *mem_traits_range);
   }
 
 }

@@ -51,7 +51,7 @@ namespace Force {
     cuint64 mStartAddr; //!< Starting address
     cuint64 mEndAddr; //!< Ending address
 
-    friend class MemoryTraitsJson; // Accesses mTraitRanges in order to dump data without having to otherwise expose mTraitRanges.
+    friend class MemoryTraitsJson; // Accesses mTraitRanges in order to dump data without having to otherwise expose this member.
   };
 
   /*!
@@ -73,7 +73,7 @@ namespace Force {
   private:
     std::map<uint32, ConstraintSet*> mTraitRanges; //!< Map from memory trait IDs to associated address ranges
 
-    friend class MemoryTraitsJson; // Accesses mTraitRanges in order to dump data without having to otherwise expose mTraitRanges.
+    friend class MemoryTraitsJson; // Accesses mTraitRanges in order to dump data without having to otherwise expose this member.
   };
 
   /*!
@@ -135,6 +135,8 @@ namespace Force {
     MemoryTraits mGlobalMemTraits; //!< Global memory traits
     std::map<uint32, MemoryTraits*> mThreadMemTraits; //!< Thread-specific memory traits
     MemoryTraitsRegistry* mpMemTraitsRegistry; //!< Mapping between descriptive memory trait identifiers and simple IDs
+
+    friend class MemoryTraitsJson; // Accesses mGlobalMemTraits and mThreadMemTraits in order to dump data without having to otherwise expose these members.
   };
 
   /*!
@@ -148,10 +150,12 @@ namespace Force {
     DESTRUCTOR_DEFAULT(MemoryTraitsJson);
     ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsJson);
 
-    void DumpTraits(std::ofstream& rOutFile, const MemoryTraitsRange& rMemTraitsRange) const; //!< Dumps memory trait associations in a MemoryTraitsRange object into a JSON format.
+    void DumpTraits(std::ofstream& rOutFile, cuint32 threadId, const MemoryTraitsManager& rMemTraitsManager) const; //!< Dumps memory trait associations for the specified thread into a partial JSON format. The output is meant to be further enclosed in a JSON object or JSON array in order to represent a fully-formatted JSON file.
+    void DumpTraitsRange(std::ofstream& rOutFile, const MemoryTraitsRange& rMemTraitsRange) const; //!< Dumps memory trait associations for a particular address range into a partial JSON format. The output is meant to be further enclosed in a JSON object or JSON array in order to represent a fully-formatted JSON file.
   private:
-    void DumpTraitRanges(std::ofstream& rOutFile, const std::map<uint32, ConstraintSet*>& rTraitRanges) const; //!< Dumps memory trait associations in the specified map into a partial JSON format. The output is meant to be further enclosed in a JSON object or JSON array in order to represent a fully-formatted JSON file. This method breaks the traits up into constituent categories.
-    void DumpCategorizedTraitRanges(std::ofstream& rOutFile, const std::map<std::string, const ConstraintSet*>& rTraitRanges) const; //!< Dumps memory trait associations in the specified map into a JSON format. This method is meant to be called with maps containing traits of a given category, e.g. architecture memory attributes.
+    void CategorizeTraitRanges(const std::map<uint32, ConstraintSet*>& rTraitRanges, std::map<std::string, const ConstraintSet*>& rArchMemAttributeRanges, std::map<std::string, const ConstraintSet*>& rImplMemAttributeRanges) const; //!< Breaks memory traits up into constituent categories.
+    void DumpCategorizedTraitRanges(std::ofstream& rOutFile, const std::map<std::string, const ConstraintSet*>& rArchMemAttributeRanges, const std::map<std::string, const ConstraintSet*>& rImplMemAttributeRanges) const; //!< Dumps memory trait associations in the categorized maps into a partial JSON format.
+    void DumpTraitRangeCategory(std::ofstream& rOutFile, const std::map<std::string, const ConstraintSet*>& rTraitRanges) const; //!< Dumps memory trait associations in the specified map into a JSON format. This method is meant to be called with a map containing traits of a given category, e.g. architecture memory attributes.
   private:
     const MemoryTraitsRegistry* mpMemTraitsRegistry; //!< Mapping between descriptive memory trait identifiers and simple IDs
   };

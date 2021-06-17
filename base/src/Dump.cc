@@ -191,7 +191,7 @@ namespace Force {
   {
     auto generators = mpScheduler->GetGenerators();
     for (auto gen_item : generators) {
-      gen_item.second->GetVmManager()->DumpPage(EDumpFormat::Text);
+      gen_item.second->GetVmManager()->DumpPage();
     }
   }
 
@@ -199,7 +199,7 @@ namespace Force {
   {
     auto generators = mpScheduler->GetGenerators();
     for (auto gen_item : generators) {
-      gen_item.second->GetVmManager()->DumpPage(EDumpFormat::JSON);
+      gen_item.second->GetVmManager()->DumpPageAndMemoryAttributesJson();
     }
   }
 
