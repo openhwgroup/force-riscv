@@ -23,7 +23,8 @@ namespace Force {
     : MemoryTraitsRegistry()
   {
     AddMutuallyExclusiveTraits({EMemoryAttributeType::MainRegion, EMemoryAttributeType::IORegion, EMemoryAttributeType::EmptyRegion});
-    AddMutuallyExclusiveTraits({EMemoryAttributeType::MainRegion, EMemoryAttributeType::EmptyRegion, EMemoryAttributeType::LRSC, EMemoryAttributeType::AMONone, EMemoryAttributeType::AMOSwap, EMemoryAttributeType::AMOLogical, EMemoryAttributeType::AMOArithmetic});
+    AddMutuallyExclusiveTraits({EMemoryAttributeType::MainRegion, EMemoryAttributeType::EmptyRegion, EMemoryAttributeType::LRSC});
+    AddMutuallyExclusiveTraits({EMemoryAttributeType::MainRegion, EMemoryAttributeType::EmptyRegion, EMemoryAttributeType::AMONone, EMemoryAttributeType::AMOSwap, EMemoryAttributeType::AMOLogical, EMemoryAttributeType::AMOArithmetic});
     AddMutuallyExclusiveTraits({EMemoryAttributeType::MainRegion, EMemoryAttributeType::EmptyRegion, EMemoryAttributeType::AMOAligned, EMemoryAttributeType::AMOMisaligned});
     AddMutuallyExclusiveTraits({EMemoryAttributeType::IORegion, EMemoryAttributeType::EmptyRegion, EMemoryAttributeType::RVWMO, EMemoryAttributeType::RVTSO});
     AddMutuallyExclusiveTraits({EMemoryAttributeType::MainRegion, EMemoryAttributeType::EmptyRegion, EMemoryAttributeType::RelaxedOrdering, EMemoryAttributeType::StrongOrderingChannel0, EMemoryAttributeType::StrongOrderingChannel1});

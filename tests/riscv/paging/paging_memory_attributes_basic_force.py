@@ -22,7 +22,7 @@ import RandomUtils
 # This test verifies that memory attributes can be set on specific regions of memory.
 class MainSequence(Sequence):
     def generate(self, **kargs):
-        for _ in range(10):
+        for _ in range(50):
             size_bits = RandomUtils.random32(1, 20)
             size = 2 ** size_bits
             align_bits = RandomUtils.random32(1, size_bits)
