@@ -145,7 +145,7 @@ namespace Force {
   */
   class MemoryTraitsJson {
   public:
-    MemoryTraitsJson(const MemoryTraitsRegistry* pMemTraitsRegistry);
+    explicit MemoryTraitsJson(const MemoryTraitsRegistry* pMemTraitsRegistry);
     COPY_CONSTRUCTOR_ABSENT(MemoryTraitsJson);
     DESTRUCTOR_DEFAULT(MemoryTraitsJson);
     ASSIGNMENT_OPERATOR_ABSENT(MemoryTraitsJson);

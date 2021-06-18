@@ -537,23 +537,24 @@ namespace Force
   void PhysicalPageManager::GetPageMemoryAttributes(GenPageRequest* pPageReq, vector<uint32>& rPageMemAttributes) const
   {
     MemoryTraitsRegistry* mem_traits_registry = mpMemTraitsManager->GetMemoryTraitsRegistry();
-    for (EMemoryAttributeType arch_mem_attr : pPageReq->ArchitectureMemoryAttributes()) {
-      rPageMemAttributes.push_back(mem_traits_registry->RequestTraitId(arch_mem_attr));
-    }
 
-    for (const string& impl_mem_attr : pPageReq->ImplementationMemoryAttributes()) {
-      rPageMemAttributes.push_back(mem_traits_registry->RequestTraitId(impl_mem_attr));
-    }
+    const vector<EMemoryAttributeType>& arch_mem_attributes = pPageReq->ArchitectureMemoryAttributes();
+    transform(arch_mem_attributes.cbegin(), arch_mem_attributes.cend(), back_inserter(rPageMemAttributes),
+      [mem_traits_registry](const EMemoryAttributeType archMemAttr) { return mem_traits_registry->RequestTraitId(archMemAttr); });
+
+    const vector<string>& impl_mem_attributes = pPageReq->ImplementationMemoryAttributes();
+    transform(impl_mem_attributes.cbegin(), impl_mem_attributes.cend(), back_inserter(rPageMemAttributes),
+      [mem_traits_registry](const string& rImplMemAttr) { return mem_traits_registry->RequestTraitId(rImplMemAttr); });
   }
 
   void PhysicalPageManager::GetPageMemoryAttributesForAliasing(GenPageRequest* pPageReq, vector<uint32>& rPageAliasMemAttributes) const
   {
-    const vector<string>& alias_impl_mem_attributes = pPageReq->AliasImplementationMemoryAttributes();
     MemoryTraitsRegistry* mem_traits_registry = mpMemTraitsManager->GetMemoryTraitsRegistry();
+
+    const vector<string>& alias_impl_mem_attributes = pPageReq->AliasImplementationMemoryAttributes();
     if (not alias_impl_mem_attributes.empty()) {
-      for (const string& alias_impl_mem_attr : alias_impl_mem_attributes) {
-        rPageAliasMemAttributes.push_back(mem_traits_registry->RequestTraitId(alias_impl_mem_attr));
-      }
+      transform(alias_impl_mem_attributes.cbegin(), alias_impl_mem_attributes.cend(), back_inserter(rPageAliasMemAttributes),
+        [mem_traits_registry](const string& rAliasImplMemAttr) { return mem_traits_registry->RequestTraitId(rAliasImplMemAttr); });
     }
     else {
       GetPageMemoryAttributes(pPageReq, rPageAliasMemAttributes);
