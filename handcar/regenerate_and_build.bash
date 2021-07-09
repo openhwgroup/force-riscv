@@ -17,6 +17,7 @@
 
 # SCRIPT DEFAULTS
 unset NO_GIT
+unset MAKE_JOBS
 pause() {
     echo
     echo "$1"
@@ -24,14 +25,16 @@ pause() {
 }
 
 function usage {
-    echo "Usage: $(basename "$0") [-in]"
-    echo "    -i  interactive mode"
-    echo "    -n  no-git mode"
+    echo "Usage: $(basename "$0") [options]"
+    echo "Options:"
+    echo "    -i      interactive mode"
+    echo "    -n      no-git mode"
+    echo "    -j [N]  number of make jobs allowed"
     echo ""
     exit 1
 }
 
-while getopts ":in" opt; do
+while getopts ":inj:" opt; do
     case "$opt" in
     i)  # interactive requested, so redefine 'pause'
         echo "===== option 'i' detected"
@@ -44,6 +47,10 @@ while getopts ":in" opt; do
     n)  # no git
         echo "===== option 'n' detected"
         NO_GIT=1
+        ;;
+    j)  # number of make jobs allowed
+        echo "===== option 'j' detected"
+        MAKE_JOBS=$OPTARG
         ;;
     ?)  # usage
         echo "Invalid option: -${OPTARG}"
@@ -106,7 +113,7 @@ echo "^^^^^ End auto-edit output ^^^^^"
 pause "===== Please review edit(s) above"
 
 echo "===== Preparing to run makefile for standalone/"
-make -j
+make -j $MAKE_JOBS
 cd ..
 
 rm -rf  bin inc src so_build spike_mod
@@ -129,7 +136,7 @@ pause "===== Preparing to run filesurgeon"
 ./filesurgeon.py
 
 pause "===== Preparing to run handcar make"
-make -j
+make -j $MAKE_JOBS
 
 pause "===== Preparing to copy handcar_cosim.so"
 rsync -c ./bin/handcar_cosim.so ../utils/handcar/handcar_cosim.so
