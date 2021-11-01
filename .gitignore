@@ -6,6 +6,7 @@ __pycache__/
 bin/friscv
 fpix/bin/fpix_riscv
 fpix/riscv/inc/usage.h
+handcar/build
 handcar/patcher/originals/
 handcar/patcher/patched/
 handcar/so_build/cosim/src/

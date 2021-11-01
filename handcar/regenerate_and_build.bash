@@ -116,28 +116,32 @@ echo "===== Preparing to run makefile for standalone/"
 make -j $MAKE_JOBS
 cd ..
 
-rm -rf  bin inc src so_build spike_mod
+# TODO(Noah): Revise this to rebuild Handcar only when necessary when there is time to do so.
+rm -rf build
+cp -r standalone build
 
-mkdir bin
-mkdir inc
-mkdir src
-mkdir -p so_build/cosim/src
-mkdir -p spike_mod/insns
-
-cp -r ./headers/* .
-cp ../3rd_party/inc/softfloat/softfloat.h ./inc/.
+cp ./headers/handcar_cosim_wrapper.h build/spike_main/
+cp ../3rd_party/inc/softfloat/softfloat.h build/softfloat/
+cp -r ./force_mod build/
 
 pause "===== Preparing to create handcar files"
 cd ./patcher || exit 1
 ./patcher.py patch --clean
 cd ..
 
-pause "===== Preparing to run filesurgeon"
-./filesurgeon.py
+pause "===== Preparing to change softfloat source file extensions"
+# The Handcar Makefile expects all source files to use a ".cc" extension
+cd build/softfloat
+for f in *.c; do
+  mv -- "$f" "${f%.c}.cc"
+done
+cd ../..
 
 pause "===== Preparing to run handcar make"
+cp Makefile.common build/
+cp Makefile build/
+cd build
 make -j $MAKE_JOBS
+cd ..
 
-pause "===== Preparing to copy handcar_cosim.so"
-rsync -c ./bin/handcar_cosim.so ../utils/handcar/handcar_cosim.so
 echo $?

@@ -34,18 +34,18 @@ import subprocess
 
 from docopt.docopt import docopt
 
-copyright_text = """# %s
+copyright_text = """#
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the
-# 'License'.)  You may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
 #
-# THIS SOFTWARE IS PROVIDED ON AN \'AS IS\' BASIS, WITHOUT WARRANTIES OF ANY
-# KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-# NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
+# FIT FOR A PARTICULAR PURPOSE.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
@@ -72,29 +72,37 @@ to_originals = {
     "config.h": {"origin": STANDALONE},
     "decode.h": {"origin": SA_RISCV},
     "devices.h": {"origin": SA_RISCV},
-    "disasm.cc": {"origin": "standalone/spike_main"},
+    "disasm.cc": {
+        "origin": "standalone/spike_main",
+        "staged_path": "../build/spike_main/disasm.cc",
+    },
     "disasm.h": {"origin": SA_RISCV},
     "execute.cc": {"origin": SA_RISCV},
     "mmu.cc": {"origin": SA_RISCV},
     "mmu.h": {"origin": SA_RISCV},
-    "mret.h": {"origin": SA_INSNS},
-    "primitives.h": {"origin": "standalone/softfloat"},
+    "primitives.h": {
+        "origin": "standalone/softfloat",
+        "staged_path": "../build/softfloat/primitives.h",
+    },
     "processor.cc": {"origin": SA_RISCV},
     "processor.h": {"origin": SA_RISCV},
     "regnames.cc": {"origin": SA_RISCV},
-    "sim.cc": {"origin": SA_RISCV, "patch_tgt": "simlib.cc"},
-    "sim.h": {"origin": SA_RISCV, "patch_tgt": "simlib.h"},
+    "sim.cc": {"origin": SA_RISCV},
+    "sim.h": {"origin": SA_RISCV},
     "simif.h": {"origin": SA_RISCV},
-    "specialize.h": {"origin": "standalone/softfloat"},
-    "sret.h": {"origin": SA_INSNS},
+    "specialize.h": {
+        "origin": "standalone/softfloat",
+        "staged_path": "../build/softfloat/specialize.h",
+    },
     "spike.cc": {
         "origin": "standalone/spike_main",
-        "patch_tgt": "handcar_cosim_wrapper.cc",
-        "staged_path": "../so_build/cosim/src/handcar_cosim_wrapper.cc",
+        "staged_path": "../build/spike_main/spike.cc",
     },
 }
 
 to_originals_insns = {
+    "mret.h": {"origin": SA_INSNS},
+    "sret.h": {"origin": SA_INSNS},
     "vadc_vim.h": {"origin": SA_INSNS},
     "vadc_vvm.h": {"origin": SA_INSNS},
     "vadc_vxm.h": {"origin": SA_INSNS},
@@ -229,10 +237,10 @@ def apply_patches():
     for extra_path, dic in file_folders:
         for item in dic.keys():
             src = ORIGINALS_PATH % (extra_path, item)
-            patch = "./patches" + ADD_A_PATH + ".patch" % (extra_path, item)
+            patch = ("./patches" + ADD_A_PATH + ".patch") % (extra_path, item)
 
             # allow for specified target filename
-            tgt = "./patched" + ADD_A_PATH % (extra_path, dic[item].get("patch_tgt", item))
+            tgt = "./patched" + ADD_A_PATH % (extra_path, item)
 
             if should_do_patch(src, patch, tgt):
                 patch_file(src, patch, tgt)
@@ -241,10 +249,10 @@ def apply_patches():
 def stage_patched_files():
     for extra_path, dic in file_folders:
         for item in dic.keys():
-            src = "./patched" + ADD_A_PATH % (extra_path, dic[item].get("patch_tgt", item))
+            src = "./patched" + ADD_A_PATH % (extra_path, item)
             tgt = dic[item].get(
                 "staged_path",
-                "../spike_mod" + ADD_A_PATH % (extra_path, dic[item].get("patch_tgt", item)),
+                "../build/riscv" + ADD_A_PATH % (extra_path, item),
             )
             if first_file_is_newer(src, tgt):
                 shutil.copy(src, tgt, follow_symlinks=False)
@@ -259,20 +267,22 @@ def generate_patches():
             # patch_tgt = './modified%s/%s.patch' % (extra_path, item)
             src = dic[item].get(
                 "staged_path",
-                "../spike_mod" + ADD_A_PATH % (extra_path, dic[item].get("patch_tgt", item)),
+                "../build/riscv" + ADD_A_PATH % (extra_path, item),
             )
-            tgt = "./modified" + ADD_A_PATH % (extra_path, dic[item].get("patch_tgt", item))
+            tgt = "./modified" + ADD_A_PATH % (extra_path, item)
             if first_file_is_newer(src, tgt):
                 shutil.copy(src, tgt, follow_symlinks=False)
 
             src = ORIGINALS_PATH % (extra_path, item)
-            tgt = "./modified" + ADD_A_PATH % (extra_path, dic[item].get("patch_tgt", item))
+            tgt = "./modified" + ADD_A_PATH % (extra_path, item)
             patch = "./patches" + ADD_A_PATH % (extra_path, item + ".patch")
 
             # see if patch needs to be recreated
             if should_do_patch(src, tgt, patch):
                 with open(patch, "w") as fh:
-                    fh.write(copyright_text % patch)
+                    fh.write(copyright_text)
+
+                with open(patch, "a") as fh:
                     cmd = [diff_cmd, src, tgt]
                     subprocess.call(cmd, stdout=fh)
 
@@ -282,7 +292,7 @@ def main():
     args = docopt(__doc__)
     print(args)
 
-    if args["verbose"]:
+    if args["--verbose"]:
         verbose = 1
     else:
         verbose = 0

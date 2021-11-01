@@ -14,26 +14,19 @@
 # limitations under the License.
 #
 
-BASE_SRCS = $(shell find src -name '*.cc' -type f)
-COSIM_SRCS = $(shell find so_build/cosim/src -name '*.cc' -type f)
-FORCE_SRCS = $(shell find force_mod -name '*.cc' -type f)
-
-ALL_SRCS := $(BASE_SRCS) $(COSIM_SRCS) $(FORCE_SRCS)
+ALL_SRCS := $(wildcard *.cc fesvr/*.cc force_mod/*.cc riscv/*.cc softfloat/*.cc spike_main/*.cc)
+ALL_SRCS := $(filter-out fesvr/dtm.cc fesvr/elf2hex.cc fesvr/htif.cc fesvr/htif_hexwriter.cc fesvr/htif_pthread.cc fesvr/syscall.cc fesvr/term.cc fesvr/tsi.cc riscv/clint.cc riscv/debug_module.cc riscv/devices.cc riscv/dts.cc riscv/insn_template.cc riscv/interactive.cc riscv/jtag_dtm.cc riscv/rom.cc spike_main/spike-dasm.cc spike_main/spike-log-parser.cc spike_main/termios-xspike.cc spike_main/xspike.cc, $(ALL_SRCS))
 
 CLEAN_TARGETS = \
 	./bin/\
-	./inc/\
 	./make_area/\
-	./so_build/\
-	./src/
 
 include Makefile.common
 
-INC_PATHS = -I./inc -I./so_build/cosim/inc -I./force_mod -I../3rd_party/inc/
+INC_PATHS = -I. -I../../3rd_party/inc/ -I./fesvr -I./force_mod -I./riscv -I./softfloat -I./spike_main
 
 NODEPS:=clean
 
-vpath %.cc src so_build/cosim/src force_mod
 vpath %.d $(DEP_DIR)
 
 all:
@@ -63,18 +56,15 @@ bin/handcar_cosim.so: $(ALL_OBJS)
 
 .PHONY: setup
 setup:
-	@mkdir -p bin src spike_mod/insns so_build/cosim/src make_area/obj make_area/dep
+	@mkdir -p bin make_area/obj make_area/dep
 
 .PHONY: handcar
 handcar:
-	@./scripts/regenerate_and_build.bash -n
-	@cd patcher && $(MAKE) && cd ..
-	@./scripts/filesurgeon.py
 	@$(MAKE) bin/handcar_cosim.so
 
 .PHONY: install
 install: ./bin/handcar_cosim.so
-	@cp bin/handcar_cosim.so ../utils/handcar
+	@cp bin/handcar_cosim.so ../../utils/handcar
 
 .PHONY: clean
 clean:

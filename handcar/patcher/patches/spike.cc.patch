@@ -1,7 +1,7 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
@@ -13,13 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-1,3c1,2
+1,2c1
 < // See LICENSE for license details.
 < 
-< #include "sim.h"
 ---
 > #include "handcar_cosim_wrapper.h"
-> #include "simlib.h"
 5d3
 < #include "remote_bitbang.h"
 14a13,14
