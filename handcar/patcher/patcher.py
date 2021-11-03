@@ -69,7 +69,7 @@ folder_list = [
 ]
 
 to_originals = {
-    "config.h": {"origin": STANDALONE},
+    "config.h": {"origin": STANDALONE, "staged_path": "../build/config.h"},
     "decode.h": {"origin": SA_RISCV},
     "devices.h": {"origin": SA_RISCV},
     "disasm.cc": {
