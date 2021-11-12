@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-8c8
+11c11
 < #define DEFAULT_ISA "RV64IMAFDC"
 ---
-> #define DEFAULT_ISA "RV64IMAFDCV_zfh_zvamo_zvlsseg" //"RV64IMAFDQC"
+> #define DEFAULT_ISA "RV64IMAFDCV_zfh"

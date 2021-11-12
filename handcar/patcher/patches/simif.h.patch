@@ -22,8 +22,10 @@
 <   virtual bool mmio_load(reg_t addr, size_t len, uint8_t* bytes) = 0;
 <   virtual bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes) = 0;
 <   // Callback for processors to let the simulation know they were reset.
-18a14,25
-> 
+20,21c15,25
+<   virtual const char* get_symbol(uint64_t addr) = 0;
+< 
+---
 >   // to support sparse memory model
 >   virtual uint64_t sparse_read(reg_t paddr, size_t len) = 0;
 >   virtual void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes) = 0;

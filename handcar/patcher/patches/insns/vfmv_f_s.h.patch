@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-13c13
+14c14
 <     vs2_0 = P.VU.elt<uint16_t>(rs2_num, 0);
 ---
 >     vs2_0 = P.VU.elt_val<uint16_t>(rs2_num, 0);
-16c16
+17c17
 <     vs2_0 = P.VU.elt<uint32_t>(rs2_num, 0);
 ---
 >     vs2_0 = P.VU.elt_val<uint32_t>(rs2_num, 0);
-19c19
+20c20
 <     vs2_0 = P.VU.elt<uint64_t>(rs2_num, 0);
 ---
 >     vs2_0 = P.VU.elt_val<uint64_t>(rs2_num, 0);

@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-ALL_SRCS := $(wildcard *.cc fesvr/*.cc force_mod/*.cc riscv/*.cc softfloat/*.cc spike_main/*.cc)
+ALL_SRCS := $(wildcard *.cc disasm/*.cc fesvr/*.cc force_mod/*.cc riscv/*.cc softfloat/*.cc spike_main/*.cc)
 ALL_SRCS := $(filter-out fesvr/dtm.cc fesvr/elf2hex.cc fesvr/htif.cc fesvr/htif_hexwriter.cc fesvr/htif_pthread.cc fesvr/syscall.cc fesvr/term.cc fesvr/tsi.cc riscv/clint.cc riscv/debug_module.cc riscv/devices.cc riscv/dts.cc riscv/insn_template.cc riscv/interactive.cc riscv/jtag_dtm.cc riscv/rom.cc spike_main/spike-dasm.cc spike_main/spike-log-parser.cc spike_main/termios-xspike.cc spike_main/xspike.cc, $(ALL_SRCS))
 
 CLEAN_TARGETS = \

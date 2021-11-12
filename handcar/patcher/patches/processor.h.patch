@@ -15,29 +15,27 @@
 #
 1a2
 > 
-14c15
-< #include "debug_rom_defines.h"
----
+15a17
 > #include <iostream>
-153a155
+151a154
 > 
-157c159
+155c158
 <   void reset(reg_t max_isa);
 ---
 >   void reset(reg_t max_isa, uint32_t id);
-219a222,226
+235a239,243
 > 
 >   size_t pid;
 > 
 >   state_t(size_t id): pid(id), XPR(id), FPR(id) {};
 >   state_t(): pid(0), XPR(0), FPR(0) {};
-251,252c258,259
+271,272c279,280
 <               simif_t* sim, uint32_t id, bool halt_on_reset,
 <               FILE *log_file);
 ---
 >               simif_t* sim, uint32_t id, bool halt_on_reset
 >               );
-254a262,269
+274a283,290
 >   bool set_pc_api(const std::string& name, const uint8_t* bytes, size_t len); //len advertises the size of the buffer
 >   bool retrieve_pc_api(uint8_t* bytes, const std::string& name, size_t len); //len advertises the size of the buffer
 > 
@@ -46,34 +44,34 @@
 >   reg_t get_csr_api(int which);
 >   void set_csr_api(int which, reg_t val);
 > 
-467c482,485
+499c515,518
 <       // vector element for varies SEW
 ---
 >       template<class T>
 >       void do_callback(reg_t vecRegIndex, reg_t eltIndex, const char pAccessType[]) const; 
 >   
 >       // vector element for varing SEW
-475c493,495
+507c526,528
 < #ifdef WORDS_BIGENDIAN
 ---
 >           reg_referenced[vReg] = 1;
 >   
 >           #ifdef WORDS_BIGENDIAN
-478,486c498,500
+510,518c531,533
 <   	  n ^= elts_per_reg - 1;
 < #endif
 <           reg_referenced[vReg] = 1;
 < 
 < #ifdef RISCV_ENABLE_COMMITLOG
 <           if (is_write)
-<             p->get_state()->log_reg_write[((vReg) << 2) | 2] = {0, 0};
+<             p->get_state()->log_reg_write[((vReg) << 4) | 2] = {0, 0};
 < #endif
 < 
 ---
 >           n ^= elts_per_reg - 1;
 >           #endif
 >   
-489a504,518
+521a537,551
 >   
 >       template<class T>
 >         T elt_val(reg_t vecReg, reg_t n, bool is_write = false){
@@ -89,9 +87,9 @@
 >           return r_reg_ref;
 >         }
 > 
-503a533
+535a566
 >       reg_t set_vl_api(reg_t reqVL, reg_t newType);
-515a546,583
+547a579,616
 > 
 > extern "C"{
 >   // update_vector_element function: for the given cpuid, this callback function is called by the simulator to notify the user that a vector register element has been read or written

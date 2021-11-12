@@ -13,15 +13,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-11,12c11,18
+14a15,17
+> 
+>   // Commented out the original memcpy implementations. We need the instrumented elt() calls to
+>   // trigger the vector state update callbacks.
+16,17c19,24
+<     memcpy(&P.VU.elt<uint8_t>(vd + i, off, true),
+<            &P.VU.elt<uint8_t>(vs2 + i, off), P.VU.vlenb - off);
+---
+>     //memcpy(&P.VU.elt<uint8_t>(vd + i, off, true),
+>     //       &P.VU.elt<uint8_t>(vs2 + i, off), P.VU.vlenb - off);
+>     for(reg_t _byte = off; _byte < (P.VU.vlenb - off); ++_byte) {
+>       P.VU.elt_ref<uint8_t>(vd + i, _byte, true) = P.VU.elt_val<uint8_t>(vs2 + i, _byte);
+>     }
+> 
+22,23c29,33
 <     memcpy(&P.VU.elt<uint8_t>(vd + i, 0, true),
 <            &P.VU.elt<uint8_t>(vs2 + i, 0), P.VU.vlenb);
 ---
->     // Commented out the original implementation, it isn't clear how it would work with the instrumented elt calls.	   
 >     //memcpy(&P.VU.elt<uint8_t>(vd + i, 0, true),
 >     //       &P.VU.elt<uint8_t>(vs2 + i, 0), P.VU.vlenb);
->     
->     // Replacement implementation that plays nice with the instrumentation	  
 >     for(reg_t _byte = 0; _byte < P.VU.vlenb; ++_byte) {
 >       P.VU.elt_ref<uint8_t>(vd + i, _byte, true) = P.VU.elt_val<uint8_t>(vs2 + i, _byte);
->     }	       
+>     }

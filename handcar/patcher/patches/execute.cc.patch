@@ -13,49 +13,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-28,31c28,31
-<   fprintf(log_file, "0x");
-<   for (int idx = width / 64 - 1; idx >= 0; --idx) {
-<     fprintf(log_file, "%016" PRIx64, arr[idx]);
-<   }
+30c30
+<       fprintf(log_file, "0x%01" PRIx8, *(const uint8_t *)data);
 ---
->   //fprintf(log_file, "0x");
->   //for (int idx = width / 64 - 1; idx >= 0; --idx) {
->   //  fprintf(log_file, "%016" PRIx64, arr[idx]);
->   //}
-41c41
-<       fprintf(log_file, "0x%01" PRIx8, (uint8_t)lo);
+>       //fprintf(log_file, "0x%01" PRIx8, *(const uint8_t *)data);
+33c33
+<       fprintf(log_file, "0x%04" PRIx16, *(const uint16_t *)data);
 ---
->       //fprintf(log_file, "0x%01" PRIx8, (uint8_t)lo);
-44c44
-<       fprintf(log_file, "0x%04" PRIx16, (uint16_t)lo);
+>       //fprintf(log_file, "0x%04" PRIx16, *(const uint16_t *)data);
+36c36
+<       fprintf(log_file, "0x%08" PRIx32, *(const uint32_t *)data);
 ---
->       //fprintf(log_file, "0x%04" PRIx16, (uint16_t)lo);
-47c47
-<       fprintf(log_file, "0x%08" PRIx32, (uint32_t)lo);
+>       //fprintf(log_file, "0x%08" PRIx32, *(const uint32_t *)data);
+39c39
+<       fprintf(log_file, "0x%016" PRIx64, *(const uint64_t *)data);
 ---
->       //fprintf(log_file, "0x%08" PRIx32, (uint32_t)lo);
-50c50
-<       fprintf(log_file, "0x%016" PRIx64, lo);
+>       //fprintf(log_file, "0x%016" PRIx64, *(const uint64_t *)data);
+46,49c46,49
+<         fprintf(log_file, "0x");
+<         for (int idx = width / 64 - 1; idx >= 0; --idx) {
+<           fprintf(log_file, "%016" PRIx64, arr[idx]);
+<         }
 ---
->       //fprintf(log_file, "0x%016" PRIx64, lo);
-53c53
-<       fprintf(log_file, "0x%016" PRIx64 "%016" PRIx64, hi, lo);
+>         //fprintf(log_file, "0x");
+>         //for (int idx = width / 64 - 1; idx >= 0; --idx) {
+>         //  fprintf(log_file, "%016" PRIx64, arr[idx]);
+>         //}
+79c79
+<   fprintf(log_file, "core%4" PRId32 ": ", p->get_id());
 ---
->       //fprintf(log_file, "0x%016" PRIx64 "%016" PRIx64, hi, lo);
-71c71
+>   //fprintf(log_file, "core%4" PRId32 ": ", p->get_id());
+81c81
 <   fprintf(log_file, "%1d ", priv);
 ---
 >   //fprintf(log_file, "%1d ", priv);
-73c73
+83c83
 <   fprintf(log_file, " (");
 ---
 >   //fprintf(log_file, " (");
-75c75
+85c85
 <   fprintf(log_file, ")");
 ---
 >   //fprintf(log_file, ")");
-110,114c110,114
+124,128c124,128
 <         fprintf(log_file, " e%ld %s%ld l%ld",
 <                 p->VU.vsew,
 <                 p->VU.vflmul < 1 ? "mf" : "m",
@@ -67,31 +67,35 @@
 >         //        p->VU.vflmul < 1 ? "mf" : "m",
 >         //        p->VU.vflmul < 1 ? (reg_t)(1 / p->VU.vflmul) : (reg_t)p->VU.vflmul,
 >         //        p->VU.vl);
-119c119
-<       fprintf(log_file, " %c%2d ", prefix, rd);
+134c134
+<         fprintf(log_file, " c%d_%s ", rd, csr_name(rd));
 ---
->       //fprintf(log_file, " %c%2d ", prefix, rd);
-128c128
+>         //fprintf(log_file, " c%d_%s ", rd, csr_name(rd));
+136c136
+<         fprintf(log_file, " %c%2d ", prefix, rd);
+---
+>         //fprintf(log_file, " %c%2d ", prefix, rd);
+145c145
 <     fprintf(log_file, " mem ");
 ---
 >     //fprintf(log_file, " mem ");
-133c133
+150c150
 <     fprintf(log_file, " mem ");
 ---
 >     //fprintf(log_file, " mem ");
-135c135
+152c152
 <     fprintf(log_file, " ");
 ---
 >     //fprintf(log_file, " ");
-138c138
+155c155
 <   fprintf(log_file, "\n");
 ---
 >   //fprintf(log_file, "\n");
-237c237
+257c257
 <       if (unlikely(slow_path()))
 ---
 >       if (true || unlikely(slow_path()))
-255,256c255,256
+275,276c275,276
 <           if (debug && !state.serialized)
 <             disasm(fetch.insn);
 ---

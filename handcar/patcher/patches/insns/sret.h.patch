@@ -13,6 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-4a5,6
+10a11,12
 > SimException exit_s(0x4e, 0, "exit_sret", p->get_state()->sepc);
 > update_exception_event(&exit_s);
