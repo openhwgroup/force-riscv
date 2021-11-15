@@ -42,7 +42,7 @@
 <   ~sim_t();
 ---
 >   simlib_t(const char* isa, const char* priv, const char* varch, size_t _nprocs, bool halted,
->         reg_t start_pc, const std::vector<int> hartids);
+>         reg_t start_pc, const std::vector<int> hartids, bool auto_init_mem);
 >   ~simlib_t();
 > 
 >   // load the elf file and reset

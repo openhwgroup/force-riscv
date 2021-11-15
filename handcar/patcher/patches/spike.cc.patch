@@ -721,16 +721,18 @@
 <   std::unique_ptr<icache_sim_t> ic;
 <   std::unique_ptr<dcache_sim_t> dc;
 <   std::unique_ptr<cache_sim_t> l2;
-201,204d548
+201,204c549
 <   bool log_commits = false;
 <   const char *log_path = nullptr;
 <   std::function<extension_t*()> extension;
 <   const char* initrd = NULL;
-208,210d551
+---
+>   bool auto_init_mem = false;
+208,210d552
 <   const char* dtb_file = NULL;
 <   uint16_t rbb_port = 0;
 <   bool use_rbb = false;
-212,220d552
+212,220d553
 <   debug_module_config_t dm_config = {
 <     .progbufsize = 2,
 <     .max_bus_master_bits = 0,
@@ -740,15 +742,15 @@
 <     .support_abstract_csr_access = true,
 <     .support_haltgroups = true
 <   };
-222c554
+222c555
 < 
 ---
 >  
-226c558
+226c559
 < 
 ---
 >  
-235,277d566
+235,277d567
 <   auto const device_parser = [&plugin_devices](const char *s) {
 <     const std::string str(s);
 <     std::istringstream stream(str);
@@ -792,14 +794,14 @@
 <     plugin_devices.emplace_back(base, new mmio_plugin_device_t(name, args));
 <   };
 < 
-279,280d567
+279,280d568
 <   parser.help(&suggest_help);
 <   parser.option('h', "help", 0, [&](const char* s){help(0);});
-285d571
+285d572
 <   parser.option('m', 0, 1, [&](const char* s){mems = make_mems(s);});
-288d573
+288d574
 <   parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoi(s);});
-291,293c576,578
+291,293c577,579
 <   parser.option(0, "ic", 1, [&](const char* s){ic.reset(new icache_sim_t(s));});
 <   parser.option(0, "dc", 1, [&](const char* s){dc.reset(new dcache_sim_t(s));});
 <   parser.option(0, "l2", 1, [&](const char* s){l2.reset(cache_sim_t::construct(s, "L2$"));});
@@ -807,15 +809,17 @@
 >   parser.option(0, "ic", 1, [&](const char* s){ic = new icache_sim_t(s);});
 >   parser.option(0, "dc", 1, [&](const char* s){dc = new dcache_sim_t(s);});
 >   parser.option(0, "l2", 1, [&](const char* s){l2 = cache_sim_t::construct(s, "L2$");});
-298,299c583
+294a581
+>   parser.option(0, "auto-init-mem", 0, [&](const char* s){auto_init_mem = true;});
+298,299c585
 <   parser.option(0, "device", 1, device_parser);
 <   parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
 ---
 >   //parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
-302,303d585
+302,303d587
 <   parser.option(0, "dtb", 1, [&](const char *s){dtb_file = s;});
 <   parser.option(0, "initrd", 1, [&](const char* s){initrd = s;});
-312,332d593
+312,332d595
 <   parser.option(0, "dm-progsize", 1,
 <       [&](const char* s){dm_config.progbufsize = atoi(s);});
 <   parser.option(0, "dm-sba", 1,
@@ -837,7 +841,7 @@
 <   parser.option(0, "log", 1,
 <                 [&](const char* s){log_path = s;});
 < 
-334,367d594
+334,367d596
 <   std::vector<std::string> htif_args(argv1, (const char*const*)argv + argc);
 <   if (mems.empty())
 <     mems = make_mems("2048");
@@ -872,16 +876,16 @@
 <     printf("%s", s.get_dts());
 <     return 0;
 <   }
-368a596,603
+368a598,605
 >   std::string isa_str = isa;
 >   isa_rv32 = isa_str.find("RV32") != std::string::npos;
 >   isa_D = (isa_str.find("F") != std::string::npos) && (isa_str.find("D") != std::string::npos);
 > 
 >   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, start_pc, 
->     hartids);
+>     hartids, auto_init_mem);
 >   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
 >  
-375,377c610,663
+375,377c612,665
 <     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
 <     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
 <     if (extension) s.get_core(i)->register_extension(extension());
@@ -940,7 +944,7 @@
 >   {
 >     delete _pSimulatorTopLevel;
 >     _pSimulatorTopLevel = nullptr;
-380,382c666,735
+380,382c668,737
 <   s.set_debug(debug);
 <   s.configure_log(log, log_commits);
 <   s.set_histogram(histogram);
@@ -1015,9 +1019,9 @@
 > 
 >   return rcode;
 > }
-384d736
+384d738
 <   auto return_code = s.run();
-386,387c738,779
+386,387c740,781
 <   for (auto& mem : mems)
 <     delete mem.second;
 ---
@@ -1063,16 +1067,16 @@
 >     _pSimulatorTopLevel->dump_sparse_memory(dump2);    
 >   //}
 > }
-389,390d780
+389,390d782
 <   for (auto& plugin_device : plugin_devices)
 <     delete plugin_device.second;
-392c782,784
+392c784,786
 <   return return_code;
 ---
 > int step_simulator(int target_id, int num_steps, int stx_failed)
 > {
 >   return _pSimulatorTopLevel->step_simulator(target_id, num_steps, stx_failed);
-393a786,1302
+393a788,1304
 > 
 > 
 > int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly)
