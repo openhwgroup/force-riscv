@@ -15,7 +15,6 @@
 //
 
 #include <lest/lest.hpp>
-//#include <Log.h>
 #include <map>
 #include <cstring>
 #include <algorithm>
@@ -26,8 +25,7 @@
 #include "SimLoader.h"
 #include <iostream>
 
-//using text = std::string;
-//using namespace Force;
+using text = std::string;
 
 std::vector<uint8_t> global_buffer(32);
 const char* handcar_path = "../../../utils/handcar/handcar_cosim.so";
@@ -257,57 +255,38 @@ CASE("Test 0, basics") {
 //
 //  }
 //},
-//
-//CASE("Test 3, step simulator api") {
-//
-//  SETUP("Load SimDllApi Object")  {
-//    //-----------------------------------------
-//    // include necessary setup code here
-//    //-----------------------------------------
-//    // load the simulator DLL and pointers to API functions...
-//    SimDllApi sim_api;
-//    std::string options = "-p4 -l";
-//    uint64_t num_procs = 4;
-//    std::string elf_path = "../resources/multiply.riscv";
-//    int hart_id = 0;
-//    int num_steps = 10;
-//    int num_step_groups = 1000;
-//    int stx_failed = 0;
-//    int rcode = 0;
-//
-//    //-----------------------------------------
-//    // do some initial checking here
-//    //-----------------------------------------
-//    EXPECT(not open_sim_dll(handcar_path, &sim_api));
-//
-//    SECTION("Test 3, 0: step_simulator(...)") {
-//      sim_api.initialize_simulator(nullptr);
-//      sim_api.simulator_load_elf(0, elf_path.c_str());
-//      rcode = sim_api.step_simulator(hart_id, num_steps, stx_failed);
-//      sim_api.terminate_simulator();
-//
-//      EXPECT(rcode == 0);
-//
-//      close_sim_dll(&sim_api);
-//    }
-//
-//    SECTION("Test 3, 1: step_simulator(...), multiple cores") {
-//      sim_api.initialize_simulator(options.c_str());
-//      sim_api.simulator_load_elf(0, elf_path.c_str());
-//
-//      for(size_t step_group = 0; step_group < num_step_groups; ++step_group) 
-//      {
-//        rcode += sim_api.step_simulator(step_group % num_procs, num_steps, stx_failed);
-//        EXPECT(rcode == 0);
-//      }
-//
-//      sim_api.terminate_simulator();
-//
-//      close_sim_dll(&sim_api);
-//    }
-//
-//  }
-//},
+
+CASE("Test 3, step simulator api") {
+
+  SETUP("Load SimDllApi Object")  {
+    SimDllApi sim_api;
+    EXPECT(not open_sim_dll(handcar_path, &sim_api));
+
+    std::string options;
+    int status = 0;
+
+    SECTION("Test 3, 0: load uninitialized memory with auto initialization") {
+      options = "--auto-init-mem";
+      sim_api.initialize_simulator(options.c_str());
+
+      uint8_t target_addr[8] = {0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.write_simulator_register(0, "x1", target_addr, 8);
+      EXPECT(status == 0);
+
+      uint64_t instr_addr = 0x1000;
+      uint8_t instr_data[4] = {0x03, 0xB1, 0x0, 0x0};  // LD x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, instr_data);
+      EXPECT(status == 0);
+
+      int stx_failed = 0;
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      sim_api.terminate_simulator();
+      close_sim_dll(&sim_api);
+    }
+  }
+},
 
 CASE("Test 4, get_disassembly(...) api") {
 
