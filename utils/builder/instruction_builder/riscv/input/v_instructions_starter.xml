@@ -1705,62 +1705,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VPOPC.M"/>
   </I>
-  <I name="VQMACC.VV" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111010001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VQMACC.VV"/>
-  </I>
-  <I name="VQMACC.VX" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111011001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VQMACC.VX"/>
-  </I>
-  <I name="VQMACCSU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111110001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VQMACCSU.VV"/>
-  </I>
-  <I name="VQMACCSU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111111001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VQMACCSU.VX"/>
-  </I>
-  <I name="VQMACCU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111000001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VQMACCU.VV"/>
-  </I>
-  <I name="VQMACCU.VX" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111001001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VQMACCU.VX"/>
-  </I>
-  <I name="VQMACCUS.VX" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1111101001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VQMACCUS.VX"/>
-  </I>
   <I name="VREDAND.VS" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010101010111"/>
     <O name="vd" type="Register" bits="11-7"/>
