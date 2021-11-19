@@ -363,7 +363,7 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         self._mVsew = RandomUtils.random32(0, max_vsew_val)
 
         self._mVlmul = self.choice(self._getVlmulChoices())
-        self.mVtype = ((self._mVlmul & 0x4) << 3) | (self._mVsew << 2) | (self._mVlmul & 0x3)
+        self.mVtype = (self._mVsew << 3) | self._mVlmul
 
         vlmax = self._calculateVlmax()
         if RandomUtils.random32(0, 1) == 1:
