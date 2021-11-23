@@ -69,6 +69,7 @@ namespace Force {
     obj_registry->RegisterObject(new VectorStridedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new VectorIndexedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new MultiVectorRegisterOperandRISCV());
+    obj_registry->RegisterObject(new VectorIndexRegisterOperand());
     obj_registry->RegisterObject(new VectorDataRegisterOperand());
     obj_registry->RegisterObject(new VectorIndexedDataRegisterOperand());
 

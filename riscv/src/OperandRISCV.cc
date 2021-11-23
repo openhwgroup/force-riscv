@@ -358,13 +358,13 @@ namespace Force {
     float data_layout_multiple = vec_reg_opr_constr->GetLayoutMultiple();
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* index_vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* base_vec_layout = instr_constr->GetVectorLayout();
 
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    uint32 data_elem_byte_size = lround(index_vec_layout->mElemSize * data_layout_multiple) / 8;
+    uint32 data_elem_byte_size = lround(base_vec_layout->mElemSize * data_layout_multiple) / 8;
     lsop_struct->SetElementSize(data_elem_byte_size);
     lsop_struct->SetAlignment(data_elem_byte_size);
-    lsop_struct->SetDataSize(data_elem_byte_size * index_vec_layout->mFieldCount);
+    lsop_struct->SetDataSize(data_elem_byte_size * base_vec_layout->mFieldCount);
   }
 
   void VectorIndexedLoadStoreOperandRISCV::GetIndexRegisterNames(vector<string>& rIndexRegNames) const
@@ -460,13 +460,16 @@ namespace Force {
 
   void MultiVectorRegisterOperandRISCV::AdjustRegisterCount(const Instruction& rInstr)
   {
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto vec_reg_opr_constr = mpOperandConstraint->CastInstance<VectorRegisterOperandConstraintRISCV>();
-    mRegCount = vec_layout->GetRegisterCount(vec_reg_opr_constr->GetLayoutMultiple());
+    mRegCount = vec_reg_opr_constr->GetRegisterCount(rInstr);
     if (mRegCount < GetMinimumRegisterCount(rInstr)) {
         mRegCount = GetMinimumRegisterCount(rInstr);
     }
+  }
+
+  OperandConstraint* VectorIndexRegisterOperand::InstantiateOperandConstraint() const
+  {
+    return new VectorIndexRegisterOperandConstraint();
   }
 
   const uint32 VectorDataRegisterOperand::GetMinimumRegisterCount(const Instruction& rInstr)

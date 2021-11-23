@@ -339,6 +339,24 @@ namespace Force {
   };
 
   /*!
+    \class VectorIndexRegisterOperand
+    \brief Operand for RISCV vector indexed load/store index register operands.
+  */
+  class VectorIndexRegisterOperand : public MultiVectorRegisterOperandRISCV {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexRegisterOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexRegisterOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexRegisterOperand);
+
+    Object* Clone() const override { return new VectorIndexRegisterOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorIndexRegisterOperand"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorIndexRegisterOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+  };
+
+  /*!
     \class VectorDataRegisterOperand
     \brief Operand class handling number of registers
   */

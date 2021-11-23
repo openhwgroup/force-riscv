@@ -295,7 +295,7 @@ def adjust_vs3_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vs3_ls_indexed_source()
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_ls_index()
     operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -358,7 +358,7 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
 def adjust_rs1_vs2_vs3_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_ls_index()
     operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -451,7 +451,7 @@ def adjust_vd_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_vd_ls_indexed_dest()
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_ls_index()
     operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -514,7 +514,7 @@ def adjust_vd_rs1_rs2_vm(aInstruction):
 def adjust_rs1_vs2_vd_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2()
+    operand_adjustor.set_vs2_ls_index()
     operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))

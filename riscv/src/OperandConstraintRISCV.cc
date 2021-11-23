@@ -335,9 +335,7 @@ namespace Force {
       mpConstraintSet = DefaultConstraintSet(operandStruct);
     }
 
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    uint32 reg_count = vec_layout->GetRegisterCount(mLayoutMultiple);
+    uint32 reg_count = GetRegisterCount(instr);
     if (reg_count == 0) {
       reg_count = 1;
     }
@@ -354,6 +352,8 @@ namespace Force {
       SubConstraintValue(32 - i, operandStruct);
     }
 
+    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(instr.GetInstructionConstraint());
+    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     uint32 reg_index_alignment = vec_layout->GetRegisterIndexAlignment(mLayoutMultiple);
     if (reg_index_alignment == 0) {
       reg_index_alignment = 1;
@@ -369,12 +369,16 @@ namespace Force {
     mpConstraintSet->FilterAlignedElements(get_align_mask(reg_index_alignment));
   }
 
-  void VectorRegisterOperandConstraintRISCV::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  uint32 VectorRegisterOperandConstraintRISCV::GetRegisterCount(const Instruction& rInstr) const
   {
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
     const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    return CalculateRegisterCount(*vec_layout);
+  }
 
-    uint32 reg_count = vec_layout->GetRegisterCount(mLayoutMultiple);
+  void VectorRegisterOperandConstraintRISCV::GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const
+  {
+    uint32 reg_count = GetRegisterCount(rInstr);
     if (reg_count == 0) {
       reg_count = 1;
     }
@@ -385,7 +389,7 @@ namespace Force {
     }
 
     auto vec_reg_opr_constr = rDifferOprConstr.CastInstance<const VectorRegisterOperandConstraintRISCV>();
-    uint32 differ_reg_count = vec_layout->GetRegisterCount(vec_reg_opr_constr->mLayoutMultiple);
+    uint32 differ_reg_count = vec_reg_opr_constr->GetRegisterCount(rInstr);
     if (differ_reg_count == 0) {
       differ_reg_count = 1;
     }
@@ -405,10 +409,24 @@ namespace Force {
     rAdjDifferValues.AddRange(min_differ_val, max_differ_val);
   }
 
+  uint32 VectorRegisterOperandConstraintRISCV::CalculateRegisterCount(const VectorLayout& rVecLayout) const
+  {
+    return rVecLayout.GetRegisterCount(mLayoutMultiple);
+  }
+
   float VectorRegisterOperandConstraintRISCV::CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const
   {
     auto vec_reg_operand_struct = dynamic_cast<const VectorRegisterOperandStructure*>(&rOperandStruct);
     return vec_reg_operand_struct->GetLayoutMultiple();
+  }
+
+  // The vector layout associated with indexed instructions takes into account the number of fields
+  // to compute the number of registers required. However, the index register group only requires
+  // one element per structure rather than per field. We divide by the number of fields to adjust
+  // the register count appropriately.
+  uint32 VectorIndexRegisterOperandConstraint::CalculateRegisterCount(const VectorLayout& rVecLayout) const
+  {
+    return rVecLayout.GetRegisterCount(GetLayoutMultiple()) / rVecLayout.mFieldCount;
   }
 
   float VectorIndexedDataRegisterOperandConstraint::CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const
@@ -418,9 +436,9 @@ namespace Force {
     vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
 
     auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* index_vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* base_vec_layout = instr_constr->GetVectorLayout();
 
-    return data_vec_layout.mElemSize / static_cast<float>(index_vec_layout->mElemSize);
+    return data_vec_layout.mElemSize / static_cast<float>(base_vec_layout->mElemSize);
   }
 
 }
