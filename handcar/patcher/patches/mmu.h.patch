@@ -57,8 +57,8 @@
 >     //exception handling callback
 >     void update_exception_event(const SimException* exception);
 > }
-75a119,130
->   inline reg_t misaligned_load_partially_initialized(reg_t addr, size_t size)
+79a123,135
+>   inline reg_t misaligned_load_partially_initialized(reg_t addr, size_t size, uint32_t xlate_flags)
 >   {
 > #ifdef RISCV_ENABLE_MISALIGNED
 >     reg_t res = 0;
@@ -66,11 +66,12 @@
 >       res += (reg_t)load_partially_initialized_uint8(addr + i) << (i * 8);
 >     return res;
 > #else
->     throw trap_load_address_misaligned(addr, 0, 0);
+>     bool gva = ((proc) ? proc->state.v : false) || (RISCV_XLATE_VIRT & xlate_flags);
+>     throw trap_load_address_misaligned(gva, addr, 0, 0);
 > #endif
 >   }
 > 
-108,109c163,168
+108,109c164,169
 <         if (proc) READ_MEM(addr, size); \
 <         return from_target(*(target_endian<type##_t>*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr)); \
 ---
@@ -80,18 +81,18 @@
 >         type##_t update_data = to_target_from_value(data); \
 >         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, size, reinterpret_cast<const char*>(&update_data), "read"); \
 >         return data; \
-112c171,173
+112c172,174
 <         type##_t data = from_target(*(target_endian<type##_t>*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr)); \
 ---
 >         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
 >         type##_t data = static_cast<type##_t>(sim->sparse_read(paddr, size)); \
 >         data = to_value_from_be(data); \
-118c179,180
+118c180,181
 <         if (proc) READ_MEM(addr, size); \
 ---
 >         type##_t update_data = to_target_from_value(data); \
 >         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, size, reinterpret_cast<const char*>(&update_data), "read"); \
-155,160c217,228
+153,158c216,227
 < #ifndef RISCV_ENABLE_COMMITLOG
 < # define WRITE_MEM(addr, value, size) ({})
 < #else
@@ -103,7 +104,7 @@
 >   #define load_func_partially_initialized(type, xlate_flags)\
 >     inline type##_t load_partially_initialized_##type(reg_t addr) { \
 >       if (unlikely(addr & (sizeof(type##_t)-1))) \
->         return misaligned_load_partially_initialized(addr, sizeof(type##_t)); \
+>         return misaligned_load_partially_initialized(addr, sizeof(type##_t), xlate_flags); \
 >       type##_t res; \
 >       load_slow_path_partially_initialized(addr, sizeof(type##_t), (uint8_t*)&res, xlate_flags); \
 >       return res; \
@@ -111,12 +112,12 @@
 > 
 >   load_func_partially_initialized(uint8, 0)
 >   load_func_partially_initialized(uint64, 0)
-170c238,239
+166c235,236
 <       size_t size = sizeof(type##_t); \
 ---
 >       type##_t data = to_target_from_value(val); \
 >       reg_t size = sizeof(type##_t); \
-172,173c241,249
+168,169c238,246
 <         if (proc) WRITE_MEM(addr, val, size); \
 <         *(target_endian<type##_t>*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr) = to_target(val); \
 ---
@@ -129,7 +130,7 @@
 >         else { \
 >           sim->sparse_write(paddr, (const uint8_t*)&data, size); \
 >         } \
-181,182c257,265
+177,178c254,262
 <         if (proc) WRITE_MEM(addr, val, size); \
 <         *(target_endian<type##_t>*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr) = to_target(val); \
 ---
@@ -142,24 +143,22 @@
 >         else { \
 >           sim->sparse_write(paddr, (const uint8_t*)&data, size); \
 >         } \
-185,187c268
+181,183c265
 <         target_endian<type##_t> target_val = to_target(val); \
 <         store_slow_path(addr, sizeof(type##_t), (const uint8_t*)&target_val, (xlate_flags)); \
 <         if (proc) WRITE_MEM(addr, val, size); \
 ---
 >        store_slow_path(addr, sizeof(type##_t), (const uint8_t*)&data, (xlate_flags)); \
-189,191c270
-<       if ((xlate_flags) != 0) \
-<         flush_tlb(); \
+185c267
 <   }
 ---
 >     }
-247a327,328
+244a327,328
 >   static const size_t LOAD_RESERVATION_SIZE = 8;
 > 
-249a331
+246a331
 >     sim->sparse_unreserve(load_reservation_address, LOAD_RESERVATION_SIZE);
-255,259c337,340
+252,256c337,340
 <     reg_t paddr = translate(vaddr, 1, LOAD, 0);
 <     if (auto host_addr = sim->addr_to_mem(paddr))
 <       load_reservation_address = refill_tlb(vaddr, paddr, host_addr, LOAD).target_offset + vaddr;
@@ -170,7 +169,7 @@
 >     sim->sparse_reserve(load_reservation_address, LOAD_RESERVATION_SIZE);
 >     refill_tlb(vaddr, load_reservation_address, 0ull /*host_addr*/, LOAD);
 >     return;
-285,289c366,368
+284,288c368,370
 <     reg_t paddr = translate(vaddr, 1, STORE, 0);
 <     if (auto host_addr = sim->addr_to_mem(paddr))
 <       return load_reservation_address == refill_tlb(vaddr, paddr, host_addr, STORE).target_offset + vaddr;
@@ -180,7 +179,7 @@
 >     reg_t paddr = translate(vaddr, LOAD_RESERVATION_SIZE, STORE, 0);
 >     refill_tlb(vaddr, paddr, 0ull /*host_addr*/, STORE);
 >     return (paddr == load_reservation_address) and (sim->sparse_is_reserved(load_reservation_address, LOAD_RESERVATION_SIZE));
-302c381,390
+301c383,392
 <     insn_bits_t insn = from_le(*(uint16_t*)(tlb_entry.host_offset + addr));
 ---
 >     uint16_t insn_buf = 0;
@@ -193,7 +192,7 @@
 > 
 >     insn_bits_t insn = from_le(insn_buf); 
 > 
-306c394,398
+305c396,400
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
 ---
 >       load_buff = sim->sparse_read(muh_paddr + 2, len); 
@@ -201,9 +200,9 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf);
 >       insn |= (insn_bits_t)(const int16_t)insn_buf << 16;
-308a401
+307a403
 > 
-310,311c403,413
+309,310c405,415
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
 ---
@@ -218,7 +217,7 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf); 
 >       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
-314,316c416,432
+313,315c418,434
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 6)) << 48;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
@@ -240,7 +239,7 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf); 
 >       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
-392a509,537
+391a511,539
 >   template<typename T> inline T to_target_from_value(T n) const
 >   {
 >     return target_big_endian? to_be(n) : to_le(n);
@@ -270,7 +269,7 @@
 >   //        7 - walk would have been successful had paddr_ptr not been a null pointer
 >   int translate_api(reg_t addr, reg_t* paddr, uint64_t* pmp_info, reg_t len, access_type type, uint32_t xlate_flags);
 > 
-419a565,577
+421a570,582
 >   // perform a page table walk but don't set any state bits
 >   // and instead of throwing exceptions, return codes are used:
 >   //
@@ -282,11 +281,11 @@
 >   //        5 - walk was unsuccessful and access type was STORE
 >   //        6 - walk was unsuccessful and access type was not any of the above
 >   //        7 - walk would have been successful had paddr_ptr not been a null pointer
->   int walk_api(reg_t addr, reg_t* paddr_ptr, access_type type, reg_t prv, bool virt, bool mxr);
+>   int walk_api(reg_t addr, reg_t* paddr_ptr, access_type type, reg_t prv, bool virt, bool hlvx);
 > 
-425a584
+424a586
 >   void load_slow_path_partially_initialized(reg_t addr, reg_t len, uint8_t* bytes, uint32_t xlate_flags);
-427,430c586,587
+426,429c588,589
 <   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
 <   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
 <   bool mmio_ok(reg_t addr, access_type type);
@@ -294,7 +293,7 @@
 ---
 >   void initialize_slow_path(reg_t addr, reg_t len, const uint8_t* bytes, uint32_t xlate_flags);
 >   //reg_t translate(reg_t addr, reg_t len, access_type type);
-444,445c601,606
+443,444c603,608
 <       target_endian<uint16_t>* ptr = (target_endian<uint16_t>*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr);
 <       int match = proc->trigger_match(OPERATION_EXECUTE, addr, from_target(*ptr));
 ---
@@ -304,11 +303,11 @@
 >       load_buff = static_cast<uint16_t>(sim->sparse_read(paddr, sizeof(uint16_t)));
 > 
 >       int match = proc->trigger_match(OPERATION_EXECUTE, addr, from_be(load_buff));
-447c608
+446c610
 <         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, from_target(*ptr));
 ---
 >         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, from_be(load_buff));
-453,455c614,617
+452,454c616,619
 <   inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
 <     return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 <   }
@@ -317,5 +316,5 @@
 >   //inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
 >   //  return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 >   //}
-473a636
->   reg_t pmp_ok_api(reg_t addr, reg_t* pmpaddr_ptr, uint8_t* pmpcfg_ptr, reg_t len, access_type type, reg_t mode);
+472a638
+>   bool pmp_ok_api(reg_t addr, reg_t* pmpaddr_ptr, uint8_t* pmpcfg_ptr, reg_t len, access_type type, reg_t mode);

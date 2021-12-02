@@ -70,6 +70,8 @@ folder_list = [
 
 to_originals = {
     "config.h": {"origin": STANDALONE, "staged_path": "../build/config.h"},
+    "csrs.cc": {"origin": SA_RISCV},
+    "csrs.h": {"origin": SA_RISCV},
     "decode.h": {"origin": SA_RISCV},
     "disasm.cc": {
         "origin": "standalone/disasm",
@@ -106,6 +108,7 @@ to_originals_insns = {
     "vadc_vvm.h": {"origin": SA_INSNS},
     "vadc_vxm.h": {"origin": SA_INSNS},
     "vcompress_vm.h": {"origin": SA_INSNS},
+    "vcpop_m.h": {"origin": SA_INSNS},
     "vfcvt_f_x_v.h": {"origin": SA_INSNS},
     "vfcvt_f_xu_v.h": {"origin": SA_INSNS},
     "vfcvt_rtz_x_f_v.h": {"origin": SA_INSNS},
@@ -152,7 +155,6 @@ to_originals_insns = {
     "vmv_s_x.h": {"origin": SA_INSNS},
     "vmv_x_s.h": {"origin": SA_INSNS},
     "vmvnfr_v.h": {"origin": SA_INSNS},
-    "vpopc_m.h": {"origin": SA_INSNS},
     "vrgather_vi.h": {"origin": SA_INSNS},
     "vrgather_vv.h": {"origin": SA_INSNS},
     "vrgather_vx.h": {"origin": SA_INSNS},

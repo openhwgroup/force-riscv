@@ -91,11 +91,11 @@
 <   fprintf(log_file, "\n");
 ---
 >   //fprintf(log_file, "\n");
-257c257
+259c259
 <       if (unlikely(slow_path()))
 ---
 >       if (true || unlikely(slow_path()))
-275,276c275,276
+278,279c278,279
 <           if (debug && !state.serialized)
 <             disasm(fetch.insn);
 ---

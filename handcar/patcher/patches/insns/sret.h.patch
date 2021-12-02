@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 10a11,12
-> SimException exit_s(0x4e, 0, "exit_sret", p->get_state()->sepc);
+> SimException exit_s(0x4e, 0, "exit_sret", next_pc);
 > update_exception_event(&exit_s);

@@ -13,99 +13,103 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-13c13
+18c18
 <     return std::to_string((int)insn.i_imm()) + '(' + xpr_name[insn.rs1()] + ')';
 ---
 >     return std::to_string((int)insn.i_imm()) + '(' + xpr_arch_name[insn.rs1()] + ')';
-19c19
+24c24
 <     return std::to_string((int)insn.s_imm()) + '(' + xpr_name[insn.rs1()] + ')';
 ---
 >     return std::to_string((int)insn.s_imm()) + '(' + xpr_arch_name[insn.rs1()] + ')';
-25c25
+30c30
 <     return std::string("(") + xpr_name[insn.rs1()] + ')';
 ---
 >     return std::string("(") + xpr_arch_name[insn.rs1()] + ')';
-31c31
+36c36
 <     return xpr_name[insn.rd()];
 ---
 >     return xpr_arch_name[insn.rd()];
-37c37
+42c42
 <     return xpr_name[insn.rs1()];
 ---
 >     return xpr_arch_name[insn.rs1()];
-43c43
+48c48
 <     return xpr_name[insn.rs2()];
 ---
 >     return xpr_arch_name[insn.rs2()];
-49c49
+54c54
+<     return xpr_name[insn.rs3()];
+---
+>     return xpr_arch_name[insn.rs3()];
+60c60
 <     return fpr_name[insn.rd()];
 ---
 >     return fpr_arch_name[insn.rd()];
-55c55
+66c66
 <     return fpr_name[insn.rs1()];
 ---
 >     return fpr_arch_name[insn.rs1()];
-61c61
+72c72
 <     return fpr_name[insn.rs2()];
 ---
 >     return fpr_arch_name[insn.rs2()];
-67c67
+78c78
 <     return fpr_name[insn.rs3()];
 ---
 >     return fpr_arch_name[insn.rs3()];
-136c136
+147c147
 <     return xpr_name[insn.rvc_rs1()];
 ---
 >     return xpr_arch_name[insn.rvc_rs1()];
-142c142
+153c153
 <     return xpr_name[insn.rvc_rs2()];
 ---
 >     return xpr_arch_name[insn.rvc_rs2()];
-148c148
+159c159
 <     return fpr_name[insn.rvc_rs2()];
 ---
 >     return fpr_arch_name[insn.rvc_rs2()];
-154c154
+165c165
 <     return xpr_name[insn.rvc_rs1s()];
 ---
 >     return xpr_arch_name[insn.rvc_rs1s()];
-160c160
+171c171
 <     return xpr_name[insn.rvc_rs2s()];
 ---
 >     return xpr_arch_name[insn.rvc_rs2s()];
-166c166
+177c177
 <     return fpr_name[insn.rvc_rs2s()];
 ---
 >     return fpr_arch_name[insn.rvc_rs2s()];
-172c172
+183c183
 <     return xpr_name[X_SP];
 ---
 >     return xpr_arch_name[X_SP];
-216c216
+227c227
 <     return std::to_string((int)insn.rvc_lwsp_imm()) + '(' + xpr_name[X_SP] + ')';
 ---
 >     return std::to_string((int)insn.rvc_lwsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
-222c222
+233c233
 <     return std::to_string((int)insn.rvc_ldsp_imm()) + '(' + xpr_name[X_SP] + ')';
 ---
 >     return std::to_string((int)insn.rvc_ldsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
-228c228
+239c239
 <     return std::to_string((int)insn.rvc_swsp_imm()) + '(' + xpr_name[X_SP] + ')';
 ---
 >     return std::to_string((int)insn.rvc_swsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
-234c234
+245c245
 <     return std::to_string((int)insn.rvc_sdsp_imm()) + '(' + xpr_name[X_SP] + ')';
 ---
 >     return std::to_string((int)insn.rvc_sdsp_imm()) + '(' + xpr_arch_name[X_SP] + ')';
-240c240
+251c251
 <     return std::to_string((int)insn.rvc_lw_imm()) + '(' + xpr_name[insn.rvc_rs1s()] + ')';
 ---
 >     return std::to_string((int)insn.rvc_lw_imm()) + '(' + xpr_arch_name[insn.rvc_rs1s()] + ')';
-246c246
+257c257
 <     return std::to_string((int)insn.rvc_ld_imm()) + '(' + xpr_name[insn.rvc_rs1s()] + ')';
 ---
 >     return std::to_string((int)insn.rvc_ld_imm()) + '(' + xpr_arch_name[insn.rvc_rs1s()] + ')';
-272c272
+283c283
 <     return std::string("(") + xpr_name[insn.rs1()] + ')';
 ---
 >     return std::string("(") + xpr_arch_name[insn.rs1()] + ')';

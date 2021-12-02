@@ -67,13 +67,13 @@ if [ -z "${NO_GIT}" ]; then
     rm -rf standalone
     git clone https://github.com/riscv/riscv-isa-sim standalone
     cd standalone || exit 3
-    git checkout 12748b501d733f4165a8481b93053cbc93cdc0dd
+    git checkout 7dbb7c353ff8877a0d194845acf298c7c3f6f961
 else
     echo
     echo ===== NO-GIT requested =====
     echo "You are responsible for ensuring that handcar/standalone contains"
     echo "a clone of https://github.com/riscv/riscv-isa-sim, and a checkout"
-    echo "of hash 12748b501d733f4165a8481b93053cbc93cdc0dd"
+    echo "of hash 7dbb7c353ff8877a0d194845acf298c7c3f6f961"
     echo
     cd standalone || exit 3
 fi

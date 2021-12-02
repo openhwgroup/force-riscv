@@ -14,5 +14,5 @@
 # limitations under the License.
 #
 3a4,5
-> SimException exit_m(0x4e, 0, "exit_mret", p->get_state()->mepc);
+> SimException exit_m(0x4e, 0, "exit_mret", p->get_state()->mepc->read());
 > update_exception_event(&exit_m); 
