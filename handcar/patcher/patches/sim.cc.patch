@@ -59,31 +59,32 @@
 < #endif
 ---
 > simlib_t::simlib_t(const char* isa, const char* priv, const char* varch, size_t nprocs, bool halted, const char* bootargs, reg_t start_pc, std::vector<int> const hartids,
-44,46c53,54
+44,49c53
 <   : htif_t(args),
 <     mems(mems),
 <     plugin_devices(plugin_devices),
----
->   : entry(DRAM_BASE),
->     _ForceSparseMemoryModel(Force::EMemBankType::Default),
-48,49d55
+<     procs(std::max(nprocs, size_t(1))),
 <     initrd_start(initrd_start),
 <     initrd_end(initrd_end),
-52,54d57
+---
+>   : procs(std::max(nprocs, size_t(1))),
+52,54d55
 <     dtb_file(dtb_file ? dtb_file : ""),
 <     dtb_enabled(dtb_enabled),
 <     log_file(log_path),
-56,59d58
+56,59d56
 < #ifdef HAVE_BOOST_ASIO
 <     io_service_ptr(io_service_ptr), // socket interface
 <     acceptor_ptr(acceptor_ptr),
 < #endif
-65,67c64
+65,67c62,64
 <     log(false),
 <     remote_bitbang(NULL),
 <     debug_module(this, dm_config)
 ---
->     dtb_enabled(true)
+>     dtb_enabled(true),
+>     _ForceSparseMemoryModel(Force::EMemBankType::Default),
+>     entry(DRAM_BASE)
 73,80d69
 <   for (auto& x : mems)
 <     bus.add_device(x.first, x.second);

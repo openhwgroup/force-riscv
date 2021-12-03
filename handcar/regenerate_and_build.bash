@@ -17,7 +17,7 @@
 
 # SCRIPT DEFAULTS
 unset NO_GIT
-unset MAKE_JOBS
+MAKE_JOBS=32
 pause() {
     echo
     echo "$1"

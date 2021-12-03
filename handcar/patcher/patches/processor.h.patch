@@ -26,8 +26,8 @@
 > 
 >   size_t pid;
 > 
->   state_t(size_t id): pid(id), XPR(id), FPR(id) {};
->   state_t(): pid(0), XPR(0), FPR(0) {};
+>   state_t(size_t id): XPR(id), FPR(id), pid(id) {};
+>   state_t(): XPR(0), FPR(0), pid(0) {};
 288c296
 <               FILE *log_file, std::ostream& sout_); // because of command line option --log and -s we need both
 ---
