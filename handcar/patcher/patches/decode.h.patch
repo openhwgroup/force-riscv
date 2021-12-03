@@ -70,9 +70,9 @@
 < #define dirty_ext_state STATE.sstatus->dirty(SSTATUS_XS)
 < #define dirty_vs_state  STATE.sstatus->dirty(SSTATUS_VS)
 ---
-> #define dirty_fp_state  (STATE.sstatus->dirty(SSTATUS_FS), update_generator_register(STATE.pid, "sstatus", STATE.sstatus->read(), 0xffffffffffffffffull, "write"))
-> #define dirty_ext_state (STATE.sstatus->dirty(SSTATUS_XS), update_generator_register(STATE.pid, "sstatus", STATE.sstatus->read(), 0xffffffffffffffffull, "write"))
-> #define dirty_vs_state  (STATE.sstatus->dirty(SSTATUS_VS), update_generator_register(STATE.pid, "sstatus", STATE.sstatus->read(), 0xffffffffffffffffull, "write"))
+> #define dirty_fp_state  (STATE.sstatus->dirty(SSTATUS_FS), update_generator_register(STATE.pid, "mstatus", STATE.mstatus->read(), 0xffffffffffffffffull, "write"))
+> #define dirty_ext_state (STATE.sstatus->dirty(SSTATUS_XS), update_generator_register(STATE.pid, "mstatus", STATE.mstatus->read(), 0xffffffffffffffffull, "write"))
+> #define dirty_vs_state  (STATE.sstatus->dirty(SSTATUS_VS), update_generator_register(STATE.pid, "mstatus", STATE.mstatus->read(), 0xffffffffffffffffull, "write"))
 259a306
 >     assert(P.VU.vl <= P.VU.vlmax); \
 284a332,333

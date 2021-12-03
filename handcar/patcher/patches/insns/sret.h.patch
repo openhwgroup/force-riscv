@@ -16,3 +16,7 @@
 10a11,12
 > SimException exit_s(0x4e, 0, "exit_sret", next_pc);
 > update_exception_event(&exit_s);
+17c19
+< STATE.sstatus->write(s);
+---
+> p->set_csr(CSR_SSTATUS, s);

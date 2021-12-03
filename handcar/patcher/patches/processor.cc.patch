@@ -228,27 +228,35 @@
 >   reg_t effective_value = 0;
 >   std::string text_name = std::string(csr_name(which));
 > 
-925a940,943
+925a940,951
 > 
+>     // TODO(Noah): Improve this logic when a more general mechanism, i.e. one that could potentially
+>     // handle other alias registers, can be devised. Since sstatus is a restricted alias of mstatus,
+>     // we need to send the update for the underlying mstatus register.
 >     effective_value = search->second->read();
+>     if (search->second == STATE.sstatus) {
+>       text_name = "mstatus";
+>       effective_value = STATE.mstatus->read();
+>     }
+> 
 >     update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "write");
 > 
-932a951
+932a959
 >       effective_value = val;
-936a956
+936a964
 >       effective_value = state.fflags;
-940a961
+940a969
 >       effective_value = state.frm;
-945a967
+945a975
 >       effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT);
-950a973
+950a981
 >       effective_value = (VU.vxsat << VCSR_VXSAT_SHIFT) | (VU.vxrm << VCSR_VXRM_SHIFT);
-957a981,982
+957a989,990
 > 
 >       effective_value = state.minstret;
-966a992
+966a1000
 >       effective_value = state.minstret;
-969,970c995,1008
+969,970c1003,1016
 <     case CSR_MTVAL2: state.mtval2 = val; break;
 <     case CSR_MTINST: state.mtinst = val; break;
 ---
@@ -266,46 +274,46 @@
 >         effective_value = state.mtinst;
 >         break;
 >     }
-985a1024
+985a1032
 >       effective_value = state.hedeleg;
-990a1030
+990a1038
 >       effective_value = state.hideleg;
-997a1038
+997a1046
 >       effective_value = state.htval;
-1000a1042
+1000a1050
 >       effective_value = state.htinst;
-1018a1061
+1018a1069
 >       effective_value = state.hgatp;
-1023a1067
+1023a1075
 >         effective_value = state.tselect;
-1048a1093,1095
+1048a1101,1103
 > 
 >         // If mcontrol_t had a more clear size it may make sense to bitcopy its contents.
 >         effective_value = val;
-1056a1104,1105
+1056a1112,1113
 >         
 >         effective_value = val;
-1062d1110
+1062d1118
 <       // TODO: ndreset and fullreset
-1067a1116,1117
+1067a1124,1125
 >         
 >       memcpy(&effective_value, &(state.dcsr), sizeof(dcsr_t));
-1070a1121,1122
+1070a1129,1130
 > 
 >       effective_value = state.dpc;
-1073a1126,1127
+1073a1134,1135
 > 
 >       effective_value = state.dscratch0;
-1076a1131,1132
+1076a1139,1140
 >     
 >       effective_value = state.dscratch1;
-1080a1137,1138
+1080a1145,1146
 > 
 >       effective_value = VU.vstart;
-1084a1143,1144
+1084a1151,1152
 > 
 >       effective_value = VU.vxsat;
-1088a1149,1390
+1088a1157,1398
 > 
 >       effective_value = VU.vxrm;
 >       break;
@@ -548,20 +556,29 @@
 >       break;
 >     case CSR_VTYPE:
 >       VU.set_vl_api(VU.vl, val);
-1166a1469
+1166a1477
 >   std::string text_name = std::string(csr_name(which));
-1176c1479,1483
+1176c1487,1500
 <     return search->second->read();
 ---
 >     res = search->second->read();
 > 
->     update_generator_register(this->id, text_name.c_str(), res, 0xffffffffffffffffull, "read");
+>     // TODO(Noah): Improve this logic when a more general mechanism, i.e. one that could potentially
+>     // handle other alias registers, can be devised. Since sstatus is a restricted alias of mstatus,
+>     // we need to send the update for the underlying mstatus register.
+>     reg_t update_val = res;
+>     if (search->second == STATE.sstatus) {
+>       text_name = "mstatus";
+>       update_val = STATE.mstatus->read();
+>     }
+> 
+>     update_generator_register(this->id, text_name.c_str(), update_val, 0xffffffffffffffffull, "read");
 > 
 >     return res;
-1412a1720,1721
+1412a1737,1738
 >   update_generator_register(this->id, text_name.c_str(), res, 0xffffffffffffffffull, "read");
 > 
-1415a1725,1958
+1415a1742,1975
 > reg_t processor_t::get_csr_api(int which)
 > {
 > #define mcounteren_ok(__which) \
@@ -796,7 +813,7 @@
 >   *val = state.prv;
 > }
 > 
-1518a2062
+1518a2079
 >         update_generator_register(this->id, "mip", state.mip->read(), 0xffffffffffffffff, "read");
-1533a2078
+1533a2095
 >         update_generator_register(this->id, "mip", state.mip->read(), 0xffffffffffffffff, "write");
