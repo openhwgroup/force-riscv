@@ -31,8 +31,6 @@ class MainSequence(VectorTestSequence):
             "VAND.VI##RISCV",
             "VAND.VV##RISCV",
             "VAND.VX##RISCV",
-            "VDOT.VV##RISCV",
-            "VDOTU.VV##RISCV",
             "VID.V##RISCV",
             "VMAX.VV##RISCV",
             "VMAX.VX##RISCV",
