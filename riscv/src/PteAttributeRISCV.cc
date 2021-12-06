@@ -369,8 +369,12 @@ namespace Force
         break;
     }
 
-    bool is_instr = rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr);
-    if (is_instr && (pteLevel > 0))
+    // TODO(Noah): Implement a better solution for this issue when one can be devised. The problem
+    // is that if the X, W and R bits are all 0, it indicates a non-leaf page table entry. We want
+    // to avoid unintentionally generating such entries when are are attempting to set the
+    // attributes of a leaf page table entry to trigger a fault. We can allow X, W and R to be 0 at
+    // Level 0 because the page table walk will not attempt to progress to a level beyond Level 0.
+    if (pteLevel > 0)
     {
       rTriggerConstr.SubValue(0x0);
     }
@@ -433,6 +437,19 @@ namespace Force
   EPagingExceptionType VPteAttributeRISCV::GetExceptionType(const GenPageRequest& rPagingReq) const
   {
     return get_exception_type_from_access_type(rPagingReq.GenBoolAttribute(EPageGenBoolAttrType::InstrAddr), rPagingReq.MemoryAccessType());
+  }
+
+  void WRPteAttributeRISCV::AdjustDefaultConstraint(cuint32 pteLevel, ConstraintSet& rValueConstr) const
+  {
+    // TODO(Noah): Implement a better solution for this issue when one can be devised. The problem
+    // is that if the X, W and R bits are all 0, it indicates a non-leaf page table entry. We want
+    // to avoid unintentionally generating such entries when are are attempting to set the
+    // attributes of a leaf page table entry to trigger a fault. We can allow X, W and R to be 0 at
+    // Level 0 because the page table walk will not attempt to progress to a level beyond Level 0.
+    if (pteLevel > 0)
+    {
+      rValueConstr.SubValue(0x0);
+    }
   }
 
   bool VPteAttributeRISCV::EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const

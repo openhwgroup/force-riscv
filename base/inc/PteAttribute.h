@@ -147,6 +147,8 @@ namespace Force {
     virtual void ExceptionTriggeringConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, cuint32 pteLevel, ConstraintSet& rTriggerConstr) const = 0; //!< Return constraint that will trigger the exception.
     virtual void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const = 0; //!< Return constraint that will prevent the exception.
     virtual bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const = 0; //!< evaluates the architecture fault choices for the pte attr and returns true if a fault should be set
+  private:
+    virtual void AdjustDefaultConstraint(cuint32 pteLevel, ConstraintSet& rValueConstr) const { } //!< Adjust default constraint for special cases.
   };
 
 }

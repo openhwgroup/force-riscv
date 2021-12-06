@@ -138,6 +138,8 @@ namespace Force {
     void ExceptionPreventingConstraint(const GenPageRequest& rPagingReq, const VmAddressSpace& rVmas, ConstraintSet& rPreventConstr) const override; //!< Return constraint that will prevent the exception.
     void SetPteGenAttribute(const GenPageRequest& rPagingReq, PageTableEntry& rPte) const override; //!< Hook to set PageGenAttribute onto the PageTableEntry object.
     bool EvaluateArchFaultChoice(const VmAddressSpace& rVmas, PageTableEntry& rPte, bool& rHardFaultChoice) const override; //!< Hook to evaluate whether to apply individual field based faults.
+  private:
+    void AdjustDefaultConstraint(cuint32 pteLevel, ConstraintSet& rValueConstr) const override; //!< Adjust default constraint for special cases.
   };
 
   /*!
