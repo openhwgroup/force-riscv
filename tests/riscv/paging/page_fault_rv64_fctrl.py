@@ -16,168 +16,168 @@
 control_items = [
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_DA,PageFaultLevel=0"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_DA,PageFaultLevel=1"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_DA,PageFaultLevel=2"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_DA,PageFaultLevel=3"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_DA"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_U,PageFaultLevel=0"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_U,PageFaultLevel=1"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_U,PageFaultLevel=2"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_U,PageFaultLevel=3"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_U"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_X,PageFaultLevel=0"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_X,PageFaultLevel=1"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_X,PageFaultLevel=2"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_X,PageFaultLevel=3"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_X"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_WR,PageFaultLevel=0"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_WR,PageFaultLevel=1"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_WR,PageFaultLevel=2"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_WR,PageFaultLevel=3"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_WR"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_V,PageFaultLevel=0"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_V,PageFaultLevel=1"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_V,PageFaultLevel=2"',
         },
     },
     {
         "fname": "page_fault_on_load_store_03_force.py",
-        "options": {"max-instr": 20000},
+        "options": {"max-instr": 25000},
         "generator": {
             "--options": '"PrivilegeLevel=1,IterCount=50,PageFaultType=Invalid_V,PageFaultLevel=3"',
         },
