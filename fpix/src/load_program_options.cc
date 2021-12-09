@@ -88,6 +88,7 @@ struct Arg: public option::Arg
       {EOptionIndexBaseType(EOptionIndex::THREADS_PER_CPU_OPT), 0, "T", "threads_per_cpu", Arg::Numeric, "  --threads_per_cpu, -T \tset num threads per cpu"},
       {EOptionIndexBaseType(EOptionIndex::PA_SIZE_OPT), 0, "P", "pa_size", Arg::Numeric, "  --pa_size, -P \tdefualt pa size is 44 bits"},
       {EOptionIndexBaseType(EOptionIndex::EXIT_LOOP_OPT), 0, "X", "exit_loop", Arg::Numeric, "  --exit_loop, -X \texit when an instruction jumps to itself"},
+      {EOptionIndexBaseType(EOptionIndex::AUTO_INIT_MEM_OPT), 0, "", "auto_init_mem", Arg::None, "  --auto_init_mem  \tautomatically initialize simulator memory on access; enabling this could potentially mask errors in the test"},
       {EOptionIndexBaseType(EOptionIndex::UNKNOWN), 0, "", "", Arg::None, "\nExamples:\n"
                                                          "  fpix -i 10000 -D \n"
                                                          "  fpix --unknown -- --this_is_no_option\n"},
@@ -295,6 +296,12 @@ struct Arg: public option::Arg
         exit(-1);
       }
       arCfg.SetExitOnBranchToSelf(nval);
+    }
+
+    if (options[EOptionIndexBaseType(EOptionIndex::AUTO_INIT_MEM_OPT)])
+    {
+      arCfg.SetAutoInitMem(true);
+      LOG(info) << "      'auto_init_mem' : enabled" << endl;
     }
 
     if (options[EOptionIndexBaseType(EOptionIndex::PA_SIZE_OPT)])
