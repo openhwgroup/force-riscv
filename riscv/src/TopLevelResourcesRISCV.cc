@@ -54,6 +54,7 @@ namespace Force {
     ObjectRegistry* obj_registry = ObjectRegistry::Instance();
 
     // Register Operand based objects.
+    obj_registry->RegisterObject(new VsetvlAvlImmediateOperand());
     obj_registry->RegisterObject(new VsetvlVtypeImmediateOperand());
     obj_registry->RegisterObject(new VectorMaskOperand());
     obj_registry->RegisterObject(new BaseOffsetBranchOperand());

@@ -158,6 +158,13 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vs1" type="Register" bits="19-15"/>
     <asm format="VCOMPRESS.VM"/>
   </I>
+  <I name="VCPOP.M" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-12,6-0" value="010000100000101010111"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VCPOP.M"/>
+  </I>
   <I name="VDIV.VV" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010101010111"/>
     <O name="vd/rd" type="Register" bits="11-7"/>
@@ -189,22 +196,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VDIVU.VX"/>
-  </I>
-  <I name="VDOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110010001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VDOT.VV"/>
-  </I>
-  <I name="VDOTU.VV" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110000001010111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VDOTU.VV"/>
   </I>
   <I name="VFADD.VF" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000001011010111"/>
@@ -286,14 +277,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VFDIV.VV"/>
-  </I>
-  <I name="VFDOT.VV" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110010011010111"/>
-    <O name="vd/rd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VFDOT.VV"/>
   </I>
   <I name="VFIRST.M" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,19-12,6-0" value="010000100010101010111"/>
@@ -567,6 +550,13 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VFRDIV.VF"/>
   </I>
+  <I name="VFREC7.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-12,6-0" value="010011001010011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFREC7.V"/>
+  </I>
   <I name="VFREDMAX.VS" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0001110011010111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -591,13 +581,20 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VFREDOSUM.VS"/>
   </I>
-  <I name="VFREDSUM.VS" isa="RISCV" class="VectorInstruction" group="Vector">
+  <I name="VFREDUSUM.VS" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010011010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VFREDSUM.VS"/>
+    <asm format="VFREDUSUM.VS"/>
+  </I>
+  <I name="VFRSQRT7.V" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,19-12,6-0" value="010011001000011010111"/>
+    <O name="vd/rd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VFRSQRT7.V"/>
   </I>
   <I name="VFRSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1001111011010111"/>
@@ -863,13 +860,13 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VFWREDOSUM.VS"/>
   </I>
-  <I name="VFWREDSUM.VS" isa="RISCV" class="VectorInstruction" group="Vector">
+  <I name="VFWREDUSUM.VS" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100010011010111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VFWREDSUM.VS"/>
+    <asm format="VFWREDUSUM.VS"/>
   </I>
   <I name="VFWSUB.VF" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100101011010111"/>
@@ -1698,13 +1695,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VOR.VX"/>
   </I>
-  <I name="VPOPC.M" isa="RISCV" class="VectorInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,19-12,6-0" value="010000100000101010111"/>
-    <O name="rd" type="Register" bits="11-7"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VPOPC.M"/>
-  </I>
   <I name="VREDAND.VS" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010101010111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -1824,6 +1814,14 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VRGATHER.VX"/>
+  </I>
+  <I name="VRGATHEREI16.VV" isa="RISCV" class="VectorInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0011100001010111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vs1" type="Register" bits="19-15"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VRGATHEREI16.VV"/>
   </I>
   <I name="VRSUB.VI" isa="RISCV" class="VectorInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110111010111"/>
@@ -2456,6 +2454,13 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs2" type="Register" bits="24-20"/>
     <asm format="VSETVL"/>
   </I>
+  <I name="VSETIVLI" isa="RISCV" class="VsetvlInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-30,14-12,6-0" value="111111010111"/>
+    <O name="rd" type="Register" bits="11-7"/>
+    <O name="uimm[4:0]" type="Immediate" bits="19-15"/>
+    <O name="zimm[9:0]" type="Immediate" bits="29-20"/>
+    <asm format="VSETIVLI"/>
+  </I>
   <I name="VSETVLI" isa="RISCV" class="VsetvlInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-31,14-12,6-0" value="01111010111"/>
     <O name="rd" type="Register" bits="11-7"/>
@@ -2519,12 +2524,12 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLE64FF.V"/>
   </I>
-  <I name="VLSEG1E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000000000000111"/>
+  <I name="VLM.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000010110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E8.V"/>
+    <asm format="VLM.V"/>
   </I>
   <I name="VLSEG2E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000000000000111"/>
@@ -2575,13 +2580,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSEG8E8.V"/>
   </I>
-  <I name="VLSEG1E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001010000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E16.V"/>
-  </I>
   <I name="VLSEG2E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000001010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -2630,13 +2628,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSEG8E16.V"/>
-  </I>
-  <I name="VLSEG1E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001100000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E32.V"/>
   </I>
   <I name="VLSEG2E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000001100000111"/>
@@ -2687,13 +2678,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSEG8E32.V"/>
   </I>
-  <I name="VLSEG1E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001110000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E64.V"/>
-  </I>
   <I name="VLSEG2E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000001110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -2742,13 +2726,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSEG8E64.V"/>
-  </I>
-  <I name="VLSEG1E8FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000100000000000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E8FF.V"/>
   </I>
   <I name="VLSEG2E8FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000100000000000111"/>
@@ -2799,13 +2776,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSEG8E8FF.V"/>
   </I>
-  <I name="VLSEG1E16FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000100001010000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E16FF.V"/>
-  </I>
   <I name="VLSEG2E16FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000100001010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -2855,13 +2825,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSEG8E16FF.V"/>
   </I>
-  <I name="VLSEG1E32FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000100001100000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E32FF.V"/>
-  </I>
   <I name="VLSEG2E32FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000100001100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -2910,13 +2873,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSEG8E32FF.V"/>
-  </I>
-  <I name="VLSEG1E64FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000100001110000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSEG1E64FF.V"/>
   </I>
   <I name="VLSEG2E64FF.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000100001110000111"/>
@@ -2999,14 +2955,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSE64.V"/>
   </I>
-  <I name="VLSSEG1E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000100000000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSSEG1E8.V"/>
-  </I>
   <I name="VLSSEG2E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010100000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -3062,14 +3010,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSSEG8E8.V"/>
-  </I>
-  <I name="VLSSEG1E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101010000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSSEG1E16.V"/>
   </I>
   <I name="VLSSEG2E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101010000111"/>
@@ -3127,14 +3067,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSSEG8E16.V"/>
   </I>
-  <I name="VLSSEG1E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101100000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSSEG1E32.V"/>
-  </I>
   <I name="VLSSEG2E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
@@ -3190,14 +3122,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSSEG8E32.V"/>
-  </I>
-  <I name="VLSSEG1E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101110000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLSSEG1E64.V"/>
   </I>
   <I name="VLSSEG2E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101110000111"/>
@@ -3255,293 +3179,517 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLSSEG8E64.V"/>
   </I>
-  <I name="VLXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXEI8.V"/>
+    <asm format="VLOXEI8.V"/>
   </I>
-  <I name="VLXEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXEI16.V"/>
+    <asm format="VLOXEI16.V"/>
   </I>
-  <I name="VLXEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXEI32.V"/>
+    <asm format="VLOXEI32.V"/>
   </I>
-  <I name="VLXEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXEI64.V"/>
+    <asm format="VLOXEI64.V"/>
   </I>
-  <I name="VLXSEG1EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110000000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG1EI8.V"/>
-  </I>
-  <I name="VLXSEG2EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG2EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG2EI8.V"/>
+    <asm format="VLOXSEG2EI8.V"/>
   </I>
-  <I name="VLXSEG3EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG3EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG3EI8.V"/>
+    <asm format="VLOXSEG3EI8.V"/>
   </I>
-  <I name="VLXSEG4EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG4EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG4EI8.V"/>
+    <asm format="VLOXSEG4EI8.V"/>
   </I>
-  <I name="VLXSEG5EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG5EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG5EI8.V"/>
+    <asm format="VLOXSEG5EI8.V"/>
   </I>
-  <I name="VLXSEG6EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG6EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG6EI8.V"/>
+    <asm format="VLOXSEG6EI8.V"/>
   </I>
-  <I name="VLXSEG7EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG7EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG7EI8.V"/>
+    <asm format="VLOXSEG7EI8.V"/>
   </I>
-  <I name="VLXSEG8EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG8EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG8EI8.V"/>
+    <asm format="VLOXSEG8EI8.V"/>
   </I>
-  <I name="VLXSEG1EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111010000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG1EI16.V"/>
-  </I>
-  <I name="VLXSEG2EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG2EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG2EI16.V"/>
+    <asm format="VLOXSEG2EI16.V"/>
   </I>
-  <I name="VLXSEG3EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG3EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG3EI16.V"/>
+    <asm format="VLOXSEG3EI16.V"/>
   </I>
-  <I name="VLXSEG4EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG4EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG4EI16.V"/>
+    <asm format="VLOXSEG4EI16.V"/>
   </I>
-  <I name="VLXSEG5EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG5EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG5EI16.V"/>
+    <asm format="VLOXSEG5EI16.V"/>
   </I>
-  <I name="VLXSEG6EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG6EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG6EI16.V"/>
+    <asm format="VLOXSEG6EI16.V"/>
   </I>
-  <I name="VLXSEG7EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG7EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG7EI16.V"/>
+    <asm format="VLOXSEG7EI16.V"/>
   </I>
-  <I name="VLXSEG8EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG8EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111010000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG8EI16.V"/>
+    <asm format="VLOXSEG8EI16.V"/>
   </I>
-  <I name="VLXSEG1EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111100000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG1EI32.V"/>
-  </I>
-  <I name="VLXSEG2EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG2EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG2EI32.V"/>
+    <asm format="VLOXSEG2EI32.V"/>
   </I>
-  <I name="VLXSEG3EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG3EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG3EI32.V"/>
+    <asm format="VLOXSEG3EI32.V"/>
   </I>
-  <I name="VLXSEG4EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG4EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG4EI32.V"/>
+    <asm format="VLOXSEG4EI32.V"/>
   </I>
-  <I name="VLXSEG5EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG5EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG5EI32.V"/>
+    <asm format="VLOXSEG5EI32.V"/>
   </I>
-  <I name="VLXSEG6EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG6EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG6EI32.V"/>
+    <asm format="VLOXSEG6EI32.V"/>
   </I>
-  <I name="VLXSEG7EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG7EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG7EI32.V"/>
+    <asm format="VLOXSEG7EI32.V"/>
   </I>
-  <I name="VLXSEG8EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG8EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111100000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG8EI32.V"/>
+    <asm format="VLOXSEG8EI32.V"/>
   </I>
-  <I name="VLXSEG1EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111110000111"/>
-    <O name="vd" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG1EI64.V"/>
-  </I>
-  <I name="VLXSEG2EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG2EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG2EI64.V"/>
+    <asm format="VLOXSEG2EI64.V"/>
   </I>
-  <I name="VLXSEG3EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG3EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG3EI64.V"/>
+    <asm format="VLOXSEG3EI64.V"/>
   </I>
-  <I name="VLXSEG4EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG4EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG4EI64.V"/>
+    <asm format="VLOXSEG4EI64.V"/>
   </I>
-  <I name="VLXSEG5EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG5EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG5EI64.V"/>
+    <asm format="VLOXSEG5EI64.V"/>
   </I>
-  <I name="VLXSEG6EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG6EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG6EI64.V"/>
+    <asm format="VLOXSEG6EI64.V"/>
   </I>
-  <I name="VLXSEG7EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG7EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG7EI64.V"/>
+    <asm format="VLOXSEG7EI64.V"/>
   </I>
-  <I name="VLXSEG8EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VLOXSEG8EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111110000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VLXSEG8EI64.V"/>
+    <asm format="VLOXSEG8EI64.V"/>
+  </I>
+  <I name="VLUXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXEI8.V"/>
+  </I>
+  <I name="VLUXEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXEI16.V"/>
+  </I>
+  <I name="VLUXEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXEI32.V"/>
+  </I>
+  <I name="VLUXEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXEI64.V"/>
+  </I>
+  <I name="VLUXSEG2EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG2EI8.V"/>
+  </I>
+  <I name="VLUXSEG3EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG3EI8.V"/>
+  </I>
+  <I name="VLUXSEG4EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG4EI8.V"/>
+  </I>
+  <I name="VLUXSEG5EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG5EI8.V"/>
+  </I>
+  <I name="VLUXSEG6EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG6EI8.V"/>
+  </I>
+  <I name="VLUXSEG7EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG7EI8.V"/>
+  </I>
+  <I name="VLUXSEG8EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110010000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG8EI8.V"/>
+  </I>
+  <I name="VLUXSEG2EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG2EI16.V"/>
+  </I>
+  <I name="VLUXSEG3EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG3EI16.V"/>
+  </I>
+  <I name="VLUXSEG4EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG4EI16.V"/>
+  </I>
+  <I name="VLUXSEG5EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG5EI16.V"/>
+  </I>
+  <I name="VLUXSEG6EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG6EI16.V"/>
+  </I>
+  <I name="VLUXSEG7EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG7EI16.V"/>
+  </I>
+  <I name="VLUXSEG8EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG8EI16.V"/>
+  </I>
+  <I name="VLUXSEG2EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG2EI32.V"/>
+  </I>
+  <I name="VLUXSEG3EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG3EI32.V"/>
+  </I>
+  <I name="VLUXSEG4EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG4EI32.V"/>
+  </I>
+  <I name="VLUXSEG5EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG5EI32.V"/>
+  </I>
+  <I name="VLUXSEG6EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG6EI32.V"/>
+  </I>
+  <I name="VLUXSEG7EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG7EI32.V"/>
+  </I>
+  <I name="VLUXSEG8EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG8EI32.V"/>
+  </I>
+  <I name="VLUXSEG2EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG2EI64.V"/>
+  </I>
+  <I name="VLUXSEG3EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG3EI64.V"/>
+  </I>
+  <I name="VLUXSEG4EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG4EI64.V"/>
+  </I>
+  <I name="VLUXSEG5EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG5EI64.V"/>
+  </I>
+  <I name="VLUXSEG6EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG6EI64.V"/>
+  </I>
+  <I name="VLUXSEG7EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG7EI64.V"/>
+  </I>
+  <I name="VLUXSEG8EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VLUXSEG8EI64.V"/>
   </I>
   <I name="VSE8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000000000100111"/>
@@ -3571,12 +3719,12 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSE64.V"/>
   </I>
-  <I name="VSSEG1E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000000000100111"/>
+  <I name="VSM.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000010110000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSEG1E8.V"/>
+    <asm format="VSM.V"/>
   </I>
   <I name="VSSEG2E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000000000100111"/>
@@ -3627,13 +3775,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSEG8E8.V"/>
   </I>
-  <I name="VSSEG1E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001010100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSEG1E16.V"/>
-  </I>
   <I name="VSSEG2E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000001010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
@@ -3683,13 +3824,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSEG8E16.V"/>
   </I>
-  <I name="VSSEG1E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001100100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSEG1E32.V"/>
-  </I>
   <I name="VSSEG2E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000001100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
@@ -3738,13 +3872,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSEG8E32.V"/>
-  </I>
-  <I name="VSSEG1E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000000001110100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSEG1E64.V"/>
   </I>
   <I name="VSSEG2E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="001000000001110100111"/>
@@ -3827,14 +3954,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSE64.V"/>
   </I>
-  <I name="VSSSEG1E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000100000100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSSEG1E8.V"/>
-  </I>
   <I name="VSSSEG2E8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010100000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
@@ -3890,14 +4009,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSSEG8E8.V"/>
-  </I>
-  <I name="VSSSEG1E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101010100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSSEG1E16.V"/>
   </I>
   <I name="VSSSEG2E16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101010100111"/>
@@ -3955,14 +4066,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSSEG8E16.V"/>
   </I>
-  <I name="VSSSEG1E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101100100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSSEG1E32.V"/>
-  </I>
   <I name="VSSSEG2E32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
@@ -4018,14 +4121,6 @@ Add RISCV V extension instruction starter information in this file.
     <O name="rs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSSEG8E32.V"/>
-  </I>
-  <I name="VSSSEG1E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000101110100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="rs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSSSEG1E64.V"/>
   </I>
   <I name="VSSSEG2E64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010101110100111"/>
@@ -4083,37 +4178,261 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSSSEG8E64.V"/>
   </I>
-  <I name="VSXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VSOXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXEI8.V"/>
+    <asm format="VSOXEI8.V"/>
   </I>
-  <I name="VSXEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VSOXEI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXEI16.V"/>
+    <asm format="VSOXEI16.V"/>
   </I>
-  <I name="VSXEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VSOXEI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXEI32.V"/>
+    <asm format="VSOXEI32.V"/>
   </I>
-  <I name="VSXEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VSOXEI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXEI64.V"/>
+    <asm format="VSOXEI64.V"/>
+  </I>
+  <I name="VSOXSEG2EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010110000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG2EI8.V"/>
+  </I>
+  <I name="VSOXSEG3EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100110000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG3EI8.V"/>
+  </I>
+  <I name="VSOXSEG4EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110110000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG4EI8.V"/>
+  </I>
+  <I name="VSOXSEG5EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000110000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG5EI8.V"/>
+  </I>
+  <I name="VSOXSEG6EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010110000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG6EI8.V"/>
+  </I>
+  <I name="VSOXSEG7EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100110000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG7EI8.V"/>
+  </I>
+  <I name="VSOXSEG8EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110110000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG8EI8.V"/>
+  </I>
+  <I name="VSOXSEG2EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111010100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG2EI16.V"/>
+  </I>
+  <I name="VSOXSEG3EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111010100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG3EI16.V"/>
+  </I>
+  <I name="VSOXSEG4EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111010100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG4EI16.V"/>
+  </I>
+  <I name="VSOXSEG5EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111010100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG5EI16.V"/>
+  </I>
+  <I name="VSOXSEG6EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111010100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG6EI16.V"/>
+  </I>
+  <I name="VSOXSEG7EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111010100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG7EI16.V"/>
+  </I>
+  <I name="VSOXSEG8EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111010100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG8EI16.V"/>
+  </I>
+  <I name="VSOXSEG2EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111100100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG2EI32.V"/>
+  </I>
+  <I name="VSOXSEG3EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111100100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG3EI32.V"/>
+  </I>
+  <I name="VSOXSEG4EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111100100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG4EI32.V"/>
+  </I>
+  <I name="VSOXSEG5EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111100100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG5EI32.V"/>
+  </I>
+  <I name="VSOXSEG6EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111100100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG6EI32.V"/>
+  </I>
+  <I name="VSOXSEG7EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111100100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG7EI32.V"/>
+  </I>
+  <I name="VSOXSEG8EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111100100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG8EI32.V"/>
+  </I>
+  <I name="VSOXSEG2EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111110100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG2EI64.V"/>
+  </I>
+  <I name="VSOXSEG3EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111110100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG3EI64.V"/>
+  </I>
+  <I name="VSOXSEG4EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111110100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG4EI64.V"/>
+  </I>
+  <I name="VSOXSEG5EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111110100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG5EI64.V"/>
+  </I>
+  <I name="VSOXSEG6EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111110100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG6EI64.V"/>
+  </I>
+  <I name="VSOXSEG7EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111110100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG7EI64.V"/>
+  </I>
+  <I name="VSOXSEG8EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111110100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <O name="vs2" type="Register" bits="24-20"/>
+    <O name="vm" type="Immediate" bits="25-25"/>
+    <asm format="VSOXSEG8EI64.V"/>
   </I>
   <I name="VSUXEI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000010000100111"/>
@@ -4147,273 +4466,349 @@ Add RISCV V extension instruction starter information in this file.
     <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSUXEI64.V"/>
   </I>
-  <I name="VSXSEG1EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000110000100111"/>
+  <I name="VSUXSEG2EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010010000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG1EI8.V"/>
+    <asm format="VSUXSEG2EI8.V"/>
   </I>
-  <I name="VSXSEG2EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010110000100111"/>
+  <I name="VSUXSEG3EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100010000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG2EI8.V"/>
+    <asm format="VSUXSEG3EI8.V"/>
   </I>
-  <I name="VSXSEG3EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100110000100111"/>
+  <I name="VSUXSEG4EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110010000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG3EI8.V"/>
+    <asm format="VSUXSEG4EI8.V"/>
   </I>
-  <I name="VSXSEG4EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110110000100111"/>
+  <I name="VSUXSEG5EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000010000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG4EI8.V"/>
+    <asm format="VSUXSEG5EI8.V"/>
   </I>
-  <I name="VSXSEG5EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000110000100111"/>
+  <I name="VSUXSEG6EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010010000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG5EI8.V"/>
+    <asm format="VSUXSEG6EI8.V"/>
   </I>
-  <I name="VSXSEG6EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010110000100111"/>
+  <I name="VSUXSEG7EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100010000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG6EI8.V"/>
+    <asm format="VSUXSEG7EI8.V"/>
   </I>
-  <I name="VSXSEG7EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100110000100111"/>
+  <I name="VSUXSEG8EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110010000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG7EI8.V"/>
+    <asm format="VSUXSEG8EI8.V"/>
   </I>
-  <I name="VSXSEG8EI8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110110000100111"/>
+  <I name="VSUXSEG2EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG8EI8.V"/>
+    <asm format="VSUXSEG2EI16.V"/>
   </I>
-  <I name="VSXSEG1EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111010100111"/>
+  <I name="VSUXSEG3EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG1EI16.V"/>
+    <asm format="VSUXSEG3EI16.V"/>
   </I>
-  <I name="VSXSEG2EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111010100111"/>
+  <I name="VSUXSEG4EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG2EI16.V"/>
+    <asm format="VSUXSEG4EI16.V"/>
   </I>
-  <I name="VSXSEG3EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111010100111"/>
+  <I name="VSUXSEG5EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG3EI16.V"/>
+    <asm format="VSUXSEG5EI16.V"/>
   </I>
-  <I name="VSXSEG4EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111010100111"/>
+  <I name="VSUXSEG6EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG4EI16.V"/>
+    <asm format="VSUXSEG6EI16.V"/>
   </I>
-  <I name="VSXSEG5EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111010100111"/>
+  <I name="VSUXSEG7EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG5EI16.V"/>
+    <asm format="VSUXSEG7EI16.V"/>
   </I>
-  <I name="VSXSEG6EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111010100111"/>
+  <I name="VSUXSEG8EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011010100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG6EI16.V"/>
+    <asm format="VSUXSEG8EI16.V"/>
   </I>
-  <I name="VSXSEG7EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111010100111"/>
+  <I name="VSUXSEG2EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG7EI16.V"/>
+    <asm format="VSUXSEG2EI32.V"/>
   </I>
-  <I name="VSXSEG8EI16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111010100111"/>
+  <I name="VSUXSEG3EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG8EI16.V"/>
+    <asm format="VSUXSEG3EI32.V"/>
   </I>
-  <I name="VSXSEG1EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111100100111"/>
+  <I name="VSUXSEG4EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG1EI32.V"/>
+    <asm format="VSUXSEG4EI32.V"/>
   </I>
-  <I name="VSXSEG2EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111100100111"/>
+  <I name="VSUXSEG5EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG2EI32.V"/>
+    <asm format="VSUXSEG5EI32.V"/>
   </I>
-  <I name="VSXSEG3EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111100100111"/>
+  <I name="VSUXSEG6EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG3EI32.V"/>
+    <asm format="VSUXSEG6EI32.V"/>
   </I>
-  <I name="VSXSEG4EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111100100111"/>
+  <I name="VSUXSEG7EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG4EI32.V"/>
+    <asm format="VSUXSEG7EI32.V"/>
   </I>
-  <I name="VSXSEG5EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111100100111"/>
+  <I name="VSUXSEG8EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011100100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG5EI32.V"/>
+    <asm format="VSUXSEG8EI32.V"/>
   </I>
-  <I name="VSXSEG6EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111100100111"/>
+  <I name="VSUXSEG2EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010011110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG6EI32.V"/>
+    <asm format="VSUXSEG2EI64.V"/>
   </I>
-  <I name="VSXSEG7EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111100100111"/>
+  <I name="VSUXSEG3EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100011110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG7EI32.V"/>
+    <asm format="VSUXSEG3EI64.V"/>
   </I>
-  <I name="VSXSEG8EI32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111100100111"/>
+  <I name="VSUXSEG4EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110011110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG8EI32.V"/>
+    <asm format="VSUXSEG4EI64.V"/>
   </I>
-  <I name="VSXSEG1EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000111110100111"/>
+  <I name="VSUXSEG5EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000011110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG1EI64.V"/>
+    <asm format="VSUXSEG5EI64.V"/>
   </I>
-  <I name="VSXSEG2EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0010111110100111"/>
+  <I name="VSUXSEG6EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010011110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG2EI64.V"/>
+    <asm format="VSUXSEG6EI64.V"/>
   </I>
-  <I name="VSXSEG3EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0100111110100111"/>
+  <I name="VSUXSEG7EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100011110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG3EI64.V"/>
+    <asm format="VSUXSEG7EI64.V"/>
   </I>
-  <I name="VSXSEG4EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0110111110100111"/>
+  <I name="VSUXSEG8EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110011110100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="vs2" type="Register" bits="24-20"/>
     <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG4EI64.V"/>
+    <asm format="VSUXSEG8EI64.V"/>
   </I>
-  <I name="VSXSEG5EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1000111110100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG5EI64.V"/>
-  </I>
-  <I name="VSXSEG6EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1010111110100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG6EI64.V"/>
-  </I>
-  <I name="VSXSEG7EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1100111110100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG7EI64.V"/>
-  </I>
-  <I name="VSXSEG8EI64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="1110111110100111"/>
-    <O name="vs3" type="Register" bits="11-7"/>
-    <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vs2" type="Register" bits="24-20"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
-    <asm format="VSXSEG8EI64.V"/>
-  </I>
-  <I name="VL1R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+  <I name="VL1RE8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <asm format="VL1R.V"/>
+    <asm format="VL1RE8.V"/>
+  </I>
+  <I name="VL2RE8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0010001010000000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL2RE8.V"/>
+  </I>
+  <I name="VL4RE8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0110001010000000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL4RE8.V"/>
+  </I>
+  <I name="VL8RE8.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="1110001010000000000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL8RE8.V"/>
+  </I>
+  <I name="VL1RE16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010001010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL1RE16.V"/>
+  </I>
+  <I name="VL2RE16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0010001010001010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL2RE16.V"/>
+  </I>
+  <I name="VL4RE16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0110001010001010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL4RE16.V"/>
+  </I>
+  <I name="VL8RE16.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="1110001010001010000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL8RE16.V"/>
+  </I>
+  <I name="VL1RE32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010001100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL1RE32.V"/>
+  </I>
+  <I name="VL2RE32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0010001010001100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL2RE32.V"/>
+  </I>
+  <I name="VL4RE32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0110001010001100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL4RE32.V"/>
+  </I>
+  <I name="VL8RE32.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="1110001010001100000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL8RE32.V"/>
+  </I>
+  <I name="VL1RE64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010001110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL1RE64.V"/>
+  </I>
+  <I name="VL2RE64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0010001010001110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL2RE64.V"/>
+  </I>
+  <I name="VL4RE64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0110001010001110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL4RE64.V"/>
+  </I>
+  <I name="VL8RE64.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="1110001010001110000111"/>
+    <O name="vd" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VL8RE64.V"/>
   </I>
   <I name="VS1R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
     <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010000000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <asm format="VS1R.V"/>
+  </I>
+  <I name="VS2R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0010001010000000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VS2R.V"/>
+  </I>
+  <I name="VS4R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0110001010000000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VS4R.V"/>
+  </I>
+  <I name="VS8R.V" isa="RISCV" class="VectorLoadStoreInstruction" group="Vector">
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="1110001010000000100111"/>
+    <O name="vs3" type="Register" bits="11-7"/>
+    <O name="rs1" type="Register" bits="19-15"/>
+    <asm format="VS8R.V"/>
   </I>
   <I name="VAMOSWAPEI8.V" isa="RISCV" class="VectorAMOInstructionRISCV" group="Vector" form="No register write">
     <O name="const_bits" type="Constant" bits="31-26,14-12,6-0" value="0000100000101111"/>

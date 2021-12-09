@@ -21,6 +21,24 @@
 namespace Force {
 
   /*!
+    \class VsetvlAvlImmediateOperand
+    \brief Operand class for VSETVLI vtype immediate operands.
+  */
+  class VsetvlAvlImmediateOperand : public ImmediateOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlAvlImmediateOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlAvlImmediateOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlAvlImmediateOperand);
+
+    Object* Clone() const override { return new VsetvlAvlImmediateOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VsetvlAvlImmediateOperand"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VsetvlAvlImmediateOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+  };
+
+  /*!
     \class VsetvlVtypeImmediateOperand
     \brief Operand class for VSETVLI vtype immediate operands.
   */

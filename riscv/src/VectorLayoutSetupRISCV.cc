@@ -65,12 +65,13 @@ namespace Force {
 
   void VectorLayoutSetupRISCV::SetUpVectorLayoutWholeRegister(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
   {
-    rVecLayout.mElemSize = 8;
+    rVecLayout.mElemSize = rVecLayoutOprStruct.GetElementWidth();
+    rVecLayout.mRegCount = rVecLayoutOprStruct.GetRegisterCount();
+
     Config* config = Config::Instance();
-    rVecLayout.mElemCount = config->LimitValue(ELimitType::MaxPhysicalVectorLen) / rVecLayout.mElemSize;
+    rVecLayout.mElemCount = (config->LimitValue(ELimitType::MaxPhysicalVectorLen) / rVecLayout.mElemSize) * rVecLayout.mRegCount;
 
     rVecLayout.mFieldCount = 1;
-    rVecLayout.mRegCount = rVecLayoutOprStruct.GetRegisterCount();
     rVecLayout.mRegIndexAlignment = rVecLayoutOprStruct.GetRegisterIndexAlignment();
   }
 

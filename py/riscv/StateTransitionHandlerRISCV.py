@@ -153,7 +153,7 @@ class VectorRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
 
         self.initializeMemoryBlock(mem_block_ptr_index, (aStateElem,))
         self.genInstruction(
-            "VL1R.V##RISCV",
+            "VL1RE8.V##RISCV",
             {
                 "vd": aStateElem.getRegisterIndex(),
                 "rs1": mem_block_ptr_index,
@@ -187,7 +187,7 @@ class VectorRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
 
         for state_elem in aStateElems:
             self.genInstruction(
-                "VL1R.V##RISCV",
+                "VL1RE8.V##RISCV",
                 {
                     "vd": state_elem.getRegisterIndex(),
                     "rs1": mem_block_ptr_index,

@@ -22,6 +22,20 @@
 namespace Force {
 
   /*!
+    \class VsetvlAvlImmediateOperandConstraint
+    \brief This class carries dynamic constraint properties for VsetvlAvlImmediateOperand.
+  */
+  class VsetvlAvlImmediateOperandConstraint : public ImmediateOperandConstraint {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlAvlImmediateOperandConstraint);
+    COPY_CONSTRUCTOR_ABSENT(VsetvlAvlImmediateOperandConstraint);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlAvlImmediateOperandConstraint);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlAvlImmediateOperandConstraint);
+
+    void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
+  };
+
+  /*!
     \class VsetvlVtypeImmediateOperandConstraint
     \brief This class carries dynamic constraint properties for VsetvlVtypeImmediateOperand.
   */

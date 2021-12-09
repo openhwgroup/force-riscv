@@ -366,12 +366,15 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         self.mVtype = (self._mVsew << 3) | self._mVlmul
 
         vlmax = self._calculateVlmax()
-        if RandomUtils.random32(0, 1) == 1:
-            self.mAvl = RandomUtils.random32(0, vlmax)
-            self._mVl = self.mAvl
-        else:
-            self.mAvl = RandomUtils.random32(aMin=(2 * vlmax))
+        max_avl = self._get_max_avl()
+
+        # Randomly choose between two ranges for AVL, but make sure the first one is legal
+        if (2 * vlmax <= max_avl) and (RandomUtils.random32(0, 1) == 1):
+            self.mAvl = RandomUtils.random32((2 * vlmax), max_avl)
             self._mVl = vlmax
+        else:
+            self.mAvl = RandomUtils.random32(0, min(vlmax, max_avl))
+            self._mVl = self.mAvl
 
     # Generate parameters to be passed to Sequence.genInstruction() and load
     # register operands.
@@ -396,3 +399,8 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         lmul = self.calculateLmul(self._mVlmul)
         sew = self.calculateSew(self._mVsew)
         return round((lmul * self._mVlen) / sew)
+
+    # Return the maximum allowable value for AVL. This generally depends on the instruction to be
+    # generated.
+    def _get_max_avl(self):
+        return 0xFFFFFFFF

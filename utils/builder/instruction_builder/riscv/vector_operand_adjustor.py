@@ -46,13 +46,14 @@ class VectorOperandAdjustor(OperandAdjustor):
         layout_opr.elemWidth = aElemWidth
         self.mInstr.insert_operand(0, layout_opr)
 
-    def add_whole_register_layout_operand(self, aRegCount=1, aRegIndexAlignment=1):
+    def add_whole_register_layout_operand(self, aRegCount=1, aElemWidth=8):
         layout_opr = Operand()
         layout_opr.name = "whole"
         layout_opr.type = "VectorLayout"
         layout_opr.oclass = "WholeRegisterLayoutOperand"
         layout_opr.regCount = aRegCount
-        layout_opr.regIndexAlignment = aRegIndexAlignment
+        layout_opr.regIndexAlignment = aRegCount
+        layout_opr.elemWidth = aElemWidth
         self.mInstr.insert_operand(0, layout_opr)
 
     def set_reg_vec(self, aOperand):
@@ -76,10 +77,16 @@ class VectorOperandAdjustor(OperandAdjustor):
         rs2_opr.differ = "rs1"
         self.set_rs2_int()
 
-    def set_imm_vsetvl(self):
-        imm_opr = self.mInstr.find_operand("zimm[10:0]")
+    def set_imm_avl_vsetvl(self):
+        imm_opr = self.mInstr.find_operand("uimm[4:0]")
+        imm_opr.oclass = "VsetvlAvlImmediateOperand"
+        imm_opr.name = "uimm5"
+        self.add_asm_op(imm_opr)
+
+    def set_imm_vtype_vsetvl(self, aOperandName, aOperandBitCount):
+        imm_opr = self.mInstr.find_operand(aOperandName)
         imm_opr.oclass = "VsetvlVtypeImmediateOperand"
-        imm_opr.name = "zimm10"
+        imm_opr.name = "zimm%d" % aOperandBitCount
         self.add_asm_op(imm_opr)
 
     def set_vm(self):

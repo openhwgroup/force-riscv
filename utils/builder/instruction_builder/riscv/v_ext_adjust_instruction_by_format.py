@@ -58,9 +58,11 @@ def v_ext_adjust_instruction_by_format(aInstruction):
         return adjust_vdrd_rs1_vm(aInstruction)
     elif instruction_format == "vd-vm":
         return adjust_vd_vm(aInstruction)
-    # vsetvl/i instructions
+    # vset{i}vl{i} instructions
     elif instruction_format == "rd-rs1-rs2":
         return adjust_rd_rs1_rs2(aInstruction)
+    elif instruction_format == "rd-uimm[4:0]-zimm[9:0]":
+        return adjust_rd_uimm_4_0_zimm_9_0(aInstruction)
     elif instruction_format == "rd-rs1-zimm[10:0]":
         return adjust_rd_rs1_zimm_10_0(aInstruction)
     # vmerge and vmv instructions
@@ -116,18 +118,24 @@ def record_instruction_format(aInstructionFormat):
 
 
 def add_layout_operand(aInstruction):
-    load_store_whole_register = ["VL1R.V", "VS1R.V"]
-
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    if aInstruction.name in load_store_whole_register:
+    if _is_whole_register_load_store(aInstruction.name):
         reg_count = int(aInstruction.name[2])
-        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
+
+        elem_width = 8
+        if aInstruction.name[4] == "E":
+            width_end_index = aInstruction.name.find(".")
+            elem_width = int(aInstruction.name[5:width_end_index])
+
+        operand_adjustor.add_whole_register_layout_operand(
+            aRegCount=reg_count, aElemWidth=elem_width
+        )
+    elif aInstruction.name in ("VLM.V", "VSM.V"):
+        operand_adjustor.add_whole_register_layout_operand(aRegCount=1)
     elif aInstruction.name in ("VMV1R.V", "VMV2R.V", "VMV4R.V", "VMV8R.V"):
         reg_count = int(aInstruction.name[3])
-        operand_adjustor.add_whole_register_layout_operand(
-            aRegCount=reg_count, aRegIndexAlignment=reg_count
-        )
-    elif aInstruction.name in ("VSETVL", "VSETVLI"):
+        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
+    elif aInstruction.name in ("VSETVL", "VSETIVLI", "VSETVLI"):
         pass  # No vector layout operand required
     elif (
         aInstruction.iclass == "VectorLoadStoreInstruction"
@@ -391,11 +399,19 @@ def adjust_rd_rs1_rs2(aInstruction):
     return True
 
 
+def adjust_rd_uimm_4_0_zimm_9_0(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    operand_adjustor.set_rd_int()
+    operand_adjustor.set_imm_avl_vsetvl()
+    operand_adjustor.set_imm_vtype_vsetvl("zimm[9:0]", 10)
+    return True
+
+
 def adjust_rd_rs1_zimm_10_0(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rd_int()
     operand_adjustor.set_rs1_vsetvl()
-    operand_adjustor.set_imm_vsetvl()
+    operand_adjustor.set_imm_vtype_vsetvl("zimm[10:0]", 11)
     return True
 
 
@@ -739,3 +755,10 @@ def adjust_vdrd_vs2_rs1_vm(aInstruction):
     operand_adjustor.set_rs1_int()
     operand_adjustor.set_vm()
     return True
+
+
+def _is_whole_register_load_store(aInstructionName):
+    if re.fullmatch(r"V(L|S)\dR(E\d{1,2})?\.V", aInstructionName):
+        return True
+
+    return False

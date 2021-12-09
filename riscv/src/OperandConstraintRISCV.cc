@@ -40,6 +40,22 @@ using namespace std;
 
 namespace Force {
 
+  void VsetvlAvlImmediateOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    if (not HasConstraint()) {
+      const RegisterFile* reg_file = rGen.GetRegisterFile();
+      Register* vtype_reg = reg_file->RegisterLookup("vl");
+
+      // We want to maintain the same vl value by default if we can. If vl is larger than the
+      // operand width, we won't be able to, and there is no value in constrainining the operand.
+      if (vtype_reg->Value() <= rOperandStruct.mMask) {
+        mpConstraintSet = new ConstraintSet(vtype_reg->Value());
+      }
+    }
+  }
+
   void VsetvlVtypeImmediateOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
   {
     ImmediateOperandConstraint::Setup(rGen, rInstr, rOperandStruct);

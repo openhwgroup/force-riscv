@@ -25,18 +25,22 @@ class MainSequence(VectorLoadStoreTestSequence):
         super().__init__(aGenThread, aName)
 
         self._mInstrList = (
-            "VLXEI16.V##RISCV",
-            "VLXEI32.V##RISCV",
-            "VLXEI64.V##RISCV",
-            "VLXEI8.V##RISCV",
+            "VLOXEI16.V##RISCV",
+            "VLOXEI32.V##RISCV",
+            "VLOXEI64.V##RISCV",
+            "VLOXEI8.V##RISCV",
+            "VLUXEI16.V##RISCV",
+            "VLUXEI32.V##RISCV",
+            "VLUXEI64.V##RISCV",
+            "VLUXEI8.V##RISCV",
+            "VSOXEI16.V##RISCV",
+            "VSOXEI32.V##RISCV",
+            "VSOXEI64.V##RISCV",
+            "VSOXEI8.V##RISCV",
             "VSUXEI16.V##RISCV",
             "VSUXEI32.V##RISCV",
             "VSUXEI64.V##RISCV",
             "VSUXEI8.V##RISCV",
-            "VSXEI16.V##RISCV",
-            "VSXEI32.V##RISCV",
-            "VSXEI64.V##RISCV",
-            "VSXEI8.V##RISCV",
         )
 
     # Return a list of test instructions to randomly choose from.

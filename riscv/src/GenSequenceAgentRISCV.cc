@@ -233,7 +233,7 @@ namespace Force {
 
   void GenSequenceAgentRISCV::GetLoadVecRegSequence(const Register* regPtr, uint64 loadValue, vector<GenRequest*>& reqSeq, const Register* gprPtr)
   {
-    const char* instr_name = "VL1R.V##RISCV";
+    const char* instr_name = "VL1RE8.V##RISCV";
     const char* src_opr = "rs1";
     const char* dest_opr = "vd";
 

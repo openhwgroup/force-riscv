@@ -47,6 +47,11 @@ using namespace std;
 
 namespace Force {
 
+  OperandConstraint* VsetvlAvlImmediateOperand::InstantiateOperandConstraint() const
+  {
+    return new VsetvlAvlImmediateOperandConstraint();
+  }
+
   OperandConstraint* VsetvlVtypeImmediateOperand::InstantiateOperandConstraint() const
   {
     return new VsetvlVtypeImmediateOperandConstraint();
