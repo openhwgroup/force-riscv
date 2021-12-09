@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+import Log
+
 from abc import ABC
 from abc import abstractmethod
 
@@ -325,7 +327,7 @@ class AssemblyHelper(ABC):
             shift=self.getBranchShift(),
         )
         if not valid:
-            self.error(
+            Log.error(
                 "Unable to generate branch instruction from 0x%x to 0x%x" % (cur_pc, aTargetAddr)
             )
 
