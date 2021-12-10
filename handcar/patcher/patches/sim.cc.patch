@@ -58,7 +58,7 @@
 <              boost::asio::io_service *io_service_ptr, boost::asio::ip::tcp::acceptor *acceptor_ptr, // option -s
 < #endif
 ---
-> simlib_t::simlib_t(const char* isa, const char* priv, const char* varch, size_t nprocs, bool halted, const char* bootargs, reg_t start_pc, std::vector<int> const hartids,
+> simlib_t::simlib_t(const char* isa, const char* priv, const char* varch, size_t nprocs, bool halted, const char* bootargs, reg_t start_pc, std::vector<int> const hartids, bool auto_init_mem,
 44,49c53
 <   : htif_t(args),
 <     mems(mems),
@@ -83,7 +83,7 @@
 <     debug_module(this, dm_config)
 ---
 >     dtb_enabled(true),
->     _ForceSparseMemoryModel(Force::EMemBankType::Default),
+>     _ForceSparseMemoryModel(Force::EMemBankType::Default, auto_init_mem),
 >     entry(DRAM_BASE)
 73,80d69
 <   for (auto& x : mems)

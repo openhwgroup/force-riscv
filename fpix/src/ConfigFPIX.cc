@@ -129,6 +129,7 @@ class ConfigParserFPIX : public pugi::xml_tree_walker
             else if (!strcmp(name,"vlen")) _mpConfig->mVectorRegLen = ival;
             else if (!strcmp(name,"elen")) _mpConfig->mMaxVectorElemWidth = ival;
             else if (!strcmp(name,"exit_loop")) _mpConfig->mExitOnBranchToSelf = ival;
+            else if (!strcmp(name,"auto_init_mem")) _mpConfig->mAutoInitMem = static_cast<bool>(ival);
             else if (!strcmp(name,"plugins_options")) _mpConfig->mGlobalPluginsOptions += value; 
             else
             {

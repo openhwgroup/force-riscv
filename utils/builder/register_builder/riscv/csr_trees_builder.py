@@ -20,7 +20,7 @@ import os
 import getopt
 import argparse
 import re
-import defusedxml.defusedxml.ElementTree as ET
+import defusedxml_local.defusedxml.ElementTree as ET
 import copy
 
 license_string = """# Copyright (C) [2020] Futurewei Technologies, Inc.

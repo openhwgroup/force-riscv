@@ -53,16 +53,18 @@ namespace Force {
 
     mspSimAPI = pSimAPI;
 
-    ApiSimConfig sim_dll_cfg(sim_cfg->ClusterCount(), /* # of clusters */
-			     sim_cfg->NumberOfCores(), /* # cores */
-			     sim_cfg->ThreadsPerCpu(), /* # threads */
-			     sim_cfg->PhysicalAddressSize(), /* physical address size */
-			     sim_cfg->VectorRegisterLength(), /* vector register length */
-			     sim_cfg->MaxVectorElementWidth(), /* maximum vector element width */
-			     "./fpix_sim.log", /* simulator debug trace file */
-                             false,
-			     sim_cfg->SimulatorConfigString()
-			     );
+    ApiSimConfig sim_dll_cfg(
+      sim_cfg->ClusterCount(), /* # of clusters */
+      sim_cfg->NumberOfCores(), /* # cores */
+      sim_cfg->ThreadsPerCpu(), /* # threads */
+      sim_cfg->PhysicalAddressSize(), /* physical address size */
+      sim_cfg->VectorRegisterLength(), /* vector register length */
+      sim_cfg->MaxVectorElementWidth(), /* maximum vector element width */
+      "./fpix_sim.log", /* simulator debug trace file */
+      false, /* don't use trace file */
+      sim_cfg->SimulatorConfigString(), /* simulator configuration string */
+      sim_cfg->AutoInitMem() /* automatically initialize simulator memory on access */
+    );
 
     mspSimAPI->InitializeIss(sim_dll_cfg, sim_cfg->SimulatorSharedObjectFile(),"" /* no api trace file */ );
 

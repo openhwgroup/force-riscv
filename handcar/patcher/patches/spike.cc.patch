@@ -740,16 +740,18 @@
 <   std::unique_ptr<icache_sim_t> ic;
 <   std::unique_ptr<dcache_sim_t> dc;
 <   std::unique_ptr<cache_sim_t> l2;
-233,236d552
+233,236c553
 <   bool log_commits = false;
 <   const char *log_path = nullptr;
 <   std::vector<std::function<extension_t*()>> extensions;
 <   const char* initrd = NULL;
-240,242d555
+---
+>   bool auto_init_mem = false;
+240,242d556
 <   const char* dtb_file = NULL;
 <   uint16_t rbb_port = 0;
 <   bool use_rbb = false;
-244,253d556
+244,253d557
 <   debug_module_config_t dm_config = {
 <     .progbufsize = 2,
 <     .max_bus_master_bits = 0,
@@ -760,15 +762,15 @@
 <     .support_haltgroups = true,
 <     .support_impebreak = true
 <   };
-255c558
+255c559
 < 
 ---
 >  
-259c562
+259c563
 < 
 ---
 >  
-268,310d570
+268,310d571
 <   auto const device_parser = [&plugin_devices](const char *s) {
 <     const std::string str(s);
 <     std::istringstream stream(str);
@@ -812,10 +814,10 @@
 <     plugin_devices.emplace_back(base, new mmio_plugin_device_t(name, args));
 <   };
 < 
-312,313d571
+312,313d572
 <   parser.help(&suggest_help);
 <   parser.option('h', "help", 0, [&](const char* s){help(0);});
-317,321c575
+317,321c576
 < #ifdef HAVE_BOOST_ASIO
 <   parser.option('s', 0, 0, [&](const char* s){socket = true;});
 < #endif
@@ -823,9 +825,9 @@
 <   parser.option('m', 0, 1, [&](const char* s){mems = make_mems(s);});
 ---
 >   parser.option('p', 0, 1, [&](const char* s){nprocs = atoi(s);});
-324d577
+324d578
 <   parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoul_safe(s);});
-327,329c580,582
+327,329c581,583
 <   parser.option(0, "ic", 1, [&](const char* s){ic.reset(new icache_sim_t(s));});
 <   parser.option(0, "dc", 1, [&](const char* s){dc.reset(new dcache_sim_t(s));});
 <   parser.option(0, "l2", 1, [&](const char* s){l2.reset(cache_sim_t::construct(s, "L2$"));});
@@ -833,16 +835,18 @@
 >   parser.option(0, "ic", 1, [&](const char* s){ic = new icache_sim_t(s);});
 >   parser.option(0, "dc", 1, [&](const char* s){dc = new dcache_sim_t(s);});
 >   parser.option(0, "l2", 1, [&](const char* s){l2 = cache_sim_t::construct(s, "L2$");});
-334,335c587
+330a585
+>   parser.option(0, "auto-init-mem", 0, [&](const char* s){auto_init_mem = true;});
+334,335c589
 <   parser.option(0, "device", 1, device_parser);
 <   parser.option(0, "extension", 1, [&](const char* s){extensions.push_back(find_extension(s));});
 ---
 >   //parser.option(0, "extension", 1, [&](const char* s){extensions.push_back(find_extension(s));});
-338d589
+338d591
 <   parser.option(0, "dtb", 1, [&](const char *s){dtb_file = s;});
-340d590
+340d592
 <   parser.option(0, "initrd", 1, [&](const char* s){initrd = s;});
-350,371d599
+350,371d601
 <   parser.option(0, "dm-progsize", 1,
 <       [&](const char* s){dm_config.progbufsize = atoul_safe(s);});
 <   parser.option(0, "dm-no-impebreak", 0,
@@ -865,7 +869,7 @@
 <                 [&](const char* s){log_commits = true;});
 <   parser.option(0, "log", 1,
 <                 [&](const char* s){log_path = s;});
-381,399c609,626
+381,399c611,626
 <   std::vector<std::string> htif_args(argv1, (const char*const*)argv + argc);
 <   if (mems.empty())
 <     mems = make_mems("2048");
@@ -891,9 +895,7 @@
 >   isa_rv32 = isa_str.find("RV32") != std::string::npos;
 >   isa_D = (isa_str.find("F") != std::string::npos) && (isa_str.find("D") != std::string::npos);
 > 
->   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, bootargs, start_pc, 
->     hartids,
->     cmd_file);
+>   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, bootargs, start_pc, hartids, auto_init_mem, cmd_file);
 >   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
 >  
 >   if (ic && l2) ic->set_miss_handler(&*l2);

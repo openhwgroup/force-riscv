@@ -56,7 +56,7 @@
 < #endif
 ---
 >   simlib_t(const char* isa, const char* priv, const char* varch, size_t _nprocs, bool halted,
->         const char* bootargs, reg_t start_pc, const std::vector<int> hartids,
+>         const char* bootargs, reg_t start_pc, const std::vector<int> hartids, bool auto_init_mem,
 46c30,39
 <   ~sim_t();
 ---

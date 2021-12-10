@@ -205,7 +205,7 @@ namespace Force {
   }
 
 
-  unsigned char EOptionIndexSize = 15;
+  unsigned char EOptionIndexSize = 16;
 
   const string EOptionIndex_to_string(EOptionIndex in_enum)
   {
@@ -225,6 +225,7 @@ namespace Force {
     case EOptionIndex::EXIT_LOOP_OPT: return "EXIT_LOOP_OPT";
     case EOptionIndex::PLUGIN: return "PLUGIN";
     case EOptionIndex::PLUGINS_OPTIONS: return "PLUGINS_OPTIONS";
+    case EOptionIndex::AUTO_INIT_MEM_OPT: return "AUTO_INIT_MEM_OPT";
     default:
       unknown_enum_value("EOptionIndex", (unsigned char)(in_enum));
     }
@@ -244,6 +245,9 @@ namespace Force {
     case 1:
       validate(in_str, "SEED", enum_type_name);
       return EOptionIndex::SEED;
+    case 2:
+      validate(in_str, "AUTO_INIT_MEM_OPT", enum_type_name);
+      return EOptionIndex::AUTO_INIT_MEM_OPT;
     case 3:
       validate(in_str, "RAILHOUSE_OPT", enum_type_name);
       return EOptionIndex::RAILHOUSE_OPT;
@@ -302,6 +306,9 @@ namespace Force {
     case 1:
       okay = (in_str == "SEED");
       return EOptionIndex::SEED;
+    case 2:
+      okay = (in_str == "AUTO_INIT_MEM_OPT");
+      return EOptionIndex::AUTO_INIT_MEM_OPT;
     case 3:
       okay = (in_str == "RAILHOUSE_OPT");
       return EOptionIndex::RAILHOUSE_OPT;

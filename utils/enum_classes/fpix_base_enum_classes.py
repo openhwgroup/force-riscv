@@ -56,6 +56,7 @@ enum_classes_details = [
             ("EXIT_LOOP_OPT", 12),
             ("PLUGIN", 13),
             ("PLUGINS_OPTIONS", 14),
+            ("AUTO_INIT_MEM_OPT", 15),
         ],
     ],
     [

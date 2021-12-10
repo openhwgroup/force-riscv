@@ -73,6 +73,7 @@ namespace Force {
     EXIT_LOOP_OPT = 12,
     PLUGIN = 13,
     PLUGINS_OPTIONS = 14,
+    AUTO_INIT_MEM_OPT = 15,
   };
   extern unsigned char EOptionIndexSize;
   extern const std::string EOptionIndex_to_string(EOptionIndex in_enum); //!< Get string name for enum.

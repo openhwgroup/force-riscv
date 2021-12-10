@@ -23,8 +23,8 @@ import sys
 from xml.etree.ElementTree import Element
 
 import RiscVRegDef as RISCV
-import defusedxml.defusedxml.ElementTree as ET
-import defusedxml.defusedxml.minidom as DOM
+import defusedxml_local.defusedxml.ElementTree as ET
+import defusedxml_local.defusedxml.minidom as DOM
 from ModifyRegisterFile import Files
 
 

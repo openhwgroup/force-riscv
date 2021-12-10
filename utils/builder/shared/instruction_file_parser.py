@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import defusedxml.defusedxml.sax
+import defusedxml_local.defusedxml.sax
 import sys
 from shared.instruction import Instruction, Operand, GroupOperand, Asm
 import shared.builder_utils as builder_utils
@@ -179,7 +179,7 @@ class InstructionFileParser(object):
     def parse(self, file_path):
         ifile_handler = InstructionFileHandler(file_path, self.instrFile)
         try:
-            defusedxml.defusedxml.sax.parse(file_path, ifile_handler)
+            defusedxml_local.defusedxml.sax.parse(file_path, ifile_handler)
         except BaseException:
             e_type, e_value, e_tb = sys.exc_info()
             import traceback

@@ -57,10 +57,10 @@ namespace Force {
     void Initialize(uint64 address, uint64 value, uint32 nBytes, EMemDataType type);  //!< Initialize memory.
     void Initialize(uint64 address, cuint8* data, cuint8* attrs, uint32 nBytes, EMemDataType type);  //!< Initialize memory.
     bool IsInitialized(uint64 address, uint32 nBytes) const; //!< check whether address is initialized or not
-    uint64 Read(uint64 address, uint32 nBytes) const;        //!< read data in big-endian
+    uint64 Read(uint64 address, uint32 nBytes);        //!< read data in big-endian
     void Write(uint64 address, uint64 value, uint32 nBytes); //!< write data in big-endian
     void Write(uint64 address, cuint8* data, uint32 nBytes);  //!< write data in the buffer
-    uint64 ReadInitialValue(uint64 address, uint32 nBytes) const;  //!< read initial value in big-endian, failed if some byte not initialized
+    uint64 ReadInitialValue(uint64 address, uint32 nBytes);  //!< read initial value in big-endian, failed if some byte not initialized
     void Reserve(uint64 address, uint32 nBytes); //!< Reserve a memory range. Unreserve any overlapping reserved ranges. Any write to any part of the reserved range causes the range to become unreserved.
     void Unreserve(uint64 address, uint32 nBytes); //!< Unreserve all reserved memory ranges that overlap with the specified memory range.
     bool IsReserved(uint64 address, uint32 nBytes); //!< Return true if the specified memory range lies entirely within a reserved memory range.
@@ -73,7 +73,7 @@ namespace Force {
     void Dump (std::ostream& out_str, uint64 address, uint64 nBytes) const; //!< dump memory range
     void GetSections(std::vector<Section>& rSections) const;    //!< Get sections the memory object contained, by address ascending order
 
-    explicit Memory(EMemBankType bankType) : mBankType(bankType), mContent() { }  //!< Constructor.
+    Memory(EMemBankType bankType, bool autoInit) : mBankType(bankType), mContent(), mAutoInit(autoInit) { }  //!< Constructor.
     ~Memory(); //!< Destructor.
     EMemBankType MemoryBankType() const { return mBankType; } //!< Return memory bank type.
     bool IsEmpty() const { return mContent.empty(); } //!< Return if the memory module is empty.
@@ -83,6 +83,7 @@ namespace Force {
   private:
     void InitializeMemoryBytes(const MetaAccess& rMetaAccess, EMemDataType type); //!< initialize the memory bytes on meta access
     bool IsInitializedMemoryBytes(const MetaAccess& rMetaAccess) const; //!< check memory bytes are initialized or not
+    void ValidateInitialization(uint64 address, uint32 nBytes); //!< Verify the specified memory range is initialized. If mAutoInit is true, uninitialized memory is initialized; otherwise, uninitialize memory triggers a failure.
     void ReadMemoryBytes(MetaAccess& rMetaAccess) const;                //!< read memory bytes on meta access
     void WriteMemoryBytes(const MetaAccess& rMetaAccess);         //!< write memory bytes on meta access
     void ReadInitialValue(MetaAccess& rMetaAccess) const;         //!< read initial value on meta access
@@ -91,6 +92,7 @@ namespace Force {
     EMemBankType mBankType;
     std::map<uint64, MemoryBytes *> mContent;  //!< map containing all memory content, increasing order by the key
     std::list<Section> mReservedRanges; //!< List of reserved memory ranges sorted by start address
+    bool mAutoInit; //!< Flag indicating memory should be automatically initialized on access if not already initialized
     static bool msRandomPattern; //!< memory fill rondom pattern
     static uint64 msValuePattern;  //!< memory fill value pattern in big endian
  };
