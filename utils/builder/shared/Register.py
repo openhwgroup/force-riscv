@@ -18,7 +18,7 @@
 # This file defines the register and its associated register and bit fields
 # and also handles reading from and writing to XML files.
 
-import defusedxml.defusedxml.ElementTree as ET
+import defusedxml_local.defusedxml.ElementTree as ET
 
 
 # A bit field has a size (# of bits) and a shift (# of bits to shift the

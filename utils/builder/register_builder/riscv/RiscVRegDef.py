@@ -21,8 +21,8 @@
 import copy
 import os
 
-import defusedxml.defusedxml.ElementTree as ET
-import defusedxml.defusedxml.minidom as DOM
+import defusedxml_local.defusedxml.ElementTree as ET
+import defusedxml_local.defusedxml.minidom as DOM
 
 from BootPriority import *
 
