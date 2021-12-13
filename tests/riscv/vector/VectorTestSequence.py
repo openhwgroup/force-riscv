@@ -258,10 +258,16 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
             allowed_except_codes.add(0x4)
             allowed_except_codes.add(0x6)
 
-        if self._calculateEmul(aInstr) > 8:
+        if self._calculateMaxRegisterCount(aInstr) > 8:
             allowed_except_codes.add(0x2)
 
         return allowed_except_codes
+
+    # Calculate the largest register count for the given instruction's operands.
+    #
+    #  @param aInstr The name of the instruction.
+    def _calculateMaxRegisterCount(self, aInstr):
+        return self._calculateEmul(aInstr)
 
     # Calculate EMUL for the given instruction.
     #
@@ -275,7 +281,7 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
 
         (vsew_val, valid) = self.readRegister("vtype", field="VSEW")
         self.assertValidRegisterValue("vtype", valid)
-        sew = self.calculateLmul(vsew_val)
+        sew = self.calculateSew(vsew_val)
 
         return round((eew / sew) * lmul)
 
@@ -283,8 +289,8 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     #
     #  @param aInstr The name of the instruction.
     def _getEew(self, aInstr):
-        match = re.fullmatch(r"V[A-Z]+(\d+)\.V\#\#RISCV", aInstr)
-        return int(match.group(1))
+        match = re.fullmatch(r"V(L|S)\w*EI?(\d+)\.V\#\#RISCV", aInstr)
+        return int(match.group(2))
 
 
 #  This class provides some common parameters for testing VSETVL and
