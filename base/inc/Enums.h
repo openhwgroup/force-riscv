@@ -75,7 +75,6 @@ namespace Force {
     PREDREG = 16,
     ALU = 17,
     DataProcessing = 18,
-    VectorLayout = 19,
   };
   extern unsigned char EOperandTypeSize;
   extern const std::string EOperandType_to_string(EOperandType in_enum); //!< Get string name for enum.

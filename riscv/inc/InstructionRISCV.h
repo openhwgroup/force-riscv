@@ -43,7 +43,7 @@ namespace Force {
     \class VectorAMOInstructionRISCV
     \brief Class for RISCV vector AMO instructions.
   */
-  class VectorAMOInstructionRISCV : public VectorLoadStoreInstruction {
+  class VectorAMOInstructionRISCV : public LoadStoreInstruction {
   public:
     DEFAULT_CONSTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorAMOInstructionRISCV);

@@ -84,6 +84,7 @@ class Operand(object):
         self.exclude = None
         self.differ = None
         self.slave = None
+        self.layoutType = None
         self.layoutMultiple = None
         self.regCount = None
         self.regIndexAlignment = None
@@ -137,6 +138,8 @@ class Operand(object):
             ret_str += ' class="%s"' % self.oclass
         if self.slave:
             ret_str += ' slave="%s"' % self.slave
+        if self.layoutType:
+            ret_str += ' layout-type="%s"' % self.layoutType
         if self.layoutMultiple:
             ret_str += ' layout-multiple="%s"' % self.layoutMultiple
         if self.regCount:
@@ -258,6 +261,7 @@ class Operand(object):
             "differ",
             "ext",
             "slave",
+            "layoutType",
             "layoutMultiple",
             "regCount",
             "regIndexAlignment",

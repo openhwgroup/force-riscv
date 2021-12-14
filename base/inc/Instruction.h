@@ -217,42 +217,6 @@ namespace Force {
     //InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of SystemCallInstructionConstraint object.
   };
 
-  /*!
-    \class VectorInstruction
-    \brief Class for vector instructions.
-  */
-  class VectorInstruction : public virtual Instruction {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorInstruction);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorInstruction);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorInstruction);
-
-    Object* Clone() const override { return new VectorInstruction(*this); } //!< Return a cloned VectorInstruction object of the same type and same contents of the object.
-    const char* Type() const override { return "VectorInstruction"; } //!< Return the type of the VectorInstruction object in C string.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(VectorInstruction);
-
-    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstraint object.
-  };
-
-  /*!
-    \class VectorLoadStoreInstruction
-    \brief Class for vector load store instructions.
-  */
-  class VectorLoadStoreInstruction : public VectorInstruction, public LoadStoreInstruction {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorLoadStoreInstruction);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLoadStoreInstruction);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorLoadStoreInstruction);
-
-    Object* Clone() const override { return new VectorLoadStoreInstruction(*this); } //!< Return a cloned object of the same type and same contents of the object.
-    const char* Type() const override { return "VectorLoadStoreInstruction"; } //!< Return the type of the VectorLoadStoreInstruction object in C string.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(VectorLoadStoreInstruction);
-
-    InstructionConstraint* InstantiateInstructionConstraint() const override; //!< Return an instance of appropriate InstructionConstraint object.
-  };
-
 }
 
 #endif

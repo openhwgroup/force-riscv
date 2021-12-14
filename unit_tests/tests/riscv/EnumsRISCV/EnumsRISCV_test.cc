@@ -1288,6 +1288,45 @@ CASE( "tests for EVmInfoBoolType" ) {
   }
 },
 
+
+CASE( "tests for EVectorLayoutType" ) {
+
+  SETUP ( "setup EVectorLayoutType" )  {
+
+    SECTION( "test enum to string conversion" ) {
+      EXPECT(EVectorLayoutType_to_string(EVectorLayoutType::Vtype) == "Vtype");
+      EXPECT(EVectorLayoutType_to_string(EVectorLayoutType::FixedElementSize) == "FixedElementSize");
+      EXPECT(EVectorLayoutType_to_string(EVectorLayoutType::WholeRegister) == "WholeRegister");
+    }
+
+    SECTION( "test string to enum conversion" ) {
+      EXPECT(string_to_EVectorLayoutType("Vtype") == EVectorLayoutType::Vtype);
+      EXPECT(string_to_EVectorLayoutType("FixedElementSize") == EVectorLayoutType::FixedElementSize);
+      EXPECT(string_to_EVectorLayoutType("WholeRegister") == EVectorLayoutType::WholeRegister);
+    }
+
+    SECTION( "test string to enum conversion with non-matching string" ) {
+      EXPECT_THROWS_AS(string_to_EVectorLayoutType("V_ype"), EnumTypeError);
+    }
+
+    SECTION( "test non-throwing string to enum conversion" ) {
+      bool okay = false;
+      EXPECT(try_string_to_EVectorLayoutType("Vtype", okay) == EVectorLayoutType::Vtype);
+      EXPECT(okay);
+      EXPECT(try_string_to_EVectorLayoutType("FixedElementSize", okay) == EVectorLayoutType::FixedElementSize);
+      EXPECT(okay);
+      EXPECT(try_string_to_EVectorLayoutType("WholeRegister", okay) == EVectorLayoutType::WholeRegister);
+      EXPECT(okay);
+    }
+
+    SECTION( "test non-throwing string to enum conversion with non-matching string" ) {
+      bool okay = false;
+      try_string_to_EVectorLayoutType("V_ype", okay);
+      EXPECT(!okay);
+    }
+  }
+},
+
 };
 
 int main(int argc, char* argv[])

@@ -64,15 +64,10 @@ namespace Force {
     obj_registry->RegisterObject(new CompressedRegisterOperandRISCV());
     obj_registry->RegisterObject(new VsetvlAvlRegisterOperand());
     obj_registry->RegisterObject(new VsetvlVtypeRegisterOperand());
-    obj_registry->RegisterObject(new VtypeLayoutOperand());
-    obj_registry->RegisterObject(new WholeRegisterLayoutOperand());
-    obj_registry->RegisterObject(new CustomLayoutOperand());
+    obj_registry->RegisterObject(new VectorBaseOffsetLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new VectorStridedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new VectorIndexedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new MultiVectorRegisterOperandRISCV());
-    obj_registry->RegisterObject(new VectorIndexRegisterOperand());
-    obj_registry->RegisterObject(new VectorDataRegisterOperand());
-    obj_registry->RegisterObject(new VectorIndexedDataRegisterOperand());
 
     // Register Paging related objects.
     obj_registry->RegisterObject(new AddressPteAttributeRISCV());
@@ -85,7 +80,6 @@ namespace Force {
 
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());
-    obj_registry->RegisterObject(new VectorLoadStoreInstruction());
     obj_registry->RegisterObject(new VectorAMOInstructionRISCV());
     obj_registry->RegisterObject(new VsetvlInstruction());
   }

@@ -120,6 +120,7 @@ class InstructionFileHandler(ContentHandler, object):
             "exclude",
             "differ",
             "slave",
+            "layout-type",
             "layout-multiple",
             "reg-count",
             "reg-index-alignment",

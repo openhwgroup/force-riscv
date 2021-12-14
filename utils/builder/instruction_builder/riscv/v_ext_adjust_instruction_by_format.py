@@ -27,9 +27,9 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     # necessary to strip off the layout operand name.
     instruction_format = aInstruction.get_format()
 
-    add_layout_operand(aInstruction)
+    set_register_layouts(aInstruction)
 
-    adjust_register_layout(aInstruction)
+    adjust_register_layouts(aInstruction)
 
     if instruction_format == "vd/rd-vs2-vs1-vm":
         return adjust_vdrd_vs2_vs1_vm(aInstruction)
@@ -117,46 +117,24 @@ def record_instruction_format(aInstructionFormat):
         format_map[aInstructionFormat] = 1
 
 
-def add_layout_operand(aInstruction):
-    operand_adjustor = VectorOperandAdjustor(aInstruction)
-    if _is_whole_register_load_store(aInstruction.name):
-        reg_count = int(aInstruction.name[2])
-
-        elem_width = 8
-        if aInstruction.name[4] == "E":
-            width_end_index = aInstruction.name.find(".")
-            elem_width = int(aInstruction.name[5:width_end_index])
-
-        operand_adjustor.add_whole_register_layout_operand(
-            aRegCount=reg_count, aElemWidth=elem_width
-        )
-    elif aInstruction.name in ("VLM.V", "VSM.V"):
-        operand_adjustor.add_whole_register_layout_operand(aRegCount=1)
-    elif aInstruction.name in ("VMV1R.V", "VMV2R.V", "VMV4R.V", "VMV8R.V"):
-        reg_count = int(aInstruction.name[3])
-        operand_adjustor.add_whole_register_layout_operand(aRegCount=reg_count)
-    elif aInstruction.name in ("VSETVL", "VSETIVLI", "VSETVLI"):
-        pass  # No vector layout operand required
-    elif (
-        aInstruction.iclass == "VectorLoadStoreInstruction"
-        or aInstruction.iclass == "VectorAMOInstructionRISCV"
-    ):
-        reg_count = 1
-        elem_width = None
-        ints = re.findall("\d+", aInstruction.name)
-        if len(ints) > 1:
-            reg_count = ints[0]
-            elem_width = ints[1]
+def set_register_layouts(aInstruction):
+    if _is_load_store(aInstruction):
+        if _is_whole_register_load_store(aInstruction.name):
+            _set_whole_register_load_store_register_layouts(aInstruction)
+        elif _is_mask_load_store(aInstruction.name):
+            _set_mask_load_store_register_layouts(aInstruction)
+        elif _is_indexed_load_store(aInstruction):
+            _set_indexed_load_store_register_layouts(aInstruction)
         else:
-            elem_width = ints[0]
-
-        operand_adjustor.add_custom_layout_operand(aRegCount=reg_count, aElemWidth=elem_width)
+            _set_load_store_register_layouts(aInstruction)
+    elif _is_whole_register_move(aInstruction.name):
+        _set_whole_register_move_register_layouts(aInstruction)
     else:
-        operand_adjustor.add_vtype_layout_operand()
+        _set_arithmetic_register_layouts(aInstruction)
 
 
 # Account for non-standard register layouts due to wide and narrow operands
-def adjust_register_layout(aInstruction):
+def adjust_register_layouts(aInstruction):
     adjust_dest = False
     dest_layout_multiple = 2
     if aInstruction.name.startswith("VW") or aInstruction.name.startswith("VFW"):
@@ -210,9 +188,9 @@ def get_element_size(aConstBitsOpr):
 
 
 def adjust_vd_rs1(aInstruction):
-    if aInstruction.iclass == "VectorLoadStoreInstruction":
+    if aInstruction.iclass == "LoadStoreInstruction":
         operand_adjustor = VectorOperandAdjustor(aInstruction)
-        operand_adjustor.set_vd_ls_dest()
+        operand_adjustor.set_vd()
         operand_adjustor.set_rs1_int_ls_base()
 
         width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -229,7 +207,7 @@ def adjust_vd_rs1(aInstruction):
             aInstruction,
             None,
             "LoadStore",
-            "VectorBaseOffsetLoadStoreOperand",
+            "VectorBaseOffsetLoadStoreOperandRISCV",
             subop_dict,
             attr_dict,
         )
@@ -246,7 +224,7 @@ def adjust_vd_rs1(aInstruction):
 
 def adjust_vs3_rs1(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_vs3()
     operand_adjustor.set_rs1_int_ls_base()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -263,7 +241,7 @@ def adjust_vs3_rs1(aInstruction):
         aInstruction,
         None,
         "LoadStore",
-        "VectorBaseOffsetLoadStoreOperand",
+        "VectorBaseOffsetLoadStoreOperandRISCV",
         subop_dict,
         attr_dict,
     )
@@ -273,7 +251,7 @@ def adjust_vs3_rs1(aInstruction):
 
 def adjust_vs3_rs1_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_vs3()
     operand_adjustor.set_rs1_int_ls_base()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -290,7 +268,7 @@ def adjust_vs3_rs1_vm(aInstruction):
         aInstruction,
         None,
         "LoadStore",
-        "VectorBaseOffsetLoadStoreOperand",
+        "VectorBaseOffsetLoadStoreOperandRISCV",
         subop_dict,
         attr_dict,
     )
@@ -301,9 +279,9 @@ def adjust_vs3_rs1_vm(aInstruction):
 
 def adjust_vs3_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vs3_ls_indexed_source()
+    operand_adjustor.set_vs3()
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2_ls_index()
+    operand_adjustor.set_vs2()
     operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -332,10 +310,10 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
 
     reg_count = 1
     if "SEG" in aInstruction.name:
-        layout_opr = aInstruction.find_operand("custom")
-        reg_count = int(layout_opr.regCount)
+        src_opr = aInstruction.find_operand("vs3")
+        reg_count = int(src_opr.regCount)
 
-    operand_adjustor.set_vs3_ls_source()
+    operand_adjustor.set_vs3()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_rs2_int_ls_base()
 
@@ -366,7 +344,7 @@ def adjust_vs3_rs1_rs2_vm(aInstruction):
 def adjust_rs1_vs2_vs3_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2_ls_index()
+    operand_adjustor.set_vs2()
     operand_adjustor.set_vs2_differ_vs3()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -386,7 +364,7 @@ def adjust_rs1_vs2_vs3_vm(aInstruction):
         attr_dict,
     )
 
-    operand_adjustor.set_vs3_ls_indexed_source()
+    operand_adjustor.set_vs3()
     operand_adjustor.set_vm()
     return True
 
@@ -430,8 +408,8 @@ def adjust_vdrd_rs1_vm(aInstruction):
 
 def adjust_vd_rs1_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    if aInstruction.iclass == "VectorLoadStoreInstruction":
-        operand_adjustor.set_vd_ls_dest()
+    if aInstruction.iclass == "LoadStoreInstruction":
+        operand_adjustor.set_vd()
         operand_adjustor.set_rs1_int_ls_base()
 
         width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -448,7 +426,7 @@ def adjust_vd_rs1_vm(aInstruction):
             aInstruction,
             None,
             "LoadStore",
-            "VectorBaseOffsetLoadStoreOperand",
+            "VectorBaseOffsetLoadStoreOperandRISCV",
             subop_dict,
             attr_dict,
         )
@@ -465,9 +443,9 @@ def adjust_vd_rs1_vm(aInstruction):
 
 def adjust_vd_rs1_vs2_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
-    operand_adjustor.set_vd_ls_indexed_dest()
+    operand_adjustor.set_vd()
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2_ls_index()
+    operand_adjustor.set_vs2()
     operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -496,10 +474,10 @@ def adjust_vd_rs1_rs2_vm(aInstruction):
 
     reg_count = 1
     if "SEG" in aInstruction.name:
-        layout_opr = aInstruction.find_operand("custom")
-        reg_count = int(layout_opr.regCount)
+        dest_opr = aInstruction.find_operand("vd")
+        reg_count = int(dest_opr.regCount)
 
-    operand_adjustor.set_vd_ls_dest()
+    operand_adjustor.set_vd()
     operand_adjustor.set_rs1_int_ls_base()
     operand_adjustor.set_rs2_int_ls_base()
 
@@ -530,7 +508,7 @@ def adjust_vd_rs1_rs2_vm(aInstruction):
 def adjust_rs1_vs2_vd_vm(aInstruction):
     operand_adjustor = VectorOperandAdjustor(aInstruction)
     operand_adjustor.set_rs1_int_ls_base()
-    operand_adjustor.set_vs2_ls_index()
+    operand_adjustor.set_vs2()
     operand_adjustor.set_vs2_differ_vd()
 
     width = get_element_size(aInstruction.find_operand("const_bits"))
@@ -550,7 +528,7 @@ def adjust_rs1_vs2_vd_vm(aInstruction):
         attr_dict,
     )
 
-    operand_adjustor.set_vd_ls_indexed_dest()
+    operand_adjustor.set_vd()
     operand_adjustor.set_vm()
     return True
 
@@ -757,8 +735,125 @@ def adjust_vdrd_vs2_rs1_vm(aInstruction):
     return True
 
 
+def _is_load_store(aInstruction):
+    if aInstruction.iclass in ("LoadStoreInstruction", "VectorAMOInstructionRISCV"):
+        return True
+
+    return False
+
+
 def _is_whole_register_load_store(aInstructionName):
     if re.fullmatch(r"V(L|S)\dR(E\d{1,2})?\.V", aInstructionName):
         return True
 
     return False
+
+
+def _is_mask_load_store(aInstructionName):
+    if aInstructionName in ("VLM.V", "VSM.V"):
+        return True
+
+    return False
+
+
+def _is_indexed_load_store(aInstruction):
+    if (aInstruction.name[:4] in ("VLOX", "VLUX", "VSOX", "VSUX")) or (
+        aInstruction.iclass == "VectorAMOInstructionRISCV"
+    ):
+        return True
+
+    return False
+
+
+def _is_whole_register_move(aInstructionName):
+    if aInstructionName in ("VMV1R.V", "VMV2R.V", "VMV4R.V", "VMV8R.V"):
+        return True
+
+    return False
+
+
+def _set_whole_register_load_store_register_layouts(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+
+    reg_count = int(aInstruction.name[2])
+
+    elem_width = 8
+    if aInstruction.name[4] == "E":
+        width_end_index = aInstruction.name.find(".")
+        elem_width = int(aInstruction.name[5:width_end_index])
+
+    src_dest_opr = _get_source_or_destination_operand(aInstruction)
+    operand_adjustor.set_whole_register_layout(
+        src_dest_opr, aRegCount=reg_count, aElemWidth=elem_width
+    )
+
+
+def _set_mask_load_store_register_layouts(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+
+    src_dest_opr = _get_source_or_destination_operand(aInstruction)
+    operand_adjustor.set_whole_register_layout(src_dest_opr, aRegCount=1)
+
+
+def _set_indexed_load_store_register_layouts(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+
+    (reg_count, elem_width) = _get_load_store_register_layout_parameters(aInstruction)
+
+    src_dest_opr = _get_source_or_destination_operand(aInstruction)
+    operand_adjustor.set_vtype_layout(aInstruction, src_dest_opr, aRegCount=reg_count)
+    index_opr = aInstruction.find_operand("vs2")
+    operand_adjustor.set_fixed_element_size_layout(index_opr, aRegCount=1, aElemWidth=elem_width)
+
+
+def _set_load_store_register_layouts(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+
+    (reg_count, elem_width) = _get_load_store_register_layout_parameters(aInstruction)
+
+    src_dest_opr = _get_source_or_destination_operand(aInstruction)
+    operand_adjustor.set_fixed_element_size_layout(
+        src_dest_opr, aRegCount=reg_count, aElemWidth=elem_width
+    )
+
+
+def _set_whole_register_move_register_layouts(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+
+    reg_count = int(aInstruction.name[3])
+
+    dest_opr = aInstruction.find_operand("vd")
+    operand_adjustor.set_whole_register_layout(dest_opr, aRegCount=reg_count)
+    src_opr = aInstruction.find_operand("vs2")
+    operand_adjustor.set_whole_register_layout(src_opr, aRegCount=reg_count)
+
+
+def _set_arithmetic_register_layouts(aInstruction):
+    operand_adjustor = VectorOperandAdjustor(aInstruction)
+    for opr_name in ("vd", "vs1", "vs2", "vd/rd", "vd$\neq$0"):
+        opr = aInstruction.find_operand(opr_name, fail_not_found=False)
+
+        if opr:
+            operand_adjustor.set_vtype_layout(aInstruction, opr)
+
+
+def _get_source_or_destination_operand(aInstruction):
+    src_dest_opr = aInstruction.find_operand("vd", fail_not_found=False)
+    if not src_dest_opr:
+        src_dest_opr = aInstruction.find_operand("vs3")
+
+    return src_dest_opr
+
+
+def _get_load_store_register_layout_parameters(aInstruction):
+    reg_count = 1
+    elem_width = None
+
+    matches = re.findall("\d+", aInstruction.name)
+    if len(matches) > 1:
+        reg_count = matches[0]
+        elem_width = matches[1]
+    else:
+        elem_width = matches[0]
+
+    return (reg_count, elem_width)

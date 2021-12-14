@@ -100,37 +100,6 @@ namespace Force {
     const LoadStoreOperand* mpLoadStoreOperand; //!< Pointer to load-store operand.
   };
 
-  class VectorLayout;
-
-  /*!
-    \class VectorInstructionConstraint
-    \brief Class for vector instruction constraint.
-  */
-  class VectorInstructionConstraint : public virtual InstructionConstraint {
-  public:
-    VectorInstructionConstraint();
-    COPY_CONSTRUCTOR_ABSENT(VectorInstructionConstraint);
-    ~VectorInstructionConstraint() override;
-    ASSIGNMENT_OPERATOR_ABSENT(VectorInstructionConstraint);
-
-    const VectorLayout* GetVectorLayout() const { return mpVectorLayout; } //!< Return vector register layout for the instruction.
-    void SetVectorLayout(const VectorLayout& rVectorLayout) const; //!< Set vector register layout for the instruction.
-  private:
-    VectorLayout* mpVectorLayout; //!< Vector register layout for the instruction
-  };
-
-  /*!
-    \class VectorLoadStoreInstructionConstraint
-    \brief Class for vector load store instruction constraint.
-  */
-  class VectorLoadStoreInstructionConstraint : public VectorInstructionConstraint, public LoadStoreInstructionConstraint {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorLoadStoreInstructionConstraint);
-    COPY_CONSTRUCTOR_ABSENT(VectorLoadStoreInstructionConstraint);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLoadStoreInstructionConstraint);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorLoadStoreInstructionConstraint);
-  };
-
 }
 
 #endif

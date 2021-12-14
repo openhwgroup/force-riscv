@@ -456,6 +456,21 @@ namespace Force {
   extern EVmInfoBoolType try_string_to_EVmInfoBoolType(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
   typedef unsigned char EVmInfoBoolTypeBaseType; //!< Define a type name for the enum base data type.
 
+
+  /*!
+    Mechanism for determining vector register format
+  */
+  enum class EVectorLayoutType : unsigned char {
+    Vtype = 0,
+    FixedElementSize = 1,
+    WholeRegister = 2,
+  };
+  extern unsigned char EVectorLayoutTypeSize;
+  extern const std::string EVectorLayoutType_to_string(EVectorLayoutType in_enum); //!< Get string name for enum.
+  extern EVectorLayoutType string_to_EVectorLayoutType(const std::string& in_str); //!< Get enum value for string name.
+  extern EVectorLayoutType try_string_to_EVectorLayoutType(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
+  typedef unsigned char EVectorLayoutTypeBaseType; //!< Define a type name for the enum base data type.
+
 }
 
 #endif

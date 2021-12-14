@@ -134,7 +134,6 @@ CASE( "tests for EOperandType" ) {
       EXPECT(EOperandType_to_string(EOperandType::PREDREG) == "PREDREG");
       EXPECT(EOperandType_to_string(EOperandType::ALU) == "ALU");
       EXPECT(EOperandType_to_string(EOperandType::DataProcessing) == "DataProcessing");
-      EXPECT(EOperandType_to_string(EOperandType::VectorLayout) == "VectorLayout");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -157,7 +156,6 @@ CASE( "tests for EOperandType" ) {
       EXPECT(string_to_EOperandType("PREDREG") == EOperandType::PREDREG);
       EXPECT(string_to_EOperandType("ALU") == EOperandType::ALU);
       EXPECT(string_to_EOperandType("DataProcessing") == EOperandType::DataProcessing);
-      EXPECT(string_to_EOperandType("VectorLayout") == EOperandType::VectorLayout);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -203,8 +201,6 @@ CASE( "tests for EOperandType" ) {
       EXPECT(try_string_to_EOperandType("ALU", okay) == EOperandType::ALU);
       EXPECT(okay);
       EXPECT(try_string_to_EOperandType("DataProcessing", okay) == EOperandType::DataProcessing);
-      EXPECT(okay);
-      EXPECT(try_string_to_EOperandType("VectorLayout", okay) == EOperandType::VectorLayout);
       EXPECT(okay);
     }
 

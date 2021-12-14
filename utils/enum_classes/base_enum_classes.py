@@ -60,7 +60,6 @@ enum_classes_details = [
             ("PREDREG", 16),
             ("ALU", 17),
             ("DataProcessing", 18),
-            ("VectorLayout", 19),
         ],
     ],
     [

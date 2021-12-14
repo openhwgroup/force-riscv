@@ -30,12 +30,9 @@ namespace Force {
     uint32 mElemSize; //!< The size in bits of each vector register element
     uint32 mElemCount; //!< The number of elements per vector register group
     uint32 mFieldCount; //!< The number of fields per structure in memory
-    float mRegCount; //!< The number of registers per vector register group
-    float mRegIndexAlignment; //!< A power of 2 to which vector register indices must be aligned
-
-    uint32 GetRegisterCount(const float layoutMultiple) const { return mRegCount * layoutMultiple <= 1 ? 1 : lround(mRegCount * layoutMultiple); }
-
-    uint32 GetRegisterIndexAlignment(const float layoutMultiple) const { return mRegIndexAlignment * layoutMultiple <= 1 ? 1 : lround(mRegIndexAlignment * layoutMultiple); }
+    uint32 mRegCount; //!< The number of registers per vector register group
+    uint32 mRegIndexAlignment; //!< A power of 2 to which vector register indices must be aligned
+    bool mIsIllegal; //!< Flag indicating whether the layout is illegal
   };
 
 }

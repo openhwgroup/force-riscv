@@ -191,10 +191,19 @@ namespace Force {
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorRegisterOperandStructure);
     ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandStructure);
 
-    void SetLayoutMultiple(const float layoutMultiple) { mLayoutMultiple = layoutMultiple; } //!< Set the multiple used to adjust the register operand layout for widening and narrowing instructions.
+    uint32 GetElementWidth() const { return mElemWidth; } //!< Get the width of each element in the vector register group.
     float GetLayoutMultiple() const { return mLayoutMultiple; } //!< Return the multiple used to adjust the register operand layout for widening and narrowing instructions.
+    uint32 GetRegisterCount() const { return mRegCount; } //!< Get the number of registers in the vector register group.
+    EVectorLayoutType GetVectorLayoutType() const { return mVecLayoutType; } //!< Get the vector layout type.
+    void SetElementWidth(cuint32 elemWidth) { mElemWidth = elemWidth; } //!< Set the width of each element in the vector register group.
+    void SetLayoutMultiple(const float layoutMultiple) { mLayoutMultiple = layoutMultiple; } //!< Set the multiple used to adjust the register operand layout for widening and narrowing instructions.
+    void SetRegisterCount(cuint32 regCount) { mRegCount = regCount; } //!< Set the number of registers in the vector register group.
+    void SetVectorLayoutType(const EVectorLayoutType vecLayoutType) { mVecLayoutType = vecLayoutType; } //!< Set the vector layout type.
   private:
+    uint32 mElemWidth; //!< The width of each element in the vector register group.
     float mLayoutMultiple; //!< Multiple used to adjust the register operand layout for widening and narrowing instructions
+    uint32 mRegCount; //!< The number of registers per vector register group.
+    EVectorLayoutType mVecLayoutType; //!< Vector layout type
   };
 
   class ConstraintSet;
@@ -231,29 +240,6 @@ namespace Force {
     COPY_CONSTRUCTOR_ABSENT(GroupOperandStructure); //!< Copy constructor absent.
   public:
     std::vector<OperandStructure* > mOperandStructures; //!< Vector of children operands
-  };
-
-  /*!
-    \class VectorLayoutOperandStructure
-    \brief Record static structural information about a vector layout operand.
-  */
-  class VectorLayoutOperandStructure : public OperandStructure {
-  public:
-    VectorLayoutOperandStructure();
-    COPY_CONSTRUCTOR_ABSENT(VectorLayoutOperandStructure);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLayoutOperandStructure);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperandStructure);
-
-    uint32 GetRegisterCount() const { return mRegCount; } //!< Get the number of registers per vector register group.
-    uint32 GetElementWidth() const { return mElemWidth; } //!< Get the width of each element in the vector register group.
-    uint32 GetRegisterIndexAlignment() const { return mRegIndexAlignment; } //!< Get a power of 2 to which vector register indices must be aligned.
-    void SetRegisterCount(cuint32 regCount) { mRegCount = regCount; } //!< Set the number of registers per vector register group.
-    void SetElementWidth(cuint32 elemWidth) { mElemWidth = elemWidth; } //!< Set the width of each element in the vector register group
-    void SetRegisterIndexAlignment(cuint32 regIndexAlignment) { mRegIndexAlignment = regIndexAlignment; } //!< Set a power of 2 to which vector register indices must be aligned.
-  private:
-    uint32 mRegCount; //!< The number of registers per vector register group.
-    uint32 mElemWidth; //!< The width of each element in the vector register group.
-    uint32 mRegIndexAlignment; //!< A power of 2 to which vector register indices must be aligned
   };
 
   /*!

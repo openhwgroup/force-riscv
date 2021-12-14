@@ -19,10 +19,14 @@
 #include <InstructionStructure.h>
 #include <Register.h>
 
+#include <cmath>
+
 /*!
   \file VectorLayoutSetupRISCV.cc
   \brief Code supporting configuring VectorLayout objects.
 */
+
+using namespace std;
 
 namespace Force {
 
@@ -31,54 +35,52 @@ namespace Force {
   {
   }
 
-  void VectorLayoutSetupRISCV::SetUpVectorLayoutVtype(VectorLayout& rVecLayout)
+  void VectorLayoutSetupRISCV::SetUpVectorLayoutVtype(const VectorRegisterOperandStructure& rVecRegOprStruct, VectorLayout& rVecLayout) const
   {
-    rVecLayout.mElemCount = GetVl();
-    rVecLayout.mElemSize = GetSew();
+    SetUpVectorLayoutWithLayoutMultiple(rVecRegOprStruct, rVecRegOprStruct.GetLayoutMultiple(), rVecLayout);
+  }
+
+  void VectorLayoutSetupRISCV::SetUpVectorLayoutFixedElementSize(const VectorRegisterOperandStructure& rVecRegOprStruct, VectorLayout& rVecLayout) const
+  {
+    float layout_multiple = static_cast<float>(rVecRegOprStruct.GetElementWidth()) / GetSew();
+    SetUpVectorLayoutWithLayoutMultiple(rVecRegOprStruct, layout_multiple, rVecLayout);
+  }
+
+  void VectorLayoutSetupRISCV::SetUpVectorLayoutWholeRegister(const VectorRegisterOperandStructure& rVecRegOprStruct, VectorLayout& rVecLayout) const
+  {
+    rVecLayout.mElemSize = rVecRegOprStruct.GetElementWidth();
     rVecLayout.mFieldCount = 1;
-    rVecLayout.mRegCount = GetLmul();
-    rVecLayout.mRegIndexAlignment = rVecLayout.mRegCount;
-  }
-
-  void VectorLayoutSetupRISCV::SetUpVectorLayoutFixedElementSize(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
-  {
-    uint32 sew = GetSew();
-    float lmul = GetLmul();
-
-    // EMUL = (EEW / SEW) * LMUL. EEW is the element width for the instruction. Register operands
-    // must be aligned to EMUL.
-    rVecLayout.mRegIndexAlignment = rVecLayoutOprStruct.GetElementWidth() * lmul / sew;
-    if (rVecLayout.mRegIndexAlignment == 0) {
-      rVecLayout.mRegIndexAlignment = 1;
-    }
-
-    // The total register count is EMUL * NFIELDS. NFIELDS is the register count for the
-    // instruction. For instructions other than load/store segment instructions, NFIELDS = 1.
-    rVecLayout.mFieldCount = rVecLayoutOprStruct.GetRegisterCount();
-    rVecLayout.mRegCount = rVecLayout.mFieldCount * rVecLayout.mRegIndexAlignment;
-
-    rVecLayout.mElemSize = rVecLayoutOprStruct.GetElementWidth();
-
-    // The total element count is NFIELDS * vl.
-    rVecLayout.mElemCount = rVecLayout.mFieldCount * GetVl();
-  }
-
-  void VectorLayoutSetupRISCV::SetUpVectorLayoutWholeRegister(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout)
-  {
-    rVecLayout.mElemSize = rVecLayoutOprStruct.GetElementWidth();
-    rVecLayout.mRegCount = rVecLayoutOprStruct.GetRegisterCount();
+    rVecLayout.mRegCount = rVecRegOprStruct.GetRegisterCount();
 
     Config* config = Config::Instance();
     rVecLayout.mElemCount = (config->LimitValue(ELimitType::MaxPhysicalVectorLen) / rVecLayout.mElemSize) * rVecLayout.mRegCount;
 
-    rVecLayout.mFieldCount = 1;
-    rVecLayout.mRegIndexAlignment = rVecLayoutOprStruct.GetRegisterIndexAlignment();
+    rVecLayout.mRegIndexAlignment = rVecLayout.mRegCount;
+
+    AdjustForLimits(rVecLayout);
   }
 
-  uint32 VectorLayoutSetupRISCV::GetVl() const
+  void VectorLayoutSetupRISCV::SetUpVectorLayoutWithLayoutMultiple(const VectorRegisterOperandStructure& rVecRegOprStruct, const float layoutMultiple, VectorLayout& rVecLayout) const
   {
-    Register* vl_reg = mpRegFile->RegisterLookup("vl");
-    return vl_reg->Value();
+    rVecLayout.mElemSize = lround(GetSew() * layoutMultiple);
+
+    // NFIELDS is the register count for the operand. For instructions other than load/store segment
+    // instructions, NFIELDS = 1.
+    rVecLayout.mFieldCount = rVecRegOprStruct.GetRegisterCount();
+
+    // The total element count is NFIELDS * vl.
+    rVecLayout.mElemCount = rVecLayout.mFieldCount * GetVl();
+
+    // Register operands must be aligned to EMUL.
+    rVecLayout.mRegIndexAlignment = lround(GetLmul() * layoutMultiple);
+    if (rVecLayout.mRegIndexAlignment == 0) {
+      rVecLayout.mRegIndexAlignment = 1;
+    }
+
+    // The total register count is NFIELDS * EMUL.
+    rVecLayout.mRegCount = rVecLayout.mFieldCount * rVecLayout.mRegIndexAlignment;
+
+    AdjustForLimits(rVecLayout);
   }
 
   uint32 VectorLayoutSetupRISCV::GetSew() const
@@ -127,6 +129,29 @@ namespace Force {
         FAIL("undefined-vlmul");
     }
     return lmul;
+  }
+
+  uint32 VectorLayoutSetupRISCV::GetVl() const
+  {
+    Register* vl_reg = mpRegFile->RegisterLookup("vl");
+    return vl_reg->Value();
+  }
+
+  void VectorLayoutSetupRISCV::AdjustForLimits(VectorLayout& rVecLayout) const
+  {
+    rVecLayout.mIsIllegal = false;
+
+    if (rVecLayout.mRegCount > 8) {
+      LOG(notice) << "{VectorLayoutSetupRISCV::AdjustForLimits} EMUL * NFIELDS = " << rVecLayout.mRegCount << " > 8" << endl;
+
+      rVecLayout.mRegCount = 8;
+      rVecLayout.mIsIllegal = true;
+    }
+
+    if (rVecLayout.mRegIndexAlignment > 8) {
+      rVecLayout.mRegIndexAlignment = 8;
+      rVecLayout.mIsIllegal = true;
+    }
   }
 
 }

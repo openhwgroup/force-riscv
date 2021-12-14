@@ -289,4 +289,10 @@ enum_classes_details = [
         "VmInfo boolean attribute types (M should be the last one)",
         [("MODE", 1), ("MPRV", 2), ("TVM", 4)],
     ],
+    [
+        "VectorLayoutType",
+        "unsigned char",
+        "Mechanism for determining vector register format",
+        [("Vtype", 0), ("FixedElementSize", 1), ("WholeRegister", 2)],
+    ],
 ]

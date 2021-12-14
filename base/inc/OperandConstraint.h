@@ -203,16 +203,26 @@ namespace Force {
     FpRegisterOperandConstraint(const FpRegisterOperandConstraint& rOther) : RegisterOperandConstraint(rOther) { } //!< Copy constructor, not meant to be used.
   };
 
+  class VectorLayout;
+
   /*!
     \class VectorRegisterOperandConstraint
     \brief The class carries dynamic constraint properties for VectorRegisterOperand.
   */
   class VectorRegisterOperandConstraint : public RegisterOperandConstraint {
   public:
-    VectorRegisterOperandConstraint() : RegisterOperandConstraint() { } //!< Constructor.
-    ~VectorRegisterOperandConstraint() { } //!< Destructor.
+    VectorRegisterOperandConstraint();
+    ~VectorRegisterOperandConstraint() override;
+    ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandConstraint);
+
+    void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
+    const VectorLayout* GetVectorLayout() const { return mpVectorLayout; } //!< Return vector register layout for the operand.
   protected:
-    VectorRegisterOperandConstraint(const VectorRegisterOperandConstraint& rOther) : RegisterOperandConstraint(rOther) { } //!< Copy constructor, not meant to be used.
+    VectorRegisterOperandConstraint(const VectorRegisterOperandConstraint& rOther); //!< Copy constructor, not meant to be used.
+  private:
+    virtual void SetUpVectorLayout(const Generator& rGen, const OperandStructure& rOperandStruct, VectorLayout& rVecLayout) = 0; //!< Populate vector layout fields.
+
+    VectorLayout* mpVectorLayout; //!< Vector register layout for the operand
   };
 
   /*!

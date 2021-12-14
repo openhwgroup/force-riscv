@@ -21,7 +21,7 @@
 namespace Force {
 
   class RegisterFile;
-  class VectorLayoutOperandStructure;
+  class VectorRegisterOperandStructure;
 
   /*!
     \class VectorLayoutSetupRISCV
@@ -34,13 +34,15 @@ namespace Force {
     DESTRUCTOR_DEFAULT(VectorLayoutSetupRISCV);
     ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutSetupRISCV);
 
-    void SetUpVectorLayoutVtype(VectorLayout& rVecLayout); //!< Configure the VectorLayout object using current vtype register values.
-    void SetUpVectorLayoutFixedElementSize(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout); //!< Configure the VectorLayout object using vtype register values, but with the element width specified by the layout operand structure.
-    void SetUpVectorLayoutWholeRegister(const VectorLayoutOperandStructure& rVecLayoutOprStruct, VectorLayout& rVecLayout); //!< Configure the VectorLayout object for a whole register instruction.
+    void SetUpVectorLayoutVtype(const VectorRegisterOperandStructure& rVecRegOprStruct, VectorLayout& rVecLayout) const; //!< Configure the VectorLayout object using current vtype register values.
+    void SetUpVectorLayoutFixedElementSize(const VectorRegisterOperandStructure& rVecRegOprStruct, VectorLayout& rVecLayout) const; //!< Configure the VectorLayout object using vtype register values, but with the element width specified by the operand.
+    void SetUpVectorLayoutWholeRegister(const VectorRegisterOperandStructure& rVecRegOprStruct, VectorLayout& rVecLayout) const; //!< Configure the VectorLayout object for a whole register instruction.
     uint32 GetSew() const; //!< Get the current SEW value.
     float GetLmul() const; //!< Get the current LMUL value.
   private:
+    void SetUpVectorLayoutWithLayoutMultiple(const VectorRegisterOperandStructure& rVecRegOprStruct, const float layoutMultiple, VectorLayout& rVecLayout) const; //!< Configure the VectorLayout object using current vtype register values adjusted by a multiple.
     uint32 GetVl() const; //!< Get the current VL value.
+    void AdjustForLimits(VectorLayout& rVecLayout) const; //!< Adjust VectorLayout values to lie within architectural limits. Mark the VectorLayout as illegal if the unadjusted values exceeded the limits.
   private:
     const RegisterFile* mpRegFile; //!< Register file
   };

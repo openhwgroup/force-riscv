@@ -2104,4 +2104,62 @@ namespace Force {
     return EVmInfoBoolType::MODE;
   }
 
+
+  unsigned char EVectorLayoutTypeSize = 3;
+
+  const string EVectorLayoutType_to_string(EVectorLayoutType in_enum)
+  {
+    switch (in_enum) {
+    case EVectorLayoutType::Vtype: return "Vtype";
+    case EVectorLayoutType::FixedElementSize: return "FixedElementSize";
+    case EVectorLayoutType::WholeRegister: return "WholeRegister";
+    default:
+      unknown_enum_value("EVectorLayoutType", (unsigned char)(in_enum));
+    }
+    return "";
+  }
+
+  EVectorLayoutType string_to_EVectorLayoutType(const string& in_str)
+  {
+    string enum_type_name = "EVectorLayoutType";
+    char hash_value = in_str.at(0);
+
+    switch (hash_value) {
+    case 70:
+      validate(in_str, "FixedElementSize", enum_type_name);
+      return EVectorLayoutType::FixedElementSize;
+    case 86:
+      validate(in_str, "Vtype", enum_type_name);
+      return EVectorLayoutType::Vtype;
+    case 87:
+      validate(in_str, "WholeRegister", enum_type_name);
+      return EVectorLayoutType::WholeRegister;
+    default:
+      unknown_enum_name(enum_type_name, in_str);
+    }
+    return EVectorLayoutType::Vtype;
+  }
+
+  EVectorLayoutType try_string_to_EVectorLayoutType(const string& in_str, bool& okay)
+  {
+    okay = true;
+    char hash_value = in_str.at(0);
+
+    switch (hash_value) {
+    case 70:
+      okay = (in_str == "FixedElementSize");
+      return EVectorLayoutType::FixedElementSize;
+    case 86:
+      okay = (in_str == "Vtype");
+      return EVectorLayoutType::Vtype;
+    case 87:
+      okay = (in_str == "WholeRegister");
+      return EVectorLayoutType::WholeRegister;
+    default:
+      okay = false;
+      return EVectorLayoutType::Vtype;
+    }
+    return EVectorLayoutType::Vtype;
+  }
+
 }

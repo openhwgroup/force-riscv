@@ -202,13 +202,12 @@ namespace Force {
 
     bool Setup() override; //!< Setup shared data structures.
     const std::vector<AddressingRegister*>& GetStrideChoices() const { return mStrideChoices; } //!< Return available stride register choices.
-    uint32 GetElementCount() const { return mElemCount; } //!< Return the number of vector elements.
+    uint32 GetDataElementCount() const; //!< Return the number of data vector register elements.
   private:
     void SetupStrideChoices(); //!< Record the available stride choices.
   private:
     const RegisterOperand* mpStrideOpr; //!< Stride operand
     std::vector<AddressingRegister*> mStrideChoices; //!< Available stride register choices
-    uint32 mElemCount; //!< The number of vector elements
   };
 
   class AddressingMultiRegister;
@@ -226,13 +225,12 @@ namespace Force {
 
     bool Setup() override; //!< Setup shared data structures.
     const std::vector<AddressingMultiRegister*>& GetIndexChoices() const { return mIndexChoices; } //!< Return available index operand choices.
-    uint32 GetElementSize() const { return mElemSize; } //!< Return the size in bits of each vector register element.
+    uint32 GetIndexElementSize() const; //!< Return the size in bits of each index vector register element.
   private:
     void SetupIndexChoices(); //!< Record the available index choices.
   private:
     const RegisterOperand* mpIndexOpr; //!< Index operand
     std::vector<AddressingMultiRegister*> mIndexChoices; //!< Available index operand choices
-    uint32 mElemSize; //!< The size in bits of each vector register element
   };
 
   /*!
