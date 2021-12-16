@@ -285,6 +285,49 @@ CASE("Test 3, step simulator api") {
       sim_api.terminate_simulator();
       close_sim_dll(&sim_api);
     }
+
+    SECTION("Test 3, 1: load partially initialized memory with auto initialization") {
+      options = "--auto-init-mem";
+      sim_api.initialize_simulator(options.c_str());
+
+      uint8_t data[8] = {0xC5, 0x76, 0x84, 0x38, 0x22, 0x9A, 0x1D, 0x0E};
+      status = sim_api.write_simulator_register(0, "x3", data, 8);
+      EXPECT(status == 0);
+
+      uint8_t target_addr[8] = {0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.write_simulator_register(0, "x1", target_addr, 8);
+      EXPECT(status == 0);
+
+      uint64_t instr_addr = 0x1000;
+      uint8_t sh_instr_data[4] = {0x23, 0x90, 0x30, 0x0};  // SH x3 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, sh_instr_data);
+      EXPECT(status == 0);
+
+      instr_addr += 4;
+      uint8_t ld_instr_data[4] = {0x03, 0xB1, 0x0, 0x0};  // LD x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, ld_instr_data);
+      EXPECT(status == 0);
+
+      int stx_failed = 0;
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      uint8_t load_data[8];
+      status = sim_api.read_simulator_register(0, "x2", load_data, 8);
+      EXPECT(status == 0);
+
+      EXPECT(load_data[0] == 0xC5);
+      EXPECT(load_data[1] == 0x76);
+
+      for (size_t i = 2; i < 8; i++) {
+        EXPECT(load_data[i] == 0);
+      }
+
+      sim_api.terminate_simulator();
+      close_sim_dll(&sim_api);
+    }
   }
 },
 
