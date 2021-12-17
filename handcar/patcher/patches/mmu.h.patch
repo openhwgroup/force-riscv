@@ -127,7 +127,7 @@
 > 
 >   load_func_partially_initialized(uint8)
 >   load_func_partially_initialized(uint64)
-142,145c222,236
+142,145c222,228
 <       size_t size = sizeof(type##_t); \
 <       if (likely(tlb_store_tag[vpn % TLB_ENTRIES] == vpn)) { \
 <         if (proc) WRITE_MEM(addr, val, size); \
@@ -139,16 +139,8 @@
 >         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
 >         reg_t len = sizeof(type##_t); \
 >         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
->         if(unlikely(! sim->sparse_is_pa_initialized(paddr, len))) \
->         { \
->             uint64_t attrs = 0ull; \
->             sim->sparse_initialize_pa(paddr, (const uint8_t*)&val, reinterpret_cast<const uint8_t*>(&attrs), len, Force::EMemDataType::Both); \
->         } \
->         else \
->         { \
->             sim->sparse_write(paddr, (const uint8_t*)&val, len); \
->         } \
-153,159c244,255
+>         sim->sparse_write_with_initialization(paddr, (const uint8_t*)&val, len); \
+153,159c236,239
 <         if (proc) WRITE_MEM(addr, val, size); \
 <         *(type##_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr) = to_le(val); \
 <       } \
@@ -160,27 +152,19 @@
 >         reg_t paddr = tlb_data[vpn % TLB_ENTRIES].target_offset + addr; \
 >         reg_t len = sizeof(type##_t); \
 >         update_generator_memory(nullptr != proc ? proc->id : 0xffffffffu, addr, 0, paddr, len, reinterpret_cast<const char*>(&val), "write"); \
->         if(unlikely(! sim->sparse_is_pa_initialized(paddr, len))) \
->         { \
->             uint64_t attrs = 0ull; \
->             sim->sparse_initialize_pa(paddr, (const uint8_t*)&val, reinterpret_cast<const uint8_t*>(&attrs), len, Force::EMemDataType::Both); \
->         } \
->         else \
->         { \
->             sim->sparse_write(paddr, (const uint8_t*)&val, len); \
->         } \
-161c257,259
+>         sim->sparse_write_with_initialization(paddr, (const uint8_t*)&val, len); \
+161c241,243
 <   }
 ---
 >       else \
 >        store_slow_path(addr, sizeof(type##_t), (const uint8_t*)&val); \
 >     }
-210a309,310
+210a293,294
 >   static const size_t LOAD_RESERVATION_SIZE = 8;
 > 
-212a313
+212a297
 >     sim->sparse_unreserve(load_reservation_address, LOAD_RESERVATION_SIZE);
-218,222c319,322
+218,222c303,306
 <     reg_t paddr = translate(vaddr, 1, LOAD);
 <     if (auto host_addr = sim->addr_to_mem(paddr))
 <       load_reservation_address = refill_tlb(vaddr, paddr, host_addr, LOAD).target_offset + vaddr;
@@ -191,7 +175,7 @@
 >     sim->sparse_reserve(load_reservation_address, LOAD_RESERVATION_SIZE);
 >     refill_tlb(vaddr, load_reservation_address, 0ull /*host_addr*/, LOAD);
 >     return;
-230,234c330,332
+230,234c314,316
 <     reg_t paddr = translate(vaddr, 1, STORE);
 <     if (auto host_addr = sim->addr_to_mem(paddr))
 <       return load_reservation_address == refill_tlb(vaddr, paddr, host_addr, STORE).target_offset + vaddr;
@@ -201,7 +185,7 @@
 >     reg_t paddr = translate(vaddr, LOAD_RESERVATION_SIZE, STORE);
 >     refill_tlb(vaddr, paddr, 0ull /*host_addr*/, STORE);
 >     return (paddr == load_reservation_address) and (sim->sparse_is_reserved(load_reservation_address, LOAD_RESERVATION_SIZE));
-247c345,354
+247c329,338
 <     insn_bits_t insn = from_le(*(uint16_t*)(tlb_entry.host_offset + addr));
 ---
 >     uint16_t insn_buf = 0;
@@ -214,7 +198,7 @@
 > 
 >     insn_bits_t insn = from_le(insn_buf); 
 > 
-251c358,362
+251c342,346
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
 ---
 >       load_buff = sim->sparse_read(muh_paddr + 2, len); 
@@ -222,9 +206,9 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf);
 >       insn |= (insn_bits_t)(const int16_t)insn_buf << 16;
-253a365
+253a349
 > 
-255,256c367,377
+255,256c351,361
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
 ---
@@ -239,7 +223,7 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf); 
 >       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
-259,261c380,396
+259,261c364,380
 <       insn |= (insn_bits_t)from_le(*(const int16_t*)translate_insn_addr_to_host(addr + 6)) << 48;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 4)) << 32;
 <       insn |= (insn_bits_t)from_le(*(const uint16_t*)translate_insn_addr_to_host(addr + 2)) << 16;
@@ -261,7 +245,7 @@
 >       reinterpret_cast<uint8_t*>(&insn_buf)[1] = reinterpret_cast<uint8_t*>(&load_buff)[0]; 
 >       insn_buf = from_le(insn_buf); 
 >       insn |= (insn_bits_t)(const uint16_t)insn_buf << 16;
-313a449,466
+313a433,450
 >   reg_t translate(reg_t addr, reg_t len, access_type type);
 > 
 >   // Translate a VA to a PA by performing a page table walk but don't set any state bits
@@ -280,7 +264,7 @@
 >   //        7 - walk would have been successful had paddr_ptr not been a null pointer
 >   int translate_api(reg_t addr, reg_t *paddr, uint64_t* pmp_info, reg_t len, access_type type);
 > 
-337a491,503
+337a475,487
 >   // perform a page table walk but don't set any state bits
 >   // and instead of throwing exceptions, return codes are used:
 >   //
@@ -294,9 +278,9 @@
 >   //        7 - walk would have been successful had paddr_ptr not been a null pointer
 >   int walk_api(reg_t addr, reg_t* paddr_ptr, access_type type, reg_t prv);
 > 
-343a510
+343a494
 >   void load_slow_path_partially_initialized(reg_t addr, reg_t len, uint8_t* bytes);
-345,348c512,513
+345,348c496,497
 <   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
 <   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
 <   bool mmio_ok(reg_t addr, access_type type);
@@ -304,7 +288,7 @@
 ---
 >   void initialize_slow_path(reg_t addr, reg_t len, const uint8_t* bytes);
 >   //reg_t translate(reg_t addr, reg_t len, access_type type);
-362,363c527,538
+362,363c511,522
 <       uint16_t* ptr = (uint16_t*)(tlb_data[vpn % TLB_ENTRIES].host_offset + addr);
 <       int match = proc->trigger_match(OPERATION_EXECUTE, addr, from_le(*ptr));
 ---
@@ -320,11 +304,11 @@
 >       ptr = &buf;
 > 
 >       int match = proc->trigger_match(OPERATION_EXECUTE, addr, *ptr);
-365c540
+365c524
 <         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, from_le(*ptr));
 ---
 >         throw trigger_matched_t(match, OPERATION_EXECUTE, addr, *ptr);
-371,373c546,549
+371,373c530,533
 <   inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
 <     return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 <   }
@@ -333,5 +317,5 @@
 >   //inline const uint16_t* translate_insn_addr_to_host(reg_t addr) {
 >   //  return (uint16_t*)(translate_insn_addr(addr).host_offset + addr);
 >   //}
-391a568
+391a552
 >   reg_t pmp_ok_api(reg_t addr, reg_t* pmpaddr_ptr, uint8_t* pmpcfg_ptr, reg_t len, access_type type, reg_t mode);

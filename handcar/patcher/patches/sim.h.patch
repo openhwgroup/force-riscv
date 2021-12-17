@@ -82,7 +82,7 @@
 >   // for debugging the sparse memory model
 >   void dump_sparse_memory(std::ostream & out);
 > 
-59a81,155
+59a81,156
 >   //
 >   reg_t get_entry_point(){ return entry; };
 > 
@@ -124,6 +124,7 @@
 > 
 >   void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes);
 >   void sparse_write(reg_t paddr, const uint8_t* bytes, size_t len);
+>   void sparse_write_with_initialization(reg_t paddr, const uint8_t* bytes, size_t len);
 >   void sparse_write_multiword(reg_t paddr, const uint8_t* bytes, size_t len){};
 >   void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes);
 >   bool sparse_is_pa_initialized(reg_t paddr, size_t len);
@@ -158,10 +159,10 @@
 >   //
 >   int translate_virtual_address_api(int procid, const uint64_t* vaddr, int intent, uint64_t* paddr, uint64_t* memattrs);
 > 
-61,62d156
+61,62d157
 <   std::vector<std::pair<reg_t, mem_t*>> mems;
 <   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
-69,75d162
+69,75d163
 <   std::string dtb;
 <   std::string dtb_file;
 <   bool dtb_enabled;
@@ -169,14 +170,14 @@
 <   std::unique_ptr<clint_t> clint;
 <   bus_t bus;
 <   log_file_t log_file;
-86a174
+86a175
 >   bool dtb_enabled;
-89,92d176
+89,92d177
 <   // memory-mapped I/O routines
 <   char* addr_to_mem(reg_t addr);
 <   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
 <   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
-96,97c180,192
+96,97c181,193
 <   // presents a prompt for introspection into the simulation
 <   void interactive();
 ---
@@ -193,7 +194,7 @@
 > 
 >   reg_t entry;
 >   std::map<std::string, uint64_t> load_elf(const char* fn, reg_t* entry);
-99,118d193
+99,118d194
 <   // functions that help implement interactive()
 <   void interactive_help(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_quit(const std::string& cmd, const std::vector<std::string>& args);
@@ -214,14 +215,14 @@
 <   void interactive_until_noisy(const std::string& cmd, const std::vector<std::string>& args);
 <   reg_t get_reg(const std::vector<std::string>& args);
 <   freg_t get_freg(const std::vector<std::string>& args);
-121c196
+121c197
 < 
 ---
 >     
-130,131d204
+130,131d205
 <   context_t* host;
 <   context_t target;
-133,135c206,210
+133,135c207,211
 <   void idle();
 <   void read_chunk(addr_t taddr, size_t len, void* dst);
 <   void write_chunk(addr_t taddr, size_t len, const void* src);
@@ -231,7 +232,7 @@
 >   void clear_chunk(reg_t taddr, size_t len);
 >   //void initialize_multiword(reg_t taddr, size_t len, const void* src); // To support multiword initializations during elf loading
 >   void write_chunk(reg_t taddr, size_t len, const void* src);
-139,143d213
+139,143d214
 < public:
 <   // Initialize this after procs, because in debug_module_t::reset() we
 <   // enumerate processors, which segfaults if procs hasn't been initialized

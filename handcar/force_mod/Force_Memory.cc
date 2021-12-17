@@ -486,6 +486,17 @@ namespace Force {
     return data;
   }
 
+  void Memory::AutoInitialize(uint64 address, uint32 nBytes)
+  {
+    // Need to pass in the memory attributes to the Initialize() call to indicate which bytes
+    // are already initialized
+    vector<uint8> attrs(nBytes, 0);
+    GetMemoryAttributes(address, nBytes, attrs.data());
+
+    vector<uint8> data(nBytes, 0);
+    Initialize(address, data.data(), attrs.data(), nBytes, EMemDataType::Both);
+  }
+
   //!< the parameter value is in big endian
   void Memory::Initialize(uint64 address, uint64 value, uint32 nBytes, EMemDataType type)
   {
@@ -823,13 +834,7 @@ namespace Force {
   {
     if (!IsInitialized(address, nBytes)) {
       if (mAutoInit) {
-        // Need to pass in the memory attributes to the Initialize() call to indicate which bytes
-        // are already initialized
-        vector<uint8> attrs(nBytes, 0);
-        GetMemoryAttributes(address, nBytes, attrs.data());
-
-        vector<uint8> data(nBytes, 0);
-        Initialize(address, data.data(), attrs.data(), nBytes, EMemDataType::Both);
+        AutoInitialize(address, nBytes);
       }
       else {
         LOG(fail) << "read uninitialized memory range (address, size) = (0x"

@@ -328,6 +328,58 @@ CASE("Test 3, step simulator api") {
       sim_api.terminate_simulator();
       close_sim_dll(&sim_api);
     }
+
+    SECTION("Test 3, 2: store to previously partially written memory") {
+      sim_api.initialize_simulator("");
+
+      uint8_t target_addr[8] = {0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.write_simulator_register(0, "x1", target_addr, 8);
+      EXPECT(status == 0);
+
+      uint64_t instr_addr = 0x1000;
+      uint8_t sw_instr_data[4] = {0x23, 0xA0, 0x20, 0x0};  // SW x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, sw_instr_data);
+      EXPECT(status == 0);
+
+      instr_addr += 4;
+      uint8_t sd_instr_data[4] = {0x23, 0xB0, 0x20, 0x0};  // SD x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, sd_instr_data);
+      EXPECT(status == 0);
+
+      uint8_t data_a[8] = {0xB2, 0xB9, 0xDA, 0xC4, 0x8A, 0x79, 0xE7, 0x4F};
+      status = sim_api.write_simulator_register(0, "x2", data_a, 8);
+      EXPECT(status == 0);
+
+      int stx_failed = 0;
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      uint64_t mem_addr = 0x8000;
+      uint8_t mem_values[8] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.read_simulator_memory(0, &mem_addr, 4, mem_values);
+      EXPECT(status == 0);
+
+      for (size_t i = 0; i < 4; i++) {
+        EXPECT(mem_values[i] == data_a[i]);
+      }
+
+      uint8_t data_b[8] = {0x08, 0xD6, 0xC7, 0x59, 0x61, 0xA1, 0xE0, 0x54};
+      status = sim_api.write_simulator_register(0, "x2", data_b, 8);
+      EXPECT(status == 0);
+
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      status = sim_api.read_simulator_memory(0, &mem_addr, 8, mem_values);
+      EXPECT(status == 0);
+
+      for (size_t i = 0; i < 8; i++) {
+        EXPECT(mem_values[i] == data_b[i]);
+      }
+
+      sim_api.terminate_simulator();
+      close_sim_dll(&sim_api);
+    }
   }
 },
 

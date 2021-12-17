@@ -54,6 +54,7 @@ namespace Force {
   */
   class Memory {
   public:
+    void AutoInitialize(uint64 address, uint32 nBytes); //!< Initialize any uninitialized memory in the specified range. Previously initialized memory is unchanged. This is useful when it doesn't matter whether the memory has been initialized previously and the initial value is unimportant.
     void Initialize(uint64 address, uint64 value, uint32 nBytes, EMemDataType type);  //!< Initialize memory.
     void Initialize(uint64 address, cuint8* data, cuint8* attrs, uint32 nBytes, EMemDataType type);  //!< Initialize memory.
     bool IsInitialized(uint64 address, uint32 nBytes) const; //!< check whether address is initialized or not
