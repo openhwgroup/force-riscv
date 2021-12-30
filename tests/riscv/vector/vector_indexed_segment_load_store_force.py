@@ -19,8 +19,8 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 import re
 
 
-#  This test verifies that strided load and store instructions can be
-#  generated and executed successfully.
+# This test verifies that indexed segment load and store instructions can be generated and executed
+# successfully.
 class MainSequence(VectorLoadStoreTestSequence):
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
