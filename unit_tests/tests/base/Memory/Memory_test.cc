@@ -324,6 +324,13 @@ CASE ("Test partial initialization") {
       uint8 mem_attrs_buffer[byte_count] = {0x05, 0x00, 0x00, 0x00};
       EXPECT_FAIL(mem.Initialize(0x2, mem_data_buffer, mem_attrs_buffer, byte_count, EMemDataType::Data), "reinitilize-memory");
     }
+
+    SECTION ("Test initialization mismatch with all 0 attributes") {
+      cuint32 byte_count = 4;
+      uint8 mem_data_buffer[byte_count] = {0x6d, 0xca, 0x20, 0x60};
+      uint8 mem_attrs_buffer[byte_count] = {0x00, 0x00, 0x00, 0x00};
+      EXPECT_FAIL(mem.Initialize(0x2, mem_data_buffer, mem_attrs_buffer, byte_count, EMemDataType::Data), "reinitilize-memory");
+    }
   }
 },
 

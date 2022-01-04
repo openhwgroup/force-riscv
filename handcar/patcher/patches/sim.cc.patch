@@ -223,11 +223,13 @@
 < sim_t::~sim_t()
 ---
 > simlib_t::~simlib_t()
-173c150,166
+173c150
 < void sim_thread_main(void* arg)
 ---
 > int simlib_t::step_simulator(int target_id, int num_steps, int stx_failed)
-> {
+175c152,168
+<   ((sim_t*)arg)->main();
+---
 >   processor_t* proc_ptr = get_core(target_id);
 >   if (proc_ptr == nullptr)
 >     return 1;
@@ -243,9 +245,7 @@
 > }
 > 
 > void simlib_t::set_debug(bool value)
-175c168
-<   ((sim_t*)arg)->main();
----
+> {
 >   debug = value;
 178c171
 < void sim_t::main()
@@ -380,19 +380,12 @@
 < void sim_t::set_procs_debug(bool value)
 ---
 > void simlib_t::set_procs_debug(bool value)
-263,268c245
+263c245
 < static bool paddr_ok(reg_t addr)
-< {
-<   return (addr >> MAX_PADDR_BITS) == 0;
-< }
-< 
-< bool sim_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
 > std::map<std::string, uint64_t> simlib_t::load_elf(const char* fn, reg_t* entry)
-270,272c247,318
-<   if (addr + len < addr || !paddr_ok(addr + len - 1))
-<     return false;
-<   return bus.load(addr, len, bytes);
+265c247,318
+<   return (addr >> MAX_PADDR_BITS) == 0;
 ---
 >   int fd = open(fn, O_RDONLY);
 >   struct stat s;
@@ -466,12 +459,18 @@
 > 
 >   munmap(buf, size);
 >   return symbols;
-275c321,322
-< bool sim_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
+268c321,322
+< bool sim_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
 > // use the dedicated function for initializing
 > void simlib_t::make_dtb()
-277,298d323
+270,272d323
+<   if (addr + len < addr || !paddr_ok(addr + len - 1))
+<     return false;
+<   return bus.load(addr, len, bytes);
+275,301c326
+< bool sim_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
+< {
 <   if (addr + len < addr || !paddr_ok(addr + len - 1))
 <     return false;
 <   return bus.store(addr, len, bytes);
@@ -494,7 +493,8 @@
 <     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, bootargs, procs, mems);
 <     dtb = dts_compile(dts);
 <   }
-301c326
+< }
+< 
 < void sim_t::set_rom()
 ---
 > void simlib_t::set_rom()
@@ -514,7 +514,7 @@
 <     get_core(0)->get_xlen() == 32 ?
 ---
 >     usable_proc_ptr->get_xlen() == 32 ?
-338,343c374,388
+338,343c374,384
 <   std::string dtb;
 <   if (!dtb_file.empty()) {
 <     std::ifstream fin(dtb_file.c_str(), std::ios::binary);
@@ -533,11 +533,11 @@
 >     {
 >       std::cerr << "### Warning something already initialized the memory for VA: " << std::hex << DEFAULT_RSTVEC + _index << " with contents: " << std::hex << sparse_read(DEFAULT_RSTVEC + _index, 1) << std::endl;
 >       sparse_write(DEFAULT_RSTVEC + _index, reinterpret_cast<uint8_t*>(rom.data() + _index), 1);
->     }
+344a386,391
 >     else
 >     {
 >       sparse_initialize_pa(DEFAULT_RSTVEC + _index, reinterpret_cast<const uint8_t*>(rom.data()+_index), reinterpret_cast<const uint8_t*>(attrVec.data()+_index), 1, Force::EMemDataType::Both);
-344a390,391
+>     }
 >   }
 > }
 346,347c393,398
@@ -609,23 +609,28 @@
 380c433
 < void sim_t::reset()
 ---
-> bool simlib_t::sparse_is_pa_initialized(reg_t paddr, size_t len)
-382,383c435
+> void simlib_t::sparse_write_with_initialization(reg_t paddr, const uint8_t* bytes, size_t len)
+382,383c435,459
 <   if (dtb_enabled)
 <     set_rom();
 ---
+>   if (not sparse_is_pa_initialized(paddr, len)) {
+>     _ForceSparseMemoryModel.AutoInitialize(paddr, len);
+>   }
+> 
+>   _ForceSparseMemoryModel.Write(paddr, bytes, len);
+> }
+> 
+> bool simlib_t::sparse_is_pa_initialized(reg_t paddr, size_t len)
+> {
 >   return  _ForceSparseMemoryModel.IsInitialized(paddr, len);
-386c438
-< void sim_t::idle()
----
+> }
+> 
 > void simlib_t::sparse_initialize_pa(reg_t paddr, const uint8_t* data, const uint8_t* attrs, uint32_t nBytes, Force::EMemDataType type)
-388c440
-<   target.switch_to();
----
+> {
 >   _ForceSparseMemoryModel.Initialize(paddr, data, attrs, nBytes, type);
-391c443,492
-< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
----
+> }
+> 
 > void simlib_t::sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type)
 > {
 >   _ForceSparseMemoryModel.Initialize(paddr, value, numBytes, type);
@@ -634,13 +639,17 @@
 > void simlib_t::sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes)
 > {
 >   _ForceSparseMemoryModel.Initialize(paddr, value, numBytes, Force::EMemDataType::Both);
-> }
-> 
+386c462
+< void sim_t::idle()
+---
 > void simlib_t::sparse_reserve(reg_t paddr, size_t numBytes)
-> {
+388c464
+<   target.switch_to();
+---
 >   _ForceSparseMemoryModel.Reserve(paddr, numBytes);
-> }
-> 
+391c467,501
+< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
+---
 > void simlib_t::sparse_unreserve(reg_t paddr, size_t numBytes)
 > {
 >   _ForceSparseMemoryModel.Unreserve(paddr, numBytes);
@@ -676,11 +685,11 @@
 > }
 > 
 > void simlib_t::read_chunk_partially_initialized(reg_t taddr, size_t len, void* dst)
-394c495
+394c504
 <   auto data = debug_mmu->to_target(debug_mmu->load_uint64(taddr));
 ---
 >   auto data = debug_mmu->to_target(debug_mmu->load_partially_initialized_uint64(taddr));
-398c499,552
+398c508,561
 < void sim_t::write_chunk(addr_t taddr, size_t len, const void* src)
 ---
 > void simlib_t::clear_chunk(reg_t taddr, size_t len)
@@ -737,21 +746,23 @@
 > }
 > 
 > void simlib_t::write_chunk(reg_t taddr, size_t len, const void* src)
-406c560
+406c569
 < void sim_t::set_target_endianness(memif_endianness_t endianness)
 ---
 > void simlib_t::set_target_endianness(memif_endianness_t endianness)
-422c576
+422c585
 < memif_endianness_t sim_t::get_target_endianness() const
 ---
 > memif_endianness_t simlib_t::get_target_endianness() const
-431c585,1008
+431c594
 < void sim_t::proc_reset(unsigned id)
 ---
 > void simlib_t::proc_reset(unsigned id)
-> {
+433c596
+<   debug_module.proc_reset(id);
+---
 > ////  debug_module.proc_reset(id);
-> }
+434a598,1391
 > 
 > processor_t *simlib_t::get_core(const std::string& i)
 > {
@@ -1172,9 +1183,7 @@
 > 
 > 
 > int simlib_t::write_csr(uint32_t procid, uint64_t index, const uint64_t* value, uint32_t length)
-433c1010,1029
-<   debug_module.proc_reset(id);
----
+> {
 >   //Check if the pointers point to something
 >   if(value == nullptr)
 >     return 1;
@@ -1195,7 +1204,7 @@
 >   get_core(procid)->set_csr_api(index, *value);
 > 
 >   return 0;
-434a1031,1382
+> }
 > 
 > int simlib_t::write_csr(uint32_t procid, const std::string& input_name, const uint64_t* value, uint32_t length)
 > {

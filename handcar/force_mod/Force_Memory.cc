@@ -311,10 +311,6 @@ namespace Force {
         FAIL("out-of-boundary");
       }
 
-      if (attrs == 0x0) {
-        return !IsInitialized(offset, nBytes);
-      }
-
       uint64 init_attrs = attrs & BASE_INIT_MASK;
       uint64 stored_init_attrs = mAttributes & BASE_INIT_MASK;
       uint32 len_in_bits = nBytes << 3;
@@ -490,6 +486,17 @@ namespace Force {
     return data;
   }
 
+  void Memory::AutoInitialize(uint64 address, uint32 nBytes)
+  {
+    // Need to pass in the memory attributes to the Initialize() call to indicate which bytes
+    // are already initialized
+    vector<uint8> attrs(nBytes, 0);
+    GetMemoryAttributes(address, nBytes, attrs.data());
+
+    vector<uint8> data(nBytes, 0);
+    Initialize(address, data.data(), attrs.data(), nBytes, EMemDataType::Both);
+  }
+
   //!< the parameter value is in big endian
   void Memory::Initialize(uint64 address, uint64 value, uint32 nBytes, EMemDataType type)
   {
@@ -612,7 +619,7 @@ namespace Force {
       FAIL("unsupported-number-of-bytes");
     }
 
-    ValidateInitialization(address, nBytes);
+    EnsureInitialization(address, nBytes);
 
     uint32 nbytes = (ADDR_OFFSET(address) + nBytes <= mem_bytes) ?
                     nBytes : mem_bytes - ADDR_OFFSET(address);
@@ -638,7 +645,7 @@ namespace Force {
       FAIL("value-out-of-byte-range ");
     }
 
-    ValidateInitialization(address, nBytes);
+    EnsureInitialization(address, nBytes);
 
     Unreserve(address, nBytes);
 
@@ -745,7 +752,7 @@ namespace Force {
       FAIL("unsupported-number-of-bytes");
     }
 
-    ValidateInitialization(address, nBytes);
+    EnsureInitialization(address, nBytes);
 
     uint32 nbytes = (ADDR_OFFSET(address) + nBytes <= mem_bytes) ?
                     nBytes : mem_bytes - ADDR_OFFSET(address);
@@ -823,11 +830,11 @@ namespace Force {
     return true;
   }
 
-  void Memory::ValidateInitialization(uint64 address, uint32 nBytes)
+  void Memory::EnsureInitialization(uint64 address, uint32 nBytes)
   {
     if (!IsInitialized(address, nBytes)) {
       if (mAutoInit) {
-        Initialize(address, 0, nBytes, EMemDataType::Both);
+        AutoInitialize(address, nBytes);
       }
       else {
         LOG(fail) << "read uninitialized memory range (address, size) = (0x"

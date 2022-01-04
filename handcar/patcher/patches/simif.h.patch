@@ -24,7 +24,7 @@
 <   // Callback for processors to let the simulation know they were reset.
 ---
 >   virtual ~simif_t() = default;
-20,21c16,26
+20,21c16,27
 <   virtual const char* get_symbol(uint64_t addr) = 0;
 < 
 ---
@@ -33,6 +33,7 @@
 >   virtual void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes) = 0;
 >   virtual void sparse_write(reg_t paddr, const uint8_t* bytes, size_t len) = 0;
 >   virtual void sparse_write(reg_t paddr, uint64_t value, size_t len) = 0;
+>   virtual void sparse_write_with_initialization(reg_t paddr, const uint8_t* bytes, size_t len) = 0;
 >   virtual bool sparse_is_pa_initialized(reg_t paddr, size_t len) = 0;
 >   virtual void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type) = 0;
 >   virtual void sparse_initialize_pa(reg_t paddr, const uint8_t* data, const uint8_t* attrs, uint32_t nBytes, Force::EMemDataType type) = 0;

@@ -54,6 +54,7 @@ namespace Force {
   */
   class Memory {
   public:
+    void AutoInitialize(uint64 address, uint32 nBytes); //!< Initialize any uninitialized memory in the specified range. Previously initialized memory is unchanged. This is useful when it doesn't matter whether the memory has been initialized previously and the initial value is unimportant.
     void Initialize(uint64 address, uint64 value, uint32 nBytes, EMemDataType type);  //!< Initialize memory.
     void Initialize(uint64 address, cuint8* data, cuint8* attrs, uint32 nBytes, EMemDataType type);  //!< Initialize memory.
     bool IsInitialized(uint64 address, uint32 nBytes) const; //!< check whether address is initialized or not
@@ -83,7 +84,7 @@ namespace Force {
   private:
     void InitializeMemoryBytes(const MetaAccess& rMetaAccess, EMemDataType type); //!< initialize the memory bytes on meta access
     bool IsInitializedMemoryBytes(const MetaAccess& rMetaAccess) const; //!< check memory bytes are initialized or not
-    void ValidateInitialization(uint64 address, uint32 nBytes); //!< Verify the specified memory range is initialized. If mAutoInit is true, uninitialized memory is initialized; otherwise, uninitialize memory triggers a failure.
+    void EnsureInitialization(uint64 address, uint32 nBytes); //!< Verify the specified memory range is initialized. If mAutoInit is true, uninitialized memory is initialized; otherwise, uninitialize memory triggers a failure.
     void ReadMemoryBytes(MetaAccess& rMetaAccess) const;                //!< read memory bytes on meta access
     void WriteMemoryBytes(const MetaAccess& rMetaAccess);         //!< write memory bytes on meta access
     void ReadInitialValue(MetaAccess& rMetaAccess) const;         //!< read initial value on meta access
