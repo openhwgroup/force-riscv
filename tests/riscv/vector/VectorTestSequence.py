@@ -192,6 +192,22 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         self._mUnalignedAllowed = False
         self._mTargetAddrConstr = None
 
+    # Calculate EMUL for the given instruction.
+    #
+    #  @param aInstr The name of the instruction.
+    def calculateEmul(self, aInstr):
+        eew = self._getEew(aInstr)
+
+        (vlmul_val, valid) = self.readRegister("vtype", field="VLMUL")
+        self.assertValidRegisterValue("vtype", valid)
+        lmul = self.calculateLmul(vlmul_val)
+
+        (vsew_val, valid) = self.readRegister("vtype", field="VSEW")
+        self.assertValidRegisterValue("vtype", valid)
+        sew = self.calculateSew(vsew_val)
+
+        return round((eew / sew) * lmul)
+
     # Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
         if RandomUtils.random32(0, 1) == 1:
@@ -229,7 +245,7 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     def _isSkipAllowed(self, aInstr, aInstrParams):
-        if aInstrParams or (self._calculateEmul(aInstr) > 8):
+        if aInstrParams or (self.calculateEmul(aInstr) > 8):
             return True
 
         return False
@@ -267,29 +283,15 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     #
     #  @param aInstr The name of the instruction.
     def _calculateMaxRegisterCount(self, aInstr):
-        return self._calculateEmul(aInstr)
-
-    # Calculate EMUL for the given instruction.
-    #
-    #  @param aInstr The name of the instruction.
-    def _calculateEmul(self, aInstr):
-        eew = self._getEew(aInstr)
-
-        (vlmul_val, valid) = self.readRegister("vtype", field="VLMUL")
-        self.assertValidRegisterValue("vtype", valid)
-        lmul = self.calculateLmul(vlmul_val)
-
-        (vsew_val, valid) = self.readRegister("vtype", field="VSEW")
-        self.assertValidRegisterValue("vtype", valid)
-        sew = self.calculateSew(vsew_val)
-
-        return round((eew / sew) * lmul)
+        return self.calculateEmul(aInstr)
 
     # Determine EEW for the given instruction.
     #
     #  @param aInstr The name of the instruction.
     def _getEew(self, aInstr):
-        match = re.fullmatch(r"V(L|S)\w*EI?(\d+)\.V\#\#RISCV", aInstr)
+        match = re.fullmatch(
+            r"V(L|S|AMO)\w*EI?(\d+)(FF)?\.V\#(No register write|Register write)?\#RISCV", aInstr
+        )
         return int(match.group(2))
 
 

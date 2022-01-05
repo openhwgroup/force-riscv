@@ -26,6 +26,12 @@ class MainSequence(VectorTestSequence):
         super().__init__(aGenThread, aName)
 
         self._mInstrList = (
+            "VNCLIP.WI##RISCV",
+            "VNCLIP.WV##RISCV",
+            "VNCLIP.WX##RISCV",
+            "VNCLIPU.WI##RISCV",
+            "VNCLIPU.WV##RISCV",
+            "VNCLIPU.WX##RISCV",
             "VNSRA.WI##RISCV",
             "VNSRA.WV##RISCV",
             "VNSRA.WX##RISCV",

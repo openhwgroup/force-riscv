@@ -16,32 +16,39 @@
 from VectorTestSequence import VectorLoadStoreTestSequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
+import re
 
 
-#  This test verifies that unit-stride load and store instructions can be
-#  generated and executed successfully.
+# This test verifies that unit-stride segment load and store instructions can be generated and
+# executed successfully.
 class MainSequence(VectorLoadStoreTestSequence):
     def __init__(self, aGenThread, aName=None):
         super().__init__(aGenThread, aName)
 
-        self._mInstrList = (
-            "VLE16.V##RISCV",
-            "VLE16FF.V##RISCV",
-            "VLE32.V##RISCV",
-            "VLE32FF.V##RISCV",
-            "VLE64.V##RISCV",
-            "VLE64FF.V##RISCV",
-            "VLE8.V##RISCV",
-            "VLE8FF.V##RISCV",
-            "VSE16.V##RISCV",
-            "VSE32.V##RISCV",
-            "VSE64.V##RISCV",
-            "VSE8.V##RISCV",
+        instr_base_list = (
+            "VLSEG%dE%d.V##RISCV",
+            "VLSEG%dE%dFF.V##RISCV",
+            "VSSEG%dE%d.V##RISCV",
         )
+
+        self._mInstrList = []
+        for instr_base in instr_base_list:
+            for field_count in range(2, 9):
+                for eew in (8, 16, 32, 64):
+                    self._mInstrList.append(instr_base % (field_count, eew))
 
     # Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
         return self._mInstrList
+
+    # Calculate the largest register count for the given instruction's operands.
+    #
+    #  @param aInstr The name of the instruction.
+    def _calculateMaxRegisterCount(self, aInstr):
+        match = re.fullmatch(r"V(L|S)SEG(\d)E\d+(FF)?\.V\#\#RISCV", aInstr)
+        field_count = int(match.group(2))
+
+        return self.calculateEmul(aInstr) * field_count
 
 
 MainSequenceClass = MainSequence

@@ -46,11 +46,11 @@ class MainSequence(VectorLoadStoreTestSequence):
     #
     #  @param aInstr The name of the instruction.
     def _calculateMaxRegisterCount(self, aInstr):
-        match = re.fullmatch(r"V(L|S)(O|U)XSEG(\d)EI(\d+)\.V\#\#RISCV", aInstr)
+        match = re.fullmatch(r"V(L|S)(O|U)XSEG(\d)EI\d+\.V\#\#RISCV", aInstr)
         field_count = int(match.group(3))
         dest_reg_count = self.getRegisterCount(field_count)
 
-        index_reg_count = self._calculateEmul(aInstr)
+        index_reg_count = self.calculateEmul(aInstr)
 
         return max(dest_reg_count, index_reg_count)
 
