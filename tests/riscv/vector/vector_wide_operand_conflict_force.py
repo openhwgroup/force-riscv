@@ -73,7 +73,7 @@ class MainSequence(VectorTestSequence):
     def _setUpTest(self):
         choices_mod = ChoicesModifier(self.genThread)
 
-        choice_weights = {
+        vsew_choice_weights = {
             "0x0": 10,
             "0x1": 10,
             "0x2": 10,
@@ -83,7 +83,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", choice_weights)
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", vsew_choice_weights)
 
         # Ensure vector register group size is no more than 4, as larger values
         # are not legal for widening and narrowing instructions
