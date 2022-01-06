@@ -2525,10 +2525,9 @@ Add RISCV V extension instruction starter information in this file.
     <asm format="VLE64FF.V"/>
   </I>
   <I name="VLM.V" isa="RISCV" class="LoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000010110000000111"/>
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010110000000111"/>
     <O name="vd" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VLM.V"/>
   </I>
   <I name="VLSEG2E8.V" isa="RISCV" class="LoadStoreInstruction" group="Vector">
@@ -3720,10 +3719,9 @@ Add RISCV V extension instruction starter information in this file.
     <asm format="VSE64.V"/>
   </I>
   <I name="VSM.V" isa="RISCV" class="LoadStoreInstruction" group="Vector">
-    <O name="const_bits" type="Constant" bits="31-26,24-20,14-12,6-0" value="000000010110000100111"/>
+    <O name="const_bits" type="Constant" bits="31-20,14-12,6-0" value="0000001010110000100111"/>
     <O name="vs3" type="Register" bits="11-7"/>
     <O name="rs1" type="Register" bits="19-15"/>
-    <O name="vm" type="Immediate" bits="25-25"/>
     <asm format="VSM.V"/>
   </I>
   <I name="VSSEG2E8.V" isa="RISCV" class="LoadStoreInstruction" group="Vector">
