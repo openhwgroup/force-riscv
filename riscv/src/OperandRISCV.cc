@@ -280,6 +280,16 @@ namespace Force {
     return new VsetvlRegisterOperandConstraint();
   }
 
+  bool VectorBaseOffsetLoadStoreOperandRISCV::IsIllegal(const Instruction& rInstr)
+  {
+    Operand* data_opr = GetDataOperand(rInstr);
+    OperandConstraint* data_opr_constr = data_opr->GetOperandConstraint();
+    auto vec_reg_opr_constr = data_opr_constr->CastInstance<VectorRegisterOperandConstraint>();
+    const VectorLayout* vec_layout = vec_reg_opr_constr->GetVectorLayout();
+
+    return vec_layout->mIsIllegal;
+  }
+
   void VectorBaseOffsetLoadStoreOperandRISCV::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
   {
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();

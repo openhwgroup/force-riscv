@@ -236,6 +236,8 @@ namespace Force {
     const char* Type() const override { return "VectorBaseOffsetLoadStoreOperandRISCV"; } //!< Return a string describing the actual type of the Object.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperandRISCV);
+
+    bool IsIllegal(const Instruction& rInstr) override; //!< Return true if the result will yield an illegal instruction regardless of the operands chosen.
   private:
     void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
     Operand* GetDataOperand(const Instruction& rInstr) const; //!< Return data operand.

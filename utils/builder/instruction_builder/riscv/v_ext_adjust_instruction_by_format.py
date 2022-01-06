@@ -199,7 +199,6 @@ def adjust_vd_rs1(aInstruction):
         subop_dict["base"] = "rs1"
         attr_dict["alignment"] = width
         attr_dict["base"] = "rs1"
-        attr_dict["data-size"] = width
         attr_dict["element-size"] = width
         attr_dict["mem-access"] = "Read"
 
@@ -233,7 +232,6 @@ def adjust_vs3_rs1(aInstruction):
     subop_dict["base"] = "rs1"
     attr_dict["alignment"] = width
     attr_dict["base"] = "rs1"
-    attr_dict["data-size"] = width
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Write"
 
@@ -260,7 +258,6 @@ def adjust_vs3_rs1_vm(aInstruction):
     subop_dict["base"] = "rs1"
     attr_dict["alignment"] = width
     attr_dict["base"] = "rs1"
-    attr_dict["data-size"] = width
     attr_dict["element-size"] = width
     attr_dict["mem-access"] = "Write"
 
@@ -418,7 +415,6 @@ def adjust_vd_rs1_vm(aInstruction):
         subop_dict["base"] = "rs1"
         attr_dict["alignment"] = width
         attr_dict["base"] = "rs1"
-        attr_dict["data-size"] = width
         attr_dict["element-size"] = width
         attr_dict["mem-access"] = "Read"
 

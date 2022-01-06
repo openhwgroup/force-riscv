@@ -1575,7 +1575,7 @@ namespace Force {
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
     const VectorLayout* vec_layout = GetDataVectorLayout(rInstr);
 
-    uint64 max_stride_total = addrRangeSize - lsop_struct->ElementSize();
+    uint64 max_stride_total = addrRangeSize - lsop_struct->DataSize();
     uint64 max_stride = max_stride_total / (vec_layout->mElemCount - 1);
 
     // Randomly select a stride value between plus or minus the maximum stride value
@@ -1602,7 +1602,7 @@ namespace Force {
     }
     else {
       auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-      uint64 max_addr = baseAddr + addrRangeSize - lsop_struct->ElementSize();
+      uint64 max_addr = baseAddr + addrRangeSize - lsop_struct->DataSize();
       base_val = max_addr & get_align_mask(alignment);
     }
 
