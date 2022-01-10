@@ -23,8 +23,8 @@ format_map = {}
 
 
 def v_ext_adjust_instruction_by_format(aInstruction):
-    # Get the format prior to adding the layout operand, so that it's not
-    # necessary to strip off the layout operand name.
+    success = False
+
     instruction_format = aInstruction.get_format()
 
     set_register_layouts(aInstruction)
@@ -32,82 +32,82 @@ def v_ext_adjust_instruction_by_format(aInstruction):
     adjust_register_layouts(aInstruction)
 
     if instruction_format == "vd/rd-vs2-vs1-vm":
-        return adjust_vdrd_vs2_vs1_vm(aInstruction)
+        success = adjust_vdrd_vs2_vs1_vm(aInstruction)
     elif instruction_format == "vd-vs2-vs1-vm":
-        return adjust_vd_vs2_vs1_vm(aInstruction)
+        success = adjust_vd_vs2_vs1_vm(aInstruction)
     elif instruction_format == "vd-vs2-simm5-vm":
-        return adjust_vd_vs2_simm5_vm(aInstruction)
+        success = adjust_vd_vs2_simm5_vm(aInstruction)
     elif instruction_format == "vd-vs2-rs1-vm":
-        return adjust_vd_vs2_rs1_vm(aInstruction)
+        success = adjust_vd_vs2_rs1_vm(aInstruction)
     elif instruction_format == "vd/rd-vs2-rs1-vm":
-        return adjust_vdrd_vs2_rs1_vm(aInstruction)
+        success = adjust_vdrd_vs2_rs1_vm(aInstruction)
     # unary instruction formats
     elif instruction_format == "vd/rd-vs2-vm":
-        return adjust_vdrd_vs2_vm(aInstruction)
+        success = adjust_vdrd_vs2_vm(aInstruction)
     elif instruction_format == "vd-vs2-vm":
-        return adjust_vd_vs2_vm(aInstruction)
+        success = adjust_vd_vs2_vm(aInstruction)
     elif instruction_format == "vd/rd-vs2":
-        return adjust_vdrd_vs2(aInstruction)
+        success = adjust_vdrd_vs2(aInstruction)
     elif instruction_format == "rd-vs2-vm":
-        return adjust_rd_vs2_vm(aInstruction)
+        success = adjust_rd_vs2_vm(aInstruction)
     elif instruction_format == "rd-vs2":
-        return adjust_rd_vs2(aInstruction)
+        success = adjust_rd_vs2(aInstruction)
     elif instruction_format == "vd-rs1-vm":
-        return adjust_vd_rs1_vm(aInstruction)
+        success = adjust_vd_rs1_vm(aInstruction)
     elif instruction_format == "vd/rd-rs1-vm":
-        return adjust_vdrd_rs1_vm(aInstruction)
+        success = adjust_vdrd_rs1_vm(aInstruction)
     elif instruction_format == "vd-vm":
-        return adjust_vd_vm(aInstruction)
+        success = adjust_vd_vm(aInstruction)
     # vset{i}vl{i} instructions
     elif instruction_format == "rd-rs1-rs2":
-        return adjust_rd_rs1_rs2(aInstruction)
+        success = adjust_rd_rs1_rs2(aInstruction)
     elif instruction_format == "rd-uimm[4:0]-zimm[9:0]":
-        return adjust_rd_uimm_4_0_zimm_9_0(aInstruction)
+        success = adjust_rd_uimm_4_0_zimm_9_0(aInstruction)
     elif instruction_format == "rd-rs1-zimm[10:0]":
-        return adjust_rd_rs1_zimm_10_0(aInstruction)
+        success = adjust_rd_rs1_zimm_10_0(aInstruction)
     # vmerge and vmv instructions
     elif instruction_format == "vd-vs2-simm5":
-        return adjust_vd_vs2_simm5(aInstruction)
+        success = adjust_vd_vs2_simm5(aInstruction)
     elif instruction_format == "vd$\\neq$0-vs2-simm5":
-        return adjust_vd_nonzero_vs2_simm5(aInstruction)
+        success = adjust_vd_nonzero_vs2_simm5(aInstruction)
     elif instruction_format == "vd-vs2-vs1":
-        return adjust_vd_vs2_vs1(aInstruction)
+        success = adjust_vd_vs2_vs1(aInstruction)
     elif instruction_format == "vd$\\neq$0-vs2-vs1":
-        return adjust_vd_nonzero_vs2_vs1(aInstruction)
+        success = adjust_vd_nonzero_vs2_vs1(aInstruction)
     elif instruction_format == "vd-vs2-rs1":
-        return adjust_vd_vs2_rs1(aInstruction)
+        success = adjust_vd_vs2_rs1(aInstruction)
     elif instruction_format == "vd$\\neq$0-vs2-rs1":
-        return adjust_vd_nonzero_vs2_rs1(aInstruction)
+        success = adjust_vd_nonzero_vs2_rs1(aInstruction)
     elif instruction_format == "vd-simm5":
-        return adjust_vd_simm5(aInstruction)
+        success = adjust_vd_simm5(aInstruction)
     elif instruction_format == "vd-vs1":
-        return adjust_vd_vs1(aInstruction)
+        success = adjust_vd_vs1(aInstruction)
     elif instruction_format == "vd-vs2":
-        return adjust_vd_vs2(aInstruction)
+        success = adjust_vd_vs2(aInstruction)
     # vl<nf>r/vs<nf>r instructions
     elif instruction_format == "vd-rs1":
-        return adjust_vd_rs1(aInstruction)
+        success = adjust_vd_rs1(aInstruction)
     elif instruction_format == "vd-rs1-vs2-vm":
-        return adjust_vd_rs1_vs2_vm(aInstruction)
+        success = adjust_vd_rs1_vs2_vm(aInstruction)
     elif instruction_format == "vd-rs1-rs2-vm":
-        return adjust_vd_rs1_rs2_vm(aInstruction)
+        success = adjust_vd_rs1_rs2_vm(aInstruction)
     elif instruction_format == "vs3-rs1":
-        return adjust_vs3_rs1(aInstruction)
+        success = adjust_vs3_rs1(aInstruction)
     elif instruction_format == "vs3-rs1-vm":
-        return adjust_vs3_rs1_vm(aInstruction)
+        success = adjust_vs3_rs1_vm(aInstruction)
     elif instruction_format == "vs3-rs1-vs2-vm":
-        return adjust_vs3_rs1_vs2_vm(aInstruction)
+        success = adjust_vs3_rs1_vs2_vm(aInstruction)
     elif instruction_format == "vs3-rs1-rs2-vm":
-        return adjust_vs3_rs1_rs2_vm(aInstruction)
+        success = adjust_vs3_rs1_rs2_vm(aInstruction)
     # vamo instructions
     elif instruction_format == "rs1-vs2-vs3-vm":
-        return adjust_rs1_vs2_vs3_vm(aInstruction)
+        success = adjust_rs1_vs2_vs3_vm(aInstruction)
     elif instruction_format == "rs1-vs2-vd-vm":
-        return adjust_rs1_vs2_vd_vm(aInstruction)
+        success = adjust_rs1_vs2_vd_vm(aInstruction)
     else:
         record_instruction_format(instruction_format)
 
-    return False
+    return success
 
 
 def record_instruction_format(aInstructionFormat):
@@ -165,26 +165,30 @@ def adjust_register_layouts(aInstruction):
 
 
 def get_element_size(aConstBitsOpr):
+    elem_size = 0
+
     width = aConstBitsOpr.value[-10:-7]
     mew = aConstBitsOpr.value[3]
     if mew == "0":
         if width == "000":
-            return 1
+            elem_size = 1
         elif width == "101":
-            return 2
+            elem_size = 2
         elif width == "110":
-            return 4
+            elem_size = 4
         elif width == "111":
-            return 8
+            elem_size = 8
     elif mew == "1":
         if width == "000":
-            return 16
+            elem_size = 16
         elif width == "101":
-            return 32
+            elem_size = 32
         elif width == "110":
-            return 64
+            elem_size = 64
         elif width == "111":
-            return 128
+            elem_size = 128
+
+    return elem_size
 
 
 def adjust_vd_rs1(aInstruction):

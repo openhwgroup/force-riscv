@@ -113,7 +113,7 @@ echo "^^^^^ End auto-edit output ^^^^^"
 pause "===== Please review edit(s) above"
 
 echo "===== Preparing to run makefile for standalone/"
-make -j $MAKE_JOBS
+make -j "$MAKE_JOBS"
 cd ..
 
 # TODO(Noah): Revise this to rebuild Handcar only when necessary when there is time to do so.
@@ -131,7 +131,7 @@ cd ..
 
 pause "===== Preparing to change softfloat source file extensions"
 # The Handcar Makefile expects all source files to use a ".cc" extension
-cd build/softfloat
+cd build/softfloat || exit 1
 for f in *.c; do
   mv -- "$f" "${f%.c}.cc"
 done
@@ -140,8 +140,8 @@ cd ../..
 pause "===== Preparing to run handcar make"
 cp Makefile.common build/
 cp Makefile build/
-cd build
-make -j $MAKE_JOBS
+cd build || exit 1
+make -j "$MAKE_JOBS"
 cd ..
 
 echo $?

@@ -22,103 +22,105 @@ format_map = {}
 
 
 def c_ext_adjust_instruction_by_format(aInstr):
+    success = False
+
     instr_format = aInstr.get_format()
 
     if instr_format == "rs1'/rd'-rs2'":
-        return adjust_rs1p_or_rdp_rs2p(aInstr)
+        success = adjust_rs1p_or_rdp_rs2p(aInstr)
     elif instr_format == "rs1'/rd'":
-        return adjust_rs1p_or_rdp(aInstr)
+        success = adjust_rs1p_or_rdp(aInstr)
     elif instr_format == "imm[11|4|9:8|10|6|7|3:1|5]":
-        return adjust_imm_branch(aInstr)
+        success = adjust_imm_branch(aInstr)
     elif instr_format == "imm[5]-rs1/rd$\\neq$0-imm[4:0]":
-        return adjust_addiw(aInstr)
+        success = adjust_addiw(aInstr)
     elif instr_format == "imm[5]-rd$\\neq$0-imm[4:0]":
-        return adjust_li(aInstr)
+        success = adjust_li(aInstr)
     elif instr_format == "imm[5]-rs1'/rd'-imm[4:0]":
-        return adjust_andi(aInstr)
+        success = adjust_andi(aInstr)
     elif instr_format == "imm[8|4:3]-rs1'-imm[7:6|2:1|5]":
-        return adjust_cond_branch(aInstr)
+        success = adjust_cond_branch(aInstr)
     elif instr_format == "nzimm[17]-rd$\\neq$$\\{0,2\\}$-nzimm[16:12]":
-        return adjust_lui(aInstr)
+        success = adjust_lui(aInstr)
     elif instr_format == "nzimm[5]-nzimm[4:0]":
-        return adjust_nop(aInstr)
+        success = adjust_nop(aInstr)
     elif instr_format == "nzimm[5]-rs1/rd$\\neq$0-nzimm[4:0]":
-        return adjust_addi(aInstr)
+        success = adjust_addi(aInstr)
     elif instr_format == "nzimm[9]-2-nzimm[4|6|8:7|5]":
-        return adjust_addi16sp(aInstr)
+        success = adjust_addi16sp(aInstr)
     elif instr_format == "nzuimm[5:4|9:6|2|3]-rd'":
-        return adjust_addi4spn(aInstr)
+        success = adjust_addi4spn(aInstr)
     elif instr_format == "nzuimm[5]-rs1'/rd'-nzuimm[4:0]":
-        return adjust_srai_srli(aInstr)
+        success = adjust_srai_srli(aInstr)
     elif instr_format == "nzuimm[5]-rs1/rd$\\neq$0-nzuimm[4:0]":
-        return adjust_slli(aInstr)
+        success = adjust_slli(aInstr)
     elif instr_format == "rd$\\neq$0-rs2$\\neq$0":
-        return adjust_mv(aInstr)
+        success = adjust_mv(aInstr)
     elif instr_format == "rs1$\\neq$0":
-        return adjust_jalr_jr(aInstr)
+        success = adjust_jalr_jr(aInstr)
     elif instr_format == "rs1/rd$\\neq$0":
-        return adjust_slli64(aInstr)
+        success = adjust_slli64(aInstr)
     elif instr_format == "rs1/rd$\\neq$0-rs2$\\neq$0":
-        return adjust_add(aInstr)
+        success = adjust_add(aInstr)
     elif instr_format == "uimm[5:2|7:6]-rs2":
         # SWSP FSWSP
         #      12-9  8-7
         # uimm[5:2 | 7:6]
-        return adjust_store_sp(
+        success = adjust_store_sp(
             aInstr, "uimm[5:2|7:6]", "8-7,12-9", 4, 2
         )  # with imm name, size, and scale parameters
     elif instr_format == "uimm[5:3]-rs1'-uimm[2|6]-rd'":
         # LW FLW
         #      12-10  6   5
         # uimm[5:3  | 2 | 6]
-        return adjust_load(
+        success = adjust_load(
             aInstr, "uimm[5:3]", "uimm[2|6]", "5,12-10,6", 4, 2
         )  # imm names, size, and scale parameters
     elif instr_format == "uimm[5:3]-rs1'-uimm[2|6]-rs2'":
         # SW FSW
-        return adjust_store(
+        success = adjust_store(
             aInstr, "uimm[5:3]", "uimm[2|6]", "5,12-10,6", 4, 2
         )  # imm names, size, and scale parameters
     elif instr_format == "uimm[5:3]-rs1'-uimm[7:6]-rd'":
         # LD FLD
         #      12-10  6-5
         # uimm[5:3  | 7:6]
-        return adjust_load(
+        success = adjust_load(
             aInstr, "uimm[5:3]", "uimm[7:6]", "6-5,12-10", 8, 3
         )  # imm names, size, and scale parameters
     elif instr_format == "uimm[5:3]-rs1'-uimm[7:6]-rs2'":
         # SD FSD
         #      12-10  6-5
         # uimm[5:3  | 7:6]
-        return adjust_store(
+        success = adjust_store(
             aInstr, "uimm[5:3]", "uimm[7:6]", "6-5,12-10", 8, 3
         )  # imm names, size, and scale parameters
     elif instr_format == "uimm[5:3|8:6]-rs2":
         # SDSP FSDSP
         #      12-10  9-7
         # uimm[5:3  | 8:6]
-        return adjust_store_sp(
+        success = adjust_store_sp(
             aInstr, "uimm[5:3|8:6]", "9-7,12-10", 8, 3
         )  # with imm name, size, and scale parameters
     elif instr_format == "uimm[5:4|8]-rs1'-uimm[7:6]-rd'":
         # LQ
         #      12  11  10  6-5
         # uimm[5 | 4 | 8 | 7:6]
-        return adjust_load(
+        success = adjust_load(
             aInstr, "uimm[5:4|8]", "uimm[7:6]", "10,6-5,12-11", 16, 4
         )  # imm names, size, and scale parameters
     elif instr_format == "uimm[5:4|8]-rs1'-uimm[7:6]-rs2'":
         # SQ
         #      12  11  10  6-5
         # uimm[5 | 4 | 8 | 7:6]
-        return adjust_store(
+        success = adjust_store(
             aInstr, "uimm[5:4|8]", "uimm[7:6]", "10,6-5,12-11", 16, 4
         )  # imm names, size, and scale parameters
     elif instr_format == "uimm[5:4|9:6]-rs2":
         # SQSP
         #      12-11  10-7
         # uimm[5:4  | 9:6]
-        return adjust_store_sp(
+        success = adjust_store_sp(
             aInstr, "uimm[5:4|9:6]", "10-7,12-11", 16, 4
         )  # with imm name, size, and scale parameters
     elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:2|7:6]") or (
@@ -127,7 +129,7 @@ def c_ext_adjust_instruction_by_format(aInstr):
         # C.LWSP or C.FLWSP
         #      12  6-4   3-2
         # uimm[5 | 4:2 | 7:6]
-        return adjust_load_sp(
+        success = adjust_load_sp(
             aInstr, "uimm[5]", "uimm[4:2|7:6]", "3-2,12,6-4", 4, 2
         )  # with imm name, size, and scale parameters
     elif (instr_format == "uimm[5]-rd$\\neq$0-uimm[4:3|8:6]") or (
@@ -136,24 +138,25 @@ def c_ext_adjust_instruction_by_format(aInstr):
         # C.LDSP or C.FLDSP
         #      12  6-5   4-2
         # uimm[5 | 4:3 | 8:6]
-        return adjust_load_sp(
+        success = adjust_load_sp(
             aInstr, "uimm[5]", "uimm[4:3|8:6]", "4-2,12,6-5", 8, 3
         )  # with imm name, size, and scale parameters
     elif instr_format == "uimm[5]-rd$\\neq$0-uimm[4|9:6]":
         # C.LQSP
         #      12  6   5-2
         # uimm[5 | 4 | 9:6]
-        return adjust_load_sp(
+        success = adjust_load_sp(
             aInstr, "uimm[5]", "uimm[4|9:6]", "5-2,12,6", 16, 4
         )  # with imm name, size, and scale parameters
     elif aInstr.name == "C.EBREAK":
-        return True
+        success = True
     else:
         record_instruction_format(instr_format)
-        pass
 
-    dump_format_map()
-    return False
+    if not success:
+        dump_format_map()
+
+    return success
 
 
 def record_instruction_format(aInstrFormat):

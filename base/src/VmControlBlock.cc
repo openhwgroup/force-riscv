@@ -103,8 +103,8 @@ namespace Force {
     for (const auto param : mContextParams) {
       if (nullptr != param) {
         valid_context &= param->Validate(mpGenerator, rErrMsg);
-        //LOG(notice) << "{VmControlBlock::Validate} " << EVmContextParamType_to_string(param->ParamType()) << "=0x" << hex << param->Value()
-        //            << " valid_context=" << valid_context << endl;
+
+        LOG(debug) << "{VmControlBlock::Validate} " << EVmContextParamType_to_string(param->ParamType()) << "=0x" << hex << param->Value() << " valid_context=" << valid_context << endl;
       }
     }
 

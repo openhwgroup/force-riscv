@@ -925,13 +925,13 @@ class RegisterFile:
     def updatePhysicalRegisterAttributeToTree(self, aTree, aAttribute):
         root = aTree.getroot()
 
-        for child in root:
-            if child.tag == "physical_registers":
-                for physical_register in child:
-                    if physical_register.attrib["name"] == aAttribute["register"]:
-                        for key, value in aAttribute.items():
-                            if key != "register" and key != "target":
-                                physical_register.attrib[key] = value
+        for physical_register in root.findall("physical_registers"):
+            for physical_register in physical_register.findall(
+                "./physical_register[@name=%s]" % aAttribute["register"]
+            ):
+                for (key, value) in aAttribute.items():
+                    if key not in ("register", "target"):
+                        physical_register.attrib[key] = value
 
     # Updates field choices
     def updateFieldChoices(self, aChoice):
@@ -978,13 +978,10 @@ class RegisterFile:
     def updateFieldWeight(self, aWeight):
         field_choices = self.mFieldChoicesTree.getroot()
 
-        for field_choice in field_choices:
-            if field_choice.attrib["name"] == aWeight["field_name"]:
-                for choice in aWeight["choices"]:
-                    for child in field_choice.getchildren():
-                        if choice["value"] == child.attrib["value"]:
-                            child.attrib["weight"] = choice["weight"]
-                break
+        for field_choice in field_choices.findall("./choices[@name=%s]" % aWeight["field_name"]):
+            for choice in aWeight["choices"]:
+                for child in field_choice.findall("./choice[@value=%s]" % choice["value"]):
+                    child.attrib["weight"] = choice["weight"]
 
     # Writes register file from system register tree
     def outputRiscVRegisterFileFromTree(self, aSystemRegisterFile, aLicenseText=None):

@@ -12,22 +12,22 @@ pause() {
 }
 
 gcc_ver=$(g++ --version|grep g++|awk '{print $NF}')
-if ! $(./version_chk.py "$gcc_ver" "$gcc_req" ); then
+if ! ( ./version_chk.py "$gcc_ver" "$gcc_req" ); then
   echo g++ version needs to be >= "$gcc_req"
   pause "g++ version may need updating."
 fi
 
 python_ver=$(python3 --version|grep Python|awk '{print $NF}')
-if ! $(./version_chk.py "$python_ver" "$python_req"); then
+if ! ( ./version_chk.py "$python_ver" "$python_req" ); then
   echo python version needs to be >= "$python_req"
   pause "python version may need updating."
 fi
 
 echo Current environment:
-echo FORCE_CC=$FORCE_CC
-echo FORCE_PYTHON_VER=$FORCE_PYTHON_VER
-echo FORCE_PYTHON_INC=$FORCE_PYTHON_INC
-echo FORCE_PYTHON_LIB=$FORCE_PYTHON_LIB
+echo FORCE_CC="$FORCE_CC"
+echo FORCE_PYTHON_VER="$FORCE_PYTHON_VER"
+echo FORCE_PYTHON_INC="$FORCE_PYTHON_INC"
+echo FORCE_PYTHON_LIB="$FORCE_PYTHON_LIB"
 
 make -j
 make -j tests

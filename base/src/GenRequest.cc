@@ -38,16 +38,6 @@ using namespace std;
 
 namespace Force {
 
-  static inline void add_constraint_value(ConstraintSet*& constr_ptr, uint64 value)
-  {
-    if (nullptr == constr_ptr) {
-      constr_ptr = new ConstraintSet(value);
-    }
-    else {
-      constr_ptr->AddValue(value);
-    }
-  }
-
   static EMemDataType parse_data_type(const std::string& data_type)
   {
     if (data_type == "I") {
