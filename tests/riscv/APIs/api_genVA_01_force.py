@@ -16,6 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
+import itertools
 
 
 class MainSequence(Sequence):
@@ -26,93 +27,58 @@ class MainSequence(Sequence):
     """
 
     def generate(self, **kargs):
+        # Test smaller values of size - 1 byte to 32 bytes.
+        self._test_gen_va(range(0, 6), range(0, 16), 1)
 
-        ldstr_byte_ops = ["LB##RISCV", "SB##RISCV"]
-        ldstr_half_ops = ["LH##RISCV", "SH##RISCV"]
-        ldstr_word_ops = ["LW##RISCV", "SW##RISCV"]
-        ldstr_double_ops = ["LD##RISCV", "SD##RISCV"]
+        # Test larger values of size - 32K to 8M.
+        self._test_gen_va(range(15, 24), range(15, 25), 0)
 
+    def _test_gen_va(self, size_exp_range, align_exp_range, flat_map):
         # Iterate through Size and Align values.  Force requires Align to
-        # be a power of 2. This 1st block tests smaller values of size -
-        # 1 byte to 32 bytes.
-        for theSize in [2 ** x for x in range(0, 6)]:
+        # be a power of 2.
+        for (theSize, theAlign) in itertools.product(
+            [2 ** x for x in size_exp_range], [2 ** x for x in align_exp_range]
+        ):
+            if theAlign < theSize:
+                continue
 
-            for theAlign in [2 ** x for x in range(0, 16)]:
+            self._gen_load_store_instructions(theSize, theAlign, flat_map)
 
-                if theAlign < theSize:
-                    continue
+    def _gen_load_store_instructions(self, addr_size, addr_align, flat_map):
 
-                for _ in range(2):
+        for _ in range(2):
+            rand_VA = self.genVA(
+                Size=addr_size,
+                Align=addr_align,
+                Type="D",
+                Bank="Default",
+                FlatMap=flat_map,
+            )
+            self.notice(
+                ">>>>>> Requested Alignment:  {:6d}     Requested "
+                "Size:  {:6d}     gen target VA={:12X}".format(addr_align, addr_size, rand_VA)
+            )
 
-                    rand_VA = self.genVA(
-                        Size=theSize,
-                        Align=theAlign,
-                        Type="D",
-                        Bank="Default",
-                        FlatMap=1,
-                    )
-                    self.notice(
-                        ">>>>>> Requested Alignment:  {:6d}     Requested "
-                        "Size:  {:6d}     gen target VA={:12X}".format(theAlign, theSize, rand_VA)
-                    )
+            for instr_list in self._get_instruction_lists(addr_align):
+                self.genInstruction(self.choice(instr_list), {"LSTarget": rand_VA})
 
-                    instr_id = self.genInstruction(
-                        self.choice(ldstr_byte_ops), {"LSTarget": rand_VA}
-                    )
-                    if theAlign % 2 == 0:
-                        instr_id = self.genInstruction(
-                            self.choice(ldstr_half_ops), {"LSTarget": rand_VA}
-                        )
-                    if theAlign % 4 == 0:
-                        instr_id = self.genInstruction(
-                            self.choice(ldstr_word_ops), {"LSTarget": rand_VA}
-                        )
-                    if (theAlign % 8 == 0) and (self.getGlobalState("AppRegisterWidth") != 32):
-                        instr_id = self.genInstruction(
-                            self.choice(ldstr_double_ops),
-                            {"LSTarget": rand_VA},
-                        )
+    # Return the lists of instructions applicable for the specified alignment.
+    def _get_instruction_lists(self, addr_align):
+        ldstr_byte_ops = ("LB##RISCV", "SB##RISCV")
+        ldstr_half_ops = ("LH##RISCV", "SH##RISCV")
+        ldstr_word_ops = ("LW##RISCV", "SW##RISCV")
+        ldstr_double_ops = ("LD##RISCV", "SD##RISCV")
 
-        # Iterate through Size and Align values.  Force requires Align to
-        # be a power of 2. This 2nd block tests larger values of size - 32K to
-        # 8M.
-        for theSize in [2 ** x for x in range(15, 24)]:
+        instr_lists = [ldstr_byte_ops]
 
-            for theAlign in [2 ** x for x in range(15, 25)]:
+        if addr_align % 2 == 0:
+            instr_lists.append(ldstr_half_ops)
+        if addr_align % 4 == 0:
+            instr_lists.append(ldstr_word_ops)
+        if (addr_align % 8 == 0) and (self.getGlobalState("AppRegisterWidth") != 32):
+            instr_lists.append(ldstr_double_ops)
 
-                if theAlign < theSize:
-                    continue
-
-                for _ in range(2):
-
-                    rand_VA = self.genVA(
-                        Size=theSize,
-                        Align=theAlign,
-                        Type="D",
-                        Bank="Default",
-                        FlatMap=0,
-                    )
-                    self.notice(
-                        ">>>>>> Requested Alignment:  {:6d}     Requested "
-                        "Size:  {:6d}     gen target VA={:12X}".format(theAlign, theSize, rand_VA)
-                    )
-
-                    instr_id = self.genInstruction(
-                        self.choice(ldstr_byte_ops), {"LSTarget": rand_VA}
-                    )
-                    if theAlign % 2 == 0:
-                        instr_id = self.genInstruction(
-                            self.choice(ldstr_half_ops), {"LSTarget": rand_VA}
-                        )
-                    if theAlign % 4 == 0:
-                        instr_id = self.genInstruction(
-                            self.choice(ldstr_word_ops), {"LSTarget": rand_VA}
-                        )
-                    if (theAlign % 8 == 0) and (self.getGlobalState("AppRegisterWidth") != 32):
-                        instr_id = self.genInstruction(
-                            self.choice(ldstr_double_ops),
-                            {"LSTarget": rand_VA},
-                        )
+        return instr_lists
 
 
 MainSequenceClass = MainSequence

@@ -16,8 +16,7 @@
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
 from base.Sequence import Sequence
-
-import sys
+from base.TestUtils import assert_not_in
 
 # import instruction_tree module from the current directory
 from DV.riscv.trees.instruction_tree import *
@@ -81,34 +80,42 @@ class MainSequence(Sequence):
             dests = instr_info["Dests"]
 
             for rname, rvalue in dests.items():
-                if rname in read_only_regs:
-                    raise ValueError(
-                        "[DEBUG] OOPS! random '%s' instruction used reserved "
-                        "(read-only) register (X%d) as dest operand???"
+                assert_not_in(
+                    rname,
+                    read_only_regs,
+                    (
+                        "OOPS! random '%s' instruction used reserved (read-only) register (%s) as dest operand???"
                         % (instr_info["Name"], rname)
-                    )
-                if rname in cant_access_regs:
-                    raise ValueError(
-                        "[DEBUG] OOPS! random '%s' instruction used reserved "
-                        "(read,write not allowed) register (X%d) as dest"
-                        "operand???" % (instr_info["Name"], rname)
-                    )
+                    ),
+                )
+                assert_not_in(
+                    rname,
+                    cant_access_regs,
+                    (
+                        "OOPS! random '%s' instruction used reserved (read,write not allowed) register (%s) as dest operand???"
+                        % (instr_info["Name"], rname)
+                    ),
+                )
 
             srcs = instr_info["Srcs"]
 
             for rname, rvalue in srcs.items():
-                if rname in write_only_regs:
-                    raise ValueError(
-                        "[DEBUG] OOPS! random '%s' instruction used reserved "
-                        "(write-only) register (X%d) as src operand???"
+                assert_not_in(
+                    rname,
+                    write_only_regs,
+                    (
+                        "OOPS! random '%s' instruction used reserved (write-only) register (%s) as src operand???"
                         % (instr_info["Name"], rname)
-                    )
-                if rname in cant_access_regs:
-                    raise ValueError(
-                        "[DEBUG] OOPS! random '%s' instruction used reserved "
-                        "(read,write not allowed) register (X%d) as src "
-                        "operand???" % (instr_info["Name"], rname)
-                    )
+                    ),
+                )
+                assert_not_in(
+                    rname,
+                    cant_access_regs,
+                    (
+                        "OOPS! random '%s' instruction used reserved (read,write not allowed) register (%s) as src operand???"
+                        % (instr_info["Name"], rname)
+                    ),
+                )
 
         self.freeReservedRegs(read_only_regs, "Write")
         self.freeReservedRegs(write_only_regs, "Read")
@@ -130,12 +137,11 @@ class MainSequence(Sequence):
             if r5 not in rnd_set:
                 rnd_set.append(r5)
         print("\t[DEBUG] random gprs: ", rnd_set)
-        if reserved_reg_id in rnd_set:
-            print("[DEBUG] OOPS! RandomGPR returned reserved register (X%d) ???" % reserved_reg_id)
-            sys.stdout.flush()
-            raise ValueError(
-                "OOPS! RandomGPR returned reserved register (X%d) ???" % reserved_reg_id
-            )
+        assert_not_in(
+            reserved_reg_id,
+            rnd_set,
+            ("OOPS! RandomGPR returned reserved register (X%d) ???" % reserved_reg_id),
+        )
 
     def reservedRandomRegCheck(self, access_to_deny):
         (gpr1, gpr2, gpr3) = self.getRandomRegisters(3, "GPR", "31")

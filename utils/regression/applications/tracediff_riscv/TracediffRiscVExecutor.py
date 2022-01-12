@@ -96,6 +96,6 @@ class TracediffRiscVExecutor(ToolExecutor):
         my_msg = ""
         # for now only the first line is of interest
         for line in arg_hfile:
-            pass
-        my_msg = line
+            my_msg = line
+
         return my_msg

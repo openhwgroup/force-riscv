@@ -96,10 +96,6 @@ class MainSequence(Sequence):
         state.addPrivilegeLevelStateElementByName("S")
         self._mExpectedStateData[EStateElementType.PrivilegeLevel] = 1
 
-        # state.addVmContextStateElement('satp', 'MODE', 8)
-        # self._mExpectedStateData[
-        #   EStateElementType.VmContext] = [('satp', 'MODE', 8)]
-
         expected_gpr_state_data = []
         for gpr_index in range(1, 32, 2):
             gpr_name = "x%d" % gpr_index

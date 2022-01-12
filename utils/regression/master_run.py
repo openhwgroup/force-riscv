@@ -15,9 +15,6 @@
 # limitations under the License.
 #
 
-#  PYTHON3 UP
-# /software/public/python/3.4.1/bin/python3
-
 # File: master_run.py
 # Comment: MasterRun main module
 # Contributors: Howard Maler, Noah Sherrill, Amit Kumar, Jingliang(Leo) Wang,

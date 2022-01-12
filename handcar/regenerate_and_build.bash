@@ -114,7 +114,7 @@ pause "===== Please review edit(s) above"
 
 echo "===== Preparing to run makefile for standalone/"
 make -j "$MAKE_JOBS"
-cd ..
+cd .. || exit 1
 
 # TODO(Noah): Revise this to rebuild Handcar only when necessary when there is time to do so.
 rm -rf build
@@ -125,9 +125,9 @@ cp ../3rd_party/inc/softfloat/softfloat.h build/softfloat/
 cp -r ./force_mod build/
 
 pause "===== Preparing to create handcar files"
-cd ./patcher || exit 1
+cd patcher || exit 1
 ./patcher.py patch --clean
-cd ..
+cd .. || exit 1
 
 pause "===== Preparing to change softfloat source file extensions"
 # The Handcar Makefile expects all source files to use a ".cc" extension
@@ -135,13 +135,13 @@ cd build/softfloat || exit 1
 for f in *.c; do
   mv -- "$f" "${f%.c}.cc"
 done
-cd ../..
+cd ../.. || exit 1
 
 pause "===== Preparing to run handcar make"
 cp Makefile.common build/
 cp Makefile build/
 cd build || exit 1
 make -j "$MAKE_JOBS"
-cd ..
+cd .. || exit 1
 
 echo $?

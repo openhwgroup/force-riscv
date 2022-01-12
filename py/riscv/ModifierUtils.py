@@ -225,67 +225,70 @@ class TrapsRedirectModifier(ChoicesModifier):
 # Required arguments:
 # - MainSequence object from test template
 # - Page object returned from the self.getPageInfo()
-
-
 def displayPageInfo(seq, page_obj):
-
     seq.notice(">>>>>>>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     seq.notice(">>>>>>>  Page Object:  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 
-    for key, value in page_obj.items():
+    for (key, value) in page_obj.items():
         if key == "Page":
-            if value["PageSize"] == 2 ** 12:
-                page_size_string = "4KB"
-            elif value["PageSize"] == 2 ** 21:
-                page_size_string = "2MB"
-            elif value["PageSize"] == 2 ** 30:
-                page_size_string = "1GB"
-            elif value["PageSize"] == 2 ** 39:
-                page_size_string = "512GB"
-            else:
-                page_size_string = "unknown"
-            seq.notice(">>>>>>>      Page Size:  {}".format(page_size_string))
-            seq.notice(
-                ">>>>>>>      Virtual Address Range:    {:#018x} - {:#018x}".format(
-                    value["Lower"], value["Upper"]
-                )
-            )
-            seq.notice(
-                ">>>>>>>      Physical Address Range:   {:#018x} - {:#018x}".format(
-                    value["PhysicalLower"], value["PhysicalUpper"]
-                )
-            )
-            seq.notice(">>>>>>>      Descriptor:  {:#018x}".format(value["Descriptor"]))
-            seq.notice(
-                ">>>>>>>      Descriptor Address:  {}".format(
-                    value["DescriptorDetails"]["Address"]
-                )
-            )
-            seq.notice(
-                ">>>>>>>      Descriptor Details:    DA         G          U          X          WR         V"
-            )
-            seq.notice(
-                (">>>>>>>      Descriptor Details:    " + "{:<10} " * 6 + " ").format(
-                    value["DescriptorDetails"]["DA"],
-                    value["DescriptorDetails"]["G"],
-                    value["DescriptorDetails"]["U"],
-                    value["DescriptorDetails"]["X"],
-                    value["DescriptorDetails"]["WR"],
-                    value["DescriptorDetails"]["V"],
-                )
-            )
-
-        if key.startswith("Table"):
-            for field, info in value.items():
-                if field == "DescriptorAddr" or field == "Descriptor":
-                    seq.notice(">>>>>>>      {:<20}:    {:#018x}".format(field, info))
-                if field == "Level":
-                    seq.notice(">>>>>>>    {}  {}".format(field, info))
-                if field == "DescriptorDetails":
-                    seq.notice(
-                        ">>>>>>>      PPN of Next PTE     :    {}".format(
-                            value["DescriptorDetails"]["Address"]
-                        )
-                    )
+            _display_page_details(seq, value)
+        elif key.startswith("Table"):
+            _display_table_details(seq, value)
 
     seq.notice(">>>>>>>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
+
+def _display_page_details(seq, page_details):
+    if page_details["PageSize"] == 2 ** 12:
+        page_size_string = "4KB"
+    elif page_details["PageSize"] == 2 ** 21:
+        page_size_string = "2MB"
+    elif page_details["PageSize"] == 2 ** 30:
+        page_size_string = "1GB"
+    elif page_details["PageSize"] == 2 ** 39:
+        page_size_string = "512GB"
+    else:
+        page_size_string = "unknown"
+
+    seq.notice(">>>>>>>      Page Size:  {}".format(page_size_string))
+    seq.notice(
+        ">>>>>>>      Virtual Address Range:    {:#018x} - {:#018x}".format(
+            page_details["Lower"], page_details["Upper"]
+        )
+    )
+    seq.notice(
+        ">>>>>>>      Physical Address Range:   {:#018x} - {:#018x}".format(
+            page_details["PhysicalLower"], page_details["PhysicalUpper"]
+        )
+    )
+    seq.notice(">>>>>>>      Descriptor:  {:#018x}".format(page_details["Descriptor"]))
+    seq.notice(
+        ">>>>>>>      Descriptor Address:  {}".format(page_details["DescriptorDetails"]["Address"])
+    )
+    seq.notice(
+        ">>>>>>>      Descriptor Details:    DA         G          U          X          WR         V"
+    )
+    seq.notice(
+        (">>>>>>>      Descriptor Details:    " + "{:<10} " * 6 + " ").format(
+            page_details["DescriptorDetails"]["DA"],
+            page_details["DescriptorDetails"]["G"],
+            page_details["DescriptorDetails"]["U"],
+            page_details["DescriptorDetails"]["X"],
+            page_details["DescriptorDetails"]["WR"],
+            page_details["DescriptorDetails"]["V"],
+        )
+    )
+
+
+def _display_table_details(seq, table_details):
+    for (field, info) in table_details.items():
+        if field in ("DescriptorAddr", "Descriptor"):
+            seq.notice(">>>>>>>      {:<20}:    {:#018x}".format(field, info))
+        elif field == "Level":
+            seq.notice(">>>>>>>    {}  {}".format(field, info))
+        elif field == "DescriptorDetails":
+            seq.notice(
+                ">>>>>>>      PPN of Next PTE     :    {}".format(
+                    table_details["DescriptorDetails"]["Address"]
+                )
+            )
