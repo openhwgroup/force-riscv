@@ -60,6 +60,7 @@ The user manual is located in the 'force-riscv/doc' directory.  The user manual 
      `./setup`
      * Skip to the section: **ELF file generation running FORCE-RISCV directly**
   * Manual steps
+     * `source setenv.bash` if running bash; otherwise `./setenv.bash`
      * `make`
      * `make tests`
      * Run the main regression while in the force-riscv directory.   
