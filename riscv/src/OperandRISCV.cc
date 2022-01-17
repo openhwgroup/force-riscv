@@ -300,7 +300,7 @@ namespace Force {
     const VectorLayout* vec_layout = vec_reg_opr_constr->GetVectorLayout();
 
     uint32 elem_size_bytes = vec_layout->mElemSize / 8;
-    lsop_struct->SetDataSize(elem_size_bytes * vec_layout->mElemCount);
+    lsop_struct->SetDataSize(elem_size_bytes * vec_layout->mFieldCount * vec_layout->mElemCount);
   }
 
   Operand* VectorBaseOffsetLoadStoreOperandRISCV::GetDataOperand(const Instruction& rInstr) const

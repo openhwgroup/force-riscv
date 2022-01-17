@@ -63,13 +63,11 @@ namespace Force {
   void VectorLayoutSetupRISCV::SetUpVectorLayoutWithLayoutMultiple(const VectorRegisterOperandStructure& rVecRegOprStruct, const float layoutMultiple, VectorLayout& rVecLayout) const
   {
     rVecLayout.mElemSize = lround(GetSew() * layoutMultiple);
+    rVecLayout.mElemCount = GetVl();
 
     // NFIELDS is the register count for the operand. For instructions other than load/store segment
     // instructions, NFIELDS = 1.
     rVecLayout.mFieldCount = rVecRegOprStruct.GetRegisterCount();
-
-    // The total element count is NFIELDS * vl.
-    rVecLayout.mElemCount = rVecLayout.mFieldCount * GetVl();
 
     // Register operands must be aligned to EMUL.
     rVecLayout.mRegIndexAlignment = lround(GetLmul() * layoutMultiple);
