@@ -196,13 +196,7 @@ class MsgLabel:
 
 
 class Msg:
-    lev = (
-        MsgLevel.crit
-        | MsgLevel.err
-        | MsgLevel.warn
-        | MsgLevel.info
-        | MsgLevel.noinfo
-    )
+    lev = MsgLevel.crit | MsgLevel.err | MsgLevel.warn | MsgLevel.info | MsgLevel.noinfo
 
     # set the default message level
     @classmethod
@@ -269,10 +263,7 @@ class Msg:
             if (arg_level & MsgLevel.info) and (Msg.lev & MsgLevel.noinfo):
                 print(str(arg_msg).strip())
             else:
-                print(
-                    "[%s] - %s"
-                    % (MsgLabel.get_label(arg_level), str(arg_msg).strip())
-                )
+                print("[%s] - %s" % (MsgLabel.get_label(arg_level), str(arg_msg).strip()))
 
     @classmethod
     def write(cls, arg_msg, arg_level):
@@ -280,22 +271,15 @@ class Msg:
             if (arg_level & MsgLevel.info) and (Msg.lev & MsgLevel.noinfo):
                 print(str(arg_msg).strip())
             else:
-                print(
-                    "[%s] - %s"
-                    % (MsgLabel.get_label(arg_level), str(arg_msg).strip())
-                )
+                print("[%s] - %s" % (MsgLabel.get_label(arg_level), str(arg_msg).strip()))
 
     @classmethod
     def write_nostrip(cls, arg_msg, arg_level, arg_notag=False):
         if Msg.lev != MsgLevel.nomsg:
-            if arg_notag or (
-                (arg_level & MsgLevel.info) and (Msg.lev & MsgLevel.noinfo)
-            ):
+            if arg_notag or ((arg_level & MsgLevel.info) and (Msg.lev & MsgLevel.noinfo)):
                 print(str(arg_msg).strip())
             else:
-                print(
-                    "[%s] - %s" % (MsgLabel.get_label(arg_level), str(arg_msg))
-                )
+                print("[%s] - %s" % (MsgLabel.get_label(arg_level), str(arg_msg)))
 
     @classmethod
     def user(cls, arg_msg, arg_label=None):
@@ -391,52 +375,68 @@ class Msg:
 
     @classmethod
     def lout(cls, arg_obj, arg_lev, arg_lbl=None, arg_indent=""):
+        if arg_obj is None:
+            return
 
-        if arg_obj:
-            if (isinstance(arg_obj, (list, dict)) and len(arg_obj) > 0) or hasattr(arg_obj, "__class__"):
-                if isinstance(arg_lev, str):
-                    Msg.lout(arg_obj, MsgLevel.translate(arg_lev), arg_lbl)
+        if (isinstance(arg_obj, (list, dict)) and len(arg_obj) > 0) or hasattr(
+            arg_obj, "__class__"
+        ):
+            if isinstance(arg_lev, str):
+                Msg.lout(arg_obj, MsgLevel.translate(arg_lev), arg_lbl)
+            else:
+                if not arg_lev & Msg.lev:
+                    return
+
+                arg_indent += "\t"
+                if arg_lbl is not None:
+                    Msg.write_nostrip(arg_indent + str(arg_lbl), arg_lev)
+
+                if isinstance(arg_obj, list):
+                    my_ndx = 0
+                    for my_item in arg_obj:
+                        my_ndx += 1
+                        if isinstance(my_item, (list, dict)):
+                            Msg.lout(
+                                my_item,
+                                arg_lev,
+                                str(my_ndx),
+                                "%s" % (arg_indent),
+                            )
+                        else:
+                            Msg.write_nostrip(
+                                "%s[%02d] = %s" % (arg_indent, my_ndx, str(my_item)),
+                                arg_lev,
+                                True,
+                            )
+                elif isinstance(arg_obj, dict):
+                    for my_key in arg_obj:
+                        if isinstance(arg_obj[my_key], (list, dict)):
+                            Msg.lout(
+                                arg_obj[my_key],
+                                arg_lev,
+                                my_key,
+                                "%s" % (arg_indent),
+                            )
+                        else:
+                            Msg.write_nostrip(
+                                "%s[%s] = %s"
+                                % (
+                                    arg_indent,
+                                    my_key,
+                                    str(arg_obj[my_key]),
+                                ),
+                                arg_lev,
+                                True,
+                            )
+                elif hasattr(arg_obj, "__class__"):
+                    Msg.lout(
+                        arg_obj.__dict__,
+                        arg_lev,
+                        None,
+                        "%s" % (arg_indent),
+                    )
                 else:
-                    if not arg_lev & Msg.lev:
-                        return
-
-                    arg_indent += "\t"
-                    if arg_lbl is not None:
-                        Msg.write_nostrip(arg_indent + str(arg_lbl), arg_lev)
-
-                    if isinstance(arg_obj, list):
-                        my_ndx = 0
-                        for my_item in arg_obj:
-                            my_ndx += 1
-                            if isinstance(my_item, (list, dict)):
-                                Msg.lout(
-                                    my_item, arg_lev, str(my_ndx), "%s" % (arg_indent)
-                                )
-                            else:
-                                Msg.write_nostrip(
-                                    "%s[%02d] = %s" % (arg_indent, my_ndx, str(my_item)),
-                                    arg_lev,
-                                    True,
-                                )
-                    elif isinstance(arg_obj, dict):
-                        for my_key in arg_obj:
-                            if isinstance(arg_obj[my_key], (list, dict)):
-                                Msg.lout(
-                                    arg_obj[my_key], arg_lev, my_key, "%s" % (arg_indent)
-                                )
-                            else:
-                                Msg.write_nostrip(
-                                    "%s[%s] = %s"
-                                    % (arg_indent, my_key, str(arg_obj[my_key])),
-                                    arg_lev,
-                                    True,
-                                )
-                    elif hasattr(arg_obj, "__class__"):
-                        Msg.lout(arg_obj.__dict__, arg_lev, None, "%s" % (arg_indent))
-                    else:
-                        raise Exception(
-                            "Argument 1 needs to be of list or dictionary type"
-                        )
+                    raise Exception("Argument 1 needs to be of list or dictionary type")
 
     @classmethod
     def flush(cls):

@@ -91,9 +91,7 @@ def update_bits_value(bits, value):
             bit_hi = int(range_split[0])
             bit_lo = int(range_split[1])
             piece_sz = bit_hi - bit_lo + 1
-            new_bitval_obj = BitValue(
-                bit_hi, bit_lo, value[start_loc : (start_loc + piece_sz)]
-            )
+            new_bitval_obj = BitValue(bit_hi, bit_lo, value[start_loc : (start_loc + piece_sz)])
 
         bitval_list.append(new_bitval_obj)
         start_loc += piece_sz
@@ -163,8 +161,7 @@ def merge_imm_value(value1, value2):
 
     if len(value1) != len(value2):
         raise BuilderException(
-            "Merging value but value length don't match: %d and %d."
-            % (len(value1), len(value2))
+            "Merging value but value length don't match: %d and %d." % (len(value1), len(value2))
         )
 
     merged_value = ""

@@ -23,6 +23,7 @@
 #include <Enums.h>
 #include ARCH_ENUM_HEADER
 #include <map>
+#include <vector>
 
 namespace py = pybind11;
 
@@ -56,6 +57,9 @@ namespace Force {
     void RevertModificationSet(uint32 threadId, const py::object& choicesType, const py::object& setId);  //!< revert a modification set with the given ID
     void AddMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Add usable physical memory range.
     void SubMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Subtract usable physical memory range.
+    void AddArchitectureMemoryAttributes(cuint32 bank, cuint64 start, cuint64 end, const std::string& rMemAttributes, cuint32 threadId); //!< Assign architecture memory attributes to the specified physical memory range.
+    void AddImplementationMemoryAttributes(cuint32 bank, cuint64 start, cuint64 end, const std::string& rMemAttributes, cuint32 threadId); //!< Assign implementation memory attributes to the specified physical memory range.
+
 
     // Page related APIs
 //    py::object GenPA(uint32 threadId, uint64 size, bool isInstr, uint64 align) const;

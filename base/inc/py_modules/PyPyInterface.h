@@ -63,6 +63,8 @@ namespace Force {
       .def("genSequence", &PyInterface::GenSequence, py::call_guard<ThreadContext>())
       .def("addMemoryRange", &PyInterface::AddMemoryRange /* No call guard because used when initializing environment, prior to creating thread dispatcher */)
       .def("subMemoryRange", &PyInterface::SubMemoryRange /* No call guard because used when initializing environment, prior to creating thread dispatcher */)
+      .def("addArchitectureMemoryAttributes", &PyInterface::AddArchitectureMemoryAttributes, py::arg(), py::arg(), py::arg(), py::arg(), py::arg("thread_id") = 0 /* No call guard because used when initializing environment, prior to creating thread dispatcher */)
+      .def("addImplementationMemoryAttributes", &PyInterface::AddImplementationMemoryAttributes, py::arg(), py::arg(), py::arg(), py::arg(), py::arg("thread_id") = 0 /* No call guard because used when initializing environment, prior to creating thread dispatcher */)
       .def("getOption", &PyInterface::GetOption, py::call_guard<ThreadContext>())
       .def("query", &PyInterface::Query, py::call_guard<ThreadContext>())
       .def("virtualMemoryRequest", &PyInterface::VirtualMemoryRequest, py::call_guard<ThreadContext>())

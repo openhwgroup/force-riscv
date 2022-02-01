@@ -76,7 +76,7 @@ namespace Force {
     //Mapper Interface Definition
     virtual void   AddPhysicalRegion(PhysicalRegion* pRegion, bool map) = 0; //!< Add Physical Region to be mapped
     virtual void   ApplyVirtualUsableConstraint(const EMemDataType memDataType, const EMemAccessType memAccessType, const AddressReuseMode& rAddrReuseMode, ConstraintSet* constrSet) const = 0; //!< Apply virtual usable constraint to specified constraint.
-    virtual void   DumpPage(std::ofstream& os) const = 0; //!< Dump pages.
+    virtual void   DumpPage(const EDumpFormat dumpFormat, std::ofstream& os) const = 0; //!< Dump pages.
     virtual void   GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap) const = 0; //!< Find the delta map between the VmMapper and currect machine state.
     virtual bool   GetPageInfo(uint64 addr, const std::string& type, uint32 bank, PageInformation& page_info) const = 0; //!< Return the page information record according to the given address/address type
     virtual bool   GetTranslationRange(uint64 VA, TranslationRange& rTransRange) const = 0; //!< Get translation range that covers the VA, if exists.
@@ -139,7 +139,7 @@ namespace Force {
     virtual void Initialize() { mState = EVmStateType::Initialized;   } //!< Initialize the VmRegime object.
     virtual void Deactivate() { mState = EVmStateType::Uninitialized; } //!< Deactivate the VmRegime object.
 
-    virtual void DumpPage(std::ofstream& os) const { } //!< Dump pages.
+    virtual void DumpPage(const EDumpFormat dumpFormat, std::ofstream& os) const { } //!< Dump pages.
 
     virtual const std::vector<Register* > RegisterContext() const; //!<Return vector of context register pointers.
     virtual void FinalizeRegisterContext() const; //!< Initialize necessary context registers
@@ -184,7 +184,7 @@ namespace Force {
     virtual void AddPhysicalRegion(PhysicalRegion* pRegion, bool map) override { } //!< Add Physical Region to be mapped
     virtual void ApplyVirtualUsableConstraint(const EMemDataType memDataType, const EMemAccessType memAccessType, const AddressReuseMode& rAddrReuseMode, ConstraintSet* constrSet) const override; //!< Apply virtual usable constraint to specified constraint.
     virtual void GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap) const override; //!< Find the delta map between the VmMapper and currect machine state.
-    virtual void DumpPage(std::ofstream& os) const override { } //!< Dump pages.
+    virtual void DumpPage(const EDumpFormat dumpFormat, std::ofstream& os) const override { } //!< Dump pages.
     virtual bool GetPageInfo(uint64 addr, const std::string& type, uint32 bank, PageInformation& page_info) const override { return false; } //!< Return the page information record according to the given address/address type
     virtual bool GetTranslationRange(uint64 VA, TranslationRange& rTransRange) const override; //!< Get translation range that covers the VA, if exists.
     virtual bool MapAddressRange(uint64 VA, uint64 size, bool isInstr, const GenPageRequest* pPageReq=nullptr) override { return false; } //!< Map virtual address range.
@@ -251,7 +251,7 @@ namespace Force {
     virtual void AddPhysicalRegion(PhysicalRegion* pRegion, bool map) override; //!< Add Physical Region to be mapped
     virtual void ApplyVirtualUsableConstraint(const EMemDataType memDataType, const EMemAccessType memAccessType, const AddressReuseMode& rAddrReuseMode, ConstraintSet* constrSet) const override; //!< Apply virtual usable constraint to specified constraint.
     virtual void ApplyVmConstraints(const GenPageRequest* pPageReq, ConstraintSet& rConstr) const override; //!< Apply VmConstraints.
-    virtual void DumpPage(std::ofstream& os) const override; //!< dump pages
+    virtual void DumpPage(const EDumpFormat dumpFormat, std::ofstream& os) const override; //!< dump pages
     virtual void GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap) const override { }; //!< Find the delta map between the VmMapper and currect machine state.
     virtual bool GetPageInfo(uint64 addr, const std::string& type, uint32 bank, PageInformation& page_info) const override; //!< Return the page information record according to the given address/address type
     virtual bool GetTranslationRange(uint64 VA, TranslationRange& rTransRange) const override; //!< Get translation range that covers the VA from a Page object, if exists.
@@ -316,7 +316,7 @@ namespace Force {
     void Initialize() override; //!< Initialize the VmPagingRegime.
     void Deactivate() override; //!< Deactivate the VmPagingRegime.
 
-    void DumpPage(std::ofstream& os) const override; //!< dump pages
+    void DumpPage(const EDumpFormat dumpFormat, std::ofstream& os) const override; //!< dump pages
 
     VmMapper* GetVmMapper(const VmInfo& rVmInfo) override; //!< Return VmMapper based on the VmInfo object specified.
     VmMapper* FindVmMapper(const VmContext& rVmContext) override; //!< Find VmMapper if exist based on VmContext.

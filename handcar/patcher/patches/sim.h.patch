@@ -1,7 +1,7 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
@@ -13,36 +13,53 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-6,8c6,7
-< #include "debug_module.h"
-< #include "devices.h"
-< #include "log_file.h"
+6c6,7
+< #include "config.h"
 ---
 > #include "Force_Memory.h"
 > #include "Force_Enums.h"
-9a9
+8,12c9
+< #ifdef HAVE_BOOST_ASIO
+< #include <boost/algorithm/string.hpp>
+< #include <boost/regex.hpp>
+< #include <boost/asio.hpp>
+< #endif
+---
+> #include "config.h"
+14,16d10
+< #include "debug_module.h"
+< #include "devices.h"
+< #include "log_file.h"
+17a12
 > #include "devices.h"
-11,13d10
+19,21c14
 < 
 < #include <fesvr/htif.h>
 < #include <fesvr/context.h>
-23c20
+---
+> #include <fesvr/memif.h>
+31c24
 < class sim_t : public htif_t, public simif_t
 ---
 > class simlib_t : public simif_t
-26,34c23,34
+34,44c27,28
 <   sim_t(const char* isa, const char* priv, const char* varch, size_t _nprocs,
 <         bool halted, bool real_time_clint,
-<         reg_t initrd_start, reg_t initrd_end,
+<         reg_t initrd_start, reg_t initrd_end, const char* bootargs,
 <         reg_t start_pc, std::vector<std::pair<reg_t, mem_t*>> mems,
 <         std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices,
 <         const std::vector<std::string>& args, const std::vector<int> hartids,
 <         const debug_module_config_t &dm_config, const char *log_path,
-<         bool dtb_enabled, const char *dtb_file);
-<   ~sim_t();
+<         bool dtb_enabled, const char *dtb_file,
+< #ifdef HAVE_BOOST_ASIO
+<         boost::asio::io_service *io_service_ptr_ctor, boost::asio::ip::tcp::acceptor *acceptor_ptr_ctor,  // option -s
+< #endif
 ---
 >   simlib_t(const char* isa, const char* priv, const char* varch, size_t _nprocs, bool halted,
->         reg_t start_pc, const std::vector<int> hartids);
+>         const char* bootargs, reg_t start_pc, const std::vector<int> hartids, bool auto_init_mem,
+46c30,39
+<   ~sim_t();
+---
 >   ~simlib_t();
 > 
 >   // load the elf file and reset
@@ -53,15 +70,15 @@
 > 
 >   // fetch the instruction at the given pc using the debug_mmu and return the opcode and disassembly
 >   int get_disassembly(int target_id, const uint64_t* pc, char** opcode, char** disassembly);
-38a39
+50a44
 >   void set_log(bool value);
-49a51,53
+61a56,58
 >   void set_dtb_enabled(bool value) {
 >     this->dtb_enabled = value;
 >   }
-52a57
+64a62
 > 
-54c59,70
+66c64,75
 <   processor_t* get_core(size_t i) { return procs.at(i); }
 ---
 > 
@@ -76,13 +93,13 @@
 >     return nullptr;
 >   }
 > 
-56a73,77
+68a78,82
 >   bool doesCoreWithIdExist(size_t i);
 > 
 >   // for debugging the sparse memory model
 >   void dump_sparse_memory(std::ostream & out);
 > 
-59a81,155
+71a86,161
 >   //
 >   reg_t get_entry_point(){ return entry; };
 > 
@@ -124,6 +141,7 @@
 > 
 >   void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes);
 >   void sparse_write(reg_t paddr, const uint8_t* bytes, size_t len);
+>   void sparse_write_with_initialization(reg_t paddr, const uint8_t* bytes, size_t len);
 >   void sparse_write_multiword(reg_t paddr, const uint8_t* bytes, size_t len){};
 >   void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes);
 >   bool sparse_is_pa_initialized(reg_t paddr, size_t len);
@@ -158,10 +176,10 @@
 >   //
 >   int translate_virtual_address_api(int procid, const uint64_t* vaddr, int intent, uint64_t* paddr, uint64_t* memattrs);
 > 
-61,62d156
+73,74d162
 <   std::vector<std::pair<reg_t, mem_t*>> mems;
 <   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
-69,75d162
+82,88d169
 <   std::string dtb;
 <   std::string dtb_file;
 <   bool dtb_enabled;
@@ -169,16 +187,24 @@
 <   std::unique_ptr<clint_t> clint;
 <   bus_t bus;
 <   log_file_t log_file;
-86a174
+92,99d172
+< #ifdef HAVE_BOOST_ASIO
+<   // the following are needed for command socket interface
+<   boost::asio::io_service *io_service_ptr;
+<   boost::asio::ip::tcp::acceptor *acceptor_ptr;
+<   std::unique_ptr<boost::asio::ip::tcp::socket> socket_ptr;
+<   std::string rin(boost::asio::streambuf *bout_ptr); // read input command string
+<   void wout(boost::asio::streambuf *bout_ptr); // write output to socket
+< #endif
+111a185
 >   bool dtb_enabled;
-89,92d176
+114,117d187
 <   // memory-mapped I/O routines
 <   char* addr_to_mem(reg_t addr);
 <   bool mmio_load(reg_t addr, size_t len, uint8_t* bytes);
 <   bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes);
-96,97c180,192
-<   // presents a prompt for introspection into the simulation
-<   void interactive();
+121c191,199
+<   const char* get_symbol(uint64_t addr);
 ---
 >   // sparse memory routines
 >   Force::Memory _ForceSparseMemoryModel;
@@ -189,11 +215,10 @@
 >   void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type);
 >   //void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes);
 >   //void sparse_write(reg_t paddr, const uint8_t* bytes, size_t len);
-> 
-> 
->   reg_t entry;
->   std::map<std::string, uint64_t> load_elf(const char* fn, reg_t* entry);
-99,118d193
+123,124d200
+<   // presents a prompt for introspection into the simulation
+<   void interactive();
+126,145c202,204
 <   // functions that help implement interactive()
 <   void interactive_help(const std::string& cmd, const std::vector<std::string>& args);
 <   void interactive_quit(const std::string& cmd, const std::vector<std::string>& args);
@@ -214,14 +239,18 @@
 <   void interactive_until_noisy(const std::string& cmd, const std::vector<std::string>& args);
 <   reg_t get_reg(const std::vector<std::string>& args);
 <   freg_t get_freg(const std::vector<std::string>& args);
-121c196
+---
+>   reg_t entry;
+>   std::map<std::string, uint64_t> load_elf(const char* fn, reg_t* entry);
+> 
+148c207
 < 
 ---
 >     
-130,131d204
+157,158d215
 <   context_t* host;
 <   context_t target;
-133,135c206,210
+160,162c217,221
 <   void idle();
 <   void read_chunk(addr_t taddr, size_t len, void* dst);
 <   void write_chunk(addr_t taddr, size_t len, const void* src);
@@ -231,7 +260,7 @@
 >   void clear_chunk(reg_t taddr, size_t len);
 >   //void initialize_multiword(reg_t taddr, size_t len, const void* src); // To support multiword initializations during elf loading
 >   void write_chunk(reg_t taddr, size_t len, const void* src);
-139,143d213
+168,172d226
 < public:
 <   // Initialize this after procs, because in debug_module_t::reset() we
 <   // enumerate processors, which segfaults if procs hasn't been initialized

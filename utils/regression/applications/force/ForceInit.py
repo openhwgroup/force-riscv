@@ -52,10 +52,7 @@ class ForceParametersProcessor(ParameterProcessor):
         )
 
         if not PathUtils.check_exe(force_path):
-            raise Exception(
-                force_path
-                + " does not exist or is not executable, confirm valid exe"
-            )
+            raise Exception(force_path + " does not exist or is not executable, confirm valid exe")
 
         # determine svn revision information and store as a parameter
         version_data = VersionCtrlUtils.get_scm_revisions(force_dir)

@@ -33,9 +33,7 @@ class MainSequence(Sequence):
         loop_control = LoopControl(self.genThread)
         loop_control.start(LoopCount=3)
 
-        self.genInstruction(
-            "ADDI##RISCV", {"rd": gpr_index, "rs1": gpr_index, "simm12": 1}
-        )
+        self.genInstruction("ADDI##RISCV", {"rd": gpr_index, "rs1": gpr_index, "simm12": 1})
 
         loop_control.end()
 

@@ -52,14 +52,14 @@ class CleanUpRules(object):
 
         if self.keepAll:
             ret_val = True
-        
+
         if self.typesToKeep is not None:
             for typeToKeep in self.typesToKeep:
                 if self.fileBaseName.endswith(typeToKeep):
                     ret_val = True
                     break
 
-        return ret_val 
+        return ret_val
 
     def setBaseNamesToKeep(self, baseNames):
         self.baseNamesToKeep = baseNames

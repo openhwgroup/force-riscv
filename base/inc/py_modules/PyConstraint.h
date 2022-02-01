@@ -28,6 +28,18 @@ namespace py = pybind11;
 namespace Force {
 
   PYBIND11_MODULE(Constraint, mod) {
+    py::class_<Constraint>(mod, "Constraint");
+
+    py::class_<ValueConstraint, Constraint>(mod, "ValueConstraint")
+      .def("lowerBound", &ValueConstraint::LowerBound, py::call_guard<ThreadContextNoAdvance>())
+      .def("upperBound", &ValueConstraint::UpperBound, py::call_guard<ThreadContextNoAdvance>())
+      ;
+
+    py::class_<RangeConstraint, Constraint>(mod, "RangeConstraint")
+      .def("lowerBound", &RangeConstraint::LowerBound, py::call_guard<ThreadContextNoAdvance>())
+      .def("upperBound", &RangeConstraint::UpperBound, py::call_guard<ThreadContextNoAdvance>())
+      ;
+
     py::class_<ConstraintSet>(mod, "ConstraintSet")
       .def(py::init<uint64, uint64>(), py::call_guard<ThreadContextNoAdvance>())
       .def(py::init<uint64>(), py::call_guard<ThreadContextNoAdvance>())
@@ -60,6 +72,7 @@ namespace Force {
       .def("alignWithSize", &ConstraintSet::AlignWithSize, py::call_guard<ThreadContextNoAdvance>())
       .def("alignOffsetWithSize", &ConstraintSet::AlignOffsetWithSize, py::call_guard<ThreadContextNoAdvance>())
       .def("alignWithPage", &ConstraintSet::AlignWithPage, py::call_guard<ThreadContextNoAdvance>())
+      .def("getConstraints", &ConstraintSet::GetConstraints, py::return_value_policy::reference, py::call_guard<ThreadContextNoAdvance>())
       .def("__str__", &ConstraintSet::ToSimpleString, py::call_guard<ThreadContextNoAdvance>())  // Allows conversion with Python str() method
       ;
   }

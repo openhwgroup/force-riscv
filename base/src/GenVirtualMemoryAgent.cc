@@ -31,6 +31,7 @@
 #include <UtilityFunctions.h>
 #include <FreePageRangeClaimer.h>
 #include <Architectures.h>
+#include <MemoryTraits.h>
 #include <Log.h>
 
 #include <memory>
@@ -140,7 +141,7 @@ namespace Force {
     VmManager* vm_manager = mpGenerator->GetVmManager();
     VmMapper* vm_mapper = vm_manager->CurrentVmMapper();
 
-    if (va_req->VmSpecified()) 
+    if (va_req->VmSpecified())
     {
       std::unique_ptr<VmInfo> vm_info_storage(vm_manager->VmInfoInstance()); // to release vm_info when done.
 
@@ -149,7 +150,7 @@ namespace Force {
 
       bool valid_regime = false;
       EVmRegimeType regime_type = vm_info_storage.get()->RegimeType(&valid_regime);
-      if (valid_regime) 
+      if (valid_regime)
       {
         LOG(info) << "{GenVirtualMemoryAgent::GenVA} target VM info: " << vm_info_storage.get()->ToString() << " regime type: " << EVmRegimeType_to_string(regime_type) << endl;
         vm_mapper = vm_manager->GetVmMapper(*vm_info_storage.get());
@@ -232,6 +233,8 @@ namespace Force {
     if (pa_req->SharedMemory()) {
       mem_man->MarkShared(PaTuple(ret_pa, EMemBankTypeBaseType(mem_bank_type)), pa_req->Size());
     }
+
+    AddMemoryTraits(*pa_req, ret_pa, pa_req->Size(), *(mem_bank->GetMemoryTraitsManager()));
 
     // << "genpa pa=0x" << hex << ret_pa << " bank=" << EMemBankType_to_string(mem_bank_type) << " size=0x" << pa_req->Size() << endl;
 
@@ -489,16 +492,25 @@ namespace Force {
 
   void GenVirtualMemoryAgent::SetCommonPageRequestAttributes(const GenVirtualMemoryRequest& rGenVmReq, GenPageRequest* pPageReq)
   {
-    if (nullptr != rGenVmReq.MemAttrImplConstraint())
+    const vector<string>& impl_mem_attributes = rGenVmReq.ImplementationMemoryAttributes();
+    if (not impl_mem_attributes.empty())
     {
-      pPageReq->SetMemAttrImplConstraint(rGenVmReq.MemAttrImplConstraint());
-      LOG(trace) << "{GenVirtualMemoryAgent::SetPageRequestAttributes} setting mem attr impl from request to: " << hex << pPageReq->MemAttrImplConstraint()->ToSimpleString() << endl;
+      pPageReq->SetImplementationMemoryAttributes(impl_mem_attributes);
+      LOG(trace) << "{GenVirtualMemoryAgent::SetCommonPageRequestAttributes} setting implementation memory attributes" << endl;
     }
 
-    if (nullptr != rGenVmReq.TargetAliasAttrsConstraint())
+    const vector<EMemoryAttributeType>& arch_mem_attributes = rGenVmReq.ArchitectureMemoryAttributes();
+    if (not arch_mem_attributes.empty())
     {
-      pPageReq->SetTargetAliasAttrsConstraint(rGenVmReq.MemAttrImplConstraint());
-      LOG(trace) << "{GenVirtualMemoryAgent::GenVA} setting target alias attrs from request to: " << hex << pPageReq->TargetAliasAttrsConstraint()->ToSimpleString() << endl;
+      pPageReq->SetArchitectureMemoryAttributes(arch_mem_attributes);
+      LOG(trace) << "{GenVirtualMemoryAgent::SetCommonPageRequestAttributes} setting architecture memory attributes" << endl;
+    }
+
+    const vector<string>& alias_impl_mem_attributes = rGenVmReq.AliasImplementationMemoryAttributes();
+    if (not alias_impl_mem_attributes.empty())
+    {
+      pPageReq->SetAliasImplementationMemoryAttributes(alias_impl_mem_attributes);
+      LOG(trace) << "{GenVirtualMemoryAgent::SetCommonPageRequestAttributes} setting alias implementation memory attributes" << endl;
     }
 
     if (rGenVmReq.PrivilegeLevelSpecified()) {
@@ -509,6 +521,18 @@ namespace Force {
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::ForceMemAttrs, rGenVmReq.ForceMemAttrs());
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::CanAlias, rGenVmReq.CanAlias());
     pPageReq->SetGenBoolAttribute(EPageGenBoolAttrType::ForceNewAddr, rGenVmReq.ForceNewAddr());
+  }
+
+  void GenVirtualMemoryAgent::AddMemoryTraits(const GenVirtualMemoryRequest& rGenVmReq, cuint64 startAddr, cuint64 size, MemoryTraitsManager& rMemTraitsManager)
+  {
+    uint64 end_addr = startAddr + size - 1;
+    for (const string& impl_mem_attr : rGenVmReq.ImplementationMemoryAttributes()) {
+      rMemTraitsManager.AddTrait(mpGenerator->ThreadId(), impl_mem_attr, startAddr, end_addr);
+    }
+
+    for (EMemoryAttributeType arch_mem_attr : rGenVmReq.ArchitectureMemoryAttributes()) {
+      rMemTraitsManager.AddTrait(mpGenerator->ThreadId(), arch_mem_attr, startAddr, end_addr);
+    }
   }
 
 }

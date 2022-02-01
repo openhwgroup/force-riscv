@@ -41,6 +41,7 @@ namespace Force {
   class MemoryConstraint;
   class AddressReuseMode;
   class SymbolManager;
+  class MemoryTraitsManager;
 
   /*!
     \class MemoryBank
@@ -49,20 +50,16 @@ namespace Force {
   class MemoryBank {
   public:
     explicit MemoryBank(EMemBankType bankType); //!< Constructor with memory bank type given.
-
-    MemoryBank() //!< Default constructor.
-      : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr)
-    {
-    }
-
     COPY_CONSTRUCTOR_ABSENT(MemoryBank);
     ~MemoryBank(); //!< Destructor.
 
     ASSIGNMENT_OPERATOR_ABSENT(MemoryBank);
-    inline Memory* MemoryInstance() { return mpMemory; } //!< Return pointer to memory object
+    Memory* MemoryInstance() { return mpMemory; } //!< Return pointer to memory object
     EMemBankType MemoryBankType() const; //!< Return name of memory bank.
     void AddMemoryRange(uint64 start, uint64 end); //!< Add usable physical memory range.
     void SubMemoryRange(uint64 start, uint64 end); //!< Subtract usable physical memory range.
+    void AddArchitectureMemoryAttributes(cuint32 threadId, cuint64 start, cuint64 end, const std::vector<EMemoryAttributeType>& rMemAttributes); //!< Assign architecture memory attributes to the specified physical memory range.
+    void AddImplementationMemoryAttributes(cuint32 threadId, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes); //!< Assign implementation memory attributes to the specified physical memory range.
     void Configure(); //!< Configure base line memory constraints.
     void InitializeMemory(const MemoryInitRecord& memInitRecord);  //!< Initialize memory.
     void ReadMemoryPartiallyInitialized(cuint64 address, cuint32 nBytes, uint8* data) const; //!< Read data from memory that may not be fully initialized.
@@ -78,10 +75,11 @@ namespace Force {
     void SetupPageTableRegion(); //!< Setup page table region in the memory bank.
     void ReserveMemory(const ConstraintSet& memConstr); //!< Reserve memory ranges.
     void UnreserveMemory(const ConstraintSet& memConstr); //!< Unreserve memory ranges
-    bool AllocatePageTableBlock(uint64 align, uint64 size, const ConstraintSet* range, uint64& start); //!< Allocate page table block in a certain memory bank.
-    inline PhysicalPageManager* GetPhysicalPageManager() const { return mpPhysicalPageManager; } //!< Return the physical page manager for the specified memory bank.
-    inline PageTableManager* GetPageTableManager() const { return mpPageTableManager; } //!< Return page table manager for the specified memory bank.
-    inline SymbolManager* GetSymbolManager() const { return mpSymbolManager; } //!< Return symbol manager for the specified memory bank.
+    bool AllocatePageTableBlock(uint64 align, uint64 size, const ConstraintSet* range, uint64& start); //!< Allocate page table block.
+    PhysicalPageManager* GetPhysicalPageManager() const { return mpPhysicalPageManager; } //!< Return the physical page manager.
+    PageTableManager* GetPageTableManager() const { return mpPageTableManager; } //!< Return the page table manager.
+    SymbolManager* GetSymbolManager() const { return mpSymbolManager; } //!< Return the symbol manager.
+    MemoryTraitsManager* GetMemoryTraitsManager() const { return mpMemTraitsManager; } //!< Return the memory traits manager.
   private:
     Memory* mpMemory; //!< Pointer to memory object.
     ConstraintSet* mpBaseConstraint; //!< Pointer to base memory constraint.
@@ -90,6 +88,7 @@ namespace Force {
     PhysicalPageManager* mpPhysicalPageManager; //!< Pointer to physical page manager object
     PageTableManager* mpPageTableManager; //!< Pointer to the page table manager object
     SymbolManager* mpSymbolManager; //!< Pointer to the symbol manager object.
+    MemoryTraitsManager* mpMemTraitsManager; //!< Pointer to the memory traits manager object.
   };
 
   /*!
@@ -111,6 +110,8 @@ namespace Force {
     void OutputTest(const std::map<uint32, Generator *>& generators, uint64 resetPC, uint32 machineType); //!< Output test.
     void AddMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Add usable physical memory range.
     void SubMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Subtract usable physical memory range.
+    void AddArchitectureMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<EMemoryAttributeType>& rMemAttributes); //!< Assign architecture memory attributes to the specified physical memory range.
+    void AddImplementationMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes); //!< Assign implementation memory attributes to the specified physical memory range.
     void ConfigureMemoryBanks(); //!< Configure base line memory constraints.
     uint32 NumberBanks() const { return mMemoryBanks.size(); } //!< Return number of memory banks.
 

@@ -24,6 +24,7 @@
 #include <GenRequest.h>
 #include <Register.h>
 #include <VectorLayout.h>
+#include <InstructionStructure.h>
 #include <Log.h>
 
 #include <memory>
@@ -72,16 +73,25 @@ namespace Force {
 
   bool VectorAMOInstructionRISCV::Validate(const Generator& gen, string& error) const
   {
-    VectorLayoutSetupRISCV vec_layout_setup(gen.GetRegisterFile());
-    VectorLayout data_vec_layout;
-    vec_layout_setup.SetUpVectorLayoutVtype(data_vec_layout);
-    if (data_vec_layout.mElemSize < 32) {
+    const Operand* data_opr = nullptr;
+    if (mpStructure->mForm == "Register write") {
+      data_opr = FindOperand("vd", true);
+    }
+    else {
+      data_opr = FindOperand("vs3", true);
+    }
+
+    OperandConstraint* data_opr_constr = data_opr->GetOperandConstraint();
+    auto vec_reg_opr_constr = data_opr_constr->CastInstance<VectorRegisterOperandConstraint>();
+    const VectorLayout* data_vec_layout = vec_reg_opr_constr->GetVectorLayout();
+
+    if (data_vec_layout->mElemSize < 32) {
       ChoicesModerator* choices_moderator = gen.GetChoicesModerator(EChoicesType::GeneralChoices);
       unique_ptr<Choice> choices_tree(choices_moderator->CloneChoiceTree("Skip Generation - Vector AMO"));
       auto chosen = choices_tree->Choose();
       if (chosen->Name() == "DoSkip") {
         stringstream err_stream;
-        err_stream << "Instruction \"" << Name() << "\" skipped because Handcar does not currently support SEW < 32 (SEW = " << data_vec_layout.mElemSize << "). To enable generation, adjust the \"Skip Generation - Vector AMO\" general choice tree.";
+        err_stream << "Instruction \"" << Name() << "\" skipped because Handcar does not currently support SEW < 32 (SEW = " << data_vec_layout->mElemSize << "). To enable generation, adjust the \"Skip Generation - Vector AMO\" general choice tree.";
         error = err_stream.str();
         return false;
       }

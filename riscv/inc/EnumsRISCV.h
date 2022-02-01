@@ -151,6 +151,22 @@ namespace Force {
 
 
   /*!
+    Paging mode
+  */
+  enum class EPagingMode : unsigned char {
+    Bare = 0,
+    Sv32 = 1,
+    Sv39 = 2,
+    Sv48 = 3,
+  };
+  extern unsigned char EPagingModeSize;
+  extern const std::string EPagingMode_to_string(EPagingMode in_enum); //!< Get string name for enum.
+  extern EPagingMode string_to_EPagingMode(const std::string& in_str); //!< Get enum value for string name.
+  extern EPagingMode try_string_to_EPagingMode(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
+  typedef unsigned char EPagingModeBaseType; //!< Define a type name for the enum base data type.
+
+
+  /*!
     Boolean type GenPageRequest attributes for configuring page generation
   */
   enum class EPageGenBoolAttrType : unsigned char {
@@ -391,9 +407,33 @@ namespace Force {
     Types of memory attributes for physical memory segments
   */
   enum class EMemoryAttributeType : unsigned char {
-    Device = 0,
-    NormalCacheable = 1,
-    NormalNonCacheable = 2,
+    MainRegion = 0,
+    IORegion = 1,
+    EmptyRegion = 2,
+    LRSC = 3,
+    AMONone = 4,
+    AMOSwap = 5,
+    AMOLogical = 6,
+    AMOArithmetic = 7,
+    AMOAligned = 8,
+    AMOMisaligned = 9,
+    RVWMO = 10,
+    RVTSO = 11,
+    RelaxedOrdering = 12,
+    StrongOrderingChannel0 = 13,
+    StrongOrderingChannel1 = 14,
+    CoherentL1 = 15,
+    CoherentL2 = 16,
+    CoherentL3 = 17,
+    Incoherent = 18,
+    CacheableMasterPrivate = 19,
+    CacheableShared = 20,
+    CacheableSlavePrivate = 21,
+    Uncacheable = 22,
+    ReadIdempotent = 23,
+    ReadNonIdempotent = 24,
+    WriteIdempotent = 25,
+    WriteNonIdempotent = 26,
   };
   extern unsigned char EMemoryAttributeTypeSize;
   extern const std::string EMemoryAttributeType_to_string(EMemoryAttributeType in_enum); //!< Get string name for enum.
@@ -415,6 +455,21 @@ namespace Force {
   extern EVmInfoBoolType string_to_EVmInfoBoolType(const std::string& in_str); //!< Get enum value for string name.
   extern EVmInfoBoolType try_string_to_EVmInfoBoolType(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
   typedef unsigned char EVmInfoBoolTypeBaseType; //!< Define a type name for the enum base data type.
+
+
+  /*!
+    Mechanism for determining vector register format
+  */
+  enum class EVectorLayoutType : unsigned char {
+    Vtype = 0,
+    FixedElementSize = 1,
+    WholeRegister = 2,
+  };
+  extern unsigned char EVectorLayoutTypeSize;
+  extern const std::string EVectorLayoutType_to_string(EVectorLayoutType in_enum); //!< Get string name for enum.
+  extern EVectorLayoutType string_to_EVectorLayoutType(const std::string& in_str); //!< Get enum value for string name.
+  extern EVectorLayoutType try_string_to_EVectorLayoutType(const std::string& in_str, bool& okay); //!< Try to get enum value for string name, set status to indicate if conversion successful. Return value is indeterminate on failure.
+  typedef unsigned char EVectorLayoutTypeBaseType; //!< Define a type name for the enum base data type.
 
 }
 

@@ -15,7 +15,7 @@
  limitations under the License.
 -->
 <instruction_file>
-  <I name="FADD.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FADD.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="31-25,6-0" value="00000101010011"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>
@@ -99,7 +99,7 @@
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="FCVT.WU.H %s, %s" op1="rs1" op2="rd"/>
   </I>
-  <I name="FDIV.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FDIV.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="31-25,6-0" value="00011101010011"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>
@@ -137,7 +137,7 @@
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="FLT.H %s, %s, %s" op1="rd" op2="rs2" op3="rs1"/>
   </I>
-  <I name="FMADD.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FMADD.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="26-25,6-0" value="101000011"/>
     <O name="rs3" type="FPR" bits="31-27" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
@@ -160,7 +160,7 @@
     <O name="rd" type="FPR" bits="11-7" access="Write" choices="16-bit SIMD/FP registers"/>
     <asm format="FMIN.H %s, %s, %s" op1="rs2" op2="rs1" op3="rd"/>
   </I>
-  <I name="FMSUB.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FMSUB.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="26-25,6-0" value="101000111"/>
     <O name="rs3" type="FPR" bits="31-27" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
@@ -169,7 +169,7 @@
     <O name="rd" type="FPR" bits="11-7" access="Write" choices="16-bit SIMD/FP registers"/>
     <asm format="FMSUB.H %s, %s, %s, %s" op1="rs1" op2="rs2" op3="rs3" op4="rd"/>
   </I>
-  <I name="FMUL.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FMUL.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="31-25,6-0" value="00010101010011"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>
@@ -189,7 +189,7 @@
     <O name="rd" type="GPR" bits="11-7" access="Write" choices="GPRs"/>
     <asm format="FMV.X.H %s, %s" op1="rs1" op2="rd"/>
   </I>
-  <I name="FNMADD.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FNMADD.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="26-25,6-0" value="101001111"/>
     <O name="rs3" type="FPR" bits="31-27" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
@@ -198,7 +198,7 @@
     <O name="rd" type="FPR" bits="11-7" access="Write" choices="16-bit SIMD/FP registers"/>
     <asm format="FNMADD.H %s, %s, %s, %s" op1="rs1" op2="rs2" op3="rs3" op4="rd"/>
   </I>
-  <I name="FNMSUB.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FNMSUB.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="26-25,6-0" value="101001011"/>
     <O name="rs3" type="FPR" bits="31-27" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
@@ -244,7 +244,7 @@
     <O name="rd" type="FPR" bits="11-7" access="Write" choices="16-bit SIMD/FP registers"/>
     <asm format="FSQRT.H %s, %s" op1="rs1" op2="rd"/>
   </I>
-  <I name="FSUB.H" form="Half-precision" isa="RISCV" group="Float" extension="RV32F">
+  <I name="FSUB.H" isa="RISCV" group="Float" extension="RV32F">
     <O name="const_bits" type="Constant" bits="31-25,6-0" value="00001101010011"/>
     <O name="rs2" type="FPR" bits="24-20" access="Read" choices="16-bit SIMD/FP registers"/>
     <O name="rs1" type="FPR" bits="19-15" access="Read" choices="16-bit SIMD/FP registers"/>

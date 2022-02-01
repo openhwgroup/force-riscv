@@ -21,7 +21,8 @@ from base.Sequence import Sequence
 class MainSequence(Sequence):
     """Exercise different combinations of values for the parameters for
     the genPA instruction. Focus in this test is to try values of the Size,
-    Align and CanAlias parameters. Type is always 'D'; Bank is always '0'.
+    Align and CanAlias parameters. Type is always 'D'; Bank is always
+    "Default".
     """
 
     def generate(self, **kargs):
@@ -32,7 +33,7 @@ class MainSequence(Sequence):
         ldstr_double_ops = ["LD##RISCV", "SD##RISCV"]
 
         theType = "D"
-        theBank = 0
+        theBank = "Default"
         theCanAlias = 0
         loopCount = 1
         set_of_PAs = set()
@@ -58,10 +59,7 @@ class MainSequence(Sequence):
                     )
 
                     if rand_PA in set_of_PAs:
-                        self.error(
-                            ">>>>>>>>> Error -- Received a duplicate PA"
-                            "from self.genPA."
-                        )
+                        self.error(">>>>>>>>> Error -- Received a duplicate PA from self.genPA.")
                     else:
                         set_of_PAs.add(rand_PA)
 

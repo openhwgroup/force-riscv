@@ -27,9 +27,7 @@ from riscv.GenThreadRISCV import GenThreadRISCV
 class MainSequence(Sequence):
     def generate(self, **kargs):
 
-        instrCount = (
-            10  # How many instructions should be generated in the test case.
-        )
+        instrCount = 10  # How many instructions should be generated in the test case.
 
         # "ALL" indicates randomly select from the set of instructions in
         # the instructionSubset.
@@ -44,14 +42,14 @@ class MainSequence(Sequence):
         # if you specify instrType="ALL", instructions will be generated from
         # this set of instructions
         instructionSubset = {
-            "FMUL.D#Double-precision#RISCV": 20,
-            "FMUL.S#Single-precision#RISCV": 20,
-            "FDIV.D#Double-precision#RISCV": 20,
-            "FDIV.S#Single-precision#RISCV": 20,
-            "FMADD.D#Double-precision#RISCV": 20,
-            "FMADD.S#Single-precision#RISCV": 20,
-            "FADD.D#Double-precision#RISCV": 20,
-            "FADD.S#Single-precision#RISCV": 20,
+            "FMUL.D##RISCV": 20,
+            "FMUL.S##RISCV": 20,
+            "FDIV.D##RISCV": 20,
+            "FDIV.S##RISCV": 20,
+            "FMADD.D##RISCV": 20,
+            "FMADD.S##RISCV": 20,
+            "FADD.D##RISCV": 20,
+            "FADD.S##RISCV": 20,
         }
 
         # gen each instruction

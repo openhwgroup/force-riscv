@@ -38,10 +38,7 @@ class MainSequence(Sequence):
 
         val = constr_a.chooseValue()
         if (val < 0x23) or (val > 0x87):
-            self.error(
-                "Chosen value %d lies outside of constraint %s"
-                % (val, constr_a)
-            )
+            self.error("Chosen value %d lies outside of constraint %s" % (val, constr_a))
 
         constr_a.addRange(0x35, 0x100)
         if str(constr_a) != "0x23-0x100":
@@ -49,31 +46,26 @@ class MainSequence(Sequence):
 
         constr_a.subRange(0x4F, 0x6F)
         if str(constr_a) != "0x23-0x4e,0x70-0x100":
-            self.error(
-                "Constraint %s didn't subtract range correctly." % constr_a
-            )
+            self.error("Constraint %s didn't subtract range correctly." % constr_a)
 
         constr_b = ConstraintSet("0x18, 0x22-0x5C")
         constr_b.mergeConstraintSet(constr_a)
         if str(constr_b) != "0x18,0x22-0x5c,0x70-0x100":
             self.error(
-                "Constraint %s didn't merge with constraint %s correctly."
-                % (constr_b, constr_a)
+                "Constraint %s didn't merge with constraint %s correctly." % (constr_b, constr_a)
             )
 
         constr_c = ConstraintSet(0x5B)
         constr_c.applyConstraintSet(constr_a)
         if not constr_c.isEmpty():
             self.error(
-                "Constraint %s didn't apply constraint %s correctly."
-                % (constr_c, constr_a)
+                "Constraint %s didn't apply constraint %s correctly." % (constr_c, constr_a)
             )
 
         constr_d = ConstraintSet(constr_a)
         if constr_d != constr_a:
             self.error(
-                "Constraint %s didn't copy from constraint %s correctly."
-                % (constr_d, constr_a)
+                "Constraint %s didn't copy from constraint %s correctly." % (constr_d, constr_a)
             )
 
 

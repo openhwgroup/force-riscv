@@ -119,9 +119,7 @@ class VersionCtrlUtils(object):
         :rtype: dict
         """
         status_cmd = "git log --oneline -n1 --decorate "
-        version_info, cmd_output = cls.get_scm_data(
-            "git", a_path, status_cmd, a_cwd=a_path
-        )
+        version_info, cmd_output = cls.get_scm_data("git", a_path, status_cmd, a_cwd=a_path)
         if version_info["error_msg"]:
             return version_info
 
@@ -190,9 +188,7 @@ class VersionCtrlUtils(object):
         :param list a_version_data: Result of get_scm_revisions()
         :return: Formatted string of SCM data
         """
-        out_line_fmt = (
-            "scm_type: {}, revision number: {}, location: {}, url: {}"
-        )
+        out_line_fmt = "scm_type: {}, revision number: {}, location: {}, url: {}"
         version_output = ""
         for item in a_version_data:
             if item.get("status", False):

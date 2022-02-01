@@ -21,9 +21,7 @@ from common.path_utils import PathUtils
 #
 class FrunToCtrlCmdLineOptions(object):
     cGroupName = "Frun to ctrl related options"
-    cGroupDescription = (
-        "Useful FRUN_TO_CTRL options to control FRUN_TO_CTRL usage"
-    )
+    cGroupDescription = "Useful FRUN_TO_CTRL options to control FRUN_TO_CTRL usage"
 
     #          "number of value arguments"
     #    "option name"               | "additional arguments"
@@ -50,16 +48,13 @@ class FrunToCtrlParametersProcessor(ParameterProcessor):
 
         if self.mAppParameters.parameter("frun-to-ctrl"):
             frun_to_ctrl_path = (
-                PathUtils.include_trailing_path_delimiter(
-                    aCmdLineOptions.mProgramPath
-                )
+                PathUtils.include_trailing_path_delimiter(aCmdLineOptions.mProgramPath)
                 + "../frun_to_ctrl/frun_to_ctrl.py"
             )
 
             if not PathUtils.check_exe(frun_to_ctrl_path):
                 raise Exception(
-                    frun_to_ctrl_path
-                    + " does not exist or is not executable, confirm valid exe"
+                    frun_to_ctrl_path + " does not exist or is not executable, confirm valid exe"
                 )
             frun_to_ctrl_path = PathUtils.real_path(frun_to_ctrl_path)
             self.mAppParameters.setParameter("path", frun_to_ctrl_path)

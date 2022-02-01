@@ -19,6 +19,7 @@
 #include <py_modules/PyConstraint.h>
 #include <py_modules/PyEnums.h>
 #include <py_modules/PyLog.h>
+#include <py_modules/PyMemoryTraits.h>
 #include <py_modules/PyPyInterface.h>
 #include <py_modules/PyRandomUtils.h>
 #include <py_modules/PyState.h>
@@ -26,6 +27,7 @@
 #include <py_modules/PyStateTransition.h>
 #include <py_modules/PyThreadDispatcher.h>
 #include <py_modules/PyUtilityFunctions.h>
+#include <py_modules/PyVirtualMemory.h>
 
 #include <pybind11/embed.h>
 
@@ -43,12 +45,14 @@ namespace PyEnvironment {
     PyImport_AppendInittab("Constraint", PyInit_Constraint);
     PyImport_AppendInittab("Enums", PyInit_Enums);
     PyImport_AppendInittab("Log", PyInit_Log);
+    PyImport_AppendInittab("MemoryTraits", PyInit_MemoryTraits);
     PyImport_AppendInittab("RandomUtils", PyInit_RandomUtils);
     PyImport_AppendInittab("State", PyInit_State);
     PyImport_AppendInittab("StateElement", PyInit_StateElement);
     PyImport_AppendInittab("StateTransition", PyInit_StateTransition);
     PyImport_AppendInittab("ThreadDispatcher", PyInit_ThreadDispatcher);
     PyImport_AppendInittab("UtilityFunctions", PyInit_UtilityFunctions);
+    PyImport_AppendInittab("VirtualMemory", PyInit_VirtualMemory);
 
     py::initialize_interpreter();
   }

@@ -84,10 +84,7 @@ class FpixParametersProcessor(ParameterProcessor):
 
         fpix_path = self.mAppParameters.parameter("fpix_path")
         if not PathUtils.check_exe(fpix_path):
-            raise Exception(
-                fpix_path
-                + " does not exist or is not executable, condirm valid exe"
-            )
+            raise Exception(fpix_path + " does not exist or is not executable, condirm valid exe")
 
 
 #  Process iss control data

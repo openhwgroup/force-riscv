@@ -50,9 +50,7 @@ class RunWithReport(object):
 
         # find Force revision
         self._mTestDir = self._getTestDir()
-        self._mRtlRev = self._getSvnRev(
-            self._mTestDir + OUTPUT_SUBDIR, "rtl", "revision number:"
-        )
+        self._mRtlRev = self._getSvnRev(self._mTestDir + OUTPUT_SUBDIR, "rtl", "revision number:")
         self._mForceRev = self._getSvnRev(
             self._mTestDir + OUTPUT_SUBDIR, "force", "revision number:"
         )
@@ -112,23 +110,21 @@ class RunWithReport(object):
 
     def _getReportCommand(self):
         report_cmd = (
-            self._mDirName
-            + "/../misc/gen_report_force.pl -m regress_sim -l %s "
+            self._mDirName + "/../misc/gen_report_force.pl -m regress_sim -l %s "
             "-n regress_sim -v off -u top -s -svn %d --report_name %s"
             % (self._mTestDir, self._mRtlRev, self._mReportName)
         )
         return report_cmd
 
     def runReportCommand(self):
-        subprocess.run(shlex.split(self._mReportCommand))
+        subprocess.call(shlex.split(self._mReportCommand))
 
     def _getGatherCommand(self):
         # Always XML dump regardless of command line arguments for now.
         # Preventing slip-ups while this is still in development.
         gather_cmd = (
             self._mDirName
-            + "/../misc/gather_force.pl -u top %s/top_regress_sim.rpt -q"
-            % self._mTestDir
+            + "/../misc/gather_force.pl -u top %s/top_regress_sim.rpt -q" % self._mTestDir
         )
         if self._mRunParameters.dump_xml:
             gather_cmd += " --dump"
@@ -136,7 +132,7 @@ class RunWithReport(object):
         return gather_cmd
 
     def runGatherCommand(self):
-        subprocess.run(shlex.split(self._mGatherCommand))
+        subprocess.call(shlex.split(self._mGatherCommand))
 
     def dump(self):
         print(vars(self))

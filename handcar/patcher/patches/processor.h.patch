@@ -1,7 +1,7 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
@@ -15,65 +15,53 @@
 #
 1a2
 > 
-14c15
-< #include "debug_rom_defines.h"
----
+16a18,19
 > #include <iostream>
-153a155
 > 
-157c159
-<   void reset(reg_t max_isa);
+156c159
+<   void reset(processor_t* const proc, reg_t max_isa);
 ---
->   void reset(reg_t max_isa, uint32_t id);
-219a222,226
+>   void reset(processor_t* const proc, reg_t max_isa, uint32_t id);
+234a238,242
 > 
 >   size_t pid;
 > 
->   state_t(size_t id): pid(id), XPR(id), FPR(id) {};
->   state_t(): pid(0), XPR(0), FPR(0) {};
-251,252c258,259
-<               simif_t* sim, uint32_t id, bool halt_on_reset,
-<               FILE *log_file);
+>   state_t(size_t id): XPR(id), FPR(id), pid(id) {};
+>   state_t(): XPR(0), FPR(0), pid(0) {};
+288c296
+<               FILE *log_file, std::ostream& sout_); // because of command line option --log and -s we need both
 ---
->               simif_t* sim, uint32_t id, bool halt_on_reset
->               );
-254a262,269
+>               std::ostream& sout_); // because of command line option --log and -s we need both
+290a299,303
 >   bool set_pc_api(const std::string& name, const uint8_t* bytes, size_t len); //len advertises the size of the buffer
 >   bool retrieve_pc_api(uint8_t* bytes, const std::string& name, size_t len); //len advertises the size of the buffer
 > 
->   void set_privilege_api(reg_t prv);
 >   void retrieve_privilege_api(reg_t* prv);
->   reg_t get_csr_api(int which);
->   void set_csr_api(int which, reg_t val);
 > 
-467c482,485
+299a313
+>   void set_csr_api(int which, reg_t val);
+302a317
+>   reg_t get_csr_api(int which);
+351a367
+>   void set_privilege_api(reg_t prv);
+534c550,553
 <       // vector element for varies SEW
 ---
 >       template<class T>
 >       void do_callback(reg_t vecRegIndex, reg_t eltIndex, const char pAccessType[]) const; 
 >   
 >       // vector element for varing SEW
-475c493,495
-< #ifdef WORDS_BIGENDIAN
----
+541a561,562
 >           reg_referenced[vReg] = 1;
 >   
->           #ifdef WORDS_BIGENDIAN
-478,486c498,500
-<   	  n ^= elts_per_reg - 1;
-< #endif
+547,552d567
 <           reg_referenced[vReg] = 1;
 < 
 < #ifdef RISCV_ENABLE_COMMITLOG
 <           if (is_write)
-<             p->get_state()->log_reg_write[((vReg) << 2) | 2] = {0, 0};
+<             p->get_state()->log_reg_write[((vReg) << 4) | 2] = {0, 0};
 < #endif
-< 
----
->           n ^= elts_per_reg - 1;
->           #endif
->   
-489a504,518
+556a572,586
 >   
 >       template<class T>
 >         T elt_val(reg_t vecReg, reg_t n, bool is_write = false){
@@ -89,9 +77,9 @@
 >           return r_reg_ref;
 >         }
 > 
-503a533
+570a601
 >       reg_t set_vl_api(reg_t reqVL, reg_t newType);
-515a546,583
+582a614,651
 > 
 > extern "C"{
 >   // update_vector_element function: for the given cpuid, this callback function is called by the simulator to notify the user that a vector register element has been read or written

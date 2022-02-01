@@ -27,6 +27,7 @@
 #include <Instruction.h>
 #include <sstream>
 #include <algorithm>
+#include <cctype>
 
 /*!
   \file GenRequest.cc
@@ -36,16 +37,6 @@
 using namespace std;
 
 namespace Force {
-
-  static inline void add_constraint_value(ConstraintSet*& constr_ptr, uint64 value)
-  {
-    if (nullptr == constr_ptr) {
-      constr_ptr = new ConstraintSet(value);
-    }
-    else {
-      constr_ptr->AddValue(value);
-    }
-  }
 
   static EMemDataType parse_data_type(const std::string& data_type)
   {
@@ -824,8 +815,8 @@ namespace Force {
 
   GenVirtualMemoryRequest::GenVirtualMemoryRequest(EVmRequestType reqType)
     : GenRequestWithResult(), mVmRequestType(reqType), mDataType(EMemDataType::Data), mBankType(EMemBankType(0)), mPrivilegeLevel(EPrivilegeLevelType(0)), mSize(1), mAlign(1), mTag(0x1000), mPhysAddr(0), mPhysPageId(0),
-      mPrivilegeLevelSpecified(false), mBankSpecified(false), mForceAlias(false), mFlatMap(false), mForceMemAttrs(false), mCanAlias(true), mForceNewAddr(false), mSharedMemory(false), mpMemAttrImplConstraint(nullptr), mpMemAttrArchConstraint(nullptr),
-      mpTargetAliasAttrsConstraint(nullptr), mpMemoryRangesConstraint(nullptr), mVmContextParams(), mVmInfoBoolTypes(0), mVmInfoBoolTypeMask(0)
+      mPrivilegeLevelSpecified(false), mBankSpecified(false), mForceAlias(false), mFlatMap(false), mForceMemAttrs(false), mCanAlias(true), mForceNewAddr(false), mSharedMemory(false), mImplMemAttributes(), mArchMemAttributes(),
+      mAliasImplMemAttributes(), mpMemoryRangesConstraint(nullptr), mVmContextParams(), mVmInfoBoolTypes(0), mVmInfoBoolTypeMask(0)
   {
 
   }
@@ -833,20 +824,12 @@ namespace Force {
   GenVirtualMemoryRequest::GenVirtualMemoryRequest(const GenVirtualMemoryRequest& rOther)
     : GenRequestWithResult(rOther), mVmRequestType(rOther.mVmRequestType), mDataType(rOther.mDataType), mBankType(rOther.mBankType), mPrivilegeLevel(rOther.mPrivilegeLevel), mSize(rOther.mSize), mAlign(rOther.mAlign), mTag(rOther.mTag),
       mPhysAddr(rOther.mPhysAddr), mPhysPageId(rOther.mPhysPageId), mPrivilegeLevelSpecified(rOther.mPrivilegeLevelSpecified), mBankSpecified(rOther.mBankSpecified), mForceAlias(rOther.mForceAlias), mFlatMap(rOther.mFlatMap), mForceMemAttrs(rOther.mForceMemAttrs),
-      mCanAlias(rOther.mCanAlias), mForceNewAddr(rOther.mForceNewAddr), mSharedMemory(rOther.mSharedMemory), mpMemAttrImplConstraint(nullptr), mpMemAttrArchConstraint(nullptr), mpTargetAliasAttrsConstraint(nullptr), mpMemoryRangesConstraint(nullptr),
+      mCanAlias(rOther.mCanAlias), mForceNewAddr(rOther.mForceNewAddr), mSharedMemory(rOther.mSharedMemory), mImplMemAttributes(), mArchMemAttributes(), mAliasImplMemAttributes(), mpMemoryRangesConstraint(nullptr),
       mVmContextParams(), mVmInfoBoolTypes(rOther.mVmInfoBoolTypes), mVmInfoBoolTypeMask(rOther.mVmInfoBoolTypeMask)
   {
-    if (rOther.mpMemAttrImplConstraint) {
-      mpMemAttrImplConstraint = dynamic_cast<ConstraintSet* >(rOther.mpMemAttrImplConstraint->Clone());
-    }
-
-    if (rOther.mpMemAttrArchConstraint) {
-      mpMemAttrArchConstraint = dynamic_cast<ConstraintSet* >(rOther.mpMemAttrArchConstraint->Clone());
-    }
-
-    if (rOther.mpTargetAliasAttrsConstraint) {
-      mpTargetAliasAttrsConstraint = dynamic_cast<ConstraintSet* >(rOther.mpTargetAliasAttrsConstraint->Clone());
-    }
+    copy(rOther.mImplMemAttributes.begin(), rOther.mImplMemAttributes.end(), back_inserter(mImplMemAttributes));
+    copy(rOther.mArchMemAttributes.begin(), rOther.mArchMemAttributes.end(), back_inserter(mArchMemAttributes));
+    copy(rOther.mAliasImplMemAttributes.begin(), rOther.mAliasImplMemAttributes.end(), back_inserter(mAliasImplMemAttributes));
 
     if (rOther.mpMemoryRangesConstraint) {
       mpMemoryRangesConstraint = dynamic_cast<ConstraintSet* >(rOther.mpMemoryRangesConstraint->Clone());
@@ -859,9 +842,6 @@ namespace Force {
 
   GenVirtualMemoryRequest::~GenVirtualMemoryRequest()
   {
-    delete mpMemAttrImplConstraint;
-    delete mpMemAttrArchConstraint;
-    delete mpTargetAliasAttrsConstraint;
     delete mpMemoryRangesConstraint;
   }
 
@@ -886,17 +866,23 @@ namespace Force {
             << ", ForceNewAddr=" << mForceNewAddr
             << ", SharedMemory=" << mSharedMemory;
 
-    if (nullptr != mpMemAttrImplConstraint) {
-      out_str << ", MemAttrImplConstraint=" << mpMemAttrImplConstraint->ToSimpleString();
+    out_str << ", MemAttrImpl=[";
+    for (const string& impl_mem_attr : mImplMemAttributes) {
+      out_str << impl_mem_attr << ",";
     }
+    out_str << "]";
 
-    if (nullptr != mpMemAttrArchConstraint) {
-      out_str << ", MemAttrArchConstraint=" << mpMemAttrArchConstraint->ToSimpleString();
+    out_str << ", MemAttrArch=[";
+    for (EMemoryAttributeType arch_mem_attr : mArchMemAttributes) {
+      out_str << EMemoryAttributeType_to_string(arch_mem_attr) << ",";
     }
+    out_str << "]";
 
-    if (nullptr != mpTargetAliasAttrsConstraint) {
-      out_str << ", TargetAliasAttrsConstraint=" << mpTargetAliasAttrsConstraint->ToSimpleString();
+    out_str << ", TargetAliasAttrs=[";
+    for (const string& alias_impl_mem_attr : mAliasImplMemAttributes) {
+      out_str << alias_impl_mem_attr << ",";
     }
+    out_str << "]";
 
     if (nullptr !=  mpMemoryRangesConstraint) {
       out_str << ", MemoryRangesConstraint=" << mpMemoryRangesConstraint->ToSimpleString();
@@ -926,39 +912,57 @@ namespace Force {
     else mVmInfoBoolTypes &= ~set_bit;
   }
 
-  void GenVirtualMemoryRequest::SetMemAttrImplConstraint(const ConstraintSet* constrSet)
+  void GenVirtualMemoryRequest::SetImplementationMemoryAttributes(const vector<string>& rImplMemAttributes)
   {
-    if (mpMemAttrImplConstraint != nullptr)
+    if (not mImplMemAttributes.empty())
     {
-      LOG(fail) << "{GenVirtualMemoryRequest::SetMemAttrImplConstraint} MemAttrImplConstraint is not nullptr" << endl;
+      LOG(fail) << "{GenVirtualMemoryRequest::SetImplementationMemoryAttributes} ImplMemAttributes is not empty" << endl;
       FAIL("impl-constraint-already-set");
     }
 
-    if (nullptr == constrSet)
+    if (rImplMemAttributes.empty())
     {
-      LOG(warn) << "{GenVirtualMemoryRequest::SetMemAttrImplConstraint} constr set ptr is not valid, impl constraint still nullptr" << endl;
+      LOG(warn) << "{GenVirtualMemoryRequest::SetImplementationMemoryAttributes} specified list of memory attributes is empty" << endl;
     }
     else
     {
-      mpMemAttrImplConstraint = constrSet->Clone();
+      mImplMemAttributes = rImplMemAttributes;
     }
   }
 
-  void GenVirtualMemoryRequest::SetTargetAliasAttrsConstraint(const ConstraintSet* constrSet)
+  void GenVirtualMemoryRequest::SetArchitectureMemoryAttributes(const vector<EMemoryAttributeType>& rArchMemAttributes)
   {
-    if (mpTargetAliasAttrsConstraint != nullptr)
+    if (not mArchMemAttributes.empty())
     {
-      LOG(fail) << "{GenVirtualMemoryRequest::SetTargetAliasAttrsConstraint} TargetAliasAttrsConstraint is not nullptr" << endl;
-      FAIL("target-alias-attrs-constraint-already-set");
+      LOG(fail) << "{GenVirtualMemoryRequest::SetArchitectureMemoryAttributes} ArchMemAttributes is not empty" << endl;
+      FAIL("arch-constraint-already-set");
     }
 
-    if (nullptr == constrSet)
+    if (rArchMemAttributes.empty())
     {
-      LOG(warn) << "{GenVirtualMemoryRequest::SetTargetAliasAttrsConstraint} constr set ptr is not valid, target attr constraint still nullptr" << endl;
+      LOG(warn) << "{GenVirtualMemoryRequest::SetArchitectureMemoryAttributes} specified list of memory attributes is empty" << endl;
     }
     else
     {
-      mpTargetAliasAttrsConstraint = constrSet->Clone();
+      mArchMemAttributes = rArchMemAttributes;
+    }
+  }
+
+  void GenVirtualMemoryRequest::SetAliasImplementationMemoryAttributes(const vector<string>& rAliasImplMemAttributes)
+  {
+    if (not mAliasImplMemAttributes.empty())
+    {
+      LOG(fail) << "{GenVirtualMemoryRequest::SetAliasImplementationMemoryAttributes} AliasImplMemAttributes is not empty" << endl;
+      FAIL("target-alias-attrs-constraint-already-set");
+    }
+
+    if (rAliasImplMemAttributes.empty())
+    {
+      LOG(warn) << "{GenVirtualMemoryRequest::SetAliasImplementationMemoryAttributes} specified list of memory attributes is empty" << endl;
+    }
+    else
+    {
+      mAliasImplMemAttributes = rAliasImplMemAttributes;
     }
   }
 
@@ -1017,17 +1021,8 @@ namespace Force {
     {
       mSharedMemory = bool(value);
     }
-    else if (attrName == "MemAttrImpl")
-    {
-      add_constraint_value(mpMemAttrImplConstraint, value);
-    }
     else if (attrName == "MemAttrArch") {
-      add_constraint_value(mpMemAttrArchConstraint, value);
-      return;
-    }
-    else if (attrName == "TargetAliasAttrs")
-    {
-      add_constraint_value(mpTargetAliasAttrsConstraint, value);
+      mArchMemAttributes.push_back(EMemoryAttributeType(value));
     }
 
     bool convert_okay = false;
@@ -1088,22 +1083,10 @@ namespace Force {
     }
     else if (attrName == "MemAttrImpl")
     {
-      StringSplitter ss(valueStr, ',');
-      while (!ss.EndOfString())
-      {
-        string sub_str = ss.NextSubString();
-        EMemAttributeImplType impl_type = string_to_EMemAttributeImplType(sub_str);
-        add_constraint_value(mpMemAttrImplConstraint, (uint64)(impl_type));
-      }
+      AddImplementationMemoryAttributes(valueStr, mImplMemAttributes);
     }
     else if (attrName == "MemAttrArch") {
-      StringSplitter ss(valueStr, ',');
-      while (!ss.EndOfString()) {
-        string sub_str = ss.NextSubString();
-        uint64 attr_value = parse_uint64(sub_str);
-        add_constraint_value(mpMemAttrArchConstraint, attr_value);
-      }
-      return;
+      AddArchitectureMemoryAttributes(valueStr, mArchMemAttributes);
     }
     else if (attrName == "ForceMemAttrs")
     {
@@ -1111,13 +1094,7 @@ namespace Force {
     }
     else if (attrName == "TargetAliasAttrs")
     {
-      StringSplitter ss(valueStr, ',');
-      while (!ss.EndOfString())
-      {
-        string sub_str = ss.NextSubString();
-        EMemAttributeImplType impl_type = string_to_EMemAttributeImplType(sub_str);
-        add_constraint_value(mpTargetAliasAttrsConstraint, (uint64)(impl_type));
-      }
+      AddImplementationMemoryAttributes(valueStr, mAliasImplMemAttributes);
     }
     else if (attrName == "CanAlias")
     {
@@ -1151,6 +1128,32 @@ namespace Force {
   bool GenVirtualMemoryRequest::VmSpecified() const
   {
     return (mPrivilegeLevelSpecified or (mVmContextParams.size() > 0) or (mVmInfoBoolTypeMask != 0));
+  }
+
+  void GenVirtualMemoryRequest::AddImplementationMemoryAttributes(const string& rValueStr, vector<string>& rMemAttributes)
+  {
+    StringSplitter ss(rValueStr, ',');
+    while (!ss.EndOfString()) {
+      string sub_str = ss.NextSubString();
+      rMemAttributes.push_back(sub_str);
+    }
+  }
+
+  void GenVirtualMemoryRequest::AddArchitectureMemoryAttributes(const string& rValueStr, vector<EMemoryAttributeType>& rMemAttributes)
+  {
+    StringSplitter ss(rValueStr, ',');
+    bool is_integer = isdigit(rValueStr[0]);
+    while (!ss.EndOfString()) {
+      string sub_str = ss.NextSubString();
+
+      if (is_integer) {
+        uint64 attr_value = parse_uint64(sub_str);
+        rMemAttributes.push_back(EMemoryAttributeType(attr_value));
+      }
+      else {
+        rMemAttributes.push_back(string_to_EMemoryAttributeType(sub_str));
+      }
+    }
   }
 
   GenVaRequest::GenVaRequest()

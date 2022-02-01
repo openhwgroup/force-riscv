@@ -72,9 +72,7 @@ class MainSequence(Sequence):
 
         my_choices_mod.apply(myarg1=dep_dicts)
 
-        self.modifyVariable(
-            "Inter-Dependency Window", "1-5:10, 6-10:1", "Choice"
-        )
+        self.modifyVariable("Inter-Dependency Window", "1-5:10, 6-10:1", "Choice")
 
         alu_instrs = (
             ALU_Int32_All_instructions

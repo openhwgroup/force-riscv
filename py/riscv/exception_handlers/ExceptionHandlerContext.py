@@ -53,9 +53,7 @@ class ExceptionHandlerContext(object):
         if aRegCallRole in self.mScratchRegIndices:
             call_role_reg_indices = self.mScratchRegIndices[aRegCallRole]
         else:
-            raise TypeError(
-                "Registers for %s are not available." % aRegCallRole
-            )
+            raise TypeError("Registers for %s are not available." % aRegCallRole)
 
         if isinstance(call_role_reg_indices, tuple):
             call_role_reg_indices = self._getScratchRegisterIndicesFromTuple(
@@ -63,8 +61,7 @@ class ExceptionHandlerContext(object):
             )
         elif aCount and (aCount != 1):
             raise ValueError(
-                "More scratch registers requested than are available "
-                "for %s." % aRegCallRole
+                "More scratch registers requested than are available for %s." % aRegCallRole
             )
 
         return call_role_reg_indices
@@ -76,8 +73,7 @@ class ExceptionHandlerContext(object):
         call_role_reg_indices = aCallRoleRegIndices
         if aCount > len(call_role_reg_indices):
             raise ValueError(
-                "More scratch registers requested than are available "
-                "for %s." % aRegCallRole
+                "More scratch registers requested than are available for %s." % aRegCallRole
             )
 
         if aCount == 1:
@@ -115,27 +111,13 @@ class ComprehensiveExceptionHandlerContext(ExceptionHandlerContext):
             aMemBank,
         )
 
-        self.mScratchRegIndices[
-            RegisterCallRole.PRIV_LEVEL_VALUE
-        ] = aScratchRegIndices[0]
-        self.mScratchRegIndices[
-            RegisterCallRole.CAUSE_VALUE
-        ] = aScratchRegIndices[1]
-        self.mScratchRegIndices[
-            RegisterCallRole.EC_VALUE
-        ] = aScratchRegIndices[2]
-        self.mScratchRegIndices[
-            RegisterCallRole.ARGUMENT
-        ] = aScratchRegIndices[3:5]
-        self.mScratchRegIndices[
-            RegisterCallRole.TEMPORARY
-        ] = aScratchRegIndices[5:8]
-        self.mScratchRegIndices[
-            RegisterCallRole.CALLER_SAVED
-        ] = aScratchRegIndices[:8]
-        self.mScratchRegIndices[
-            RegisterCallRole.CALLEE_SAVED
-        ] = aScratchRegIndices[8:]
+        self.mScratchRegIndices[RegisterCallRole.PRIV_LEVEL_VALUE] = aScratchRegIndices[0]
+        self.mScratchRegIndices[RegisterCallRole.CAUSE_VALUE] = aScratchRegIndices[1]
+        self.mScratchRegIndices[RegisterCallRole.EC_VALUE] = aScratchRegIndices[2]
+        self.mScratchRegIndices[RegisterCallRole.ARGUMENT] = aScratchRegIndices[3:5]
+        self.mScratchRegIndices[RegisterCallRole.TEMPORARY] = aScratchRegIndices[5:8]
+        self.mScratchRegIndices[RegisterCallRole.CALLER_SAVED] = aScratchRegIndices[:8]
+        self.mScratchRegIndices[RegisterCallRole.CALLEE_SAVED] = aScratchRegIndices[8:]
 
 
 # This class defines roles for the various scratch registers. The caller is

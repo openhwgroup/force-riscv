@@ -32,19 +32,13 @@ class AccessExceptionHandlerRegisters:
         priv_level_reg_index = handler_context.getScratchRegisterIndices(
             RegisterCallRole.PRIV_LEVEL_VALUE
         )
-        cause_reg_index = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.CAUSE_VALUE
-        )
-        ec_code_reg_index = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.EC_VALUE, 1
-        )
+        cause_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.CAUSE_VALUE)
+        ec_code_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.EC_VALUE, 1)
         # these two registers are used for subroutine arguments:
         (
             pmp_entry_reg_index,
             prev_addrlo_reg_index,
-        ) = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.ARGUMENT, 2
-        )
+        ) = handler_context.getScratchRegisterIndices(RegisterCallRole.ARGUMENT, 2)
 
         rcode_reg_index = pmp_entry_reg_index  # use 1st subroutine argument,
         # for return code too
@@ -54,9 +48,7 @@ class AccessExceptionHandlerRegisters:
             fault_addr_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
-        ) = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.TEMPORARY, 3
-        )
+        ) = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 3)
 
         # these register will need to be saved restored by the 'top level',
         # ie, by the exception handler itself:
@@ -126,8 +118,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             )
 
         self.debug(
-            "[AccessExceptionHandlerRISCV] generate handler address: 0x%x"
-            % self.getPEstate("PC")
+            "[AccessExceptionHandlerRISCV] generate handler address: 0x%x" % self.getPEstate("PC")
         )
 
         handler_regs = AccessExceptionHandlerRegisters(
@@ -146,10 +137,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
         if self.hasGeneratedRoutine("ClearAccessFault"):
             self.callRoutine("ClearAccessFault")
         else:
-            self.error(
-                "INTERNAL ERROR: ClearAccessFault subroutine has NOT "
-                "generated?"
-            )
+            self.error("INTERNAL ERROR: ClearAccessFault subroutine has NOT generated?")
 
         # restore 'handler-saved' registers
         self.mHandlerStack.freeStackFrame()
@@ -177,9 +165,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
         self.mAssemblyHelper.genReturn()
 
     def getPrerequisiteRoutineNames(self, aRoutineName):
-        self.notice(
-            "[getPrerequisiteRoutineNames] routine-name: '%s'" % aRoutineName
-        )
+        self.notice("[getPrerequisiteRoutineNames] routine-name: '%s'" % aRoutineName)
         if aRoutineName == "Handler":
             return ["ClearAccessFault"]
         elif aRoutineName == "ClearAccessFault":
@@ -234,9 +220,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             fault_addr_reg_index, ("%stval" % priv_level.name.lower())
         )
 
-        self.mAssemblyHelper.logDebugSymbol(
-            "Current privilege level: %s" % priv_level.name
-        )
+        self.mAssemblyHelper.logDebugSymbol("Current privilege level: %s" % priv_level.name)
 
         # if not at machine level, then bail...
 
@@ -306,8 +290,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             handler_context = kwargs["handler_context"]
         except KeyError:
             self.error(
-                "INTERNAL ERROR: one or more arguments to genPMPfixup"
-                "generate method missing."
+                "INTERNAL ERROR: one or more arguments to generatePMPfixup() method missing."
             )
 
         handler_regs = AccessExceptionHandlerRegisters(
@@ -339,9 +322,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             fault_addr_reg_index,
             pmp_reg_index,
             prev_addrlo_reg_index,
-        ) = handler_regs.RegisterSet(
-            ["fault_addr", "pmp_index", "prev_addrlo"]
-        )
+        ) = handler_regs.RegisterSet(["fault_addr", "pmp_index", "prev_addrlo"])
 
         # more reg indices...
         (
@@ -381,9 +362,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
         )
 
         # isolate Mode bits...
-        self.mAssemblyHelper.genShiftRightImmediate(
-            scratch_reg_index, 3, cfgval_reg_index
-        )
+        self.mAssemblyHelper.genShiftRightImmediate(scratch_reg_index, 3, cfgval_reg_index)
         self.mAssemblyHelper.genAndImmediate(scratch_reg_index, 3)
 
         # ASSUME: While a particular PMP entry R,W,X values may not be
@@ -413,12 +392,8 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
         # check address range for this mode...
         # save previous tor 'address lo' in a scratch register.
         # update address lo value...
-        self.mAssemblyHelper.genMoveRegister(
-            scratch_reg_index, prev_addrlo_reg_index
-        )
-        self.mAssemblyHelper.genMoveRegister(
-            prev_addrlo_reg_index, pmp_entry_value_reg_index
-        )
+        self.mAssemblyHelper.genMoveRegister(scratch_reg_index, prev_addrlo_reg_index)
+        self.mAssemblyHelper.genMoveRegister(prev_addrlo_reg_index, pmp_entry_value_reg_index)
         # TOR address lo (previous TOR PMP entry address) <= faulting
         # address <= this TOR PMP entry address
         self.mAssemblyHelper.genConditionalBranchToLabel(
@@ -493,9 +468,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
 
         self.callRoutine("GetNAPOTaddrRange")  # get address range, NAPOT mode
 
-        (addr_lo_reg_index, addr_hi_reg_index) = handler_regs.RegisterSet(
-            ["addr_lo", "addr_hi"]
-        )
+        (addr_lo_reg_index, addr_hi_reg_index) = handler_regs.RegisterSet(["addr_lo", "addr_hi"])
 
         # address range hi will be zero on error...
         self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
@@ -520,9 +493,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
 
         # match: fault address is within this NAPOT mode entry address range
         self.callRoutine("FixPMPentry")  # fix the entry,
-        self.mAssemblyHelper.genMoveImmediate(
-            rcode_reg_index, 0
-        )  # clear return code,
+        self.mAssemblyHelper.genMoveImmediate(rcode_reg_index, 0)  # clear return code,
 
         self.mAssemblyHelper.addLabel("NAPOT_MODE_RETURN")
         self.mAssemblyHelper.genReturn()
@@ -540,9 +511,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             scratch_reg_index, pmp_reg_index
         )  # will use scratch reg to index into pmpcfg
         self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 8)
-        self.mAssemblyHelper.genConditionalBranch(
-            pmp_reg_index, scratch_reg2_index, 6, "GE"
-        )
+        self.mAssemblyHelper.genConditionalBranch(pmp_reg_index, scratch_reg2_index, 6, "GE")
         # if pmp_index < 8:
         self.mAssemblyHelper.genReadSystemRegister(cfgval_reg_index, "pmpcfg0")
         self.mAssemblyHelper.genRelativeBranch(12)
@@ -552,27 +521,19 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             scratch_reg_index, 1
         )  # when pmp-index >= 8, divide by 2
 
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            scratch_reg_index, 3
-        )  # multiply by 8
+        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg_index, 3)  # multiply by 8
         self.genShiftRightRegister(
             cfgval_reg_index, cfgval_reg_index, scratch_reg_index
         )  # shift pmpcfg val right to indexed cfg
-        self.mAssemblyHelper.genAndImmediate(
-            cfgval_reg_index, 0xFF
-        )  # isolate indexed cfg
+        self.mAssemblyHelper.genAndImmediate(cfgval_reg_index, 0xFF)  # isolate indexed cfg
 
-    def genShiftLeftRegister(
-        self, aDestRegIndex, aSrcRegIndex1, aSrcRegIndex2
-    ):
+    def genShiftLeftRegister(self, aDestRegIndex, aSrcRegIndex1, aSrcRegIndex2):
         self.genInstruction(
             "SLL##RISCV",
             {"rd": aDestRegIndex, "rs1": aSrcRegIndex1, "rs2": aSrcRegIndex2},
         )
 
-    def genShiftRightRegister(
-        self, aDestRegIndex, aSrcRegIndex1, aSrcRegIndex2
-    ):
+    def genShiftRightRegister(self, aDestRegIndex, aSrcRegIndex1, aSrcRegIndex2):
         self.genInstruction(
             "SRL##RISCV",
             {"rd": aDestRegIndex, "rs1": aSrcRegIndex1, "rs2": aSrcRegIndex2},
@@ -603,18 +564,14 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             fault_addr_reg_index,
             pmp_reg_index,
             pmp_entry_value_reg_index,
-        ) = handler_regs.RegisterSet(
-            ["fault_addr", "pmp_index", "pmp_entry_value"]
-        )
+        ) = handler_regs.RegisterSet(["fault_addr", "pmp_index", "pmp_entry_value"])
 
         (
             addr_lo_reg_index,
             addr_hi_reg_index,
             scratch_reg1_index,
             scratch_reg2_index,
-        ) = handler_regs.RegisterSet(
-            ["addr_lo", "addr_hi", "scratch_reg", "scratch_reg2"]
-        )
+        ) = handler_regs.RegisterSet(["addr_lo", "addr_hi", "scratch_reg", "scratch_reg2"])
 
         (
             offset_reg_index,
@@ -633,9 +590,7 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
         self.mAssemblyHelper.genMoveImmediate(
             offset_reg_index, 7
         )  # smallest offset range is 2**8 - 1
-        self.mAssemblyHelper.genMoveImmediate(
-            zero_bit_reg_index, 1
-        )  # zero bit starts here
+        self.mAssemblyHelper.genMoveImmediate(zero_bit_reg_index, 1)  # zero bit starts here
         self.mAssemblyHelper.genMoveRegister(
             addr_base_reg_index, pmp_entry_value_reg_index
         )  # form starting addr_base from pmpAddrX,
@@ -645,55 +600,35 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
 
         # for 64 bit address, with minimal granule size of 3 bits...
         # loop:
-        self.mAssemblyHelper.genMoveImmediate(
-            loop_reg_index, 60
-        )  # loop 60 times max
+        self.mAssemblyHelper.genMoveImmediate(loop_reg_index, 60)  # loop 60 times max
 
         # break if addr_base & zero_bit == 0:
         self.mAssemblyHelper.genAndRegister(
             scratch_reg1_index, zero_bit_reg_index, addr_base_reg_index
         )
         self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 0)
-        self.mAssemblyHelper.genConditionalBranch(
-            scratch_reg1_index, scratch_reg2_index, 18, "EQ"
-        )
+        self.mAssemblyHelper.genConditionalBranch(scratch_reg1_index, scratch_reg2_index, 18, "EQ")
 
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            zero_bit_reg_index, 1
-        )  # zerobit<<1
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            offset_reg_index, 1
-        )  # offset =
-        self.mAssemblyHelper.genAddImmediate(
-            offset_reg_index, 1
-        )  # (offset<<1)+1
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            addr_base_reg_index, 1
-        )  # addr_base << 1
+        self.mAssemblyHelper.genShiftLeftImmediate(zero_bit_reg_index, 1)  # zerobit<<1
+        self.mAssemblyHelper.genShiftLeftImmediate(offset_reg_index, 1)  # offset =
+        self.mAssemblyHelper.genAddImmediate(offset_reg_index, 1)  # (offset<<1)+1
+        self.mAssemblyHelper.genShiftLeftImmediate(addr_base_reg_index, 1)  # addr_base << 1
 
         self.mAssemblyHelper.genSubRegister(loop_reg_index, 1)
-        self.mAssemblyHelper.genConditionalBranch(
-            loop_reg_index, scratch_reg2_index, -16, "NE"
-        )
+        self.mAssemblyHelper.genConditionalBranch(loop_reg_index, scratch_reg2_index, -16, "NE")
         # loop ends
 
         # if we get here, then error...
-        self.mAssemblyHelper.genMoveImmediate(
-            addr_hi_reg_index, 1
-        )  # set address hi to zero
+        self.mAssemblyHelper.genMoveImmediate(addr_hi_reg_index, 1)  # set address hi to zero
         self.mAssemblyHelper.genReturn()  # for fail...
 
-        self.mAssemblyHelper.genConditionalBranch(
-            scratch_reg1_index, scratch_reg2_index, 12, "NE"
-        )
+        self.mAssemblyHelper.genConditionalBranch(scratch_reg1_index, scratch_reg2_index, 12, "NE")
 
         # but if we get here, then located the zero bit and can correctly
         # form address range...
 
         # addr_lo = addr_base & not offset_rval:
-        self.mAssemblyHelper.genMoveImmediate(
-            scratch_reg1_index, 0
-        )  # load scratch reg
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg1_index, 0)  # load scratch reg
         self.mAssemblyHelper.genNotRegister(
             scratch_reg1_index, scratch_reg1_index
         )  # with all ones,
@@ -729,18 +664,14 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             fault_addr_reg_index,
             pmp_reg_index,
             rcode_reg_index,
-        ) = handler_regs.RegisterSet(
-            ["ec_code", "fault_addr", "pmp_index", "rcode"]
-        )
+        ) = handler_regs.RegisterSet(["ec_code", "fault_addr", "pmp_index", "rcode"])
 
         (
             pmpcfg_reg_index,
             cfgval_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
-        ) = handler_regs.RegisterSet(
-            ["pmpcfg", "cfgval", "scratch_reg", "scratch_reg2"]
-        )
+        ) = handler_regs.RegisterSet(["pmpcfg", "cfgval", "scratch_reg", "scratch_reg2"])
 
         # if PMP entry is locked, then cannot change...
         self.mAssemblyHelper.genAndImmediate(
@@ -764,25 +695,17 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             ec_code_reg_index, scratch_reg_index, 6, "NE", "NOT_INSTR"
         )
         self.mAssemblyHelper.genOrImmediate(cfgval_reg_index, 4)  # set X bit
-        self.mAssemblyHelper.genRelativeBranchToLabel(
-            12, "FORMAT_WRITE_PMP_ENTRY"
-        )
+        self.mAssemblyHelper.genRelativeBranchToLabel(12, "FORMAT_WRITE_PMP_ENTRY")
         self.mAssemblyHelper.addLabel("NOT_INSTR")
-        self.mAssemblyHelper.genMoveImmediate(
-            scratch_reg_index, 5
-        )  # set R bit
+        self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 5)  # set R bit
         self.mAssemblyHelper.genConditionalBranchToLabel(
             ec_code_reg_index, scratch_reg_index, 6, "NE", "NOT_LOAD"
         )
         self.mAssemblyHelper.genOrImmediate(cfgval_reg_index, 1)
-        self.mAssemblyHelper.genRelativeBranchToLabel(
-            4, "FORMAT_WRITE_PMP_ENTRY"
-        )
+        self.mAssemblyHelper.genRelativeBranchToLabel(4, "FORMAT_WRITE_PMP_ENTRY")
         self.mAssemblyHelper.addLabel("NOT_LOAD")
 
-        self.mAssemblyHelper.genOrImmediate(
-            cfgval_reg_index, 3
-        )  # set R and W bits for store
+        self.mAssemblyHelper.genOrImmediate(cfgval_reg_index, 3)  # set R and W bits for store
 
         self.mAssemblyHelper.addLabel("FORMAT_WRITE_PMP_ENTRY")
 
@@ -792,14 +715,10 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
             pmp_reg_index, scratch_reg2_index, 8, "GE", "POSITION_CFG"
         )
         # if pmp_index < 8:
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            scratch_reg2_index, 8, pmp_reg_index
-        )
+        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index, 8, pmp_reg_index)
         self.mAssemblyHelper.genRelativeBranchToLabel(4, "POSITION_CFG")
         # else:
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            scratch_reg2_index, 4, pmp_reg_index
-        )
+        self.mAssemblyHelper.genShiftLeftImmediate(scratch_reg2_index, 4, pmp_reg_index)
 
         self.mAssemblyHelper.addLabel("POSITION_CFG")
         self.genShiftLeftRegister(
@@ -819,18 +738,12 @@ class AccessExceptionHandlerRISCV(ReusableSequence):
         )  # then or in new cfg value
 
         self.mAssemblyHelper.genMoveImmediate(scratch_reg2_index, 8)
-        self.mAssemblyHelper.genConditionalBranch(
-            pmp_reg_index, scratch_reg2_index, 6, "GE"
-        )
+        self.mAssemblyHelper.genConditionalBranch(pmp_reg_index, scratch_reg2_index, 6, "GE")
         # if pmp_index < 8:
-        self.mAssemblyHelper.genWriteSystemRegister(
-            "pmpcfg0", pmpcfg_reg_index
-        )
+        self.mAssemblyHelper.genWriteSystemRegister("pmpcfg0", pmpcfg_reg_index)
         self.mAssemblyHelper.genRelativeBranch(4)
         # else:
-        self.mAssemblyHelper.genWriteSystemRegister(
-            "pmpcfg2", pmpcfg_reg_index
-        )
+        self.mAssemblyHelper.genWriteSystemRegister("pmpcfg2", pmpcfg_reg_index)
 
         # if we got here, then located and corrected a PMP entry, for the
         # faulting address. can safely return...

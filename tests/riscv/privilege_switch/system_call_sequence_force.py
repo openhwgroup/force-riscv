@@ -23,6 +23,7 @@ from base.ChoicesModifier import ChoicesModifier
 from base.Sequence import Sequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
+from base.TestUtils import assert_equal, assert_true
 
 
 # This test evaluates invoking the privilege level switching function of the
@@ -73,14 +74,10 @@ class MainSequence(Sequence):
         }
 
         for reg_field_name in ("MIE", "SIE", "UIE", "SUM", "MXR", "MPRV"):
-            (state[reg_field_name], valid) = self.readRegister(
-                "mstatus", reg_field_name
+            (state[reg_field_name], valid) = self.readRegister("mstatus", reg_field_name)
+            assert_true(
+                valid, ("Register field mstatus.%s does not have a valid value" % reg_field_name)
             )
-            if not valid:
-                self.error(
-                    "Register field mstatus.%s does not have a valid value"
-                    % reg_field_name
-                )
 
         return state
 
@@ -129,105 +126,13 @@ class MainSequence(Sequence):
     #  @param aCurrentState The system state after the privilege level switch.
     #  @param aSysCallParams Parameters used for the privilege level switch.
     def _verifyState(self, aOrigState, aCurrentState, aSysCallParams):
-        expected_priv_level = None
-        priv_level_param = aSysCallParams.get("PrivilegeLevel")
-        if (priv_level_param == "U") or (priv_level_param == 0):
-            expected_priv_level = 0
-        elif (priv_level_param == "S") or (priv_level_param == 1):
-            expetected_priv_level = 1
-        elif (priv_level_param == "M") or (priv_level_param == 3):
-            expected_priv_level = 3
-
-        if (expected_priv_level is not None) and (
-            aCurrentState["PrivilegeLevel"] != expected_priv_level
-        ):
-            self.error(
-                "Current privilege level does not match the expected "
-                "value. Expected=%d, Actual=%d"
-                % (expected_priv_level, aCurrentState["PrivilegeLevel"])
-            )
-
-        expected_target_addr = aSysCallParams.get("TargetAddr")
-        if (expected_target_addr is not None) and (
-            aCurrentState["PC"] != expected_target_addr
-        ):
-            self.error(
-                "Current PC does not match the expected value. "
-                "Expected=0x%x, Actual=0x%x"
-                % (expected_target_addr, aCurrentState["PC"])
-            )
-
-        priv_level_name = None
-        if aCurrentState["PrivilegeLevel"] == 0:
-            priv_level_name = "U"
-        elif aCurrentState["PrivilegeLevel"] == 1:
-            priv_level_name = "S"
-        elif aCurrentState["PrivilegeLevel"] == 3:
-            priv_level_name = "M"
+        self._verifyPrivilegeLevel(aCurrentState, aSysCallParams)
+        self._verifyTargetAddress(aCurrentState, aSysCallParams)
 
         gen_mode = self.getPEstate("GenMode")
         no_iss = gen_mode & 0x1
         if no_iss != 1:
-            interrupt_field_name = "%sIE" % priv_level_name
-            expected_interrupt_mask = self._getExpectedRegisterFieldValue(
-                interrupt_field_name,
-                aSysCallParams.get("InterruptMask"),
-                aOrigState,
-            )
-
-            # Ignore UIE; it is hardwired to 0 because the N extension is not
-            # supported
-            if (
-                (expected_interrupt_mask is not None)
-                and (aCurrentState["PrivilegeLevel"] != 0)
-                and (
-                    aCurrentState[interrupt_field_name]
-                    != expected_interrupt_mask
-                )
-            ):
-                self.error(
-                    "Current mstatus.%s does not match the expected "
-                    "value. Expected=0x%x, Actual=0x%x"
-                    % (
-                        interrupt_field_name,
-                        expected_interrupt_mask,
-                        aCurrentState[interrupt_field_name],
-                    )
-                )
-
-            for reg_field_name in ("SUM", "MXR"):
-                expected_field_val = self._getExpectedRegisterFieldValue(
-                    reg_field_name,
-                    aSysCallParams.get(reg_field_name),
-                    aOrigState,
-                )
-
-                if (expected_field_val is not None) and (
-                    aCurrentState[reg_field_name] != expected_field_val
-                ):
-                    self.error(
-                        "Current mstatus.%s does not match the expected "
-                        "value. Expected=0x%x, Actual=0x%x"
-                        % (
-                            reg_field_name,
-                            expected_field_val,
-                            aCurrentState[reg_field_name],
-                        )
-                    )
-
-            expected_mprv_val = self._getExpectedRegisterFieldValue(
-                "MPRV", aSysCallParams.get("MPRV"), aOrigState
-            )
-            if (
-                (expected_mprv_val is not None)
-                and (priv_level_name == "M")
-                and (aCurrentState["MPRV"] != expected_mprv_val)
-            ):
-                self.error(
-                    "Current mstatus.MPRV does not match the expected "
-                    "value. Expected=0x%x, Actual=0x%x"
-                    % (expected_mprv_val, aCurrentState["MPRV"])
-                )
+            self._verifyRegisterFields(aOrigState, aCurrentState, aSysCallParams)
 
     # Randomly generate a target address for a privilege level switch.
     #
@@ -240,9 +145,7 @@ class MainSequence(Sequence):
             # Don't specify a target address if we don't know which privilege
             # level we're targeting; otherwise we can't be sure our target
             # address is valid
-            if (aTargetPrivLevel is not None) and (
-                aTargetPrivLevel != "Random"
-            ):
+            if (aTargetPrivLevel is not None) and (aTargetPrivLevel != "Random"):
                 target_addr = self.genVA(
                     Size=4, Align=4, Type="I", PrivilegeLevel=aTargetPrivLevel
                 )
@@ -250,6 +153,138 @@ class MainSequence(Sequence):
                 target_addr = None
 
         return target_addr
+
+    # Verify the privilege level is as expected after a privilege level switch.
+    #
+    #  @param aCurrentState The system state after the privilege level switch.
+    #  @param aSysCallParams Parameters used for the privilege level switch.
+    def _verifyPrivilegeLevel(self, aCurrentState, aSysCallParams):
+        expected_priv_level = None
+        priv_level_param = aSysCallParams.get("PrivilegeLevel")
+        if isinstance(priv_level_param, int):
+            expected_priv_level = priv_level_param
+        else:
+            expected_priv_level = self._getPrivilegeLevelValueFromName(priv_level_param)
+
+        if expected_priv_level is not None:
+            assert_equal(
+                aCurrentState["PrivilegeLevel"],
+                expected_priv_level,
+                "Current privilege level does not match the expected value.",
+            )
+
+    # Verify the PC is equal to the target address after a privilege level switch.
+    #
+    #  @param aCurrentState The system state after the privilege level switch.
+    #  @param aSysCallParams Parameters used for the privilege level switch.
+    def _verifyTargetAddress(self, aCurrentState, aSysCallParams):
+        expected_target_addr = aSysCallParams.get("TargetAddr")
+        if expected_target_addr is not None:
+            assert_equal(
+                aCurrentState["PC"],
+                expected_target_addr,
+                "Current PC does not match the expected value.",
+            )
+
+    # Verify the register field values are as expected after a privilege level switch.
+    #
+    #  @param aOrigState The system state prior to the privilege level switch.
+    #  @param aCurrentState The system state after the privilege level switch.
+    #  @param aSysCallParams Parameters used for the privilege level switch.
+    def _verifyRegisterFields(self, aOrigState, aCurrentState, aSysCallParams):
+        self._verifyInterruptField(aOrigState, aCurrentState, aSysCallParams)
+        for reg_field_name in ("SUM", "MXR"):
+            self._verifyMstatusField(reg_field_name, aOrigState, aCurrentState, aSysCallParams)
+
+        self._verifyMprvField(aOrigState, aCurrentState, aSysCallParams)
+
+    # Verify the interrupt field value is as expected after a privilege level switch.
+    #
+    #  @param aOrigState The system state prior to the privilege level switch.
+    #  @param aCurrentState The system state after the privilege level switch.
+    #  @param aSysCallParams Parameters used for the privilege level switch.
+    def _verifyInterruptField(self, aOrigState, aCurrentState, aSysCallParams):
+        interrupt_field_name = "%sIE" % self._getPrivilegeLevelNameFromValue(
+            aCurrentState["PrivilegeLevel"]
+        )
+        expected_interrupt_mask = self._getExpectedRegisterFieldValue(
+            interrupt_field_name,
+            aSysCallParams.get("InterruptMask"),
+            aOrigState,
+        )
+
+        # Ignore UIE; it is hardwired to 0 because the N extension is not
+        # supported
+        if (expected_interrupt_mask is not None) and (aCurrentState["PrivilegeLevel"] != 0):
+            assert_equal(
+                aCurrentState[interrupt_field_name],
+                expected_interrupt_mask,
+                ("Current mstatus.%s does not match the expected value." % interrupt_field_name),
+            )
+
+    # Verify an mstatus field value is as expected after a privilege level switch.
+    #
+    #  @param aRegFieldName The name of the register field to verify.
+    #  @param aOrigState The system state prior to the privilege level switch.
+    #  @param aCurrentState The system state after the privilege level switch.
+    #  @param aSysCallParams Parameters used for the privilege level switch.
+    def _verifyMstatusField(self, aRegFieldName, aOrigState, aCurrentState, aSysCallParams):
+        expected_field_val = self._getExpectedRegisterFieldValue(
+            aRegFieldName,
+            aSysCallParams.get(aRegFieldName),
+            aOrigState,
+        )
+
+        if expected_field_val is not None:
+            assert_equal(
+                aCurrentState[aRegFieldName],
+                expected_field_val,
+                ("Current mstatus.%s does not match the expected value" % aRegFieldName),
+            )
+
+    # Verify the MPRV field value is as expected after a privilege level switch.
+    #
+    #  @param aOrigState The system state prior to the privilege level switch.
+    #  @param aCurrentState The system state after the privilege level switch.
+    #  @param aSysCallParams Parameters used for the privilege level switch.
+    def _verifyMprvField(self, aOrigState, aCurrentState, aSysCallParams):
+        expected_mprv_val = self._getExpectedRegisterFieldValue(
+            "MPRV", aSysCallParams.get("MPRV"), aOrigState
+        )
+        if (expected_mprv_val is not None) and (priv_level_name == "M"):
+            assert_equal(
+                aCurrentState["MPRV"],
+                expected_mprv_val,
+                "Current mstatus.MPRV does not match the expected value.",
+            )
+
+    # Return the value corresponding to the specified privilege level name.
+    #
+    #  @param aPrivLevelName Name of the privilege level.
+    def _getPrivilegeLevelValueFromName(self, aPrivLevelName):
+        priv_level_value = None
+        if aPrivLevelName == "U":
+            priv_level_value = 0
+        elif aPrivLevelName == "S":
+            priv_level_value = 1
+        elif aPrivLevelName == "M":
+            priv_level_value = 3
+
+        return priv_level_value
+
+    # Return the name corresponding to the specified privilege level value.
+    #
+    #  @param aPrivLevelVaue Value of the privilege level.
+    def _getPrivilegeLevelNameFromValue(self, aPrivLevelValue):
+        priv_level_name = None
+        if aPrivLevelValue == 0:
+            priv_level_name = "U"
+        elif aPrivLevelValue == 1:
+            priv_level_name = "S"
+        elif aPrivLevelValue == 3:
+            priv_level_name = "M"
+
+        return priv_level_name
 
     # Determine the expected register field value based on the original
     # register field value and the specified parameter.
@@ -259,9 +294,7 @@ class MainSequence(Sequence):
     #       register field for the privilege level switch.
     #  @param aOrigState The register field value prior to the privilege level
     #       switch.
-    def _getExpectedRegisterFieldValue(
-        self, aRegFieldName, aRegFieldParam, aOrigState
-    ):
+    def _getExpectedRegisterFieldValue(self, aRegFieldName, aRegFieldParam, aOrigState):
         expected_field_val = None
         if aRegFieldParam == 0:
             expected_field_val = 0

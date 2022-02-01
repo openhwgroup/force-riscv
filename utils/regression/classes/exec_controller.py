@@ -106,9 +106,7 @@ class ExecuteController(Controller):
 
     def initialize_task(self):
         # Msg.user( "ExecuteController::initialize_task(1)" )
-        my_task_file = PathUtils.append_path(
-            self.ctrl_item.fctrl_dir, self.ctrl_item.fctrl_name
-        )
+        my_task_file = PathUtils.append_path(self.ctrl_item.fctrl_dir, self.ctrl_item.fctrl_name)
         # Msg.user( "ExecuteController::initialize_task(2)" )
         my_tmp, my_task_ndx = PathUtils.split_path(self.ctrl_item.fctrl_dir)
         # Msg.user( "ExecuteController::initialize_task(3)" )

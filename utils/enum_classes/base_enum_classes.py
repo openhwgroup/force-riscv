@@ -60,7 +60,6 @@ enum_classes_details = [
             ("PREDREG", 16),
             ("ALU", 17),
             ("DataProcessing", 18),
-            ("VectorLayout", 19),
         ],
     ],
     [
@@ -148,8 +147,7 @@ enum_classes_details = [
     [
         "ConstraintMoveDirection",
         "unsigned char",
-        "In ConstraintSet assembling, the direction toward which to move "
-        "involved Constraints.",
+        "In ConstraintSet assembling, the direction toward which to move involved Constraints.",
         [("Shrink", 0), ("Expand", 1)],
     ],
     [
@@ -409,8 +407,7 @@ enum_classes_details = [
     [
         "PageGenAttributeType",
         "unsigned char",
-        "Paging attribute of generated page that is useful in later test "
-        "generation.",
+        "Paging attribute of generated page that is useful in later test generation.",
         [
             ("MemAttrImpl", 0),
             ("Invalid", 1),
@@ -629,6 +626,7 @@ enum_classes_details = [
             ("Page", 3),
             ("FailOnly", 4),
             ("Handlers", 5),
+            ("PageMemAttrJSON", 6),
         ],
     ],
     [
@@ -822,5 +820,14 @@ enum_classes_details = [
         "unsigned char",
         "Byte order",
         [("LittleEndian", 0), ("BigEndian", 1)],
+    ],
+    [
+        "DumpFormat",
+        "unsigned char",
+        "Format of dump output.",
+        [
+            ("Text", 0),
+            ("JSON", 1),
+        ],
     ],
 ]

@@ -1,7 +1,7 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
@@ -13,13 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-1,3c1,2
+1,2c1
 < // See LICENSE for license details.
 < 
-< #include "sim.h"
 ---
 > #include "handcar_cosim_wrapper.h"
-> #include "simlib.h"
 5d3
 < #include "remote_bitbang.h"
 14a13,14
@@ -53,7 +51,7 @@
 > //Persistent options class and support, designed to keep consistency with Spike's existing options
 > //Options storage manages the setting and retrieval of options stored as OptionsPrimitives
 > class OptionsStorage
-20,94c40,50
+20,106c40,50
 <   fprintf(stderr, "Spike RISC-V ISA Simulator " SPIKE_VERSION "\n\n");
 <   fprintf(stderr, "usage: spike [host options] <target program> [target options]\n");
 <   fprintf(stderr, "Host Options:\n");
@@ -64,8 +62,13 @@
 <   fprintf(stderr, "  -d                    Interactive debug mode\n");
 <   fprintf(stderr, "  -g                    Track histogram of PCs\n");
 <   fprintf(stderr, "  -l                    Generate a log of execution\n");
+< #ifdef HAVE_BOOST_ASIO
+<   fprintf(stderr, "  -s                    Command I/O via socket (use with -d)\n");
+< #endif
 <   fprintf(stderr, "  -h, --help            Print this help message\n");
 <   fprintf(stderr, "  -H                    Start halted, allowing a debugger to connect\n");
+<   fprintf(stderr, "  --log=<name>          File name for option -l\n");
+<   fprintf(stderr, "  --debug-cmd=<name>    Read commands from file (use with -d)\n");
 <   fprintf(stderr, "  --isa=<name>          RISC-V ISA string [default %s]\n", DEFAULT_ISA);
 <   fprintf(stderr, "  --priv=<m|mu|msu>     RISC-V privilege modes supported [default %s]\n", DEFAULT_PRIV);
 <   fprintf(stderr, "  --varch=<name>        RISC-V Vector uArch string [default %s]\n", DEFAULT_VARCH);
@@ -82,12 +85,15 @@
 <   fprintf(stderr, "                          The extlib flag for the library must come first.\n");
 <   fprintf(stderr, "  --log-cache-miss      Generate a log of cache miss\n");
 <   fprintf(stderr, "  --extension=<name>    Specify RoCC Extension\n");
+<   fprintf(stderr, "                          This flag can be used multiple times.\n");
 <   fprintf(stderr, "  --extlib=<name>       Shared library to load\n");
 <   fprintf(stderr, "                        This flag can be used multiple times.\n");
 <   fprintf(stderr, "  --rbb-port=<port>     Listen on <port> for remote bitbang connection\n");
 <   fprintf(stderr, "  --dump-dts            Print device tree string and exit\n");
 <   fprintf(stderr, "  --disable-dtb         Don't write the device tree blob into memory\n");
+<   fprintf(stderr, "  --kernel=<path>       Load kernel flat image into memory\n");
 <   fprintf(stderr, "  --initrd=<path>       Load kernel initrd into memory\n");
+<   fprintf(stderr, "  --bootargs=<args>     Provide custom bootargs for kernel [default: console=hvc0 earlycon=sbi]\n");
 <   fprintf(stderr, "  --real-time-clint     Increment clint time at real-time rate\n");
 <   fprintf(stderr, "  --dm-progsize=<words> Progsize for the debug module [default 2]\n");
 <   fprintf(stderr, "  --dm-sba=<bits>       Debug bus master supports up to "
@@ -100,6 +106,7 @@
 <   fprintf(stderr, "  --dm-no-hasel         Debug module supports hasel\n");
 <   fprintf(stderr, "  --dm-no-abstract-csr  Debug module won't support abstract to authenticate\n");
 <   fprintf(stderr, "  --dm-no-halt-groups   Debug module won't support halt groups\n");
+<   fprintf(stderr, "  --dm-no-impebreak     Debug module won't support implicit ebreak in program buffer\n");
 < 
 <   exit(exit_code);
 < }
@@ -123,11 +130,14 @@
 < }
 < 
 < static void read_file_bytes(const char *filename,size_t fileoff,
-<                             char *read_buf, size_t read_sz)
+<                             mem_t* mem, size_t memoff, size_t read_sz)
 < {
 <   std::ifstream in(filename, std::ios::in | std::ios::binary);
 <   in.seekg(fileoff, std::ios::beg);
-<   in.read(read_buf, read_sz);
+< 
+<   std::vector<char> read_buf(read_sz, 0);
+<   in.read(&read_buf[0], read_sz);
+<   mem->store(memoff, read_sz, (uint8_t*)&read_buf[0]);
 < }
 ---
 >   //OptionsPrimitive is a record type used to store the definition of an option as well as its settings either default or after user modification.
@@ -141,7 +151,7 @@
 >     uint64_t mVal;
 >     std::string mPath;
 >   };
-96,103c52,58
+108,115c52,58
 < bool sort_mem_region(const std::pair<reg_t, mem_t*> &a,
 <                        const std::pair<reg_t, mem_t*> &b)
 < {
@@ -158,78 +168,31 @@
 >     USED = true,
 >     UNUSED = false
 >   };
-105,175c60,135
+117,140c60,134
 < void merge_overlapping_memory_regions(std::vector<std::pair<reg_t, mem_t*>>& mems)
 < {
 <   // check the user specified memory regions and merge the overlapping or
 <   // eliminate the containing parts
 <   std::sort(mems.begin(), mems.end(), sort_mem_region);
-<   reg_t start_page = 0, end_page = 0;
-<   std::vector<std::pair<reg_t, mem_t*>>::reverse_iterator it = mems.rbegin();
-<   std::vector<std::pair<reg_t, mem_t*>>::reverse_iterator _it = mems.rbegin();
-<   for(; it != mems.rend(); ++it) {
-<     reg_t _start_page = it->first/PGSIZE;
-<     reg_t _end_page = _start_page + it->second->size()/PGSIZE;
-<     if (_start_page >= start_page && _end_page <= end_page) {
-<       // contains
-<       mems.erase(std::next(it).base());
-<     }else if ( _start_page < start_page && _end_page > start_page) {
-<       // overlapping
-<       _it->first = _start_page;
-<       if (_end_page > end_page)
-<         end_page = _end_page;
-<       mems.erase(std::next(it).base());
-<     }else {
-<       _it = it;
-<       start_page = _start_page;
-<       end_page = _end_page;
-<       assert(start_page < end_page);
-<     }
-<   }
-< }
+<   std::vector<std::pair<reg_t, mem_t*>>::iterator it = mems.begin() + 1;
 < 
-< static std::vector<std::pair<reg_t, mem_t*>> make_mems(const char* arg)
-< {
-<   // handle legacy mem argument
-<   char* p;
-<   auto mb = strtoull(arg, &p, 0);
-<   if (*p == 0) {
-<     reg_t size = reg_t(mb) << 20;
-<     if (size != (size_t)size)
-<       throw std::runtime_error("Size would overflow size_t");
-<     return std::vector<std::pair<reg_t, mem_t*>>(1, std::make_pair(reg_t(DRAM_BASE), new mem_t(size)));
-<   }
+<   while (it != mems.end()) {
+<     reg_t start = prev(it)->first;
+<     reg_t end = prev(it)->first + prev(it)->second->size();
+<     reg_t start2 = it->first;
+<     reg_t end2 = it->first + it->second->size();
 < 
-<   // handle base/size tuples
-<   std::vector<std::pair<reg_t, mem_t*>> res;
-<   while (true) {
-<     auto base = strtoull(arg, &p, 0);
-<     if (!*p || *p != ':')
-<       help();
-<     auto size = strtoull(p + 1, &p, 0);
-< 
-<     // page-align base and size
-<     auto base0 = base, size0 = size;
-<     size += base0 % PGSIZE;
-<     base -= base0 % PGSIZE;
-<     if (size % PGSIZE != 0)
-<       size += PGSIZE - size % PGSIZE;
-< 
-<     if (base + size < base)
-<       help();
-< 
-<     if (size != size0) {
-<       fprintf(stderr, "Warning: the memory at  [0x%llX, 0x%llX] has been realigned\n"
-<                       "to the %ld KiB page size: [0x%llX, 0x%llX]\n",
-<               base0, base0 + size0 - 1, PGSIZE / 1024, base, base + size - 1);
-<     }
-< 
-<     res.push_back(std::make_pair(reg_t(base), new mem_t(size)));
-<     if (!*p)
-<       break;
-<     if (*p != ',')
-<       help();
-<     arg = p + 1;
+<     //contains -> remove
+<     if (start2 >= start && end2 <= end) {
+<       it = mems.erase(it);
+<     //parital overlapped -> extend
+<     } else if (start2 >= start && start2 < end) {
+<       delete prev(it)->second;
+<       prev(it)->second = new mem_t(std::max(end, end2) - start);
+<       it = mems.erase(it);
+<     // no overlapping -> keep it
+<     } else {
+<       it++;
 ---
 >   enum ERROR_CODES : int
 >   {
@@ -306,14 +269,21 @@
 >     if(flat_options_temp.size() > 0)
 >     {
 >       _token_vector.push_back(flat_options_temp);
->     }
-178,180d137
-<   merge_overlapping_memory_regions(res);
-<   return res;
+143d136
 < }
-182c139,485
-< int main(int argc, char** argv)
+145,154c138,215
+< static std::vector<std::pair<reg_t, mem_t*>> make_mems(const char* arg)
+< {
+<   // handle legacy mem argument
+<   char* p;
+<   auto mb = strtoull(arg, &p, 0);
+<   if (*p == 0) {
+<     reg_t size = reg_t(mb) << 20;
+<     if (size != (size_t)size)
+<       throw std::runtime_error("Size would overflow size_t");
+<     return std::vector<std::pair<reg_t, mem_t*>>(1, std::make_pair(reg_t(DRAM_BASE), new mem_t(size)));
 ---
+> 
 >   // _rejectOrEnroll function: looks up an option by name from the _options_map and determines if the right types of arguments have been provided. If so, the option is enabled and the argument is stored.
 >   //
 >   // inputs:
@@ -391,9 +361,22 @@
 >     map_item->second.mIsUsed = true;
 > 
 >     return  SUCCESS;
->   }
-> 
-> 
+157,163d217
+<   // handle base/size tuples
+<   std::vector<std::pair<reg_t, mem_t*>> res;
+<   while (true) {
+<     auto base = strtoull(arg, &p, 0);
+<     if (!*p || *p != ':')
+<       help();
+<     auto size = strtoull(p + 1, &p, 0);
+165,170c219,249
+<     // page-align base and size
+<     auto base0 = base, size0 = size;
+<     size += base0 % PGSIZE;
+<     base -= base0 % PGSIZE;
+<     if (size % PGSIZE != 0)
+<       size += PGSIZE - size % PGSIZE;
+---
 >   // _resetArgMatrix function: clears the memory allocated to char** _stored_argv, uses count of number of enabled options to resize char** _stored_argv. 
 >   //               Then, memory is allocated for the elements and the first and last elements are set to dummy arguements.
 >   //
@@ -425,7 +408,10 @@
 >     free(_stored_argv);
 >     _stored_argv = nullptr;    
 >     _stored_argc = 0;
-> 
+172,173c251,288
+<     if (base + size < base)
+<       help();
+---
 >     // lambda function to for counting number of options to set so that the argv can be resized
 >     auto add_one_if_used = [](int count, const std::pair<std::string, OptionsPrimitive>& option_record)
 >     {
@@ -464,7 +450,12 @@
 >       
 >     return SUCCESS;    
 >   }
-> 
+175,178c290,354
+<     if (size != size0) {
+<       fprintf(stderr, "Warning: the memory at  [0x%llX, 0x%llX] has been realigned\n"
+<                       "to the %ld KiB page size: [0x%llX, 0x%llX]\n",
+<               base0, base0 + size0 - 1, long(PGSIZE / 1024), base, base + size - 1);
+---
 > 
 >   // _loadArgMatrix function: once memory has been allocated for char** _stored_argv, scan the _options_map for enabled options and write them into the argv. 
 >   //
@@ -530,12 +521,29 @@
 >           ++arg_num;
 >         }
 >       }
->     }
-> 
+181,186c357
+<     res.push_back(std::make_pair(reg_t(base), new mem_t(size)));
+<     if (!*p)
+<       break;
+<     if (*p != ',')
+<       help();
+<     arg = p + 1;
+---
 >     return SUCCESS;
->   }
-> 
-> 
+189,191d359
+<   merge_overlapping_memory_regions(res);
+<   return res;
+< }
+193,200c361,460
+< static unsigned long atoul_safe(const char* s)
+< {
+<   char* e;
+<   auto res = strtoul(s, &e, 10);
+<   if (*e)
+<     help();
+<   return res;
+< }
+---
 > public:
 >   // The constructor that must be used when intending to use the set_simulator_parameter interface
 >   OptionsStorage():
@@ -636,8 +644,17 @@
 >     free(_stored_argv);
 >     _stored_argv = nullptr;    
 >   }
-> 
-> 
+202,208d461
+< static unsigned long atoul_nonzero_safe(const char* s)
+< {
+<   auto res = atoul_safe(s);
+<   if (!res)
+<     help();
+<   return res;
+< }
+210c463,485
+< int main(int argc, char** argv)
+---
 >   char** exposeStoredArgv()
 >   {
 >     return _stored_argv;
@@ -661,7 +678,7 @@
 > bool isa_D;     // true if double-precision floating pt extension configured in
 > 
 > void initialize_simulator(const char* options)
-183a487,538
+211a487,538
 >   // Hopefully the user has called set_simulator_parameter a number of times before calling initialize_simulator, but handle the contingency if they didn't.
 >   if(_pOptionsStorage == nullptr)
 >   {
@@ -714,25 +731,27 @@
 >     printf("\n");
 >   }
 >   
-192,193d546
+223,224d549
 <   size_t initrd_size;
 <   reg_t initrd_start = 0, initrd_end = 0;
-195,199d547
+227,231d551
 <   std::vector<std::pair<reg_t, mem_t*>> mems;
 <   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
 <   std::unique_ptr<icache_sim_t> ic;
 <   std::unique_ptr<dcache_sim_t> dc;
 <   std::unique_ptr<cache_sim_t> l2;
-201,204d548
+233,236c553
 <   bool log_commits = false;
 <   const char *log_path = nullptr;
-<   std::function<extension_t*()> extension;
+<   std::vector<std::function<extension_t*()>> extensions;
 <   const char* initrd = NULL;
-208,210d551
+---
+>   bool auto_init_mem = false;
+240,242d556
 <   const char* dtb_file = NULL;
 <   uint16_t rbb_port = 0;
 <   bool use_rbb = false;
-212,220d552
+244,253d557
 <   debug_module_config_t dm_config = {
 <     .progbufsize = 2,
 <     .max_bus_master_bits = 0,
@@ -740,17 +759,18 @@
 <     .abstract_rti = 0,
 <     .support_hasel = true,
 <     .support_abstract_csr_access = true,
-<     .support_haltgroups = true
+<     .support_haltgroups = true,
+<     .support_impebreak = true
 <   };
-222c554
+255c559
 < 
 ---
 >  
-226c558
+259c563
 < 
 ---
 >  
-235,277d566
+268,310d571
 <   auto const device_parser = [&plugin_devices](const char *s) {
 <     const std::string str(s);
 <     std::istringstream stream(str);
@@ -794,14 +814,20 @@
 <     plugin_devices.emplace_back(base, new mmio_plugin_device_t(name, args));
 <   };
 < 
-279,280d567
+312,313d572
 <   parser.help(&suggest_help);
 <   parser.option('h', "help", 0, [&](const char* s){help(0);});
-285d571
+317,321c576
+< #ifdef HAVE_BOOST_ASIO
+<   parser.option('s', 0, 0, [&](const char* s){socket = true;});
+< #endif
+<   parser.option('p', 0, 1, [&](const char* s){nprocs = atoul_nonzero_safe(s);});
 <   parser.option('m', 0, 1, [&](const char* s){mems = make_mems(s);});
-288d573
-<   parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoi(s);});
-291,293c576,578
+---
+>   parser.option('p', 0, 1, [&](const char* s){nprocs = atoi(s);});
+324d578
+<   parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoul_safe(s);});
+327,329c581,583
 <   parser.option(0, "ic", 1, [&](const char* s){ic.reset(new icache_sim_t(s));});
 <   parser.option(0, "dc", 1, [&](const char* s){dc.reset(new dcache_sim_t(s));});
 <   parser.option(0, "l2", 1, [&](const char* s){l2.reset(cache_sim_t::construct(s, "L2$"));});
@@ -809,25 +835,30 @@
 >   parser.option(0, "ic", 1, [&](const char* s){ic = new icache_sim_t(s);});
 >   parser.option(0, "dc", 1, [&](const char* s){dc = new dcache_sim_t(s);});
 >   parser.option(0, "l2", 1, [&](const char* s){l2 = cache_sim_t::construct(s, "L2$");});
-298,299c583
+330a585
+>   parser.option(0, "auto-init-mem", 0, [&](const char* s){auto_init_mem = true;});
+334,335c589
 <   parser.option(0, "device", 1, device_parser);
-<   parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
+<   parser.option(0, "extension", 1, [&](const char* s){extensions.push_back(find_extension(s));});
 ---
->   //parser.option(0, "extension", 1, [&](const char* s){extension = find_extension(s);});
-302,303d585
+>   //parser.option(0, "extension", 1, [&](const char* s){extensions.push_back(find_extension(s));});
+338d591
 <   parser.option(0, "dtb", 1, [&](const char *s){dtb_file = s;});
+340d592
 <   parser.option(0, "initrd", 1, [&](const char* s){initrd = s;});
-312,332d593
+350,371d601
 <   parser.option(0, "dm-progsize", 1,
-<       [&](const char* s){dm_config.progbufsize = atoi(s);});
+<       [&](const char* s){dm_config.progbufsize = atoul_safe(s);});
+<   parser.option(0, "dm-no-impebreak", 0,
+<       [&](const char* s){dm_config.support_impebreak = false;});
 <   parser.option(0, "dm-sba", 1,
-<       [&](const char* s){dm_config.max_bus_master_bits = atoi(s);});
+<       [&](const char* s){dm_config.max_bus_master_bits = atoul_safe(s);});
 <   parser.option(0, "dm-auth", 0,
 <       [&](const char* s){dm_config.require_authentication = true;});
 <   parser.option(0, "dmi-rti", 1,
-<       [&](const char* s){dmi_rti = atoi(s);});
+<       [&](const char* s){dmi_rti = atoul_safe(s);});
 <   parser.option(0, "dm-abstract-rti", 1,
-<       [&](const char* s){dm_config.abstract_rti = atoi(s);});
+<       [&](const char* s){dm_config.abstract_rti = atoul_safe(s);});
 <   parser.option(0, "dm-no-hasel", 0,
 <       [&](const char* s){dm_config.support_hasel = false;});
 <   parser.option(0, "dm-no-abstract-csr", 0,
@@ -838,8 +869,7 @@
 <                 [&](const char* s){log_commits = true;});
 <   parser.option(0, "log", 1,
 <                 [&](const char* s){log_path = s;});
-< 
-334,367d594
+381,399c611,626
 <   std::vector<std::string> htif_args(argv1, (const char*const*)argv + argc);
 <   if (mems.empty())
 <     mems = make_mems("2048");
@@ -847,54 +877,50 @@
 <   if (!*argv1)
 <     help();
 < 
+<   if (kernel && check_file_exists(kernel)) {
+<     kernel_size = get_file_size(kernel);
+<     if (isa[2] == '6' && isa[3] == '4')
+<       kernel_offset = 0x200000;
+<     else
+<       kernel_offset = 0x400000;
+<     for (auto& m : mems) {
+<       if (kernel_size && (kernel_offset + kernel_size) < m.second->size()) {
+<          read_file_bytes(kernel, 0, m.second, kernel_offset, kernel_size);
+<          break;
+<       }
+<     }
+---
+> 
+>   std::string isa_str = isa;
+>   isa_rv32 = isa_str.find("RV32") != std::string::npos;
+>   isa_D = (isa_str.find("F") != std::string::npos) && (isa_str.find("D") != std::string::npos);
+> 
+>   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, bootargs, start_pc, hartids, auto_init_mem, cmd_file);
+>   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
+>  
+>   if (ic && l2) ic->set_miss_handler(&*l2);
+>   if (dc && l2) dc->set_miss_handler(&*l2);
+>   if (ic) ic->set_log(log_cache);
+>   if (dc) dc->set_log(log_cache);
+>   for (size_t i = 0; i < nprocs; i++)
+>   {
+>   if (ic) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*ic);
+>   if (dc) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*dc);
+400a628,630
+>  
+>   _pSimulatorTopLevel->set_log(log);
+>   _pSimulatorTopLevel->set_histogram(histogram);
+402,410c632,717
 <   if (initrd && check_file_exists(initrd)) {
 <     initrd_size = get_file_size(initrd);
 <     for (auto& m : mems) {
 <       if (initrd_size && (initrd_size + 0x1000) < m.second->size()) {
 <          initrd_end = m.first + m.second->size() - 0x1000;
 <          initrd_start = initrd_end - initrd_size;
-<          read_file_bytes(initrd, 0, m.second->contents() + (initrd_start - m.first), initrd_size);
+<          read_file_bytes(initrd, 0, m.second, initrd_start - m.first, initrd_size);
 <          break;
 <       }
-<     }
-<   }
-< 
-<   sim_t s(isa, priv, varch, nprocs, halted, real_time_clint,
-<       initrd_start, initrd_end, start_pc, mems, plugin_devices, htif_args,
-<       std::move(hartids), dm_config, log_path, dtb_enabled, dtb_file);
-<   std::unique_ptr<remote_bitbang_t> remote_bitbang((remote_bitbang_t *) NULL);
-<   std::unique_ptr<jtag_dtm_t> jtag_dtm(
-<       new jtag_dtm_t(&s.debug_module, dmi_rti));
-<   if (use_rbb) {
-<     remote_bitbang.reset(new remote_bitbang_t(rbb_port, &(*jtag_dtm)));
-<     s.set_remote_bitbang(&(*remote_bitbang));
-<   }
-< 
-<   if (dump_dts) {
-<     printf("%s", s.get_dts());
-<     return 0;
-<   }
-368a596,603
->   std::string isa_str = isa;
->   isa_rv32 = isa_str.find("RV32") != std::string::npos;
->   isa_D = (isa_str.find("F") != std::string::npos) && (isa_str.find("D") != std::string::npos);
-> 
->   _pSimulatorTopLevel = new simlib_t(isa, priv, varch, nprocs, halted, start_pc, 
->     hartids);
->   _pSimulatorTopLevel->set_dtb_enabled(dtb_enabled);
->  
-375,377c610,663
-<     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
-<     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
-<     if (extension) s.get_core(i)->register_extension(extension());
 ---
->   if (ic) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*ic);
->   if (dc) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*dc);
->   }
->  
->   _pSimulatorTopLevel->set_log(log);
->   _pSimulatorTopLevel->set_histogram(histogram);
-> 
 >   argc=0;
 >   argv=nullptr;
 > }
@@ -942,11 +968,8 @@
 >   {
 >     delete _pSimulatorTopLevel;
 >     _pSimulatorTopLevel = nullptr;
-380,382c666,735
-<   s.set_debug(debug);
-<   s.configure_log(log, log_commits);
-<   s.set_histogram(histogram);
----
+>   }
+> 
 >   // originally handled by smart pointers, but we have to delete these manually now.
 >   if(ic != nullptr)
 >   {
@@ -984,10 +1007,26 @@
 >     if(NOISY)
 >     {
 >       printf("### handcar_cosim::set_simulator_parameter(), call failed with error code: %d\n", rcode);
->     }
+411a719
 >     return rcode;
->   }
-> 
+414,429c722,741
+< #ifdef HAVE_BOOST_ASIO
+<   boost::asio::io_service *io_service_ptr = NULL; // needed for socket command interface option -s
+<   boost::asio::ip::tcp::acceptor *acceptor_ptr = NULL;
+<   if (socket) {  // if command line option -s is set
+<      try
+<      { // create socket server
+<        using boost::asio::ip::tcp;
+<        io_service_ptr = new boost::asio::io_service;
+<        acceptor_ptr = new tcp::acceptor(*io_service_ptr, tcp::endpoint(tcp::v4(), 0));
+<        // aceptor is created passing argument port=0, so O.S. will choose a free port
+<        std::string name = boost::asio::ip::host_name();
+<        std::cout << "Listening for debug commands on " << name.substr(0,name.find('.'))
+<                  << " port " << acceptor_ptr->local_endpoint().port() << " ." << std::endl;
+<        // at the end, add space and some other character for convenience of javascript .split(" ")
+<      }
+<      catch (std::exception& e)
+---
 >   // Reinitialization has been seen not to work, so we will indicate to the user that this is not ok
 >   if(_pSimulatorTopLevel != nullptr){
 >     return 10;
@@ -1008,21 +1047,39 @@
 >   else 
 >   {
 >      if(NOISY)
->      {
+431,432c743
+<        std::cerr << e.what() << std::endl;
+<        exit(-1);
+---
 >        printf("### handcar_cosim::simulator_load_elf(...), simulator not initialized before simulator_load_elf(...) called.\n");
->      }
->   }
-> 
+435d745
+< #endif
+437,454c747,825
+<   sim_t s(isa, priv, varch, nprocs, halted, real_time_clint,
+<       initrd_start, initrd_end, bootargs, start_pc, mems, plugin_devices, htif_args,
+<       std::move(hartids), dm_config, log_path, dtb_enabled, dtb_file,
+< #ifdef HAVE_BOOST_ASIO
+<       io_service_ptr, acceptor_ptr,
+< #endif
+<       cmd_file);
+<   std::unique_ptr<remote_bitbang_t> remote_bitbang((remote_bitbang_t *) NULL);
+<   std::unique_ptr<jtag_dtm_t> jtag_dtm(
+<       new jtag_dtm_t(&s.debug_module, dmi_rti));
+<   if (use_rbb) {
+<     remote_bitbang.reset(new remote_bitbang_t(rbb_port, &(*jtag_dtm)));
+<     s.set_remote_bitbang(&(*remote_bitbang));
+<   }
+< 
+<   if (dump_dts) {
+<     printf("%s", s.get_dts());
+<     return 0;
+---
 >   //dump_memory("./memdump.txt");
 > 
 >   return rcode;
 > }
-384d736
-<   auto return_code = s.run();
-386,387c738,779
-<   for (auto& mem : mems)
-<     delete mem.second;
----
+> 
+> 
 > void dump_memory(const char* file_to_create)
 > {
 >   //if(_pMemories != nullptr)
@@ -1065,16 +1122,12 @@
 >     _pSimulatorTopLevel->dump_sparse_memory(dump2);    
 >   //}
 > }
-389,390d780
-<   for (auto& plugin_device : plugin_devices)
-<     delete plugin_device.second;
-392c782,784
-<   return return_code;
----
+> 
+> 
 > int step_simulator(int target_id, int num_steps, int stx_failed)
 > {
 >   return _pSimulatorTopLevel->step_simulator(target_id, num_steps, stx_failed);
-393a786,1302
+> }
 > 
 > 
 > int get_disassembly(const uint64_t* pc, char** opcode, char** disassembly)
@@ -1100,8 +1153,13 @@
 >   {
 >     printf("#### handcar_cosim::get_simulator_version, not enough room in 'version' string buffer");
 >     return 1;
->   }
-> 
+457,461c828,849
+<   if (ic && l2) ic->set_miss_handler(&*l2);
+<   if (dc && l2) dc->set_miss_handler(&*l2);
+<   if (ic) ic->set_log(log_cache);
+<   if (dc) dc->set_log(log_cache);
+<   for (size_t i = 0; i < nprocs; i++)
+---
 >   strcpy(version, version_string);   
 > 
 >   return 0;
@@ -1124,12 +1182,20 @@
 > 
 >   // Check if this is any of the other types of register
 >   if(temp_name.find("unknown") != std::string::npos)
->   {
+463,466c851,853
+<     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
+<     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
+<     for (auto e : extensions)
+<       s.get_core(i)->register_extension(e());
+---
 >     category = 1;
 >     index = _pSimulatorTopLevel->get_xpr_number(std::string(pRegName));
 >     temp_name = _pSimulatorTopLevel->get_xpr_name(index);
->   }
-> 
+469,471c856,868
+<   s.set_debug(debug);
+<   s.configure_log(log, log_commits);
+<   s.set_histogram(histogram);
+---
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
 >     category = 2;
@@ -1143,27 +1209,37 @@
 >     index = _pSimulatorTopLevel->get_vecr_number(std::string(pRegName));
 >     temp_name = _pSimulatorTopLevel->get_vecr_name(index);
 >   }
-> 
+473c870,874
+<   auto return_code = s.run();
+---
 >   if(temp_name.find("unknown") != std::string::npos)
 >   {
 >     category = 4; //fail category
 >     status = 3;
 >   }
-> 
+475,476c876,881
+<   for (auto& mem : mems)
+<     delete mem.second;
+---
 >   //PC is a special case since its not directly writeable in Spike code
 >   if(strcmp(pRegName, "PC") == 0 || strcmp(pRegName, "pc") == 0)
 >   {
 >     category = 5;
 >     status = 0;
 >   }
-> 
+478,479c883,888
+<   for (auto& plugin_device : plugin_devices)
+<     delete plugin_device.second;
+---
 >   //privilege is internal register to force, should bypass CSR/register and access state of proc
 >   if(strcmp(pRegName, "PRIVILEGE") == 0 || strcmp(pRegName, "privilege") == 0)
 >   {
 >     category = 6;
 >     status = 0;
 >   }
-> 
+481c890,928
+<   return return_code;
+---
 >   // Check the category of the register and try to obtain the name
 >   uint32_t my_length = length;
 >   switch(category)
@@ -1203,7 +1279,7 @@
 >   }
 > 
 >   return status;
-> }
+482a930,1317
 > 
 > 
 > int partial_read_large_register(int target_id, const char* pRegName, uint8_t* pValue, uint32_t length, uint32_t offset)

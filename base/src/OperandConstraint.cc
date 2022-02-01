@@ -32,6 +32,7 @@
 #include <VmMapper.h>
 #include <AddressReuseMode.h>
 #include <Log.h>
+#include <VectorLayout.h>
 
 #include <memory>
 
@@ -290,6 +291,29 @@ namespace Force {
   {
     auto instr_req = rInstr.GetInstructionConstraint()->InstructionRequest();
     return instr_req->FindOperandDataRequest(rOprName);
+  }
+
+  VectorRegisterOperandConstraint::VectorRegisterOperandConstraint()
+    : RegisterOperandConstraint(), mpVectorLayout(new VectorLayout())
+  {
+  }
+
+  VectorRegisterOperandConstraint::~VectorRegisterOperandConstraint()
+  {
+    delete mpVectorLayout;
+  }
+
+  VectorRegisterOperandConstraint::VectorRegisterOperandConstraint(const VectorRegisterOperandConstraint& rOther)
+    : RegisterOperandConstraint(rOther), mpVectorLayout(nullptr)
+  {
+    mpVectorLayout = new VectorLayout(*(rOther.mpVectorLayout));
+  }
+
+  void VectorRegisterOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)
+  {
+    RegisterOperandConstraint::Setup(rGen, rInstr, rOperandStruct);
+
+    SetUpVectorLayout(rGen, rOperandStruct, *mpVectorLayout);
   }
 
   void ImpliedRegisterOperandConstraint::Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct)

@@ -37,9 +37,7 @@ class MainSequence(Sequence):
         # Disable floating point, so the StateTransition can enable it
         sys_reg_name = "misa"
         (sys_reg_val, valid) = self.readRegister(sys_reg_name)
-        state_transition_test_utils.assert_valid_register_value(
-            self, sys_reg_name, valid
-        )
+        state_transition_test_utils.assert_valid_register_value(self, sys_reg_name, valid)
 
         load_gpr64_seq = LoadGPR64(self.genThread)
         rand_gpr_index = self.getRandomGPR(exclude="0")
@@ -54,13 +52,9 @@ class MainSequence(Sequence):
         )
 
         state = self._createState()
-        StateTransition.transitionToState(
-            state, EStateTransitionOrderMode.ByPriority
-        )
+        StateTransition.transitionToState(state, EStateTransitionOrderMode.ByPriority)
 
-        state_transition_test_utils.verify_state(
-            self, self._mExpectedStateData
-        )
+        state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
     # Create a simple State to test an explicit StateTransition.
     def _createState(self):
@@ -74,13 +68,9 @@ class MainSequence(Sequence):
         test_utils.assert_valid_register_value(self, sys_reg_name, valid)
 
         sys_reg_val |= 0x0000028
-        state.addRegisterStateElement(
-            sys_reg_name, (sys_reg_val,), aPriority=1
-        )
+        state.addRegisterStateElement(sys_reg_name, (sys_reg_val,), aPriority=1)
         expected_sys_reg_state_data.append((sys_reg_name, sys_reg_val))
-        self._mExpectedStateData[
-            EStateElementType.SystemRegister
-        ] = expected_sys_reg_state_data
+        self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
 
         self._mExpectedStateData[
             EStateElementType.FloatingPointRegister

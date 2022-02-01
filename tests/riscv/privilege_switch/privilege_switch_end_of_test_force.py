@@ -43,9 +43,7 @@ class MainSequence(Sequence):
             self.genInstruction(instr)
 
         target_addr = self.genVA(Size=4, Align=4, Type="I")
-        self.genInstruction(
-            "SRET##RISCV", {"NoSkip": 1, "epc": target_addr, "priv": 0}
-        )
+        self.genInstruction("SRET##RISCV", {"NoSkip": 1, "epc": target_addr, "priv": 0})
 
 
 MainSequenceClass = MainSequence

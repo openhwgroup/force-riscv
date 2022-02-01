@@ -41,7 +41,7 @@ class MainSequence(VectorVsetvlTestSequence):
         load_gpr64_seq.load(avl_reg_index, self.mAvl)
         instr_params["rs1"] = avl_reg_index
         avl_reg_index = self.getRandomGPR(exclude="0")
-        instr_params["zimm10"] = self.mVtype
+        instr_params["zimm11"] = self.mVtype
 
         return instr_params
 

@@ -34,9 +34,7 @@ class MainSequence(Sequence):
 
     def generate(self, **kargs):
         state_a = self._createStateA()
-        StateTransition.transitionToState(
-            state_a, EStateTransitionOrderMode.ByPriority
-        )
+        StateTransition.transitionToState(state_a, EStateTransitionOrderMode.ByPriority)
         utils.verify_state(self, self._mExpectedStateData)
 
         if self.getGlobalState("AppRegisterWidth") == 32:
@@ -74,7 +72,7 @@ class MainSequence(Sequence):
         utils.verify_state(self, self._mExpectedStateData)
 
         for _ in range(RandomUtils.random32(200, 500)):
-            self.genInstruction("FMUL.D#Double-precision#RISCV")
+            self.genInstruction("FMUL.D##RISCV")
 
     # Create a State in M privilege level configured to trigger a timer
     # interrupt.
@@ -98,24 +96,16 @@ class MainSequence(Sequence):
         state.addPrivilegeLevelStateElementByName("S")
         self._mExpectedStateData[EStateElementType.PrivilegeLevel] = 1
 
-        # state.addVmContextStateElement('satp', 'MODE', 8)
-        # self._mExpectedStateData[
-        #   EStateElementType.VmContext] = [('satp', 'MODE', 8)]
-
         expected_gpr_state_data = []
         for gpr_index in range(1, 32, 2):
             gpr_name = "x%d" % gpr_index
             gpr_val = (
-                0xFFFFFFFF
-                if self.getGlobalState("AppRegisterWidth") == 32
-                else 0xFFFFFFFFFFFFFFFF
+                0xFFFFFFFF if self.getGlobalState("AppRegisterWidth") == 32 else 0xFFFFFFFFFFFFFFFF
             )
             state.addRegisterStateElement(gpr_name, (gpr_val,))
             expected_gpr_state_data.append((gpr_name, gpr_val))
 
-        self._mExpectedStateData[
-            EStateElementType.GPR
-        ] = expected_gpr_state_data
+        self._mExpectedStateData[EStateElementType.GPR] = expected_gpr_state_data
 
         return state
 
@@ -139,9 +129,7 @@ class MainSequence(Sequence):
         expected_fp_reg_state_data = []
         for fp_reg_index in range(0, 32):
             fp_reg_val = RandomUtils.random64(0, 0x3FFFFFFFFFFFFFFF)
-            state.addRegisterStateElement(
-                ("D%d" % fp_reg_index), (fp_reg_val,)
-            )
+            state.addRegisterStateElement(("D%d" % fp_reg_index), (fp_reg_val,))
 
         self._mExpectedStateData[
             EStateElementType.FloatingPointRegister
@@ -172,9 +160,7 @@ class MainSequence(Sequence):
 
         expected_sys_reg_state_data.append((sstatus_name, sstatus_val))
 
-        self._mExpectedStateData[
-            EStateElementType.SystemRegister
-        ] = expected_sys_reg_state_data
+        self._mExpectedStateData[EStateElementType.SystemRegister] = expected_sys_reg_state_data
 
         return state
 

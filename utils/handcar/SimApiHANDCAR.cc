@@ -503,7 +503,7 @@ namespace Force {
     config_stream << "--varch=vlen:" << rConfig.mVectorRegLen << ",slen:" << rConfig.mVectorRegLen << ",elen:" << rConfig.mMaxVectorElemWidth;
 
     if (rConfig.mSimConfigString.size() > 0) {
-      config_stream << " " << rConfig.mSimConfigString;
+      config_stream << " " << rConfig.mSimConfigString << " ";
 
       if (rConfig.mSimConfigString.find("RV32") != string::npos) {
         sXlen = 32;
@@ -512,6 +512,10 @@ namespace Force {
       if (rConfig.mSimConfigString.find("D") != string::npos) {
         sFlen = 64;
       }
+    }
+
+    if (rConfig.mAutoInitMem) {
+      config_stream << "--auto-init-mem";
     }
 
     string config_str = config_stream.str();

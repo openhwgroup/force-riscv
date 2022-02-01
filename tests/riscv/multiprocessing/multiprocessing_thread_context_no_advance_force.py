@@ -45,22 +45,15 @@ class MainSequence(Sequence):
 
             val = constr_a.chooseValue()
             if (val < 0xF9B3) or (val > 0x207CE):
-                self.error(
-                    "Chosen value %d lies outside of constraint %s"
-                    % (val, constr_a)
-                )
+                self.error("Chosen value %d lies outside of constraint %s" % (val, constr_a))
 
             constr_a.addRange(0xE700, 0xE800)
             if str(constr_a) != "0xe700-0xe800,0xf9b3-0x207ce":
-                self.error(
-                    "Constraint %s didn't add range correctly." % constr_a
-                )
+                self.error("Constraint %s didn't add range correctly." % constr_a)
 
             constr_a.subRange(0xE780, 0x1F390)
             if str(constr_a) != "0xe700-0xe77f,0x1f391-0x207ce":
-                self.error(
-                    "Constraint %s didn't subtract range correctly." % constr_a
-                )
+                self.error("Constraint %s didn't subtract range correctly." % constr_a)
 
             constr_b = ConstraintSet(0x20800)
             constr_b.mergeConstraintSet(constr_a)
@@ -74,8 +67,7 @@ class MainSequence(Sequence):
             constr_c.applyConstraintSet(constr_a)
             if str(constr_c) != "0x20000-0x20600":
                 self.error(
-                    "Constraint %s didn't apply constraint %s correctly."
-                    % (constr_c, constr_a)
+                    "Constraint %s didn't apply constraint %s correctly." % (constr_c, constr_a)
                 )
 
             constr_d = ConstraintSet(constr_a)

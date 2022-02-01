@@ -23,6 +23,7 @@ namespace Force {
 
   class GenPageRequest;
   class GenVirtualMemoryRequest;
+  class MemoryTraitsManager;
 
   /*!
     \class GenVirtualMemoryAgent
@@ -61,6 +62,7 @@ namespace Force {
     GenVirtualMemoryRequest* mpVirtualMemoryRequest; //!< Pointer to GenVirtualMemoryRequest object.
   private:
     void SetCommonPageRequestAttributes(const GenVirtualMemoryRequest& rGenVmReq, GenPageRequest* pPageReq); //!< Set PageRequest attributes common to different types of GenVirtualMemoryRequests.
+    void AddMemoryTraits(const GenVirtualMemoryRequest& rGenVmReq, cuint64 startAddr, cuint64 size, MemoryTraitsManager& rMemTraitsManager); //!< Associate memory traits from the request with the specified address range.
   };
 
 }

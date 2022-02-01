@@ -68,6 +68,8 @@ namespace Force {
                                const std::map<std::string, uint32>& modifications); //!< do choices modification
     void AddMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Add usable physical memory range.
     void SubMemoryRange(uint32 bank, uint64 start, uint64 end); //!< Subtract usable physical memory range.
+    void AddArchitectureMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<EMemoryAttributeType>& rMemAttributes); //!< Assign architecture memory attributes to the specified physical memory range.
+    void AddImplementationMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes); //!< Assign implementation memory attributes to the specified physical memory range.
 
     // Virtual memory related API
     void GenVmRequest(uint32 threadId, GenRequest* pVmReq); //!< Pass virtual memory request to the back end.

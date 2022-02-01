@@ -2,42 +2,43 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
+# FORCE-RISCV is licensed under the Apache License, Version 2.0
+#  (the "License"); you may not use this file except in compliance
+#  with the License.  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
 #
-# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR
-# FIT FOR A PARTICULAR PURPOSE.
+# THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES
+# OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+# NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
 
 # SCRIPT DEFAULTS
 unset NO_GIT
+MAKE_JOBS=32
 pause() {
-    #do things with parameters like $1 such as
     echo
     echo "$1"
     echo
 }
 
 function usage {
-    echo "Usage: $(basename "$0") [-in]"
-    echo "    -i  interactive mode"
-    echo "    -n  no-git mode"
+    echo "Usage: $(basename "$0") [options]"
+    echo "Options:"
+    echo "    -i      interactive mode"
+    echo "    -n      no-git mode"
+    echo "    -j [N]  number of make jobs allowed"
     echo ""
     exit 1
 }
 
-while getopts ":in" opt; do
+while getopts ":inj:" opt; do
     case "$opt" in
-    i)  # interactive
+    i)  # interactive requested, so redefine 'pause'
         echo "===== option 'i' detected"
         pause() {
-            #do things with parameters like $1 such as
             echo
             read -r -sn1 -p "$1 -- Press Enter to continue or Ctrl-C to quit"
             echo
@@ -46,6 +47,10 @@ while getopts ":in" opt; do
     n)  # no git
         echo "===== option 'n' detected"
         NO_GIT=1
+        ;;
+    j)  # number of make jobs allowed
+        echo "===== option 'j' detected"
+        MAKE_JOBS=$OPTARG
         ;;
     ?)  # usage
         echo "Invalid option: -${OPTARG}"
@@ -62,13 +67,13 @@ if [ -z "${NO_GIT}" ]; then
     rm -rf standalone
     git clone https://github.com/riscv/riscv-isa-sim standalone
     cd standalone || exit 3
-    git checkout 61f0dab33f7e529cc709908840311a8a7dcb23ce
+    git checkout 7dbb7c353ff8877a0d194845acf298c7c3f6f961
 else
     echo
     echo ===== NO-GIT requested =====
     echo "You are responsible for ensuring that handcar/standalone contains"
     echo "a clone of https://github.com/riscv/riscv-isa-sim, and a checkout"
-    echo "of hash 61f0dab33f7e529cc709908840311a8a7dcb23ce"
+    echo "of hash 7dbb7c353ff8877a0d194845acf298c7c3f6f961"
     echo
     cd standalone || exit 3
 fi
@@ -107,24 +112,36 @@ cat Makefile | grep -B10 -A7 "^default-CFLAGS"
 echo "^^^^^ End auto-edit output ^^^^^"
 pause "===== Please review edit(s) above"
 
-echo "===== Preparing to run makefile"
-make -j
-cd ..
+echo "===== Preparing to run makefile for standalone/"
+make -j "$MAKE_JOBS"
+cd .. || exit 1
 
-# NOTE: so_build/cosim/inc contains the handcar_cosim_wrapper.h file.  Don't remove it.
-rm -rf src spike_mod so_build/cosim/src bin
+# TODO(Noah): Revise this to rebuild Handcar only when necessary when there is time to do so.
+rm -rf build
+cp -r standalone build
 
-mkdir src
-mkdir -p spike_mod/insns
-mkdir -p so_build/cosim/src
-mkdir bin
+cp ./headers/handcar_cosim_wrapper.h build/spike_main/
+cp ../3rd_party/inc/softfloat/softfloat.h build/softfloat/
+cp -r ./force_mod build/
 
 pause "===== Preparing to create handcar files"
-./create_handcar_files.bash
-pause "===== Preparing to run filesurgeon"
-./filesurgeon.py
-pause "===== Preparing to run handcar make"
-make -j
-pause "===== Preparing to copy handcaar_cosim.so"
-cp bin/handcar_cosim.so ../utils/handcar
+cd patcher || exit 1
+./patcher.py patch --clean
+cd .. || exit 1
 
+pause "===== Preparing to change softfloat source file extensions"
+# The Handcar Makefile expects all source files to use a ".cc" extension
+cd build/softfloat || exit 1
+for f in *.c; do
+  mv -- "$f" "${f%.c}.cc"
+done
+cd ../.. || exit 1
+
+pause "===== Preparing to run handcar make"
+cp Makefile.common build/
+cp Makefile build/
+cd build || exit 1
+make -j "$MAKE_JOBS"
+cd .. || exit 1
+
+echo $?

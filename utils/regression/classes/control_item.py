@@ -116,8 +116,7 @@ class ControlItemActionType:
         if arg_str == "no-write":
             return ControlItemActionType.NoWrite
         raise Exception(
-            "Unable to translate string value: %s, to ControlItemActionType"
-            % (arg_str)
+            "Unable to translate string value: %s, to ControlItemActionType" % (arg_str)
         )
 
     @classmethod
@@ -131,8 +130,7 @@ class ControlItemActionType:
         if arg_val == ControlItemActionType.NoWrite:
             return "no-write"
         raise Exception(
-            "Unable to translate value to string  %s, to ControlItemActionType"
-            % (str(arg_val))
+            "Unable to translate value to string  %s, to ControlItemActionType" % (str(arg_val))
         )
 
 
@@ -176,9 +174,7 @@ class ControlItem(object):
         self.validate_item_data(aAppsInfo, aItemDict)
 
         # fname is the key in the control file
-        self.fctrl_name = aItemDict.get(
-            CtrlItmKeys.fname, CtrlItmDefs.fctrl_name
-        )
+        self.fctrl_name = aItemDict.get(CtrlItmKeys.fname, CtrlItmDefs.fctrl_name)
 
         work_dir = self.load_item_values(aAppsInfo, aItemDict, aParentItem)
 
@@ -195,19 +191,11 @@ class ControlItem(object):
         # grouped options
         #
         if aParentItem is None:
-            self.performance = aItemDict.get(
-                CtrlItmKeys.performance, CtrlItmDefs.performance
-            )
-            self.regression = aItemDict.get(
-                CtrlItmKeys.regression, CtrlItmDefs.regression
-            )
+            self.performance = aItemDict.get(CtrlItmKeys.performance, CtrlItmDefs.performance)
+            self.regression = aItemDict.get(CtrlItmKeys.regression, CtrlItmDefs.regression)
         else:
-            self.performance = aItemDict.get(
-                CtrlItmKeys.performance, aParentItem.performance
-            )
-            self.regression = aItemDict.get(
-                CtrlItmKeys.regression, aParentItem.regression
-            )
+            self.performance = aItemDict.get(CtrlItmKeys.performance, aParentItem.performance)
+            self.regression = aItemDict.get(CtrlItmKeys.regression, aParentItem.regression)
         for seq_app_cfg in aAppsInfo.mAllAppsOrder[1:]:
             self.processAppControlData(seq_app_cfg, aItemDict, aParentItem)
 
@@ -215,19 +203,22 @@ class ControlItem(object):
         app_tag = aAppCfg.tag()
         Msg.user("processing %s application" % app_tag)
 
-        if aParentItem is None:
-            # no parent item.
-            app_dict = aItemDict.get(app_tag, {})
-        else:
-            # have parent item, get default from parent item
-            if app_tag in aItemDict:
-                app_dict = aItemDict[app_tag]
-            else:
-                parent_dict = getattr(aParentItem, app_tag)
-                app_dict = copy.deepcopy(parent_dict)
+        app_dict = aItemDict.get(app_tag, {})
+        if any(map(lambda val: isinstance(val, dict), app_dict.values())):
+            raise TypeError(
+                "Control Item Data: Nested dictionary not allowed inside %s, Control Item: %s"
+                % (app_tag, aItemDict)
+            )
 
-        setattr(self, app_tag, app_dict)
-        aAppCfg.processControlData(app_dict)
+        # Merge this item's app control data with the parent item's app control
+        # data. Only override the parent item's data when there is a matching
+        # key in this item's data.
+        parent_dict = getattr(aParentItem, app_tag, {})
+        merged_app_dict = copy.deepcopy(parent_dict)
+        merged_app_dict.update(app_dict)
+
+        setattr(self, app_tag, merged_app_dict)
+        aAppCfg.processControlData(merged_app_dict)
 
     def item_type(self):
         if self.fctrl_name.endswith("_force.py"):
@@ -242,9 +233,7 @@ class ControlItem(object):
             # Msg.dbg( self.fctrl_name + ": Is a Control File" )
             return ControlItemType.FileItem
 
-        raise Exception(
-            '"' + self.fctrl_name + '": Unknown Control Item Type ...'
-        )
+        raise Exception('"' + self.fctrl_name + '": Unknown Control Item Type ...')
 
     def file_path(self):
 
@@ -261,8 +250,7 @@ class ControlItem(object):
         # it must be a dictionary type
         if not isinstance(aItemDict, dict):
             raise TypeError(
-                "Control Item Data: Must Be a Dictionary, Control Item: %s"
-                % (str(aItemDict))
+                "Control Item Data: Must Be a Dictionary, Control Item: %s" % (str(aItemDict))
             )
 
         # check for valid data in control item line
@@ -277,9 +265,7 @@ class ControlItem(object):
 
         for my_key in my_keys:
             my_tmp_dict = aItemDict.get(my_key, None)
-            if (my_tmp_dict is not None) and (
-                not isinstance(my_tmp_dict, dict)
-            ):
+            if (my_tmp_dict is not None) and (not isinstance(my_tmp_dict, dict)):
                 raise TypeError(
                     'Control Item["%s"]: Must Be a Dictionary, "%s":%s'
                     % (my_key, my_key, str(my_tmp_dict))
@@ -301,14 +287,10 @@ class ControlItem(object):
         my_options = aItemDict.get(CtrlItmKeys.options, CtrlItmDefs.options)
 
         # Control File Location
-        self.fctrl_dir = my_options.get(
-            CtrlItmKeys.fdir, CtrlItmDefs.fctrl_dir
-        )
+        self.fctrl_dir = my_options.get(CtrlItmKeys.fdir, CtrlItmDefs.fctrl_dir)
 
         # Populated from control item options
-        self.iterations = my_options.get(
-            CtrlItmKeys.iterations, CtrlItmDefs.iterations
-        )
+        self.iterations = my_options.get(CtrlItmKeys.iterations, CtrlItmDefs.iterations)
 
         # Populated from control item options or parent
         # Control File Location
@@ -334,13 +316,15 @@ class ControlItem(object):
         )
         self.num_threads = my_options.get(
             CtrlItmKeys.num_threads,
-            parent_options.get(
-                CtrlItmKeys.num_threads, CtrlItmDefs.num_threads
-            ),
+            parent_options.get(CtrlItmKeys.num_threads, CtrlItmDefs.num_threads),
         )
         self.no_sim = my_options.get(
             CtrlItmKeys.no_sim,
             parent_options.get(CtrlItmKeys.no_sim, CtrlItmDefs.no_sim),
+        )
+        self.suffix = my_options.get(
+            CtrlItmKeys.suffix,
+            parent_options.get(CtrlItmKeys.suffix, CtrlItmDefs.suffix),
         )
         self.timeout = my_options.get(
             CtrlItmKeys.timeout,
@@ -359,9 +343,7 @@ class ControlItem(object):
         control_dir = self.fctrl_dir
 
         if control_file_name.startswith("$/"):
-            control_file_name = control_file_name.replace(
-                "$/", aAppsInfo.mTestBaseDir
-            )
+            control_file_name = control_file_name.replace("$/", aAppsInfo.mTestBaseDir)
 
         the_dir, the_filename = PathUtils.split_path(control_file_name)
 
@@ -378,9 +360,7 @@ class ControlItem(object):
             control_file_name, prefix_list
         )
 
-        control_dir, control_file_name = PathUtils.split_path(
-            control_file_path
-        )
+        control_dir, control_file_name = PathUtils.split_path(control_file_path)
         control_dir = PathUtils.include_trailing_path_delimiter(control_dir)
 
         if not path_valid:
@@ -420,10 +400,7 @@ class ControlItem(object):
             app_tag = seq_app_cfg.tag()
             app_dict = copy.deepcopy(getattr(self, app_tag))
             if app_tag in self.vals:
-                raise Exception(
-                    'Application tag "%s"already exist in self.vals dict.'
-                    % app_tag
-                )
+                raise Exception('Application tag "%s"already exist in self.vals dict.' % app_tag)
             self.vals[app_tag] = app_dict
 
         # # Msg.lout( my_vals, "user", "Control Item Values" )
@@ -454,9 +431,7 @@ class ControlItem(object):
             app_tag = seq_app_cfg.tag()
             app_dict = getattr(self, app_tag)
             if app_tag in my_dict:
-                raise Exception(
-                    'Application tag "%s"already exist in my_dict.' % app_tag
-                )
+                raise Exception('Application tag "%s"already exist in my_dict.' % app_tag)
             my_dict[app_tag] = app_dict
 
         return my_dict
@@ -474,9 +449,7 @@ class ControlItem(object):
                     my_str += "%s%s'%s': None" % (arg_indent, my_sep, my_key)
                 elif isinstance(arg_obj[my_key], dict):
                     my_str += "%s%s'%s':\n" % (arg_indent, my_sep, str(my_key))
-                    my_str += self.print_vals(
-                        arg_obj[my_key], "\t%s" % (arg_indent)
-                    )
+                    my_str += self.print_vals(arg_obj[my_key], "\t%s" % (arg_indent))
                 elif isinstance(arg_obj[my_key], (int, bool, list)):
                     my_str += "%s%s'%s': %s" % (
                         arg_indent,

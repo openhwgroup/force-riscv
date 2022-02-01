@@ -29,24 +29,19 @@ class FileLocator(object):
     #       the filepath's existence
     #
     @classmethod
-    def checkNestedPath(aClass, aPathList):
+    def checkNestedPath(cls, aPathList):
         # validate the input
         if not isinstance(aPathList, list):
-            raise Exception(
-                "Input to FileLocator.checkNestedPath must be a list"
-            )
+            raise Exception("Input to FileLocator.checkNestedPath must be a list")
         if len(aPathList) < 2:
             raise Exception(
-                "Input to FileLocator.checkNesterPath needs to be a list"
-                "more than 1 item long"
+                "Input to FileLocator.checkNesterPath needs to be a list more than 1 item long"
             )
 
         joined_path = str(aPathList[0])
 
         for path in aPathList[1:]:
-            joined_path = PathUtils.real_path(
-                PathUtils.append_path(joined_path, path)
-            )
+            joined_path = PathUtils.real_path(PathUtils.append_path(joined_path, path))
 
         # validate the joined path
         if not PathUtils.check_found(joined_path):
@@ -66,17 +61,13 @@ class FileLocator(object):
     #       flag that indicates if the filepath could be resolved.
     #
     @classmethod
-    def resolveFileLocation(aClass, aInputString, aPrefixDirectoryList):
+    def resolveFileLocation(cls, aInputString, aPrefixDirectoryList):
         # validate the input
         if not isinstance(aPrefixDirectoryList, list):
-            raise Exception(
-                "Parameter aPrefixDirectoryList needs to be a list of strings"
-            )
+            raise Exception("Parameter aPrefixDirectoryList needs to be a list of strings")
 
         # is the input string itself a usable absolute path?
-        if aInputString.startswith("/") and PathUtils.check_found(
-            aInputString
-        ):
+        if aInputString.startswith("/") and PathUtils.check_found(aInputString):
             return aInputString, True
 
         # is the input string a relative path meaningful with one of the
@@ -84,9 +75,7 @@ class FileLocator(object):
         intermed_dir, file_name = PathUtils.split_path(aInputString)
         for directory in aPrefixDirectoryList:
             joined_path, outcome = (
-                FileLocator.checkNestedPath(
-                    [directory, intermed_dir, file_name]
-                )
+                FileLocator.checkNestedPath([directory, intermed_dir, file_name])
                 if intermed_dir is not None
                 else FileLocator.checkNestedPath([directory, file_name])
             )

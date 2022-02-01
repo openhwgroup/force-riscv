@@ -319,6 +319,7 @@ namespace Force {
       }
       else {
         GetDefaultConstraint(rExceptConstr);
+        AdjustDefaultConstraint(rPte.Level(), rExceptConstr);
       }
       break;
     default:

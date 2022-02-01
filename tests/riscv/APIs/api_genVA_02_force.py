@@ -63,9 +63,7 @@ class MainSequence(Sequence):
                 "VA:  {:016X}".format(theAddressRange, rand_VA)
             )
 
-            instr_id = self.genInstruction(
-                self.choice(ldstr_double_ops), {"LSTarget": rand_VA}
-            )
+            instr_id = self.genInstruction(self.choice(ldstr_double_ops), {"LSTarget": rand_VA})
 
         # Try different address ranges
         for _ in range(50):
@@ -79,17 +77,14 @@ class MainSequence(Sequence):
             else:
                 theAddressRange += ["0xF220000000-0xFFFFFFFFFF"]
                 theAddressRange += ["0xFFF00000000-0xFFFFFFFFFFF"]
-                theAddressRange += [
-                    "0x1000-0x1FFF,0x88000-0x89800,"
-                    "0xFFF00000000-0xFFFFFFFFFFF"
-                ]
+                theAddressRange += ["0x1000-0x1FFF,0x88000-0x89800,0xFFF00000000-0xFFFFFFFFFFF"]
 
             for addrRange in theAddressRange:
 
                 self.notice(
                     ">>>>>>>>>>>  Size= {}     Align= {}     Type= {}     "
                     "Bank= {}     Flatmap= {}     Range= {}".format(
-                        theSize, theAlign, "D", 0, 1, addrRange
+                        theSize, theAlign, "D", "Default", 1, addrRange
                     )
                 )
 
@@ -97,7 +92,7 @@ class MainSequence(Sequence):
                     Size=theSize,
                     Align=theAlign,
                     Type="D",
-                    Bank=0,
+                    Bank="Default",
                     FlatMap=1,
                     Range=addrRange,
                 )

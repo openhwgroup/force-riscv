@@ -40,9 +40,7 @@ class NestedHashTable:
         # Sorting isn't necessary for functionality, but it helps generate
         # patterned output such that case values can easily be written in
         # increasing order, which makes it a little easier to read.
-        for (key, values) in sorted(
-            hash_table.items(), key=operator.itemgetter(0)
-        ):
+        for (key, values) in sorted(hash_table.items(), key=operator.itemgetter(0)):
             entries.append(NestedHashTableEntry(key, values))
 
         return entries
@@ -98,12 +96,8 @@ def _generate_nested_hash_table(string_values):
         # The loop below evaluates all possible combinations of
         # char_index_count character indexes; it will halt early if a given
         # combination yields a unique set of hash values.
-        for char_indexes in itertools.product(
-            range(max_string_length), repeat=(char_index_count)
-        ):
-            (hash_table, duplicate_count) = _compute_hash_table(
-                char_indexes, string_values
-            )
+        for char_indexes in itertools.product(range(max_string_length), repeat=(char_index_count)):
+            (hash_table, duplicate_count) = _compute_hash_table(char_indexes, string_values)
             if duplicate_count == 0:
                 nested_hash_table = NestedHashTable(char_indexes, hash_table)
                 return nested_hash_table
@@ -114,14 +108,10 @@ def _generate_nested_hash_table(string_values):
                     duplicate_count,
                 )
 
-    nested_hash_table = NestedHashTable(
-        min_duplicate_hash[0], min_duplicate_hash[1]
-    )
+    nested_hash_table = NestedHashTable(min_duplicate_hash[0], min_duplicate_hash[1])
     for table_entry in nested_hash_table.entries:
         if table_entry.has_multiple_values():
-            table_entry.inner_hash_table = _generate_nested_hash_table(
-                table_entry.values
-            )
+            table_entry.inner_hash_table = _generate_nested_hash_table(table_entry.values)
 
     return nested_hash_table
 

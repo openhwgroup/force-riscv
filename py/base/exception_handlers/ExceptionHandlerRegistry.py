@@ -49,9 +49,7 @@ class ExceptionHandlerRegistry(object):
         aStack,
     ):
         if aExceptionHandlerClassName in self._mExceptionHandlers:
-            exception_handler = self._mExceptionHandlers[
-                aExceptionHandlerClassName
-            ]
+            exception_handler = self._mExceptionHandlers[aExceptionHandlerClassName]
         else:
             exception_handler = self.createExceptionHandler(
                 aExceptionHandlerModuleName,
@@ -105,9 +103,7 @@ class ExceptionHandlerRegistry(object):
             import traceback
 
             tb_str = "".join(
-                traceback.format_exception(
-                    None, eTypeError, eTypeError.__traceback__
-                )
+                traceback.format_exception(None, eTypeError, eTypeError.__traceback__)
             )
             Log.error(
                 "[createExceptionHandler] failed to create handler from "
@@ -119,18 +115,12 @@ class ExceptionHandlerRegistry(object):
                 )
             )
 
-        self._mExceptionHandlers[
-            aExceptionHandlerClassName
-        ] = exception_handler
+        self._mExceptionHandlers[aExceptionHandlerClassName] = exception_handler
         return exception_handler
 
     # Store an exception handler instance for future retrieval.
     #
     #  @param aExceptionHandlerClassName The exception handler class name.
     #  @param aExceptionHandler The exception handler instance.
-    def addExceptionHandler(
-        self, aExceptionHandlerClassName, aExceptionHandler
-    ):
-        self._mExceptionHandlers[
-            aExceptionHandlerClassName
-        ] = aExceptionHandler
+    def addExceptionHandler(self, aExceptionHandlerClassName, aExceptionHandler):
+        self._mExceptionHandlers[aExceptionHandlerClassName] = aExceptionHandler

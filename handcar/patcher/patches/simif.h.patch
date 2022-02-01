@@ -1,7 +1,7 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
@@ -15,20 +15,25 @@
 #
 6a7
 > #include "Force_Memory.h"
-12,17d12
+12,17c13
 <   // should return NULL for MMIO addresses
 <   virtual char* addr_to_mem(reg_t addr) = 0;
 <   // used for MMIO addresses
 <   virtual bool mmio_load(reg_t addr, size_t len, uint8_t* bytes) = 0;
 <   virtual bool mmio_store(reg_t addr, size_t len, const uint8_t* bytes) = 0;
 <   // Callback for processors to let the simulation know they were reset.
-18a14,25
-> 
+---
+>   virtual ~simif_t() = default;
+20,21c16,27
+<   virtual const char* get_symbol(uint64_t addr) = 0;
+< 
+---
 >   // to support sparse memory model
 >   virtual uint64_t sparse_read(reg_t paddr, size_t len) = 0;
 >   virtual void sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes) = 0;
 >   virtual void sparse_write(reg_t paddr, const uint8_t* bytes, size_t len) = 0;
 >   virtual void sparse_write(reg_t paddr, uint64_t value, size_t len) = 0;
+>   virtual void sparse_write_with_initialization(reg_t paddr, const uint8_t* bytes, size_t len) = 0;
 >   virtual bool sparse_is_pa_initialized(reg_t paddr, size_t len) = 0;
 >   virtual void sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes, Force::EMemDataType type) = 0;
 >   virtual void sparse_initialize_pa(reg_t paddr, const uint8_t* data, const uint8_t* attrs, uint32_t nBytes, Force::EMemDataType type) = 0;

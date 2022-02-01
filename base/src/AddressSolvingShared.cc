@@ -337,7 +337,7 @@ namespace Force {
   }
 
   VectorStridedSolvingShared::VectorStridedSolvingShared()
-    : AddressSolvingShared(), mpStrideOpr(nullptr), mStrideChoices(), mElemCount(0)
+    : AddressSolvingShared(), mpStrideOpr(nullptr), mStrideChoices()
   {
   }
 
@@ -358,10 +358,6 @@ namespace Force {
     auto strided_opr_constr = mpAddressingOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
     mpStrideOpr = strided_opr_constr->StrideOperand();
 
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    mElemCount = vec_layout->mElemCount;
-
     SetupStrideChoices();
     if (mStrideChoices.empty()) {
       LOG(notice) << "{VectorStridedSolvingShared::Setup} no stride choice available." << endl;
@@ -369,6 +365,17 @@ namespace Force {
     }
 
     return true;
+  }
+
+  uint32 VectorStridedSolvingShared::GetDataElementCount() const
+  {
+    auto load_store_opr = dynamic_cast<VectorLoadStoreOperand*>(mpAddressingOperand);
+    Operand* data_opr = load_store_opr->GetDataOperand(*mpInstruction);
+    OperandConstraint* data_opr_constr = data_opr->GetOperandConstraint();
+    auto vec_reg_opr_constr = data_opr_constr->CastInstance<VectorRegisterOperandConstraint>();
+
+    const VectorLayout* vec_layout = vec_reg_opr_constr->GetVectorLayout();
+    return vec_layout->mElemCount;
   }
 
   void VectorStridedSolvingShared::SetupStrideChoices()
@@ -401,7 +408,7 @@ namespace Force {
   }
 
   VectorIndexedSolvingShared::VectorIndexedSolvingShared()
-    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices(), mElemSize(0)
+    : AddressSolvingShared(), mpIndexOpr(nullptr), mIndexChoices()
   {
   }
 
@@ -422,10 +429,6 @@ namespace Force {
     auto indexed_opr_constr = mpAddressingOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
     mpIndexOpr = indexed_opr_constr->IndexOperand();
 
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(mpInstruction->GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    mElemSize = vec_layout->mElemSize;
-
     SetupIndexChoices();
     if (mIndexChoices.empty()) {
       LOG(notice) << "{VectorIndexedSolvingShared::Setup} no index choice available." << endl;
@@ -433,6 +436,14 @@ namespace Force {
     }
 
     return true;
+  }
+
+  uint32 VectorIndexedSolvingShared::GetIndexElementSize() const
+  {
+    OperandConstraint* index_opr_constr = mpIndexOpr->GetOperandConstraint();
+    auto vec_reg_opr_constr = index_opr_constr->CastInstance<VectorRegisterOperandConstraint>();
+    const VectorLayout* vec_layout = vec_reg_opr_constr->GetVectorLayout();
+    return vec_layout->mElemSize;
   }
 
   void VectorIndexedSolvingShared::SetupIndexChoices()

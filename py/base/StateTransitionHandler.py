@@ -67,9 +67,7 @@ class StateTransitionHandler(Sequence):
     def getArbitraryGprs(self, aGprCount, aExclude=None):
         arbitrary_gpr_indices = self.getAllArbitraryGprs(aExclude)
         if aGprCount <= len(arbitrary_gpr_indices):
-            arbitrary_gpr_indices = self.sample(
-                arbitrary_gpr_indices, aGprCount
-            )
+            arbitrary_gpr_indices = self.sample(arbitrary_gpr_indices, aGprCount)
         else:
             arbitrary_gpr_indices = None
 
@@ -84,9 +82,7 @@ class StateTransitionHandler(Sequence):
         arbitrary_gpr_indices = self._mArbitraryGprIndices
         if aExclude is not None:
             arbitrary_gpr_indices = frozenset(arbitrary_gpr_indices)
-            arbitrary_gpr_indices = tuple(
-                arbitrary_gpr_indices.difference(aExclude)
-            )
+            arbitrary_gpr_indices = tuple(arbitrary_gpr_indices.difference(aExclude))
 
         return arbitrary_gpr_indices
 
@@ -122,12 +118,8 @@ class StateTransitionHandler(Sequence):
             if byte_count > alignment:
                 alignment = byte_count
 
-        mem_block_start_addr = self.genVA(
-            Size=mem_block_size, Align=alignment, Type="D"
-        )
-        self._initializeMemoryWithStateElementValues(
-            mem_block_start_addr, aStateElems
-        )
+        mem_block_start_addr = self.genVA(Size=mem_block_size, Align=alignment, Type="D")
+        self._initializeMemoryWithStateElementValues(mem_block_start_addr, aStateElems)
 
         load_gpr64_seq = LoadGPR64(self.genThread)
         load_gpr64_seq.load(aMemBlockPtrIndex, mem_block_start_addr)
@@ -141,9 +133,7 @@ class StateTransitionHandler(Sequence):
     #       block.
     #  @param aStateElems A list of StateElement objects with values that need
     #       to be placed into the memory block.
-    def _initializeMemoryWithStateElementValues(
-        self, aMemBlockStartAddr, aStateElems
-    ):
+    def _initializeMemoryWithStateElementValues(self, aMemBlockStartAddr, aStateElems):
         endianness = EEndianness(self.getPEstate("Endianness"))
         cur_addr = aMemBlockStartAddr
         for state_elem in aStateElems:

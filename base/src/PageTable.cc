@@ -106,7 +106,12 @@ namespace Force {
     }
 
     uint64 page_start = pageObj->Lower();
+    uint32 pte_index = GetPteIndex(page_start);
+    page_table_rec.descr_addr = TableBase() + (pte_index << pVmas->GetControlBlock()->PteShift());
+    page_table_rec.level = TableLevel();
     if (level_gap == 0) {
+      page_table_rec.descr_value = pageObj->Descriptor();
+      pageObj->DescriptorDetails(page_table_rec.descr_details);
       return nullptr;
     }
 
@@ -116,11 +121,8 @@ namespace Force {
       FAIL("next-level-table-not-found");
     }
 
-    uint32 pte_index = GetPteIndex(page_start);
-    page_table_rec.descr_addr = TableBase() + (pte_index << pVmas->GetControlBlock()->PteShift());
     page_table_rec.descr_value = pPte->Descriptor();
     pPte->DescriptorDetails(page_table_rec.descr_details);
-    page_table_rec.level = TableLevel();
 
     return pPte;
   }

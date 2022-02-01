@@ -33,14 +33,14 @@ class MainSequence(Sequence):
     VALID_DATA_TYPES = ["FP", "INT"]
     VALID_DATA_SIZES = [16, 32, 64]
     INSTRUCTIONS = {
-        "H": ["FMUL.H#Half-precision#RISCV", "FDIV.H#Half-precision#RISCV"],
+        "H": ["FMUL.H##RISCV", "FDIV.H##RISCV"],
         "S": [
-            "FMUL.S#Single-precision#RISCV",
-            "FDIV.S#Single-precision#RISCV",
+            "FMUL.S##RISCV",
+            "FDIV.S##RISCV",
         ],
         "D": [
-            "FMUL.D#Double-precision#RISCV",
-            "FDIV.D#Double-precision#RISCV",
+            "FMUL.D##RISCV",
+            "FDIV.D##RISCV",
         ],
     }
 
@@ -50,22 +50,15 @@ class MainSequence(Sequence):
         (data_size, data_size_valid) = self.getOption("data_size")
 
         if not prec_valid or prec not in self.VALID_PRECISIONS:
-            Log.warn(
-                "precision option invalid or missing, using single "
-                "precision (S) as default"
-            )
+            Log.warn("precision option invalid or missing, using single precision (S) as default")
             prec = "S"
 
         if not data_type_valid or data_type not in self.VALID_DATA_TYPES:
-            Log.warn(
-                "data type option invalid or missing, using FP as default"
-            )
+            Log.warn("data type option invalid or missing, using FP as default")
             data_type = "FP"
 
         if not data_size_valid or data_size not in self.VALID_DATA_SIZES:
-            Log.warn(
-                "data size option invalid or missing, using 32 as default"
-            )
+            Log.warn("data size option invalid or missing, using 32 as default")
             data_size = 32
 
         data_string = "(0x0)"
@@ -78,12 +71,8 @@ class MainSequence(Sequence):
             self.genInstruction(
                 instr,
                 {
-                    "rs1.Data": "{}{}{}".format(
-                        data_type, data_size, data_string
-                    ),
-                    "rs2.Data": "{}{}{}".format(
-                        data_type, data_size, data_string
-                    ),
+                    "rs1.Data": "{}{}{}".format(data_type, data_size, data_string),
+                    "rs2.Data": "{}{}{}".format(data_type, data_size, data_string),
                 },
             )
 

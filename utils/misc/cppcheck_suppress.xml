@@ -82,7 +82,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/GenSequenceAgent.cc</fileName>
-        <lineNumber>547</lineNumber>
+        <lineNumber>546</lineNumber>
     </suppress>
 
 <!-- GenVirtualMemoryAgent module -->
@@ -90,7 +90,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/GenVirtualMemoryAgent.cc</fileName>
-        <lineNumber>342</lineNumber>
+        <lineNumber>344</lineNumber>
     </suppress>
 
 <!-- Operand module -->
@@ -98,7 +98,7 @@
     <suppress>
         <id>knownConditionTrueFalse</id>
         <fileName>base/src/Operand.cc</fileName>
-        <lineNumber>424</lineNumber>
+        <lineNumber>423</lineNumber>
     </suppress>
 
 <!-- OperandConstraintRISCV module -->
@@ -159,7 +159,7 @@
     <suppress>
         <id>oppositeExpression</id>
         <fileName>base/src/UtilityFunctions.cc</fileName>
-        <lineNumber>604</lineNumber>
+        <lineNumber>576</lineNumber>
     </suppress>
 
 <!-- VmControlBlock module -->

@@ -55,17 +55,12 @@ class FastExceptionHandlersBaseRISCV(ReusableSequence):
             )
 
         self.mErrCode = handler_context.mErrCode
-        self.mScratchRegisters = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.ALL, 2
-        )
+        self.mScratchRegisters = handler_context.getScratchRegisterIndices(RegisterCallRole.ALL, 2)
         self.mPrivLevel = handler_context.mPrivLevel
         self.mAddrTable = handler_context.mAddrTable
 
         if self.mPrivLevel not in ("S", "M"):
-            self.error(
-                'INTERNAL ERROR: unknown privilege level: "%s'
-                % self.mPrivLevel
-            )
+            self.error('INTERNAL ERROR: unknown privilege level: "%s' % self.mPrivLevel)
 
         # call method to generate the code to process the exception
         self.processException()
@@ -83,4 +78,4 @@ class FastExceptionHandlersBaseRISCV(ReusableSequence):
 
     # generate the code to process the exception
     def processException(self):
-        NotImplementedError
+        raise NotImplementedError

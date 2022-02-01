@@ -63,8 +63,9 @@ int main(int argc, char* argv[]) {
                         my_config.VectorRegisterLength(), /* vector register length */
                         my_config.MaxVectorElementWidth(), /* maximum vector element width */
                         "./fpix_sim.log", /* simulator debug trace file */
-                        true,
-                        my_config.SimulatorConfigString()
+                        true, /* use trace file */
+                        my_config.SimulatorConfigString(), /* simulator configuration string */
+                        my_config.AutoInitMem() /* automatically initialize simulator memory on access */
                        );
 
   sim_api.InitializeIss(sim_dll_cfg, my_config.SimulatorSharedObjectFile(), "" /* no api trace file */);

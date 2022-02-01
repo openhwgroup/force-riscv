@@ -74,11 +74,7 @@ def unit_tests():
 
     except getopt.GetoptError as err:
         print("\nERROR: " + str(err) + "\n")
-        print(
-            'Please Run "'
-            + sys.argv[0]
-            + ' -h or --help" for usage information\n'
-        )
+        print('Please Run "' + sys.argv[0] + ' -h or --help" for usage information\n')
         sys.exit(1)
 
     clean_build = False
@@ -114,16 +110,12 @@ def unit_tests():
     force_path = os.path.abspath(force_path)
     (_, unit_tests_path) = verify_force_path(force_path)
 
-    run_unit_tests(
-        unit_tests_path, process_max, print_fails, nopicky, clean_build
-    )
+    run_unit_tests(unit_tests_path, process_max, print_fails, nopicky, clean_build)
 
     sys.exit(0)
 
 
-def run_unit_tests(
-    unit_tests_path, num_parallel_workers, print_fails, nopicky, clean_build
-):
+def run_unit_tests(unit_tests_path, num_parallel_workers, print_fails, nopicky, clean_build):
     verify_dir_writable(unit_tests_path)
 
     p = Pool(num_parallel_workers)
@@ -221,16 +213,14 @@ def run_one_unit_test(nopicky, clean_build, arg_tuple):
 def execute_command(cmd):
     # Measure the amount of time it took to run this test
     start_time = time.time()
-    process = subprocess.run(
-        shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-    )
+    process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    process.wait()
     end_time = time.time()
-    process_stdout = process.stdout.decode("utf-8")
+
+    process_stdout = process.stdout.read()
     ret_code = process.returncode
 
-    trace = ExecutionTrace(
-        process_stdout, ret_code, cmd, end_time - start_time
-    )
+    trace = ExecutionTrace(process_stdout.decode("utf-8"), ret_code, cmd, end_time - start_time)
     return trace
 
 

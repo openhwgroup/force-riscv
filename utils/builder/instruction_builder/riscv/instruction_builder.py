@@ -18,9 +18,19 @@
 import getopt
 import sys
 
-sys.path.insert(0, "../..")
-
 import instruction_adjustor
+from adjust_instruction_by_format import adjust_instruction_by_format
+from c_ext_adjust_instruction_by_format import (
+    c_ext_adjust_instruction_by_format,
+)
+from priv_adjust_instruction_by_format import (
+    priv_adjust_instruction_by_format,
+)
+from shared.instruction_file import InstructionFile
+from shared.instruction_file_parser import InstructionFileParser
+from v_ext_adjust_instruction_by_format import (
+    v_ext_adjust_instruction_by_format,
+)
 
 
 def usage():
@@ -58,20 +68,13 @@ license_string = """<!--
 """
 
 
-def process_instruction_file(
-    aInputFile, aOutputFile, aSupportedFile, aAdjustByFormatFunc
-):
-    from shared.instruction_file import InstructionFile
-    from shared.instruction_file_parser import InstructionFileParser
-
+def process_instruction_file(aInputFile, aOutputFile, aSupportedFile, aAdjustByFormatFunc):
     starter_file = aInputFile
     instr_file = InstructionFile()
     file_parser = InstructionFileParser(instr_file)
     file_parser.parse(starter_file)
 
-    instr_adjustor = instruction_adjustor.RiscV_InstructionAdjustor(
-        aAdjustByFormatFunc
-    )
+    instr_adjustor = instruction_adjustor.RiscV_InstructionAdjustor(aAdjustByFormatFunc)
     instr_file.adjust_instructions(instr_adjustor)
 
     out_file_name = aOutputFile
@@ -205,7 +208,4 @@ def build_instructions():
 
 # temp class/unit test for instruction parsing utility
 if __name__ == "__main__":
-    import force_path_resolver
-
-    force_path_resolver.add_force_relative_path("utils/builder")
     build_instructions()

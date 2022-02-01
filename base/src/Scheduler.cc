@@ -198,6 +198,16 @@ namespace Force {
     MemoryManager::Instance()->SubMemoryRange(bank, start, end);
   }
 
+  void Scheduler::AddArchitectureMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const vector<EMemoryAttributeType>& rMemAttributes)
+  {
+    MemoryManager::Instance()->AddArchitectureMemoryAttributes(threadId, bank, start, end, rMemAttributes);
+  }
+
+  void Scheduler::AddImplementationMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes)
+  {
+    MemoryManager::Instance()->AddImplementationMemoryAttributes(threadId, bank, start, end, rMemAttributes);
+  }
+
   void Scheduler::ConfigureMemoryBanks()
   {
     MemoryManager::Instance()->ConfigureMemoryBanks();

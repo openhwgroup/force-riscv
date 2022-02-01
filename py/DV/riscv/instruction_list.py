@@ -16,8 +16,7 @@
 import warnings
 
 warnings.warn(
-    "DV.instruction_list is deprecated; please use "
-    "DV.riscv.trees.instruction_tree",
+    "DV.instruction_list is deprecated; please use DV.riscv.trees.instruction_tree",
     DeprecationWarning,
 )
 

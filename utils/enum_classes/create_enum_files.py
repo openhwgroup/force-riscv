@@ -83,9 +83,7 @@ class _CppHeaderGenerator:
         self._script_path = script_path
         self._file_name = file_name
         self._header_template = _TemplateLoader.load_template("cpp_header.txt")
-        self._declaration_template = (
-            _TemplateLoader.get_enum_declaration_template()
-        )
+        self._declaration_template = _TemplateLoader.get_enum_declaration_template()
         self._indent = " " * 2
 
     def generate(self, enum_specs):
@@ -113,9 +111,7 @@ class _CppHeaderGenerator:
             "value_settings": value_settings,
         }
 
-        return self._declaration_template.substitute(
-            declaration_template_mapping
-        )
+        return self._declaration_template.substitute(declaration_template_mapping)
 
     def _generate_value_settings(self, enum_values):
         value_settings = ""
@@ -130,9 +126,7 @@ class _CppSourceGenerator:
         self._script_path = script_path
         self._file_name = file_name
         self._source_template = _TemplateLoader.load_template("cpp_source.txt")
-        self._definition_template = (
-            _TemplateLoader.get_enum_definition_template()
-        )
+        self._definition_template = _TemplateLoader.get_enum_definition_template()
         self._indent = " " * 2
 
     def generate(self, enum_specs):
@@ -168,41 +162,33 @@ class _CppSourceGenerator:
             "default_string_value": enum_spec.values[0][0],
         }
 
-        return self._definition_template.substitute(
-            definition_template_mapping
-        )
+        return self._definition_template.substitute(definition_template_mapping)
 
     # Combine generation of string_to_<enum_type> and
     # try_string_to_<enum_type> functions into a single method to avoid the
     # cost of having to generate the nested hash table twice.
     def _generate_to_enum_function_bodies(self, enum_spec):
-        nested_hash_table = enum_string_hash.find_limited_char_nested_hash(
-            enum_spec.values
-        )
+        nested_hash_table = enum_string_hash.find_limited_char_nested_hash(enum_spec.values)
 
         to_enum_function_generator = _CppStringToEnumFunctionGenerator(
             enum_spec, nested_hash_table
         )
-        to_enum_function_body = (
-            to_enum_function_generator.generate_function_body()
-        )
+        to_enum_function_body = to_enum_function_generator.generate_function_body()
 
         try_to_enum_function_generator = _CppTryStringToEnumFunctionGenerator(
             enum_spec, nested_hash_table
         )
-        try_to_enum_function_body = (
-            try_to_enum_function_generator.generate_function_body()
-        )
+        try_to_enum_function_body = try_to_enum_function_generator.generate_function_body()
 
         return (to_enum_function_body, try_to_enum_function_body)
 
     def _generate_to_string_cases(self, enum_spec):
         to_string_cases = ""
         for enum_value in enum_spec.values:
-            to_string_cases += (
-                self._indent * 2
-                + 'case E%s::%s: return "%s";\n'
-                % (enum_spec.class_name, enum_value[0], enum_value[0])
+            to_string_cases += self._indent * 2 + 'case E%s::%s: return "%s";\n' % (
+                enum_spec.class_name,
+                enum_value[0],
+                enum_value[0],
             )
 
         return to_string_cases[:-1]
@@ -212,12 +198,8 @@ class _CppUnitTestGenerator:
     def __init__(self, script_path, file_name):
         self._script_path = script_path
         self._file_name = file_name
-        self._unit_test_template = _TemplateLoader.load_template(
-            "cpp_unit_test.txt"
-        )
-        self._unit_test_case_template = (
-            _TemplateLoader.get_unit_test_case_template()
-        )
+        self._unit_test_template = _TemplateLoader.load_template("cpp_unit_test.txt")
+        self._unit_test_case_template = _TemplateLoader.get_unit_test_case_template()
         self._indent = " " * 2
 
     def generate(self, enum_specs):
@@ -240,9 +222,7 @@ class _CppUnitTestGenerator:
         to_enum_tests = self._generate_to_enum_tests(enum_spec)
         to_enum_fail_tests = self._generate_to_enum_fail_tests(enum_spec)
         try_to_enum_tests = self._generate_try_to_enum_tests(enum_spec)
-        try_to_enum_fail_tests = self._generate_try_to_enum_fail_tests(
-            enum_spec
-        )
+        try_to_enum_fail_tests = self._generate_try_to_enum_fail_tests(enum_spec)
 
         unit_test_case_template_mapping = {
             "class_name": enum_spec.class_name,
@@ -253,22 +233,16 @@ class _CppUnitTestGenerator:
             "try_to_enum_fail_tests": try_to_enum_fail_tests,
         }
 
-        return self._unit_test_case_template.substitute(
-            unit_test_case_template_mapping
-        )
+        return self._unit_test_case_template.substitute(unit_test_case_template_mapping)
 
     def _generate_to_string_tests(self, enum_spec):
         to_string_tests = ""
         for enum_value in enum_spec.values:
-            to_string_tests += (
-                self._indent * 3
-                + 'EXPECT(E%s_to_string(E%s::%s) == "%s");\n'
-                % (
-                    enum_spec.class_name,
-                    enum_spec.class_name,
-                    enum_value[0],
-                    enum_value[0],
-                )
+            to_string_tests += self._indent * 3 + 'EXPECT(E%s_to_string(E%s::%s) == "%s");\n' % (
+                enum_spec.class_name,
+                enum_spec.class_name,
+                enum_value[0],
+                enum_value[0],
             )
 
         return to_string_tests[:-1]
@@ -276,23 +250,17 @@ class _CppUnitTestGenerator:
     def _generate_to_enum_tests(self, enum_spec):
         to_enum_tests = ""
         for enum_value in enum_spec.values:
-            to_enum_tests += (
-                self._indent * 3
-                + 'EXPECT(string_to_E%s("%s") == E%s::%s);\n'
-                % (
-                    enum_spec.class_name,
-                    enum_value[0],
-                    enum_spec.class_name,
-                    enum_value[0],
-                )
+            to_enum_tests += self._indent * 3 + 'EXPECT(string_to_E%s("%s") == E%s::%s);\n' % (
+                enum_spec.class_name,
+                enum_value[0],
+                enum_spec.class_name,
+                enum_value[0],
             )
 
         return to_enum_tests[:-1]
 
     def _generate_to_enum_fail_tests(self, enum_spec):
-        fail_test_string = self._generate_fail_test_string(
-            enum_spec.values[0][0]
-        )
+        fail_test_string = self._generate_fail_test_string(enum_spec.values[0][0])
         to_enum_fail_tests = (
             self._indent * 3
             + 'EXPECT_THROWS_AS(string_to_E%s("%s"), EnumTypeError);'
@@ -320,13 +288,10 @@ class _CppUnitTestGenerator:
         return try_to_enum_tests[:-1]
 
     def _generate_try_to_enum_fail_tests(self, enum_spec):
-        fail_test_string = self._generate_fail_test_string(
-            enum_spec.values[0][0]
-        )
-        try_to_enum_fail_tests = (
-            self._indent * 3
-            + 'try_string_to_E%s("%s", okay);\n'
-            % (enum_spec.class_name, fail_test_string)
+        fail_test_string = self._generate_fail_test_string(enum_spec.values[0][0])
+        try_to_enum_fail_tests = self._indent * 3 + 'try_string_to_E%s("%s", okay);\n' % (
+            enum_spec.class_name,
+            fail_test_string,
         )
 
         try_to_enum_fail_tests += self._indent * 3 + "EXPECT(!okay);"
@@ -382,14 +347,11 @@ class _CppStringToEnumFunctionGeneratorBase(abc.ABC):
 
         for table_entry in nested_hash_table.entries:
             to_enum_function_body += (
-                self._indent * (2 + context.indent_level)
-                + "case %d:\n" % table_entry.key
+                self._indent * (2 + context.indent_level) + "case %d:\n" % table_entry.key
             )
 
             if table_entry.has_multiple_values():
-                to_enum_function_body += (
-                    self._indent * (3 + context.indent_level) + "{\n"
-                )
+                to_enum_function_body += self._indent * (3 + context.indent_level) + "{\n"
                 nested_context = _CppFunctionGenerationContext(
                     context.indent_level + 2, "_%d" % table_entry.key
                 )
@@ -398,9 +360,7 @@ class _CppStringToEnumFunctionGeneratorBase(abc.ABC):
                     table_entry.inner_hash_table, nested_context
                 )
 
-                to_enum_function_body += (
-                    self._indent * (3 + context.indent_level) + "}\n"
-                )
+                to_enum_function_body += self._indent * (3 + context.indent_level) + "}\n"
             else:
                 # Validate the input string inside the case statement to
                 # guard against hash collisions for strings that don't match
@@ -411,38 +371,26 @@ class _CppStringToEnumFunctionGeneratorBase(abc.ABC):
                     context,
                 )
 
-        to_enum_function_body += (
-            self._indent * (2 + context.indent_level) + "default:\n"
-        )
+        to_enum_function_body += self._indent * (2 + context.indent_level) + "default:\n"
 
         for error_statement in self.error_statements:
-            to_enum_function_body += (
-                self._indent * (3 + context.indent_level) + error_statement
-            )
+            to_enum_function_body += self._indent * (3 + context.indent_level) + error_statement
 
-        to_enum_function_body += (
-            self._indent * (2 + context.indent_level) + "}\n"
-        )
+        to_enum_function_body += self._indent * (2 + context.indent_level) + "}\n"
 
         return to_enum_function_body
 
     def _generate_hash_computation(self, char_indexes, context):
-        hash_computation = self._generate_string_size_expression(
-            char_indexes, context
-        )
+        hash_computation = self._generate_string_size_expression(char_indexes, context)
 
         hash_computation += (
             self._indent * (2 + context.indent_level)
             + "char hash_value%s = " % context.var_name_suffix
         )
-        hash_computation += self._generate_char_retrieval_expression(
-            char_indexes[0], context
-        )
+        hash_computation += self._generate_char_retrieval_expression(char_indexes[0], context)
 
         for char_index in char_indexes[1:]:
-            expression = self._generate_char_retrieval_expression(
-                char_index, context
-            )
+            expression = self._generate_char_retrieval_expression(char_index, context)
             hash_computation += " ^ " + expression
 
         hash_computation += ";\n\n"
@@ -467,15 +415,12 @@ class _CppStringToEnumFunctionGeneratorBase(abc.ABC):
             # Use the modulo operator in case the character index is larger
             # than the string size, but not otherwise, as it degrades
             # performance.
-            char_retrieval_expression = (
-                "in_str.at(%d < size%s ? %d : %d %% size%s)"
-                % (
-                    char_index,
-                    context.var_name_suffix,
-                    char_index,
-                    char_index,
-                    context.var_name_suffix,
-                )
+            char_retrieval_expression = "in_str.at(%d < size%s ? %d : %d %% size%s)" % (
+                char_index,
+                context.var_name_suffix,
+                char_index,
+                char_index,
+                context.var_name_suffix,
             )
 
         return char_retrieval_expression
@@ -485,9 +430,7 @@ class _CppStringToEnumFunctionGenerator(_CppStringToEnumFunctionGeneratorBase):
     def __init__(self, enum_spec, nested_hash_table):
         super().__init__(enum_spec)
         self._nested_hash_table = nested_hash_table
-        self._error_statements = [
-            "unknown_enum_name(enum_type_name, in_str);\n"
-        ]
+        self._error_statements = ["unknown_enum_name(enum_type_name, in_str);\n"]
 
     @property
     def error_statements(self):
@@ -505,23 +448,21 @@ class _CppStringToEnumFunctionGenerator(_CppStringToEnumFunctionGeneratorBase):
             3 + context.indent_level
         ) + 'validate(in_str, "%s", enum_type_name);\n' % (string_value)
 
-        validation += self.indent * (
-            3 + context.indent_level
-        ) + "return E%s::%s;\n" % (class_name, string_value)
+        validation += self.indent * (3 + context.indent_level) + "return E%s::%s;\n" % (
+            class_name,
+            string_value,
+        )
 
         return validation
 
 
-class _CppTryStringToEnumFunctionGenerator(
-    _CppStringToEnumFunctionGeneratorBase
-):
+class _CppTryStringToEnumFunctionGenerator(_CppStringToEnumFunctionGeneratorBase):
     def __init__(self, enum_spec, nested_hash_table):
         super().__init__(enum_spec)
         self._nested_hash_table = nested_hash_table
         self._error_statements = [
             "okay = false;\n",
-            "return E%s::%s;\n"
-            % (enum_spec.class_name, enum_spec.values[0][0]),
+            "return E%s::%s;\n" % (enum_spec.class_name, enum_spec.values[0][0]),
         ]
 
     @property
@@ -539,12 +480,12 @@ class _CppTryStringToEnumFunctionGenerator(
 
     def generate_validation(self, class_name, string_value, context):
         validation = (
-            self.indent * (3 + context.indent_level)
-            + 'okay = (in_str == "%s");\n' % string_value
+            self.indent * (3 + context.indent_level) + 'okay = (in_str == "%s");\n' % string_value
         )
-        validation += self.indent * (
-            3 + context.indent_level
-        ) + "return E%s::%s;\n" % (class_name, string_value)
+        validation += self.indent * (3 + context.indent_level) + "return E%s::%s;\n" % (
+            class_name,
+            string_value,
+        )
         return validation
 
 
@@ -552,9 +493,7 @@ class _TemplateLoader:
     @classmethod
     def load_template(cls, template_file_name):
         template_dir = "templates"
-        with open(
-            os.path.join(template_dir, template_file_name)
-        ) as template_file:
+        with open(os.path.join(template_dir, template_file_name)) as template_file:
             template_file_contents = template_file.read()
 
         return string.Template(template_file_contents)
@@ -604,17 +543,11 @@ def _generate_enum_file(enum_file_spec):
     script_path = os.path.join("utils", "enum_classes", "create_enum_files.py")
     enum_specs = _load_enum_specs(enum_file_spec.input_file_name)
 
-    cpp_header_generator = _CppHeaderGenerator(
-        script_path, enum_file_spec.output_file_name
-    )
+    cpp_header_generator = _CppHeaderGenerator(script_path, enum_file_spec.output_file_name)
     cpp_header_contents = cpp_header_generator.generate(enum_specs)
-    cpp_source_generator = _CppSourceGenerator(
-        script_path, enum_file_spec.output_file_name
-    )
+    cpp_source_generator = _CppSourceGenerator(script_path, enum_file_spec.output_file_name)
     cpp_source_contents = cpp_source_generator.generate(enum_specs)
-    cpp_unit_test_generator = _CppUnitTestGenerator(
-        script_path, enum_file_spec.output_file_name
-    )
+    cpp_unit_test_generator = _CppUnitTestGenerator(script_path, enum_file_spec.output_file_name)
     cpp_unit_test_contents = cpp_unit_test_generator.generate(enum_specs)
 
     cpp_header_path = os.path.join(

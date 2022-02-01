@@ -18,7 +18,7 @@
 # This file defines the register and its associated register and bit fields
 # and also handles reading from and writing to XML files.
 
-import defusedxml.defusedxml.ElementTree as ET
+import defusedxml_local.defusedxml.ElementTree as ET
 
 
 # A bit field has a size (# of bits) and a shift (# of bits to shift the
@@ -59,9 +59,7 @@ class FieldValue:
 
     # Prints value and description to stdout
     def print(self):
-        print(
-            "\t  fieldValue:", self.mValue, "description:", self.mDescription
-        )
+        print("\t  fieldValue:", self.mValue, "description:", self.mDescription)
 
     # Returns value
     def value(self):
@@ -124,9 +122,7 @@ class RegisterField:
             raise ValueError("Register definition missing field name")
         if msb is None or lsb is None:
             self.print()
-            raise ValueError(
-                "Did not parse register field '%s' correctly" % self.mName
-            )
+            raise ValueError("Did not parse register field '%s' correctly" % self.mName)
 
         self.addBitField(msb, lsb)
 
@@ -177,10 +173,10 @@ class RegisterField:
         return size
 
     def toXmlString(self, aIndent):
-        xml_str = (
-            aIndent + '<register_field name="%s" physical_register="%s" '
-            'size="%d">\n'
-            % (self.name(), self.physicalRegister(), self.size())
+        xml_str = aIndent + '<register_field name="%s" physical_register="%s" ' 'size="%d">\n' % (
+            self.name(),
+            self.physicalRegister(),
+            self.size(),
         )
 
         # Add bit field information here.
@@ -255,10 +251,11 @@ class PhysicalRegister:
 
     # Write out the PhysicalRegister as a XML file segment.
     def toXmlString(self, aIndent):
-        xml_str = (
-            aIndent
-            + '<physical_register name="%s" index="%d" size="%d" type="%s"'
-            % (self.mName, self.mIndex, self.mSize, self.mPhysicalType)
+        xml_str = aIndent + '<physical_register name="%s" index="%d" size="%d" type="%s"' % (
+            self.mName,
+            self.mIndex,
+            self.mSize,
+            self.mPhysicalType,
         )
 
         if self.mPhysicalClass is not None:
@@ -413,8 +410,7 @@ class Register:
             return self.mRegisterFields[aRegisterFieldName]
         else:
             raise KeyError(
-                "Register.getRegisterField():Register field '%s' not found"
-                % aRegisterFieldName
+                "Register.getRegisterField():Register field '%s' not found" % aRegisterFieldName
             )
 
     # Add a register field in order, record the field name in the ordering list
@@ -427,9 +423,7 @@ class Register:
     # field (or the existing register field if the name already exists)
     def addRegisterField(self, aRegisterFieldName):
         if aRegisterFieldName not in self.mRegisterFields:
-            self.mRegisterFields[aRegisterFieldName] = RegisterField(
-                aRegisterFieldName
-            )
+            self.mRegisterFields[aRegisterFieldName] = RegisterField(aRegisterFieldName)
         return self.mRegisterFields[aRegisterFieldName]
 
     # Deletes a register field according to the provided name or raises an
@@ -445,10 +439,12 @@ class Register:
 
     # Return register structural information as an XML segment string.
     def toXmlString(self, aIndent):
-        xml_str = (
-            aIndent + '<register name="%s" index="%d" size="%d" type="%s" '
-            'boot="0x%x"'
-            % (self.mName, self.mIndex, self.mLength, self.mType, self.mBoot)
+        xml_str = aIndent + '<register name="%s" index="%d" size="%d" type="%s" ' 'boot="0x%x"' % (
+            self.mName,
+            self.mIndex,
+            self.mLength,
+            self.mType,
+            self.mBoot,
         )
 
         if self.mClass is not None:
@@ -495,10 +491,7 @@ class RegisterFile:
             elif key is "field_choices":
                 self.mFieldChoicesTree = ET.parse(aXmlFile[key])
             else:
-                print(
-                    "Unable to initiate RegisterFile with XML file type: '%s'"
-                    % key
-                )
+                print("Unable to initiate RegisterFile with XML file type: '%s'" % key)
 
     # Adds a register to registers dictionary and to implementation dictionary
     # if implementation is defined
@@ -518,10 +511,7 @@ class RegisterFile:
         if aRegisterName in self.mRegisters:
             return self.mRegisters[aRegisterName]
         else:
-            raise KeyError(
-                "RegisterFile.getRegister(): Register '%s' not found"
-                % aRegisterName
-            )
+            raise KeyError("RegisterFile.getRegister(): Register '%s' not found" % aRegisterName)
 
     # Deletes a register (and associated register in the implementation
     # dictionary) according to the provided name or raises an exception if the
@@ -533,8 +523,7 @@ class RegisterFile:
             del self.mRegisters[aRegisterName]
         else:
             raise KeyError(
-                "RegisterFile.deleteRegister(): Register '%s' not found"
-                % aRegisterName
+                "RegisterFile.deleteRegister(): Register '%s' not found" % aRegisterName
             )
 
     # Return a XML segment string containing structural information for all

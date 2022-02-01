@@ -27,8 +27,7 @@ class MainSequence(Sequence):
         thread_groups = self.queryThreadGroup()
         if len(thread_groups) != 1:
             self.error(
-                "Unexpected thread group count; Expected=%d, Actual=%d"
-                % (1, len(thread_groups))
+                "Unexpected thread group count; Expected=%d, Actual=%d" % (1, len(thread_groups))
             )
 
         total_thread_count = self.getThreadNumber()
@@ -41,16 +40,11 @@ class MainSequence(Sequence):
 
         thread_groups = self.queryThreadGroup(1)
         if len(thread_groups) != 0:
-            self.error(
-                "Unexpectedly retrieved nonexistent thread group %d" % 1
-            )
+            self.error("Unexpectedly retrieved nonexistent thread group %d" % 1)
 
         group_id = self.getThreadGroupId()
         if group_id != 0:
-            self.error(
-                "Unexpected thread group ID; Expected=%d, Actual=%d"
-                % (0, group_id)
-            )
+            self.error("Unexpected thread group ID; Expected=%d, Actual=%d" % (0, group_id))
 
         # The thread count should not be a valid thread ID; e.g. if there are
         # 16 threads, the largest valid thread ID is 15
@@ -64,8 +58,7 @@ class MainSequence(Sequence):
         free_threads = self.getFreeThreads()
         if len(free_threads) != 0:
             self.error(
-                "Unexpected free thread count; Expected=%d, Actual=%d"
-                % (0, len(free_threads))
+                "Unexpected free thread count; Expected=%d, Actual=%d" % (0, len(free_threads))
             )
 
 

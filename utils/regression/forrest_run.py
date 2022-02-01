@@ -28,8 +28,6 @@
 
 import os
 import signal
-
-# Make third-party modules available for import
 import sys
 import traceback
 
@@ -43,8 +41,6 @@ from common.path_utils import PathUtils
 from common.sys_utils import SysUtils
 from force_init import the_force_root
 from forrest_init import CmdLine, Defaults, CommandLineParameters
-
-sys.path.append(PathUtils.real_path("../../3rd_party/py"))
 
 
 class ForrestRun(ModuleRun):
@@ -73,9 +69,7 @@ class ForrestRun(ModuleRun):
         except TypeError:
             # catches error that is thrown when trying to iterate through a
             # None type variable (if workflow argument does not exist)
-            self.m_app_setup = ApplicationsSetup(
-                CommandLineParameters, sys.argv
-            )
+            self.m_app_setup = ApplicationsSetup(CommandLineParameters, sys.argv)
             self.m_app_info = self.m_app_setup.getApplicationsInfo()
         except SystemExit as aSysExit:
             sys.exit(int(str(aSysExit)))
@@ -88,13 +82,10 @@ class ForrestRun(ModuleRun):
             sys.exit(43)
 
     def load(self):
-        my_frun_path = self.option_def(
-            CmdLine.Switches[CmdLine.control_name], None
-        )
+        my_frun_path = self.option_def(CmdLine.Switches[CmdLine.control_name], None)
         if my_frun_path is None:
             raise Exception(
-                "F-Run Control File Not Found on the Forrest Run Command "
-                "Line: Given Path: %s",
+                "F-Run Control File Not Found on the Forrest Run Command Line: Given Path: %s",
                 str((my_frun_path)),
             )
 
@@ -147,9 +138,7 @@ class ForrestRun(ModuleRun):
 
         # change into the directory to generate and simulate
         if not PathUtils.chdir(my_frun_dir):
-            raise Exception(
-                "F-Run Directory[%s] Not Found" % (str(my_frun_dir))
-            )
+            raise Exception("F-Run Directory[%s] Not Found" % (str(my_frun_dir)))
 
         self.frun_name = my_frun_name
         self.frun_dir = my_frun_dir
@@ -163,15 +152,10 @@ class ForrestRun(ModuleRun):
             if not my_lib_path:
                 SysUtils.envar_set("LD_LIBRARY_PATH", my_gcc_path)
             elif my_lib_path.find(my_gcc_path) < 0:
-                SysUtils.envar_set(
-                    "LD_LIBRARY_PATH", "%s:%s" % (my_gcc_path, my_lib_path)
-                )
+                SysUtils.envar_set("LD_LIBRARY_PATH", "%s:%s" % (my_gcc_path, my_lib_path))
 
             Msg.dbg("LD_LIB_PATH: %s " % (str(my_lib_path)))
-            Msg.dbg(
-                '"LD_LIBRARY_PATH" = %s'
-                % (str(SysUtils.envar("LD_LIBRARY_PATH", None)))
-            )
+            Msg.dbg('"LD_LIBRARY_PATH" = %s' % (str(SysUtils.envar("LD_LIBRARY_PATH", None))))
 
         else:
             Msg.dbg("System is Red Zone or Yellow Zone")
@@ -246,9 +230,7 @@ def main():
 
         Msg.dbg("Directory set to %s" % (PathUtils.current_dir()))
         if not PathUtils.chdir(my_module.frun_dir, False):
-            Msg.dbg(
-                "Directory Unchanged, using the current directory for output"
-            )
+            Msg.dbg("Directory Unchanged, using the current directory for output")
 
         my_module.run()
         Msg.dbg("Test Completed ....\n")
@@ -256,21 +238,14 @@ def main():
         # sys.exit( 0 )
 
     except Exception as ex:
-        from force_init import force_usage
-
-        Msg.err(
-            "An Unhandled Error has Occurred during run of " + str(sys.argv[0])
-        )
+        Msg.err("An Unhandled Error has Occurred during run of " + str(sys.argv[0]))
         traceback.print_exc(file=sys.stdout)
         Msg.error_trace(str(ex))
         my_module.m_app_info.mCmdLineOpts.print_help()
         sys.exit(41)
 
     except BaseException:
-        print(
-            "[ERROR] - An Unhandled Error has Occurred during run of "
-            + str(sys.argv[0])
-        )
+        print("[ERROR] - An Unhandled Error has Occurred during run of " + str(sys.argv[0]))
         traceback.print_exc(file=sys.stdout)
         sys.exit(42)
 

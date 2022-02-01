@@ -1,7 +1,7 @@
 #
 # Copyright (C) [2020] Futurewei Technologies, Inc.
 #
-# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the License);
+# FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
@@ -13,16 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-3c3
-< #include "sim.h"
----
-> #include "simlib.h"
 5,6d4
 < #include "dts.h"
 < #include "remote_bitbang.h"
-10d7
+11d8
 < #include <iostream>
-18a16,39
+19a17,40
 > #include "disasm.h"
 > 
 > // for elf loading
@@ -47,38 +43,49 @@
 > //
 > void update_generator_register(uint32_t cpuid, const char* registerName, uint64_t value, uint64_t mask, const char* accessType);  //!< update generator register information when step an instruction
 > }
-29,41c50,52
+30,42c51
 < sim_t::sim_t(const char* isa, const char* priv, const char* varch,
 <              size_t nprocs, bool halted, bool real_time_clint,
-<              reg_t initrd_start, reg_t initrd_end,
+<              reg_t initrd_start, reg_t initrd_end, const char* bootargs,
 <              reg_t start_pc, std::vector<std::pair<reg_t, mem_t*>> mems,
 <              std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices,
 <              const std::vector<std::string>& args,
 <              std::vector<int> const hartids,
 <              const debug_module_config_t &dm_config,
 <              const char *log_path,
-<              bool dtb_enabled, const char *dtb_file)
+<              bool dtb_enabled, const char *dtb_file,
+< #ifdef HAVE_BOOST_ASIO
+<              boost::asio::io_service *io_service_ptr, boost::asio::ip::tcp::acceptor *acceptor_ptr, // option -s
+< #endif
+---
+> simlib_t::simlib_t(const char* isa, const char* priv, const char* varch, size_t nprocs, bool halted, const char* bootargs, reg_t start_pc, std::vector<int> const hartids, bool auto_init_mem,
+44,49c53
 <   : htif_t(args),
 <     mems(mems),
 <     plugin_devices(plugin_devices),
----
-> simlib_t::simlib_t(const char* isa, const char* priv, const char* varch, size_t nprocs, bool halted, reg_t start_pc, std::vector<int> const hartids)
->   : entry(DRAM_BASE),
->     _ForceSparseMemoryModel(Force::EMemBankType::Default),
-43,44d53
+<     procs(std::max(nprocs, size_t(1))),
 <     initrd_start(initrd_start),
 <     initrd_end(initrd_end),
-46,48d54
+---
+>   : procs(std::max(nprocs, size_t(1))),
+52,54d55
 <     dtb_file(dtb_file ? dtb_file : ""),
 <     dtb_enabled(dtb_enabled),
 <     log_file(log_path),
-53,55c59
+56,59d56
+< #ifdef HAVE_BOOST_ASIO
+<     io_service_ptr(io_service_ptr), // socket interface
+<     acceptor_ptr(acceptor_ptr),
+< #endif
+65,67c62,64
 <     log(false),
 <     remote_bitbang(NULL),
 <     debug_module(this, dm_config)
 ---
->     dtb_enabled(true)
-59,66d62
+>     dtb_enabled(true),
+>     _ForceSparseMemoryModel(Force::EMemBankType::Default, auto_init_mem),
+>     entry(DRAM_BASE)
+73,80d69
 <   for (auto& x : mems)
 <     bus.add_device(x.first, x.second);
 < 
@@ -87,49 +94,142 @@
 < 
 <   debug_module.add_device(&bus);
 < 
-79,80c75
+93,106c82
 <     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted,
-<                                log_file.get());
----
->     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted);
-83,100c78,86
+<                                log_file.get(), sout_);
+<   }
+< 
 <   make_dtb();
 < 
+<   void *fdt = (void *)dtb.c_str();
+<   //handle clic
 <   clint.reset(new clint_t(procs, CPU_HZ / INSNS_PER_RTC_TICK, real_time_clint));
 <   reg_t clint_base;
-<   if (fdt_parse_clint((void *)dtb.c_str(), &clint_base, "riscv,clint0")) {
+<   if (fdt_parse_clint(fdt, &clint_base, "riscv,clint0")) {
 <     bus.add_device(CLINT_BASE, clint.get());
 <   } else {
 <     bus.add_device(clint_base, clint.get());
+---
+>     procs[i] = new processor_t(isa, priv, varch, this, hart_id, halted, sout_);
+108a85
+>   // these inputs will have to be hard coded until dtb and fdt are added as dependencies.
+110,114c87,91
+<   int cpu_offset = 0, rc;
+<   size_t cpu_idx = 0;
+<   cpu_offset = fdt_get_offset(fdt, "/cpus");
+<   if (cpu_offset < 0)
+<     return;
+---
+>   //int cpu_offset = 0, rc;
+>   //size_t cpu_idx = 0;
+>   //cpu_offset = fdt_get_offset(fdt, "/cpus");
+>   //if (cpu_offset < 0)
+>   //  return;
+116,117c93,94
+<   for (cpu_offset = fdt_get_first_subnode(fdt, cpu_offset); cpu_offset >= 0;
+<        cpu_offset = fdt_get_next_subnode(fdt, cpu_offset)) {
+---
+>   //for (cpu_offset = fdt_get_first_subnode(fdt, cpu_offset); cpu_offset >= 0;
+>   //     cpu_offset = fdt_get_next_subnode(fdt, cpu_offset)) {
+119,120c96,97
+<     if (cpu_idx >= nprocs)
+<       break;
+---
+>   //  if (cpu_idx >= nprocs)
+>   //    break;
+123,130c100,107
+<     reg_t pmp_num = 0, pmp_granularity = 0;
+<     if (fdt_parse_pmp_num(fdt, cpu_offset, &pmp_num) == 0) {
+<       procs[cpu_idx]->set_pmp_num(pmp_num);
+<     }
+< 
+<     if (fdt_parse_pmp_alignment(fdt, cpu_offset, &pmp_granularity) == 0) {
+<       procs[cpu_idx]->set_pmp_granularity(pmp_granularity);
+<     }
+---
+>   //  reg_t pmp_num = 0, pmp_granularity = 0;
+>   //  if (fdt_parse_pmp_num(fdt, cpu_offset, &pmp_num) == 0) {
+>   //    procs[cpu_idx]->set_pmp_num(pmp_num);
+>   //  }
+> 
+>   //  if (fdt_parse_pmp_alignment(fdt, cpu_offset, &pmp_granularity) == 0) {
+>   //    procs[cpu_idx]->set_pmp_granularity(pmp_granularity);
+>   //  }
+133,143c110,120
+<     char mmu_type[256] = "";
+<     rc = fdt_parse_mmu_type(fdt, cpu_offset, mmu_type);
+<     if (rc == 0) {
+<       procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SBARE);
+<       if (strncmp(mmu_type, "riscv,sv32", strlen("riscv,sv32")) == 0) {
+<         procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SV32);
+<       } else if (strncmp(mmu_type, "riscv,sv39", strlen("riscv,sv39")) == 0) {
+<         procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SV39);
+<       } else if (strncmp(mmu_type, "riscv,sv48", strlen("riscv,sv48")) == 0) {
+<         procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SV48);
+<       } else if (strncmp(mmu_type, "riscv,sbare", strlen("riscv,sbare")) == 0) {
+---
+>   //  char mmu_type[256] = "";
+>   //  rc = fdt_parse_mmu_type(fdt, cpu_offset, mmu_type);
+>   //  if (rc == 0) {
+>   //    procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SBARE);
+>   //    if (strncmp(mmu_type, "riscv,sv32", strlen("riscv,sv32")) == 0) {
+>   //      procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SV32);
+>   //    } else if (strncmp(mmu_type, "riscv,sv39", strlen("riscv,sv39")) == 0) {
+>   //      procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SV39);
+>   //    } else if (strncmp(mmu_type, "riscv,sv48", strlen("riscv,sv48")) == 0) {
+>   //      procs[cpu_idx]->set_mmu_capability(IMPL_MMU_SV48);
+>   //    } else if (strncmp(mmu_type, "riscv,sbare", strlen("riscv,sbare")) == 0) {
+145,163c122,140
+<       } else {
+<         std::cerr << "core ("
+<                   << hartids.size()
+<                   << ") doesn't have valid 'mmu-type'"
+<                   << mmu_type << ").\n";
+<         exit(1);
+<       }
+<     }
+< 
+<     cpu_idx++;
 <   }
 < 
-<   for (size_t i = 0; i < nprocs; i++) {
-<     reg_t pmp_num = 0, pmp_granularity = 0;
-<     fdt_parse_pmp_num((void *)dtb.c_str(), &pmp_num, "riscv");
-<     fdt_parse_pmp_alignment((void *)dtb.c_str(), &pmp_granularity, "riscv");
-< 
-<     procs[i]->set_pmp_num(pmp_num);
-<     procs[i]->set_pmp_granularity(pmp_granularity);
+<   if (cpu_idx != nprocs) {
+<       std::cerr << "core number in dts ("
+<                 <<  cpu_idx
+<                 << ") doesn't match it in command line ("
+<                 << nprocs << ").\n";
+<       exit(1);
 <   }
 ---
->   //for (size_t i = 0; i < nprocs; i++) {
->   //  reg_t pmp_num = 0, pmp_granularity = 0;
->   //  //fdt_parse_pmp_num((void *)dtb.c_str(), &pmp_num, "riscv");
->   //  //fdt_parse_pmp_alignment((void *)dtb.c_str(), &pmp_granularity, "riscv");
+>   //    } else {
+>   //      std::cerr << "core ("
+>   //                << hartids.size()
+>   //                << ") doesn't have valid 'mmu-type'"
+>   //                << mmu_type << ").\n";
+>   //      exit(1);
+>   //    }
+>   //  }
 > 
->   //  //these inputs will have to be hard coded until dtb and fdt are added as dependencies.
->   //  procs[i]->set_pmp_num(pmp_num);
->   //  procs[i]->set_pmp_granularity(pmp_granularity);
+>   //  cpu_idx++;
 >   //}
-103c89
+> 
+>   //if (cpu_idx != nprocs) {
+>   //    std::cerr << "core number in dts ("
+>   //              <<  cpu_idx
+>   //              << ") doesn't match it in command line ("
+>   //              << nprocs << ").\n";
+>   //    exit(1);
+>   //}
+166c143
 < sim_t::~sim_t()
 ---
 > simlib_t::~simlib_t()
-110c96,112
+173c150
 < void sim_thread_main(void* arg)
 ---
 > int simlib_t::step_simulator(int target_id, int num_steps, int stx_failed)
-> {
+175c152,168
+<   ((sim_t*)arg)->main();
+---
 >   processor_t* proc_ptr = get_core(target_id);
 >   if (proc_ptr == nullptr)
 >     return 1;
@@ -145,26 +245,24 @@
 > }
 > 
 > void simlib_t::set_debug(bool value)
-112c114
-<   ((sim_t*)arg)->main();
----
+> {
 >   debug = value;
-115c117
+178c171
 < void sim_t::main()
 ---
 > int simlib_t::get_disassembly(int target_id, const uint64_t* pc, char** opcode, char** disassembly)
-117,118c119,121
+180,181c173,175
 <   if (!debug && log)
 <     set_procs_debug(true);
 ---
 >   std::string opcode_temp;
 >   std::string disassembly_temp;
 >   uint64_t opcode_num = 0ull;
-120c123
+183c177
 <   while (!done())
 ---
 >   if(procs.size() > 0)
-122,127c125,142
+185,190c179,196
 <     if (debug || ctrlc_pressed)
 <       interactive();
 <     else
@@ -190,7 +288,7 @@
 >       strcpy(*opcode,"00000000");
 >       strcpy(*disassembly,"?");
 >       return 1; // there may not be an instruction at the PC (example: page fault on branch)
-130,137c145,148
+193,200c199,202
 < }
 < 
 < int sim_t::run()
@@ -204,26 +302,26 @@
 >   {
 >     return 2; // No processors, therefore no configured disassembler for us to use
 >   }
-139,141c150,151
+202,204c204,211
 < void sim_t::step(size_t n)
 < {
 <   for (size_t i = 0, steps = 0; i < n; i += steps)
 ---
 >   // At this point disassembly proceeded correctly. Now check the output buffers
 >   if(opcode == nullptr || disassembly == nullptr)
-143,144c153,160
-<     steps = std::min(n - i, INTERLEAVE - current_step);
-<     procs[current_proc]->step(steps);
----
+>   {
 >     return 2;
 >   }
 >   size_t opcode_buffer_length = opcode != nullptr ? strlen(*opcode) : 0;
 >   size_t disassembly_buffer_length = disassembly != nullptr ? strlen(*disassembly) : 0;
 >   if((opcode_buffer_length < (opcode_temp.size()+1)) || (disassembly_buffer_length < (disassembly_temp.size()+1))) // check for enough size to place the null termination character
->   {
+206,207c213,214
+<     steps = std::min(n - i, INTERLEAVE - current_step);
+<     procs[current_proc]->step(steps);
+---
 >     return 2; // The user didn't give us room to put the answers
 >   }
-146,154c162,167
+209,217c216,221
 <     current_step += steps;
 <     if (current_step == INTERLEAVE)
 <     {
@@ -240,25 +338,25 @@
 >   (*opcode)[opcode_temp.size()]='\0'; // No idea how the user is initializing these strings, so just null terminate the relevant part.
 >   disassembly_temp.copy(*disassembly, disassembly_temp.size(), 0);
 >   (*disassembly)[disassembly_temp.size()]='\0';
-156,158c169
+219,221c223
 <       host->switch_to();
 <     }
 <   }
 ---
 >   return 0;
-161c172
+224c226
 < void sim_t::set_debug(bool value)
 ---
 > void simlib_t::set_log(bool value)
-163c174
+226c228
 <   debug = value;
 ---
 >   log = value;
-166c177
+229c231
 < void sim_t::set_histogram(bool value)
 ---
 > void simlib_t::set_histogram(bool value)
-174,194c185
+237,257c239
 < void sim_t::configure_log(bool enable_log, bool enable_commitlog)
 < {
 <   log = enable_log;
@@ -282,11 +380,11 @@
 < void sim_t::set_procs_debug(bool value)
 ---
 > void simlib_t::set_procs_debug(bool value)
-200c191
+263c245
 < static bool paddr_ok(reg_t addr)
 ---
 > std::map<std::string, uint64_t> simlib_t::load_elf(const char* fn, reg_t* entry)
-202c193,264
+265c247,318
 <   return (addr >> MAX_PADDR_BITS) == 0;
 ---
 >   int fd = open(fn, O_RDONLY);
@@ -361,23 +459,23 @@
 > 
 >   munmap(buf, size);
 >   return symbols;
-205c267,268
+268c321,322
 < bool sim_t::mmio_load(reg_t addr, size_t len, uint8_t* bytes)
 ---
 > // use the dedicated function for initializing
 > void simlib_t::make_dtb()
-207,216d269
+270,272d323
 <   if (addr + len < addr || !paddr_ok(addr + len - 1))
 <     return false;
 <   return bus.load(addr, len, bytes);
-< }
-< 
+275,301c326
 < bool sim_t::mmio_store(reg_t addr, size_t len, const uint8_t* bytes)
 < {
 <   if (addr + len < addr || !paddr_ok(addr + len - 1))
 <     return false;
 <   return bus.store(addr, len, bytes);
-219,238c272
+< }
+< 
 < void sim_t::make_dtb()
 < {
 <   if (!dtb_file.empty()) {
@@ -392,7 +490,7 @@
 < 
 <     dtb = strstream.str();
 <   } else {
-<     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, procs, mems);
+<     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, bootargs, procs, mems);
 <     dtb = dts_compile(dts);
 <   }
 < }
@@ -400,7 +498,7 @@
 < void sim_t::set_rom()
 ---
 > void simlib_t::set_rom()
-243a278,288
+306a332,342
 >   processor_t* usable_proc_ptr = nullptr;
 >   for(uint32_t id = 0; id < 0xffffffffu; ++id)
 >   {
@@ -412,11 +510,11 @@
 >   }
 >   assert(usable_proc_ptr != nullptr);
 > 
-248c293
+311c347
 <     get_core(0)->get_xlen() == 32 ?
 ---
 >     usable_proc_ptr->get_xlen() == 32 ?
-261,266c306,316
+338,343c374,384
 <   std::string dtb;
 <   if (!dtb_file.empty()) {
 <     std::ifstream fin(dtb_file.c_str(), std::ios::binary);
@@ -435,14 +533,14 @@
 >     {
 >       std::cerr << "### Warning something already initialized the memory for VA: " << std::hex << DEFAULT_RSTVEC + _index << " with contents: " << std::hex << sparse_read(DEFAULT_RSTVEC + _index, 1) << std::endl;
 >       sparse_write(DEFAULT_RSTVEC + _index, reinterpret_cast<uint8_t*>(rom.data() + _index), 1);
-267a318,323
+344a386,391
 >     else
 >     {
 >       sparse_initialize_pa(DEFAULT_RSTVEC + _index, reinterpret_cast<const uint8_t*>(rom.data()+_index), reinterpret_cast<const uint8_t*>(attrVec.data()+_index), 1, Force::EMemDataType::Both);
 >     }
 >   }
 > }
-269,270c325,330
+346,347c393,398
 <     std::stringstream strstream;
 <     strstream << fin.rdbuf();
 ---
@@ -452,17 +550,17 @@
 >   std::string path;
 >   if (access(elfPath, F_OK) == 0)
 >     path = elfPath;
-272,275c332,335
+349,352c400,403
 <     dtb = strstream.str();
 <   } else {
-<     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, procs, mems);
+<     dts = make_dts(INSNS_PER_RTC_TICK, CPU_HZ, initrd_start, initrd_end, bootargs, procs, mems);
 <     dtb = dts_compile(dts);
 ---
 >   if (path.empty())
 >   {
 >     std::cerr << "could not open " << elfPath << " (did you misspell it? If VCS, did you forget +permissive/+permissive-off?)" << std::endl;
 >     return 1;
-278,280c338,348
+355,357c406,411
 <   rom.insert(rom.end(), dtb.begin(), dtb.end());
 <   const int align = 0x1000;
 <   rom.resize((rom.size() + align - 1) / align * align);
@@ -473,46 +571,58 @@
 > 
 >   return 0;
 > }
-> 
-> uint64_t simlib_t::sparse_read(reg_t paddr, size_t len)
-> {
->   return _ForceSparseMemoryModel.Read(paddr, len);
-> }
-282,283c350,352
+359,360c413,415
 <   boot_rom.reset(new rom_device_t(rom));
 <   bus.add_device(DEFAULT_RSTVEC, boot_rom.get());
 ---
-> void simlib_t::sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes)
+> uint64_t simlib_t::sparse_read(reg_t paddr, size_t len)
 > {
->   _ForceSparseMemoryModel.ReadPartiallyInitialized(paddr, len, bytes);
-286,293c355,357
+>   return _ForceSparseMemoryModel.Read(paddr, len);
+363,370c418,420
 < char* sim_t::addr_to_mem(reg_t addr) {
 <   if (!paddr_ok(addr))
 <     return NULL;
 <   auto desc = bus.find_device(addr);
 <   if (auto mem = dynamic_cast<mem_t*>(desc.second))
 <     if (addr - desc.first < mem->size())
-<       return mem->contents() + (addr - desc.first);
+<       return mem->contents(addr - desc.first);
 <   return NULL;
 ---
-> void simlib_t::sparse_write(reg_t paddr, const uint8_t* bytes, size_t len)
+> void simlib_t::sparse_read_partially_initialized(reg_t paddr, size_t len, uint8_t* bytes)
 > {
+>   _ForceSparseMemoryModel.ReadPartiallyInitialized(paddr, len, bytes);
+373c423
+< const char* sim_t::get_symbol(uint64_t addr)
+---
+> void simlib_t::sparse_write(reg_t paddr, const uint8_t* bytes, size_t len)
+375c425
+<   return htif_t::get_symbol(addr);
+---
 >   _ForceSparseMemoryModel.Write(paddr, bytes, len);
-296c360,363
+378c428,431
 < // htif
 ---
 > void simlib_t::sparse_write(reg_t paddr, uint64_t value, size_t len)
 > {
 >   _ForceSparseMemoryModel.Write(paddr, value, len);
 > }
-298c365
+380c433
 < void sim_t::reset()
 ---
-> bool simlib_t::sparse_is_pa_initialized(reg_t paddr, size_t len)
-300,301c367,397
+> void simlib_t::sparse_write_with_initialization(reg_t paddr, const uint8_t* bytes, size_t len)
+382,383c435,459
 <   if (dtb_enabled)
 <     set_rom();
 ---
+>   if (not sparse_is_pa_initialized(paddr, len)) {
+>     _ForceSparseMemoryModel.AutoInitialize(paddr, len);
+>   }
+> 
+>   _ForceSparseMemoryModel.Write(paddr, bytes, len);
+> }
+> 
+> bool simlib_t::sparse_is_pa_initialized(reg_t paddr, size_t len)
+> {
 >   return  _ForceSparseMemoryModel.IsInitialized(paddr, len);
 > }
 > 
@@ -529,13 +639,17 @@
 > void simlib_t::sparse_initialize_pa(reg_t paddr, reg_t value, size_t numBytes)
 > {
 >   _ForceSparseMemoryModel.Initialize(paddr, value, numBytes, Force::EMemDataType::Both);
-> }
-> 
+386c462
+< void sim_t::idle()
+---
 > void simlib_t::sparse_reserve(reg_t paddr, size_t numBytes)
-> {
+388c464
+<   target.switch_to();
+---
 >   _ForceSparseMemoryModel.Reserve(paddr, numBytes);
-> }
-> 
+391c467,501
+< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
+---
 > void simlib_t::sparse_unreserve(reg_t paddr, size_t numBytes)
 > {
 >   _ForceSparseMemoryModel.Unreserve(paddr, numBytes);
@@ -544,13 +658,10 @@
 > bool simlib_t::sparse_is_reserved(reg_t paddr, size_t numBytes)
 > {
 >   return _ForceSparseMemoryModel.IsReserved(paddr, numBytes);
-304c400
-< void sim_t::idle()
----
+> }
+> 
 > bool simlib_t::doesCoreWithIdExist(size_t i)
-306c402,421
-<   target.switch_to();
----
+> {
 >   for(processor_t* proc_ptr: procs)
 >   {
 >     if(proc_ptr != nullptr && proc_ptr->get_state() != nullptr && proc_ptr->get_state()->pid == i)
@@ -571,15 +682,14 @@
 > {
 >   if (dtb_enabled)
 >     set_rom();
-309c424
-< void sim_t::read_chunk(addr_t taddr, size_t len, void* dst)
----
+> }
+> 
 > void simlib_t::read_chunk_partially_initialized(reg_t taddr, size_t len, void* dst)
-312c427
-<   auto data = to_le(debug_mmu->load_uint64(taddr));
+394c504
+<   auto data = debug_mmu->to_target(debug_mmu->load_uint64(taddr));
 ---
->   auto data = to_le(debug_mmu->load_partially_initialized_uint64(taddr));
-316c431,484
+>   auto data = debug_mmu->to_target(debug_mmu->load_partially_initialized_uint64(taddr));
+398c508,561
 < void sim_t::write_chunk(addr_t taddr, size_t len, const void* src)
 ---
 > void simlib_t::clear_chunk(reg_t taddr, size_t len)
@@ -636,13 +746,23 @@
 > }
 > 
 > void simlib_t::write_chunk(reg_t taddr, size_t len, const void* src)
-324c492,1071
+406c569
+< void sim_t::set_target_endianness(memif_endianness_t endianness)
+---
+> void simlib_t::set_target_endianness(memif_endianness_t endianness)
+422c585
+< memif_endianness_t sim_t::get_target_endianness() const
+---
+> memif_endianness_t simlib_t::get_target_endianness() const
+431c594
 < void sim_t::proc_reset(unsigned id)
 ---
 > void simlib_t::proc_reset(unsigned id)
-> {
+433c596
+<   debug_module.proc_reset(id);
+---
 > ////  debug_module.proc_reset(id);
-> }
+434a598,1391
 > 
 > processor_t *simlib_t::get_core(const std::string& i)
 > {
@@ -1219,9 +1339,7 @@
 > 
 > //will probably have to cast differently here and other places to the get the pointer types the same and compatible with the function.
 > int simlib_t::write_vecr(uint32_t procid, const std::string& input_name, const uint8_t* value, uint32_t length)
-326c1073,1185
-<   debug_module.proc_reset(id);
----
+> {
 >   //Check that the pointers point to something
 >   if(value == nullptr)
 >     return 1;
@@ -1335,7 +1453,7 @@
 >   }
 > 
 >   return 0;
-327a1187,1287
+> }
 > 
 > int simlib_t::translate_virtual_address_api(int procid, const uint64_t* vaddr, int intent, uint64_t* paddr, uint64_t* memattrs)
 > {
@@ -1361,7 +1479,9 @@
 >       type = access_type::FETCH;
 >       break;
 >   }
->   int status = get_core(procid)->get_mmu()->translate_api(*vaddr, paddr, memattrs, reg_t(1) /* length */, static_cast<access_type>(intent)); // length is set to 1 byte here because the api requirements were for individual bytes only.
+>   // TODO(Noah): Investigate what might need to be passed for the xlate_flags parameter when there
+>   // is time to do so.
+>   int status = get_core(procid)->get_mmu()->translate_api(*vaddr, paddr, memattrs, reg_t(1) /* length */, static_cast<access_type>(intent), 0); // length is set to 1 byte here because the api requirements were for individual bytes only.
 > 
 >   if(status == 0)
 >   {

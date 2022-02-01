@@ -31,15 +31,11 @@ class PageFaultSequence(Sequence):
     def generate(self, **kwargs):
         (paging_opt, valid) = self.getOption("PagingDisabled")
         if valid and (paging_opt == 1):
-            self.error(
-                "'PagingDisabled' option set, can't generate page faults."
-            )
+            self.error("'PagingDisabled' option set, can't generate page faults.")
 
         self.generatePreFaultInstructions()
 
-        self.notice(
-            "Applying all valid level and exception level page fault choices"
-        )
+        self.notice("Applying all valid level and exception level page fault choices")
         page_fault_mod = self.createPageFaultModifier()
         page_fault_mod.apply(**{"All": 1})
         # page_fault_mod.apply(**{"Type":"Invalid V"})
@@ -106,9 +102,7 @@ class PageFaultSequence(Sequence):
 
         (handlers_set, valid) = self.getOption("handlers_set")
         fast_handlers = handlers_set == "Fast"
-        resolution_type = self.getPageFaultResolutionType(
-            self._getFaultLevels(), fast_handlers
-        )
+        resolution_type = self.getPageFaultResolutionType(self._getFaultLevels(), fast_handlers)
 
         xepc_val = self._readXepcRegister()
         instr_record = self.queryInstructionRecord(aFaultingInstrId)
@@ -118,9 +112,7 @@ class PageFaultSequence(Sequence):
         # preamble instruction triggered the fault
         if resolution_type == PageFaultResolutionType.SKIP_INSTRUCTION:
             if xepc_val in [instr_va, aPcVal]:
-                self.error(
-                    "Fault handler did not skip the faulting instruction."
-                )
+                self.error("Fault handler did not skip the faulting instruction.")
         elif resolution_type == PageFaultResolutionType.RE_EXECUTE_INSTRUCTION:
             if xepc_val in [instr_va, aPcVal]:
                 self.error(

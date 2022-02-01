@@ -15,9 +15,9 @@
 //
 
 #include <lest/lest.hpp>
-//#include <Log.h>
 #include <map>
 #include <cstring>
+#include <algorithm>
 
 //------------------------------------------------
 // include necessary header files here
@@ -25,8 +25,7 @@
 #include "SimLoader.h"
 #include <iostream>
 
-//using text = std::string;
-//using namespace Force;
+using text = std::string;
 
 std::vector<uint8_t> global_buffer(32);
 const char* handcar_path = "../../../utils/handcar/handcar_cosim.so";
@@ -44,10 +43,7 @@ void update_vector_element(uint32_t cpuid, const char *pRegName, uint32_t vRegIn
 {
    //std::cout << "Update vector element called. cpuid: " << cpuid << " regname: " << pRegName << " vRegIndex: " << vRegIndex << " eltIndex: " << eltIndex << " eltByteWidth: " << eltByteWidth << " pAccessType: " << pAccessType << std::endl;
 
-   for(uint8_t & elt : global_buffer)
-   {    
-     elt = 0;
-   }
+   std::fill(global_buffer.begin(), global_buffer.end(), 0);
    for(size_t byte_number = 0; byte_number < byteLength; ++ byte_number)
    {
      global_buffer[byte_number] = value[byte_number];
@@ -259,57 +255,133 @@ CASE("Test 0, basics") {
 //
 //  }
 //},
-//
-//CASE("Test 3, step simulator api") {
-//
-//  SETUP("Load SimDllApi Object")  {
-//    //-----------------------------------------
-//    // include necessary setup code here
-//    //-----------------------------------------
-//    // load the simulator DLL and pointers to API functions...
-//    SimDllApi sim_api;
-//    std::string options = "-p4 -l";
-//    uint64_t num_procs = 4;
-//    std::string elf_path = "../resources/multiply.riscv";
-//    int hart_id = 0;
-//    int num_steps = 10;
-//    int num_step_groups = 1000;
-//    int stx_failed = 0;
-//    int rcode = 0;
-//
-//    //-----------------------------------------
-//    // do some initial checking here
-//    //-----------------------------------------
-//    EXPECT(not open_sim_dll(handcar_path, &sim_api));
-//
-//    SECTION("Test 3, 0: step_simulator(...)") {
-//      sim_api.initialize_simulator(nullptr);
-//      sim_api.simulator_load_elf(0, elf_path.c_str());
-//      rcode = sim_api.step_simulator(hart_id, num_steps, stx_failed);
-//      sim_api.terminate_simulator();
-//
-//      EXPECT(rcode == 0);
-//
-//      close_sim_dll(&sim_api);
-//    }
-//
-//    SECTION("Test 3, 1: step_simulator(...), multiple cores") {
-//      sim_api.initialize_simulator(options.c_str());
-//      sim_api.simulator_load_elf(0, elf_path.c_str());
-//
-//      for(size_t step_group = 0; step_group < num_step_groups; ++step_group) 
-//      {
-//        rcode += sim_api.step_simulator(step_group % num_procs, num_steps, stx_failed);
-//        EXPECT(rcode == 0);
-//      }
-//
-//      sim_api.terminate_simulator();
-//
-//      close_sim_dll(&sim_api);
-//    }
-//
-//  }
-//},
+
+CASE("Test 3, step simulator api") {
+
+  SETUP("Load SimDllApi Object")  {
+    SimDllApi sim_api;
+    EXPECT(not open_sim_dll(handcar_path, &sim_api));
+
+    std::string options;
+    int status = 0;
+
+    SECTION("Test 3, 0: load uninitialized memory with auto initialization") {
+      options = "--auto-init-mem";
+      sim_api.initialize_simulator(options.c_str());
+
+      uint8_t target_addr[8] = {0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.write_simulator_register(0, "x1", target_addr, 8);
+      EXPECT(status == 0);
+
+      uint64_t instr_addr = 0x1000;
+      uint8_t instr_data[4] = {0x03, 0xB1, 0x0, 0x0};  // LD x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, instr_data);
+      EXPECT(status == 0);
+
+      int stx_failed = 0;
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      sim_api.terminate_simulator();
+      close_sim_dll(&sim_api);
+    }
+
+    SECTION("Test 3, 1: load partially initialized memory with auto initialization") {
+      options = "--auto-init-mem";
+      sim_api.initialize_simulator(options.c_str());
+
+      uint8_t data[8] = {0xC5, 0x76, 0x84, 0x38, 0x22, 0x9A, 0x1D, 0x0E};
+      status = sim_api.write_simulator_register(0, "x3", data, 8);
+      EXPECT(status == 0);
+
+      uint8_t target_addr[8] = {0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.write_simulator_register(0, "x1", target_addr, 8);
+      EXPECT(status == 0);
+
+      uint64_t instr_addr = 0x1000;
+      uint8_t sh_instr_data[4] = {0x23, 0x90, 0x30, 0x0};  // SH x3 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, sh_instr_data);
+      EXPECT(status == 0);
+
+      instr_addr += 4;
+      uint8_t ld_instr_data[4] = {0x03, 0xB1, 0x0, 0x0};  // LD x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, ld_instr_data);
+      EXPECT(status == 0);
+
+      int stx_failed = 0;
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      uint8_t load_data[8];
+      status = sim_api.read_simulator_register(0, "x2", load_data, 8);
+      EXPECT(status == 0);
+
+      EXPECT(load_data[0] == 0xC5);
+      EXPECT(load_data[1] == 0x76);
+
+      for (size_t i = 2; i < 8; i++) {
+        EXPECT(load_data[i] == 0);
+      }
+
+      sim_api.terminate_simulator();
+      close_sim_dll(&sim_api);
+    }
+
+    SECTION("Test 3, 2: store to previously partially written memory") {
+      sim_api.initialize_simulator("");
+
+      uint8_t target_addr[8] = {0x0, 0x80, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.write_simulator_register(0, "x1", target_addr, 8);
+      EXPECT(status == 0);
+
+      uint64_t instr_addr = 0x1000;
+      uint8_t sw_instr_data[4] = {0x23, 0xA0, 0x20, 0x0};  // SW x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, sw_instr_data);
+      EXPECT(status == 0);
+
+      instr_addr += 4;
+      uint8_t sd_instr_data[4] = {0x23, 0xB0, 0x20, 0x0};  // SD x2 0(x1)
+      status = sim_api.write_simulator_memory(0, &instr_addr, 4, sd_instr_data);
+      EXPECT(status == 0);
+
+      uint8_t data_a[8] = {0xB2, 0xB9, 0xDA, 0xC4, 0x8A, 0x79, 0xE7, 0x4F};
+      status = sim_api.write_simulator_register(0, "x2", data_a, 8);
+      EXPECT(status == 0);
+
+      int stx_failed = 0;
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      uint64_t mem_addr = 0x8000;
+      uint8_t mem_values[8] = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+      status = sim_api.read_simulator_memory(0, &mem_addr, 4, mem_values);
+      EXPECT(status == 0);
+
+      for (size_t i = 0; i < 4; i++) {
+        EXPECT(mem_values[i] == data_a[i]);
+      }
+
+      uint8_t data_b[8] = {0x08, 0xD6, 0xC7, 0x59, 0x61, 0xA1, 0xE0, 0x54};
+      status = sim_api.write_simulator_register(0, "x2", data_b, 8);
+      EXPECT(status == 0);
+
+      status = sim_api.step_simulator(0, 1, stx_failed);
+      EXPECT(status == 0);
+
+      status = sim_api.read_simulator_memory(0, &mem_addr, 8, mem_values);
+      EXPECT(status == 0);
+
+      for (size_t i = 0; i < 8; i++) {
+        EXPECT(mem_values[i] == data_b[i]);
+      }
+
+      sim_api.terminate_simulator();
+      close_sim_dll(&sim_api);
+    }
+  }
+},
 
 CASE("Test 4, get_disassembly(...) api") {
 

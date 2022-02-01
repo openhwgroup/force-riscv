@@ -51,9 +51,7 @@ class MainSequence(PageFaultSequence):
 
     def getPageFaultResolutionType(self, aFaultLevels, aFastHandlers):
         resolution_type = PageFaultResolutionType.SKIP_INSTRUCTION
-        if any([x in aFaultLevels for x in (0, 1, 2, 3)]) and (
-            not aFastHandlers
-        ):
+        if any([x in aFaultLevels for x in (0, 1, 2, 3)]) and (not aFastHandlers):
             resolution_type = PageFaultResolutionType.RE_EXECUTE_INSTRUCTION
 
         return resolution_type

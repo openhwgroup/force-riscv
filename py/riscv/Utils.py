@@ -45,14 +45,8 @@ class LoadGPR64(Sequence):
         if reserved_reg:
             self.unreserveRegister(reg_name)
 
-    # Generate instructions to load a 64-bit value into a general purpose
-    # register. This method first computes the parameter values required to
-    # load the lower bits, if necessary, then generates instructions to load
-    # the top 32 bits. After that, it uses the parameter values initially
-    # computed to generate the instructions to load the remaining bits. The
-    # maximum number of instructions this method generates should be 8. The
-    # method attempts use larger shift amounts and avoids adding 0 to reduce
-    # the number of instructions required to load values with few set bits.
+    # Generate instructions to load a 64-bit value into a reserved general
+    # purpose register.
     #
     #  @param aValue A 64-bit value.
     def _loadValue(self, aValue):
@@ -60,12 +54,55 @@ class LoadGPR64(Sequence):
             reg_val = aValue & 0xFFFFFFFF
             self._load32BitValue(aValue)
             self.writeRegister("x%d" % self._mRegisterIndex, reg_val, "", True)
-            return
-
-        if (aValue & 0xFFFFFFFFFFFFF800) == 0xFFFFFFFFFFFFF800:
-            self._loadValueTop53BitsSet(aValue)
+        else:
+            self._load64BitValue(aValue)
             self.writeRegister("x%d" % self._mRegisterIndex, aValue, "", True)
-            return
+
+    # Generate instructions to load a 32-bit value into a reserved general
+    # purpose register. If Bit 31 is set in loadValue, the value loaded into
+    # the register will be sign-extended to 64 bits.
+    #
+    #  @param aValue A 32-bit value.
+    def _load32BitValue(self, aValue):
+        top_20_bits = ((aValue + 0x800) >> 12) & 0xFFFFF
+
+        # Always execute the LUI, even when top 20 bits are 0, because it will
+        # clear the remaining register bits, as desired.
+        self.genInstruction("LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": top_20_bits})
+
+        bottom_12_bits = aValue & 0xFFF
+        if bottom_12_bits != 0:
+            if self.getGlobalState("AppRegisterWidth") == 32:
+                self.genInstruction(
+                    "ADDI##RISCV",
+                    {
+                        "rd": self._mRegisterIndex,
+                        "rs1": self._mRegisterIndex,
+                        "simm12": bottom_12_bits,
+                    },
+                )
+            else:
+                self.genInstruction(
+                    "ADDIW##RISCV",
+                    {
+                        "rd": self._mRegisterIndex,
+                        "rs1": self._mRegisterIndex,
+                        "simm12": bottom_12_bits,
+                    },
+                )
+
+    # Generate instructions to load a 64-bit value into a reserved general
+    # purpose register. This method first computes the parameter values
+    # required to load the lower bits, if necessary, then generates
+    # instructions to load the top 32 bits. After that, it uses the parameter
+    # values initially computed to generate the instructions to load the
+    # remaining bits. The maximum number of instructions this method generates
+    # should be 8.
+    #
+    #  @param aValue A 64-bit value.
+    def _load64BitValue(self, aValue):
+        if (aValue & 0xFFFFFFFFFFFFF800) == 0xFFFFFFFFFFFFF800:
+            return self._loadValueTop53BitsSet(aValue)
 
         # Initialize list of shift amounts and ADDI immediate parameters
         imm_params = []
@@ -86,25 +123,7 @@ class LoadGPR64(Sequence):
 
         self._load32BitValue(value)
 
-        for (shift_amount, imm_value) in reversed(imm_params):
-            self.genInstruction(
-                "SLLI#RV64I#RISCV",
-                {
-                    "rd": self._mRegisterIndex,
-                    "rs1": self._mRegisterIndex,
-                    "shamt": shift_amount,
-                },
-            )
-
-            if imm_value != 0:
-                self.genInstruction(
-                    "ADDI##RISCV",
-                    {
-                        "rd": self._mRegisterIndex,
-                        "rs1": self._mRegisterIndex,
-                        "simm12": imm_value,
-                    },
-                )
+        self._genShiftAndAddInstructions(reversed(imm_params))
 
         # Due to limitations in the RISC-V architecture, _load32BitValue() is
         # forced to use instructions that sign-extend the result to 64 bits.
@@ -130,17 +149,14 @@ class LoadGPR64(Sequence):
                 },
             )
 
-        self.writeRegister("x%d" % self._mRegisterIndex, aValue, "", True)
-
     # Generate instructions to load a value with the top 53 bits set into a
-    # general purpose register. This method takes advantage of the sign
-    # extension for LUI and ADDI to perform the operation in two instructions.
+    # reserved general purpose register. This method takes advantage of the
+    # sign extension for LUI and ADDI to perform the operation in two
+    # instructions.
     #
     #  @param aValue A value with the top 53 bits set.
     def _loadValueTop53BitsSet(self, aValue):
-        self.genInstruction(
-            "LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": 0}
-        )
+        self.genInstruction("LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": 0})
         bottom_12_bits = aValue & 0xFFF
         self.genInstruction(
             "ADDIW##RISCV",
@@ -151,38 +167,30 @@ class LoadGPR64(Sequence):
             },
         )
 
-    # Generate instructions to load a 32-bit value into a general purpose
-    # register. If Bit 31 is set in loadValue, the value loaded into the
-    # register will be sign-extended to 64 bits.
+    # Generate a sequence of pairs of shift and add instructions. Add
+    # instructions with an immediate value of 0 are skipped to reduce the
+    # number of instructions generated.
     #
-    #  @param aValue A 32-bit value.
-    def _load32BitValue(self, aValue):
-        top_20_bits = ((aValue + 0x800) >> 12) & 0xFFFFF
+    #  @param aImmParams Tuples containing a shift amount and an immediate
+    #       value for an add instruction.
+    def _genShiftAndAddInstructions(self, aImmParams):
+        for (shift_amount, imm_value) in aImmParams:
+            self.genInstruction(
+                "SLLI#RV64I#RISCV",
+                {
+                    "rd": self._mRegisterIndex,
+                    "rs1": self._mRegisterIndex,
+                    "shamt": shift_amount,
+                },
+            )
 
-        # Always execute the LUI, even when top 20 bits are 0, because it will
-        # clear the remaining register bits, as desired.
-        self.genInstruction(
-            "LUI##RISCV", {"rd": self._mRegisterIndex, "simm20": top_20_bits}
-        )
-
-        bottom_12_bits = aValue & 0xFFF
-        if bottom_12_bits != 0:
-            if self.getGlobalState("AppRegisterWidth") == 32:
+            if imm_value != 0:
                 self.genInstruction(
                     "ADDI##RISCV",
                     {
                         "rd": self._mRegisterIndex,
                         "rs1": self._mRegisterIndex,
-                        "simm12": bottom_12_bits,
-                    },
-                )
-            else:
-                self.genInstruction(
-                    "ADDIW##RISCV",
-                    {
-                        "rd": self._mRegisterIndex,
-                        "rs1": self._mRegisterIndex,
-                        "simm12": bottom_12_bits,
+                        "simm12": imm_value,
                     },
                 )
 

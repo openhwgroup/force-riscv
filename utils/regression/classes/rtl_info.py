@@ -38,15 +38,11 @@ class RtlInfo(object):
 
         self.root = arg_rtl_data.get("root", "$(PROJ_ROOT)")
         self.path = arg_rtl_data.get("path", "verif/top/sim")
-        self.regr = arg_rtl_data.get(
-            "regr", "$(RTL_REGR)"
-        )  # "logs"          )
+        self.regr = arg_rtl_data.get("regr", "$(RTL_REGR)")  # "logs"          )
         self.tgt = arg_rtl_data.get("tgt", "build")
         self.cfg = arg_rtl_data.get("cfg", "$(RTL_CFG)")  # "target_config"  )
         self.name = arg_rtl_data.get("name", "$(RTL_EXE)")  # "uvm_simv_opt" )
-        self.cmd = arg_rtl_data.get(
-            "cmd", "%s/%s/%s/%s/%s/%s"
-        )  # root/path/regr/tgt/cfg/name
+        self.cmd = arg_rtl_data.get("cmd", "%s/%s/%s/%s/%s/%s")  # root/path/regr/tgt/cfg/name
 
         # replaces cfg for building debug rerun command for getting wave dumps
         self.debug_cfg = arg_rtl_data.get("debug_cfg", "target_config_waves")
@@ -56,9 +52,7 @@ class RtlInfo(object):
 
         # copies a user modifiable do file into the test results directory to
         # help them select signals for a debug wave dump rerun
-        self.default_fsdb_do = arg_rtl_data.get(
-            "default_fsdb_do", "/verif/top/tests/wave_fsdb.do"
-        )
+        self.default_fsdb_do = arg_rtl_data.get("default_fsdb_do", "/verif/top/tests/wave_fsdb.do")
         self._command = None
         self._debug_command = None
 
@@ -77,9 +71,7 @@ class RtlInfo(object):
                 SysUtils.envar(self.root[2:-1], None)
             )
 
-        self.default_fsdb_do = PathUtils.append_path(
-            self.root, self.default_fsdb_do
-        )
+        self.default_fsdb_do = PathUtils.append_path(self.root, self.default_fsdb_do)
 
         if self.regr.startswith("$(") and self.regr.endswith(")"):
             self.regr = PathUtils.exclude_trailing_path_delimiter(

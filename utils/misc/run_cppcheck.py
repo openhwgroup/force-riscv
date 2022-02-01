@@ -60,9 +60,7 @@ def parse_svn_status():
     # therefore it needs a little formatting before processing
     raw_svn_status = subprocess.check_output(["svn", "status"])
     raw_svn_status = raw_svn_status.decode()
-    raw_svn_status = raw_svn_status[
-        : len(raw_svn_status) - 1
-    ]  # stripping away last \n character
+    raw_svn_status = raw_svn_status[: len(raw_svn_status) - 1]  # stripping away last \n character
 
     for line in raw_svn_status.split("\n"):
         contents = line.split()
@@ -95,9 +93,7 @@ def run_cpp_check(a_args):
         # warning, performance, portability, and style messages.
         cmd_line.append("--enable=style")
         (root, paths) = parse_svn_status()
-    elif a_args.path[0].endswith(".cc") or a_args.path[0].endswith(
-        ".h"
-    ):  # file(s)
+    elif a_args.path[0].endswith(".cc") or a_args.path[0].endswith(".h"):  # file(s)
         # from CppCheck manual: For historical reasons, --enable=style enables
         # warning, performance, portability, and style messages.
         cmd_line.append("--enable=style")
@@ -117,8 +113,7 @@ def run_cpp_check(a_args):
 
     # suppression file (for generated files and the like)
     cmd_line.append(
-        "--suppress-xml="
-        + os.path.join(root, "utils", "misc", "cppcheck_suppress.xml")
+        "--suppress-xml=" + os.path.join(root, "utils", "misc", "cppcheck_suppress.xml")
     )
 
     # additional minor arguments
@@ -136,10 +131,7 @@ def run_cpp_check(a_args):
 
 if __name__ == "__main__":
     if "CPPCHECK_BIN" not in os.environ:
-        print(
-            "Please set the CPPCHECK_BIN environment variable to point to "
-            "Cppcheck."
-        )
+        print("Please set the CPPCHECK_BIN environment variable to point to Cppcheck.")
         sys.exit(1)
 
     parser = setup_arguments()

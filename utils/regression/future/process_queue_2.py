@@ -50,10 +50,7 @@ class ProcessQueueItem(object):
             my_sum_qitem = SummaryQueueItem(my_launcher.extract_results())
         except Exception as arg_ex:
             Msg.error_trace(str(arg_ex))
-            Msg.err(
-                "Message: %s, Control File Path: %s"
-                % (str(arg_ex), PathUtils.current_dir())
-            )
+            Msg.err("Message: %s, Control File Path: %s" % (str(arg_ex), PathUtils.current_dir()))
             my_sum_qitem = SummaryErrorQueueItem(
                 {
                     "error": arg_ex,
@@ -70,9 +67,7 @@ class ProcessQueueItem(object):
         my_launcher = None
         if self.process_queue.use_lsf():
             my_launcher = LsfLauncher()
-            my_launcher.shell_log = "%s.lsf" % str(
-                self.process_queue.processor_name
-            )
+            my_launcher.shell_log = "%s.lsf" % str(self.process_queue.processor_name)
             my_launcher.lsf_log = "lsf.%P"
         else:
             my_launcher = StdLauncher()
@@ -85,9 +80,7 @@ class ProcessQueueItem(object):
         my_launcher.item_group = self.item_group
 
         my_launcher.frun_dir = self.frun_path.replace("_def_frun.py", "")
-        my_launcher.process_log = "%s.log" % str(
-            self.process_queue.processor_name
-        )
+        my_launcher.process_log = "%s.log" % str(self.process_queue.processor_name)
         my_launcher.process_cmd = self.process_queue.process_cmd
 
         return my_launcher
@@ -116,16 +109,12 @@ class ProcessQueue(object):
 
     def enqueue(self, arg_item):
         arg_item.process_queue = self
-        my_future = self.executor.submit(
-            ProcessQueue.execute_item, arg_item, self.summary.queue
-        )
+        my_future = self.executor.submit(ProcessQueue.execute_item, arg_item, self.summary.queue)
         self.futures.append(my_future)
         return True
 
     def open_queue(self):
-        self.executor = concurrent.futures.ThreadPoolExecutor(
-            max_workers=self.process_max
-        )
+        self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=self.process_max)
 
     def wait_for_completion(self):
         # self.executor.shutdown()

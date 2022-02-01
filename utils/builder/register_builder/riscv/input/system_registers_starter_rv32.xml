@@ -1399,8 +1399,7 @@ Add RISCV system registers starter information in this file.
       <choice description="Tail elements may be overwritten" value="0x1" weight="10"/>
     </register_field>
     <register_field name="VLMUL" size="3" init_policy="VlmulInitPolicy">
-      <bit_field shift="5" size="1"/>
-      <bit_field shift="0" size="2"/>
+      <bit_field shift="0" size="3"/>
       <choice description="32 register groups" value="0x0" weight="10"/>
       <choice description="16 register groups" value="0x1" weight="10"/>
       <choice description="8 register groups" value="0x2" weight="10"/>
@@ -1411,7 +1410,7 @@ Add RISCV system registers starter information in this file.
       <choice description="1/2, 32 register groups" value="0x7" weight="10"/>
     </register_field>
     <register_field name="VSEW" size="3">
-      <bit_field shift="2" size="3"/>
+      <bit_field shift="3" size="3"/>
       <choice description="8-bit elements" value="0x0" weight="0"/>
       <choice description="16-bit elements" value="0x1" weight="10"/>
       <choice description="32-bit elements" value="0x2" weight="10"/>

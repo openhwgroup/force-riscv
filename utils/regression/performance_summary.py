@@ -62,9 +62,7 @@ class PerformanceSummaryItem(SummaryItem):
     # save the generation results for this task item
     def commit_generate(self):
 
-        self.force_result = SysUtils.ifthen(
-            SysUtils.success(self.force_retcode), "PASS", "FAIL"
-        )
+        self.force_result = SysUtils.ifthen(SysUtils.success(self.force_retcode), "PASS", "FAIL")
         self.force_level = SummaryLevel.Any
 
         if SysUtils.failed(self.force_retcode):
@@ -89,10 +87,7 @@ class PerformanceSummaryItem(SummaryItem):
 
     def commit_simulate(self):
         self.instr_count, self.iss_message = self.extract_iss_info()
-        Msg.user(
-            "Instr Count: %d, Message: %s"
-            % (self.instr_count, self.iss_message)
-        )
+        Msg.user("Instr Count: %d, Message: %s" % (self.instr_count, self.iss_message))
         try:
 
             # check the return code for error and check to see for instruction
@@ -128,9 +123,7 @@ class PerformanceSummaryItem(SummaryItem):
             my_log.close()
         try:
             my_results = [
-                my_tmp
-                for my_tmp in my_lines
-                if re.search(" Instructions Generated", my_tmp)
+                my_tmp for my_tmp in my_lines if re.search(" Instructions Generated", my_tmp)
             ]
             Msg.lout(my_results, "dbg")
             if not my_results:
@@ -160,10 +153,7 @@ class PerformanceSummaryItem(SummaryItem):
 
         except ValueError:
             Msg.error_trace()
-            Msg.err(
-                "Unable to extract instruction count from %s"
-                % (int(my_lines[-1]))
-            )
+            Msg.err("Unable to extract instruction count from %s" % (int(my_lines[-1])))
 
         return 0
 
@@ -210,14 +200,10 @@ class PerformanceSummary(Summary):
                 my_ofile.write("Time: %s\n" % (DateTime.TimeAsStr(my_utcdt)))
 
                 self.process_errors(my_ofile)
-                my_total_count, my_total_elapsed = self.process_groups(
-                    my_ofile
-                )
+                my_total_count, my_total_elapsed = self.process_groups(my_ofile)
 
                 Msg.blank("info")
-                my_line = "Total Instructions Generated: %3d\n" % (
-                    my_total_count
-                )
+                my_line = "Total Instructions Generated: %3d\n" % (my_total_count)
                 my_line += "Total Elapsed Time:  %0.3f\n" % (my_total_elapsed)
                 my_line += "Overall Instructions per Second:  %0.3f\n" % (
                     SysUtils.ifthen(
@@ -252,9 +238,7 @@ class PerformanceSummary(Summary):
                 Msg.blank("info")
                 Msg.info(my_str)
 
-                my_grp_count, my_grp_elapsed = self.process_group_items(
-                    arg_ofile, my_items
-                )
+                my_grp_count, my_grp_elapsed = self.process_group_items(arg_ofile, my_items)
 
                 my_total_count += my_grp_count
                 my_total_elapsed += my_grp_elapsed
@@ -262,9 +246,7 @@ class PerformanceSummary(Summary):
                 my_line = "\nGroup Instructions: %3d\n" % (my_grp_count)
                 my_line += "Group Elapsed Time: %0.3f\n" % (my_grp_elapsed)
                 my_line += "Group Instructions per Second:  %0.3f\n" % (
-                    SysUtils.ifthen(
-                        bool(my_grp_elapsed), my_grp_count / my_grp_elapsed, 0
-                    )
+                    SysUtils.ifthen(bool(my_grp_elapsed), my_grp_count / my_grp_elapsed, 0)
                 )
                 my_line += "End Group: %s\n" % (my_group)
 
@@ -274,10 +256,7 @@ class PerformanceSummary(Summary):
             except Exception as arg_ex:
 
                 Msg.error_trace()
-                Msg.err(
-                    "Unable to process, Group: %s, Reason: %s"
-                    % (my_group, type(arg_ex))
-                )
+                Msg.err("Unable to process, Group: %s, Reason: %s" % (my_group, type(arg_ex)))
 
         return my_total_count, my_total_elapsed
 

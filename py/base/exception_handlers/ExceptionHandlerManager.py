@@ -41,9 +41,7 @@ from base.exception_handlers.ExceptionHandlerAssignment import (
 
 class ExceptionHandlerManager(Sequence):
 
-    cSharedHandlerSetGenerated = (
-        False  # indicate if the shared code has been generated.
-    )
+    cSharedHandlerSetGenerated = False  # indicate if the shared code has been generated.
 
     def __init__(self, gen_thread, factory):
         super().__init__(gen_thread)
@@ -70,9 +68,7 @@ class ExceptionHandlerManager(Sequence):
         self_copy = copy.copy(self)
         self_copy.genThread = gen_thread
         factory = self_copy.factory
-        self_copy.exceptions_stack = factory.createExceptionHandlerStack(
-            gen_thread
-        )
+        self_copy.exceptions_stack = factory.createExceptionHandlerStack(gen_thread)
         self_copy.address_table = None
 
         return self_copy
@@ -80,29 +76,21 @@ class ExceptionHandlerManager(Sequence):
     def setup(self, **kargs):
         super().setup()
 
-        self.genThread.modifyGenMode(
-            "NoEscape,SimOff,NoJump,NoSkip," "DelayInit"
-        )
+        self.genThread.modifyGenMode("NoEscape,SimOff,NoJump,NoSkip,DelayInit")
 
     def cleanUp(self, **kargs):
         super().cleanUp()
 
-        self.genThread.revertGenMode(
-            "NoEscape,SimOff,NoJump,NoSkip," "DelayInit"
-        )
+        self.genThread.revertGenMode("NoEscape,SimOff,NoJump,NoSkip,DelayInit")
 
     def debugPrint(self, msg):
         self.debug("DEBUG [ExceptionHandlerManager]: %s" % msg)
 
     def registerSynchronousExceptionHandler(self, aAssignmentRequest):
-        self.thread_handler_set.assignSynchronousExceptionHandler(
-            aAssignmentRequest
-        )
+        self.thread_handler_set.assignSynchronousExceptionHandler(aAssignmentRequest)
 
     # register user-defined asynchronous exception handler
-    def registerAsynchronousExceptionHandler(
-        self, handler_module_name, handler_class_name
-    ):
+    def registerAsynchronousExceptionHandler(self, handler_module_name, handler_class_name):
         for mem_bank in self.getMemoryBanks():
             repo = self.memBankHandlerRegistryRepo
             registry = repo.getMemoryBankHandlerRegistry(mem_bank)
@@ -113,9 +101,7 @@ class ExceptionHandlerManager(Sequence):
                 self.exceptions_stack,
             )
 
-        self.thread_handler_set.assignAsynchronousExceptionHandler(
-            handler_class_name
-        )
+        self.thread_handler_set.assignAsynchronousExceptionHandler(handler_class_name)
 
     # register user-defined dispatch code generator
     def registerSynchronousExceptionDispatcher(self, dispatcher):
@@ -165,9 +151,7 @@ class ExceptionHandlerManager(Sequence):
         # after all exception handlers are set, inform back-end the scratch
         # register sets and vbar_sets
         if not self.fastMode():
-            scratch_reg_info_set = (
-                self.thread_handler_set.getScratchRegisterSets()
-            )
+            scratch_reg_info_set = self.thread_handler_set.getScratchRegisterSets()
             scratch_reg_info_set["Function"] = "ExceptionRegisters"
             self.exceptionRequest("UpdateHandlerInfo", scratch_reg_info_set)
 
@@ -181,13 +165,9 @@ class ExceptionHandlerManager(Sequence):
         )
 
     def registerDefaultExceptionHandlers(self):
-        assignment_file_path = self.getDefaultAssignmentFilePath(
-            self.default_set_name
-        )
+        assignment_file_path = self.getDefaultAssignmentFilePath(self.default_set_name)
         assignment_parser = ExceptionHandlerAssignmentParser()
-        handler_assignments = assignment_parser.parseHandlerAssignments(
-            assignment_file_path
-        )
+        handler_assignments = assignment_parser.parseHandlerAssignments(assignment_file_path)
         for (
             (exception_class_name, subexception_class_name),
             (handler_module_name, handler_class_name),
@@ -196,9 +176,7 @@ class ExceptionHandlerManager(Sequence):
 
             subexception_class = None
             if subexception_class_name is not None:
-                subexception_class = self.getExceptionClass(
-                    subexception_class_name
-                )
+                subexception_class = self.getExceptionClass(subexception_class_name)
 
             for (
                 priv_level,

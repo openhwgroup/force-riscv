@@ -35,9 +35,7 @@ class FrunToCtrlExecutor(AppExecutor):
 
     def skip(self):
         if not self.ctrl_item.fruntoctrl.get("run", False):
-            Msg.user(
-                "[FrunToCtrlExecutor::skip] skipping - run is not True..."
-            )
+            Msg.user("[FrunToCtrlExecutor::skip] skipping - run is not True...")
             return True
 
         Msg.user("[FrunToCtrlExecutor::skip] not skipping")
@@ -46,9 +44,7 @@ class FrunToCtrlExecutor(AppExecutor):
     def execute(self):
 
         if not PathUtils.check_file("./_def_frun.py"):
-            Msg.user(
-                "[FrunToCtrlExecutor::skip] skipping - no _def_frun.py found"
-            )
+            Msg.user("[FrunToCtrlExecutor::skip] skipping - no _def_frun.py found")
             return True
 
         my_cmd = self.mFrunToCtrlCmd

@@ -28,9 +28,7 @@ from DV.riscv.trees.instruction_tree import (
 
 class MyOperandChoicesModifier(ChoicesModifier):
     def __init__(self, gen_thread):
-        super(MyOperandChoicesModifier, self).__init__(
-            gen_thread, "MyOperandChoicesModifier"
-        )
+        super(MyOperandChoicesModifier, self).__init__(gen_thread, "MyOperandChoicesModifier")
 
     def update(self, **kwargs):
         for arg in kwargs:
@@ -47,9 +45,7 @@ class MainSequence(Sequence):
         apply_id1 = my_choices_mod.apply(myarg1=dict1)
 
         self.notice("Applied choices modifications")
-        self.dumpPythonObject(
-            my_choices_mod.getChoicesTreeInfo("GPRs", "OperandChoices")
-        )
+        self.dumpPythonObject(my_choices_mod.getChoicesTreeInfo("GPRs", "OperandChoices"))
 
         instrs = (
             ALU_Int32_All_instructions
@@ -64,9 +60,7 @@ class MainSequence(Sequence):
         my_choices_mod.revert(apply_id1)
 
         self.notice("Reverted choices modifications")
-        self.dumpPythonObject(
-            my_choices_mod.getChoicesTreeInfo("GPRs", "OperandChoices")
-        )
+        self.dumpPythonObject(my_choices_mod.getChoicesTreeInfo("GPRs", "OperandChoices"))
 
         for _ in range(50):
             instr = self.pickWeighted(instrs)

@@ -22,49 +22,48 @@ format_map = {}
 
 
 def adjust_instruction_by_format(instr):
+    success = False
 
     instr_format = instr.get_format()
 
     if instr_format == "rs2-rs1-rd":
-        return adjust_rs2_rs1_rd(instr)
+        success = adjust_rs2_rs1_rd(instr)
     elif instr_format == "imm[11:0]-rs1-rd":
-        return adjust_imm12_rs1_rd(instr)
+        success = adjust_imm12_rs1_rd(instr)
     elif instr_format == "shamt-rs1-rd":
-        return adjust_shamt_rs1_rd(instr)
+        success = adjust_shamt_rs1_rd(instr)
     elif instr_format == "imm[31:12]-rd":
-        return adjust_imm20_rd(instr)
+        success = adjust_imm20_rd(instr)
     elif instr_format == "rs1-rd":
-        return adjust_rs1_rd(instr)
+        success = adjust_rs1_rd(instr)
     elif instr_format == "imm[20|10:1|11|19:12]-rd":
-        return adjust_jal(instr)
+        success = adjust_jal(instr)
     elif instr_format == "imm[12|10:5]-rs2-rs1-imm[4:1|11]":
-        return adjust_branches(instr)
+        success = adjust_branches(instr)
     elif instr_format == "imm[11:5]-rs2-rs1-imm[4:0]":
-        return adjust_stores(instr)
+        success = adjust_stores(instr)
     elif instr_format == "aq-rl-rs2-rs1-rd":
-        return adjust_aq_rs2(instr)
+        success = adjust_aq_rs2(instr)
     elif instr_format == "aq-rl-rs1-rd":
-        return adjust_aq_rs1(instr)
+        success = adjust_aq_rs1(instr)
     elif instr_format == "csr-rs1-rd":
-        return adjust_csr_rs1(instr)
+        success = adjust_csr_rs1(instr)
     elif instr_format == "csr-uimm-rd":
-        return adjust_csr_imm(instr)
+        success = adjust_csr_imm(instr)
     elif instr_format == "rs3-rs2-rs1-rm-rd":
-        return adjust_f_rs3(instr)
+        success = adjust_f_rs3(instr)
     elif instr_format == "rs2-rs1-rm-rd":
-        return adjust_f_rs2(instr)
+        success = adjust_f_rs2(instr)
     elif instr_format == "rs1-rm-rd":
-        return adjust_f_rs1(instr)
+        success = adjust_f_rs1(instr)
     elif instr_format == "fm-pred-succ-rs1-rd":
-        return adjust_fence(instr)
+        success = adjust_fence(instr)
     elif instr_format == "":
-        return adjust_const_only(instr)
+        success = adjust_const_only(instr)
     else:
         record_instruction_format(instr_format)
-        pass
 
-    # dump_format_map()
-    return False
+    return success
 
 
 def record_instruction_format(aInstrFormat):
@@ -103,6 +102,8 @@ def adjust_rs2_rs1_rd(instr):
 
 
 def adjust_fp_rs2_rs1_int_rd(instr):
+    success = False
+
     opr_adjustor = OperandAdjustor(instr)
     opr_adjustor.set_rd_int()
     instr.group = "Float"
@@ -110,24 +111,26 @@ def adjust_fp_rs2_rs1_int_rd(instr):
     if ".H" in instr.name:
         opr_adjustor.set_rs2_hp()
         opr_adjustor.set_rs1_hp()
-        return True
-    if ".S" in instr.name:
+        success = True
+    elif ".S" in instr.name:
         opr_adjustor.set_rs2_sp()
         opr_adjustor.set_rs1_sp()
-        return True
-    if ".D" in instr.name:
+        success = True
+    elif ".D" in instr.name:
         opr_adjustor.set_rs2_dp()
         opr_adjustor.set_rs1_dp()
-        return True
-    if ".Q" in instr.name:
+        success = True
+    elif ".Q" in instr.name:
         opr_adjustor.set_rs2_qp()
         opr_adjustor.set_rs1_qp()
-        return True
+        success = True
 
-    return False
+    return success
 
 
 def adjust_fp_rs2_rs1_rd(instr):
+    success = False
+
     opr_adjustor = OperandAdjustor(instr)
 
     instr.group = "Float"
@@ -136,28 +139,30 @@ def adjust_fp_rs2_rs1_rd(instr):
         opr_adjustor.set_rs2_hp()
         opr_adjustor.set_rs1_hp()
         opr_adjustor.set_rd_hp()
-        return True
-    if ".S" in instr.name:
+        success = True
+    elif ".S" in instr.name:
         opr_adjustor.set_rs2_sp()
         opr_adjustor.set_rs1_sp()
         opr_adjustor.set_rd_sp()
-        return True
-    if ".D" in instr.name:
+        success = True
+    elif ".D" in instr.name:
         opr_adjustor.set_rs2_dp()
         opr_adjustor.set_rs1_dp()
         opr_adjustor.set_rd_dp()
-        return True
-    if ".Q" in instr.name:
+        success = True
+    elif ".Q" in instr.name:
         opr_adjustor.set_rs2_qp()
         opr_adjustor.set_rs1_qp()
         opr_adjustor.set_rd_qp()
-        return True
+        success = True
 
-    return False
+    return success
 
 
 # Lots integer instructions fall into this category.  Like ADDI, JALR, LB etc.
 def adjust_imm12_rs1_rd(instr):
+    success = False
+
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
 
@@ -165,9 +170,9 @@ def adjust_imm12_rs1_rd(instr):
         opr_adjustor.set_rd_int()
         opr_adjustor.set_rs1_int()
         opr_adjustor.set_imm("imm[11:0]", "simm12", True)
-        return True
+        success = True
     elif instr.name == "JALR":
-        return adjust_jalr(instr)
+        success = adjust_jalr(instr)
     elif instr.name in [
         "LB",
         "LBU",
@@ -177,13 +182,13 @@ def adjust_imm12_rs1_rd(instr):
         "LW",
         "LWU",
     ]:  # integer load store instructions.
-        return adjust_int_load(instr)
+        success = adjust_int_load(instr)
     elif instr_full_ID.startswith("FENCE"):
         instr.group = "System"
-        opr_adjustor.set_imm("imm[11:0]", "simm12", True)
+        opr_adjustor.set_imm("imm[11:0]", "imm12", False)
         opr_adjustor.set_rs1_int()
         opr_adjustor.set_rd_int()
-        return True
+        success = True
     elif instr_full_ID.startswith("FL"):
         instr.group = "Float"
         instr.iclass = "LoadStoreInstruction"
@@ -214,13 +219,11 @@ def adjust_imm12_rs1_rd(instr):
         attr_dict["element-size"] = size
         attr_dict["mem-access"] = "Read"
 
-        add_addressing_operand(
-            instr, None, "LoadStore", None, subop_dict, attr_dict
-        )
-        return True
+        add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
+        success = True
 
     # print ("instruction: %s" % instr.get_full_ID())
-    return False
+    return success
 
 
 # Instructions like SLLI are handled here.
@@ -234,16 +237,16 @@ def adjust_shamt_rs1_rd(instr):
     if instr.name in ["SLLI", "SRAI", "SRLI"]:
         if shamt_opr.bits == "24-20":
             instr.form = "RV32I"
-            return True
-        if shamt_opr.bits == "25-20":
+        elif shamt_opr.bits == "25-20":
             instr.form = "RV64I"
-            return True
 
     return True
 
 
 # FCLASS/FMOV floating point instructions
 def adjust_rs1_rd(instr):
+    success = False
+
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
     if instr_full_ID.startswith("FCLASS"):
@@ -251,47 +254,47 @@ def adjust_rs1_rd(instr):
         if ".H" in instr_full_ID:
             opr_adjustor.set_rs1_hp()
             opr_adjustor.set_rd_int()
-            return True
-        if ".S" in instr_full_ID:
+            success = True
+        elif ".S" in instr_full_ID:
             opr_adjustor.set_rs1_sp()
             opr_adjustor.set_rd_int()
-            return True
+            success = True
         elif ".D" in instr_full_ID:
             opr_adjustor.set_rs1_dp()
             opr_adjustor.set_rd_int()
-            return True
+            success = True
         elif ".Q" in instr_full_ID:
             opr_adjustor.set_rs1_qp()
             opr_adjustor.set_rd_int()
-            return True
+            success = True
     elif instr_full_ID.startswith("FMV"):
         instr.group = "Float"
         if ".W.X" in instr_full_ID:
             opr_adjustor.set_rs1_int()
             opr_adjustor.set_rd_sp()
-            return True
+            success = True
         elif ".X.W" in instr_full_ID:
             opr_adjustor.set_rs1_sp()
             opr_adjustor.set_rd_int()
-            return True
+            success = True
         elif ".H.X" in instr_full_ID:
             opr_adjustor.set_rs1_int()
             opr_adjustor.set_rd_hp()
-            return True
+            success = True
         elif ".X.H" in instr_full_ID:
             opr_adjustor.set_rs1_hp()
             opr_adjustor.set_rd_int()
-            return True
+            success = True
         elif ".D.X" in instr_full_ID:
             opr_adjustor.set_rs1_int()
             opr_adjustor.set_rd_dp()
-            return True
+            success = True
         elif ".X.D" in instr_full_ID:
             opr_adjustor.set_rs1_dp()
             opr_adjustor.set_rd_int()
-            return True
+            success = True
 
-    return False
+    return success
 
 
 def adjust_imm20_rd(instr):
@@ -317,9 +320,7 @@ def adjust_jal(instr):
     attr_dict["offset-scale"] = "1"
     class_name = "PcRelativeBranchOperand"
 
-    add_addressing_operand(
-        instr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
     return True
 
 
@@ -341,9 +342,7 @@ def adjust_jalr(instr):
     attr_dict["base"] = "rs1"
     class_name = "BaseOffsetBranchOperand"
 
-    add_addressing_operand(
-        instr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
     return True
 
 
@@ -380,9 +379,7 @@ def adjust_branches(instr):
     elif instr.name == "BNE":
         attr_dict["condition"] = "BNE"
 
-    add_addressing_operand(
-        instr, None, "Branch", class_name, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "Branch", class_name, subop_dict, attr_dict)
     return True
 
 
@@ -415,9 +412,7 @@ def adjust_int_load(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Read"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -467,9 +462,7 @@ def adjust_int_stores(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -512,9 +505,7 @@ def adjust_fp_stores(instr):
     attr_dict["element-size"] = size
     attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
 
     return True
 
@@ -556,9 +547,7 @@ def adjust_aq_rs2(instr):
         attr_dict["sorder"] = order
         attr_dict["mem-access"] = "Write"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -590,9 +579,7 @@ def adjust_aq_rs1(instr):
     attr_dict["mem-access"] = "Read"
     attr_dict["lorder"] = "Ordered"
 
-    add_addressing_operand(
-        instr, None, "LoadStore", None, subop_dict, attr_dict
-    )
+    add_addressing_operand(instr, None, "LoadStore", None, subop_dict, attr_dict)
     return True
 
 
@@ -652,6 +639,8 @@ def adjust_csr_imm(instr):
 # adjust group/type to float
 # fix rm type from register to immediate
 def adjust_f_rs3(instr):
+    success = False
+
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
 
@@ -660,41 +649,39 @@ def adjust_f_rs3(instr):
     opr_adjustor.set_rm()
 
     if ".H" in instr_full_ID:
-        instr.form = "Half-precision"
         opr_adjustor.set_rs1_hp()
         opr_adjustor.set_rs2_hp()
         opr_adjustor.set_rs3_hp()
         opr_adjustor.set_rd_hp()
-        return True
+        success = True
     elif ".S" in instr_full_ID:
-        instr.form = "Single-precision"
         opr_adjustor.set_rs1_sp()
         opr_adjustor.set_rs2_sp()
         opr_adjustor.set_rs3_sp()
         opr_adjustor.set_rd_sp()
-        return True
+        success = True
     elif ".D" in instr_full_ID:
-        instr.form = "Double-precision"
         opr_adjustor.set_rs1_dp()
         opr_adjustor.set_rs2_dp()
         opr_adjustor.set_rs3_dp()
         opr_adjustor.set_rd_dp()
-        return True
+        success = True
     elif ".Q" in instr_full_ID:
-        instr.form = "Quad-precision"
         opr_adjustor.set_rs1_qp()
         opr_adjustor.set_rs2_qp()
         opr_adjustor.set_rs3_qp()
         opr_adjustor.set_rd_qp()
-        return True
+        success = True
 
-    return False
+    return success
 
 
 # Floating point Instructions w/ 2 register input operands
 # adjust group/type to float
 # fix rm type from register to immediate
 def adjust_f_rs2(instr):
+    success = False
+
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
 
@@ -703,35 +690,33 @@ def adjust_f_rs2(instr):
     opr_adjustor.set_rm()
 
     if ".H" in instr_full_ID:
-        instr.form = "Half-precision"
         opr_adjustor.set_rs1_hp()
         opr_adjustor.set_rs2_hp()
         opr_adjustor.set_rd_hp()
-        return True
+        success = True
     elif ".S" in instr_full_ID:
-        instr.form = "Single-precision"
         opr_adjustor.set_rs1_sp()
         opr_adjustor.set_rs2_sp()
         opr_adjustor.set_rd_sp()
-        return True
+        success = True
     elif ".D" in instr_full_ID:
-        instr.form = "Double-precision"
         opr_adjustor.set_rs1_dp()
         opr_adjustor.set_rs2_dp()
         opr_adjustor.set_rd_dp()
-        return True
+        success = True
     elif ".Q" in instr_full_ID:
-        instr.form = "Quad-precision"
         opr_adjustor.set_rs1_qp()
         opr_adjustor.set_rs2_qp()
         opr_adjustor.set_rd_qp()
-        return True
+        success = True
 
-    return False
+    return success
 
 
 # Floating point Instructions w/ 1 register input operand
 def adjust_f_rs1(instr):
+    success = False
+
     opr_adjustor = OperandAdjustor(instr)
     instr_full_ID = instr.get_full_ID()
 
@@ -743,19 +728,19 @@ def adjust_f_rs1(instr):
         if ".H" in instr_full_ID:
             opr_adjustor.set_rs1_hp()
             opr_adjustor.set_rd_hp()
-            return True
+            success = True
         elif ".S" in instr_full_ID:
             opr_adjustor.set_rs1_sp()
             opr_adjustor.set_rd_sp()
-            return True
+            success = True
         elif ".D" in instr_full_ID:
             opr_adjustor.set_rs1_dp()
             opr_adjustor.set_rd_dp()
-            return True
+            success = True
         elif ".Q" in instr_full_ID:
             opr_adjustor.set_rs1_qp()
             opr_adjustor.set_rd_qp()
-            return True
+            success = True
 
     elif instr_full_ID.startswith("FCVT"):
         source_dest_pattern = re.compile(r"FCVT.(?P<dest>\w*).(?P<src>\w*)")
@@ -786,9 +771,9 @@ def adjust_f_rs1(instr):
         elif ("W" in dest_str) or ("L" in dest_str):
             opr_adjustor.set_rd_int()
 
-        return True
+        success = True
 
-    return False
+    return success
 
 
 # Fence instruction
@@ -802,6 +787,8 @@ def adjust_fence(instr):
         pred_opr.choices = "Barrier option"
         succ_opr = instr.find_operand("succ")
         succ_opr.choices = "Barrier option"
+        fm_opr = instr.find_operand("fm")
+        fm_opr.choices = "Fence mode"
         opr_adjustor.set_rs1_int()
         opr_adjustor.set_rd_int()
         return True

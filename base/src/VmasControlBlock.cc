@@ -316,17 +316,10 @@ namespace Force {
   void VmasControlBlock::PopulatePageInfo(uint64 VA, const VmAddressSpace* pVmas, const Page* pPage, PageInformation& rPageInfo) const
   {
     PageTableInfoRec page_table_rec;
-    RootPageTable* root_table = GetRootPageTable(VA);
-    const TablePte* pte = root_table->PageTableWalk(pPage, pVmas, page_table_rec);
-    if (nullptr != pte)
-    {
+    const PageTable* page_table = GetRootPageTable(VA);
+    while (page_table != nullptr) {
+      page_table = page_table->PageTableWalk(pPage, pVmas, page_table_rec);
       rPageInfo.SetPageTableRecord(page_table_rec);
-      const TablePte* new_pte = nullptr;
-      while ((new_pte = pte->PageTableWalk(pPage, pVmas, page_table_rec)) != nullptr)
-      {
-        rPageInfo.SetPageTableRecord(page_table_rec);
-        pte = new_pte;
-      }
     }
 
     PageInfoRec page_info_rec;

@@ -84,6 +84,7 @@ class Operand(object):
         self.exclude = None
         self.differ = None
         self.slave = None
+        self.layoutType = None
         self.layoutMultiple = None
         self.regCount = None
         self.regIndexAlignment = None
@@ -137,6 +138,8 @@ class Operand(object):
             ret_str += ' class="%s"' % self.oclass
         if self.slave:
             ret_str += ' slave="%s"' % self.slave
+        if self.layoutType:
+            ret_str += ' layout-type="%s"' % self.layoutType
         if self.layoutMultiple:
             ret_str += ' layout-multiple="%s"' % self.layoutMultiple
         if self.regCount:
@@ -201,9 +204,7 @@ class Operand(object):
         split_const = copy.deepcopy(self)
         bit_list = bit_string_to_list(self.bits)
         if len(bit_list) != self.width:
-            raise BuilderException(
-                "Expecting bit list to be the same size as operand width."
-            )
+            raise BuilderException("Expecting bit list to be the same size as operand width.")
 
         const_bit_list = list()
         const_value = ""
@@ -242,9 +243,7 @@ class Operand(object):
         self.value = new_value
 
     def set_extra_attribute(self, name, value):
-        print(
-            'WARNING: not handled operand attribute: %s="%s".' % (name, value)
-        )
+        print('WARNING: not handled operand attribute: %s="%s".' % (name, value))
         raise Error
 
     def set_attribute(self, name, value):
@@ -262,6 +261,7 @@ class Operand(object):
             "differ",
             "ext",
             "slave",
+            "layoutType",
             "layoutMultiple",
             "regCount",
             "regIndexAlignment",
@@ -317,8 +317,7 @@ class GroupOperand(Operand):
 
         if fail_not_found:
             raise BuilderException(
-                'Operand "%s" not found in instruction "%s".'
-                % (name, self.get_full_ID())
+                'Operand "%s" not found in instruction "%s".' % (name, self.get_full_ID())
             )
         else:
             return None
@@ -365,17 +364,12 @@ class Instruction(object):
         for opr in self.operands:
             if opr.name == name:
                 return opr
-            if (
-                name == "const_bits"
-                and self.constOp
-                and self.constOp.name == name
-            ):
+            if name == "const_bits" and self.constOp and self.constOp.name == name:
                 return self.constOp
 
         if fail_not_found:
             raise BuilderException(
-                'Operand "%s" not found in instruction "%s".'
-                % (name, self.get_full_ID())
+                'Operand "%s" not found in instruction "%s".' % (name, self.get_full_ID())
             )
         else:
             return None
@@ -411,8 +405,7 @@ class Instruction(object):
             if existing_opr.value and existing_opr.value.find("!=") == 0:
                 print(
                     "WARNING: need special handling of this instruction with "
-                    'constraint "%s" on operand "%s".'
-                    % (existing_opr.value, opr.name)
+                    'constraint "%s" on operand "%s".' % (existing_opr.value, opr.name)
                 )
                 return
             existing_opr.merge_value(opr)
@@ -430,13 +423,10 @@ class Instruction(object):
                 pass
             else:
                 raise BuilderException(
-                    "Unexpected change_operand on Register type with "
-                    'value="%s".' % (opr.value)
+                    "Unexpected change_operand on Register type with " 'value="%s".' % (opr.value)
                 )
         else:
-            raise BuilderException(
-                'Unexpected change_operand type "%s".' % (opr.type)
-            )
+            raise BuilderException('Unexpected change_operand type "%s".' % (opr.type))
 
         if update_const:
             self.update_constant()
@@ -518,11 +508,7 @@ class Instruction(object):
         for opr in self.operands:
             if opr.name == name:
                 return opr
-            if (
-                name == "const_bits"
-                and self.constOp
-                and self.constOp.name == name
-            ):
+            if name == "const_bits" and self.constOp and self.constOp.name == name:
                 return self.constOp
             if isinstance(opr, GroupOperand):
                 opr_tmp = opr.find_operand(name, False)
@@ -533,8 +519,7 @@ class Instruction(object):
 
         if fail_not_found:
             raise BuilderException(
-                'Operand "%s" not found in instruction "%s".'
-                % (name, self.get_full_ID())
+                'Operand "%s" not found in instruction "%s".' % (name, self.get_full_ID())
             )
         else:
             return None
@@ -582,9 +567,7 @@ class Instruction(object):
 # attr_dict  => additional addressing operand attributes
 
 
-def add_addressing_operand(
-    instr, opr_name, opr_type, class_name, subop_dict, attr_dict=None
-):
+def add_addressing_operand(instr, opr_name, opr_type, class_name, subop_dict, attr_dict=None):
     addr_opr = GroupOperand()
     addr_opr.type = opr_type
     if class_name is not None:

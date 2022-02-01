@@ -825,7 +825,7 @@ namespace {
   void VectorStridedMode::CalculateTargetAddresses(const AddressSolvingShared& rShared, const IndexSolution& rIndexSolution, vector<uint64>& rTargetAddresses) const
   {
     auto& strided_shared = dynamic_cast<const VectorStridedSolvingShared&>(rShared);
-    for (uint32 elem_index = 0; elem_index < strided_shared.GetElementCount(); elem_index++) {
+    for (uint32 elem_index = 0; elem_index < strided_shared.GetDataElementCount(); elem_index++) {
       rTargetAddresses.push_back(rIndexSolution.BaseValue() + rIndexSolution.RegisterValue() * elem_index);
     }
   }
@@ -904,7 +904,7 @@ namespace {
   bool VectorStridedMode::AreTargetAddressesUsable(const VectorStridedSolvingShared& rStridedShared, cuint64 baseVal, cuint64 strideVal)
   {
     bool target_addresses_usable = IsTargetAddressUsable(rStridedShared, baseVal, rStridedShared.TargetConstraint());
-    for (uint32 elem_index = 1; elem_index < rStridedShared.GetElementCount(); elem_index++) {
+    for (uint32 elem_index = 1; elem_index < rStridedShared.GetDataElementCount(); elem_index++) {
       if (not target_addresses_usable) {
         break;
       }
@@ -991,7 +991,7 @@ namespace {
     for (AddressingMultiRegister* index_choice : indexed_shared.GetIndexChoices()) {
       const vector<AddressingRegister*>& addressing_registers = index_choice->GetAddressingRegisters();
       AddressingRegister* first_addressing_reg = addressing_registers[0];
-      uint64 base_val = indexed_shared.FreeTarget() - change_uint64_to_elementform_at_index(indexed_shared.GetElementSize(), first_addressing_reg->RegisterValues(), 0);
+      uint64 base_val = indexed_shared.FreeTarget() - change_uint64_to_elementform_at_index(indexed_shared.GetIndexElementSize(), first_addressing_reg->RegisterValues(), 0);
 
       // Copy the register values into a new index solution, so we can compute and capture the
       // values of free index registers. The unique_ptr ensures the index solution is deleted if we
@@ -1053,7 +1053,7 @@ namespace {
 
     vector<uint64> index_elem_values;
     auto& indexed_shared = dynamic_cast<const VectorIndexedSolvingShared&>(rShared);
-    change_uint64_to_elementform(indexed_shared.GetElementSize(), indexed_shared.GetElementSize(), reg_values, index_elem_values);
+    change_uint64_to_elementform(indexed_shared.GetIndexElementSize(), indexed_shared.GetIndexElementSize(), reg_values, index_elem_values);
 
     transform(index_elem_values.cbegin(), index_elem_values.cend(), back_inserter(rTargetAddresses),
       [&rIndexSolution](cuint64 indexElemVal) { return (rIndexSolution.BaseValue() + indexElemVal); });
@@ -1073,7 +1073,7 @@ namespace {
       const vector<AddressingRegister*>& addressing_registers = index_choice->GetAddressingRegisters();
       AddressingRegister* addressing_reg = addressing_registers[0];
 
-      uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), addressing_reg->RegisterValues(), 0);
+      uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetIndexElementSize(), addressing_reg->RegisterValues(), 0);
       uint64 untagged_target_addr = addr_tagging->UntagAddress(target_addr, rIndexedShared.IsInstruction());
 
       if (untagged_target_addr == forced_target_addr) {
@@ -1093,7 +1093,7 @@ namespace {
         const vector<AddressingRegister*>& addressing_registers = index_choice->GetAddressingRegisters();
         AddressingRegister* addressing_reg = addressing_registers[0];
 
-        uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetElementSize(), addressing_reg->RegisterValues(), 0);
+        uint64 target_addr = BaseValue() + change_uint64_to_elementform_at_index(rIndexedShared.GetIndexElementSize(), addressing_reg->RegisterValues(), 0);
         auto index_solution = new MultiRegisterIndexSolution(*index_choice, BaseValue(), target_addr);
         mIndexSolutionChoices.push_back(index_solution);
       }
@@ -1106,9 +1106,9 @@ namespace {
 
     vector<uint64> index_elem_values;
 
-    uint64 elem_count = GetElementCountForRegister(rAddressingReg.RegisterValues(), rIndexedShared.GetElementSize());
+    uint64 elem_count = GetElementCountForRegister(rAddressingReg.RegisterValues(), rIndexedShared.GetIndexElementSize());
     uint64 elem_target_addr = 0;
-    BaseOffsetConstraint base_offset_constr(0, rIndexedShared.GetElementSize(), 0, MAX_UINT64);
+    BaseOffsetConstraint base_offset_constr(0, rIndexedShared.GetIndexElementSize(), 0, MAX_UINT64);
     for (uint32 elem_index = 0; elem_index < elem_count; elem_index++) {
       solved = SolveWithBase(baseVal, rIndexedShared, base_offset_constr, nullptr, elem_target_addr);
       index_elem_values.push_back(elem_target_addr - baseVal);
@@ -1120,7 +1120,7 @@ namespace {
 
     if (solved) {
       vector<uint64> reg_values;
-      change_elementform_to_uint64(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), index_elem_values, reg_values);
+      change_elementform_to_uint64(rIndexedShared.GetIndexElementSize(), rIndexedShared.GetIndexElementSize(), index_elem_values, reg_values);
       rAddressingReg.SetRegisterValue(reg_values);
     }
 
@@ -1151,7 +1151,7 @@ namespace {
   bool VectorIndexedMode::AreTargetAddressesUsable(const VectorIndexedSolvingShared& rIndexedShared, cuint64 baseVal, const vector<uint64>& rIndexRegValues, const ConstraintSet* pTargetConstr)
   {
     vector<uint64> index_elem_values;
-    change_uint64_to_elementform(rIndexedShared.GetElementSize(), rIndexedShared.GetElementSize(), rIndexRegValues, index_elem_values);
+    change_uint64_to_elementform(rIndexedShared.GetIndexElementSize(), rIndexedShared.GetIndexElementSize(), rIndexRegValues, index_elem_values);
 
     bool target_addresses_usable = IsTargetAddressUsable(rIndexedShared, (baseVal + index_elem_values[0]), pTargetConstr);
 

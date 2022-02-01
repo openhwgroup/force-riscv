@@ -26,8 +26,26 @@ class MainSequence(VectorTestSequence):
         super().__init__(aGenThread, aName)
 
         self._mInstrList = (
-            "VL1R.V##RISCV",
+            "VL1RE8.V##RISCV",
+            "VL1RE16.V##RISCV",
+            "VL1RE32.V##RISCV",
+            "VL1RE64.V##RISCV",
+            "VL2RE8.V##RISCV",
+            "VL2RE16.V##RISCV",
+            "VL2RE32.V##RISCV",
+            "VL2RE64.V##RISCV",
+            "VL4RE8.V##RISCV",
+            "VL4RE16.V##RISCV",
+            "VL4RE32.V##RISCV",
+            "VL4RE64.V##RISCV",
+            "VL8RE8.V##RISCV",
+            "VL8RE16.V##RISCV",
+            "VL8RE32.V##RISCV",
+            "VL8RE64.V##RISCV",
             "VS1R.V##RISCV",
+            "VS2R.V##RISCV",
+            "VS4R.V##RISCV",
+            "VS8R.V##RISCV",
         )
 
     # Return a list of test instructions to randomly choose from.

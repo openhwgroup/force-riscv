@@ -31,6 +31,7 @@
 #include <AddressReuseMode.h>
 #include <ImageIO.h>
 #include <SymbolManager.h>
+#include <MemoryTraits.h>
 #include <Log.h>
 
 #include <algorithm>
@@ -41,7 +42,7 @@ using namespace std;
 namespace Force {
 
   MemoryBank::MemoryBank(EMemBankType bankType)
-    : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr)
+    : mpMemory(nullptr), mpBaseConstraint(nullptr), mpFree(nullptr), mpUsable(nullptr), mpPhysicalPageManager(nullptr), mpPageTableManager(nullptr), mpSymbolManager(nullptr), mpMemTraitsManager(nullptr)
   {
     mpMemory = new Memory(bankType);
     mpBaseConstraint = new ConstraintSet();
@@ -49,6 +50,10 @@ namespace Force {
     Config* config = Config::Instance();
     mpUsable = new MultiThreadMemoryConstraint(config->NumChips() * config->NumCores() * config->NumThreads());
     mpSymbolManager = new SymbolManager(bankType);
+
+    Architectures* arch = Architectures::Instance();
+    ArchInfo* arch_info = arch->DefaultArchInfo();
+    mpMemTraitsManager = new MemoryTraitsManager(arch_info->InstantiateMemoryTraitsRegistry());
   }
 
   MemoryBank::~MemoryBank()
@@ -60,6 +65,7 @@ namespace Force {
     delete mpPhysicalPageManager;
     delete mpPageTableManager;
     delete mpSymbolManager;
+    delete mpMemTraitsManager;
   }
 
   EMemBankType MemoryBank::MemoryBankType() const
@@ -75,6 +81,20 @@ namespace Force {
   void MemoryBank::SubMemoryRange(uint64 start, uint64 end)
   {
     mpBaseConstraint->SubRange(start, end);
+  }
+
+  void MemoryBank::AddArchitectureMemoryAttributes(cuint32 threadId, cuint64 start, cuint64 end, const vector<EMemoryAttributeType>& rMemAttributes)
+  {
+    for (EMemoryAttributeType mem_attr : rMemAttributes) {
+      mpMemTraitsManager->AddTrait(threadId, mem_attr, start, end);
+    }
+  }
+
+  void MemoryBank::AddImplementationMemoryAttributes(cuint32 threadId, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes)
+  {
+    for (const string& mem_attr : rMemAttributes) {
+      mpMemTraitsManager->AddTrait(threadId, mem_attr, start, end);
+    }
   }
 
   void MemoryBank::Configure()
@@ -169,7 +189,7 @@ namespace Force {
     //avoid allocating pages in predefined/unsupported physical memory ranges.
     Architectures* arch = Architectures::Instance();
     ArchInfo* arch_info = arch->DefaultArchInfo();
-    mpPhysicalPageManager = arch_info->InstantiatePhysicalPageManager(MemoryBankType());
+    mpPhysicalPageManager = arch_info->InstantiatePhysicalPageManager(MemoryBankType(), mpMemTraitsManager);
     uint64 pa_limit = Config::Instance()->LimitValue(ELimitType::PhysicalAddressLimit);
     ConstraintSet phys_range(0x0ull, pa_limit);
     mpPhysicalPageManager->Initialize(&phys_range, mpBaseConstraint);
@@ -299,12 +319,34 @@ namespace Force {
   void MemoryManager::SubMemoryRange(uint32 bank, uint64 start, uint64 end)
   {
     if (mConstraintConfigured) {
-      LOG(fail) << "{MemoryManager::AddMemoryRange} adding memory range after base line memory constraints have been configured." << endl;
+      LOG(fail) << "{MemoryManager::SubMemoryRange} adding memory range after base line memory constraints have been configured." << endl;
       FAIL("modifying-memory-ranges-after-constraints-configured");
     }
 
     MemoryBank* mem_bank = GetMemoryBank(bank);
     mem_bank->SubMemoryRange(start, end);
+  }
+
+  void MemoryManager::AddArchitectureMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const vector<EMemoryAttributeType>& rMemAttributes)
+  {
+    if (mConstraintConfigured) {
+      LOG(fail) << "{MemoryManager::AddArchitectureMemoryAttributes} method can only be called during initialization before base line memory constraints have been configured." << endl;
+      FAIL("modifying-memory-attributes-after-constraints-configured");
+    }
+
+    MemoryBank* mem_bank = GetMemoryBank(bank);
+    mem_bank->AddArchitectureMemoryAttributes(threadId, start, end, rMemAttributes);
+  }
+
+  void MemoryManager::AddImplementationMemoryAttributes(cuint32 threadId, cuint32 bank, cuint64 start, cuint64 end, const std::vector<std::string>& rMemAttributes)
+  {
+    if (mConstraintConfigured) {
+      LOG(fail) << "{MemoryManager::AddImplementationMemoryAttributes} method can only be called during initialization before base line memory constraints have been configured." << endl;
+      FAIL("modifying-memory-attributes-after-constraints-configured");
+    }
+
+    MemoryBank* mem_bank = GetMemoryBank(bank);
+    mem_bank->AddImplementationMemoryAttributes(threadId, start, end, rMemAttributes);
   }
 
   void MemoryManager::ConfigureMemoryBanks()

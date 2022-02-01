@@ -180,19 +180,13 @@ class QuickSummary(object):
                     ):
                         print(my_line)
 
-                my_ofile.write(
-                    "Total Simulations: " + str(self.total_count) + "\n"
-                )
-                my_ofile.write(
-                    "Total Fails:       " + str(self.failed_count) + "\n"
-                )
+                my_ofile.write("Total Simulations: " + str(self.total_count) + "\n")
+                my_ofile.write("Total Fails:       " + str(self.failed_count) + "\n")
                 if self.total_count > 0:
                     my_ofile.write(
                         "Success Rate:      "
                         + "{0:.2f}".format(
-                            100
-                            * (self.total_count - self.failed_count)
-                            / self.total_count
+                            100 * (self.total_count - self.failed_count) / self.total_count
                         )
                         + "%\n"
                     )
@@ -207,9 +201,7 @@ class QuickSummary(object):
                     print(
                         "Success Rate:      "
                         + "{0:.2f}".format(
-                            100
-                            * (self.total_count - self.failed_count)
-                            / self.total_count
+                            100 * (self.total_count - self.failed_count) / self.total_count
                         )
                         + "%"
                     )

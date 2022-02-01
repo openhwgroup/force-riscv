@@ -66,17 +66,9 @@ class MainSequence(Sequence):
                 requested_page_sizes_string += page_size_list[0] + ","
 
             self.notice("")
-            self.notice(
-                ">>>>>>>>   number_of_pages is:  {}".format(number_of_pages)
-            )
-            self.notice(
-                ">>>>>>>>   req_page_size   is:  {}".format(
-                    requested_page_sizes_string
-                )
-            )
-            self.notice(
-                ">>>>>>>> total_page_bytes  is:  {:X}".format(total_page_bytes)
-            )
+            self.notice(">>>>>>>>   number_of_pages is:  {}".format(number_of_pages))
+            self.notice(">>>>>>>>   req_page_size   is:  {}".format(requested_page_sizes_string))
+            self.notice(">>>>>>>> total_page_bytes  is:  {:X}".format(total_page_bytes))
 
             # return format is a tuple with these elements:
             #   is_valid, starting_address, start_end_range,
@@ -92,20 +84,10 @@ class MainSequence(Sequence):
                     ">>>>>>>>>>>>>>>>>  Valid result returned \
                             from genFreePagesRange"
                 )
-                self.notice(
-                    ">>>>>>>>>>>>>>>>>  starting_address:  {}".format(
-                        result[1]
-                    )
-                )
-                self.notice(
-                    ">>>>>>>>>>>>>>>>>  start_end_range:   {}".format(
-                        result[2]
-                    )
-                )
+                self.notice(">>>>>>>>>>>>>>>>>  starting_address:  {}".format(result[1]))
+                self.notice(">>>>>>>>>>>>>>>>>  start_end_range:   {}".format(result[2]))
                 for element in result[3:]:
-                    self.notice(
-                        ">>>>>>>>>>>>>>>>>  page size:     {}".format(element)
-                    )
+                    self.notice(">>>>>>>>>>>>>>>>>  page size:     {}".format(element))
             else:
                 self.error(
                     "The self.genFreePagesRange(Number={}) failed \
@@ -134,37 +116,25 @@ class MainSequence(Sequence):
                     )
                 )
 
-            self.notice(
-                ">>>>>>>>>>>>   Address Range:   {}".format(start_end_range)
-            )
+            self.notice(">>>>>>>>>>>>   Address Range:   {}".format(start_end_range))
 
             target_address = self.genVA(
                 Size=64, Align=64, Range=start_end_range, Type="D", Shared=0
             )
-            self.notice(
-                ">>>>>>>>>>>>   LSTarget address:  {:#x}".format(
-                    target_address
-                )
-            )
+            self.notice(">>>>>>>>>>>>   LSTarget address:  {:#x}".format(target_address))
 
             if self.getGlobalState("AppRegisterWidth") == 32:
                 the_instruction = self.pickWeighted(LDST32_All_instructions)
             else:
                 the_instruction = self.pickWeighted(LDST_All_instructions)
             self.genInstruction(the_instruction, {"LSTarget": target_address})
-            self.notice(
-                ">>>>>>>>>>>>   Generated instruction is {}".format(
-                    the_instruction
-                )
-            )
+            self.notice(">>>>>>>>>>>>   Generated instruction is {}".format(the_instruction))
 
 
 # Set up the valid paging choices, in case they are not enabled by default
 def gen_thread_initialization(gen_thread):
 
-    satp_info = gen_thread.getRegisterInfo(
-        "satp", gen_thread.getRegisterIndex("satp")
-    )
+    satp_info = gen_thread.getRegisterInfo("satp", gen_thread.getRegisterIndex("satp"))
     rv32 = satp_info["Width"] == 32
 
     choices_mod = ChoicesModifier(gen_thread)
@@ -173,9 +143,7 @@ def gen_thread_initialization(gen_thread):
     # page boundaries
 
     if rv32:
-        choices_mod.modifyPagingChoices(
-            "Page size#4K granule#S#stage 1", {"4K": 25, "4M": 25}
-        )
+        choices_mod.modifyPagingChoices("Page size#4K granule#S#stage 1", {"4K": 25, "4M": 25})
     else:
         choices_mod.modifyPagingChoices(
             "Page size#4K granule#S#stage 1",

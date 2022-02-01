@@ -15,10 +15,17 @@
 # limitations under the License.
 #
 
-# insert parent directory to access shared builder files
+import copy
+import os
 import sys
 
-sys.path.insert(0, "..")
+from shared.ctrl_file_builder import CtrlFileBuilder
+from shared.instruction_file import InstructionFile
+from shared.instruction_file_grouping import (
+    NumGroupedInstructionFile,
+    FormatGroupedInstructionFile,
+)
+from shared.instruction_file_parser import InstructionFileParser
 
 
 class BaseTestBuilder:
@@ -77,25 +84,17 @@ class BaseTestBuilder:
         return self.mInputPath + self.mTxtPath
 
     def make_output_test_dir(self, dir_name):
-        import os
-
         try:
             os.makedirs(self.mOutputPath + dir_name)
         except FileExistsError:
             pass
         except OSError:
-            self.debug(
-                "Error creating directory {}{}, exiting".format(
-                    self.mOutputPath, dir_name
-                )
-            )
+            self.debug("Error creating directory {}{}, exiting".format(self.mOutputPath, dir_name))
             sys.exit(1)
 
         return self.mOutputPath + dir_name + "/"
 
     def delete_output_test_dir(self, dir_name):
-        import os
-
         try:
             os.rmdir(dir_name)
         except OSError:
@@ -103,9 +102,6 @@ class BaseTestBuilder:
             sys.exit(1)
 
     def read_inputs(self):
-        from shared.instruction_file import InstructionFile
-        from shared.instruction_file_parser import InstructionFileParser
-
         for xml_file in self.mXmlFiles:
             instr_file = InstructionFile()
             file_parser = InstructionFileParser(instr_file)
@@ -138,14 +134,10 @@ class BaseTestBuilder:
             validInstructions,
         )
         if instr_grp.has_any_instructions():
-            with open(
-                testOutputDir + "instruction_grouping.txt", "w"
-            ) as group_handle:
+            with open(testOutputDir + "instruction_grouping.txt", "w") as group_handle:
                 instr_grp.write(group_handle)
 
-            with open(
-                testOutputDir + instrFileName + ".txt", "w"
-            ) as test_handle:
+            with open(testOutputDir + instrFileName + ".txt", "w") as test_handle:
                 instr_grp.print_tests(test_handle)
 
             return True
@@ -164,10 +156,6 @@ class BaseTestBuilder:
     ):
         instr_grp = None
         if self.mGroupByNum:
-            from shared.instruction_file_grouping import (
-                NumGroupedInstructionFile,
-            )
-
             instr_grp = NumGroupedInstructionFile(
                 instrFile,
                 self.mArchName,
@@ -180,10 +168,6 @@ class BaseTestBuilder:
                 subgroupPrefix,
             )
         else:
-            from shared.instruction_file_grouping import (
-                FormatGroupedInstructionFile,
-            )
-
             instr_grp = FormatGroupedInstructionFile(
                 instrFile,
                 self.mArchName,
@@ -200,8 +184,6 @@ class BaseTestBuilder:
         for instr_file_name, instr_file in self.mInstrFiles.items():
             valid_subgroups = []
             test_output_dir = self.make_output_test_dir(instr_file_name)
-            import copy
-
             default_skip_instrs = copy.deepcopy(self.mUnsupportedInstructions)
             for (
                 subgroup_name,
@@ -232,11 +214,7 @@ class BaseTestBuilder:
             self.write_ctrl_files(valid_subgroups, test_output_dir)
 
     def write_ctrl_files(self, subgroupNames, outputDir):
-        from shared.ctrl_file_builder import CtrlFileBuilder
-
-        ctrl_file_builder = CtrlFileBuilder(
-            self.mArchName.lower(), subgroupNames
-        )
+        ctrl_file_builder = CtrlFileBuilder(self.mArchName.lower(), subgroupNames)
         ctrl_file_builder.gen_ctrl_files(outputDir)
 
     def run(self):

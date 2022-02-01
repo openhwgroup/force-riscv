@@ -38,37 +38,31 @@ class MyMainSequence(Sequence):
             # Get two adjacent 4K pages.
             page_addr = self.genVA(Size=0x2000, Align=0x1000)
 
-            # To generate page crossings, for the target address to be at the
-            # end of the first page setting the page offset to some value close
-            # to the end of the page based on the size of the target operand of
-            # the selected instruction.  The code below will generated some
-            # page crossings and some accesses that are at the end of the page,
-            # but not crossing the page.
-
-            if (instr in LDST_Byte_instructions) or (
-                instr in LDST_Half_instructions
-            ):
-                min_addr = 0xFFC
-            elif instr in LDST_Word_instructions:
-                min_addr = 0xFFA
-            elif instr in LDST_Double_instructions:
-                min_addr = 0xFF6
-            else:
-                self.error(
-                    ">>>>>  Hmmm...  {} is an unexpected instruction.".format(
-                        instr
-                    )
-                )
-
-            target_addr = page_addr + self.random32(min_addr, 0xFFF)
+            min_addr_offset = self._get_min_address_offset(instr)
+            target_addr = page_addr + self.random32(min_addr_offset, 0xFFF)
 
             self.genInstruction(instr, {"LSTarget": target_addr})
 
-            self.notice(
-                ">>>>>  Instruction: {}   Target addr: {:012x}".format(
-                    instr, target_addr
-                )
-            )
+            self.notice(">>>>>  Instruction: {}   Target addr: {:012x}".format(instr, target_addr))
+
+    def _get_min_address_offset(self, instr):
+        # To generate page crossings, for the target address to be at the
+        # end of the first page setting the page offset to some value close
+        # to the end of the page based on the size of the target operand of
+        # the selected instruction.  The code below will generated some
+        # page crossings and some accesses that are at the end of the page,
+        # but not crossing the page.
+        min_addr_offset = 0
+        if (instr in LDST_Byte_instructions) or (instr in LDST_Half_instructions):
+            min_addr_offset = 0xFFC
+        elif instr in LDST_Word_instructions:
+            min_addr_offset = 0xFFA
+        elif instr in LDST_Double_instructions:
+            min_addr_offset = 0xFF6
+        else:
+            self.error(">>>>>  Hmmm...  {} is an unexpected instruction.".format(instr))
+
+        return min_addr_offset
 
 
 MainSequenceClass = MyMainSequence

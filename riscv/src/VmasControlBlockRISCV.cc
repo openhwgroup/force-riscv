@@ -35,6 +35,7 @@
 #include <PageInfoRecord.h>
 #include <SetupRootPageTableRISCV.h>
 #include <UtilityFunctionsRISCV.h>
+#include <PagingInfo.h>
 
 #include <memory>
 #include <sstream>
@@ -156,16 +157,27 @@ namespace Force {
     return true;
   }
 
-  //!< if Force configured for 32-bit ISA, then paging mode must be Sv32...
-  
-  bool VmasControlBlockRISCV::SV32() const {
-    return Config::Instance()->GetGlobalStateValue(EGlobalStateType::AppRegisterWidth) == 32; // force-risc configured to 32-bits 
-  }
- 
   //!< Return PTE shift based on paging mode...
   //
-  uint32 VmasControlBlockRISCV::PteShift() const { 
-    return SV32() ? 2 : 3;
+  uint32 VmasControlBlockRISCV::PteShift() const
+  {
+    uint32 pte_shift = 0;
+
+    const PagingInfo* paging_info = mpGenerator->GetPagingInfo();
+    switch (paging_info->GetPagingMode()) {
+      case EPagingMode::Sv32:
+        pte_shift = 2;
+        break;
+      case EPagingMode::Sv39:
+      case EPagingMode::Sv48:
+        pte_shift = 3;
+        break;
+      default:
+        LOG(fail) << "{VmasControlBlockRISCV::PteShift} Unknown paging mode " << EPagingMode_to_string(paging_info->GetPagingMode()) << endl;
+        FAIL("unknown-paging-mode");
+    }
+
+    return pte_shift;
   }
 
   uint64 VmasControlBlockRISCV::GetMaxPhysicalAddress() const
@@ -186,17 +198,39 @@ namespace Force {
 
   uint32 VmasControlBlockRISCV::HighestVaBitCurrent(uint32 rangeNum) const
   {
-    return SV32() ? 31 : 47;
+    uint32 highest_va_bit = 0;
+
+    const PagingInfo* paging_info = mpGenerator->GetPagingInfo();
+    switch (paging_info->GetPagingMode()) {
+      case EPagingMode::Sv32:
+        highest_va_bit = 31;
+        break;
+      case EPagingMode::Sv39:
+        highest_va_bit = 38;
+        break;
+      case EPagingMode::Sv48:
+        highest_va_bit = 47;
+        break;
+      default:
+        LOG(fail) << "{VmasControlBlockRISCV::HighestVaBitCurrent} Unknown paging mode " << EPagingMode_to_string(paging_info->GetPagingMode()) << endl;
+        FAIL("unknown-paging-mode");
+    }
+
+    return highest_va_bit;
   }
 
   void VmasControlBlockRISCV::GetAddressErrorRanges(vector<TranslationRange>& rRanges) const
   {
+    const PagingInfo* paging_info = mpGenerator->GetPagingInfo();
+    if (paging_info->GetPagingMode() == EPagingMode::Sv32) {
+      // Sv32 has no address error ranges
+      return;
+    }
+
     TranslationRange addr_err_range;
 
     uint64 va_bits = mpRootPageTable->HighestLookUpBit();
-    
-    if (SV32()) va_bits += 1; // addressses are not sign-extended in Sv32, thus no Address Error exception
-    
+
     uint64 error_start = 0x1ull << va_bits;
     uint64 error_end = sign_extend64((0x1ull << va_bits), va_bits+1) - 1;
 
@@ -239,10 +273,34 @@ namespace Force {
       FAIL("root_page_table_nullptr");
     }
 
-    uint32 pteSize       = SV32() ? 2  : 3;
-    uint32 tableStep     = SV32() ? 10 : 9;
-    uint32 maxTableLevel = SV32() ? 1  : 3;
-    uint32 tableLowBit   = SV32() ? 22 : 39;
+    uint32 pteSize = 0;
+    uint32 tableStep = 0;
+    uint32 maxTableLevel = 0;
+    uint32 tableLowBit = 0;
+    const PagingInfo* paging_info = mpGenerator->GetPagingInfo();
+    switch (paging_info->GetPagingMode()) {
+      case EPagingMode::Sv32:
+        pteSize = 2;
+        tableStep = 10;
+        maxTableLevel = 1;
+        tableLowBit = 22;
+        break;
+      case EPagingMode::Sv39:
+        pteSize = 3;
+        tableStep = 9;
+        maxTableLevel = 2;
+        tableLowBit = 30;
+        break;
+      case EPagingMode::Sv48:
+        pteSize = 3;
+        tableStep = 9;
+        maxTableLevel = 3;
+        tableLowBit = 39;
+        break;
+      default:
+        LOG(fail) << "{VmasControlBlockRISCV::SetupRootPageTable} Unknown paging mode " << EPagingMode_to_string(paging_info->GetPagingMode()) << endl;
+        FAIL("unknown-paging-mode");
+    }
 
     pRootTable->Setup(tableStep, HighestVaBitCurrent(), tableLowBit, pteSuffix, pteSize, maxTableLevel);
     
@@ -347,7 +405,8 @@ namespace Force {
 
     uint64 va_bits = mpRootPageTable->HighestLookUpBit();
 
-    if (SV32()) {
+    const PagingInfo* paging_info = mpGenerator->GetPagingInfo();
+    if (paging_info->GetPagingMode() == EPagingMode::Sv32) {
       uint64 va_end  = (0x1ull << (va_bits + 1)) - 0x1ull;
       v_constr->AddRange(0, va_end);
       LOG(debug) << "{VmasControlBlockRISCV::InitialVirtualConstraint} For Sv32, va range: 0x0/0x" << std::hex << va_end << std::dec << std::endl;

@@ -51,9 +51,7 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VSEW", vsew_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VSEW", vsew_choice_weights)
         vlmul_choice_weights = {
             "0x0": 10,
             "0x1": 0,
@@ -64,20 +62,12 @@ class MainSequence(VectorTestSequence):
             "0x6": 0,
             "0x7": 0,
         }
-        choices_mod.modifyRegisterFieldValueChoices(
-            "vtype.VLMUL", vlmul_choice_weights
-        )
+        choices_mod.modifyRegisterFieldValueChoices("vtype.VLMUL", vlmul_choice_weights)
         choices_mod.commitSet()
 
-        (self._mRegIndex1, self._mRegIndex2) = self.getRandomRegisters(
-            2, "VECREG", exclude="0"
-        )
-        self._mElemVals1 = self._initializeVectorRegister(
-            "v%d" % self._mRegIndex1
-        )
-        self._mElemVals2 = self._initializeVectorRegister(
-            "v%d" % self._mRegIndex2
-        )
+        (self._mRegIndex1, self._mRegIndex2) = self.getRandomRegisters(2, "VECREG", exclude="0")
+        self._mElemVals1 = self._initializeVectorRegister("v%d" % self._mRegIndex1)
+        self._mElemVals2 = self._initializeVectorRegister("v%d" % self._mRegIndex2)
 
     # Return a list of test instructions to randomly choose from.
     def _getInstructionList(self):
@@ -103,19 +93,14 @@ class MainSequence(VectorTestSequence):
         reg_name_1 = "v%d" % self._mRegIndex1
         for sub_index in range(8):
             field_name = "%s_%d" % (reg_name_1, sub_index)
-            (field_val, valid) = self.readRegister(
-                reg_name_1, field=field_name
-            )
+            (field_val, valid) = self.readRegister(reg_name_1, field=field_name)
             self.assertValidRegisterValue(reg_name_1, valid)
-            expected_field_val = self._getFieldValue(
-                sub_index, self._mElemVals1
-            )
+            expected_field_val = self._getFieldValue(sub_index, self._mElemVals1)
 
             if field_val != expected_field_val:
                 self.error(
                     "Register field %s has unexpected value; "
-                    "Expected=0x%x, Actual=0x%x"
-                    % (field_name, expected_field_val, field_val)
+                    "Expected=0x%x, Actual=0x%x" % (field_name, expected_field_val, field_val)
                 )
 
     # Initialize the specified vector register and return a list of 32-bit

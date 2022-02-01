@@ -25,6 +25,7 @@
 #include <RetOperandRISCV.h>
 #include <OperandRISCV.h>
 #include <PteAttributeRISCV.h>
+#include <PyEnvironmentRISCV.h>
 
 using namespace std;
 
@@ -42,12 +43,18 @@ namespace Force {
   {
     vector<ArchInfo*> arch_info_objs;
     arch_info_objs.push_back(new ArchInfoRISCV("RiscV"));
+
+    // The architecture-level Python modules must be initialized prior to calling the base
+    // initialize_top_level_resources() function
+    PyEnvironmentRISCV::initialize_python_modules();
+
     initialize_top_level_resources(argc, argv, arch_info_objs);
 
     // Register various RISCV objects.
     ObjectRegistry* obj_registry = ObjectRegistry::Instance();
 
     // Register Operand based objects.
+    obj_registry->RegisterObject(new VsetvlAvlImmediateOperand());
     obj_registry->RegisterObject(new VsetvlVtypeImmediateOperand());
     obj_registry->RegisterObject(new VectorMaskOperand());
     obj_registry->RegisterObject(new BaseOffsetBranchOperand());
@@ -57,14 +64,10 @@ namespace Force {
     obj_registry->RegisterObject(new CompressedRegisterOperandRISCV());
     obj_registry->RegisterObject(new VsetvlAvlRegisterOperand());
     obj_registry->RegisterObject(new VsetvlVtypeRegisterOperand());
-    obj_registry->RegisterObject(new VtypeLayoutOperand());
-    obj_registry->RegisterObject(new WholeRegisterLayoutOperand());
-    obj_registry->RegisterObject(new CustomLayoutOperand());
+    obj_registry->RegisterObject(new VectorBaseOffsetLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new VectorStridedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new VectorIndexedLoadStoreOperandRISCV());
     obj_registry->RegisterObject(new MultiVectorRegisterOperandRISCV());
-    obj_registry->RegisterObject(new VectorDataRegisterOperand());
-    obj_registry->RegisterObject(new VectorIndexedDataRegisterOperand());
 
     // Register Paging related objects.
     obj_registry->RegisterObject(new AddressPteAttributeRISCV());
@@ -77,7 +80,6 @@ namespace Force {
 
     // Register Instruction related objects.
     obj_registry->RegisterObject(new RetInstruction());
-    obj_registry->RegisterObject(new VectorLoadStoreInstruction());
     obj_registry->RegisterObject(new VectorAMOInstructionRISCV());
     obj_registry->RegisterObject(new VsetvlInstruction());
   }

@@ -60,32 +60,18 @@ class MainSequence(Sequence):
 
             # defaults to request size of 1 byte of memory
             vm_address = self.genVA(Size=2 ** (i + 4), Align=2 ** (i + 4))
-            self.notice(
-                ">>>>>>>>>>>>>>>>>  vm_address:        {:12X}".format(
-                    vm_address
-                )
-            )
+            self.notice(">>>>>>>>>>>>>>>>>  vm_address:        {:12X}".format(vm_address))
 
             the_instruction = self.pickWeighted(instruction_group)
-            record_id = self.genInstruction(
-                the_instruction, {"LSTarget": vm_address}
-            )
+            record_id = self.genInstruction(the_instruction, {"LSTarget": vm_address})
             instruction_info = self.queryInstructionRecord(record_id)
             chosen_instruction = instruction_info["Name"]
 
-            self.notice(
-                ">>>>>>>>>>>>>  Chosen instruction: {}".format(
-                    chosen_instruction
-                )
-            )
+            self.notice(">>>>>>>>>>>>>  Chosen instruction: {}".format(chosen_instruction))
 
+            self.notice(">>>>>>>>>>>>>  vm_address:    {:012X}".format(vm_address))
             self.notice(
-                ">>>>>>>>>>>>>  vm_address:    {:012X}".format(vm_address)
-            )
-            self.notice(
-                ">>>>>>>>>>>>>  LS_Target:     {:012X}".format(
-                    instruction_info["LSTarget"]
-                )
+                ">>>>>>>>>>>>>  LS_Target:     {:012X}".format(instruction_info["LSTarget"])
             )
 
             # Self-checking
@@ -99,95 +85,51 @@ class MainSequence(Sequence):
             elif chosen_instruction in LDST_Double_instructions:
                 target_size = 8
             else:
-                self.error(
-                    "Unexpected instruction chosen:  {}".format(
-                        chosen_instruction
-                    )
-                )
+                self.error("Unexpected instruction chosen:  {}".format(chosen_instruction))
 
             # Checking - based on the instruction target size, 1, 2, 4 or 8
             # bytes should be set to not free. Other bytes should be set to
             # free.  Assert on any mismatches.
 
             is_address_free = self.verifyVirtualAddress(vm_address, 4, False)
-            is_address_plus01_free = self.verifyVirtualAddress(
-                vm_address + 1, 4, False
-            )
-            is_address_plus02_free = self.verifyVirtualAddress(
-                vm_address + 2, 4, False
-            )
-            is_address_plus03_free = self.verifyVirtualAddress(
-                vm_address + 3, 4, False
-            )
-            is_address_plus04_free = self.verifyVirtualAddress(
-                vm_address + 4, 4, False
-            )
-            is_address_plus05_free = self.verifyVirtualAddress(
-                vm_address + 5, 4, False
-            )
-            is_address_plus06_free = self.verifyVirtualAddress(
-                vm_address + 6, 4, False
-            )
-            is_address_plus07_free = self.verifyVirtualAddress(
-                vm_address + 7, 4, False
-            )
-            is_address_plus08_free = self.verifyVirtualAddress(
-                vm_address + 8, 4, False
-            )
-            is_address_plus16_free = self.verifyVirtualAddress(
-                vm_address + 16, 4, False
-            )
+            is_address_plus01_free = self.verifyVirtualAddress(vm_address + 1, 4, False)
+            is_address_plus02_free = self.verifyVirtualAddress(vm_address + 2, 4, False)
+            is_address_plus03_free = self.verifyVirtualAddress(vm_address + 3, 4, False)
+            is_address_plus04_free = self.verifyVirtualAddress(vm_address + 4, 4, False)
+            is_address_plus05_free = self.verifyVirtualAddress(vm_address + 5, 4, False)
+            is_address_plus06_free = self.verifyVirtualAddress(vm_address + 6, 4, False)
+            is_address_plus07_free = self.verifyVirtualAddress(vm_address + 7, 4, False)
+            is_address_plus08_free = self.verifyVirtualAddress(vm_address + 8, 4, False)
+            is_address_plus16_free = self.verifyVirtualAddress(vm_address + 16, 4, False)
 
             # Dump info to the gen.log
+            self.notice(">>>>>>>>>>>>>  The address is free:     {}".format(is_address_free))
             self.notice(
-                ">>>>>>>>>>>>>  The address is free:     {}".format(
-                    is_address_free
-                )
+                ">>>>>>>>>>>>>  The address+01 is free:  {}".format(is_address_plus01_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+01 is free:  {}".format(
-                    is_address_plus01_free
-                )
+                ">>>>>>>>>>>>>  The address+02 is free:  {}".format(is_address_plus02_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+02 is free:  {}".format(
-                    is_address_plus02_free
-                )
+                ">>>>>>>>>>>>>  The address+03 is free:  {}".format(is_address_plus03_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+03 is free:  {}".format(
-                    is_address_plus03_free
-                )
+                ">>>>>>>>>>>>>  The address+04 is free:  {}".format(is_address_plus04_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+04 is free:  {}".format(
-                    is_address_plus04_free
-                )
+                ">>>>>>>>>>>>>  The address+05 is free:  {}".format(is_address_plus05_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+05 is free:  {}".format(
-                    is_address_plus05_free
-                )
+                ">>>>>>>>>>>>>  The address+05 is free:  {}".format(is_address_plus06_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+05 is free:  {}".format(
-                    is_address_plus06_free
-                )
+                ">>>>>>>>>>>>>  The address+05 is free:  {}".format(is_address_plus07_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+05 is free:  {}".format(
-                    is_address_plus07_free
-                )
+                ">>>>>>>>>>>>>  The address+08 is free:  {}".format(is_address_plus08_free)
             )
             self.notice(
-                ">>>>>>>>>>>>>  The address+08 is free:  {}".format(
-                    is_address_plus08_free
-                )
-            )
-            self.notice(
-                ">>>>>>>>>>>>>  The address+16 is free:  {}".format(
-                    is_address_plus16_free
-                )
+                ">>>>>>>>>>>>>  The address+16 is free:  {}".format(is_address_plus16_free)
             )
 
             # Checking target address should always be reserved.  Additional

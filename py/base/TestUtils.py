@@ -17,15 +17,39 @@ import Log
 import traceback
 
 
-def assert_false(expression, msg=None):
+def assert_true(expression, msg=""):
+    if not expression:
+        err_msg = "%s is false. %s" % (str(expression), msg)
+        log_failure(err_msg)
+
+
+def assert_false(expression, msg=""):
     if expression:
         err_msg = "%s is true. %s" % (str(expression), msg)
         log_failure(err_msg)
 
 
-def assert_equal(first, second, msg=None):
-    if first != second:
-        err_msg = "%s != %s. %s" % (str(first), str(second), msg)
+def assert_equal(left, right, msg=""):
+    if left != right:
+        err_msg = "%s != %s. %s" % (str(left), str(right), msg)
+        log_failure(err_msg)
+
+
+def assert_less_equal(left, right, msg=""):
+    if left > right:
+        err_msg = "%s > %s. %s" % (str(left), str(right), msg)
+        log_failure(err_msg)
+
+
+def assert_greater_equal(left, right, msg=""):
+    if left < right:
+        err_msg = "%s < %s. %s" % (str(left), str(right), msg)
+        log_failure(err_msg)
+
+
+def assert_not_in(elem, container, msg=""):
+    if elem in container:
+        err_msg = "%s is in %s. %s" % (str(elem), str(container), msg)
         log_failure(err_msg)
 
 

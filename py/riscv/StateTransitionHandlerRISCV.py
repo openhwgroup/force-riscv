@@ -51,26 +51,7 @@ class MemoryStateTransitionHandlerRISCV(StateTransitionHandler):
         load_gpr64_seq.load(base_reg_index, aStateElem.getStartAddress())
         load_gpr64_seq.load(mem_val_reg_index, aStateElem.getValues()[0])
 
-        if self.getGlobalState("AppRegisterWidth") == 32:
-            self.genInstruction(
-                "SW##RISCV",
-                {
-                    "rs1": base_reg_index,
-                    "rs2": mem_val_reg_index,
-                    "simm12": 0,
-                    "NoRestriction": 1,
-                },
-            )
-        else:
-            self.genInstruction(
-                "SD##RISCV",
-                {
-                    "rs1": base_reg_index,
-                    "rs2": mem_val_reg_index,
-                    "simm12": 0,
-                    "NoRestriction": 1,
-                },
-            )
+        self._genStoreInstruction(base_reg_index, mem_val_reg_index, 0)
 
         self._mHelperGprSet.releaseHelperGprs()
 
@@ -114,28 +95,36 @@ class MemoryStateTransitionHandlerRISCV(StateTransitionHandler):
                 load_gpr64_seq.load(base_reg_index, base_addr)
                 offset = 0
 
-            if self.getGlobalState("AppRegisterWidth") == 32:
-                self.genInstruction(
-                    "SW##RISCV",
-                    {
-                        "rs1": base_reg_index,
-                        "rs2": mem_val_reg_index,
-                        "simm12": offset,
-                        "NoRestriction": 1,
-                    },
-                )
-            else:
-                self.genInstruction(
-                    "SD##RISCV",
-                    {
-                        "rs1": base_reg_index,
-                        "rs2": mem_val_reg_index,
-                        "simm12": offset,
-                        "NoRestriction": 1,
-                    },
-                )
+            self._genStoreInstruction(base_reg_index, mem_val_reg_index, offset)
 
         self._mHelperGprSet.releaseHelperGprs()
+
+    # Generate a store instruction.
+    #
+    #  @param aBaseRegIndex The base address register.
+    #  @param aMemValRegIndex The memory value source register.
+    #  @param aOffset The address offset value.
+    def _genStoreInstruction(self, aBaseRegIndex, aSourceRegIndex, aOffset):
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            self.genInstruction(
+                "SW##RISCV",
+                {
+                    "rs1": aBaseRegIndex,
+                    "rs2": aSourceRegIndex,
+                    "simm12": aOffset,
+                    "NoRestriction": 1,
+                },
+            )
+        else:
+            self.genInstruction(
+                "SD##RISCV",
+                {
+                    "rs1": aBaseRegIndex,
+                    "rs2": aSourceRegIndex,
+                    "simm12": aOffset,
+                    "NoRestriction": 1,
+                },
+            )
 
 
 #  This class generates instructions to update the system State according to
@@ -157,17 +146,14 @@ class VectorRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     #
     #  @param aStateElem A StateElement object.
     def processStateElement(self, aStateElem):
-        if (
-            aStateElem.getStateElementType()
-            != EStateElementType.VectorRegister
-        ):
+        if aStateElem.getStateElementType() != EStateElementType.VectorRegister:
             return False
 
         (mem_block_ptr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
 
         self.initializeMemoryBlock(mem_block_ptr_index, (aStateElem,))
         self.genInstruction(
-            "VL1R.V##RISCV",
+            "VL1RE8.V##RISCV",
             {
                 "vd": aStateElem.getRegisterIndex(),
                 "rs1": mem_block_ptr_index,
@@ -190,10 +176,7 @@ class VectorRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     #  @param aStateElems A list of all StateElement objects of a particular
     #       type.
     def processStateElements(self, aStateElems):
-        if (
-            aStateElems[0].getStateElementType()
-            != EStateElementType.VectorRegister
-        ):
+        if aStateElems[0].getStateElementType() != EStateElementType.VectorRegister:
             self.error(
                 "This StateTransitionHandler can only process "
                 "StateElements of type %s" % EStateElementType.VectorRegister
@@ -204,7 +187,7 @@ class VectorRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
 
         for state_elem in aStateElems:
             self.genInstruction(
-                "VL1R.V##RISCV",
+                "VL1RE8.V##RISCV",
                 {
                     "vd": state_elem.getRegisterIndex(),
                     "rs1": mem_block_ptr_index,
@@ -243,10 +226,7 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     #
     #  @param aStateElem A StateElement object.
     def processStateElement(self, aStateElem):
-        if (
-            aStateElem.getStateElementType()
-            != EStateElementType.SystemRegister
-        ):
+        if aStateElem.getStateElementType() != EStateElementType.SystemRegister:
             return False
 
         (
@@ -256,21 +236,7 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
 
         load_gpr64_seq = LoadGPR64(self.genThread)
         load_gpr64_seq.load(reg_val_gpr_index, aStateElem.getValues()[0])
-        if aStateElem.getName() == "vtype":
-            self._processVtypeStateElement(reg_val_gpr_index)
-        elif aStateElem.getName() == "vl":
-            self._processVlStateElement(
-                aStateElem, reg_val_gpr_index, scratch_gpr_index
-            )
-        else:
-            self.genInstruction(
-                "CSRRW#register#RISCV",
-                {
-                    "rd": 0,
-                    "rs1": reg_val_gpr_index,
-                    "csr": aStateElem.getRegisterIndex(),
-                },
-            )
+        self._processSystemRegisterStateElement(aStateElem, reg_val_gpr_index, scratch_gpr_index)
 
         self._mHelperGprSet.releaseHelperGprs()
 
@@ -287,10 +253,7 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     #  @param aStateElems A list of all StateElement objects of a particular
     #       type.
     def processStateElements(self, aStateElems):
-        if (
-            aStateElems[0].getStateElementType()
-            != EStateElementType.SystemRegister
-        ):
+        if aStateElems[0].getStateElementType() != EStateElementType.SystemRegister:
             self.error(
                 "This StateTransitionHandler can only process "
                 "StateElements of type %s" % EStateElementType.SystemRegister
@@ -315,55 +278,47 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
                 load_gpr64_seq.load(mem_block_ptr_index, mem_block_ptr_val)
                 offset = 0
 
-            if self.getGlobalState("AppRegisterWidth") == 32:
-                self.genInstruction(
-                    "LW##RISCV",
-                    {
-                        "rd": reg_val_gpr_index,
-                        "rs1": mem_block_ptr_index,
-                        "simm12": offset,
-                        "NoRestriction": 1,
-                    },
-                )
-            else:
-                self.genInstruction(
-                    "LD##RISCV",
-                    {
-                        "rd": reg_val_gpr_index,
-                        "rs1": mem_block_ptr_index,
-                        "simm12": offset,
-                        "NoRestriction": 1,
-                    },
-                )
-            if state_elem.getName() == "vtype":
-                self._processVtypeStateElement(reg_val_gpr_index)
-            elif state_elem.getName() == "vl":
-                self._processVlStateElement(
-                    state_elem, reg_val_gpr_index, scratch_gpr_index
-                )
-            else:
-                self.genInstruction(
-                    "CSRRW#register#RISCV",
-                    {
-                        "rd": 0,
-                        "rs1": reg_val_gpr_index,
-                        "csr": state_elem.getRegisterIndex(),
-                    },
-                )
+            self._genLoadInstruction(reg_val_gpr_index, mem_block_ptr_index, offset)
+            self._processSystemRegisterStateElement(
+                state_elem, reg_val_gpr_index, scratch_gpr_index
+            )
 
             offset += 8
 
         self._mHelperGprSet.releaseHelperGprs()
 
+    # Execute the State change represented by the system register StateElement.
+    #
+    #  @param aStateElem A system register StateElement object.
+    #  @param aRegValGprIndex A GPR containing the system register value.
+    #  @param aScratchGprIndex A GPR to be used as a scratch register.
+    def _processSystemRegisterStateElement(self, aStateElem, aRegValGprIndex, aScratchGprIndex):
+        if aStateElem.getName() == "vtype":
+            self._processVtypeStateElement(aRegValGprIndex)
+        elif aStateElem.getName() == "vl":
+            self._processVlStateElement(aRegValGprIndex, aScratchGprIndex)
+        else:
+            self.genInstruction(
+                "CSRRW#register#RISCV",
+                {
+                    "rd": 0,
+                    "rs1": aRegValGprIndex,
+                    "csr": aStateElem.getRegisterIndex(),
+                },
+            )
+
+    # Execute the State change represented by the vtype StateElement.
+    #
+    #  @param aRegValGprIndex A GPR containing the vtype register value.
     def _processVtypeStateElement(self, aRegValGprIndex):
         # Set rd and rs1 to x0 to preserve the value of vl
-        self.genInstruction(
-            "VSETVL##RISCV", {"rd": 0, "rs1": 0, "rs2": aRegValGprIndex}
-        )
+        self.genInstruction("VSETVL##RISCV", {"rd": 0, "rs1": 0, "rs2": aRegValGprIndex})
 
-    def _processVlStateElement(
-        self, aStateElem, aRegValGprIndex, aScratchGprIndex
-    ):
+    # Execute the State change represented by the vl StateElement.
+    #
+    #  @param aRegValGprIndex A GPR containing the vl register value.
+    #  @param aScratchGprIndex A GPR to be used as a scratch register.
+    def _processVlStateElement(self, aRegValGprIndex, aScratchGprIndex):
         # Read the current value of vtype and pass it to VSETVL in order to
         # preserve the value of vtype
         self.genInstruction(
@@ -378,6 +333,33 @@ class SystemRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
             "VSETVL##RISCV",
             {"rd": 0, "rs1": aRegValGprIndex, "rs2": aScratchGprIndex},
         )
+
+    # Generate a load instruction.
+    #
+    #  @param aDestRegIndex The destination register.
+    #  @param aBaseRegIndex The base address register.
+    #  @param aOffset The address offset value.
+    def _genLoadInstruction(self, aDestRegIndex, aBaseRegIndex, aOffset):
+        if self.getGlobalState("AppRegisterWidth") == 32:
+            self.genInstruction(
+                "LW##RISCV",
+                {
+                    "rd": aDestRegIndex,
+                    "rs1": aBaseRegIndex,
+                    "simm12": aOffset,
+                    "NoRestriction": 1,
+                },
+            )
+        else:
+            self.genInstruction(
+                "LD##RISCV",
+                {
+                    "rd": aDestRegIndex,
+                    "rs1": aBaseRegIndex,
+                    "simm12": aOffset,
+                    "NoRestriction": 1,
+                },
+            )
 
 
 # This class generates instructions to update the system State according to
@@ -399,9 +381,7 @@ class GprStateTransitionHandlerRISCV(StateTransitionHandler):
             return False
 
         load_gpr64_seq = LoadGPR64(self.genThread)
-        load_gpr64_seq.load(
-            aStateElem.getRegisterIndex(), aStateElem.getValues()[0]
-        )
+        load_gpr64_seq.load(aStateElem.getRegisterIndex(), aStateElem.getValues()[0])
         return True
 
     # Execute the State changes represented by the StateElements. Only
@@ -424,19 +404,13 @@ class GprStateTransitionHandlerRISCV(StateTransitionHandler):
         # The logic below assumes there will never be more than 2,048 GPR
         # StateElements
         if len(aStateElems) > 2048:
-            self.error(
-                "Unexpected number of GPR StateElements: %d" % len(aStateElems)
-            )
+            self.error("Unexpected number of GPR StateElements: %d" % len(aStateElems))
 
         # Use the last GPR as the memory block pointer
         mem_block_ptr_index = aStateElems[-1].getRegisterIndex()
         self.initializeMemoryBlock(mem_block_ptr_index, aStateElems)
 
-        ld_instr = (
-            "LW##RISCV"
-            if self.getGlobalState("AppRegisterWidth") == 32
-            else "LD##RISCV"
-        )
+        ld_instr = "LW##RISCV" if self.getGlobalState("AppRegisterWidth") == 32 else "LD##RISCV"
 
         offset = 0
         for state_elem in aStateElems[:-1]:
@@ -610,10 +584,7 @@ class PrivilegeLevelStateTransitionHandlerRISCV(StateTransitionHandler):
     #
     #  @param aStateElem A StateElement object.
     def processStateElement(self, aStateElem):
-        if (
-            aStateElem.getStateElementType()
-            != EStateElementType.PrivilegeLevel
-        ):
+        if aStateElem.getStateElementType() != EStateElementType.PrivilegeLevel:
             return False
 
         target_priv_level = aStateElem.getValues()[0]
@@ -699,10 +670,7 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     #
     #  @param aStateElem A StateElement object.
     def processStateElement(self, aStateElem):
-        if (
-            aStateElem.getStateElementType()
-            != EStateElementType.FloatingPointRegister
-        ):
+        if aStateElem.getStateElementType() != EStateElementType.FloatingPointRegister:
             return False
 
         (reg_val_gpr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
@@ -712,11 +680,7 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
 
         (mem_block_ptr_index,) = self._mHelperGprSet.acquireHelperGprs(1)
         self.initializeMemoryBlock(mem_block_ptr_index, [aStateElem])
-        fp_load_instr = (
-            "FLW##RISCV"
-            if aStateElem.getName().startswith("S")
-            else "FLD##RISCV"
-        )
+        fp_load_instr = "FLW##RISCV" if aStateElem.getName().startswith("S") else "FLD##RISCV"
         self.genInstruction(
             fp_load_instr,
             {
@@ -742,14 +706,10 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
     #  @param aStateElems A list of all StateElement objects of a particular
     #       type.
     def processStateElements(self, aStateElems):
-        if (
-            aStateElems[0].getStateElementType()
-            != EStateElementType.FloatingPointRegister
-        ):
+        if aStateElems[0].getStateElementType() != EStateElementType.FloatingPointRegister:
             self.error(
                 "This StateTransitionHandler can only process "
-                "StateElements of type %s"
-                % EStateElementType.FloatingPointRegister
+                "StateElements of type %s" % EStateElementType.FloatingPointRegister
             )
 
         # The logic below assumes there will never be more than 2,048 floating
@@ -764,11 +724,7 @@ class FloatingPointRegisterStateTransitionHandlerRISCV(StateTransitionHandler):
         self.initializeMemoryBlock(mem_block_ptr_index, aStateElems)
         offset = 0
         for state_elem in aStateElems:
-            fp_load_instr = (
-                "FLW##RISCV"
-                if state_elem.getName().startswith("S")
-                else "FLD##RISCV"
-            )
+            fp_load_instr = "FLW##RISCV" if state_elem.getName().startswith("S") else "FLD##RISCV"
             self.genInstruction(
                 fp_load_instr,
                 {
@@ -815,9 +771,7 @@ class StateTransitionHelperGprSet(object):
             if aValidate:
                 self._validateInsufficientArbitaryGprs(aGprCount)
             handler = self._mStateTransHandler
-            self._mArbitraryGprIndices = handler.getAllArbitraryGprs(
-                aExclude=(0, 1, 2)
-            )
+            self._mArbitraryGprIndices = handler.getAllArbitraryGprs(aExclude=(0, 1, 2))
             remaining_gpr_count = aGprCount - len(self._mArbitraryGprIndices)
             excluded_regs = "0,1,2,%s" % ",".join(
                 str(index) for index in self._mArbitraryGprIndices
@@ -827,9 +781,7 @@ class StateTransitionHelperGprSet(object):
             )
 
         for non_arbitrary_gpr_index in self._mNonArbitraryGprIndices:
-            (gpr_val, _) = self._mStateTransHandler.readRegister(
-                "x%d" % non_arbitrary_gpr_index
-            )
+            (gpr_val, _) = self._mStateTransHandler.readRegister("x%d" % non_arbitrary_gpr_index)
             self._mNonArbitraryGprOrigValues.append(gpr_val)
 
         helper_gpr_indices = list(self._mArbitraryGprIndices)
@@ -840,12 +792,8 @@ class StateTransitionHelperGprSet(object):
     # generated to reset the values of any non-arbitrary GPRs.
     def releaseHelperGprs(self):
         load_gpr64_seq = LoadGPR64(self._mStateTransHandler.genThread)
-        for (i, non_arbitrary_gpr_index) in enumerate(
-            self._mNonArbitraryGprIndices
-        ):
-            load_gpr64_seq.load(
-                non_arbitrary_gpr_index, self._mNonArbitraryGprOrigValues[i]
-            )
+        for (i, non_arbitrary_gpr_index) in enumerate(self._mNonArbitraryGprIndices):
+            load_gpr64_seq.load(non_arbitrary_gpr_index, self._mNonArbitraryGprOrigValues[i])
 
         self._mNonArbitraryGprOrigValues = []
         self._mNonArbitraryGprIndices = []
@@ -856,10 +804,7 @@ class StateTransitionHelperGprSet(object):
     #
     #  @param aGprCount The number of GPRs requested.
     def _validateInsufficientArbitaryGprs(self, aGprCount):
-        if (
-            self._mStateTransHandler.mStateTransType
-            == EStateTransitionType.Boot
-        ):
+        if self._mStateTransHandler.mStateTransType == EStateTransitionType.Boot:
             self._mStateTransHandler.error(
                 "Boot StateTransitions must have at least %d arbitary GPR(s) "
                 "available" % aGprCount

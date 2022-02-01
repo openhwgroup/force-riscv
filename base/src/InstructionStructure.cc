@@ -125,7 +125,7 @@ namespace Force {
   }
 
   VectorRegisterOperandStructure::VectorRegisterOperandStructure()
-    : mLayoutMultiple(1)
+    : mElemWidth(0), mLayoutMultiple(1), mRegCount(1), mVecLayoutType{EVectorLayoutType(0)}
   {
   }
 
@@ -173,11 +173,6 @@ namespace Force {
     if (mAlignment == 0) {
       mAlignment = mElementSize;
     }
-  }
-
-  VectorLayoutOperandStructure::VectorLayoutOperandStructure()
-    : mRegCount(0), mElemWidth(8), mRegIndexAlignment(0)
-  {
   }
 
   bool LoadStoreOperandStructure::AtomicOrderedAccess() const

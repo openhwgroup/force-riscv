@@ -26,9 +26,13 @@ class MainSequence(VectorLoadStoreTestSequence):
 
         self._mInstrList = (
             "VLE16.V##RISCV",
+            "VLE16FF.V##RISCV",
             "VLE32.V##RISCV",
+            "VLE32FF.V##RISCV",
             "VLE64.V##RISCV",
+            "VLE64FF.V##RISCV",
             "VLE8.V##RISCV",
+            "VLE8FF.V##RISCV",
             "VSE16.V##RISCV",
             "VSE32.V##RISCV",
             "VSE64.V##RISCV",

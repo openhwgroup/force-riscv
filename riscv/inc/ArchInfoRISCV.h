@@ -33,7 +33,8 @@ namespace Force {
     void Setup() override; //!< Setup necessary details RISCV architecture details for the ArchInfo object.
     uint32 ElfMachineType() const override { return 0xF3; } //!< Return RISC-V ELF machine type.
     const char* DefaultConfigFile() const override { return "config/riscv_rv64.config"; } //!< Return the default config file name.
-    PhysicalPageManager* InstantiatePhysicalPageManager(EMemBankType bankType) const override; //!< Instantiate a RISC-V architecture PhysicalPageManager object.
+    PhysicalPageManager* InstantiatePhysicalPageManager(EMemBankType bankType, MemoryTraitsManager* pMemTraitsManager) const override; //!< Instantiate a RISC-V architecture PhysicalPageManager object.
+    MemoryTraitsRegistry* InstantiateMemoryTraitsRegistry() const override; //!< Instantiate a RISC-V architecture MemoryTraitsRegistry object.
   protected:
     Generator* InstantiateGenerator() const override; //!< Instantiate a RISC-V architecture Generator object.
     VmManager* InstantiateVmManager() const override; //!< Instantiate a RISC-V architecture VmManager object.

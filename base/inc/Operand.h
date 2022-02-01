@@ -351,7 +351,6 @@ namespace Force {
     {
     }
 
-    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for VectorRegisterOperand.
     virtual void SetupDataTraits(Generator& gen, Instruction& instr) { } //!< Setup VectorRegisterOperand data traits.
   };
 
@@ -435,23 +434,6 @@ namespace Force {
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for GroupOperand.
   protected:
     std::vector<Operand* > mOperands; //!< Container holding pointer to all sub operands.
-  };
-
-  /*!
-    \class VectorLayoutOperand
-    \brief Class for vector layout operands.
-  */
-  class VectorLayoutOperand : public Operand {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorLayoutOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLayoutOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorLayoutOperand);
-
-    void Setup(Generator& gen, Instruction& instr) override; //!< Setup conditions, constraining mechanisms before generating operand.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(VectorLayoutOperand);
-  private:
-    virtual void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) = 0; //!< Determine and set the vector layout attributes.
   };
 
   class AddressSolver;
@@ -754,20 +736,35 @@ namespace Force {
     bool GenerateNoPreamble(Generator& gen, Instruction& instr) override { return false; } //!< Generate the AddressingOperand using no-preamble approach.
   };
 
-  class LoadStoreOperandStructure;
+  /*!
+    \class VectorLoadStoreOperand
+    \brief Operand for vector strided load/store operations.
+  */
+  class VectorLoadStoreOperand : public LoadStoreOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorLoadStoreOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorLoadStoreOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorLoadStoreOperand);
+
+    Operand* GetDataOperand(const Instruction& rInstr) const { return FindDataOperand(rInstr); } //!< Return data operand.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VectorLoadStoreOperand);
+  private:
+    virtual Operand* FindDataOperand(const Instruction& rInstr) const = 0; //!< Find and return data operand.
+  };
+
+  class VectorLayout;
 
   /*!
     \class VectorStridedLoadStoreOperand
     \brief Operand for vector strided load/store operations.
   */
-  class VectorStridedLoadStoreOperand : public LoadStoreOperand {
+  class VectorStridedLoadStoreOperand : public VectorLoadStoreOperand {
   public:
     DEFAULT_CONSTRUCTOR_DEFAULT(VectorStridedLoadStoreOperand);
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorStridedLoadStoreOperand);
     ASSIGNMENT_OPERATOR_ABSENT(VectorStridedLoadStoreOperand);
 
-    Object* Clone() const override { return new VectorStridedLoadStoreOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
-    const char* Type() const override { return "VectorStridedLoadStoreOperand"; } //!< Return a string describing the actual type of the Object.
     bool GetPrePostAmbleRequests(Generator& gen) const override; //!< Return necessary pre/post amble requests, if any.
   protected:
     COPY_CONSTRUCTOR_DEFAULT(VectorStridedLoadStoreOperand);
@@ -783,13 +780,14 @@ namespace Force {
     uint64 CalculateStrideValue(const Instruction& rInstr, cuint32 alignment, cuint32 addrRangeSize) const; //!< Calculate the value of the stride operand.
     uint64 CalculateBaseValue(cuint64 baseAddr, cuint32 alignment, cuint32 addrRangeSize, cuint64 strideVal) const; //!< Calculate the value of the base operand.
     uint64 GetInitialAddressBlockSize(const Generator& rGen); //!< Get the initial address block size for preamble stride calculations.
+    const VectorLayout* GetDataVectorLayout(const Instruction& rInstr) const; //!< Return vector register layout for the data operand.
   };
 
   /*!
     \class VectorIndexedLoadStoreOperand
     \brief Operand for vector indexed load/store operations.
   */
-  class VectorIndexedLoadStoreOperand : public LoadStoreOperand {
+  class VectorIndexedLoadStoreOperand : public VectorLoadStoreOperand {
   public:
     DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedLoadStoreOperand);
@@ -811,6 +809,7 @@ namespace Force {
     void RecordIndexElementByteSize(const Instruction& rInstr); //!< Compute and capture the index vector element size in bytes.
     uint64 CalculateBaseAndFirstIndexElementValues(const Instruction& rInstr, cuint32 alignment, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the base operand and first index operand element.
     void CalculateIndexElementValues(const Instruction& rInstr, cuint32 alignment, cuint64 baseVal, std::vector<uint64>& rIndexElemValues) const; //!< Calculate the values of the index operand elements after the first one.
+    const VectorLayout* GetIndexVectorLayout() const; //!< Return vector register layout for the index operand.
   };
 
   /*!
@@ -856,24 +855,6 @@ namespace Force {
   protected:
     COPY_CONSTRUCTOR_DEFAULT(DataProcessingOperand); //!< Copy constructor.
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object for DataProcessingOperand.
-  };
-
-  /*!
-    \class VectorBaseOffsetLoadStoreOperand
-    \brief Operand for vector base offset load/store operations.
-  */
-  class VectorBaseOffsetLoadStoreOperand : public BaseOffsetLoadStoreOperand {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorBaseOffsetLoadStoreOperand);
-
-    Object* Clone() const override { return new VectorBaseOffsetLoadStoreOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
-    const char* Type() const override { return "VectorBaseOffsetLoadStoreOperand"; } //!< Return a string describing the actual type of the Object.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperand);
-  private:
-    void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
   };
 
 }

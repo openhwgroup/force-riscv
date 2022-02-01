@@ -80,16 +80,12 @@ class IssExecutor(AppExecutor):
             arg_test_name = arg_test_name.replace("_force", "")
 
         for my_file in my_match_files:
-            Msg.user(
-                "Match File: %s, Test Name: %s"
-                % (str(my_file), str(arg_test_name))
-            )
+            Msg.user("Match File: %s, Test Name: %s" % (str(my_file), str(arg_test_name)))
             if my_file.find(arg_test_name) != -1:
                 return my_file
 
         raise Exception(
-            "Type %s test case for base test: %s not found."
-            % (arg_extension, arg_test_name)
+            "Type %s test case for base test: %s not found." % (arg_extension, arg_test_name)
         )
 
     def query_errors(self, arg_hfile, arg_results=None):

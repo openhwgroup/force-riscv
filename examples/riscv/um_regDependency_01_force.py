@@ -36,9 +36,7 @@ class MyMainSequence(Sequence):
             # instruction.
             target_regs = instr_obj["Dests"]  # get the dict of target regs
             target_reg_id = target_regs["rd"]  # get the id for the "rd" reg
-            self.notice(
-                ">>>>>>>>  Key:  {}     Value:  {}".format("rd", target_reg_id)
-            )
+            self.notice(">>>>>>>>  Key:  {}     Value:  {}".format("rd", target_reg_id))
 
             if target_reg_id == 0:
                 continue  # targed reg id of 0 does
@@ -46,29 +44,30 @@ class MyMainSequence(Sequence):
 
             # generate new instruction with rs1 = target_reg of previous
             # instruction
-            instr_rec_id2 = self.genInstruction(
-                "SUB##RISCV", {"rs1": target_reg_id}
-            )
+            instr_rec_id2 = self.genInstruction("SUB##RISCV", {"rs1": target_reg_id})
 
             # extract the rs1 reg id from the generated instruction
             instr_obj2 = self.queryInstructionRecord(instr_rec_id2)
             source_regs = instr_obj2["Srcs"]
             source_reg_id = source_regs["rs1"]
 
-            # make sure the read-after-write dependency was generated
-            if source_reg_id == target_reg_id:
-                self.notice(
-                    ">>>>>>>>>>  It worked!  Target reg of the first \
-                        instruction is feeding the source reg of the second \
-                        instruction."
+            self._check_dependency(source_reg_id, target_reg_id)
+
+    def _check_dependency(self, source_reg_id, target_reg_id):
+        # make sure the read-after-write dependency was generated
+        if source_reg_id == target_reg_id:
+            self.notice(
+                ">>>>>>>>>>  It worked!  Target reg of the first \
+                    instruction is feeding the source reg of the second \
+                    instruction."
+            )
+        else:
+            self.notice(
+                ">>>>>>>>>>  FAIL!  Source reg id: {}    \
+                    Target reg id: {}".format(
+                    source_reg_id, target_reg_id
                 )
-            else:
-                self.notice(
-                    ">>>>>>>>>>  FAIL!  Source reg id: {}    \
-                        Target reg id: {}".format(
-                        source_reg_id, target_reg_id
-                    )
-                )
+            )
 
 
 #  Points to the MainSequence defined in this file

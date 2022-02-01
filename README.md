@@ -37,44 +37,51 @@ To run the output of FORCE-RISCV with the CORE-V-VERIF UVM testbench and to run 
 # FORCE-RISCV Quick Start Guide for RISC-V
 
 ## User Manual
-The user manual is located in the 'force-riscv/doc' directory.  The user manual is still a "work in progress".
-  *  FORCE-RISCV_ISG_User_Manual-v0.8.docx
-  *  FORCE-RISCV_ISG_User_Manual-v0.8.pdf
+The user manual is located in the 'force-riscv/doc' directory.  The user manual is still a "work in progress".  
+
+  *  FORCE-RISCV\_User\_Manual-v0.8.docx  
+  *  FORCE-RISCV\_User\_Manual-v0.8.pdf
 
 ## Use FORCE-RISCV to generate a RISC-V testcase (ELF file) from a FORCE-RISCV test template
 
 ### Setup
 * Clone the FORCE-RISCV repository:
   * The \[base directory\] in the description that follows is the directory from which you execute git clone.
-  * git clone http://path-to-the-repository/force-riscv.git
+  * `git clone http://path-to-the-repository/force-riscv.git`
+  * `cd [base directory]/force-riscv/`
 * Set the following environment variables.  FORCE-RISCV development requires gcc 5.1 or higher and Python 3.4.1 or higher version.  The Makefile will make a guess if you don't set them, which should be suitable for modern 64-bit GNU/Linux distributions.
-  * export FORCE_CC=/usr/bin/g++
-  * export FORCE_PYTHON_VER=3.6
-  * export FORCE_PYTHON_LIB=/usr/lib/x86_64-linux-gnu/
-  * export FORCE_PYTHON_INC=/usr/include/python3.6
+  * `export FORCE_CC=/usr/bin/g++`
+  * `export FORCE_PYTHON_VER=3.6`
+  * `export FORCE_PYTHON_LIB=/usr/lib/x86_64-linux-gnu/`
+  * `export FORCE_PYTHON_INC=/usr/include/python3.6`
 * Build FORCE-RISCV
-  * cd \[base directory\]/force-riscv/
-  * make
-  * make tests
-* Run the main regression while in the force-riscv directory
-  * ./utils/regression/master_run.py
-* Run the unit tests while in the force-riscv directory
-  * ./utils/regression/unit_tests.py
+  * Single command
+     * Run the setup script, which will perform some rudimentary environment checks, (warning if there are any issues,) and then run the next several commands.   
+     `./setup`
+     * Skip to the section: **ELF file generation running FORCE-RISCV directly**
+  * Manual steps
+     * `source setenv.bash` if running bash; otherwise `./setenv.bash`
+     * `make`
+     * `make tests`
+     * Run the main regression while in the force-riscv directory.   
+         `./utils/regression/master_run.py`
+     * Run the unit tests while in the force-riscv directory.   
+         `./utils/regression/unit_tests.py`
 
 ### ELF file generation running FORCE-RISCV directly
 FORCE-RISCV is run from the Linux/Unix command line, and you can specify command line options that alter how the test generation is run.  You can run this simple "smoke test" to demonstrate that the build was successful.
-    bin/friscv -t utils/smoke/test_force.py
-You can run FORCE-RISCV from any directory; just adjust the relative path names.  For example,
-    cd force-riscv/tmp
-    ../bin/friscv -t ../utils/smoke/test_force.py
+    `bin/friscv -t utils/smoke/test_force.py`  
+You can run FORCE-RISCV from any directory; just adjust the relative path names.  For example,  
+    `cd force-riscv/tmp`  
+    `../bin/friscv -t ../utils/smoke/test_force.py`  
 Note that the file name of a FORCE-RISCV test template always ends with "_force.py"; this serves to indicate that the file is a Python script, and that it is a FORCE-RISCV test template.
 
-The FORCE-RISCV program will generate the following files:
-    <templateName>.Default.S
-    <templateName>.Default.ELF
-Which in our example is:
-    test_force.Default.S
-    test_force.Default.ELF
+The FORCE-RISCV program will generate the following files:  
+    <templateName>.Default.S   
+    <templateName>.Default.ELF  
+Which in our example is:  
+    test_force.Default.S  
+    test_force.Default.ELF  
 The *.ELF files can be the input to an RTL simulation environment defining what instructions get executed during the simulation.  The *.S files are assembly code style files to help the user see what instructions have been generated.
 
 Generation can also be run with the master_run.py utility script.  Here is an example command line specifying a *_fctrl.py file.  The *_fctrl.py file contains the path to and name of the template file along with options that get passed to master_run and FORCE-RISCV.
@@ -102,7 +109,7 @@ Notes on contents of template file (*_force.py):
 
         <base directory>/force-riscv/py/DV/riscv/trees/instruction_tree.py
 
-For more details on the FORCE-RISCV test template and the FORCE-RISCV API, refer to the FORCE-RISCV ISG User Manual.
+For more details on the FORCE-RISCV test template and the FORCE-RISCV API, refer to the FORCE-RISCV User Manual.
 
 Here are the contents of an example test template:
 

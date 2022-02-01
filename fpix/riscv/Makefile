@@ -50,7 +50,7 @@ $(OBJ_DIR)/%.o: %.cc %.d
 
 .PHONY: make_dir
 make_dir:
-	@mkdir -p make_area make_area/obj make_area/dep
+	@mkdir -p ../bin inc make_area make_area/obj make_area/dep
 
 .PHONY: clean
 clean:

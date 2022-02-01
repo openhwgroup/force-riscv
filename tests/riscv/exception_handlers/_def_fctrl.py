@@ -39,8 +39,7 @@ control_items = [
         "options": {"max-instr": 5000},
         "generator": {
             "--max-instr": 5000,
-            "--options": '"PrivilegeLevel=3,DelegateExceptions=1,'
-            'PagingDisabled=1"',
+            "--options": '"PrivilegeLevel=3,DelegateExceptions=1,' 'PagingDisabled=1"',
         },
     },
     {
@@ -48,8 +47,7 @@ control_items = [
         "options": {"max-instr": 5000},
         "generator": {
             "--max-instr": 5000,
-            "--options": '"PrivilegeLevel=1,DelegateExceptions=1,'
-            'PagingDisabled=1"',
+            "--options": '"PrivilegeLevel=1,DelegateExceptions=1,' 'PagingDisabled=1"',
         },
     },
     {
@@ -57,8 +55,7 @@ control_items = [
         "options": {"max-instr": 5000},
         "generator": {
             "--max-instr": 5000,
-            "--options": '"PrivilegeLevel=0,DelegateExceptions=1,'
-            'PagingDisabled=1"',
+            "--options": '"PrivilegeLevel=0,DelegateExceptions=1,' 'PagingDisabled=1"',
         },
     },
     {

@@ -132,15 +132,13 @@ class CommandLineParameters(object):
             "--no-archive",
             0,
             {"action": "store_true"},
-            "- previous output directories are removed when this option "
-            "is present",
+            "- previous output directories are removed when this option is present",
         ],
     ]
 
     _group_2_name = "Persistent, no override"
     _group_2_description = (
-        "options which are persistent and cannot be "
-        "overridden in a control-file"
+        "options which are persistent and cannot be overridden in a control-file"
     )
     _parameters_persisting_no_override = [
         # "short option"         "number of additonal args"       "help text
@@ -289,8 +287,7 @@ class CommandLineParameters(object):
             "--max-fails=",
             1,
             {"default": 10, "metavar": ""},
-            "- When present, sets the number of fails before the run is "
-            "abandoned",
+            "- When present, sets the number of fails before the run is abandoned",
         ],
         [
             "-k",
@@ -311,8 +308,7 @@ class CommandLineParameters(object):
 
     _group_4_name = "Non persistent"
     _group_4_description = (
-        "notably includes generator options, and others "
-        "that are not preserved between tasks"
+        "notably includes generator options, and others that are not preserved between tasks"
     )
     _parameters_non_persistent = [
         # "short option"         "number of additonal args"          "help text
@@ -384,7 +380,7 @@ class CommandLineParameters(object):
             "-l",
             "--msg-lev=",
             1,
-            {"default": "crit+err+warn+" "info+noinfo", "metavar": ""},
+            {"default": "crit+err+warn+info+noinfo", "metavar": ""},
             "- When present, Updates or replaces the default output level, "
             "which include:\n"
             '  \t"crit"    [0x0001]- Critical Errors Messages,\n'

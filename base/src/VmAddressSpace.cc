@@ -30,6 +30,7 @@
 #include <MemoryConstraint.h>
 #include <MemoryConstraintUpdate.h>
 #include <MemoryManager.h>
+#include <MemoryTraits.h>
 #include <ObjectRegistry.h>
 #include <Page.h>
 #include <PageInfoRecord.h>
@@ -660,7 +661,7 @@ namespace Force {
     }
 
     GenPageRequest* updated_page_req = pPageReq->Clone();
-    std::unique_ptr<GenPageRequest> page_req_storage(updated_page_req); // delete object when going out of scope.
+    unique_ptr<GenPageRequest> page_req_storage(updated_page_req); // delete object when going out of scope.
 
     const Page* page_obj = SetupPageMapping(VA, size, is_sys_page, updated_page_req);
     CommitPage(page_obj, size);
@@ -681,7 +682,7 @@ namespace Force {
     }
 
     GenPageRequest* local_page_req = pPageReq->Clone();
-    std::unique_ptr<GenPageRequest> page_req_storage(local_page_req);
+    unique_ptr<GenPageRequest> page_req_storage(local_page_req);
 
     // Update the PA for mappings that span multiple pages
     local_page_req->SetAttributeValue(EPageRequestAttributeType::PA, PA);
@@ -738,7 +739,7 @@ namespace Force {
     else
       choices_tree = mpControlBlock->GetChoicesAdapter()->GetPageSizeChoiceTree(granule_suffix);
 
-    std::unique_ptr<ChoiceTree> choices_tree_storage(choices_tree);
+    unique_ptr<ChoiceTree> choices_tree_storage(choices_tree);
 
     const Page* ret_page = nullptr;
     PageSizeInfo psize_info;
@@ -777,7 +778,7 @@ namespace Force {
   const Page* VmAddressSpace::SetupPageMappingForPA(uint64 PA, EMemBankType bank, uint64 size, bool isInstr, GenPageRequest* pPageReq)
   {
     VmPaMapper * pa_mapper = mpVmFactory->VmPaMapperInstance(this);
-    std::unique_ptr<VmPaMapper> pa_mapper_storage(pa_mapper);
+    unique_ptr<VmPaMapper> pa_mapper_storage(pa_mapper);
     string err_msg;
     const Page* ret_page = pa_mapper->SetupPageMapping(PA, bank, size, isInstr, pPageReq, err_msg);
 
@@ -880,7 +881,7 @@ namespace Force {
     auto mem_manager   = mpGenerator->GetMemoryManager();
     auto phys_page_manager = mem_manager->GetPhysicalPageManager(memBank);
 
-    return phys_page_manager->AllocatePage(VA, size, pPageReq, rSizeInfo, pChoicesAdapter);
+    return phys_page_manager->AllocatePage(mpGenerator->ThreadId(), VA, size, pPageReq, rSizeInfo, pChoicesAdapter);
   }
 
   GenPageRequest* VmAddressSpace::DefaultPageRequest(bool isInstr) const
@@ -913,7 +914,7 @@ namespace Force {
     // allocate page table
     PageTableConstraint* page_table_constr = mPageTableConstraints[EMemBankTypeBaseType(new_mem_type)];
     uint64 tb_size = mpControlBlock->GetRootPageTable(VA)->TableSize();
-    std::unique_ptr<ConstraintSet> exclude_region_ptr(mpControlBlock->GetPageTableExcludeRegion(VA, new_mem_type, mVmConstraints));
+    unique_ptr<ConstraintSet> exclude_region_ptr(mpControlBlock->GetPageTableExcludeRegion(VA, new_mem_type, mVmConstraints));
     uint64 tb_start = page_table_constr->AllocatePageTable(tb_size, tb_size, exclude_region_ptr.get());
 
     // Remove any page table block addresses that may have been allocated from the initial virtual
@@ -968,7 +969,7 @@ namespace Force {
     return mpControlBlock->GetChoicesAdapter();
   }
 
-  bool VmAddressSpace::GetPageInfo(uint64 addr, const std::string& type, uint32 bank, PageInformation& rPageInfo) const
+  bool VmAddressSpace::GetPageInfo(uint64 addr, const string& type, uint32 bank, PageInformation& rPageInfo) const
   {
     uint64 VA = addr;
 
@@ -1054,10 +1055,10 @@ namespace Force {
     return false;
   }
 
-  EExceptionConstraintType VmAddressSpace::GetExceptionConstraintType(const std::string& rExceptName) const
+  EExceptionConstraintType VmAddressSpace::GetExceptionConstraintType(const string& rExceptName) const
   {
     // << "[VmAddressSpace::GetExceptionConstraintType] rExceptName=" << rExceptName << endl;
-    std::unique_ptr<ChoiceTree> choices_tree(mpControlBlock->GetChoicesAdapter()->GetPagingChoiceTree(rExceptName));
+    unique_ptr<ChoiceTree> choices_tree(mpControlBlock->GetChoicesAdapter()->GetPagingChoiceTree(rExceptName));
     auto choice_ptr = choices_tree->Choose();
     uint32 available_choices = choices_tree->AvailableChoices();
     // << "[VmAddressSpace::GetExceptionConstraintType] found choice tree: " << choices_tree->Name() << " chosen value: " << choice_ptr->Value() << " available choices: " << available_choices << endl;
@@ -1108,19 +1109,19 @@ namespace Force {
     return mpControlBlock->DefaultMemoryBank();
   }
 
-  void VmAddressSpace::DumpPage(ofstream& os) const
+  void VmAddressSpace::DumpPage(const EDumpFormat dumpFormat, ofstream& os) const
   {
-    for (auto page : mPages) {
-      DumpPageSummary(os, page);
+    switch (dumpFormat) {
+    case EDumpFormat::Text:
+      DumpPageText(os);
+      break;
+    case EDumpFormat::JSON:
+      DumpPageJson(os);
+      break;
+    default:
+      LOG(fail) << "{VmAddressSpace::DumpPage} Unknown dump format " << EDumpFormat_to_string(dumpFormat) << endl;
+      FAIL("unknown-dump-format");
     }
-  }
-
-  void VmAddressSpace::DumpPageSummary(std::ofstream& os, const Page* pPage) const
-  {
-    os << pPage->VaRangeString() << endl;
-    os << "Memory bank:" <<  EMemBankType_to_string(pPage->MemoryBank()) << ", PA range:0x" << hex << pPage->PhysicalLower() << " -- 0x" << pPage->PhysicalUpper() << endl;
-
-    os << pPage->DescriptorDetails() << endl;
   }
 
   bool VmAddressSpace::UpdateContext(const VmContext* pVmContext)
@@ -1148,7 +1149,7 @@ namespace Force {
     }
   }
 
-  void VmAddressSpace::GetVmContextDelta(std::map<std::string, uint64> & rDeltaMap) const
+  void VmAddressSpace::GetVmContextDelta(map<string, uint64> & rDeltaMap) const
   {
     return mpControlBlock->GetContextDelta(rDeltaMap, mpGenerator);
   }
@@ -1156,6 +1157,101 @@ namespace Force {
   uint32 VmAddressSpace::GenContextId() const
   {
     return mpControlBlock->GenContextId();
+  }
+
+  void VmAddressSpace::DumpPageText(ofstream& os) const
+  {
+    for (auto page : mPages) {
+      DumpPageSummaryText(os, page);
+    }
+  }
+
+  void VmAddressSpace::DumpPageJson(ofstream& os) const
+  {
+    bool first_entry = true;
+    for (auto page : mPages) {
+      if (page->TranslationResultType() != ETranslationResultType::AddressError) {
+        if (not first_entry) {
+          os << "," << endl;
+        }
+
+        DumpPageSummaryJson(os, page);
+
+        first_entry = false;
+      }
+    }
+  }
+
+  void VmAddressSpace::DumpPageSummaryText(ofstream& os, const Page* pPage) const
+  {
+    os << pPage->VaRangeString() << endl;
+    os << "Memory bank:" <<  EMemBankType_to_string(pPage->MemoryBank()) << ", PA range:0x" << hex << pPage->PhysicalLower() << " -- 0x" << pPage->PhysicalUpper() << endl;
+
+    os << pPage->DescriptorDetails() << endl;
+  }
+
+  void VmAddressSpace::DumpPageSummaryJson(ofstream& os, const Page* pPage) const
+  {
+    PageInformation page_info;
+    mpControlBlock->PopulatePageInfo(pPage->Lower(), this, pPage, page_info);
+    const PageInfoRec& page_info_rec = page_info.GetPageInfo();
+
+    os << dec;
+    os << "{";
+
+    os << "\"Lower\": " << page_info_rec.lower << ", ";
+    os << "\"Upper\": " << page_info_rec.upper << ", ";
+    os << "\"PhysLower\": " << page_info_rec.physical_lower << ", ";
+    os << "\"PhysUpper\": " << page_info_rec.physical_upper << ", ";
+    os << "\"Bank\": \"" << EMemBankType_to_string(pPage->MemoryBank()) << "\", ";
+
+    RootPageTable* root_page_table = pPage->GetRootPageTable();
+    os << "\"RootTable\": " << root_page_table->TableBase() << ", ";
+
+    os << "\"TableWalk\": ";
+    DumpPageTableWalkJson(os, page_info);
+    os << ", ";
+
+    DumpMemoryTraitsJson(os, *pPage);
+
+    os << "}";
+  }
+
+  void VmAddressSpace::DumpPageTableWalkJson(ofstream& os, const PageInformation& rPageInfo) const
+  {
+    bool first_entry = true;
+    os << dec;
+    os << "[";
+
+    for (const PageTableInfoRec& page_table_info_rec : rPageInfo.GetPageTableRecord()) {
+      if (not first_entry) {
+        os << ", ";
+      }
+
+      os << "{";
+
+      os << "\"Level\": " << page_table_info_rec.level << ", ";
+      os << "\"DescriptorAddr\": " << page_table_info_rec.descr_addr << ", ";
+      os << "\"Descriptor\": " << page_table_info_rec.descr_value;
+
+      os << "}";
+
+      first_entry = false;
+    }
+
+    os << "]";
+  }
+
+  void VmAddressSpace::DumpMemoryTraitsJson(ofstream& os, const Page& rPage) const
+  {
+    MemoryManager* mem_man = mpGenerator->GetMemoryManager();
+    MemoryBank* mem_bank = mem_man->GetMemoryBank(EMemBankTypeBaseType(rPage.MemoryBank()));
+    MemoryTraitsManager* mem_traits_manager = mem_bank->GetMemoryTraitsManager();
+
+    unique_ptr<MemoryTraitsRange> mem_traits_range(mem_traits_manager->CreateMemoryTraitsRange(mpGenerator->ThreadId(), rPage.PhysicalLower(), rPage.PhysicalUpper()));
+
+    MemoryTraitsJson mem_traits_json(mem_traits_manager->GetMemoryTraitsRegistry());
+    mem_traits_json.DumpTraitsRange(os, *mem_traits_range);
   }
 
 }

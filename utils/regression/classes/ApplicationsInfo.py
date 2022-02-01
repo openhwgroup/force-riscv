@@ -23,13 +23,9 @@ class ApplicationParameters(object):
 
     def resolveParameters(self, aAppOptions, aCmdLineOptions):
         for app_option in aAppOptions:
-            opt_value, opt_specified = app_option.resolveParameter(
-                aCmdLineOptions
-            )
+            opt_value, opt_specified = app_option.resolveParameter(aCmdLineOptions)
             self._mParameters[app_option.name()] = opt_value
-            self._mParameters[
-                app_option.name() + " from cmdline"
-            ] = opt_specified
+            self._mParameters[app_option.name() + " from cmdline"] = opt_specified
 
     def parameter(self, aParmName):
         return self._mParameters[aParmName]

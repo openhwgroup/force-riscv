@@ -23,8 +23,8 @@
 master_config = {"rtl": {}, "generate": {}, "iss": {}}
 
 sequence_app_opts = [
-    ("force", {"path": "../../bin/friscv_rv32"}),
-    ("fpix_riscv_rv32", {}),
+    ("force", {"path": "../../bin/friscv"}),
+    ("fpix_riscv", {"cfg": "../../fpix/config/riscv_rv32.config"}),
     ("rtl", {}),
     ("fruntoctrl", {}),
 ]

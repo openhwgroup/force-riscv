@@ -21,6 +21,24 @@
 namespace Force {
 
   /*!
+    \class VsetvlAvlImmediateOperand
+    \brief Operand class for VSETVLI vtype immediate operands.
+  */
+  class VsetvlAvlImmediateOperand : public ImmediateOperand {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlAvlImmediateOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlAvlImmediateOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlAvlImmediateOperand);
+
+    Object* Clone() const override { return new VsetvlAvlImmediateOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VsetvlAvlImmediateOperand"; } //!< Return a string describing the actual type of the Object.
+  protected:
+    COPY_CONSTRUCTOR_DEFAULT(VsetvlAvlImmediateOperand);
+
+    OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
+  };
+
+  /*!
     \class VsetvlVtypeImmediateOperand
     \brief Operand class for VSETVLI vtype immediate operands.
   */
@@ -205,57 +223,24 @@ namespace Force {
   };
 
   /*!
-    \class VtypeLayoutOperand
-    \brief Operand class for vector register layouts corresponding to vtype.
+    \class VectorBaseOffsetLoadStoreOperandRISCV
+    \brief Operand for vector base offset load/store operations.
   */
-  class VtypeLayoutOperand : public VectorLayoutOperand {
+  class VectorBaseOffsetLoadStoreOperandRISCV : public BaseOffsetLoadStoreOperand {
   public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VtypeLayoutOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VtypeLayoutOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(VtypeLayoutOperand);
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperandRISCV);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperandRISCV);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorBaseOffsetLoadStoreOperandRISCV);
 
-    Object* Clone() const override { return new VtypeLayoutOperand(*this); } //!< Return a cloned VtypeLayoutOperand object of the same type and same contents of the object.
-    const char* Type() const override { return "VtypeLayoutOperand"; } //!< Return the type of the VtypeLayoutOperand object in C string.
+    Object* Clone() const override { return new VectorBaseOffsetLoadStoreOperandRISCV(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorBaseOffsetLoadStoreOperandRISCV"; } //!< Return a string describing the actual type of the Object.
   protected:
-    COPY_CONSTRUCTOR_DEFAULT(VtypeLayoutOperand);
+    COPY_CONSTRUCTOR_DEFAULT(VectorBaseOffsetLoadStoreOperandRISCV);
+
+    bool IsIllegal(const Instruction& rInstr) override; //!< Return true if the result will yield an illegal instruction regardless of the operands chosen.
   private:
-    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
-  };
-
-  /*!
-    \class CustomLayoutOperand
-    \brief Operand class for vector register layouts corresponding to vtype.
-  */
-  class CustomLayoutOperand : public VectorLayoutOperand {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(CustomLayoutOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(CustomLayoutOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(CustomLayoutOperand);
-
-    Object* Clone() const override { return new CustomLayoutOperand(*this); } //!< Return a cloned VtypeLayoutOperand object of the same type and same contents of the object.
-    const char* Type() const override { return "CustomLayoutOperand"; } //!< Return the type of the VtypeLayoutOperand object in C string.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(CustomLayoutOperand);
-  private:
-    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
-  };
-
-  /*!
-    \class WholeRegisterLayoutOperand
-    \brief Operand class for fixed vector register layouts that read or write the whole vector register.
-  */
-  class WholeRegisterLayoutOperand : public VectorLayoutOperand {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(WholeRegisterLayoutOperand);
-
-    Object* Clone() const override { return new WholeRegisterLayoutOperand(*this); } //!< Return a cloned WholeRegisterLayoutOperand object of the same type and same contents of the object.
-    const char* Type() const override { return "WholeRegisterLayoutOperand"; } //!< Return the type of the WholeRegisterLayoutOperand object in C string.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(WholeRegisterLayoutOperand);
-  private:
-    void SetupVectorLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Determine and set the vector layout attributes.
+    void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
+    Operand* GetDataOperand(const Instruction& rInstr) const; //!< Return data operand.
   };
 
   /*!
@@ -275,7 +260,7 @@ namespace Force {
 
     bool IsIllegal(const Instruction& rInstr) override; //!< Return true if the result will yield an illegal instruction regardless of the operands chosen.
   private:
-    Operand* GetDataOperand(const Instruction& rInstr) const; //!< Return data operand.
+    Operand* FindDataOperand(const Instruction& rInstr) const override; //!< Find and return data operand.
   };
 
   /*!
@@ -295,9 +280,9 @@ namespace Force {
 
     bool IsIllegal(const Instruction& rInstr) override; //!< Return true if the result will yield an illegal instruction regardless of the operands chosen.
   private:
-    void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const override; //!< Get the names of the index registers.
     void AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr) override; //!< Finalize memory access dimensions based on runtime state.
-    Operand* GetDataOperand(const Instruction& rInstr) const; //!< Return data operand.
+    Operand* FindDataOperand(const Instruction& rInstr) const override; //!< Find and return data operand.
+    void GetIndexRegisterNames(std::vector<std::string>& rIndexRegNames) const override; //!< Get the names of the index registers.
   };
 
   /*!
@@ -313,68 +298,42 @@ namespace Force {
 
     const char* Type() const override { return "MultiVectorRegisterOperandRISCV"; } //!< Return the type as C string.
 
-    MultiVectorRegisterOperandRISCV() : MultiVectorRegisterOperand(), mDataType(), mRegCount(0) { } //!< Constructor.
+    MultiVectorRegisterOperandRISCV() : MultiVectorRegisterOperand(), mDataType() { } //!< Constructor.
     ~MultiVectorRegisterOperandRISCV() { } //!< Destructor
-    void Setup(Generator& gen, Instruction& instr) override; //!< Setup conditions, constraining mechanisms before generating operand.
     void Generate(Generator& gen, Instruction& instr) override; //!< Generate operand details.
     void GetRegisterIndices(uint32 regIndex, ConstraintSet& rRegIndices) const override; //!< Return the register indices in a ConstraintSet, assuming the specified register is chosen.
     void GetChosenRegisterIndices(const Generator& gen, ConstraintSet& rRegIndices) const override; //!< Return the chosen register indices in a ConstraintSet.
     uint32 NumberRegisters() const override; //!< Return number of registers in the list.
   protected:
     MultiVectorRegisterOperandRISCV(const MultiVectorRegisterOperandRISCV& rOther) //!< Copy constructor.
-      : MultiVectorRegisterOperand(rOther), mDataType(rOther.mDataType), mRegCount(rOther.mRegCount)
+      : MultiVectorRegisterOperand(rOther), mDataType(rOther.mDataType)
     {
     }
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of the appropriate OperandConstraint object.
     const std::string GetNextRegisterName(uint32& indexVar) const; //!< Return the name of the next register in the list.
     ChoicesFilter* GetChoicesFilter(const ConstraintSet* pConstrSet) const override; //!< Return the choices filter.
-    virtual const uint32 GetMinimumRegisterCount(const Instruction& rInstr) { return 1; } //!< Returns the minimum register count.
 
     std::string mDataType; //!< Data type of the multi vector list in string.
-  private:
-    void AdjustRegisterCount(const Instruction& rInstr); //!< Finalize register count based on runtime state.
-
-    uint32 mRegCount; //!< The number of registers per vector register group
   };
 
   /*!
-    \class VectorDataRegisterOperand
-    \brief Operand class handling number of registers
+    \class VectorIndexRegisterOperand
+    \brief Operand for RISCV vector indexed load/store index register operands.
   */
-  class VectorDataRegisterOperand : public MultiVectorRegisterOperandRISCV {
+  class VectorIndexRegisterOperand : public MultiVectorRegisterOperandRISCV {
   public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorDataRegisterOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorDataRegisterOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorDataRegisterOperand);
+    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexRegisterOperand);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexRegisterOperand);
+    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexRegisterOperand);
 
-    Object* Clone() const override { return new VectorDataRegisterOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
-    const char* Type() const override { return "VectorDataRegisterOperand"; } //!< Return a string describing the actual type of the Object.
-
+    Object* Clone() const override { return new VectorIndexRegisterOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
+    const char* Type() const override { return "VectorIndexRegisterOperand"; } //!< Return a string describing the actual type of the Object.
   protected:
-    COPY_CONSTRUCTOR_DEFAULT(VectorDataRegisterOperand);
-
-    const uint32 GetMinimumRegisterCount(const Instruction& rInstr) override; //<! Returns the minimum register count.
-  };
-
-  /*!
-    \class VectorIndexedDataRegisterOperand
-    \brief Operand for RISCV vector indexed load/store data register operands.
-  */
-  class VectorIndexedDataRegisterOperand : public VectorDataRegisterOperand {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedDataRegisterOperand);
-
-    Object* Clone() const override { return new VectorIndexedDataRegisterOperand(*this); } //!< Return a cloned Object of the same type and same contents as the Object being cloned.
-    const char* Type() const override { return "VectorIndexedDataRegisterOperand"; } //!< Return a string describing the actual type of the Object.
-  protected:
-    COPY_CONSTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperand);
+    COPY_CONSTRUCTOR_DEFAULT(VectorIndexRegisterOperand);
 
     OperandConstraint* InstantiateOperandConstraint() const override; //!< Return an instance of appropriate OperandConstraint object.
   };
-
 }
 
 #endif

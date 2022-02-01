@@ -62,9 +62,7 @@ class MainSequence(Sequence):
     #  @param aStack An initialized stack object.
     def _verifyRandomStackOperations(self, aStack):
         for _ in range(RandomUtils.random32(50, 100)):
-            gpr_index = self.getRandomGPR(
-                exclude=("0,%d" % aStack.pointerIndex())
-            )
+            gpr_index = self.getRandomGPR(exclude=("0,%d" % aStack.pointerIndex()))
             gpr_val = self._loadRandomizedGprValue(gpr_index)
 
             operation = "push"
@@ -95,9 +93,7 @@ class MainSequence(Sequence):
                 max_stack_index = len(self._mReferenceStack) - 1
                 stack_index = RandomUtils.random32(0, max_stack_index)
                 self._mReferenceStack[stack_index] = gpr_val
-                aStack.modify(
-                    gpr_index, aOffset=(max_stack_index - stack_index)
-                )
+                aStack.modify(gpr_index, aOffset=(max_stack_index - stack_index))
             else:
                 self.error("Unexpected stack operation %s" % operation)
 
@@ -111,9 +107,7 @@ class MainSequence(Sequence):
             if not self._mReferenceStackFrames:
                 operation = "newStackFrame"
             else:
-                operation = self.choice(
-                    ("newStackFrame", "freeStackFrame", "arg", "modifyArg")
-                )
+                operation = self.choice(("newStackFrame", "freeStackFrame", "arg", "modifyArg"))
 
             if operation == "newStackFrame":
                 # The link register x1 is automatically captured in every
@@ -143,24 +137,16 @@ class MainSequence(Sequence):
                     )
             elif operation == "arg":
                 reference_stack_frame = self._mReferenceStackFrames[-1]
-                arg_index = RandomUtils.random32(
-                    0, (len(reference_stack_frame) - 1)
-                )
-                temp_gpr_index = self.getRandomGPR(
-                    exclude=("0,%d" % aStack.pointerIndex())
-                )
+                arg_index = RandomUtils.random32(0, (len(reference_stack_frame) - 1))
+                temp_gpr_index = self.getRandomGPR(exclude=("0,%d" % aStack.pointerIndex()))
                 aStack.arg(temp_gpr_index, arg_index)
                 exception_handlers_test_utils.assert_gpr_has_value(
                     self, temp_gpr_index, reference_stack_frame[arg_index][1]
                 )
             elif operation == "modifyArg":
                 reference_stack_frame = self._mReferenceStackFrames[-1]
-                arg_index = RandomUtils.random32(
-                    0, (len(reference_stack_frame) - 1)
-                )
-                temp_gpr_index = self.getRandomGPR(
-                    exclude=("0,%d" % aStack.pointerIndex())
-                )
+                arg_index = RandomUtils.random32(0, (len(reference_stack_frame) - 1))
+                temp_gpr_index = self.getRandomGPR(exclude=("0,%d" % aStack.pointerIndex()))
                 updated_arg_val = self._loadRandomizedGprValue(temp_gpr_index)
                 reference_stack_frame[arg_index][1] = updated_arg_val
                 aStack.modifyArg(temp_gpr_index, arg_index)
@@ -177,9 +163,7 @@ class MainSequence(Sequence):
             gpr_name = "x%d" % aGprIndex
             self.randomInitializeRegister(gpr_name)
             (gpr_val, valid) = self.readRegister(gpr_name)
-            exception_handlers_test_utils.assert_valid_gpr_value(
-                self, aGprIndex, valid
-            )
+            exception_handlers_test_utils.assert_valid_gpr_value(self, aGprIndex, valid)
         else:
             load_gpr64_seq = LoadGPR64(self.genThread)
             gpr_val = (
@@ -196,12 +180,8 @@ class MainSequence(Sequence):
     #  @param aStack An initialized stack object.
     def _isStackEmpty(self, aStack):
         stack_pointer_index = aStack.pointerIndex()
-        (stack_pointer_val, valid) = self.readRegister(
-            "x%d" % stack_pointer_index
-        )
-        exception_handlers_test_utils.assert_valid_gpr_value(
-            self, stack_pointer_index, valid
-        )
+        (stack_pointer_val, valid) = self.readRegister("x%d" % stack_pointer_index)
+        exception_handlers_test_utils.assert_valid_gpr_value(self, stack_pointer_index, valid)
         stack_empty = stack_pointer_val == aStack.mStackTop
 
         reference_stack_empty = False

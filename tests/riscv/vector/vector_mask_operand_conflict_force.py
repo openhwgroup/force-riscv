@@ -31,8 +31,6 @@ class MainSequence(VectorTestSequence):
             "VAND.VI##RISCV",
             "VAND.VV##RISCV",
             "VAND.VX##RISCV",
-            "VDOT.VV##RISCV",
-            "VDOTU.VV##RISCV",
             "VID.V##RISCV",
             "VMAX.VV##RISCV",
             "VMAX.VX##RISCV",
@@ -119,10 +117,7 @@ class MainSequence(VectorTestSequence):
         vm_val = aInstrRecord["Imms"]["vm"]
         vd_val = aInstrRecord["Dests"]["vd"]
         if (vm_val == 0) and (vd_val == 0):
-            self.error(
-                "Instruction %s is masked with v0 as the destination register"
-                % aInstr
-            )
+            self.error("Instruction %s is masked with v0 as the destination register" % aInstr)
 
 
 MainSequenceClass = MainSequence

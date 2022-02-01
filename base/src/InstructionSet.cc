@@ -367,21 +367,21 @@ namespace Force {
             auto cast_struct = dynamic_cast<AluOperandStructure*> (op_struct);
             cast_struct->SetOperationType(string_to_EAluOperationType(attr.value()));
           }
+          else if (strcmp(attr_name, "elem-width") == 0) {
+            auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
+            cast_struct->SetElementWidth(parse_uint32(attr.value()));
+          }
           else if (strcmp(attr_name, "layout-multiple") == 0) {
             auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
             cast_struct->SetLayoutMultiple(parse_float(attr.value()));
           }
           else if (strcmp(attr_name, "reg-count") == 0) {
-            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
+            auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
             cast_struct->SetRegisterCount(parse_uint32(attr.value()));
           }
-          else if (strcmp(attr_name, "reg-index-alignment") == 0) {
-            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
-            cast_struct->SetRegisterIndexAlignment(parse_uint32(attr.value()));
-          }
-          else if (strcmp(attr_name, "elem-width") == 0) {
-            auto cast_struct = dynamic_cast<VectorLayoutOperandStructure*> (op_struct);
-            cast_struct->SetElementWidth(parse_uint32(attr.value()));
+          else if (strcmp(attr_name, "layout-type") == 0) {
+            auto cast_struct = dynamic_cast<VectorRegisterOperandStructure*> (op_struct);
+            cast_struct->SetVectorLayoutType(string_to_EVectorLayoutType(attr.value()));
           }
           else if (op_struct->Type() == EOperandType::DataProcessing) {
             auto cast_struct = dynamic_cast<DataProcessingOperandStructure*> (op_struct);
@@ -468,10 +468,6 @@ namespace Force {
       }
       else if (strcmp(opr_type, "VECREG") == 0) {
         mpOperandStructure = new VectorRegisterOperandStructure();
-        return mpOperandStructure;
-      }
-      else if (strcmp(opr_type, "VectorLayout") == 0) {
-        mpOperandStructure = new VectorLayoutOperandStructure();
         return mpOperandStructure;
       }
 

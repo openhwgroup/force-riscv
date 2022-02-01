@@ -49,8 +49,7 @@ class TrapRedirectionHandlerRISCV(ReusableSequence):
             )
 
         self.debug(
-            "[TrapRedirectionHandlerRISCV] generate handler address: 0x%x"
-            % self.getPEstate("PC")
+            "[TrapRedirectionHandlerRISCV] generate handler address: 0x%x" % self.getPEstate("PC")
         )
 
         priv_level_reg_index = handler_context.getScratchRegisterIndices(
@@ -60,17 +59,13 @@ class TrapRedirectionHandlerRISCV(ReusableSequence):
         (
             self.mDataBlockAddrRegIndex,
             self.mActionCodeRegIndex,
-        ) = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.ARGUMENT, 2
-        )
+        ) = handler_context.getScratchRegisterIndices(RegisterCallRole.ARGUMENT, 2)
 
         (
             scratch_reg_index,
             scratch_reg2_index,
             scratch_reg3_index,
-        ) = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.TEMPORARY, 3
-        )
+        ) = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 3)
 
         # if the exception was taken in machine mode, then skip it...
 
@@ -91,9 +86,7 @@ class TrapRedirectionHandlerRISCV(ReusableSequence):
         self.copyCSR(
             "sepc", "mepc", scratch_reg_index
         )  # copy address of instruction that raised the exception
-        self.copyCSR(
-            "scause", "mcause", scratch_reg_index
-        )  # copy Exception Cause value
+        self.copyCSR("scause", "mcause", scratch_reg_index)  # copy Exception Cause value
         self.copyCSR(
             "stval", "mtval", scratch_reg_index
         )  # (for page fault exception) copy faulting address
@@ -104,9 +97,7 @@ class TrapRedirectionHandlerRISCV(ReusableSequence):
         # setup to cause machine-mode return from interrupt to in effect switch
         # to supervisor-mode...
 
-        self.genSetupSmodeReturn(
-            scratch_reg_index, scratch_reg2_index, scratch_reg3_index
-        )
+        self.genSetupSmodeReturn(scratch_reg_index, scratch_reg2_index, scratch_reg3_index)
 
         self.mAssemblyHelper.genReturn()
 
@@ -115,15 +106,9 @@ class TrapRedirectionHandlerRISCV(ReusableSequence):
     #  @param aScratchReg1Index - Scratch register index.
 
     def genGetPreviousPrivilegeMode(self, aScratchRegIndex):
-        self.mAssemblyHelper.genReadSystemRegister(
-            aScratchRegIndex, "mstatus"
-        )  # read mstatus,
-        self.mAssemblyHelper.genShiftRightImmediate(
-            aScratchRegIndex, 11
-        )  # isolate
-        self.mAssemblyHelper.genAndImmediate(
-            aScratchRegIndex, 3
-        )  # mstatus.mpp
+        self.mAssemblyHelper.genReadSystemRegister(aScratchRegIndex, "mstatus")  # read mstatus,
+        self.mAssemblyHelper.genShiftRightImmediate(aScratchRegIndex, 11)  # isolate
+        self.mAssemblyHelper.genAndImmediate(aScratchRegIndex, 3)  # mstatus.mpp
 
     # Setup for mret to S-mode
     #
@@ -151,19 +136,11 @@ class TrapRedirectionHandlerRISCV(ReusableSequence):
     # make the M-mode previous privilege level == S-mode, so that
     # issueing an MRET instruction will in effect, return to S-mode
 
-    def genSetupSmodeReturn(
-        self, aMstatusTmp, aScratchRegIndex, aScratchReg2Index
-    ):
-        self.mAssemblyHelper.genReadSystemRegister(
-            aMstatusTmp, "mstatus"
-        )  # read mstatus
+    def genSetupSmodeReturn(self, aMstatusTmp, aScratchRegIndex, aScratchReg2Index):
+        self.mAssemblyHelper.genReadSystemRegister(aMstatusTmp, "mstatus")  # read mstatus
 
-        self.mAssemblyHelper.genShiftRightImmediate(
-            aScratchRegIndex, 11, aMstatusTmp
-        )  # isolate
-        self.mAssemblyHelper.genAndImmediate(
-            aScratchRegIndex, 3
-        )  # mstatus.mpp,
+        self.mAssemblyHelper.genShiftRightImmediate(aScratchRegIndex, 11, aMstatusTmp)  # isolate
+        self.mAssemblyHelper.genAndImmediate(aScratchRegIndex, 3)  # mstatus.mpp,
         self.mAssemblyHelper.genShiftLeftImmediate(
             aScratchRegIndex, 8
         )  # shift left to bit 8 (mstatus.spp),
@@ -172,16 +149,12 @@ class TrapRedirectionHandlerRISCV(ReusableSequence):
             aScratchReg2Index, 0x400
         )  # set mstatus.mpp = 1 (mpp will be S-mode)
         self.mAssemblyHelper.genShiftLeftImmediate(aScratchReg2Index, 1)  #
-        self.mAssemblyHelper.genOrRegister(
-            aScratchRegIndex, aScratchReg2Index
-        )  #
+        self.mAssemblyHelper.genOrRegister(aScratchRegIndex, aScratchReg2Index)  #
 
         self.mAssemblyHelper.genMoveImmediate(
             aScratchReg2Index, 0x19
         )  # from mstatus current value,
-        self.mAssemblyHelper.genShiftLeftImmediate(
-            aScratchReg2Index, 8
-        )  # clear mpp, spp fields
+        self.mAssemblyHelper.genShiftLeftImmediate(aScratchReg2Index, 8)  # clear mpp, spp fields
         self.mAssemblyHelper.genNotRegister(aScratchReg2Index)  #
         self.mAssemblyHelper.genAndRegister(aMstatusTmp, aScratchReg2Index)  #
 

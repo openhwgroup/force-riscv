@@ -17,13 +17,10 @@
 
 import sys
 
-sys.path.insert(0, "../../shared/")
 from Register import *
 
 
-def create_app_register(
-    aName, aSize, aIndex, aType, aClass, aBoot, aAltPhysReg=None
-):
+def create_app_register(aName, aSize, aIndex, aType, aClass, aBoot, aAltPhysReg=None):
     new_reg = Register(
         **{
             "name": aName,
@@ -125,9 +122,7 @@ def build_app_registers(a_app_registers_file, a_xlen):
         # Add x1-x31 registers
         for i in range(1, 32):
             app_register_doc.addPhysicalRegister(
-                PhysicalRegister.createPhysicalRegister(
-                    "x%d" % i, size, i, "GPR"
-                )
+                PhysicalRegister.createPhysicalRegister("x%d" % i, size, i, "GPR")
             )
             app_register_doc.addRegister(
                 create_app_register("x%d" % i, size, i, "GPR", None, 0x1000)
@@ -140,18 +135,14 @@ def build_app_registers(a_app_registers_file, a_xlen):
             )
         )
         app_register_doc.addRegister(
-            create_app_register(
-                "x0", size, 0, "ZR", "ReadOnlyZeroRegister", 0, "x0"
-            )
+            create_app_register("x0", size, 0, "ZR", "ReadOnlyZeroRegister", 0, "x0")
         )
 
         # Add PC register
         app_register_doc.addPhysicalRegister(
             PhysicalRegister.createPhysicalRegister("PC", size, 32, "PC")
         )
-        app_register_doc.addRegister(
-            create_app_register("PC", size, 32, "PC", None, 0)
-        )
+        app_register_doc.addRegister(create_app_register("PC", size, 32, "PC", None, 0))
 
         # number of sub-registers needed for quad FP 128-bit registers
         numberOfFpSubReg = 2
@@ -170,30 +161,22 @@ def build_app_registers(a_app_registers_file, a_xlen):
                 )
 
             app_register_doc.addRegister(
-                create_app_register(
-                    "S%d" % i, 32, i, "FPR", None, 0, "f%d_0" % i
-                )
+                create_app_register("S%d" % i, 32, i, "FPR", None, 0, "f%d_0" % i)
             )
 
         # Add H0-H31
         for i in range(0, 32):
             app_register_doc.addRegister(
-                create_app_register(
-                    "H%d" % i, 16, i, "FPR", None, 0, "f%d_0" % i
-                )
+                create_app_register("H%d" % i, 16, i, "FPR", None, 0, "f%d_0" % i)
             )
 
         # Add D0-D31
         for i in range(0, 32):
-            app_register_doc.addRegister(
-                create_double_precision_app_register(i, 64)
-            )
+            app_register_doc.addRegister(create_double_precision_app_register(i, 64))
 
         # Add Q0-Q31
         for i in range(0, 32):
-            app_register_doc.addRegister(
-                create_quad_precision_app_register(i, 64)
-            )
+            app_register_doc.addRegister(create_quad_precision_app_register(i, 64))
 
         # number of sub-registers needed for vector 512-bit registers
         numberOfVecSubReg = 8
@@ -233,10 +216,7 @@ if __name__ == "__main__":
                 print("ERROR: Only valid 'xlen' values are 32 or 64")
                 sys.exit(1)
         else:
-            print(
-                "Only valid option is '--xlen N', where N is "
-                "either 32 or 64"
-            )
+            print("Only valid option is '--xlen N', where N is either 32 or 64")
             sys.exit(1)
 
     print("\tApp registers file: %s, xlen: %d" % (app_registers_file, xlen))

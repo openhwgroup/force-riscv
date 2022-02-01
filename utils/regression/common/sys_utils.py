@@ -97,18 +97,14 @@ class SysUtils:
 
         Msg.dbg("arg_fout: %s, arg_ferr: %s" % (str(arg_fout), str(arg_ferr)))
         try:
-            my_fout = SysUtils.ifthen(
-                arg_fout is None, subprocess.PIPE, open(arg_fout, "w")
-            )
+            my_fout = SysUtils.ifthen(arg_fout is None, subprocess.PIPE, open(arg_fout, "w"))
 
         except Exception as arg_ex:
             Msg.err("stdout: " + str(arg_ex))
             my_fout = subprocess.PIPE
 
         try:
-            my_ferr = SysUtils.ifthen(
-                arg_ferr is None, subprocess.PIPE, open(arg_ferr, "w")
-            )
+            my_ferr = SysUtils.ifthen(arg_ferr is None, subprocess.PIPE, open(arg_ferr, "w"))
 
         except Exception as arg_ex:
             Msg.err("stderr: " + str(arg_ex))
@@ -264,10 +260,7 @@ class SysUtils:
             if not arg_suppress:
                 my_exc_type, my_exc_val, my_exc_tb = sys.exc_info()
                 Msg.err("Syntax Error...")
-                Msg.err(
-                    "FileName: %s"
-                    % (str(my_exc_tb.tb_frame.f_code.co_filename))
-                )
+                Msg.err("FileName: %s" % (str(my_exc_tb.tb_frame.f_code.co_filename)))
                 Msg.err("Line: %d" % (int(my_exc_tb.tb_lineno)))
                 Msg.err("Name: %s" % (str(my_exc_tb.tb_frame.f_code.co_name)))
                 Msg.err("Type: %s" % (str(my_exc_type)))
@@ -281,9 +274,7 @@ class SysUtils:
 
             my_exc_type, my_exc_val, my_exc_tb = sys.exc_info()
             Msg.err("Unable to process contents of Control File...")
-            Msg.err(
-                "FileName: %s" % (str(my_exc_tb.tb_frame.f_code.co_filename))
-            )
+            Msg.err("FileName: %s" % (str(my_exc_tb.tb_frame.f_code.co_filename)))
             Msg.err("Line: %d" % (int(my_exc_tb.tb_lineno)))
             Msg.err("Name: %s" % (str(my_exc_tb.tb_frame.f_code.co_name)))
             Msg.err("Type: %s" % (str(my_exc_type.name)))
@@ -297,9 +288,7 @@ class SysUtils:
         if arg_no_complex:
             return isinstance(arg_var, int) or isinstance(arg_var, float)
         return (
-            isinstance(arg_var, int)
-            or isinstance(arg_var, float)
-            or isinstance(arg_var, complex)
+            isinstance(arg_var, int) or isinstance(arg_var, float) or isinstance(arg_var, complex)
         )
 
     @classmethod
@@ -307,7 +296,7 @@ class SysUtils:
         time.sleep(arg_interval / 1000)
 
     @classmethod
-    def sleep_seconds_with_progress(aClass, aSeconds):
+    def sleep_seconds_with_progress(cls, aSeconds):
         for i in range(aSeconds):
             sys.stdout.write("%d " % aSeconds)
             aSeconds -= 1
@@ -331,9 +320,7 @@ class SysUtils:
     def get_command_output(cls, arg_command, arg_cwd=None):
         ret_okay = True
         try:
-            output = subprocess.check_output(
-                shlex.split(arg_command), cwd=arg_cwd
-            )
+            output = subprocess.check_output(shlex.split(arg_command), cwd=arg_cwd)
         except subprocess.CalledProcessError as ex:
             output = ex.output
             ret_okay = False

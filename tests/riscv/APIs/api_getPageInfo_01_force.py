@@ -21,7 +21,8 @@ from base.Sequence import Sequence
 class MainSequence(Sequence):
     """Exercise different combinations of values for the parameters for
     the genPA instruction. Focus in this test is to try values of the Size,
-    Align and CanAlias parameters. Type is always 'D'; Bank is always '0'.
+    Align and CanAlias parameters. Type is always 'D'; Bank is always
+    "Default".
     """
 
     def generate(self, **kargs):
@@ -32,7 +33,7 @@ class MainSequence(Sequence):
         ldstr_double_ops = ["LD##RISCV", "SD##RISCV"]
 
         theType = "D"
-        theBank = 0
+        theBank = "Default"
         theCanAlias = 0
         loopCount = 2
 
@@ -75,10 +76,7 @@ class MainSequence(Sequence):
                     # This section displays the keys and values for the
                     # second and third level dictionaries.
                     if "Page" in page_info.keys():
-                        self.notice(
-                            ">>>>>>>>>>  VA Page info   <<<<<<<<<<<<<<<<<<<<"
-                            "<<<<<<<<<<<<<"
-                        )
+                        self.notice(">>>>>>>>>>  VA Page info   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
                         for k in page_info["Page"]:
                             if k != "DescriptorDetails":
                                 if k == "MemoryType" or k == "MemoryAttr":
@@ -89,9 +87,7 @@ class MainSequence(Sequence):
                                 else:
                                     self.notice(
                                         ">>>>>>>>>>  Key:  {:15}   Value:  "
-                                        "0x{:x}".format(
-                                            k, page_info["Page"][k]
-                                        )
+                                        "0x{:x}".format(k, page_info["Page"][k])
                                     )
                             else:
                                 for j in page_info["Page"][
@@ -106,14 +102,12 @@ class MainSequence(Sequence):
                                     )
                     else:
                         self.error(
-                            ">>>>>>>>>>  VA Page info:  Nothing returned "
-                            'from getPageInfo "VA"'
+                            ">>>>>>>>>>  VA Page info:  Nothing returned " 'from getPageInfo "VA"'
                         )
 
                     if "Table" in page_info.keys():
                         self.notice(
-                            ">>>>>>>>>>  VA Table info   <<<<<<<<<<<<<<<<<"
-                            "<<<<<<<<<<<<<<<<"
+                            ">>>>>>>>>>  VA Table info   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
                         )
                         for k in page_info["Table"]:
                             self.notice(

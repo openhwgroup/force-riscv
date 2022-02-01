@@ -39,22 +39,16 @@ class DefaultFastSyncDispatcher(SyncDispatcherBaseRISCV):
     def processDispatch(self, aHandlerContext, aExceptionCodeClass):
 
         print("In processDispatch")
-        scratch_reg_index = aHandlerContext.getScratchRegisterIndices(
-            RegisterCallRole.ALL, 1
-        )
+        scratch_reg_index = aHandlerContext.getScratchRegisterIndices(RegisterCallRole.ALL, 1)
 
         err_code_reg_index = self._genLoadErrorCode(aHandlerContext)
 
-        self.genInstruction(
-            "AUIPC##RISCV", {"rd": scratch_reg_index, "simm20": 0}
-        )
+        self.genInstruction("AUIPC##RISCV", {"rd": scratch_reg_index, "simm20": 0})
         self.mAssemblyHelper.genAddImmediate(scratch_reg_index, 20)
 
         # Use error code as word offset into the table
         self.mAssemblyHelper.genShiftLeftImmediate(err_code_reg_index, 2)
-        self.mAssemblyHelper.genAddRegister(
-            scratch_reg_index, err_code_reg_index
-        )
+        self.mAssemblyHelper.genAddRegister(scratch_reg_index, err_code_reg_index)
         self.genInstruction(
             "JALR##RISCV",
             {

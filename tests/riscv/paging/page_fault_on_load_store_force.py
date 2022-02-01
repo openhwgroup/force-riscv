@@ -37,14 +37,10 @@ class MainSequence(PageFaultSequence):
             )
 
         self._mExceptionCodes = (13, 15)  # for risc-v, load: 13, store: 15
-        self._mExceptionSubCodes = (
-            {}
-        )  # for now, riscv does not support exception sub-codes
+        self._mExceptionSubCodes = {}  # for now, riscv does not support exception sub-codes
 
     def createPageFaultModifier(self):
-        return PageFaultModifier(
-            self.genThread, self.getGlobalState("AppRegisterWidth")
-        )
+        return PageFaultModifier(self.genThread, self.getGlobalState("AppRegisterWidth"))
 
     def getInstructionList(self):
         return self._mInstrList
@@ -59,9 +55,7 @@ def gen_thread_initialization(gen_thread):
         # enable exception delegation for some portion of the generated tests.
         delegation_enables = ChoicesModifier(gen_thread)
         weightDict = {"0x0": 0, "0x1": 50}
-        delegation_enables.modifyRegisterFieldValueChoices(
-            "medeleg.Load page fault", weightDict
-        )
+        delegation_enables.modifyRegisterFieldValueChoices("medeleg.Load page fault", weightDict)
         delegation_enables.modifyRegisterFieldValueChoices(
             "medeleg.Store/AMO page fault", weightDict
         )

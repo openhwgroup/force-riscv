@@ -46,18 +46,13 @@ class GprBootStateTransitionHandlerTest(StateTransitionHandler):
     #  @param aStateElem A StateElement object.
     def processStateElement(self, aStateElem):
         if aStateElem.getStateElementType() != EStateElementType.GPR:
-            self.error(
-                "Unexpected StateElement type %s"
-                % aStateElem.getStateElementType()
-            )
+            self.error("Unexpected StateElement type %s" % aStateElem.getStateElementType())
 
         # This implementation loads the memory block pointer GPR out of order,
         # so that it can be used to process all subsequent StateElements.
         if not self._mMemBlockAddrLoaded:
             load_gpr64_seq = LoadGPR64(self.genThread)
-            load_gpr64_seq.load(
-                self.mMemBlockPtrIndex, self.mMemBlockStartAddr
-            )
+            load_gpr64_seq.load(self.mMemBlockPtrIndex, self.mMemBlockStartAddr)
             self._mMemBlockAddrLoaded = True
 
         gpr_index = aStateElem.getRegisterIndex()
@@ -93,18 +88,14 @@ class MainSequence(Sequence):
             (EStateElementType.GPR,),
         )
 
-        gpr_indices = self.getRandomGPRs(
-            RandomUtils.random32(2, 15), exclude="0"
-        )
+        gpr_indices = self.getRandomGPRs(RandomUtils.random32(2, 15), exclude="0")
         state_trans_handler.mMemBlockPtrIndex = gpr_indices[0]
         state_trans_handler.mGprIndices = set(gpr_indices[1:])
 
         # Initialize a memory block for the StateTransitionHandler to use to
         # load the GPR boot values
         mem_block_size = 32 * 8
-        mem_block_start_addr = self.genVA(
-            Size=mem_block_size, Align=8, Type="D"
-        )
+        mem_block_start_addr = self.genVA(Size=mem_block_size, Align=8, Type="D")
         self.initializeRegister(("x%d" % gpr_indices[0]), mem_block_start_addr)
         state_trans_handler.mMemBlockStartAddr = mem_block_start_addr
 

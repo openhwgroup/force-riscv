@@ -24,38 +24,28 @@ class VectorOperandAdjustor(OperandAdjustor):
         # dictionary for instructions that use rd instead of vd where vd/rd is
         # defined
         self.rd_dictionary = {
-            "VPOPC",
-            "VFIRST",
+            "VCPOP.M",
+            "VFIRST.M",
             "VMV.X.S",
             "VFMV.F.S",
         }
 
-    def add_vtype_layout_operand(self):
-        layout_opr = Operand()
-        layout_opr.name = "vtype"
-        layout_opr.type = "VectorLayout"
-        layout_opr.oclass = "VtypeLayoutOperand"
-        self.mInstr.insert_operand(0, layout_opr)
+    def set_vtype_layout(self, aInstruction, aOperand, aRegCount=1):
+        if (aOperand.name == "vd/rd") and (aInstruction.name in self.rd_dictionary):
+            return
 
-    def add_custom_layout_operand(self, aRegCount, aElemWidth):
-        layout_opr = Operand()
-        layout_opr.name = "custom"
-        layout_opr.type = "VectorLayout"
-        layout_opr.oclass = "CustomLayoutOperand"
-        layout_opr.regCount = aRegCount
-        layout_opr.elemWidth = aElemWidth
-        self.mInstr.insert_operand(0, layout_opr)
+        aOperand.layoutType = "Vtype"
+        aOperand.regCount = aRegCount
 
-    def add_whole_register_layout_operand(
-        self, aRegCount=1, aRegIndexAlignment=1
-    ):
-        layout_opr = Operand()
-        layout_opr.name = "whole"
-        layout_opr.type = "VectorLayout"
-        layout_opr.oclass = "WholeRegisterLayoutOperand"
-        layout_opr.regCount = aRegCount
-        layout_opr.regIndexAlignment = aRegIndexAlignment
-        self.mInstr.insert_operand(0, layout_opr)
+    def set_fixed_element_size_layout(self, aOperand, aRegCount, aElemWidth):
+        aOperand.layoutType = "FixedElementSize"
+        aOperand.regCount = aRegCount
+        aOperand.elemWidth = aElemWidth
+
+    def set_whole_register_layout(self, aOperand, aRegCount=1, aElemWidth=8):
+        aOperand.layoutType = "WholeRegister"
+        aOperand.regCount = aRegCount
+        aOperand.elemWidth = aElemWidth
 
     def set_reg_vec(self, aOperand):
         aOperand.type = "VECREG"
@@ -78,10 +68,16 @@ class VectorOperandAdjustor(OperandAdjustor):
         rs2_opr.differ = "rs1"
         self.set_rs2_int()
 
-    def set_imm_vsetvl(self):
-        imm_opr = self.mInstr.find_operand("zimm[10:0]")
+    def set_imm_avl_vsetvl(self):
+        imm_opr = self.mInstr.find_operand("uimm[4:0]")
+        imm_opr.oclass = "VsetvlAvlImmediateOperand"
+        imm_opr.name = "uimm5"
+        self.add_asm_op(imm_opr)
+
+    def set_imm_vtype_vsetvl(self, aOperandName, aOperandBitCount):
+        imm_opr = self.mInstr.find_operand(aOperandName)
         imm_opr.oclass = "VsetvlVtypeImmediateOperand"
-        imm_opr.name = "zimm10"
+        imm_opr.name = "zimm%d" % aOperandBitCount
         self.add_asm_op(imm_opr)
 
     def set_vm(self):
@@ -122,16 +118,6 @@ class VectorOperandAdjustor(OperandAdjustor):
         vs3_opr.access = "Read"
         self.set_reg_vec(vs3_opr)
 
-    def set_vs3_ls_source(self):
-        vs3_opr = self.mInstr.find_operand("vs3")
-        vs3_opr.oclass = "VectorDataRegisterOperand"
-        self.set_vs3()
-
-    def set_vs3_ls_indexed_source(self):
-        vs3_opr = self.mInstr.find_operand("vs3")
-        vs3_opr.oclass = "VectorIndexedDataRegisterOperand"
-        self.set_vs3()
-
     def set_vdrd_int(self):
         vdrd_opr = self.mInstr.find_operand("vd/rd")
         if self.mInstr.name in self.rd_dictionary:
@@ -152,16 +138,6 @@ class VectorOperandAdjustor(OperandAdjustor):
         vd_opr.name = "vd"
         vd_opr.access = "Write"
         self.set_reg_vec_nonzero(vd_opr)
-
-    def set_vd_ls_dest(self):
-        vd_opr = self.mInstr.find_operand("vd")
-        vd_opr.oclass = "VectorDataRegisterOperand"
-        self.set_vd()
-
-    def set_vd_ls_indexed_dest(self):
-        vd_opr = self.mInstr.find_operand("vd")
-        vd_opr.oclass = "VectorIndexedDataRegisterOperand"
-        self.set_vd()
 
     def set_vdrd_sp(self):
         vdrd_opr = self.mInstr.find_operand("vd/rd")

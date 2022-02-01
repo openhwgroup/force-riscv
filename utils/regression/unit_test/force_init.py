@@ -55,19 +55,9 @@ def force_init():
 
 the_force_root = force_init()
 
-# next we need to set the import paths for the utils and tests directories
-# both of which are used for the rest of the module run, keep in mind the tests
-# may change in later releases
-sys.path.append(the_force_root + "utils/")
-sys.path.append(the_force_root + "utils/regression")
-
-
-# sys.path.append( the_force_root + "tests/" )
 
 # if and when another utility is written that uses the same strategy then the
 # following lines need to move to a file specific to master_run
-
-
 def force_usage(arg_msg):
     # display usage message
     print(arg_msg)

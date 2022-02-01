@@ -40,9 +40,7 @@ class CompileExecutor(AppExecutor):
 
     def skip(self):
         if not self.ctrl_item.compile_rtl.get("run", False):
-            Msg.user(
-                "[CompileExecutor::skip] skipping since 'run' is not True..."
-            )
+            Msg.user("[CompileExecutor::skip] skipping since 'run' is not True...")
             return True
 
         Msg.user("[CompileExecutor::skip] not skipping")
@@ -53,9 +51,7 @@ class CompileExecutor(AppExecutor):
             cmd = "make compile -C %s %s" % (self.mMakefilePath, self.mOptions)
             Msg.user("Compile command = " + str({"compile-cmd": cmd}))
 
-            result = SysUtils.exec_process(
-                cmd, self.log, self.elog, self.ctrl_item.timeout, True
-            )
+            result = SysUtils.exec_process(cmd, self.log, self.elog, self.ctrl_item.timeout, True)
             Msg.user("Compile result = " + str(result))
 
         except BaseException:
@@ -69,34 +65,24 @@ class CompileExecutor(AppExecutor):
 
     def pre(self):
         if self.ctrl_item.compile_rtl.get("mp"):
-            cmd = (
-                "%s/script/lsu_resize.py -scd_num %d -sca_num "
-                "%d -scb_starve %d"
-                % (
-                    self.mMakefilePath,
-                    randint(1, 16),
-                    randint(1, 12),
-                    randint(0, 1),
-                )
+            cmd = "%s/script/lsu_resize.py -scd_num %d -sca_num %d -scb_starve %d" % (
+                self.mMakefilePath,
+                randint(1, 16),
+                randint(1, 12),
+                randint(0, 1),
             )
             Msg.user("MP pre-compile command = %s" % cmd)
-            result = SysUtils.exec_process(
-                cmd, self.log, self.elog, self.ctrl_item.timeout, True
-            )
+            result = SysUtils.exec_process(cmd, self.log, self.elog, self.ctrl_item.timeout, True)
             Msg.user("MP pre-compile command result = %s" % str(result))
 
     def post(self):
         if self.ctrl_item.compile_rtl.get("mp"):
-            lsu_folder = PathUtils.real_path(
-                "%s/../../../rtl/lsu" % self.mMakefilePath
-            )
+            lsu_folder = PathUtils.real_path("%s/../../../rtl/lsu" % self.mMakefilePath)
             cmd = (
                 "svn revert %s/lsu_scb_retire_ctrl.vp "
                 "%s/lsu_scb_sca_array.vp %s/lsu_scb_scd_array.vp"
                 % (lsu_folder, lsu_folder, lsu_folder)
             )
             Msg.user("MP post-compile command = %s" % cmd)
-            result = SysUtils.exec_process(
-                cmd, self.log, self.elog, self.ctrl_item.timeout, True
-            )
+            result = SysUtils.exec_process(cmd, self.log, self.elog, self.ctrl_item.timeout, True)
             Msg.user("MP post-compile command = %s" % str(result))

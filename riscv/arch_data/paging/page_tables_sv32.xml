@@ -15,6 +15,7 @@
  limitations under the License.
 -->
 <page_tables>
+  <paging_mode name="Sv32"/>
   <pte type="4K" category="Table" granule="4K" stage="1" class="TablePte">
     <pte_attribute type="Address" bits="31-10" class="AddressPteAttributeRISCV"/>
     <pte_attribute type="SystemPage" bits="9" value="0"/>

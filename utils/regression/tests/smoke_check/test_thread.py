@@ -88,9 +88,7 @@ class UnitTest_LoopThread(UnitTest):
             "active": False,  # do not start the thread until ready
         }
         Msg.info("UnitTest_LoopThread << Creating Thread With Loop... ")
-        myThread = thread_factory(
-            "LoopThread", False, myThreadProcs, myThreadOpts
-        )
+        myThread = thread_factory("LoopThread", False, myThreadProcs, myThreadOpts)
 
         Msg.info("UnitTest_LoopThread << Initializing Thread ... ")
         myThread.start_thread()

@@ -492,11 +492,6 @@ namespace Force {
     RegisterOperand::Generate(gen, instr);
   }
 
-  OperandConstraint* VectorRegisterOperand::InstantiateOperandConstraint() const
-  {
-    return new VectorRegisterOperandConstraint();
-  }
-
   void SameValueOperand::Generate(Generator& gen, Instruction& instr)
   {
     const string& sameName = Name();
@@ -647,13 +642,6 @@ namespace Force {
   OperandConstraint* GroupOperand::InstantiateOperandConstraint() const
   {
     return new GroupOperandConstraint();
-  }
-
-  void VectorLayoutOperand::Setup(Generator& gen, Instruction& instr)
-  {
-    Operand::Setup(gen, instr);
-
-    SetupVectorLayout(gen, instr);
   }
 
   void AddressingOperand::Generate(Generator& gen, Instruction& instr)
@@ -1512,9 +1500,8 @@ namespace Force {
 
   void VectorStridedLoadStoreOperand::GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, vector<uint64>& rTargetAddresses) const
   {
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
     auto strided_opr_constr = mpOperandConstraint->CastInstance<VectorStridedLoadStoreOperandConstraint>();
+    const VectorLayout* vec_layout = GetDataVectorLayout(rInstr);
     for (uint32 elem_index = 0; elem_index < vec_layout->mElemCount; elem_index++) {
       uint64 elem_target_addr = baseTargetAddr + strided_opr_constr->StrideValue() * elem_index;
       rTargetAddresses.push_back(elem_target_addr);
@@ -1586,10 +1573,9 @@ namespace Force {
   uint64 VectorStridedLoadStoreOperand::CalculateStrideValue(const Instruction& rInstr, cuint32 alignment, cuint32 addrRangeSize) const
   {
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* vec_layout = GetDataVectorLayout(rInstr);
 
-    uint64 max_stride_total = addrRangeSize - lsop_struct->ElementSize();
+    uint64 max_stride_total = addrRangeSize - lsop_struct->DataSize();
     uint64 max_stride = max_stride_total / (vec_layout->mElemCount - 1);
 
     // Randomly select a stride value between plus or minus the maximum stride value
@@ -1616,7 +1602,7 @@ namespace Force {
     }
     else {
       auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-      uint64 max_addr = baseAddr + addrRangeSize - lsop_struct->ElementSize();
+      uint64 max_addr = baseAddr + addrRangeSize - lsop_struct->DataSize();
       base_val = max_addr & get_align_mask(alignment);
     }
 
@@ -1627,6 +1613,14 @@ namespace Force {
   {
     string init_addr_block_size = rGen.GetVariable("Initial Vector Strided Preamble Address Block Size", EVariableType::Value);
     return parse_uint64(init_addr_block_size);
+  }
+
+  const VectorLayout* VectorStridedLoadStoreOperand::GetDataVectorLayout(const Instruction& rInstr) const
+  {
+    Operand* data_opr = GetDataOperand(rInstr);
+    OperandConstraint* data_opr_constr = data_opr->GetOperandConstraint();
+    auto vec_reg_opr_constr = data_opr_constr->CastInstance<VectorRegisterOperandConstraint>();
+    return vec_reg_opr_constr->GetVectorLayout();
   }
 
   bool VectorIndexedLoadStoreOperand::GetPrePostAmbleRequests(Generator& gen) const
@@ -1683,8 +1677,7 @@ namespace Force {
 
   void VectorIndexedLoadStoreOperand::GetTargetAddresses(const Instruction& rInstr, cuint64 baseTargetAddr, vector<uint64>& rTargetAddresses) const
   {
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* vec_layout = GetIndexVectorLayout();
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
     const vector<uint64>& index_elem_values = indexed_opr_constr->IndexElementValues();
     for (uint32 elem_index = 0; elem_index < vec_layout->mElemCount; elem_index++) {
@@ -1699,8 +1692,7 @@ namespace Force {
     auto& indexed_addr_mode = dynamic_cast<const VectorIndexedMode&>(rAddrMode);
     indexed_opr_constr->SetBaseValue(indexed_addr_mode.BaseValue());
 
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* vec_layout = GetIndexVectorLayout();
 
     vector<uint64> reg_values;
     indexed_addr_mode.IndexValues(reg_values);
@@ -1751,8 +1743,7 @@ namespace Force {
   void VectorIndexedLoadStoreOperand::RecordIndexElementByteSize(const Instruction& rInstr)
   {
     auto indexed_opr_constr = mpOperandConstraint->CastInstance<VectorIndexedLoadStoreOperandConstraint>();
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* vec_layout = GetIndexVectorLayout();
     indexed_opr_constr->SetIndexElementSize(vec_layout->mElemSize / 8);
   }
 
@@ -1765,8 +1756,7 @@ namespace Force {
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
     uint64 target_addr = va_gen.GenerateAddress(alignment, lsop_struct->DataSize(), false, page_req->MemoryAccessType());
 
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* vec_layout = GetIndexVectorLayout();
 
     ConstraintSet index_elem_constr(0, get_mask64(vec_layout->mElemSize));
     uint64 index_elem_val = index_elem_constr.ChooseValue();
@@ -1784,8 +1774,7 @@ namespace Force {
     // applied here.
     VaGenerator va_gen(indexed_opr_constr->GetVmMapper(), page_req, nullptr, true, indexed_opr_constr->GetAddressReuseMode());
 
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
+    const VectorLayout* vec_layout = GetIndexVectorLayout();
     auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
 
     ConstraintSet target_addr_constr;
@@ -1796,6 +1785,16 @@ namespace Force {
       uint64 target_addr = va_gen.GenerateAddress(alignment, lsop_struct->DataSize(), false, page_req->MemoryAccessType(), &target_addr_constr);
       rIndexElemValues.push_back(target_addr - baseVal);
     }
+  }
+
+  const VectorLayout* VectorIndexedLoadStoreOperand::GetIndexVectorLayout() const
+  {
+    auto addr_opr_constr = mpOperandConstraint->CastInstance<AddressingOperandConstraint>();
+    RegisterOperand* index_opr = addr_opr_constr->IndexOperand();
+    OperandConstraint* index_opr_constr = index_opr->GetOperandConstraint();
+    auto vec_reg_opr_constr = index_opr_constr->CastInstance<VectorRegisterOperandConstraint>();
+
+    return vec_reg_opr_constr->GetVectorLayout();
   }
 
   void SignedImmediateOperand::SetValue(uint64 val)
@@ -1925,14 +1924,6 @@ namespace Force {
   OperandConstraint* DataProcessingOperand::InstantiateOperandConstraint() const
   {
     return new DataProcessingOperandConstraint();
-  }
-
-  void VectorBaseOffsetLoadStoreOperand::AdjustMemoryElementLayout(const Generator& rGen, const Instruction& rInstr)
-  {
-    auto lsop_struct = mpStructure->CastOperandStructure<LoadStoreOperandStructure>();
-    auto instr_constr = dynamic_cast<const VectorInstructionConstraint*>(rInstr.GetInstructionConstraint());
-    const VectorLayout* vec_layout = instr_constr->GetVectorLayout();
-    lsop_struct->SetDataSize(lsop_struct->ElementSize() * vec_layout->mElemCount);
   }
 
 }

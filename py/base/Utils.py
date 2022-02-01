@@ -36,10 +36,7 @@ class InitMemoryBlock(Sequence):
 
     def generate(self, **kargs):
         if self.size <= 8:
-            self.error(
-                "Should call this API with size > 8, provided size=%d"
-                % self.size
-            )
+            self.error("Should call this API with size > 8, provided size=%d" % self.size)
 
         aligned_addr = self.startAddress
         aligned_size = self.size
@@ -98,15 +95,9 @@ class LoopControlBase(Sequence):
     #  @param LoopCount The number of iterations to execute the loop.
     def start(self, LoopReg=None, LoopCount=None):
         if self.mLoopId is not None:
-            self.error(
-                "Unable to start a loop before ending Loop %d." % self.mLoopId
-            )
+            self.error("Unable to start a loop before ending Loop %d." % self.mLoopId)
 
-        self.mLoopRegIndex = (
-            LoopReg
-            if LoopReg is not None
-            else self.getRandomGprForLoopControl()
-        )
+        self.mLoopRegIndex = LoopReg if LoopReg is not None else self.getRandomGprForLoopControl()
         self.mLoopCount = LoopCount
 
         self._reserveLoopRegister()
@@ -173,21 +164,9 @@ class LoopControlBase(Sequence):
     # Reserve the loop register if it has not already been reserved.
     def _reserveLoopRegister(self):
         loop_reg_name = self.getGprName(self.mLoopRegIndex)
-        read_reserved = self.isRegisterReserved(loop_reg_name, access="Read")
-        write_reserved = self.isRegisterReserved(loop_reg_name, access="Write")
-        if read_reserved and write_reserved:
-            self._mLoopRegReservationAccess = None
-        elif read_reserved:
-            self._mLoopRegReservationAccess = "Write"
-        elif write_reserved:
-            self._mLoopRegReservationAccess = "Read"
-        else:
-            self._mLoopRegReservationAccess = "ReadWrite"
-
+        self._mLoopRegReservationAccess = self._getRegisterReservationAccess(loop_reg_name)
         if self._mLoopRegReservationAccess is not None:
-            self.reserveRegister(
-                loop_reg_name, access=self._mLoopRegReservationAccess
-            )
+            self.reserveRegister(loop_reg_name, access=self._mLoopRegReservationAccess)
 
     # Unreserve the loop register if the loop control reserved it.
     def _unreserveLoopRegister(self):
@@ -197,3 +176,24 @@ class LoopControlBase(Sequence):
                 access=self._mLoopRegReservationAccess,
             )
             self._mLoopRegReservationAccess = None
+
+    # Get the register reservation access required to fully reserve the
+    # specified register. For example, if the regiser is reserved for "Write",
+    # "Read" is returned.
+    #
+    #  @param aLoopRegName The name of the register.
+    def _getRegisterReservationAccess(self, aLoopRegName):
+        loop_reg_reservation_access = None
+
+        read_reserved = self.isRegisterReserved(aLoopRegName, access="Read")
+        write_reserved = self.isRegisterReserved(aLoopRegName, access="Write")
+        if read_reserved and write_reserved:
+            loop_reg_reservation_access = None
+        elif read_reserved:
+            loop_reg_reservation_access = "Write"
+        elif write_reserved:
+            loop_reg_reservation_access = "Read"
+        else:
+            loop_reg_reservation_access = "ReadWrite"
+
+        return loop_reg_reservation_access

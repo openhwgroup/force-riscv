@@ -40,9 +40,7 @@ class MainSequence(Sequence):
             self._genRandomInstructions()
 
             StateTransition.transitionToState(state)
-            state_transition_test_utils.verify_state(
-                self, self._mExpectedStateData
-            )
+            state_transition_test_utils.verify_state(self, self._mExpectedStateData)
 
             self._genRandomInstructions()
 
@@ -61,12 +59,8 @@ class MainSequence(Sequence):
         test_utils = state_transition_test_utils
         self._mExpectedStateData[
             EStateElementType.Memory
-        ] = test_utils.add_random_memory_state_elements(
-            self, state, RandomUtils.random32(0, 20)
-        )
-        self._mExpectedStateData[
-            EStateElementType.GPR
-        ] = test_utils.add_random_gpr_state_elements(
+        ] = test_utils.add_random_memory_state_elements(self, state, RandomUtils.random32(0, 20))
+        self._mExpectedStateData[EStateElementType.GPR] = test_utils.add_random_gpr_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
         self._mExpectedStateData[
@@ -74,9 +68,9 @@ class MainSequence(Sequence):
         ] = test_utils.add_random_floating_point_register_state_elements(
             self, state, RandomUtils.random32(0, 20)
         )
-        self._mExpectedStateData[
-            EStateElementType.PC
-        ] = test_utils.add_random_pc_state_element(self, state)
+        self._mExpectedStateData[EStateElementType.PC] = test_utils.add_random_pc_state_element(
+            self, state
+        )
 
         return state
 

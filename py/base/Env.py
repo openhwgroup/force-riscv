@@ -75,6 +75,8 @@ class Env(object):
 
         mem_module = importlib.import_module(memfile_module)
         mem_module.configure_memory(self.interface)
+        if hasattr(mem_module, "configure_memory_attributes"):
+            mem_module.configure_memory_attributes(self.interface)
 
     def configureChoicesModifier(self, modfile_module):
         import importlib
@@ -115,9 +117,7 @@ class Env(object):
 
     # Create back end generator thread
     def createBackEndGenThread(self, i_thread, i_core, i_chip):
-        ret_thread_id = self.interface.createGeneratorThread(
-            i_thread, i_core, i_chip
-        )
+        ret_thread_id = self.interface.createGeneratorThread(i_thread, i_core, i_chip)
         return ret_thread_id
 
     # Create front end generator thread.
@@ -126,9 +126,7 @@ class Env(object):
 
     # Setting up newly created generator thread.
     def setupGenThread(self, gen_thread):
-        main_seq = self.defaultSeqClass(
-            gen_thread, self.defaultSeqClass.__name__
-        )
+        main_seq = self.defaultSeqClass(gen_thread, self.defaultSeqClass.__name__)
         gen_thread.addSequence(main_seq)
         gen_thread.setGenThreadInitFunc(self.genThreadInitFunc)
 
@@ -142,13 +140,9 @@ class Env(object):
         for gen_thread in self.genThreads:
             if gen_thread is not self.mGenMain:
                 ex_mgr = self.mGenMain.exceptionHandlerManager
-                gen_thread.exceptionHandlerManager = ex_mgr.createShallowCopy(
-                    gen_thread
-                )
+                gen_thread.exceptionHandlerManager = ex_mgr.createShallowCopy(gen_thread)
                 at_mgr = self.mGenMain.addressTableManager
-                gen_thread.addressTableManager = at_mgr.createShallowCopy(
-                    gen_thread
-                )
+                gen_thread.addressTableManager = at_mgr.createShallowCopy(gen_thread)
 
         self.executor.executeGenThreads(self.genThreads)
 
@@ -196,9 +190,7 @@ class Env(object):
             self.beforeSequences.append(init_class(None, init_class.__name__))
         else:
             self.beforeSequences.append(
-                self.defaultInitSeqClass(
-                    None, self.defaultInitSeqClass.__name__
-                )
+                self.defaultInitSeqClass(None, self.defaultInitSeqClass.__name__)
             )
 
     def addThreadSplitterSequence(self):

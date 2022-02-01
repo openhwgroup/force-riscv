@@ -261,10 +261,6 @@ namespace Force {
         FAIL("out-of-boundary");
       }
 
-      if (attrs == 0x0) {
-        return !IsInitialized(offset, nBytes);
-      }
-
       uint64 init_attrs = attrs & BASE_INIT_MASK;
       uint64 stored_init_attrs = mAttributes & BASE_INIT_MASK;
       uint32 len_in_bits = nBytes << 3;

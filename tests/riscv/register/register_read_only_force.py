@@ -36,9 +36,7 @@ class MainSequence(Sequence):
         for _ in range(10):
             gpr_index = self.getRandomGPR(exclude="0")
             read_only_reg_name = self.choice(read_only_reg_names)
-            assembly_helper.genReadSystemRegister(
-                gpr_index, read_only_reg_name
-            )
+            assembly_helper.genReadSystemRegister(gpr_index, read_only_reg_name)
 
             (sys_reg_val, valid) = self.readRegister(read_only_reg_name)
             self._assertValidRegisterValue(read_only_reg_name, valid)

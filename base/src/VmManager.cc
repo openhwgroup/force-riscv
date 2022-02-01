@@ -14,11 +14,15 @@
 // limitations under the License.
 //
 #include <VmManager.h>
-#include <VmMapper.h>
-#include <VmInfo.h>
-#include <VmFactory.h>
-#include <VmContextParameter.h>
+
+#include <Generator.h>
 #include <Log.h>
+#include <MemoryManager.h>
+#include <MemoryTraits.h>
+#include <VmContextParameter.h>
+#include <VmFactory.h>
+#include <VmInfo.h>
+#include <VmMapper.h>
 
 #include <fstream>
 #include <memory>
@@ -193,15 +197,53 @@ namespace Force {
   void VmManager::DumpPage() const
   {
     ofstream os;
+
     for (auto regime : mVmRegimes) {
       auto regime_type = regime->VmRegimeType();
       string file_name = "Pages" + EVmRegimeType_to_string(regime_type) + ".txt";
       os.open(file_name);
+
       if (os.bad()) {
         LOG(fail) << "Can't open file " << file_name << std::endl;
         FAIL("Can't open file");
       }
-      regime->DumpPage(os);
+
+      regime->DumpPage(EDumpFormat::Text, os);
+
+      os.close();
+    }
+  }
+
+  void VmManager::DumpPageAndMemoryAttributesJson() const
+  {
+    ofstream os;
+
+    MemoryManager* mem_man = mpGenerator->GetMemoryManager();
+    for (auto regime : mVmRegimes) {
+      auto regime_type = regime->VmRegimeType();
+      string file_name = "Pages" + EVmRegimeType_to_string(regime_type) + "_Thread" + to_string(mpGenerator->ThreadId()) + ".json";
+      os.open(file_name);
+
+      if (os.bad()) {
+        LOG(fail) << "Can't open file " << file_name << std::endl;
+        FAIL("Can't open file");
+      }
+
+      os << "{\"Pages\": [";
+
+      regime->DumpPage(EDumpFormat::JSON, os);
+
+      os << "]," << endl;
+
+      os << "\"MemTraits\": {";
+
+      MemoryBank* mem_bank = mem_man->GetMemoryBank(EMemBankTypeBaseType(regime->DefaultMemoryBank()));
+      MemoryTraitsManager* mem_traits_manager = mem_bank->GetMemoryTraitsManager();
+      MemoryTraitsJson mem_traits_json(mem_traits_manager->GetMemoryTraitsRegistry());
+      mem_traits_json.DumpTraits(os, mpGenerator->ThreadId(), *mem_traits_manager);
+
+      os << "}}";
+
       os.close();
     }
   }

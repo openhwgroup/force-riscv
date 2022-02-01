@@ -41,9 +41,7 @@ class InstructionAddressMisalignedHandlerRISCV(ReusableSequence):
         self.privilegeLevel = handler_context.mPrivLevel
         priv_level = PrivilegeLevelRISCV[self.privilegeLevel]
 
-        stval_reg_index = handler_context.getScratchRegisterIndices(
-            RegisterCallRole.TEMPORARY, 1
-        )
+        stval_reg_index = handler_context.getScratchRegisterIndices(RegisterCallRole.TEMPORARY, 1)
 
         # retreive misaligned instruction address...
 

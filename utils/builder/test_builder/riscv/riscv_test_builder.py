@@ -17,10 +17,6 @@
 # PYTHON3 UP# /software/public/python/3.4.1/bin/python3
 
 # insert parent dir to access base test builder class
-import sys
-
-sys.path.insert(0, "..")
-sys.path.insert(0, "../..")
 
 from base_test_builder import BaseTestBuilder
 

@@ -62,9 +62,7 @@ Example:
 
 def get_command_line(a_gen_log_path):
     try:
-        with open(
-            os.path.join(os.path.sep, os.getcwd(), a_gen_log_path)
-        ) as myFile:
+        with open(os.path.join(os.path.sep, os.getcwd(), a_gen_log_path)) as myFile:
             maxcount = 20
             for linecount, my_line in enumerate(myFile):
                 if "Command line:" in my_line:
@@ -83,10 +81,7 @@ def create_reproduce_directory(a_output_directory):
         new_dir = os.path.join(os.path.sep, os.getcwd(), a_output_directory)
         os.mkdir(new_dir)
     except BaseException:
-        print(
-            "Failed to create reproduce directory. "
-            "Check if it exists already."
-        )
+        print("Failed to create reproduce directory. Check if it exists already.")
         exit(1)
     return new_dir
 
@@ -144,13 +139,9 @@ def update_control_item(a_control_item, sig, value):
 
 def format_options_string(a_control_item):
     # close the quote mark on the --options section
-    if ("generator" in a_control_item) and (
-        "--options" in a_control_item["generator"]
-    ):
+    if ("generator" in a_control_item) and ("--options" in a_control_item["generator"]):
         previous = a_control_item["generator"]["--options"]
-        a_control_item["generator"].update(
-            {"--options": "\\" + '"' + previous + "\\" + '"'}
-        )
+        a_control_item["generator"].update({"--options": "\\" + '"' + previous + "\\" + '"'})
     return a_control_item
 
 
@@ -229,9 +220,7 @@ def create_control_item(a_line):
 def write_control_file(a_control_item, a_reproduce_directory):
     # Write the actual control file
     real_repro_path = os.path.realpath(a_reproduce_directory)
-    control_file_path = os.path.join(
-        os.path.sep, real_repro_path, "_reproduce_fctrl.py"
-    )
+    control_file_path = os.path.join(os.path.sep, real_repro_path, "_reproduce_fctrl.py")
     with open(control_file_path, "w+") as control_file:
         print("\nPrinting formatted control file text to: ", control_file_path)
         control_file.write("control_items = [\n{\n")
@@ -245,13 +234,9 @@ def write_control_file(a_control_item, a_reproduce_directory):
                         if gvalue is None:
                             string += '"' + gkey + '"' + " : None, "
                         elif isinstance(gvalue, str):
-                            string += (
-                                '"' + gkey + '"' + ' : "' + gvalue + '", '
-                            )
+                            string += '"' + gkey + '"' + ' : "' + gvalue + '", '
                         else:
-                            string += (
-                                '"' + gkey + '"' + " : " + str(gvalue) + ", "
-                            )
+                            string += '"' + gkey + '"' + " : " + str(gvalue) + ", "
                 control_file.write(string + "},\n")
             else:
                 if value is None:
@@ -274,9 +259,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     try:
-        opts, args = getopt.getopt(
-            sys.argv[1:], "hg:o:", ["help", "gen=", "outdir="]
-        )
+        opts, args = getopt.getopt(sys.argv[1:], "hg:o:", ["help", "gen=", "outdir="])
     except getopt.GetoptError as err:
         print(err)
         usage()
@@ -347,8 +330,6 @@ if __name__ == "__main__":
                 elif "Revision:" in decoded:
                     url_string += "@" + decoded.split(" ")[1]
 
-            subprocess.call(
-                ["svn", "checkout", url_string, reproduce_directory + "/Force"]
-            )
+            subprocess.call(["svn", "checkout", url_string, reproduce_directory + "/Force"])
 
     print("Control file generator done.")

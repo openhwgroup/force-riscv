@@ -28,8 +28,7 @@ class SkipInstructionHandlerRISCV(ReusableSequence):
             )
 
         self.debug(
-            "[SkipInstructionHandlerRISCV] generate handler address: 0x%x"
-            % self.getPEstate("PC")
+            "[SkipInstructionHandlerRISCV] generate handler address: 0x%x" % self.getPEstate("PC")
         )
 
         priv_level_reg_index = handler_context.getScratchRegisterIndices(

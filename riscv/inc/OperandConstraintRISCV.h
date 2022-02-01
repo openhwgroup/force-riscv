@@ -22,6 +22,20 @@
 namespace Force {
 
   /*!
+    \class VsetvlAvlImmediateOperandConstraint
+    \brief This class carries dynamic constraint properties for VsetvlAvlImmediateOperand.
+  */
+  class VsetvlAvlImmediateOperandConstraint : public ImmediateOperandConstraint {
+  public:
+    DEFAULT_CONSTRUCTOR_DEFAULT(VsetvlAvlImmediateOperandConstraint);
+    COPY_CONSTRUCTOR_ABSENT(VsetvlAvlImmediateOperandConstraint);
+    SUBCLASS_DESTRUCTOR_DEFAULT(VsetvlAvlImmediateOperandConstraint);
+    ASSIGNMENT_OPERATOR_ABSENT(VsetvlAvlImmediateOperandConstraint);
+
+    void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
+  };
+
+  /*!
     \class VsetvlVtypeImmediateOperandConstraint
     \brief This class carries dynamic constraint properties for VsetvlVtypeImmediateOperand.
   */
@@ -125,6 +139,8 @@ namespace Force {
     void Setup(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) override; //!< Setup dynamic operand constraints.
   };
 
+  class VectorLayout;
+
   class VectorRegisterOperandConstraintRISCV : public VectorRegisterOperandConstraint {
   public:
     VectorRegisterOperandConstraintRISCV();
@@ -132,12 +148,9 @@ namespace Force {
     SUBCLASS_DESTRUCTOR_DEFAULT(VectorRegisterOperandConstraintRISCV);
     ASSIGNMENT_OPERATOR_ABSENT(VectorRegisterOperandConstraintRISCV);
     void Setup(const Generator& gen, const Instruction& instr, const OperandStructure& operandStruct) override; //!< Setup dynamic operand constraints.
-    float GetLayoutMultiple() const { return mLayoutMultiple; } //!< Return the multiple used to adjust the register operand layout.
   private:
     void GetAdjustedDifferValues(const Instruction& rInstr, const OperandConstraint& rDifferOprConstr, cuint64 differVal, ConstraintSet& rAdjDifferValues) const override; //!< Return a list of values to remove from the constraint set to avoid conflicting with the specified differ operand value.
-    virtual float CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const; //!< Determine the multiple used to adjust the register operand layout for wide and narrow register operands.
-  private:
-    float mLayoutMultiple; //!< Multiple used to adjust the register operand layout
+    void SetUpVectorLayout(const Generator& rGen, const OperandStructure& rOperandStruct, VectorLayout& rVecLayout) override; //!< Populate vector layout fields.
   };
 
   /**!
@@ -174,20 +187,6 @@ namespace Force {
     void SetBranchTakenForBLTU(uint64 rs1Val, uint64 rs2Val); //!< Branch if rs1 is less than rs2, interpreting them as unsigned values                 
     void SetBranchTakenForBGE(int64 rs1Val, int64 rs2Val); //!< Branch if rs1 is greater than or equal to rs2, interpreting them as signed values
     void SetBranchTakenForBGEU(uint64 rs1Val, uint64 rs2Val); //!< Branch if rs1 is greater than or equal to rs2, interpreting them as unsigned values}
-  };
-
-  /*!
-    \class VectorIndexedDataRegisterOperandConstraint
-    \brief This class carries dynamic constraint properties for VectorIndexedDataRegisterOperand.
-  */
-  class VectorIndexedDataRegisterOperandConstraint : public VectorRegisterOperandConstraintRISCV {
-  public:
-    DEFAULT_CONSTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperandConstraint);
-    COPY_CONSTRUCTOR_ABSENT(VectorIndexedDataRegisterOperandConstraint);
-    SUBCLASS_DESTRUCTOR_DEFAULT(VectorIndexedDataRegisterOperandConstraint);
-    ASSIGNMENT_OPERATOR_ABSENT(VectorIndexedDataRegisterOperandConstraint);
-  private:
-    float CalculateLayoutMultiple(const Generator& rGen, const Instruction& rInstr, const OperandStructure& rOperandStruct) const override; //!< Determine the multiple used to adjust the register operand layout for wide and narrow register operands.
   };
 
 }

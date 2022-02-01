@@ -120,14 +120,14 @@ namespace Force {
 
   class ApiSimConfig {
   public:
-    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mMaxVectorElemWidth(32), mpTraceFile(NULL), mUseTraceFile(false), mSimConfigString("") { } //!< default constructor
+    ApiSimConfig() : mChipNum(1), mCoreNum(1), mThreadNum(1), mPhysicalAddressSize(48u), mVectorRegLen(128), mMaxVectorElemWidth(32), mpTraceFile(NULL), mUseTraceFile(false), mSimConfigString(""), mAutoInitMem(false) { }
 
-    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, uint32 maxVectorElemWidth, const char* pTraceFile, bool outputTraceFile, const std::string& rSimCfgStr) //!< Constructor.
-      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mMaxVectorElemWidth(maxVectorElemWidth), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile), mSimConfigString(rSimCfgStr)
+    ApiSimConfig(uint32 chipNum, uint32 coreNum, uint32 threadNum, uint32 physicalAddressSize, uint32 vectorRegLen, uint32 maxVectorElemWidth, const char* pTraceFile, bool outputTraceFile, const std::string& rSimCfgStr, bool autoInitMem)
+      : mChipNum(chipNum), mCoreNum(coreNum), mThreadNum(threadNum), mPhysicalAddressSize(physicalAddressSize), mVectorRegLen(vectorRegLen), mMaxVectorElemWidth(maxVectorElemWidth), mpTraceFile(pTraceFile), mUseTraceFile(outputTraceFile), mSimConfigString(rSimCfgStr), mAutoInitMem(autoInitMem)
     {
     }
 
-    ~ApiSimConfig() {} //!< Destructor
+    ~ApiSimConfig() {}
 
     ASSIGNMENT_OPERATOR_ABSENT(ApiSimConfig);
     COPY_CONSTRUCTOR_ABSENT(ApiSimConfig);
@@ -141,6 +141,7 @@ namespace Force {
     const char* mpTraceFile; //!< trace file. not output trace if it is NULL
     bool mUseTraceFile;
     std::string mSimConfigString; //!< any additions to simulator config 
+    bool mAutoInitMem; //!< Flag indicating simulator memory should be automatically initialized on access
   };
 
   /*!

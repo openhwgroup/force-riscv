@@ -36,9 +36,7 @@ GenThreadClass = GenThread{2}
 EnvClass = Env{2}
 """
 
-RISCVAdditionalImport = (
-    "from riscv.ModifierUtils import PageMemoryAttributeModifier"
-)
+RISCVAdditionalImport = "from riscv.ModifierUtils import PageMemoryAttributeModifier"
 
 RISCVGenThreadInit = """def gen_thread_initialization(gen_thread):
     gen_thread.applyChoiceModifier(PageMemoryAttributeModifier)

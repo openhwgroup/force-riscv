@@ -19,6 +19,7 @@ from base.Sequence import Sequence
 from riscv.EnvRISCV import EnvRISCV
 from riscv.EnvRISCV import GlobalInitSeqRISCV
 from riscv.GenThreadRISCV import GenThreadRISCV
+from base.TestUtils import assert_equal
 
 
 #  This class partitions the threads using the random strategy.
@@ -33,87 +34,48 @@ class ThreadPartitionGlobalInitSeq(GlobalInitSeqRISCV):
 #  8 total threads are used.
 class MainSequence(Sequence):
     def generate(self, **kargs):
-        group_id = self.getThreadGroupId()
-        if group_id == 0:
-            thread_groups = self.queryThreadGroup(0)
-            if len(thread_groups) != 1:
-                self.error(
-                    "Unexpected thread group count; Expected=%d, Actual=%d"
-                    % (1, len(thread_groups))
-                )
+        if self.getThreadGroupId() != 0:
+            return
 
-            thread_constr = ConstraintSet(thread_groups[0][2])
-            if thread_constr.size() != 1:
-                self.error(
-                    "Unexpected group thread count; Expected=%d, Actual=%d"
-                    % (1, thread_constr.size())
-                )
+        thread_groups = self.queryThreadGroup(0)
+        assert_equal(len(thread_groups), 1, "Unexpected thread group count")
 
-            expected_free_thread_count = self.getThreadNumber() - 1
-            free_threads = self.getFreeThreads()
-            if len(free_threads) != expected_free_thread_count:
-                self.error(
-                    "Unexpected free thread count; Expected=%d, Actual=%d"
-                    % (expected_free_thread_count, len(free_threads))
-                )
+        thread_constr = ConstraintSet(thread_groups[0][2])
+        assert_equal(thread_constr.size(), 1, "Unexpected group thread count")
 
-            # Allocate two threads into one group randomly
-            self.partitionThreadGroup("Random", group_num=1, group_size=2)
-            expected_free_thread_count -= 2
+        expected_free_thread_count = self.getThreadNumber() - 1
+        free_threads = self.getFreeThreads()
+        assert_equal(len(free_threads), expected_free_thread_count, "Unexpected free thread count")
 
-            thread_groups = self.queryThreadGroup()
-            if len(thread_groups) != 2:
-                self.error(
-                    "Unexpected thread group count; Expected=%d, Actual=%d"
-                    % (2, len(thread_groups))
-                )
+        # Allocate two threads into one group randomly
+        self.partitionThreadGroup("Random", group_num=1, group_size=2)
+        expected_free_thread_count -= 2
 
-            thread_constr_0 = ConstraintSet(thread_groups[0][2])
-            if thread_constr_0.size() != 1:
-                self.error(
-                    "Unexpected group thread count; Expected=%d, Actual=%d"
-                    % (1, thread_constr_0.size())
-                )
+        thread_groups = self.queryThreadGroup()
+        assert_equal(len(thread_groups), 2, "Unexpected thread group count")
 
-            thread_constr_1 = ConstraintSet(thread_groups[1][2])
-            if thread_constr_1.size() != 2:
-                self.error(
-                    "Unexpected group thread count; Expected=%d, Actual=%d"
-                    % (2, thread_constr_1.size())
-                )
+        thread_constr_0 = ConstraintSet(thread_groups[0][2])
+        assert_equal(thread_constr_0.size(), 1, "Unexpected group thread count")
 
-            free_threads = self.getFreeThreads()
-            if len(free_threads) != expected_free_thread_count:
-                self.error(
-                    "Unexpected free thread count; Expected=%d, Actual=%d"
-                    % (expected_free_thread_count, len(free_threads))
-                )
+        thread_constr_1 = ConstraintSet(thread_groups[1][2])
+        assert_equal(thread_constr_1.size(), 2, "Unexpected group thread count")
 
-            free_thread_sample = self.sampleFreeThreads(5)
-            group_id = thread_groups[1][0]
-            self.setThreadGroup(group_id, "Endless Loop", free_thread_sample)
-            expected_free_thread_count = expected_free_thread_count + 2 - 5
+        free_threads = self.getFreeThreads()
+        assert_equal(len(free_threads), expected_free_thread_count, "Unexpected free thread count")
 
-            thread_groups = self.queryThreadGroup(group_id)
-            if len(thread_groups) != 1:
-                self.error(
-                    "Unexpected thread group count; Expected=%d, Actual=%d"
-                    % (1, len(thread_groups))
-                )
+        free_thread_sample = self.sampleFreeThreads(5)
+        group_id = thread_groups[1][0]
+        self.setThreadGroup(group_id, "Endless Loop", free_thread_sample)
+        expected_free_thread_count = expected_free_thread_count + 2 - 5
 
-            thread_constr = ConstraintSet(thread_groups[0][2])
-            if thread_constr.size() != 5:
-                self.error(
-                    "Unexpected group thread count; Expected=%d, Actual=%d"
-                    % (5, thread_constr.size())
-                )
+        thread_groups = self.queryThreadGroup(group_id)
+        assert_equal(len(thread_groups), 1, "Unexpected thread group count")
 
-            free_threads = self.getFreeThreads()
-            if len(free_threads) != expected_free_thread_count:
-                self.error(
-                    "Unexpected free thread count; Expected=%d, Actual=%d"
-                    % (expected_free_thread_count, len(free_threads))
-                )
+        thread_constr = ConstraintSet(thread_groups[0][2])
+        assert_equal(thread_constr.size(), 5, "Unexpected group thread count")
+
+        free_threads = self.getFreeThreads()
+        assert_equal(len(free_threads), expected_free_thread_count, "Unexpected free thread count")
 
     # Return a comma-separated string of a random sample of free thread IDs.
     #

@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-import defusedxml.defusedxml.sax
+import defusedxml_local.defusedxml.sax
 import sys
 from shared.instruction import Instruction, Operand, GroupOperand, Asm
 import shared.builder_utils as builder_utils
@@ -120,6 +120,7 @@ class InstructionFileHandler(ContentHandler, object):
             "exclude",
             "differ",
             "slave",
+            "layout-type",
             "layout-multiple",
             "reg-count",
             "reg-index-alignment",
@@ -138,17 +139,13 @@ class InstructionFileHandler(ContentHandler, object):
         if not self.currentOperand.bits:
             self.currentOperand.width = 0
         else:
-            self.currentOperand.width = builder_utils.get_bits_size(
-                self.currentOperand.bits
-            )
+            self.currentOperand.width = builder_utils.get_bits_size(self.currentOperand.bits)
 
     def end_O(self):
         if self.currentOperand:
             if self.currentGroupOperand:
                 if self.currentGroupOperand == self.currentOperand:
-                    self.currentInstruction.add_operand(
-                        self.currentGroupOperand
-                    )
+                    self.currentInstruction.add_operand(self.currentGroupOperand)
                     self.currentGroupOperand = None
                 else:
                     self.currentGroupOperand.add_operand(self.currentOperand)
@@ -183,7 +180,7 @@ class InstructionFileParser(object):
     def parse(self, file_path):
         ifile_handler = InstructionFileHandler(file_path, self.instrFile)
         try:
-            defusedxml.defusedxml.sax.parse(file_path, ifile_handler)
+            defusedxml_local.defusedxml.sax.parse(file_path, ifile_handler)
         except BaseException:
             e_type, e_value, e_tb = sys.exc_info()
             import traceback

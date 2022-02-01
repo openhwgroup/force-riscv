@@ -49,24 +49,21 @@ class RtlCmdLineOptions(object):
             False,
             0,
             {"action": "store_true"},
-            "- When present, prevents a report from being sent to the "
-            "triage database",
+            "- When present, prevents a report from being sent to the triage database",
         ),
         CommandLineOption(
             "rtl.report.name",
             "master_run",
             1,
             {},
-            "- When present, overwrites the default report name with the "
-            "users choice",
+            "- When present, overwrites the default report name with the users choice",
         ),
         CommandLineOption(
             "rtl.report.xml",
             False,
             0,
             {"action": "store_true"},
-            "- When present, dumps the report to an xml file rather than "
-            "uploading it",
+            "- When present, dumps the report to an xml file rather than uploading it",
         ),
         AppPathCmdLineOption(
             "root",

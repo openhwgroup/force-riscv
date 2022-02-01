@@ -45,13 +45,8 @@ class MainSequence(VectorTestSequence):
         vd_val = aInstrRecord["Dests"]["vd"]
         vs2_val = aInstrRecord["Srcs"]["vs2"]
         align_mask = UtilityFunctions.getAlignMask(int(aInstr[3]))
-        if ((vd_val & align_mask) != vd_val) or (
-            (vs2_val & align_mask) != vs2_val
-        ):
-            self.error(
-                "Instruction %s was generated with an improperly aligned "
-                "operand" % aInstr
-            )
+        if ((vd_val & align_mask) != vd_val) or ((vs2_val & align_mask) != vs2_val):
+            self.error("Instruction %s was generated with an improperly aligned operand" % aInstr)
 
 
 MainSequenceClass = MainSequence

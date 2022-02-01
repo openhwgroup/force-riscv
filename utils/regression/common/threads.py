@@ -37,9 +37,7 @@ class HiThread(threading.Thread):
         # remain in the shutdown sequence until the terminate flag is set. When
         # the terminate flag is set then the thread will execute the terminate
         # sequence.
-        my_target = SysUtils.ifthen(
-            arg_options.get("noloop", False), self.run_once, self.run_loop
-        )
+        my_target = SysUtils.ifthen(arg_options.get("noloop", False), self.run_once, self.run_loop)
         super().__init__(name=arg_options.get("name", None), target=my_target)
         Msg.dbg("Created Thread[%s] Processing...." % (self.name))
 
@@ -131,14 +129,10 @@ class HiThread(threading.Thread):
     def terminated(self):
         Msg.info(
             "HiThread[%s]::terminated() - self.finished: %s, "
-            "self.is_alive(): %s"
-            % (self.name, str(self.finished), str(self.is_alive()))
+            "self.is_alive(): %s" % (self.name, str(self.finished), str(self.is_alive()))
         )
         my_retval = self.finished or (not self.is_alive())
-        Msg.info(
-            "HiThread[%s]::terminated() - returns: [%s]"
-            % (self.name, str(my_retval))
-        )
+        Msg.info("HiThread[%s]::terminated() - returns: [%s]" % (self.name, str(my_retval)))
 
         return self.finished or (not self.is_alive())
 

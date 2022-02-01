@@ -26,14 +26,12 @@ namespace Force {
   */
   class PhysicalPageManagerRISCV : public PhysicalPageManager {
   public:
-    explicit PhysicalPageManagerRISCV(EMemBankType bankType); //!< Constructor
+    PhysicalPageManagerRISCV(EMemBankType bankType, MemoryTraitsManager* pMemTraitsManager); //!< Constructor
     COPY_CONSTRUCTOR_ABSENT(PhysicalPageManagerRISCV);
     SUBCLASS_DESTRUCTOR_DEFAULT(PhysicalPageManagerRISCV); //!< Destructor
     ASSIGNMENT_OPERATOR_ABSENT(PhysicalPageManagerRISCV);
   protected:
     const std::vector<EPteType>& GetPteTypes() const override { return mPteTypes; } //! Return vector of EPteTypes
-    void ConvertMemoryAttributes(const ConstraintSet* pMemAttrs, std::vector<EMemoryAttributeType>& memConstraintTypes) override; //!< Propagate the memory attributes into the memory constraint types for use in the aliasing logic
-    void GetIncompatibleAttributes(const ConstraintSet* pMemAttrs, std::vector<EMemoryAttributeType>& memConstraintTypes) override; //!< Propagate a list of incompatible memory attributes types for use in the aliasing logic
   private:
     std::vector<EPteType> mPteTypes; //!< Vector of EPteTypes to maintain page aligned addresses
   };

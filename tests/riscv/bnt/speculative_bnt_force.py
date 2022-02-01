@@ -27,9 +27,7 @@ class MyBntSequence(BntSequence):
         super(MyBntSequence, self).__init__(gen_thread, instr_num)
 
     def BntSequence_IntegerArithmetic(self):
-        self.notice(
-            "Speculative Generate Bnt Sequence for Arithmetic instructions"
-        )
+        self.notice("Speculative Generate Bnt Sequence for Arithmetic instructions")
 
         if self.getGlobalState("AppRegisterWidth") == 32:
             math_instr_dict = {
@@ -84,9 +82,7 @@ class MyBntSequence(BntSequence):
                 "SpeculativeBnt": True,
             },
         )
-        self.genMetaInstruction(
-            "ADDI##RISCV", {"simm12": 0x200}
-        )  # instructions on taken path
+        self.genMetaInstruction("ADDI##RISCV", {"simm12": 0x200})  # instructions on taken path
         self.revertBntHook()  # revert the bnt hook to the last setting
 
         choice_mod.revert(mod_id)
@@ -130,13 +126,9 @@ class MyBntSequence(BntSequence):
 
         for i in range(self.instr_num):
             instr_chosen = self.pickWeighted(ls_dict)
-            self.genInstruction(
-                instr_chosen, {"LSTarget": "0xd0000000-0xe0000000"}
-            )
+            self.genInstruction(instr_chosen, {"LSTarget": "0xd0000000-0xe0000000"})
         cur_pc = self.getPEstate("PC")
-        self.genInstruction(
-            "JAL##RISCV", {"BRTarget": cur_pc}
-        )  # branch to itself
+        self.genInstruction("JAL##RISCV", {"BRTarget": cur_pc})  # branch to itself
 
 
 class MainSequence(Sequence):
@@ -155,9 +147,7 @@ class MainSequence(Sequence):
         self.genInstruction(
             "BGE##RISCV", {"SpeculativeBnt": True}
         )  # some conditional branch instruction
-        self.genMetaInstruction(
-            "ADDI##RISCV", {"simm12": 0x100}
-        )  # instructions on taken path
+        self.genMetaInstruction("ADDI##RISCV", {"simm12": 0x100})  # instructions on taken path
 
         # revert the modifier
         choice_mod.revert(mod_id)
@@ -166,9 +156,7 @@ class MainSequence(Sequence):
             Func="BntSequence_L"
         )  # set the bnt function for the following branch instructions
         self.genInstruction("JALR##RISCV", {"SpeculativeBnt": True})
-        self.genMetaInstruction(
-            "ADDI##RISCV"
-        )  # instructions on the taken path
+        self.genMetaInstruction("ADDI##RISCV")  # instructions on the taken path
 
         self.revertBntHook(id_l)  # revert to the last setting: L-->Arithmetic
 

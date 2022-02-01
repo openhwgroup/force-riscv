@@ -57,10 +57,7 @@ class Launcher(object):
         """build the command line launcher with initial values"""
         my_cmd = self.process_cmd % (self.frun_path)
         Msg.user("Process Command: %s" % (str(my_cmd)), "LAUNCHER")
-        my_log = (
-            PathUtils.include_trailing_path_delimiter(self.frun_dir)
-            + self.process_log
-        )
+        my_log = PathUtils.include_trailing_path_delimiter(self.frun_dir) + self.process_log
         return my_cmd, my_log
 
     def launch(self):

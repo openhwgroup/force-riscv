@@ -64,8 +64,7 @@ class MainSequence(Sequence):
         if misaInitialValue != simulatorMisaValue:
             self.error(
                 "Error: Initial value for misa (0x%x) does NOT match simulator"
-                "reported value (0x%x)"
-                % (misaInitialValue, simulatorMisaValue)
+                "reported value (0x%x)" % (misaInitialValue, simulatorMisaValue)
             )
 
     # print misa value to generator log...
@@ -109,8 +108,7 @@ class MainSequence(Sequence):
                 set_bits.append(bits[i])
 
         self.notice(
-            "%s: 0x%x (MXL: %d, extensions present: %s"
-            % (srcText, misaValue, MXL, str(set_bits))
+            "%s: 0x%x (MXL: %d, extensions present: %s" % (srcText, misaValue, MXL, str(set_bits))
         )
 
 

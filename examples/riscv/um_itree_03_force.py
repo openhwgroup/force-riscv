@@ -36,7 +36,7 @@ class MainSequence(Sequence):
 
             # define a single level instruction tree and choose an instruction
             random_iset1 = {
-                "FMADD.S#Single-precision#RISCV": 10,
+                "FMADD.S##RISCV": 10,
                 "FMAX.S##RISCV": 20,
                 "FMIN.S##RISCV": 30,
             }
@@ -49,7 +49,7 @@ class MainSequence(Sequence):
                 "ADD##RISCV": 10,
                 # "SD##RISCV":10,
                 "BEQ##RISCV": 10,
-                "FMADD.D#Double-precision#RISCV": 10,
+                "FMADD.D##RISCV": 10,
             }
 
             random_iset3 = {

@@ -52,28 +52,18 @@ class MyMainSequence(Sequence):
         self.notice("**********  Usage count for all GPRs  ************")
         for reg_name in sorted(usage_count):
             self.notice(
-                "**********  Usage count for {}:  {}".format(
-                    reg_name, usage_count[reg_name]
-                )
+                "**********  Usage count for {}:  {}".format(reg_name, usage_count[reg_name])
             )
 
     def _add_register_usage_counts(self, instr_obj, usage_count):
-        self._add_register_usage_count_for_operand(
-            "Dests", "rd", instr_obj, usage_count
-        )
-        self._add_register_usage_count_for_operand(
-            "Srcs", "rs1", instr_obj, usage_count
-        )
-        self._add_register_usage_count_for_operand(
-            "Srcs", "rs2", instr_obj, usage_count
-        )
+        self._add_register_usage_count_for_operand("Dests", "rd", instr_obj, usage_count)
+        self._add_register_usage_count_for_operand("Srcs", "rs1", instr_obj, usage_count)
+        self._add_register_usage_count_for_operand("Srcs", "rs2", instr_obj, usage_count)
 
     def _add_register_usage_count_for_operand(
         self, outer_opr_key, inner_opr_key, instr_obj, usage_count
     ):
-        if (outer_opr_key in instr_obj) and (
-            inner_opr_key in instr_obj[outer_opr_key]
-        ):
+        if (outer_opr_key in instr_obj) and (inner_opr_key in instr_obj[outer_opr_key]):
             reg_index = instr_obj[outer_opr_key][inner_opr_key]
             reg_name = "x{}".format(reg_index)
             usage_count.setdefault(reg_name, 0)
@@ -90,9 +80,7 @@ def gen_thread_initialization(gen_thread):
     # Increase the likelihood of using GPRs  x10, x11, x12 and x13 by
     # increasing the weighting.  The default weighting in the
     # operand_choices.xml file is 10 for each GPR.
-    choices_mod.modifyOperandChoices(
-        "GPRs", {"x10": 40, "x11": 40, "x12": 60, "x13": 60}
-    )
+    choices_mod.modifyOperandChoices("GPRs", {"x10": 40, "x11": 40, "x12": 60, "x13": 60})
 
     choices_mod.commitSet()
 

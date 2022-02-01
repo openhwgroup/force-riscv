@@ -128,7 +128,6 @@ namespace Force {
     RegisterObject(new LoadStoreInstruction());
     RegisterObject(new SystemCallInstruction());
     RegisterObject(new UnpredictStoreInstruction());
-    RegisterObject(new VectorInstruction());
 
     // Operand based objects
     RegisterObject(new ImmediateOperand());
@@ -149,7 +148,6 @@ namespace Force {
     RegisterObject(new ImpliedRegisterOperand());
     RegisterObject(new AluImmediateOperand());
     RegisterObject(new DataProcessingOperand());
-    RegisterObject(new VectorBaseOffsetLoadStoreOperand());
 
     // OperandTextObject based objects
     RegisterObject(new AddressingOperandText());

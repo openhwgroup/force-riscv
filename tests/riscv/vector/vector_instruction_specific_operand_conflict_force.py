@@ -56,24 +56,15 @@ class MainSequence(VectorTestSequence):
         vs2_val = aInstrRecord["Srcs"]["vs2"]
         vd_val = aInstrRecord["Dests"]["vd"]
         if vs2_val == vd_val:
-            self.error(
-                "Instruction %s used overlapping source and destination "
-                "registers" % aInstr
-            )
+            self.error("Instruction %s used overlapping source and destination registers" % aInstr)
 
         vs1_val = aInstrRecord["Srcs"].get("vs1")
         if vs1_val and (vs1_val == vd_val):
-            self.error(
-                "Instruction %s used overlapping source and destination "
-                "registers" % aInstr
-            )
+            self.error("Instruction %s used overlapping source and destination registers" % aInstr)
 
         vm_val = aInstrRecord["Imms"].get("vm")
         if vm_val and ((vm_val == 0) and (vd_val == 0)):
-            self.error(
-                "Instruction %s is masked with v0 as the destination "
-                "register" % aInstr
-            )
+            self.error("Instruction %s is masked with v0 as the destination register" % aInstr)
 
 
 MainSequenceClass = MainSequence

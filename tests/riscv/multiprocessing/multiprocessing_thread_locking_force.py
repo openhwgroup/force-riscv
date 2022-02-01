@@ -34,18 +34,12 @@ class MainSequence(Sequence):
                     phys_addr = self.genPA(Size=8, Align=8, Type="D", Shared=1)
                     shared_phys_addresses.append(phys_addr)
 
-                self.setSharedThreadObject(
-                    shared_phys_addresses_name, shared_phys_addresses
-                )
+                self.setSharedThreadObject(shared_phys_addresses_name, shared_phys_addresses)
 
         for _ in range(RandomUtils.random32(2, 5)):
             with self.threadLockingContext():
-                shared_phys_addresses = self.getSharedThreadObject(
-                    shared_phys_addresses_name
-                )
-                self._genSharedLoadInstruction(
-                    self.choice(shared_phys_addresses)
-                )
+                shared_phys_addresses = self.getSharedThreadObject(shared_phys_addresses_name)
+                self._genSharedLoadInstruction(self.choice(shared_phys_addresses))
                 self._genRandomInstructions()
 
     # Generate a load instruction to a shared address and assert that the
@@ -54,9 +48,7 @@ class MainSequence(Sequence):
     #  @param aSharedPhysAddr A shared physical address to target with the
     #  load instruction.
     def _genSharedLoadInstruction(self, aSharedPhysAddr):
-        target_addr = self.genVAforPA(
-            Size=8, Align=8, Type="D", PA=aSharedPhysAddr
-        )
+        target_addr = self.genVAforPA(Size=8, Align=8, Type="D", PA=aSharedPhysAddr)
         if self.getGlobalState("AppRegisterWidth") == 32:
             instr = "LW##RISCV"
         else:
@@ -67,14 +59,9 @@ class MainSequence(Sequence):
         dest_reg_index = instr_record["Dests"]["rd"]
         dest_reg_name = "x%d" % dest_reg_index
         if (dest_reg_index != 0) and (
-            not self.isRegisterReserved(
-                dest_reg_name, access="Read", resv_type="Unpredictable"
-            )
+            not self.isRegisterReserved(dest_reg_name, access="Read", resv_type="Unpredictable")
         ):
-            self.error(
-                "Destination register %s was not marked as unpredictable"
-                % dest_reg_name
-            )
+            self.error("Destination register %s was not marked as unpredictable" % dest_reg_name)
 
     # Generate a random number of a wide variety of instructions.
     def _genRandomInstructions(self):

@@ -32,9 +32,7 @@ class ExceptionsFactory(ABC):
     #       handler registry repository.
     #  @param aStack The exception handler stack.
     @abstractmethod
-    def createThreadHandlerSet(
-        self, aGenThread, aMemBankHandlerRegistryRepo, aStack
-    ):
+    def createThreadHandlerSet(self, aGenThread, aMemBankHandlerRegistryRepo, aStack):
         raise NotImplementedError
 
     # Create a set of exception handlers for a given privilege level.
@@ -56,12 +54,8 @@ class ExceptionsFactory(ABC):
     #  @param aMemBankHandlerRegistryRepo A reference to the memory bank
     #       handler registry repository.
     #  @param aStack The exception handler stack.
-    def createSecurityStateHandlerSet(
-        self, aSecurityState, aMemBankHandlerRegistryRepo, aStack
-    ):
-        return SecurityStateHandlerSet(
-            aSecurityState, aMemBankHandlerRegistryRepo, self, aStack
-        )
+    def createSecurityStateHandlerSet(self, aSecurityState, aMemBankHandlerRegistryRepo, aStack):
+        return SecurityStateHandlerSet(aSecurityState, aMemBankHandlerRegistryRepo, self, aStack)
 
     # Create an exception handler stack.
     #

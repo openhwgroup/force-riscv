@@ -45,9 +45,7 @@ class AddressTableRISCV(Sequence):
         self.genLoadRegFromDataBlock(reg_index, self.table_index, True)
 
         # get scratch GPR and load it with the number 1
-        self.genInstruction(
-            "ADDI##RISCV", {"rd": scratch_index, "rs1": 0, "simm12": 1}
-        )
+        self.genInstruction("ADDI##RISCV", {"rd": scratch_index, "rs1": 0, "simm12": 1})
 
         # Compare the value that had been loaded into reg reg_index to one.
         # One means the table entry after this one is actually the address
@@ -73,39 +71,28 @@ class AddressTableRISCV(Sequence):
         # reg_index and then increment the value in the reg table_index by 8
         self.genLoadRegFromDataBlock(reg_index, self.table_index, True)
 
-    def genLoadRegFromDataBlock(
-        self, aDestReg, aAddrReg, aIncrementAddr=False
-    ):
+    def genLoadRegFromDataBlock(self, aDestReg, aAddrReg, aIncrementAddr=False):
         if self._mAppRegSize == 32:
-            self.genInstruction(
-                "LW##RISCV",
-                {
-                    "rd": aDestReg,
-                    "rs1": aAddrReg,
-                    "simm12": 0,
-                    "NoRestriction": 1,
-                },
-            )
-            if aIncrementAddr:
-                self.genInstruction(
-                    "ADDI##RISCV",
-                    {"rd": aAddrReg, "rs1": aAddrReg, "simm12": 4},
-                )
+            instr = "LW##RISCV"
+            data_size = 4
         else:
+            instr = "LD##RISCV"
+            data_size = 8
+
+        self.genInstruction(
+            instr,
+            {
+                "rd": aDestReg,
+                "rs1": aAddrReg,
+                "simm12": 0,
+                "NoRestriction": 1,
+            },
+        )
+        if aIncrementAddr:
             self.genInstruction(
-                "LD##RISCV",
-                {
-                    "rd": aDestReg,
-                    "rs1": aAddrReg,
-                    "simm12": 0,
-                    "NoRestriction": 1,
-                },
+                "ADDI##RISCV",
+                {"rd": aAddrReg, "rs1": aAddrReg, "simm12": data_size},
             )
-            if aIncrementAddr:
-                self.genInstruction(
-                    "ADDI##RISCV",
-                    {"rd": aAddrReg, "rs1": aAddrReg, "simm12": 8},
-                )
 
 
 #  AddressTableManagerRISCV class
@@ -117,9 +104,7 @@ class AddressTableManagerRISCV(Sequence):
 
     def generate(self):
         self.address_table = AddressTableRISCV(self.genThread)
-        self.table_index = self.address_table.generate(
-            table_index=self.table_index
-        )
+        self.table_index = self.address_table.generate(table_index=self.table_index)
         fast_mode = self.genThread.fastMode
         addr_table_info_set = {
             "table_index": self.table_index,

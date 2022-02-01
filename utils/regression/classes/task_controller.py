@@ -47,9 +47,7 @@ class TaskController(Controller):
         # Msg.dbg( "TaskController::load()")
 
         self.task_list = PathUtils.list_files(
-            PathUtils.append_path(
-                self.ctrl_item.fctrl_dir, self.ctrl_item.fctrl_name
-            )
+            PathUtils.append_path(self.ctrl_item.fctrl_dir, self.ctrl_item.fctrl_name)
         )
         return True
 
@@ -96,9 +94,7 @@ class TaskController(Controller):
 
         # Msg.info("suffix: %s" % ( str( self.ctrl_item.suffix )))
         if self.ctrl_item.suffix is not None:
-            my_task_dir = my_task_dir.replace(
-                "_force", "_%s_force" % (str(self.ctrl_item.suffix))
-            )
+            my_task_dir = my_task_dir.replace("_force", "_%s_force" % (str(self.ctrl_item.suffix)))
 
         full_task_dir = PathUtils.append_path(
             PathUtils.include_trailing_path_delimiter(aParentDir),

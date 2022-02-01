@@ -264,9 +264,10 @@ namespace Force {
                                pa_size, /* physical address size */
                                config_ptr->LimitValue(ELimitType::MaxPhysicalVectorLen), /* vector register length */
                                config_ptr->LimitValue(ELimitType::MaxVectorElementWidth), /* maximum vector element width */
-                               "./sim.log", /* ignore for now */
-                               true,
-			       SimulatorConfigString()
+                               "./sim.log", /* trace file */
+                               true, /* use trace file */
+                               SimulatorConfigString(), /* simulator configuration string */
+                               false /* don't automatically initialize simulator memory on access */
                                );
 
       mpSimAPI->InitializeIss(sim_dll_cfg, sim_so_file, config_ptr->IssApiTraceFile() );

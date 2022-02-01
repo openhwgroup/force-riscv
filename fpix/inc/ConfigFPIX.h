@@ -69,7 +69,8 @@ namespace Force {
         mPhysicalAddressSize(-1),  //!< Command line option is pa_size
         mVectorRegLen(-1),  //!< Command line option is vlen
         mMaxVectorElemWidth(-1),  //!< Command line option is elen
-        mExitOnBranchToSelf(-1)  //!< Command line option is exit_loop
+        mExitOnBranchToSelf(-1),  //!< Command line option is exit_loop
+        mAutoInitMem(false)  //!< Command line option is auto_init_mem
     {};
     virtual ~ConfigFPIX() {};
 
@@ -109,6 +110,8 @@ namespace Force {
     int ExitOnBranchToSelf() const { return mExitOnBranchToSelf; };
     void SetExitOnBranchToSelf(int ExitOnBranchToSelf) { mExitOnBranchToSelf = ExitOnBranchToSelf; };
 
+    bool AutoInitMem() const { return mAutoInitMem; };
+    void SetAutoInitMem(bool AutoInitMem) { mAutoInitMem = AutoInitMem; };
 
     // virtual class methods - sub-class accessor methods or remove call to OptionTBD if related feature is supported in simulator...
 
@@ -174,6 +177,7 @@ namespace Force {
     int mVectorRegLen;  //!< Command line option is vlen
     int mMaxVectorElemWidth;  //!< Command line option is elen
     int mExitOnBranchToSelf; //!< Command line option is exit_loop
+    bool mAutoInitMem; //!< Command line option is auto_init_mem
     
     friend class ConfigParserFPIX;
  };

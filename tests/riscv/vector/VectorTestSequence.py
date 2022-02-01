@@ -45,9 +45,7 @@ class VectorTestSequence(Sequence):
         self._setUpTest()
 
         max_instr_count = self._getMaxInstructionCount()
-        instr_count = RandomUtils.random32(
-            (max_instr_count // 2), max_instr_count
-        )
+        instr_count = RandomUtils.random32((max_instr_count // 2), max_instr_count)
         for _ in range(instr_count):
             instr = self.choice(self._getInstructionList())
             instr_params = self._getInstructionParameters()
@@ -78,16 +76,10 @@ class VectorTestSequence(Sequence):
         reg_count_a = self.getRegisterCount(aRegCountMultipleA)
         reg_count_b = self.getRegisterCount(aRegCountMultipleB)
         if aRegIndexB <= aRegIndexA < (aRegIndexB + reg_count_b):
-            self.error(
-                "Instruction %s used overlapping registers of different "
-                "formats" % aInstr
-            )
+            self.error("Instruction %s used overlapping registers of different formats" % aInstr)
 
         if aRegIndexA <= aRegIndexB < (aRegIndexA + reg_count_a):
-            self.error(
-                "Instruction %s used overlapping registers of different "
-                "formats" % aInstr
-            )
+            self.error("Instruction %s used overlapping registers of different formats" % aInstr)
 
     # Get the register count for a register group with the specified multiple.
     #
@@ -167,9 +159,7 @@ class VectorTestSequence(Sequence):
                 if except_code in self._getAllowedExceptionCodes(aInstr):
                     self._mExceptCounts[except_code] = new_except_count
                 else:
-                    self.error(
-                        "Instruction %s did not execute correctly" % aInstr
-                    )
+                    self.error("Instruction %s did not execute correctly" % aInstr)
 
     # Return true if it is permissible for the generation to skip this
     # instruction.
@@ -202,6 +192,22 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         self._mUnalignedAllowed = False
         self._mTargetAddrConstr = None
 
+    # Calculate EMUL for the given instruction.
+    #
+    #  @param aInstr The name of the instruction.
+    def calculateEmul(self, aInstr):
+        eew = self._getEew(aInstr)
+
+        (vlmul_val, valid) = self.readRegister("vtype", field="VLMUL")
+        self.assertValidRegisterValue("vtype", valid)
+        lmul = self.calculateLmul(vlmul_val)
+
+        (vsew_val, valid) = self.readRegister("vtype", field="VSEW")
+        self.assertValidRegisterValue("vtype", valid)
+        sew = self.calculateSew(vsew_val)
+
+        return round((eew / sew) * lmul)
+
     # Set up the environment prior to generating the test instructions.
     def _setUpTest(self):
         if RandomUtils.random32(0, 1) == 1:
@@ -227,12 +233,8 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
             elif target_choice == 2:
                 va_range_size = RandomUtils.random32()
                 min_target_addr = self.genVA(Size=512, Align=8, Type="D")
-                max_target_addr = mask_to_size(
-                    (min_target_addr + RandomUtils.random32()), 64
-                )
-                self._mTargetAddrConstr = ConstraintSet(
-                    min_target_addr, max_target_addr
-                )
+                max_target_addr = mask_to_size((min_target_addr + RandomUtils.random32()), 64)
+                self._mTargetAddrConstr = ConstraintSet(min_target_addr, max_target_addr)
                 instr_params["LSTarget"] = str(self._mTargetAddrConstr)
 
         return instr_params
@@ -243,7 +245,7 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
     #  @param aInstr The name of the instruction.
     #  @param aInstrParams The parameters passed to Sequence.genInstruction().
     def _isSkipAllowed(self, aInstr, aInstrParams):
-        if aInstrParams or (self._calculateEmul(aInstr) > 8):
+        if aInstrParams or (self.calculateEmul(aInstr) > 8):
             return True
 
         return False
@@ -256,16 +258,11 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
         if (
             (self._mTargetAddrConstr is not None)
             and (0x2 not in self._getAllowedExceptionCodes(aInstr))
-            and (
-                not self._mTargetAddrConstr.containsValue(
-                    aInstrRecord["LSTarget"]
-                )
-            )
+            and (not self._mTargetAddrConstr.containsValue(aInstrRecord["LSTarget"]))
         ):
             self.error(
                 "Target address 0x%x was outside of the specified "
-                "constraint %s"
-                % (aInstrRecord["LSTarget"], self._mTargetAddrConstr)
+                "constraint %s" % (aInstrRecord["LSTarget"], self._mTargetAddrConstr)
             )
 
     # Get allowed exception codes.
@@ -277,33 +274,25 @@ class VectorLoadStoreTestSequence(VectorTestSequence):
             allowed_except_codes.add(0x4)
             allowed_except_codes.add(0x6)
 
-        if self._calculateEmul(aInstr) > 8:
+        if self._calculateMaxRegisterCount(aInstr) > 8:
             allowed_except_codes.add(0x2)
 
         return allowed_except_codes
 
-    # Calculate EMUL for the given instruction.
+    # Calculate the largest register count for the given instruction's operands.
     #
     #  @param aInstr The name of the instruction.
-    def _calculateEmul(self, aInstr):
-        eew = self._getEew(aInstr)
-
-        (vlmul_val, valid) = self.readRegister("vtype", field="VLMUL")
-        self.assertValidRegisterValue("vtype", valid)
-        lmul = self.calculateLmul(vlmul_val)
-
-        (vsew_val, valid) = self.readRegister("vtype", field="VSEW")
-        self.assertValidRegisterValue("vtype", valid)
-        sew = self.calculateLmul(vsew_val)
-
-        return round((eew / sew) * lmul)
+    def _calculateMaxRegisterCount(self, aInstr):
+        return self.calculateEmul(aInstr)
 
     # Determine EEW for the given instruction.
     #
     #  @param aInstr The name of the instruction.
     def _getEew(self, aInstr):
-        match = re.fullmatch(r"V[A-Z]+(\d+)\.V\#\#RISCV", aInstr)
-        return int(match.group(1))
+        match = re.fullmatch(
+            r"V(L|S|AMO)\w*EI?(\d+)(FF)?\.V\#(No register write|Register write)?\#RISCV", aInstr
+        )
+        return int(match.group(2))
 
 
 #  This class provides some common parameters for testing VSETVL and
@@ -368,17 +357,13 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         self.assertValidRegisterValue("vtype", valid)
         if vsew_val != self._mVsew:
             self.error(
-                "Unexpected vtype.VSEW value; Expected=0x%x, Actual=0x%x"
-                % (self._mVsew, vsew_val)
+                "Unexpected vtype.VSEW value; Expected=0x%x, Actual=0x%x" % (self._mVsew, vsew_val)
             )
 
         (vl_val, valid) = self.readRegister("vl")
         self.assertValidRegisterValue("vl", valid)
         if vl_val != self._mVl:
-            self.error(
-                "Unexpected vl value; Expected=0x%x, Actual=0x%x"
-                % (self._mVl, vl_val)
-            )
+            self.error("Unexpected vl value; Expected=0x%x, Actual=0x%x" % (self._mVl, vl_val))
 
     # Generate randomized values for vtype and vl fields.
     def _generateRegisterFieldValues(self):
@@ -386,19 +371,18 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         self._mVsew = RandomUtils.random32(0, max_vsew_val)
 
         self._mVlmul = self.choice(self._getVlmulChoices())
-        self.mVtype = (
-            ((self._mVlmul & 0x4) << 3)
-            | (self._mVsew << 2)
-            | (self._mVlmul & 0x3)
-        )
+        self.mVtype = (self._mVsew << 3) | self._mVlmul
 
         vlmax = self._calculateVlmax()
-        if RandomUtils.random32(0, 1) == 1:
-            self.mAvl = RandomUtils.random32(0, vlmax)
-            self._mVl = self.mAvl
-        else:
-            self.mAvl = RandomUtils.random32(aMin=(2 * vlmax))
+        max_avl = self._get_max_avl()
+
+        # Randomly choose between two ranges for AVL, but make sure the first one is legal
+        if (2 * vlmax <= max_avl) and (RandomUtils.random32(0, 1) == 1):
+            self.mAvl = RandomUtils.random32((2 * vlmax), max_avl)
             self._mVl = vlmax
+        else:
+            self.mAvl = RandomUtils.random32(0, min(vlmax, max_avl))
+            self._mVl = self.mAvl
 
     # Generate parameters to be passed to Sequence.genInstruction() and load
     # register operands.
@@ -423,3 +407,8 @@ class VectorVsetvlTestSequence(VectorTestSequence):
         lmul = self.calculateLmul(self._mVlmul)
         sew = self.calculateSew(self._mVsew)
         return round((lmul * self._mVlen) / sew)
+
+    # Return the maximum allowable value for AVL. This generally depends on the instruction to be
+    # generated.
+    def _get_max_avl(self):
+        return 0xFFFFFFFF

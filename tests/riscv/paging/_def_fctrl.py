@@ -16,82 +16,153 @@
 control_items = [
     {
         "fname": "paging_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+            "--dump": "PageMemAttrJSON",
+        },
     },
     {
         "fname": "paging_loadstore_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+        },
+    },
+    {
+        "fname": "paging_memory_attributes_basic_force.py",
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+            "--dump": "PageMemAttrJSON",
+        },
+    },
+    {
+        "fname": "paging_va_for_pa_memory_attributes_force.py",
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+            "--dump": "PageMemAttrJSON",
+        },
     },
     {
         "fname": "paging_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1,FlatMap=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1"',
+            "--dump": "PageMemAttrJSON",
+        },
     },
     {
         "fname": "paging_loadstore_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1,FlatMap=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1"',
+        },
     },
     {
         "fname": "page_fault_on_load_store_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+        },
     },
     {
         "fname": "page_fault_on_branch_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1"',
+        },
     },
     {
         "fname": "page_fault_on_load_store_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1,FlatMap=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1"',
+        },
     },
     {
         "fname": "page_fault_on_branch_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1,FlatMap=1"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1"',
+        },
+    },
+    {
+        "fname": "paging_memory_attributes_basic_force.py",
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1"',
+            "--dump": "PageMemAttrJSON",
+        },
+    },
+    {
+        "fname": "paging_va_for_pa_memory_attributes_force.py",
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1"',
+            "--dump": "PageMemAttrJSON",
+        },
     },
     {
         "fname": "paging_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1,handlers_set=Fast"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,handlers_set=Fast"',
+            "--dump": "PageMemAttrJSON",
+        },
     },
     {
         "fname": "paging_loadstore_force.py",
-        "generator": {"--options": '"PrivilegeLevel=1,handlers_set=Fast"'},
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,handlers_set=Fast"',
+        },
     },
     {
         "fname": "paging_force.py",
+        "options": {"max-instr": 10000},
+        "generator": {
+            "--options": '"PrivilegeLevel=1,FlatMap=1,handlers_set=Fast"',
+            "--dump": "PageMemAttrJSON",
+        },
+    },
+    {
+        "fname": "paging_loadstore_force.py",
+        "options": {"max-instr": 10000},
         "generator": {
             "--options": '"PrivilegeLevel=1,FlatMap=1,handlers_set=Fast"',
         },
     },
     {
-        "fname": "paging_loadstore_force.py",
-        "generator": {
-            "--options": '"PrivilegeLevel=1,FlatMap=1,handlers_set=Fast"',
-        },
-    },
-    {
         "fname": "page_fault_on_load_store_force.py",
+        "options": {"max-instr": 10000},
         "generator": {
-            "--options": '"PrivilegeLevel=1,DelegateExceptions=0,'
-            'handlers_set=Fast"',
+            "--options": '"PrivilegeLevel=1"',
         },
     },
     {
         "fname": "page_fault_on_branch_force.py",
+        "options": {"max-instr": 10000},
         "generator": {
-            "--options": '"PrivilegeLevel=1,DelegateExceptions=0,'
-            'handlers_set=Fast"',
+            "--options": '"PrivilegeLevel=1,DelegateExceptions=0,handlers_set=Fast"',
         },
     },
     {
         "fname": "page_fault_on_load_store_force.py",
+        "options": {"max-instr": 10000},
         "generator": {
-            "--options": '"PrivilegeLevel=1,DelegateExceptions=0,FlatMap=1,'
-            'handlers_set=Fast"',
+            "--options": '"PrivilegeLevel=1,DelegateExceptions=0,FlatMap=1,handlers_set=Fast"',
         },
     },
     {
         "fname": "page_fault_on_branch_force.py",
+        "options": {"max-instr": 10000},
         "generator": {
-            "--options": '"PrivilegeLevel=1,DelegateExceptions=0,FlatMap=1,'
-            'handlers_set=Fast"',
+            "--options": '"PrivilegeLevel=1,DelegateExceptions=0,FlatMap=1,handlers_set=Fast"',
         },
+    },
+    {
+        "fname": "page_fault_rv64_fctrl.py",
     },
 ]

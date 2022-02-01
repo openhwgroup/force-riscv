@@ -44,9 +44,7 @@ def force_init():
     # wrong and recovery from second case is impossible raise a fatal exception
     if not (os.path.exists(my_force_path + "/utils/")):
         raise OSError(
-            '"'
-            + my_force_path
-            + '/utils/" does not exists, check that it exists as a sub '
+            '"' + my_force_path + '/utils/" does not exists, check that it exists as a sub '
             "directory of Force"
         )
 
@@ -54,9 +52,7 @@ def force_init():
     # wrong and recovery from second case is impossible raise a fatal exception
     if not (os.path.exists(my_force_path + "/tests/")):
         raise OSError(
-            '"'
-            + my_force_path
-            + '/tests/" does not exists, check that it exists as a sub '
+            '"' + my_force_path + '/tests/" does not exists, check that it exists as a sub '
             "directory of Force"
         )
 
@@ -64,12 +60,6 @@ def force_init():
 
 
 the_force_path = force_init()
-
-# next we need to set the import paths for the utils and tests directories
-# both of which are used for the rest of the module run, keep in mind the tests
-# may change in later releases
-sys.path.append(the_force_path + "utils/regression")
-sys.path.append(the_force_path + "utils/")
 
 
 # if and when another utility is written that uses the same strategy then the

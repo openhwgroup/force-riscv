@@ -28,24 +28,21 @@ class CompileCmdLineOptions(object):
             aDefault="",
             aNumArgs=0,
             aAdditionalArgs={"action": "store_true"},
-            aHelpText="- When present, overrides the default (False) and "
-            "enables compiling",
+            aHelpText="- When present, overrides the default (False) and enables compiling",
         ),
         CommandLineOption(
             aName="compile.path",
             aDefault="$PROJ_ROOT/verif/top/sim",
             aNumArgs=1,
             aAdditionalArgs={},
-            aHelpText="- When present, overrides the default path "
-            "($PROJ_ROOT/verif/top/sim",
+            aHelpText="- When present, overrides the default path ($PROJ_ROOT/verif/top/sim",
         ),
         CommandLineOption(
             aName="compile.options",
             aDefault="",
             aNumArgs=1,
             aAdditionalArgs={"type": str},
-            aHelpText="- When present, adds the specified option string "
-            "for compilation",
+            aHelpText="- When present, adds the specified option string for compilation",
         ),
         CommandLineOption(
             aName="compile.mp",
@@ -72,10 +69,7 @@ class CompileParametersProcessor(ParameterProcessor):
         ):
             compile_path = self.mAppParameters.parameter("compile.path")
             compile_path = PathUtils.expandVars(compile_path)
-            compile_makefile = (
-                PathUtils.include_trailing_path_delimiter(compile_path)
-                + "Makefile"
-            )
+            compile_makefile = PathUtils.include_trailing_path_delimiter(compile_path) + "Makefile"
 
             if not PathUtils.check_file(compile_makefile):
                 raise Exception(compile_makefile + " does not exist.")
@@ -83,9 +77,7 @@ class CompileParametersProcessor(ParameterProcessor):
             self.mAppParameters.setParameter("compile.path", compile_path)
             self.mAppParameters.setParameter(
                 "compile.options",
-                PathUtils.expandVars(
-                    self.mAppParameters.parameter("compile.options")
-                ),
+                PathUtils.expandVars(self.mAppParameters.parameter("compile.options")),
             )
 
 
@@ -104,9 +96,7 @@ def process_compile_control_data(aControlData, aAppParameters):
         if aAppParameters.parameter(key):
             aControlData["run"] = True
             aControlData["path"] = aAppParameters.parameter("compile.path")
-            aControlData["options"] = aAppParameters.parameter(
-                "compile.options"
-            )
+            aControlData["options"] = aAppParameters.parameter("compile.options")
             aControlData["mp"] = aAppParameters.parameter("compile.mp")
             return
 

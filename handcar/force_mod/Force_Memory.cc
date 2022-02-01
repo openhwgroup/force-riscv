@@ -311,10 +311,6 @@ namespace Force {
         FAIL("out-of-boundary");
       }
 
-      if (attrs == 0x0) {
-        return !IsInitialized(offset, nBytes);
-      }
-
       uint64 init_attrs = attrs & BASE_INIT_MASK;
       uint64 stored_init_attrs = mAttributes & BASE_INIT_MASK;
       uint32 len_in_bits = nBytes << 3;
@@ -490,6 +486,17 @@ namespace Force {
     return data;
   }
 
+  void Memory::AutoInitialize(uint64 address, uint32 nBytes)
+  {
+    // Need to pass in the memory attributes to the Initialize() call to indicate which bytes
+    // are already initialized
+    vector<uint8> attrs(nBytes, 0);
+    GetMemoryAttributes(address, nBytes, attrs.data());
+
+    vector<uint8> data(nBytes, 0);
+    Initialize(address, data.data(), attrs.data(), nBytes, EMemDataType::Both);
+  }
+
   //!< the parameter value is in big endian
   void Memory::Initialize(uint64 address, uint64 value, uint32 nBytes, EMemDataType type)
   {
@@ -604,7 +611,7 @@ namespace Force {
     return true;
   }
 
-  uint64 Memory::Read(uint64 address, uint32 nBytes) const
+  uint64 Memory::Read(uint64 address, uint32 nBytes)
   {
     uint32 mem_bytes = 8;
 
@@ -612,11 +619,8 @@ namespace Force {
       FAIL("unsupported-number-of-bytes");
     }
 
-    if (!IsInitialized(address, nBytes)) {
-      LOG(fail) << "read uninitialized memory range (address, size) = (0x"
-                << fmtx0(address) << ", " << nBytes << ")" << endl;
-      FAIL("read-un-initialized-memory");
-    }
+    EnsureInitialization(address, nBytes);
+
     uint32 nbytes = (ADDR_OFFSET(address) + nBytes <= mem_bytes) ?
                     nBytes : mem_bytes - ADDR_OFFSET(address);
     MetaAccess ma_low(ADDR_ALIGN(address), ADDR_OFFSET(address), nbytes, 0);
@@ -641,11 +645,7 @@ namespace Force {
       FAIL("value-out-of-byte-range ");
     }
 
-    if (!IsInitialized(address, nBytes)) {
-      LOG(fail) << "write uninitialized memory range (address, size) = (0x"
-                << fmtx0(address) << ", " << nBytes << ")" << endl;
-      FAIL("write-un-initialized-memory");
-    }
+    EnsureInitialization(address, nBytes);
 
     Unreserve(address, nBytes);
 
@@ -744,7 +744,7 @@ namespace Force {
     return contained;
   }
 
-  uint64 Memory::ReadInitialValue(uint64 address, uint32 nBytes) const
+  uint64 Memory::ReadInitialValue(uint64 address, uint32 nBytes)
   {
     uint32 mem_bytes = 8;
 
@@ -752,11 +752,8 @@ namespace Force {
       FAIL("unsupported-number-of-bytes");
     }
 
-    if (!IsInitialized(address, nBytes)) {
-      LOG(fail) << "read uninitialized memory range (address, size) = (0x"
-                << fmtx0(address) << ", " << nBytes << ")" << endl;
-      FAIL("read-un-initialized-memory");
-    }
+    EnsureInitialization(address, nBytes);
+
     uint32 nbytes = (ADDR_OFFSET(address) + nBytes <= mem_bytes) ?
                     nBytes : mem_bytes - ADDR_OFFSET(address);
     MetaAccess ma_low(ADDR_ALIGN(address), ADDR_OFFSET(address), nbytes, 0);
@@ -831,6 +828,20 @@ namespace Force {
     }
 
     return true;
+  }
+
+  void Memory::EnsureInitialization(uint64 address, uint32 nBytes)
+  {
+    if (!IsInitialized(address, nBytes)) {
+      if (mAutoInit) {
+        AutoInitialize(address, nBytes);
+      }
+      else {
+        LOG(fail) << "read uninitialized memory range (address, size) = (0x"
+                  << fmtx0(address) << ", " << nBytes << ")" << endl;
+        FAIL("read-un-initialized-memory");
+      }
+    }
   }
 
   void Memory::ReadMemoryBytes(MetaAccess& rMetaAccess) const

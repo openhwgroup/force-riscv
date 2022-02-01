@@ -361,9 +361,9 @@ Add RISCV main instruction starter information in this file.
   </I>
   <I name="FENCE" isa="RISCV" group="General" extension="RV32I">
     <O name="const_bits" type="Constant" bits="14-12,6-0" value="0000001111"/>
-    <O name="fm" type="Immediate" bits="31-27"/>
-    <O name="pred" type="Immediate" bits="26-21"/>
-    <O name="succ" type="Immediate" bits="20-20"/>
+    <O name="fm" type="Immediate" bits="31-28"/>
+    <O name="pred" type="Immediate" bits="27-24"/>
+    <O name="succ" type="Immediate" bits="23-20"/>
     <O name="rs1" type="Register" bits="19-15"/>
     <O name="rd" type="Register" bits="11-7"/>
     <asm format="FENCE"/>

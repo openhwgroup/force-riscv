@@ -88,7 +88,7 @@ control_items = [
         "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {
-        "fname": "paging/_def_fctrl.py",
+        "fname": "paging/_rv32_fctrl.py",
         "generator": {"--cfg": "config/riscv_rv32.config"},
     },
     {

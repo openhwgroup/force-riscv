@@ -25,14 +25,10 @@ class LoopTestSequence(Sequence):
         self.reserveRegister(loop_reg_name)
 
         loop_control = LoopControl(self.genThread)
-        loop_control.start(
-            LoopReg=loop_reg_index, LoopCount=self.random32(2, 8)
-        )
+        loop_control.start(LoopReg=loop_reg_index, LoopCount=self.random32(2, 8))
 
         for _ in range(self.random32(500, 1000)):
-            self.genInstruction(
-                self.pickWeighted(self.getInstructionWeights())
-            )
+            self.genInstruction(self.pickWeighted(self.getInstructionWeights()))
 
         loop_control.end()
 

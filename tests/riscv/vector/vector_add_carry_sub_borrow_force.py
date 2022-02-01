@@ -43,10 +43,7 @@ class MainSequence(VectorTestSequence):
     def _performAdditionalVerification(self, aInstr, aInstrRecord):
         vd_val = aInstrRecord["Dests"]["vd"]
         if vd_val == 0:
-            self.error(
-                "Instruction %s was generated with v0 as the destination "
-                "register" % aInstr
-            )
+            self.error("Instruction %s was generated with v0 as the destination register" % aInstr)
 
 
 MainSequenceClass = MainSequence

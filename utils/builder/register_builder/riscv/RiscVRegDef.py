@@ -21,8 +21,8 @@
 import copy
 import os
 
-import defusedxml.defusedxml.ElementTree as ET
-import defusedxml.defusedxml.minidom as DOM
+import defusedxml_local.defusedxml.ElementTree as ET
+import defusedxml_local.defusedxml.minidom as DOM
 
 from BootPriority import *
 
@@ -57,9 +57,7 @@ class FieldValue:
 
     # Prints value and description to stdout
     def print(self):
-        print(
-            "\t  fieldValue:", self.mValue, "description:", self.mDescription
-        )
+        print("\t  fieldValue:", self.mValue, "description:", self.mDescription)
 
     # Returns value
     def value(self):
@@ -122,9 +120,7 @@ class RegisterField:
             raise ValueError("Register definition missing field name")
         if msb is None or lsb is None:
             self.print()
-            raise ValueError(
-                "Did not parse register field '%s' correctly" % self.mName
-            )
+            raise ValueError("Did not parse register field '%s' correctly" % self.mName)
 
         self.addBitField(msb, lsb)
 
@@ -357,17 +353,14 @@ class Register:
             return self.mRegisterFields[aRegisterFieldName]
         else:
             raise KeyError(
-                "Register.getRegisterField():"
-                "Register field '%s' not found" % aRegisterFieldName
+                "Register.getRegisterField(): Register field '%s' not found" % aRegisterFieldName
             )
 
     # Adds a new register field with the provided name and returns the new
     # field (or the existing register field if the name already exists)
     def addRegisterField(self, aRegisterFieldName):
         if aRegisterFieldName not in self.mRegisterFields:
-            self.mRegisterFields[aRegisterFieldName] = RegisterField(
-                aRegisterFieldName
-            )
+            self.mRegisterFields[aRegisterFieldName] = RegisterField(aRegisterFieldName)
         return self.mRegisterFields[aRegisterFieldName]
 
     # Deletes a register field according to the provided name or raises an
@@ -425,10 +418,7 @@ class RegisterFile:
                 elif key == "field_choices_tree":
                     self.mFieldChoicesTree = aXmlFile[key]
                 else:
-                    print(
-                        "Unable to initiate RegisterFile with XML file "
-                        "type: '%s'" % key
-                    )
+                    print("Unable to initiate RegisterFile with XML file type: '%s'" % key)
             else:
                 print("Key '%s' is not associated with a file" % key)
 
@@ -445,10 +435,7 @@ class RegisterFile:
         if aRegisterName in self.mRegisters:
             return self.mRegisters[aRegisterName]
         else:
-            raise KeyError(
-                "RegisterFile.getRegister(): Register '%s' not "
-                "found" % aRegisterName
-            )
+            raise KeyError("RegisterFile.getRegister(): Register '%s' not found" % aRegisterName)
 
     # Deletes a register (and associated register in the implementation
     # dictionary) according to the provided name or raises an exception if the
@@ -460,8 +447,7 @@ class RegisterFile:
             del self.mRegisters[aRegisterName]
         else:
             raise KeyError(
-                "RegisterFile.deleteRegister(): "
-                "Register '%s' not found" % aRegisterName
+                "RegisterFile.deleteRegister(): Register '%s' not found" % aRegisterName
             )
 
     # Validates a register's field sizes
@@ -509,8 +495,7 @@ class RegisterFile:
                 if sum_size != int(size):
                     raise ValueError(
                         "Sum of field sizes (%s) and register size (%s) for "
-                        "register '%s' are different"
-                        % (sum_size, size, register.attrib["name"])
+                        "register '%s' are different" % (sum_size, size, register.attrib["name"])
                     )
 
     # Validates a register's size matches its physical size
@@ -524,14 +509,14 @@ class RegisterFile:
                 if size != physical_register_size:
                     raise ValueError(
                         "Register '%s' size (%s bits) and physical size "
-                        "(%s bits) are different"
-                        % (name, size, physical_register_size)
+                        "(%s bits) are different" % (name, size, physical_register_size)
                     )
 
     # Adds a register from a file
     def addRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.addRegisterToTree(tree, aRegister)
+        if tree is not None:
+            self.addRegisterToTree(tree, aRegister)
 
     # Returns tree from provided label
     def getTreeFromLabel(self, aLabel):
@@ -544,8 +529,9 @@ class RegisterFile:
             ret_tree = self.mImplementationTree
         elif aLabel == "choices":
             ret_tree = self.mRegisterChoicesTree
+        else:
+            print("RegisterFile.getTreeFromLabel(): Unknown label: %s" % aLabel)
 
-        print("RegisterFile.getTreeFromLabel(): Unknown label: %s" % aLabel)
         return ret_tree
 
     # Adds provided register to the specified tree
@@ -598,48 +584,30 @@ class RegisterFile:
                         if new_mask & current_mask != 0:
                             kept_mask = current_mask & ~new_mask
                             if kept_mask == 0:
-                                bit_fields_to_be_removed.append(
-                                    bit_field.attrib["shift"]
-                                )
+                                bit_fields_to_be_removed.append(bit_field.attrib["shift"])
                             else:
-                                new_ranges = self.getContinuousRanges(
-                                    kept_mask
-                                )
-                                bit_field.attrib["shift"] = str(
-                                    new_ranges[0][0]
-                                )
-                                bit_field.attrib["size"] = str(
-                                    new_ranges[0][1]
-                                )
-                                register_field.attrib["size"] = str(
-                                    new_ranges[0][1]
-                                )
+                                new_ranges = self.getContinuousRanges(kept_mask)
+                                bit_field.attrib["shift"] = str(new_ranges[0][0])
+                                bit_field.attrib["size"] = str(new_ranges[0][1])
+                                register_field.attrib["size"] = str(new_ranges[0][1])
                                 for i in range(1, len(new_ranges)):
                                     duplicate = copy.deepcopy(bit_field)
-                                    duplicate.attrib["shift"] = str(
-                                        new_ranges[i][0]
-                                    )
-                                    duplicate.attrib["size"] = str(
-                                        new_ranges[i][1]
-                                    )
+                                    duplicate.attrib["shift"] = str(new_ranges[i][0])
+                                    duplicate.attrib["size"] = str(new_ranges[i][1])
                                     register_field.append(duplicate)
 
                     while len(bit_fields_to_be_removed) > 0:
                         for bit in register_field:
                             if bit.attrib["shift"] in bit_fields_to_be_removed:
                                 register_field.remove(bit)
-                                bit_fields_to_be_removed.remove(
-                                    bit.attrib["shift"]
-                                )
+                                bit_fields_to_be_removed.remove(bit.attrib["shift"])
                                 break
 
                     if len(register_field.getchildren()) is 0:
                         register_field_to_be_removed.append(register_field)
                     else:
                         register_field.attrib["size"] = str(
-                            self.getFieldSizeFromBitsInRegisterField(
-                                register_field
-                            )
+                            self.getFieldSizeFromBitsInRegisterField(register_field)
                         )
 
                 while len(register_field_to_be_removed) > 0:
@@ -656,29 +624,15 @@ class RegisterFile:
                         current_shift = int(current_field[0].attrib["shift"])
                         current_size = int(current_field[0].attrib["size"])
                         current_shift_size = current_shift + current_size
-                        if (
-                            register_field["field"]
-                            == current_field.attrib["name"]
-                        ):
+                        if register_field["field"] == current_field.attrib["name"]:
                             merge = True
-                            if (
-                                shift_size == current_shift
-                                or current_shift_size == shift
-                            ):
-                                current_field[0].attrib["shift"] = str(
-                                    min(current_shift, shift)
-                                )
-                                current_field[0].attrib["size"] = str(
-                                    current_size + size
-                                )
-                                current_field.attrib["size"] = current_field[
-                                    0
-                                ].attrib["size"]
+                            if shift_size == current_shift or current_shift_size == shift:
+                                current_field[0].attrib["shift"] = str(min(current_shift, shift))
+                                current_field[0].attrib["size"] = str(current_size + size)
+                                current_field.attrib["size"] = current_field[0].attrib["size"]
                             else:
                                 original_bit_field = current_field[0]
-                                new_bit_field = copy.deepcopy(
-                                    original_bit_field
-                                )
+                                new_bit_field = copy.deepcopy(original_bit_field)
                                 new_bit_field.attrib["shift"] = str(shift)
                                 new_bit_field.attrib["size"] = str(size)
                                 current_field.append(new_bit_field)
@@ -695,31 +649,23 @@ class RegisterFile:
 
                     physical_register = None
                     if len(register.getchildren()) > 0:
-                        physical_register = register[0].attrib[
-                            "physical_register"
-                        ]
+                        physical_register = register[0].attrib["physical_register"]
                     elif "physical_register" in aRegister:
                         physical_register = aRegister["physical_register"]
                     else:
                         physical_register = register.attrib["name"]
 
                     register_field_name = register_field["field"]
-                    register_field_tag = register_field.get(
-                        "field_type", "register_field"
-                    )
+                    register_field_tag = register_field.get("field_type", "register_field")
                     register_field_attributes = {
                         "name": register_field_name,
                         "size": str(register_field["size"]),
                         "physical_register": physical_register,
                     }
                     if "reset" in register_field:
-                        register_field_attributes["reset"] = str(
-                            register_field["reset"]
-                        )
+                        register_field_attributes["reset"] = str(register_field["reset"])
                     if "class" in register_field:
-                        register_field_attributes["class"] = register_field[
-                            "class"
-                        ]
+                        register_field_attributes["class"] = register_field["class"]
 
                     register_field_element = ET.SubElement(
                         register, register_field_tag, register_field_attributes
@@ -776,17 +722,15 @@ class RegisterFile:
 
     # Returns mask from provided bit field
     def getMaskFromBitField(self, aBitField):
-        return (
-            1 << int(aBitField.attrib["shift"]) + int(aBitField.attrib["size"])
-        ) - (1 << int(aBitField.attrib["shift"]))
+        return (1 << int(aBitField.attrib["shift"]) + int(aBitField.attrib["size"])) - (
+            1 << int(aBitField.attrib["shift"])
+        )
 
     # Returns mask from provided fields
     def getMaskFromField(self, aFields):
         mask = 0
         for field in aFields:
-            mask |= (1 << field["shift"] + field["size"]) - (
-                1 << field["shift"]
-            )
+            mask |= (1 << field["shift"] + field["size"]) - (1 << field["shift"])
         return mask
 
     # Adds register choices
@@ -799,9 +743,7 @@ class RegisterFile:
             self.addNewRegisterToRegisterChoices(aRegister)
 
     # Adds register choices based on read-only, write-only, or read-write
-    def addNewRegisterToRegisterChoices(
-        self, aRegister, aReadChoice=True, aWriteChoice=True
-    ):
+    def addNewRegisterToRegisterChoices(self, aRegister, aReadChoice=True, aWriteChoice=True):
         register_type = aRegister.get("type", "SysReg")
         if register_type != "SysReg":
             print(
@@ -859,7 +801,8 @@ class RegisterFile:
     # Deletes specified register
     def deleteRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.deleteRegisterFromTree(tree, aRegister)
+        if tree is not None:
+            self.deleteRegisterFromTree(tree, aRegister)
 
     # Deletes specified register and associated register choices from
     # provided tree
@@ -898,17 +841,15 @@ class RegisterFile:
     # Adds specified physical register from file
     def addPhysicalRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.addPhysicalRegisterToTree(tree, aRegister)
+        if tree is not None:
+            self.addPhysicalRegisterToTree(tree, aRegister)
 
     # Adds specified physical register to the provided tree
     def addPhysicalRegisterToTree(self, aTree, aRegister):
         physical_registers = aTree.find("physical_registers")
         for physical_register in physical_registers.getchildren():
             name = physical_register.attrib["name"]
-            if (
-                aRegister.get("physical_register") == name
-                or aRegister.get("register") == name
-            ):
+            if aRegister.get("physical_register") == name or aRegister.get("register") == name:
                 return
 
         name = aRegister.get("physical_register")
@@ -928,7 +869,8 @@ class RegisterFile:
     # Copies specified register from file
     def copyRegisterFromFile(self, aRegister):
         tree = self.getTreeFromLabel(aRegister["target"])
-        self.copyRegisterToTree(tree, aRegister)
+        if tree is not None:
+            self.copyRegisterToTree(tree, aRegister)
 
     # Copies specified register into the provided tree
     def copyRegisterToTree(self, aTree, aRegister):
@@ -949,12 +891,14 @@ class RegisterFile:
     # Updates specified fields from file
     def updateFieldsFromFile(self, aFields):
         tree = self.getTreeFromLabel(aFields["target"])
-        self.updateFieldsToTree(tree, aFields)
+        if tree is not None:
+            self.updateFieldsToTree(tree, aFields)
 
     # Updates register attributes from file
     def updateRegisterAttributeFromFile(self, aAttribute):
         tree = self.getTreeFromLabel(aAttribute["target"])
-        self.updateRegisterAttributeToTree(tree, aAttribute)
+        if tree is not None:
+            self.updateRegisterAttributeToTree(tree, aAttribute)
 
     # Updates specified register attributes in the provided tree
     def updateRegisterAttributeToTree(self, aTree, aAttribute):
@@ -974,22 +918,20 @@ class RegisterFile:
     # Updates physical register attributes from file
     def updatePhysicalRegisterAttributeFromFile(self, aAttribute):
         tree = self.getTreeFromLabel(aAttribute["target"])
-        self.updatePhysicalRegisterAttributeToTree(tree, aAttribute)
+        if tree is not None:
+            self.updatePhysicalRegisterAttributeToTree(tree, aAttribute)
 
     # Updates specified physical register attributes in the provided tree
     def updatePhysicalRegisterAttributeToTree(self, aTree, aAttribute):
         root = aTree.getroot()
 
-        for child in root:
-            if child.tag == "physical_registers":
-                for physical_register in child:
-                    if (
-                        physical_register.attrib["name"]
-                        == aAttribute["register"]
-                    ):
-                        for key, value in aAttribute.items():
-                            if key != "register" and key != "target":
-                                physical_register.attrib[key] = value
+        for physical_register in root.findall("physical_registers"):
+            for physical_register in physical_register.findall(
+                "./physical_register[@name=%s]" % aAttribute["register"]
+            ):
+                for (key, value) in aAttribute.items():
+                    if key not in ("register", "target"):
+                        physical_register.attrib[key] = value
 
     # Updates field choices
     def updateFieldChoices(self, aChoice):
@@ -1036,18 +978,13 @@ class RegisterFile:
     def updateFieldWeight(self, aWeight):
         field_choices = self.mFieldChoicesTree.getroot()
 
-        for field_choice in field_choices:
-            if field_choice.attrib["name"] == aWeight["field_name"]:
-                for choice in aWeight["choices"]:
-                    for child in field_choice.getchildren():
-                        if choice["value"] == child.attrib["value"]:
-                            child.attrib["weight"] = choice["weight"]
-                break
+        for field_choice in field_choices.findall("./choices[@name=%s]" % aWeight["field_name"]):
+            for choice in aWeight["choices"]:
+                for child in field_choice.findall("./choice[@value=%s]" % choice["value"]):
+                    child.attrib["weight"] = choice["weight"]
 
     # Writes register file from system register tree
-    def outputRiscVRegisterFileFromTree(
-        self, aSystemRegisterFile, aLicenseText=None
-    ):
+    def outputRiscVRegisterFileFromTree(self, aSystemRegisterFile, aLicenseText=None):
         self.mLicenseText = aLicenseText
         self.outputRiscVRegisterFile(aSystemRegisterFile, False, "system")
 
@@ -1059,26 +996,17 @@ class RegisterFile:
             elif aLabel == "app":
                 self.prettyPrint(self.mApplicationTree, "index", aRegisterFile)
             elif aLabel == "impl":
-                self.prettyPrint(
-                    self.mImplementationTree, "index", aRegisterFile
-                )
+                self.prettyPrint(self.mImplementationTree, "index", aRegisterFile)
             else:
-                print(
-                    "Label '%s' unrecognized while writing register "
-                    "file" % aLabel
-                )
+                print("Label '%s' unrecognized while writing register file" % aLabel)
         self.mLicenseText = None
 
     # Writes xml file with some internal formatting
     def prettyPrint(self, aTree, aAttribute, aOutput):
         self.sortTree(aTree.getroot(), aAttribute)
-        xml_str = DOM.parseString(ET.tostring(aTree.getroot())).toprettyxml(
-            indent="  "
-        )
+        xml_str = DOM.parseString(ET.tostring(aTree.getroot())).toprettyxml(indent="  ")
         # removing extra whitespace that gets added by toprettyxml()
-        xml_str = os.linesep.join(
-            [s for s in xml_str.splitlines() if s.strip()]
-        )
+        xml_str = os.linesep.join([s for s in xml_str.splitlines() if s.strip()])
         with open(aOutput, "w") as f:
             if self.mLicenseText is not None:
                 f.write(self.mLicenseText)
@@ -1093,10 +1021,7 @@ class RegisterFile:
 
     # Sorts children of supplied parent node according to attribute
     def sortChildrenByAttribute(self, aParentNode, aAttribute):
-        if (
-            len(aParentNode.getchildren()) > 0
-            and aAttribute in aParentNode[0].attrib
-        ):
+        if len(aParentNode.getchildren()) > 0 and aAttribute in aParentNode[0].attrib:
             aParentNode[:] = sorted(
                 aParentNode,
                 key=lambda child: self.getProperSortKey(child, aAttribute),
@@ -1111,35 +1036,23 @@ class RegisterFile:
             return aChild.get(aAttribute)
 
     # Writes register file from application register tree
-    def outputAppRegisterFileFromTree(
-        self, aAppRegisterFile, aLicenseText=None
-    ):
+    def outputAppRegisterFileFromTree(self, aAppRegisterFile, aLicenseText=None):
         self.mLicenseText = aLicenseText
         self.outputRiscVRegisterFile(aAppRegisterfile, False, "app")
 
     # Writes register file from implementation register tree
-    def outputImplRegisterFileFromTree(
-        self, aImplRegisterFile, aLicenseText=None
-    ):
+    def outputImplRegisterFileFromTree(self, aImplRegisterFile, aLicenseText=None):
         self.mLicenseText = aLicenseText
         self.outputRiscVRegisterFile(aImplRegisterFile, True, "impl")
 
     # Writes register choices file
-    def outputRiscVRegisterChoicesFile(
-        self, aRegisterChoicesFile, aLicenseText=None
-    ):
+    def outputRiscVRegisterChoicesFile(self, aRegisterChoicesFile, aLicenseText=None):
         if self.mRegisterChoicesTree is not None:
             self.mLicenseText = aLicenseText
-            self.prettyPrint(
-                self.mRegisterChoicesTree, "value", aRegisterChoicesFile
-            )
+            self.prettyPrint(self.mRegisterChoicesTree, "value", aRegisterChoicesFile)
 
     # Writes register field choices file
-    def outputRiscVRegisterFieldChoicesFile(
-        self, aRegisterFieldChoicesFile, aLicenseText=None
-    ):
+    def outputRiscVRegisterFieldChoicesFile(self, aRegisterFieldChoicesFile, aLicenseText=None):
         if self.mFieldChoicesTree is not None:
             self.mLicenseText = aLicenseText
-            self.prettyPrint(
-                self.mFieldChoicesTree, "name", aRegisterFieldChoicesFile
-            )
+            self.prettyPrint(self.mFieldChoicesTree, "name", aRegisterFieldChoicesFile)

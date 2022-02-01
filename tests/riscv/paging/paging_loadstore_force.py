@@ -55,18 +55,14 @@ class MainSequence(Sequence):
                     Size=addr_size,
                     Align=alignment,
                     Type="D",
-                    Bank=0,
+                    Bank="Default",
                     FlatMap=opt_value,
                 )
             else:
-                rand_VA = self.genVA(
-                    Size=addr_size, Align=alignment, Type="D", Bank=0
-                )
+                rand_VA = self.genVA(Size=addr_size, Align=alignment, Type="D", Bank="Default")
 
             self.notice("gen target VA={:#x}".format(rand_VA))
-            self.genInstruction(
-                self.choice(ldstr_instructions), {"LSTarget": rand_VA}
-            )
+            self.genInstruction(self.choice(ldstr_instructions), {"LSTarget": rand_VA})
 
 
 MainSequenceClass = MainSequence

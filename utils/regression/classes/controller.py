@@ -53,8 +53,7 @@ class Controller(object):
 
     def process(self):
         raise AbstractionError(
-            "Abstract Method Error: Controller::process() not implemented in "
-            "descendent class"
+            "Abstract Method Error: Controller::process() not implemented in descendent class"
         )
 
     # initialize callbacks

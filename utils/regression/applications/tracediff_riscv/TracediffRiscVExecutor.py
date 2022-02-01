@@ -32,16 +32,10 @@ class TracediffRiscVExecutor(ToolExecutor):
 
     def execute(self):
         if not PathUtils.check_file("sim.log"):
-            Msg.info(
-                "[TracediffRiscVExecutor::skip] skipping since no sim.log "
-                "found"
-            )
+            Msg.info("[TracediffRiscVExecutor::skip] skipping since no sim.log found")
             return True
         if not PathUtils.check_file("fpix_sim.log"):
-            Msg.info(
-                "[TracediffRiscVExecutor::skip] skipping since fpx_sim.log "
-                "not found"
-            )
+            Msg.info("[TracediffRiscVExecutor::skip] skipping since fpx_sim.log not found")
             return True
 
         my_cmd = (
@@ -89,9 +83,7 @@ class TracediffRiscVExecutor(ToolExecutor):
                 )
 
         Msg.info("CMPCommand = " + str({"trace-cmp-cmd": my_cmd}))
-        my_extract_results = self.extract_results(
-            my_use_result, "./" + self.log, None
-        )
+        my_extract_results = self.extract_results(my_use_result, "./" + self.log, None)
         Msg.info("CMPResult = " + str(my_extract_results))
 
         Msg.flush()
@@ -104,6 +96,6 @@ class TracediffRiscVExecutor(ToolExecutor):
         my_msg = ""
         # for now only the first line is of interest
         for line in arg_hfile:
-            pass
-        my_msg = line
+            my_msg = line
+
         return my_msg

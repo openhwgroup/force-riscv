@@ -138,6 +138,7 @@ CASE( "tests for EOptionIndex" ) {
       EXPECT(EOptionIndex_to_string(EOptionIndex::EXIT_LOOP_OPT) == "EXIT_LOOP_OPT");
       EXPECT(EOptionIndex_to_string(EOptionIndex::PLUGIN) == "PLUGIN");
       EXPECT(EOptionIndex_to_string(EOptionIndex::PLUGINS_OPTIONS) == "PLUGINS_OPTIONS");
+      EXPECT(EOptionIndex_to_string(EOptionIndex::AUTO_INIT_MEM_OPT) == "AUTO_INIT_MEM_OPT");
     }
 
     SECTION( "test string to enum conversion" ) {
@@ -156,6 +157,7 @@ CASE( "tests for EOptionIndex" ) {
       EXPECT(string_to_EOptionIndex("EXIT_LOOP_OPT") == EOptionIndex::EXIT_LOOP_OPT);
       EXPECT(string_to_EOptionIndex("PLUGIN") == EOptionIndex::PLUGIN);
       EXPECT(string_to_EOptionIndex("PLUGINS_OPTIONS") == EOptionIndex::PLUGINS_OPTIONS);
+      EXPECT(string_to_EOptionIndex("AUTO_INIT_MEM_OPT") == EOptionIndex::AUTO_INIT_MEM_OPT);
     }
 
     SECTION( "test string to enum conversion with non-matching string" ) {
@@ -193,6 +195,8 @@ CASE( "tests for EOptionIndex" ) {
       EXPECT(try_string_to_EOptionIndex("PLUGIN", okay) == EOptionIndex::PLUGIN);
       EXPECT(okay);
       EXPECT(try_string_to_EOptionIndex("PLUGINS_OPTIONS", okay) == EOptionIndex::PLUGINS_OPTIONS);
+      EXPECT(okay);
+      EXPECT(try_string_to_EOptionIndex("AUTO_INIT_MEM_OPT", okay) == EOptionIndex::AUTO_INIT_MEM_OPT);
       EXPECT(okay);
     }
 
