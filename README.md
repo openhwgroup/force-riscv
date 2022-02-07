@@ -19,17 +19,17 @@ Test templates (written in Python) are used to control FORCE-RISCV instruction g
 
 FORCE-RISCV is integrated with the Handcar instruction simulator to model the behavior of the generated RISC-V instructions.  Handcar is based on the Spike open source RISC-V instruction simulator.  The format for the generation output is the standard *.ELF file and a disassembled text *.S file.
 
-FORCE-RISCV provides full support of the RISC-V ISA, including:
+FORCE-RISCV provides support for the following aspects of the RISC-V ISA:
 * RV64G (IMAFDCZicsr_Zifencei)
 * RV32G
-* V extension 0.9
+* V extension 1.0
 * RISC-V privileged ISA, including full support for the U, S, and M privilege levels.
-* RISC-V traps and exceptions basic handling.
 * Full support for the Sv48 virtual memory system, including 4KB, 2MB, 1GB and 512GB page sizes.
+* Full support for the Sv39 virtual memory system, including 4KB, 2MB and 1GB page sizes.
 * Full support for the Sv32 virtual memory system, including 4KB and 4MB page sizes.
 * Fast exception handling.
 * Non-trivial exception handlers.
-* Full privileged mode switching support.
+* Full privilege mode switching support.
 * Multiprocess/multithread instruction generation.
 
 To run the output of FORCE-RISCV with the CORE-V-VERIF UVM testbench and to run the Imperas riscvOVPsim simulator get instruction functional coverage, see the sections below: Using riscvOVPsim to report coverage of generated tests.
@@ -37,9 +37,9 @@ To run the output of FORCE-RISCV with the CORE-V-VERIF UVM testbench and to run 
 # FORCE-RISCV Quick Start Guide for RISC-V
 
 ## User Manual
-The user manual is located in the 'force-riscv/doc' directory.  The user manual is still a "work in progress".  
+The user manual is located in the 'force-riscv/doc' directory.  The user manual is still a "work in progress".
 
-  *  FORCE-RISCV\_User\_Manual-v0.8.docx  
+  *  FORCE-RISCV\_User\_Manual-v0.8.docx
   *  FORCE-RISCV\_User\_Manual-v0.8.pdf
 
 ## Use FORCE-RISCV to generate a RISC-V testcase (ELF file) from a FORCE-RISCV test template
@@ -56,32 +56,32 @@ The user manual is located in the 'force-riscv/doc' directory.  The user manual 
   * `export FORCE_PYTHON_INC=/usr/include/python3.6`
 * Build FORCE-RISCV
   * Single command
-     * Run the setup script, which will perform some rudimentary environment checks, (warning if there are any issues,) and then run the next several commands.   
+     * Run the setup script, which will perform some rudimentary environment checks, (warning if there are any issues,) and then run the next several commands.
      `./setup`
      * Skip to the section: **ELF file generation running FORCE-RISCV directly**
   * Manual steps
      * `source setenv.bash` if running bash; otherwise `./setenv.bash`
      * `make`
      * `make tests`
-     * Run the main regression while in the force-riscv directory.   
+     * Run the main regression while in the force-riscv directory.
          `./utils/regression/master_run.py`
-     * Run the unit tests while in the force-riscv directory.   
+     * Run the unit tests while in the force-riscv directory.
          `./utils/regression/unit_tests.py`
 
 ### ELF file generation running FORCE-RISCV directly
 FORCE-RISCV is run from the Linux/Unix command line, and you can specify command line options that alter how the test generation is run.  You can run this simple "smoke test" to demonstrate that the build was successful.
-    `bin/friscv -t utils/smoke/test_force.py`  
-You can run FORCE-RISCV from any directory; just adjust the relative path names.  For example,  
-    `cd force-riscv/tmp`  
-    `../bin/friscv -t ../utils/smoke/test_force.py`  
+    `bin/friscv -t utils/smoke/test_force.py`
+You can run FORCE-RISCV from any directory; just adjust the relative path names.  For example,
+    `cd force-riscv/tmp`
+    `../bin/friscv -t ../utils/smoke/test_force.py`
 Note that the file name of a FORCE-RISCV test template always ends with "_force.py"; this serves to indicate that the file is a Python script, and that it is a FORCE-RISCV test template.
 
-The FORCE-RISCV program will generate the following files:  
-    <templateName>.Default.S   
-    <templateName>.Default.ELF  
-Which in our example is:  
-    test_force.Default.S  
-    test_force.Default.ELF  
+The FORCE-RISCV program will generate the following files:
+    <templateName>.Default.S
+    <templateName>.Default.ELF
+Which in our example is:
+    test_force.Default.S
+    test_force.Default.ELF
 The *.ELF files can be the input to an RTL simulation environment defining what instructions get executed during the simulation.  The *.S files are assembly code style files to help the user see what instructions have been generated.
 
 Generation can also be run with the master_run.py utility script.  Here is an example command line specifying a *_fctrl.py file.  The *_fctrl.py file contains the path to and name of the template file along with options that get passed to master_run and FORCE-RISCV.
@@ -181,7 +181,3 @@ The [README.md](target/README.md) provides information on downloading and using 
 Currently we are working on FORCE-RISCV providing support for 32bit RISC-V processors. When this is working we will provide scripts and notes so the generated *.ELF files can work easily with the [CV32E40P](https://github.com/openhwgroup/cv32e40p) RV32IMC core.   The UVM verification environment for CORE-V cores, including the cv32e40p is also in GitHub [here](https://github.com/openhwgroup/core-v-verif).
 
 There is a placeholder target directory: [cv32e40p](target/riscvOVPsim_cv32e40p)
-
-# Near term FORCE-RISCV roadmap
-* Finish support for paging exceptions and control (90%)
-* Support Vector extension 1.0 when the official spec is released.
