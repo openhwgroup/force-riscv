@@ -536,7 +536,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "RBIT_CLEAR",
@@ -559,7 +559,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "WBIT_CLEAR",
@@ -582,7 +582,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "XBIT_CLEAR",
@@ -609,7 +609,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "UBIT_CLEAR",
@@ -628,7 +628,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "ABIT_CLEAR",
@@ -650,7 +650,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "DBIT_CLEAR",
@@ -691,7 +691,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "UBIT_SET_INSTR",
@@ -710,7 +710,7 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
         self.genWritePTE(pte_addr_reg_index, scratch_reg_index)
         self.genSFENCE(
             stval_reg_index,
-            pte_level_reg_index,
+            pte_reg_index,
             scratch_reg_index,
             scratch_reg2_index,
             "UBIT_SET_DATA",
