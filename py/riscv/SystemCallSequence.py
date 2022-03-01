@@ -226,8 +226,6 @@ class SystemCallSequence(Sequence):
         )
         self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 2)
         self._mAssemblyHelper.genWriteSystemRegister("satp", self._mActionCodeRegIndex)
-        self._genLoadGPR(self._mActionCodeRegIndex, self._mDataBlockAddrRegIndex, 3)
-        self._genLoadGPR(self._mDataBlockAddrRegIndex, self._mDataBlockAddrRegIndex, 4)
         self.genInstruction(("%sRET##RISCV" % priv_level_prefix), {"NoRestriction": 1})
 
     # Generate an instruction to increment the data block address pointer.
