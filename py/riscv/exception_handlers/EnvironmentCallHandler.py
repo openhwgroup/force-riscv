@@ -75,7 +75,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
         )
 
         # All other action codes: Skip instruction and return
-        self.mAssemblyHelper.genRelativeBranchToLabel(78, "SKIP_INSTRUCTION")
+        self.mAssemblyHelper.genRelativeBranchToLabel(74, "SKIP_INSTRUCTION")
 
         self.mAssemblyHelper.addLabel("RETURN_TO_S_MODE")
         self._genReturnToSMode(handler_context)
@@ -140,7 +140,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
                 ("%sepc" % priv_level.name.lower()), scratch_reg_index
             )
 
-        self.mAssemblyHelper.genRelativeBranchToLabel(52, "RETURN")
+        self.mAssemblyHelper.genRelativeBranchToLabel(48, "RETURN")
 
     # Generate instructions to load CSRs using values from the data block.
     #
@@ -148,8 +148,7 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
     #  register indices can be retrieved by role.
     def _genLoadRegistersFromDataBlock(self, aHandlerContext):
         # The data block should hold values for the following sequence of
-        # registers: xstatus, xepc, satp, action code register, data block
-        # address register
+        # registers: xstatus, xepc, satp
         (
             self.mDataBlockAddrRegIndex,
             _,
@@ -178,8 +177,6 @@ class EnvironmentCallHandlerRISCV(ReusableSequence):
 
         self._genLoadRegFromDataBlock(scratch_reg_index, self.mDataBlockAddrRegIndex, 2)
         self.mAssemblyHelper.genWriteSystemRegister("satp", scratch_reg_index)
-        self._genLoadRegFromDataBlock(self.mActionCodeRegIndex, self.mDataBlockAddrRegIndex, 3)
-        self._genLoadRegFromDataBlock(self.mDataBlockAddrRegIndex, self.mDataBlockAddrRegIndex, 4)
 
         self.mAssemblyHelper.genRelativeBranchToLabel(20, "RETURN")
 

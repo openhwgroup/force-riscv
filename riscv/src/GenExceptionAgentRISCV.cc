@@ -263,20 +263,6 @@ namespace Force {
     dataBlock.AddUnit(satp_val, dsize, big_endian);
     LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} satp/dblock offset: 0x"
 	       << std::hex << satp_val << "/0x" << dblock_offset << std::dec << std::endl;
-    dblock_offset+= dsize;
-    dataBlock.AddUnit(action_code_reg_val, dsize, big_endian);
-    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} action code reg value/dblock offset: 0x"
-	       << std::hex << result.mTargetAddr << "/0x" << dblock_offset << std::dec << std::endl;
-    dblock_offset+= dsize;
-    dataBlock.AddUnit(action_code_reg_val, dsize, big_endian);
-
-    auto addr_table_man = mpGenerator->GetAddressTableManager();
-    uint32 sys_table_mem_bank = 0;
-    auto table_ptr = addr_table_man->GetAddressTable(sys_table_mem_bank);
-
-    dataBlock.AddUnit(table_ptr->GetCurrentAddress() + dsize, (uint64) dsize, big_endian);
-    LOG(debug) << "{GenExceptionAgentRISCV::BuildDataBlock} next table address/dblock offset: 0x"
-	       << std::hex << table_ptr->GetCurrentAddress() + dsize << "/0x" << dblock_offset << std::dec << std::endl;
 
     VmManager* vm_manager = mpGenerator->GetVmManager();
     unique_ptr<VmInfo> vm_info(vm_manager->VmInfoInstance());
