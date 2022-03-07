@@ -98,7 +98,7 @@ namespace Force {
       const ConstraintSet* usable_constr  = mem_man->GetMemoryBank(EMemBankTypeBaseType(bankType))->Usable();
 
       PaGenerator pa_gen(usable_constr);
-      ConstraintSet min_ps_constr(mpGenerator->GetVariable("System Physical Address Range", EVariableType::String));
+      ConstraintSet min_ps_constr(mpGenerator->GetVariable("Address table memory address range", EVariableType::String));
       uint32 align = 8;
       bool is_instr = false;
       ret_pa = pa_gen.GenerateAddress(align, tableSize, is_instr, &min_ps_constr);

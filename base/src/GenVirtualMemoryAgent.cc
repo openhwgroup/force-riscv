@@ -388,7 +388,7 @@ namespace Force {
       }
     }
 
-    auto pa_var = mpGenerator->GetVariable("System Physical Address Range", EVariableType::String);
+    auto pa_var = mpGenerator->GetVariable("Exception Stack Address Range", EVariableType::String);
     ConstraintSet min_ps_constr(pa_var);
     PaGenerator pa_gen(&usable_constr);
     ret_pa = pa_gen.GenerateAddress(es_req->Align(), size, is_instr, &min_ps_constr);
