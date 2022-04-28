@@ -170,4 +170,12 @@ control_items = [
         "fname": "thread_group/_noiss_fctrl.py",
         "generator": {"--cfg": "config/riscv_rv64.config"},
     },
+    {
+        "fname": "rv64/_def_fctrl.py",
+        "generator": {"--cfg": "config/riscv_rv64.config"},
+    },
+    {
+        "fname": "rv64/_noiss_fctrl.py",
+        "generator": {"--cfg": "config/riscv_rv64.config"},
+    },
 ]
