@@ -153,23 +153,31 @@ class PageFaultExceptionHandlerRISCV(ReusableSequence):
             # not relevant for Sv32...
             pass
         else:
-            self.callRoutine("CheckFaultAddress")  # returns 0 if successful
+            self.callRoutine("CheckFaultAddress")  # returns 0 if faulting address detected
 
             self.mAssemblyHelper.logDebugSymbol("Return from CheckFaultAddress.")
 
-            (rcode_reg_index, scratch_reg_index) = handler_regs.RegisterSet(
-                ["rcode", "scratch_reg"]
+            # If the fault is due to the address, we can't correct that and need to skip the
+            # instruction
+            (rcode_reg_index, scratch_reg_index, priv_level_reg_index) = handler_regs.RegisterSet(
+                ["rcode", "scratch_reg", "priv_level"]
             )
             self.mAssemblyHelper.genMoveImmediate(scratch_reg_index, 0)
             self.mAssemblyHelper.genConditionalBranchToLabel(
                 rcode_reg_index,
                 scratch_reg_index,
-                26,
-                "EQ",
-                "PAGE_FAULT_HANDLER_EXIT",
+                22,
+                "NE",
+                "NO_FAULTING_ADDRESS",
             )
 
-        # faulting address seems to be okay. lets move on...
+            self.mAssemblyHelper.genIncrementExceptionReturnAddress(
+                scratch_reg_index, priv_level_reg_index
+            )
+            self.mAssemblyHelper.genRelativeBranchToLabel(26, "PAGE_FAULT_HANDLER_EXIT")
+
+            # faulting address seems to be okay. lets move on...
+            self.mAssemblyHelper.addLabel("NO_FAULTING_ADDRESS")
 
         # need to perform a table walk in order to know at what page table
         # level the fault occurred...
