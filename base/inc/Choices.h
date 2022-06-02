@@ -16,13 +16,13 @@
 #ifndef Force_Choices_H
 #define Force_Choices_H
 
-#include <Object.h>
-
-#include <Defines.h>
-#include <vector>
-#include <string>
 #include <map>
-#include <Enums.h>
+#include <string>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

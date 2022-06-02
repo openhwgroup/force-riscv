@@ -13,21 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Defines.h>
-PICKY_IGNORE_BLOCK_START
-#include <SimAPI.h>
-PICKY_IGNORE_BLOCK_END
-#include <ResourcePeState.h>
-#include <Generator.h>
-#include <GenPC.h>
-#include <Register.h>
-#include <MemoryManager.h>
-#include <Log.h>
-#include <ResourceDependence.h>
-#include <UtilityFunctions.h>
+#include "ResourcePeState.h"
 
 #include <algorithm>
 #include <sstream>
+
+#include "Defines.h"
+#include "GenPC.h"
+#include "Generator.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "Register.h"
+#include "ResourceDependence.h"
+#include "UtilityFunctions.h"
+
+PICKY_IGNORE_BLOCK_START
+#include "SimAPI.h"
+PICKY_IGNORE_BLOCK_END
 
 using namespace std;
 

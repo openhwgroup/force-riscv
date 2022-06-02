@@ -13,19 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Variable.h>
-#include <VariableParser.h>
-#include <Architectures.h>
-#include <UtilityFunctions.h>
-#include <Config.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <XmlTreeWalker.h>
-#include <Log.h>
+#include "VariableParser.h"
 
-#include <pugixml.h>
-#include <string.h>
+#include <cstring>
 #include <iostream>
+
+#include "pugixml.h"
+
+#include "Architectures.h"
+#include "Config.h"
+#include "Enums.h"
+#include "Log.h"
+#include "UtilityFunctions.h"
+#include "Variable.h"
+#include "XmlTreeWalker.h"
+#include ARCH_ENUM_HEADER
 
 /*!
   \file VariableParser.cc

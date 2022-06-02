@@ -13,14 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "ChoicesModerator.h"
 
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <Random.h>
-#include <GenException.h>
-#include <string.h>
+#include <cstring>
+
+#include "lest/lest.hpp"
+
+#include "Choices.h"
+#include "GenException.h"
+#include "Log.h"
+#include "Random.h"
 
 using namespace std;
 using namespace Force;

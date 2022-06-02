@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RegisterInitPolicy.h>
-#include <Register.h>
-#include <Generator.h>
-#include <PageTable.h>
-#include <UtilityFunctions.h>
-#include <Log.h>
+#include "RegisterInitPolicy.h"
+
+#include "Generator.h"
+#include "Log.h"
+#include "PageTable.h"
+#include "Register.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

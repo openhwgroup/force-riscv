@@ -16,8 +16,8 @@
 #ifndef Force_GenPC_H
 #define Force_GenPC_H
 
-#include <Defines.h>
-#include <Object.h>
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

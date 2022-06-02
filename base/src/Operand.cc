@@ -13,46 +13,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Operand.h>
-#include <InstructionStructure.h>
-#include <Random.h>
-#include <OperandConstraint.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <GenException.h>
-#include <Constraint.h>
-#include <Instruction.h>
-#include <Register.h>
-#include <Generator.h>
-#include <ObjectRegistry.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <VaGenerator.h>
-#include <GenRequest.h>
-#include <InstructionConstraint.h>
-#include <ChoicesFilter.h>
-#include <MemoryInitData.h>
-#include <AddressTagging.h>
-#include <BntNode.h>
-#include <OperandDataRequest.h>
-#include <RegisterInitData.h>
-#include <AddressSolver.h>
-#include <ResourceDependence.h>
-#include <VmUtils.h>
-#include <GenPC.h>
-#include <MemoryManager.h>
-#include <BaseOffsetConstraint.h>
-#include <OperandRequest.h>
-#include <Log.h>
-#include <VirtualMemoryInitializer.h>
-#include <VectorLayout.h>
-#include <DataBlock.h>
-#include <StringUtils.h>
-#include <Config.h>
+#include "Operand.h"
 
 #include <memory>
-// C++UP accumulate defined in numeric
-#include <numeric>
+#include <numeric>  // C++UP accumulate defined in numeric
+
+#include "AddressSolver.h"
+#include "AddressTagging.h"
+#include "BaseOffsetConstraint.h"
+#include "BntNode.h"
+#include "Choices.h"
+#include "ChoicesFilter.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "DataBlock.h"
+#include "GenException.h"
+#include "GenPC.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionConstraint.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "MemoryInitData.h"
+#include "MemoryManager.h"
+#include "ObjectRegistry.h"
+#include "OperandConstraint.h"
+#include "OperandDataRequest.h"
+#include "OperandRequest.h"
+#include "Random.h"
+#include "Register.h"
+#include "RegisterInitData.h"
+#include "ResourceDependence.h"
+#include "StringUtils.h"
+#include "VaGenerator.h"
+#include "VectorLayout.h"
+#include "VirtualMemoryInitializer.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
 
 /*!
   \file Operand.cc

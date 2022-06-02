@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <FieldEncoding.h>
-#include <StringUtils.h>
-#include <Log.h>
+#include "FieldEncoding.h"
+
 #include <algorithm>
 
+#include "Log.h"
+#include "StringUtils.h"
 /*!
   \file FieldEncoding.cc
   \brief Code for encoding related functionalities.

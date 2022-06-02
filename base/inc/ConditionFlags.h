@@ -16,7 +16,7 @@
 #ifndef Force_ConditionFlags_H
 #define Force_ConditionFlags_H
 
-#include <Defines.h>
+#include "Defines.h"
 
 namespace Force {
 

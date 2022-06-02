@@ -13,36 +13,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenSequenceAgent.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <Register.h>
-#include <BootOrder.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <VaGenerator.h>
-#include <BntNode.h>
-#include <MemoryManager.h>
-#include <Constraint.h>
-#include <SimplePeState.h>
-#include <DataStation.h>
-#include <PeStateUpdate.h>
-#include <RegisterReserver.h>
-#include <Config.h>
-#include <ChoicesModerator.h>
-#include <Choices.h>
-#include <GenRequest.h>
-#include <BntNodeManager.h>
-#include <ResourcePeState.h>
-#include <InstructionResults.h>
-#include <AddressTagging.h>
-#include <ResourceDependence.h>
-#include <RestoreLoop.h>
-#include <ReExecutionManager.h>
-#include <Log.h>
+#include "GenSequenceAgent.h"
 
 #include <algorithm>
 #include <memory>
+
+#include "AddressTagging.h"
+#include "BntNode.h"
+#include "BntNodeManager.h"
+#include "BootOrder.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "DataStation.h"
+#include "GenRequest.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "InstructionResults.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "PeStateUpdate.h"
+#include "ReExecutionManager.h"
+#include "Register.h"
+#include "RegisterReserver.h"
+#include "ResourceDependence.h"
+#include "ResourcePeState.h"
+#include "RestoreLoop.h"
+#include "SimplePeState.h"
+#include "VaGenerator.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

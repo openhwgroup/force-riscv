@@ -13,21 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <MemoryInitData.h>
-#include <Random.h>
-#include <Generator.h>
-#include <VirtualMemoryInitializer.h>
-#include <UtilityFunctions.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <Constraint.h>
-#include <ChoicesModerator.h>
-#include <Choices.h>
-#include <GenException.h>
-#include <Operand.h>
-#include <OperandConstraint.h>
-#include <VaGenerator.h>
-#include <Log.h>
+#include "MemoryInitData.h"
+
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "Generator.h"
+#include "Log.h"
+#include "Operand.h"
+#include "OperandConstraint.h"
+#include "Random.h"
+#include "UtilityFunctions.h"
+#include "VaGenerator.h"
+#include "VirtualMemoryInitializer.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

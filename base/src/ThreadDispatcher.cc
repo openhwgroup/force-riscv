@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ThreadDispatcher.h>
+#include "ThreadDispatcher.h"
 
-#include <Log.h>
-#include <Scheduler.h>
+#include "Log.h"
+#include "Scheduler.h"
 
 /*!
   \file ThreadDispatcher.cc

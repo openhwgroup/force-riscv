@@ -16,7 +16,7 @@
 #ifndef Force_VmDirectMapControlBlockRISCV_H
 #define Force_VmDirectMapControlBlockRISCV_H
 
-#include <VmDirectMapControlBlock.h>
+#include "VmDirectMapControlBlock.h"
 
 namespace Force {
 

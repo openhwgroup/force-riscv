@@ -13,14 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RecoveryAddressGenerator.h>
-#include <Generator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <VaGenerator.h>
-#include <GenRequest.h>
-#include <Log.h>
+#include "RecoveryAddressGenerator.h"
+
 #include <memory>
+
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "VaGenerator.h"
+#include "VmInfo.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

@@ -16,13 +16,12 @@
 #ifndef Force_ResourcePeState_H
 #define Force_ResourcePeState_H
 
-#include <Defines.h>
-
 #include <functional>
 #include <string>
 #include <vector>
 
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

@@ -13,9 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenCondition.h>
-#include <ObjectRegistry.h>
-#include <Log.h>
+#include "GenCondition.h"
+
+#include "Log.h"
+#include "ObjectRegistry.h"
 
 using namespace std;
 

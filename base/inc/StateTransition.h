@@ -16,13 +16,14 @@
 #ifndef Force_StateTransition_H
 #define Force_StateTransition_H
 
-#include <Defines.h>
-#include <Enums.h>
-
 #include <list>
 #include <map>
-#include <pybind11/pybind11.h>
 #include <vector>
+
+#include "pybind11/pybind11.h"
+
+#include "Defines.h"
+#include "Enums.h"
 
 namespace py = pybind11;
 

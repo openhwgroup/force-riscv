@@ -13,22 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Defines.h>
-#include <SimAPI.h>
-#include <BntNode.h>
-#include <Generator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <Register.h>
-#include <SimplePeState.h>
-#include <Log.h>
-#include <ResourcePeState.h>
-#include <AddressTagging.h>
-#include <Instruction.h>
-#include <Config.h>
-#include <Constraint.h>
+#include "BntNode.h"
 
 #include <sstream>
+
+#include "AddressTagging.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "Defines.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "Log.h"
+#include "Register.h"
+#include "ResourcePeState.h"
+#include "SimAPI.h"
+#include "SimplePeState.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

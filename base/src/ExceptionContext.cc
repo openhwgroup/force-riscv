@@ -13,18 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ExceptionContext.h>
-#include <Generator.h>
-#include <Register.h>
-#include <Instruction.h>
-#include <VmManager.h>
-#include <VmInfo.h>
-#include <VmMapper.h>
-#include <InstructionResults.h>
-#include <Log.h>
+#include "ExceptionContext.h"
 
-#include <sstream>
 #include <memory>
+#include <sstream>
+
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionResults.h"
+#include "Log.h"
+#include "Register.h"
+#include "VmInfo.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

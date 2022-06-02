@@ -16,10 +16,11 @@
 #ifndef Force_GenExceptionAgentRISCV_H
 #define Force_GenExceptionAgentRISCV_H
 
-#include <GenExceptionAgent.h>
-#include <GenRequest.h>
 #include <map>
 #include <set>
+
+#include "GenExceptionAgent.h"
+#include "GenRequest.h"
 
 namespace Force {
 

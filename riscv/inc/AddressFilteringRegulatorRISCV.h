@@ -16,7 +16,7 @@
 #ifndef Force_AddressFilteringRegulatorRISCV_H
 #define Force_AddressFilteringRegulatorRISCV_H
 
-#include <AddressFilteringRegulator.h>
+#include "AddressFilteringRegulator.h"
 
 namespace Force {
 

@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Constraint.h>
-#include <ExceptionManager.h>
-#include <Generator.h>
-#include <Log.h>
-#include <Enums.h>
+#include "ExceptionManager.h"
+
+#include "Constraint.h"
+#include "Enums.h"
+#include "Generator.h"
+#include "Log.h"
 #include ARCH_ENUM_HEADER
 
 using namespace std;

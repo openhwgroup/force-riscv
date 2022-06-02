@@ -16,8 +16,8 @@
 #ifndef Force_Dump_H
 #define Force_Dump_H
 
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
 
 namespace Force {
 

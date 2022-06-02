@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PcSpacing.h>
-#include <Constraint.h>
-#include <VmMapper.h>
-#include <Generator.h>
-#include <GenPC.h>
-#include <Log.h>
+#include "PcSpacing.h"
+
+#include "Constraint.h"
+#include "GenPC.h"
+#include "Generator.h"
+#include "Log.h"
+#include "VmMapper.h"
 
 using namespace std;
 

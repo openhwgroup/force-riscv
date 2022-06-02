@@ -13,34 +13,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenExceptionAgentRISCV.h>
-#include <GenRequest.h>
-#include <StringUtils.h>
-#include <Random.h>
-#include <Generator.h>
-#include <Config.h>
-#include <Register.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <VmInfo.h>
-#include <DataStation.h>
-#include <PeStateUpdate.h>
-#include <DataBlock.h>
-#include <RegisterReload.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <UtilityFunctionsRISCV.h>
-#include <ExceptionManager.h>
-#include <SwitchPrivilegeSolverRISCV.h>
-#include <PageRequestRegulator.h>
-#include <AddressTable.h>
-#include <AddressTableManager.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <Log.h>
+#include "GenExceptionAgentRISCV.h"
 
 #include <memory>
 #include <sstream>
+
+#include "AddressTable.h"
+#include "AddressTableManager.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "DataBlock.h"
+#include "DataStation.h"
+#include "Enums.h"
+#include "ExceptionManager.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "PageRequestRegulator.h"
+#include "PeStateUpdate.h"
+#include "Random.h"
+#include "Register.h"
+#include "RegisterReload.h"
+#include "StringUtils.h"
+#include "SwitchPrivilegeSolverRISCV.h"
+#include "UtilityFunctionsRISCV.h"
+#include "VmInfo.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include ARCH_ENUM_HEADER
 
 using namespace std;
 

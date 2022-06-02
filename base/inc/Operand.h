@@ -16,10 +16,11 @@
 #ifndef Force_Operand_H
 #define Force_Operand_H
 
-#include <Defines.h>
-#include <Object.h>
 #include <vector>
-#include <UtilityFunctions.h>
+
+#include "Defines.h"
+#include "Object.h"
+#include "UtilityFunctions.h"
 
 namespace Force {
 

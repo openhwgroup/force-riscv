@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PhysicalPage.h>
-#include <Page.h>
-#include <Constraint.h>
-#include <Log.h>
-#include <VmAddressSpace.h>
-#include <VmasControlBlock.h>
-#include <MemoryConstraintUpdate.h>
+#include "PhysicalPage.h"
 
 #include <algorithm>
+
+#include "Constraint.h"
+#include "Log.h"
+#include "MemoryConstraintUpdate.h"
+#include "Page.h"
+#include "VmAddressSpace.h"
+#include "VmasControlBlock.h"
 
 using namespace std;
 

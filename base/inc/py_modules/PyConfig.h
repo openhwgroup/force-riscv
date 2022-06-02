@@ -16,14 +16,14 @@
 #ifndef Force_PyConfig_H
 #define Force_PyConfig_H
 
-#include <Config.h>
-
-#include <Enums.h>
-#include <Log.h>
-#include <ThreadContext.h>
-
 #include <memory>
-#include <pybind11/pybind11.h>
+
+#include "pybind11/pybind11.h"
+
+#include "Config.h"
+#include "Enums.h"
+#include "Log.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

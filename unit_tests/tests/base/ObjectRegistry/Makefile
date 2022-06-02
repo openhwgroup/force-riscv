@@ -20,6 +20,8 @@ include Makefile.target
 include $(FORCE_DIR)/utils/make/Makefile.common
 include ../../Makefile_unit_tests.common
 
+ARCH_ENUM=RISCV
+
 CFLAGS := $(CFLAGS) -DUNIT_TEST
 NODEPS:=clean
 

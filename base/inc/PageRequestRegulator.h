@@ -16,12 +16,14 @@
 #ifndef Force_PageRequestRegulator_H
 #define Force_PageRequestRegulator_H
 
-#include <Defines.h>
-#include <Object.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <vector>
 #include <sstream>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
+
 namespace Force {
 
   class Generator;

@@ -13,30 +13,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <OperandRISCV.h>
-
-#include <AddressSolver.h>
-#include <BntNode.h>
-#include <ChoicesFilter.h>
-#include <Constraint.h>
-#include <GenException.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <Instruction.h>
-#include <InstructionStructure.h>
-#include <Log.h>
-#include <Random.h>
-#include <Register.h>
-#include <VaGenerator.h>
-#include <VectorLayout.h>
-#include <VmMapper.h>
-
-#include <InstructionConstraintRISCV.h>
-#include <OperandConstraintRISCV.h>
-#include <VectorLayoutSetupRISCV.h>
+#include "OperandRISCV.h"
 
 #include <memory>
 #include <sstream>
+
+#include "AddressSolver.h"
+#include "BntNode.h"
+#include "ChoicesFilter.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionConstraintRISCV.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "OperandConstraintRISCV.h"
+#include "Random.h"
+#include "Register.h"
+#include "VaGenerator.h"
+#include "VectorLayout.h"
+#include "VectorLayoutSetupRISCV.h"
+#include "VmMapper.h"
 
 using namespace std;
 

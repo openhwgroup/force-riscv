@@ -16,8 +16,8 @@
 #ifndef Force_RegisterInitPolicyRISCV_H
 #define Force_RegisterInitPolicyRISCV_H
 
-#include <RegisterInitPolicy.h>
-#include <SetupRootPageTableRISCV.h>
+#include "RegisterInitPolicy.h"
+#include "SetupRootPageTableRISCV.h"
 
 namespace Force {
 

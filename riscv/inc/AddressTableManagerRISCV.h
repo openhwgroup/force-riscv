@@ -16,9 +16,9 @@
 #ifndef Force_AddressTableManagerRISCV_H
 #define Force_AddressTableManagerRISCV_H
 
-#include <AddressTableManager.h>
-#include <Notify.h>
-#include <NotifyDefines.h>
+#include "AddressTableManager.h"
+#include "Notify.h"
+#include "NotifyDefines.h"
 
 namespace Force {
 

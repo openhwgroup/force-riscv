@@ -16,7 +16,7 @@
 #ifndef Force_RegisterRISCV_H
 #define Force_RegisterRISCV_H
 
-#include <Register.h>
+#include "Register.h"
 
 namespace Force {
 

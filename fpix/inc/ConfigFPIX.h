@@ -16,12 +16,11 @@
 #ifndef Fpix_Base_Config_H
 #define Fpix_Base_Config_H
 
-#include <string>
-#include <vector>
+#include <iostream>
 #include <list>
 #include <map>
-
-#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 

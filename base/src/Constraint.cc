@@ -13,20 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Constraint.h>
-#include <Random.h>
-#include <GenException.h>
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <Log.h>
+#include "Constraint.h"
 
+#include <numeric>  // C++UP accumulate defined in numeric
 #include <sstream>
-// C++UP accumulate defined in numeric
-#include <numeric>
+
+#include "ConstraintUtils.h"
+#include "GenException.h"
+#include "Log.h"
+#include "Random.h"
+#include "StringUtils.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
-
-#include <ConstraintUtils.h>
 
 //#define DEBUG_CONSTRAINT_DELETE 1
 

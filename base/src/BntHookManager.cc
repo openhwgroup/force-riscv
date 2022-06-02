@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <BntHookManager.h>
-#include <Generator.h>
-#include <Log.h>
+#include "BntHookManager.h"
 
 #include <algorithm>
 #include <sstream>
+
+#include "Generator.h"
+#include "Log.h"
 
 using namespace std;
 

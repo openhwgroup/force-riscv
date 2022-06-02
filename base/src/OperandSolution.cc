@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <OperandSolution.h>
-#include <OperandSolutionMap.h>
-#include <Register.h>
-#include <Operand.h>
-#include <Constraint.h>
-#include <OperandConstraint.h>
-#include <InstructionStructure.h>
-#include <UtilityFunctions.h>
-#include <Choices.h>
+#include "OperandSolution.h"
+
+#include "Choices.h"
+#include "Constraint.h"
+#include "InstructionStructure.h"
+#include "Operand.h"
+#include "OperandConstraint.h"
+#include "OperandSolutionMap.h"
+#include "Register.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

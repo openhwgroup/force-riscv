@@ -16,10 +16,11 @@
 #ifndef Force_UtilityFunctions_H
 #define Force_UtilityFunctions_H
 
-#include <Defines.h>
-#include <Enums.h>
 #include <string>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
 
 namespace Force {
 

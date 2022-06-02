@@ -16,8 +16,8 @@
 #ifndef Force_GenVirtualMemoryAgent_H
 #define Force_GenVirtualMemoryAgent_H
 
-#include <Defines.h>
-#include <GenAgent.h>
+#include "Defines.h"
+#include "GenAgent.h"
 
 namespace Force {
 

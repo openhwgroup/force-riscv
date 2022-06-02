@@ -16,12 +16,13 @@
 #ifndef Force_GenCondition_H
 #define Force_GenCondition_H
 
-#include <Defines.h>
-#include <Object.h>
-#include <Notify.h>
-#include <NotifyDefines.h>
-#include <Enums.h>
 #include <map>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Notify.h"
+#include "NotifyDefines.h"
+#include "Object.h"
 
 namespace Force {
 

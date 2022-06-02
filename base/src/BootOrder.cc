@@ -13,13 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <BootOrder.h>
-#include <sstream>
+#include "BootOrder.h"
+
 #include <algorithm>
-#include <Register.h>
-#include <GenRequest.h>
-#include <State.h>
-#include <Log.h>
+#include <sstream>
+
+#include "GenRequest.h"
+#include "Log.h"
+#include "Register.h"
+#include "State.h"
 
 using namespace std;
 

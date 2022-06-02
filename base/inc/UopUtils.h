@@ -16,7 +16,7 @@
 #ifndef Force_UopUtils_H
 #define Force_UopUtils_H
 
-#include <UopInterface.h>
+#include "UopInterface.h"
 
 namespace Force {
 

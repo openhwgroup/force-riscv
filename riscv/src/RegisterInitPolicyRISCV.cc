@@ -13,25 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RegisterInitPolicyRISCV.h>
-#include <VmasControlBlockRISCV.h>
-#include <Choices.h>
-#include <ChoicesFilter.h>
-#include <ChoicesModerator.h>
-#include <Config.h>
-#include <Constraint.h>
-#include <Generator.h>
-#include <Log.h>
-#include <PageTable.h>
-#include <PagingChoicesAdapter.h>
-#include <Random.h>
-#include <Register.h>
-#include <UtilityFunctions.h>
-#include <VectorLayoutSetupRISCV.h>
-#include <PagingInfo.h>
+#include "RegisterInitPolicyRISCV.h"
 
 #include <cmath>
 #include <memory>
+
+#include "Choices.h"
+#include "ChoicesFilter.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "Generator.h"
+#include "Log.h"
+#include "PageTable.h"
+#include "PagingChoicesAdapter.h"
+#include "PagingInfo.h"
+#include "Random.h"
+#include "Register.h"
+#include "UtilityFunctions.h"
+#include "VectorLayoutSetupRISCV.h"
+#include "VmasControlBlockRISCV.h"
 
 using namespace std;
 

@@ -16,9 +16,10 @@
 #ifndef Force_StringUtils_H
 #define Force_StringUtils_H
 
-#include <Defines.h>
 #include <string>
 #include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

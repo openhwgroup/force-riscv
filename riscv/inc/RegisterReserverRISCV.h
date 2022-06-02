@@ -16,9 +16,10 @@
 #ifndef Force_RegisterReserverRISCV_H
 #define Force_RegisterReserverRISCV_H
 
-#include <RegisterReserver.h>
 #include <map>
 #include <vector>
+
+#include "RegisterReserver.h"
 
 namespace Force {
 

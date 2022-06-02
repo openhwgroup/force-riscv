@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Generator.h>
-#include <Enums.h>
+#include "RegisterInitData.h"
+
+#include "Data.h"
+#include "Enums.h"
+#include "Generator.h"
+#include "Generator.h"
+#include "Log.h"
+#include "OperandDataRequest.h"
+#include "Register.h"
 #include ARCH_ENUM_HEADER
-#include <Data.h>
-#include <Generator.h>
-#include <Register.h>
-#include <OperandDataRequest.h>
-#include <RegisterInitData.h>
-#include <Log.h>
 
 using namespace std;
 namespace Force {

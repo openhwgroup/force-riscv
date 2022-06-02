@@ -16,14 +16,15 @@
 #ifndef Force_AddressSolver_H
 #define Force_AddressSolver_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Object.h>
-#include <OperandSolution.h>
-#include <OperandSolutionMap.h>
-#include <UopInterface.h>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include "OperandSolution.h"
+#include "OperandSolutionMap.h"
+#include "UopInterface.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

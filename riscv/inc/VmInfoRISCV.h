@@ -16,7 +16,7 @@
 #ifndef Force_VmInfoRISCV_H
 #define Force_VmInfoRISCV_H
 
-#include <VmInfo.h>
+#include "VmInfo.h"
 
 namespace Force {
 

@@ -13,14 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VirtualMemoryInitializer.h>
-#include <PhysicalPageSplitter.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <VmUtils.h>
-#include <Record.h>
-#include <MemoryManager.h>
+#include "VirtualMemoryInitializer.h"
+
 #include <cstring>
+
+#include "MemoryManager.h"
+#include "PhysicalPageSplitter.h"
+#include "Record.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
 
 using namespace std;
 

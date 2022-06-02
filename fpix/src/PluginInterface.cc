@@ -13,9 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PluginInterface.h>
+#include "PluginInterface.h"
+
 #include <dlfcn.h>
-#include <Log.h>
+
+#include "Log.h"
 
 namespace Force {
 

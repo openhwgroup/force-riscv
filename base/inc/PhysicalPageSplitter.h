@@ -16,7 +16,7 @@
 #ifndef Force_PhysicalPageSplitter_H
 #define Force_PhysicalPageSplitter_H
 
-#include <Defines.h>
+#include "Defines.h"
 
 namespace Force {
 

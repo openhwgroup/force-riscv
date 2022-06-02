@@ -16,12 +16,13 @@
 #ifndef FORCE_MEMORYATTRIBUTES_H
 #define FORCE_MEMORYATTRIBUTES_H
 
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Defines.h>
-#include <PagingChoicesAdapter.h>
-#include <Register.h>
 #include <string>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "PagingChoicesAdapter.h"
+#include "Register.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force
 {

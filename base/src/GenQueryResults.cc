@@ -13,12 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenQuery.h>
-#include <Log.h>
+#include "GenQuery.h"
 
-#include <pybind11/pybind11.h>
+#include "pybind11/pybind11.h"
 
-#include <PageInfoRecord.h>
+#include "Log.h"
+#include "PageInfoRecord.h"
 
 /*!
   \file GenQueryResults

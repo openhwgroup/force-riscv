@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ThreadGroup.h>
-#include <ThreadGroupPartitioner.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "ThreadGroup.h"
 
 #include <algorithm>
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
+#include "ThreadGroupPartitioner.h"
 
 using namespace std;
 

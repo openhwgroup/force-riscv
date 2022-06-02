@@ -16,9 +16,10 @@
 #ifndef Force_PeStateUpdate_H
 #define Force_PeStateUpdate_H
 
-#include <Defines.h>
-#include <Object.h>
 #include <vector>
+
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

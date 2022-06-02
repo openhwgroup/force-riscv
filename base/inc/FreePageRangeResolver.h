@@ -16,12 +16,12 @@
 #ifndef Force_FreePageRangeResolver_H
 #define Force_FreePageRangeResolver_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-
-#include <vector>
 #include <map>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

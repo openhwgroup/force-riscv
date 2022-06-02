@@ -13,24 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PyInterface.h>
-#include <Config.h>
-#include <PathUtils.h>
-#include <StringUtils.h>
-#include <Scheduler.h>
-#include <GenRequest.h>
-#include <GenQuery.h>
-#include <InstructionStructure.h>
-#include <Constraint.h>
-#include <ThreadGroup.h>
-#include <ThreadGroupPartitioner.h>
-#include <Log.h>
-#include <Constraint.h>
-
-#include <pybind11/eval.h>
-#include <pybind11/stl.h>
+#include "PyInterface.h"
 
 #include <algorithm>
+
+#include "pybind11/eval.h"
+#include "pybind11/stl.h"
+
+#include "Config.h"
+#include "Constraint.h"
+#include "Constraint.h"
+#include "GenQuery.h"
+#include "GenRequest.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "PathUtils.h"
+#include "Scheduler.h"
+#include "StringUtils.h"
+#include "ThreadGroup.h"
+#include "ThreadGroupPartitioner.h"
 
 using namespace std;
 

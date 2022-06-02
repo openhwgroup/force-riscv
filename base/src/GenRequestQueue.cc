@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenRequestQueue.h>
-#include <GenRequest.h>
-#include <Log.h>
+#include "GenRequestQueue.h"
 
 #include <sstream>
+
+#include "GenRequest.h"
+#include "Log.h"
 
 /*!
   \file GenRequestQueue.cc

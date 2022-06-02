@@ -16,11 +16,12 @@
 #ifndef Force_ReservationConstraint_H
 #define Force_ReservationConstraint_H
 
-#include <Object.h>
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

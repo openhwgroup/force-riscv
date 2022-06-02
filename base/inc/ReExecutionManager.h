@@ -16,9 +16,10 @@
 #ifndef Force_ReExecutionManager_H
 #define Force_ReExecutionManager_H
 
-#include <Defines.h>
-#include <Object.h>
 #include <vector>
+
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

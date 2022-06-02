@@ -16,9 +16,9 @@
 #ifndef Force_VectorLayout_H
 #define Force_VectorLayout_H
 
-#include <Defines.h>
-
 #include <cmath>
+
+#include "Defines.h"
 
 namespace Force {
 

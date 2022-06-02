@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <SymbolManager.h>
-#include <Log.h>
+#include "SymbolManager.h"
+
+#include "Log.h"
 
 using namespace std;
 

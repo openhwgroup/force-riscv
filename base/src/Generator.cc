@@ -13,50 +13,51 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Generator.h>
-#include <GenRequest.h>
-#include <GenRequestQueue.h>
-#include <GenAgent.h>
-#include <GenQuery.h>
-#include <InstructionResults.h>
-#include <Record.h>
-#include <MemoryManager.h>
-#include <VirtualMemoryInitializer.h>
-#include <Register.h>
-#include <RegisterReserver.h>
-#include <ChoicesModerator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <Instruction.h>
-#include <BootOrder.h>
-#include <Constraint.h>
-#include <GenMode.h>
-#include <MemoryReservation.h>
-#include <GenInstructionAgent.h>
-#include <GenPC.h>
-#include <PcSpacing.h>
-#include <ReExecutionManager.h>
-#include <ResourceDependence.h>
-#include <Variable.h>
-#include <InstructionSet.h>
-#include <RegisteredSetModifier.h>
-#include <RegisterInitPolicy.h>
-#include <GenCondition.h>
-#include <AddressTagging.h>
-#include <PageRequestRegulator.h>
-#include <AddressFilteringRegulator.h>
-#include <Config.h>
-#include <PathUtils.h>
-#include <ImageIO.h>
-#include <BntHookManager.h>
-#include <BntNodeManager.h>
-#include <AddressTableManager.h>
-#include <StateTransition.h>
-#include <Log.h>
+#include "Generator.h"
 
 #include <algorithm>
 #include <memory>
 #include <sstream>
+
+#include "AddressFilteringRegulator.h"
+#include "AddressTableManager.h"
+#include "AddressTagging.h"
+#include "BntHookManager.h"
+#include "BntNodeManager.h"
+#include "BootOrder.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "GenAgent.h"
+#include "GenCondition.h"
+#include "GenInstructionAgent.h"
+#include "GenMode.h"
+#include "GenPC.h"
+#include "GenQuery.h"
+#include "GenRequest.h"
+#include "GenRequestQueue.h"
+#include "ImageIO.h"
+#include "Instruction.h"
+#include "InstructionResults.h"
+#include "InstructionSet.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "MemoryReservation.h"
+#include "PageRequestRegulator.h"
+#include "PathUtils.h"
+#include "PcSpacing.h"
+#include "ReExecutionManager.h"
+#include "Record.h"
+#include "Register.h"
+#include "RegisterInitPolicy.h"
+#include "RegisterReserver.h"
+#include "RegisteredSetModifier.h"
+#include "ResourceDependence.h"
+#include "StateTransition.h"
+#include "Variable.h"
+#include "VirtualMemoryInitializer.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

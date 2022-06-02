@@ -16,7 +16,7 @@
 #ifndef Force_BaseOffsetConstraint_H
 #define Force_BaseOffsetConstraint_H
 
-#include <Defines.h>
+#include "Defines.h"
 
 namespace Force {
 

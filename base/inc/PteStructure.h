@@ -16,13 +16,14 @@
 #ifndef Force_PteStructure_H
 #define Force_PteStructure_H
 
-#include <Defines.h>
 
-#include <vector>
 #include <string>
-#include <Enums.h>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "FieldEncoding.h"
 #include ARCH_ENUM_HEADER
-#include <FieldEncoding.h>
 
 namespace Force {
 

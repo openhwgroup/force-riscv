@@ -16,7 +16,7 @@
 #ifndef Force_RecoveryAddressGeneratorRISCV_H
 #define Force_RecoveryAddressGeneratorRISCV_H
 
-#include <RecoveryAddressGenerator.h>
+#include "RecoveryAddressGenerator.h"
 
 namespace Force {
 

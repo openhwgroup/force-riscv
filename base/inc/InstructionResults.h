@@ -16,10 +16,11 @@
 #ifndef Force_InstructionResults_H
 #define Force_InstructionResults_H
 
-#include <Defines.h>
-#include <Object.h>
 #include <map>
 #include <vector>
+
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

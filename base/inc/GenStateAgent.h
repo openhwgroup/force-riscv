@@ -16,8 +16,8 @@
 #ifndef Force_GenStateAgent_H
 #define Force_GenStateAgent_H
 
-#include <Defines.h>
-#include <GenAgent.h>
+#include "Defines.h"
+#include "GenAgent.h"
 
 namespace Force {
 

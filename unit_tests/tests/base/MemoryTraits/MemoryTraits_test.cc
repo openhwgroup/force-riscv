@@ -13,13 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
-
-#include <MemoryTraits.h>
-
-#include <Constraint.h>
-#include ARCH_ENUM_HEADER
+#include "MemoryTraits.h"
 
 #include <cstdio>
 #include <fstream>
@@ -27,6 +21,12 @@
 #include <memory>
 #include <set>
 #include <vector>
+
+#include "lest/lest.hpp"
+
+#include "Constraint.h"
+#include "Log.h"
+#include ARCH_ENUM_HEADER
 
 using text = std::string;
 using namespace Force;

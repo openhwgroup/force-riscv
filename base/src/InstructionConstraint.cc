@@ -13,18 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <InstructionConstraint.h>
-#include <Choices.h>
-#include <InstructionStructure.h>
-#include <Generator.h>
-#include <ChoicesModerator.h>
-#include <GenException.h>
-#include <Instruction.h>
-#include <Constraint.h>
-#include <Operand.h>
-#include <GenRequest.h>
-#include <ResourceDependence.h>
-#include <Log.h>
+#include "InstructionConstraint.h"
+
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "Operand.h"
+#include "ResourceDependence.h"
 
 using namespace std;
 

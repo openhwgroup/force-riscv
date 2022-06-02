@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmConstraintValidator.h>
-#include <VmConstraint.h>
-#include <AddressFilteringRegulator.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "VmConstraintValidator.h"
 
 #include <algorithm>
+
+#include "AddressFilteringRegulator.h"
+#include "Constraint.h"
+#include "Log.h"
+#include "VmConstraint.h"
 
 using namespace std;
 

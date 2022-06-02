@@ -13,22 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmasControlBlock.h>
-#include <Generator.h>
-#include <Page.h>
-#include <PageTable.h>
-#include <PageInfoRecord.h>
-#include <VmUtils.h>
-#include <Constraint.h>
-#include <PagingChoicesAdapter.h>
-#include <Log.h>
-#include <VmAddressSpace.h>
-#include <MemoryManager.h>
-#include <MemoryAttributes.h>
-#include <UtilityFunctions.h>
+#include "VmasControlBlock.h"
 
 #include <memory>
 #include <sstream>
+
+#include "Constraint.h"
+#include "Generator.h"
+#include "Log.h"
+#include "MemoryAttributes.h"
+#include "MemoryManager.h"
+#include "Page.h"
+#include "PageInfoRecord.h"
+#include "PageTable.h"
+#include "PagingChoicesAdapter.h"
+#include "UtilityFunctions.h"
+#include "VmAddressSpace.h"
+#include "VmUtils.h"
 
 using namespace std;
 

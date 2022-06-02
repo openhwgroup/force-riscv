@@ -16,10 +16,11 @@
 #ifndef Force_InstructionSet_H
 #define Force_InstructionSet_H
 
-#include <Defines.h>
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

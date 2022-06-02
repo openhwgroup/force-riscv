@@ -16,14 +16,14 @@
 #ifndef Force_ChoicesModerator_H
 #define Force_ChoicesModerator_H
 
-#include <map>
 #include <list>
+#include <map>
 
-#include <Object.h>
-#include <Defines.h>
-#include <Notify.h>
-#include <NotifyDefines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
+#include "Notify.h"
+#include "NotifyDefines.h"
+#include "Object.h"
 
 namespace Force {
 

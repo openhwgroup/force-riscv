@@ -13,20 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AddressSolutionFilter.h>
-#include <Generator.h>
-#include <AddressSolver.h>
-#include <Operand.h>
-#include <ResourceDependence.h>
-#include <InstructionStructure.h>
-#include <Instruction.h>
-#include <InstructionConstraint.h>
-#include <Constraint.h>
-#include <Register.h>
-#include <Log.h>
-#include <ChoicesModerator.h>
-#include <Choices.h>
+#include "AddressSolutionFilter.h"
+
 #include <memory>
+
+#include "AddressSolver.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionConstraint.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "Operand.h"
+#include "Register.h"
+#include "ResourceDependence.h"
 
 using namespace std;
 

@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AddressReuseMode.h>
-#include <Constraint.h>
-#include <ConstraintUtils.h>
-#include <Log.h>
-#include <MemoryConstraint.h>
+#include "MemoryConstraint.h"
 
 #include <memory>
+
+#include "AddressReuseMode.h"
+#include "Constraint.h"
+#include "ConstraintUtils.h"
+#include "Log.h"
 
 using namespace std;
 

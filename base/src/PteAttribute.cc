@@ -13,19 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PteAttribute.h>
-#include <PteStructure.h>
-#include <Random.h>
-#include <Page.h>
-#include <GenRequest.h>
-#include <Constraint.h>
-#include <VmAddressSpace.h>
-#include <PagingChoicesAdapter.h>
-#include <Choices.h>
-#include <UtilityFunctions.h>
-#include <Log.h>
+#include "PteAttribute.h"
 
 #include <memory>
+
+#include "Choices.h"
+#include "Constraint.h"
+#include "GenRequest.h"
+#include "Log.h"
+#include "Page.h"
+#include "PagingChoicesAdapter.h"
+#include "PteStructure.h"
+#include "Random.h"
+#include "UtilityFunctions.h"
+#include "VmAddressSpace.h"
 
 using namespace std;
 

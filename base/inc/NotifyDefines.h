@@ -16,8 +16,8 @@
 #ifndef Force_NotifyDefines_H
 #define Force_NotifyDefines_H
 
-#include <Notify.h>
-#include <Enums.h>
+#include "Enums.h"
+#include "Notify.h"
 
 namespace Force {
 

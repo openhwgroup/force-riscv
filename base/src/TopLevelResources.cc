@@ -13,32 +13,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Defines.h>
-#include <TopLevelResources.h>
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <optionparser.h>
-#include <Random.h>
-#include <Architectures.h>
-#include <Config.h>
-#include <ObjectRegistry.h>
-#include <MemoryManager.h>
-#include <PcSpacing.h>
-#include <InstructionResults.h>
-#include <Log.h>
-#include <Data.h>
-#include <Dump.h>
-#include <DataStation.h>
-#include <ExceptionManager.h>
-#include <FrontEndCall.h>
-#include <RestoreLoop.h>
-#include <StateTransition.h>
-#include <ThreadGroupPartitioner.h>
-#include <PyEnvironment.h>
+#include "TopLevelResources.h"
+
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
+
+#include "optionparser.h"
+
+#include "Architectures.h"
+#include "Config.h"
+#include "Data.h"
+#include "DataStation.h"
+#include "Defines.h"
+#include "Dump.h"
+#include "ExceptionManager.h"
+#include "FrontEndCall.h"
+#include "InstructionResults.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "ObjectRegistry.h"
+#include "PcSpacing.h"
+#include "PyEnvironment.h"
+#include "Random.h"
+#include "RestoreLoop.h"
+#include "StateTransition.h"
+#include "StringUtils.h"
+#include "ThreadGroupPartitioner.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

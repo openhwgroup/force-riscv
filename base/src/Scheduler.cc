@@ -13,25 +13,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Scheduler.h>
-#include <PyInterface.h>
-#include <Config.h>
-#include <Generator.h>
-#include <ChoicesModerator.h>
-#include <Architectures.h>
-#include <MemoryManager.h>
-#include <Dump.h>
-#include <RegisteredSetModifier.h>
-#include <UtilityAlgorithms.h>
-#include <FrontEndCall.h>
-#include <ImageIO.h>
-#include <SchedulingStrategy.h>
-#include <ThreadGroup.h>
-#include <Constraint.h>
+#include "Scheduler.h"
+
 #include <algorithm>
-#include <Log.h>
-#include <SemaphoreManager.h>
-#include <SynchronizeBarrier.h>
+
+#include "Architectures.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "Dump.h"
+#include "FrontEndCall.h"
+#include "Generator.h"
+#include "ImageIO.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "PyInterface.h"
+#include "RegisteredSetModifier.h"
+#include "SchedulingStrategy.h"
+#include "SemaphoreManager.h"
+#include "SynchronizeBarrier.h"
+#include "ThreadGroup.h"
+#include "UtilityAlgorithms.h"
 
 using namespace std;
 

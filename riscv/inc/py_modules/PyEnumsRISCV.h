@@ -16,9 +16,9 @@
 #ifndef Force_PyEnumsRISCV_H
 #define Force_PyEnumsRISCV_H
 
-#include ARCH_ENUM_HEADER
+#include "pybind11/pybind11.h"
 
-#include <pybind11/pybind11.h>
+#include ARCH_ENUM_HEADER
 
 namespace py = pybind11;
 

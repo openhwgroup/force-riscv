@@ -13,47 +13,45 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmAddressSpace.h> //Force_VmAddressSpace_H
+#include "VmAddressSpace.h"
 
-//Force Modules
-#include <AddressReuseMode.h>
-#include <Choices.h>
-#include <Constraint.h>
-#include <ConstraintUtils.h>
-#include <Defines.h>
-#include <GenException.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <Log.h>
-#include <Memory.h>
-#include <MemoryAttributes.h>
-#include <MemoryConstraint.h>
-#include <MemoryConstraintUpdate.h>
-#include <MemoryManager.h>
-#include <MemoryTraits.h>
-#include <ObjectRegistry.h>
-#include <Page.h>
-#include <PageInfoRecord.h>
-#include <PageRequestRegulator.h>
-#include <PageTableConstraint.h>
-#include <PageTableManager.h>
-#include <PagingChoicesAdapter.h>
-#include <PagingInfo.h>
-#include <PhysicalPageManager.h>
-#include <PteAttribute.h>
-#include <PteStructure.h>
-#include <Random.h>
-#include <UtilityFunctions.h>
-#include <VmConstraintValidator.h>
-#include <VmFactory.h>
-#include <VmPaMapper.h>
-#include <VmUtils.h>
-#include <VmasControlBlock.h>
-
-//Library Modules
 #include <algorithm>
 #include <iomanip>
 #include <memory>
+
+#include "AddressReuseMode.h"
+#include "Choices.h"
+#include "Constraint.h"
+#include "ConstraintUtils.h"
+#include "Defines.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "Memory.h"
+#include "MemoryAttributes.h"
+#include "MemoryConstraint.h"
+#include "MemoryConstraintUpdate.h"
+#include "MemoryManager.h"
+#include "MemoryTraits.h"
+#include "ObjectRegistry.h"
+#include "Page.h"
+#include "PageInfoRecord.h"
+#include "PageRequestRegulator.h"
+#include "PageTableConstraint.h"
+#include "PageTableManager.h"
+#include "PagingChoicesAdapter.h"
+#include "PagingInfo.h"
+#include "PhysicalPageManager.h"
+#include "PteAttribute.h"
+#include "PteStructure.h"
+#include "Random.h"
+#include "UtilityFunctions.h"
+#include "VmConstraintValidator.h"
+#include "VmFactory.h"
+#include "VmPaMapper.h"
+#include "VmUtils.h"
+#include "VmasControlBlock.h"
 
 using namespace std;
 

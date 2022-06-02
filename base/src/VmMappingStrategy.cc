@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmMappingStrategy.h>
-#include <VmUtils.h>
-#include <Constraint.h>
-#include <VmasControlBlock.h>
-#include <GenRequest.h>
-#include <GenException.h>
-#include <Log.h>
+#include "VmMappingStrategy.h"
 
 #include <memory>
+
+#include "Constraint.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Log.h"
+#include "VmUtils.h"
+#include "VmasControlBlock.h"
 
 /*!
   \file VmMappingStrategy.cc

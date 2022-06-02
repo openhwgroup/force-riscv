@@ -13,25 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Instruction.h>
-#include <InstructionStructure.h>
-#include <Operand.h>
-#include <ObjectRegistry.h>
-#include <AsmText.h>
-#include <GenRequest.h>
-#include <InstructionConstraint.h>
-#include <Log.h>
-#include <Generator.h>
-#include <ResourceDependence.h>
-#include <BntNodeManager.h>
-#include <BntNode.h>
-#include <GenException.h>
+#include "Instruction.h"
 
 #include <algorithm>
+#include <numeric>  // C++UP accumulate defined in numeric
 #include <string.h>
-//#include <stdio.h>
-// C++UP accumulate defined in numeric
-#include <numeric>
+
+#include "AsmText.h"
+#include "BntNode.h"
+#include "BntNodeManager.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "InstructionConstraint.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "ObjectRegistry.h"
+#include "Operand.h"
+#include "ResourceDependence.h"
 
 /*!
   \file Instruction.cc

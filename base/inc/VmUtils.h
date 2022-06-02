@@ -16,11 +16,12 @@
 #ifndef Force_VmUtils_H
 #define Force_VmUtils_H
 
-#include <Object.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Defines.h>
 #include <string>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

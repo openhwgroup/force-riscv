@@ -16,11 +16,11 @@
 #ifndef Force_VmControlBlock_H
 #define Force_VmControlBlock_H
 
-#include <Object.h>
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include "VmContextParameter.h"
 #include ARCH_ENUM_HEADER
-#include <VmContextParameter.h>
 
 namespace Force {
 

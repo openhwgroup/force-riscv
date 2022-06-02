@@ -13,33 +13,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ArchInfoRISCV.h>
-#include <GeneratorRISCV.h>
+#include "ArchInfoRISCV.h"
 
-#include <GenQueryAgent.h>
-#include <Register.h>
-#include <GenExceptionAgentRISCV.h>
-#include <GenInstructionAgent.h>
-#include <ExceptionRecords.h>
-#include <GenCondition.h>
-#include <AddressFilteringRegulator.h>
-#include <AddressSolutionFilter.h>
-
-//#include <GenQueryAgentRISCV.h>
-//#include <GenInstructionAgentRISCV.h>
-//#include <ExceptionRecordsRISCV.h>
-//#include <GenConditionRISCV.h>
-#include <AddressFilteringRegulatorRISCV.h>
-
-#include <GenSequenceAgentRISCV.h>
-#include <BootOrderRISCV.h>
-#include <RegisterRISCV.h>
-#include <VmManagerRISCV.h>
-#include <AddressTableManagerRISCV.h>
-#include <PhysicalPageManagerRISCV.h>
-#include <MemoryTraitsRISCV.h>
-#include <PageRequestRegulatorRISCV.h>
-#include <Log.h>
+#include "AddressFilteringRegulator.h"
+#include "AddressFilteringRegulatorRISCV.h"
+#include "AddressSolutionFilter.h"
+#include "AddressTableManagerRISCV.h"
+#include "BootOrderRISCV.h"
+#include "ExceptionRecords.h"
+#include "GenCondition.h"
+#include "GenExceptionAgentRISCV.h"
+#include "GenInstructionAgent.h"
+#include "GenQueryAgent.h"
+#include "GenSequenceAgentRISCV.h"
+#include "GeneratorRISCV.h"
+#include "Log.h"
+#include "MemoryTraitsRISCV.h"
+#include "PageRequestRegulatorRISCV.h"
+#include "PhysicalPageManagerRISCV.h"
+#include "Register.h"
+#include "RegisterRISCV.h"
+#include "VmManagerRISCV.h"
 
 using namespace std;
 

@@ -16,7 +16,7 @@
 #ifndef Force_ThreadContext_H
 #define Force_ThreadContext_H
 
-#include <Defines.h>
+#include "Defines.h"
 
 namespace Force {
 

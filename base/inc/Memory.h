@@ -16,12 +16,12 @@
 #ifndef Force_Memory_H
 #define Force_Memory_H
 
-#include <map>
 #include <iosfwd>
+#include <map>
 #include <vector>
 
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

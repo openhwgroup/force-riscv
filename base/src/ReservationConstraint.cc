@@ -13,10 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ReservationConstraint.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "ReservationConstraint.h"
+
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
 
 using namespace std;
 

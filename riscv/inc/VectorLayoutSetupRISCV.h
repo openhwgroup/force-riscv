@@ -16,7 +16,7 @@
 #ifndef Force_VectorLayoutSetupRISCV_H
 #define Force_VectorLayoutSetupRISCV_H
 
-#include <VectorLayout.h>
+#include "VectorLayout.h"
 
 namespace Force {
 

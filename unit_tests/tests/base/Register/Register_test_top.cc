@@ -13,17 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#define CASE( name ) lest_CASE( specification(), name )
+#include "Register.h"
 
-#include <Log.h>
-#include <Random.h>
-#include <Architectures.h>
-#include <Config.h>
-#include <ObjectRegistry.h>
-#include <Register.h>
-#include <RegisterRISCV.h>
-#include <UnitTestUtilities.h>
+#include "lest/lest.hpp"
+
+#include "Architectures.h"
+#include "Config.h"
+#include "Log.h"
+#include "ObjectRegistry.h"
+#include "Random.h"
+#include "RegisterRISCV.h"
+#include "UnitTestUtilities.h"
+
+#define CASE( name ) lest_CASE( specification(), name )
 
 using namespace std;
 using namespace Force;

@@ -13,8 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ObjectRegistry.h>
-#include <Log.h>
+#include "ObjectRegistry.h"
+
+#include "AsmText.h"
+#include "Instruction.h"
+#include "Log.h"
+#include "Operand.h"
+#include "Page.h"
+#include "PteAttribute.h"
+#include "Register.h"
 
 using namespace std;
 
@@ -91,13 +98,6 @@ namespace Force {
 }
 
 #ifndef UNIT_TEST
-
-#include <Register.h>
-#include <Instruction.h>
-#include <Operand.h>
-#include <AsmText.h>
-#include <Page.h>
-#include <PteAttribute.h>
 
 namespace Force {
 

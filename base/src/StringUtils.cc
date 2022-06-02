@@ -13,10 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <StringUtils.h>
-#include <Log.h>
+#include "StringUtils.h"
+
 #include <algorithm>
 #include <sstream>
+
+#include "Log.h"
 
 using namespace std;
 

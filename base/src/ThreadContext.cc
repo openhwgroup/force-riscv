@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ThreadContext.h>
+#include "ThreadContext.h"
 
-#include <ThreadDispatcher.h>
+#include "pybind11/pybind11.h"
 
-#include <pybind11/pybind11.h>
+#include "ThreadDispatcher.h"
 
 /*!
   \file ThreadContext.cc

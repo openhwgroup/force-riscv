@@ -13,14 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RegisterRISCV.h>
-#include <RegisterReserverRISCV.h>
-#include <Constraint.h>
-#include <Config.h>
-#include <UtilityFunctions.h>
-#include <RegisterInitPolicyRISCV.h>
-//#include <GenConditionRISCV.h>
-#include <Log.h>
+#include "RegisterRISCV.h"
+
+#include "Config.h"
+#include "Constraint.h"
+#include "Log.h"
+#include "RegisterInitPolicyRISCV.h"
+#include "RegisterReserverRISCV.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

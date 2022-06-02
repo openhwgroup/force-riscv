@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <FrontEndCall.h>
-#include <PyInterface.h>
+#include "FrontEndCall.h"
+
+#include "PyInterface.h"
 
 /*!
   \ file FrontEndCall.cc

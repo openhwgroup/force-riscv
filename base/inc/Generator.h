@@ -16,14 +16,14 @@
 #ifndef Force_Generator_H
 #define Force_Generator_H
 
-#include <Defines.h>
-#include <Object.h>
-#include <VmUtils.h>
-
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <vector>
 #include <map>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include "VmUtils.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

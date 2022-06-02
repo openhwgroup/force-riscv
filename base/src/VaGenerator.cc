@@ -13,22 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VaGenerator.h>
-#include <VmMapper.h>
-#include <UtilityFunctions.h>
-#include <Constraint.h>
-#include <PcSpacing.h>
-#include <GenException.h>
-#include <GenRequest.h>
-#include <AddressFilteringRegulator.h>
-#include <VmConstraint.h>
-#include <Log.h>
-#include <Variable.h>
-#include <Generator.h>
-#include <AddressTagging.h>
-#include <AddressReuseMode.h>
+#include "VaGenerator.h"
 
 #include <memory>
+
+#include "AddressFilteringRegulator.h"
+#include "AddressReuseMode.h"
+#include "AddressTagging.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "PcSpacing.h"
+#include "UtilityFunctions.h"
+#include "Variable.h"
+#include "VmConstraint.h"
+#include "VmMapper.h"
 
 using namespace std;
 

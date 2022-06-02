@@ -13,23 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenExceptionAgent.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <GenPC.h>
-#include <ExceptionRecords.h>
-#include <AddressTable.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <Register.h>
-#include <StringUtils.h>
-#include <AddressTableManager.h>
-#include <ExceptionContext.h>
-#include <Log.h>
+#include "GenExceptionAgent.h"
 
 #include <memory>
+
+#include "AddressTable.h"
+#include "AddressTableManager.h"
+#include "Enums.h"
+#include "ExceptionContext.h"
+#include "ExceptionRecords.h"
+#include "GenPC.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "Register.h"
+#include "StringUtils.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include ARCH_ENUM_HEADER
 
 using namespace std;
 

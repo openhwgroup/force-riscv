@@ -16,10 +16,10 @@
 #ifndef SUPPLEMENTARY_ARG_PARSING_H
 #define SUPPLEMENTARY_ARG_PARSING_H
 
-#include <string>
-#include <vector>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <vector>
 
 namespace Force{
 

@@ -16,11 +16,12 @@
 #ifndef Force_GenExceptionAgent_H
 #define Force_GenExceptionAgent_H
 
-#include <Defines.h>
-#include <GenAgent.h>
-#include <GenRequest.h>
-#include <ExceptionManager.h>
 #include <vector>
+
+#include "Defines.h"
+#include "ExceptionManager.h"
+#include "GenAgent.h"
+#include "GenRequest.h"
 
 namespace Force {
 

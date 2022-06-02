@@ -13,11 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
-#include <GenMode.h>
-#include <Enums.h>
+#include "GenMode.h"
+
 #include <memory>
+
+#include "lest/lest.hpp"
+
+#include "Enums.h"
+#include "Log.h"
 
 using text = std::string;
 using namespace Force;

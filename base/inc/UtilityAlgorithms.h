@@ -16,9 +16,10 @@
 #ifndef Force_UtilityAlgorithms_H
 #define Force_UtilityAlgorithms_H
 
-#include <Defines.h>
 #include <algorithm>
 #include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

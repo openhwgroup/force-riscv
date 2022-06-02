@@ -16,7 +16,7 @@
 #ifndef Force_OperandRISCV_H
 #define Force_OperandRISCV_H
 
-#include <Operand.h>
+#include "Operand.h"
 
 namespace Force {
 

@@ -16,8 +16,8 @@
 #ifndef Force_AddressReuseMode_H
 #define Force_AddressReuseMode_H
 
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
 
 namespace Force {
 

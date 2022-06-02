@@ -16,7 +16,7 @@
 #ifndef Force_TopLevelResourcesRISCV_H
 #define Force_TopLevelResourcesRISCV_H
 
-#include <TopLevelResources.h>
+#include "TopLevelResources.h"
 
 namespace Force {
   void initialize_top_level_resources_RISCV(int argc, char* argv[]);

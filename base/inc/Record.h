@@ -16,11 +16,12 @@
 #ifndef Force_Record_H
 #define Force_Record_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Object.h>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

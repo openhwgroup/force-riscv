@@ -13,18 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Choices.h>
-#include <Random.h>
-#include <GenException.h>
-#include <ChoicesFilter.h>
-#include <StringUtils.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "Choices.h"
 
 #include <algorithm>
+#include <numeric>  // C++UP accumulate defined in numeric
 #include <sstream>
-// C++UP accumulate defined in numeric
-#include <numeric>
+
+#include "ChoicesFilter.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "Log.h"
+#include "Random.h"
+#include "StringUtils.h"
 
 using namespace std;
 

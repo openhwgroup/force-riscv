@@ -16,8 +16,8 @@
 #ifndef Force_OperandConstraintRISCV_H
 #define Force_OperandConstraintRISCV_H
 
-#include <Operand.h>
-#include <OperandConstraint.h>
+#include "Operand.h"
+#include "OperandConstraint.h"
 
 namespace Force {
 

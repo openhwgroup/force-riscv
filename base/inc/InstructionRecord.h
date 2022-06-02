@@ -16,8 +16,8 @@
 #ifndef Force_InstructionRecord_H
 #define Force_InstructionRecord_H
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace Force {
 

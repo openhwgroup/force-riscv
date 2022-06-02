@@ -16,8 +16,8 @@
 #ifndef Force_VmasControlBlockRISCV_H
 #define Force_VmasControlBlockRISCV_H
 
-#include <VmasControlBlock.h>
-#include <Variable.h>
+#include "Variable.h"
+#include "VmasControlBlock.h"
 
 namespace Force {
 

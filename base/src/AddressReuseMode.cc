@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AddressReuseMode.h>
-#include <UtilityFunctions.h>
+#include "AddressReuseMode.h"
+
+#include "UtilityFunctions.h"
 
 /*!
   \file AddressReuseMode.cc

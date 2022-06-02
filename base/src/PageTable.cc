@@ -13,17 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Page.h>
-#include <PteAttribute.h>
-#include <UtilityAlgorithms.h>
-#include <UtilityFunctions.h>
-#include <VmAddressSpace.h>
-#include <VmasControlBlock.h>
-#include <VmUtils.h>
-#include <sstream>
-#include <Log.h>
+#include "PageTable.h"
 
-#include <PageInfoRecord.h>
+#include <sstream>
+
+#include "Log.h"
+#include "Page.h"
+#include "PageInfoRecord.h"
+#include "PteAttribute.h"
+#include "UtilityAlgorithms.h"
+#include "UtilityFunctions.h"
+#include "VmAddressSpace.h"
+#include "VmUtils.h"
+#include "VmasControlBlock.h"
 
 /*!
   \file PageTable.cc

@@ -16,10 +16,11 @@
 #ifndef Force_VectorElementUpdates_H
 #define Force_VectorElementUpdates_H
 
-#include <Defines.h>
+#include <set>
 #include <string>
 #include <vector>
-#include <set>
+
+#include "Defines.h"
 
 namespace Force {
 

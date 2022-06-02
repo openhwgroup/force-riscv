@@ -13,18 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GeneratorRISCV.h>
-#include <Register.h>
-#include <Generator.h>
-#include <GenPC.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <ConditionFlags.h>
-#include <UtilityFunctions.h>
-//#include <RestoreLoopRISCV.h>
-#include <Log.h>
+#include "GeneratorRISCV.h"
 
 #include <algorithm>
+
+#include "ConditionFlags.h"
+#include "GenPC.h"
+#include "Generator.h"
+#include "Log.h"
+#include "Register.h"
+#include "UtilityFunctions.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

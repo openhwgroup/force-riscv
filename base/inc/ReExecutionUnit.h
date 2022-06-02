@@ -16,7 +16,7 @@
 #ifndef Force_ReExecutionUnit_H
 #define Force_ReExecutionUnit_H
 
-#include <Defines.h>
+#include "Defines.h"
 
 namespace Force {
 
