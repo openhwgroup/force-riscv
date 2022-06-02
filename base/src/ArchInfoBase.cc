@@ -13,36 +13,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ArchInfoBase.h>
-#include <Generator.h>
-#include <InstructionSet.h>
-#include <Register.h>
-#include <GenInstructionAgent.h>
-#include <GenSequenceAgent.h>
-#include <GenVirtualMemoryAgent.h>
-#include <GenQueryAgent.h>
-#include <GenStateAgent.h>
-#include <GenCallBackAgent.h>
-#include <GenStateTransitionAgent.h>
-#include <UtilityFunctions.h>
-#include <MemoryManager.h>
-#include <VirtualMemoryInitializer.h>
-#include <Choices.h>
-#include <ChoicesParser.h>
-#include <ChoicesModerator.h>
-#include <VmManager.h>
-#include <PagingInfo.h>
-#include <GenMode.h>
-#include <GenExceptionAgent.h>
-#include <Config.h>
-#include <ResourceDependence.h>
-#include <Variable.h>
-#include <VariableParser.h>
-#include <AddressFilteringRegulator.h>
-#include <SimAPI.h>
-#include <Log.h>
+#include "ArchInfoBase.h"
 
 #include <dlfcn.h>
+
+#include "AddressFilteringRegulator.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "ChoicesParser.h"
+#include "Config.h"
+#include "GenCallBackAgent.h"
+#include "GenExceptionAgent.h"
+#include "GenInstructionAgent.h"
+#include "GenMode.h"
+#include "GenQueryAgent.h"
+#include "GenSequenceAgent.h"
+#include "GenStateAgent.h"
+#include "GenStateTransitionAgent.h"
+#include "GenVirtualMemoryAgent.h"
+#include "Generator.h"
+#include "InstructionSet.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "PagingInfo.h"
+#include "Register.h"
+#include "ResourceDependence.h"
+#include "SimAPI.h"
+#include "UtilityFunctions.h"
+#include "Variable.h"
+#include "VariableParser.h"
+#include "VirtualMemoryInitializer.h"
+#include "VmManager.h"
 
 using namespace std;
 

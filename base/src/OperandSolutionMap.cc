@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <OperandSolutionMap.h>
-#include <OperandSolution.h>
+#include "OperandSolutionMap.h"
+
+#include "OperandSolution.h"
 
 using namespace std;
 

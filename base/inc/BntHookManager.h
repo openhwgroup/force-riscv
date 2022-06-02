@@ -16,11 +16,11 @@
 #ifndef Force_BntHookManager_H
 #define Force_BntHookManager_H
 
-#include <Defines.h>
-#include <Object.h>
-
-#include <string>
 #include <list>
+#include <string>
+
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

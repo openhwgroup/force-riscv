@@ -13,21 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmFactoryRISCV.h>
-#include <VmMapper.h>
-#include <VmPaMapper.h>
-#include <AddressTagging.h>
-#include <Generator.h>
-#include <VmasControlBlockRISCV.h>
-#include <VmInfoRISCV.h>
-#include <VmDirectMapControlBlockRISCV.h>
-#include <Constraint.h>
-#include <UtilityFunctions.h>
-#include <PageTableConstraint.h>
-//#include <PteAttributeRISCV.h>
-//#include <VmPaMapperRISCV.h>
+#include "VmFactoryRISCV.h"
 
-#include <Log.h>
+#include "AddressTagging.h"
+#include "Constraint.h"
+#include "Generator.h"
+#include "Log.h"
+#include "PageTableConstraint.h"
+#include "UtilityFunctions.h"
+#include "VmDirectMapControlBlockRISCV.h"
+#include "VmInfoRISCV.h"
+#include "VmMapper.h"
+#include "VmPaMapper.h"
+#include "VmasControlBlockRISCV.h"
 
 using namespace std;
 

@@ -16,7 +16,7 @@
 #ifndef Force_UnitTestUtilities_H
 #define Force_UnitTestUtilities_H
 
-#include <Architectures.h>
+#include "Architectures.h"
 
 namespace Force {
 

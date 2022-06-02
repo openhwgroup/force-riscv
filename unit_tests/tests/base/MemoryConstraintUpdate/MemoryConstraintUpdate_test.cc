@@ -13,13 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
-#include <MemoryConstraintUpdate.h>
-#include <MemoryConstraint.h>
-#include <Constraint.h>
-#include <AddressReuseMode.h>
+#include "MemoryConstraintUpdate.h"
+
 #include <memory>
+
+#include "lest/lest.hpp"
+
+#include "AddressReuseMode.h"
+#include "Constraint.h"
+#include "Log.h"
+#include "MemoryConstraint.h"
 
 using text = std::string;
 using namespace Force;

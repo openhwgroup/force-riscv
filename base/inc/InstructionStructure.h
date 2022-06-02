@@ -16,15 +16,15 @@
 #ifndef Force_InstructionStructure_H
 #define Force_InstructionStructure_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <FieldEncoding.h>
-#include <UopInterface.h>
-
-#include <vector>
 #include <map>
 #include <string>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "FieldEncoding.h"
+#include "UopInterface.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

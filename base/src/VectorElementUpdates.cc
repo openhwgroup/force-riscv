@@ -13,13 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VectorElementUpdates.h>
-#include <Log.h>
-#include <SimAPI.h>
-#include <string.h>
-#include <vector>
-#include <set>
+#include "VectorElementUpdates.h"
+
 #include <algorithm>
+#include <cstring>
+#include <set>
+#include <vector>
+
+#include "Log.h"
+#include "SimAPI.h"
 
 using namespace std;
 

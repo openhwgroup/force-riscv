@@ -13,8 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <MemoryConstraintUpdate.h>
-#include <MemoryConstraint.h>
+#include "MemoryConstraintUpdate.h"
+
+#include "MemoryConstraint.h"
 
 using namespace std;
 

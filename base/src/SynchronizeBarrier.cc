@@ -13,14 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <SynchronizeBarrier.h>
-#include <Constraint.h>
-#include <SchedulingStrategy.h>
-#include <Log.h>
-#include <Random.h>
+#include "SynchronizeBarrier.h"
 
 #include <algorithm>
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
+#include "Random.h"
+#include "SchedulingStrategy.h"
 
 using namespace std;
 

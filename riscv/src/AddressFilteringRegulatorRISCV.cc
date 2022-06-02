@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AddressFilteringRegulatorRISCV.h>
-#include <VmConstraint.h>
-#include <Constraint.h>
-#include <GenRequest.h>
-#include <VmMapper.h>
-#include <Log.h>
+#include "AddressFilteringRegulatorRISCV.h"
+
+#include "Constraint.h"
+#include "GenRequest.h"
+#include "Log.h"
+#include "VmConstraint.h"
+#include "VmMapper.h"
 
 /*!
   \file AddressFilteringRegulatorRISCV.cc

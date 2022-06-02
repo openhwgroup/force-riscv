@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Generator.h>
-#include <ChoicesModerator.h>
-#include <RegisteredSetModifier.h>
-#include <Log.h>
+#include "RegisteredSetModifier.h"
+
+#include "ChoicesModerator.h"
+#include "Generator.h"
+#include "Log.h"
 
 using namespace std;
 

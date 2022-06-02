@@ -16,11 +16,10 @@
 #ifndef Force_PyRandomUtils_H
 #define Force_PyRandomUtils_H
 
-#include <RandomUtils.h>
+#include "pybind11/pybind11.h"
 
-#include <ThreadContext.h>
-
-#include <pybind11/pybind11.h>
+#include "RandomUtils.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

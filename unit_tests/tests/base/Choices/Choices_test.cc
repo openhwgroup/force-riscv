@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "Choices.h"
 
-#include <Choices.h>
-#include <Random.h>
-#include <GenException.h>
+#include "lest/lest.hpp"
+
+#include "GenException.h"
+#include "Log.h"
+#include "Random.h"
 
 using namespace std;
 using namespace Force;

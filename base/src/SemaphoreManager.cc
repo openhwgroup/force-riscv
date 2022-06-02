@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Generator.h>
-#include <GenRequest.h>
-#include <VmManager.h>
-#include <SemaphoreManager.h>
-#include <VmMapper.h>
-#include <Log.h>
+#include "SemaphoreManager.h"
+
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

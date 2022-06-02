@@ -16,8 +16,8 @@
 #ifndef Force_VmFactoryRISCV_H
 #define Force_VmFactoryRISCV_H
 
-#include <VmFactory.h>
-#include <Enums.h>
+#include "Enums.h"
+#include "VmFactory.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

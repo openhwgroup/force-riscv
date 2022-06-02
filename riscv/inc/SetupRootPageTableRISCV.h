@@ -16,11 +16,12 @@
 #ifndef Force_SetupRootPageTableRISCV_H
 #define Force_SetupRootPageTableRISCV_H
 
-#include <VmasControlBlock.h>
 #include <vector>
-#include <Register.h>
-#include <MemoryManager.h>
-#include <PageTable.h>
+
+#include "MemoryManager.h"
+#include "PageTable.h"
+#include "Register.h"
+#include "VmasControlBlock.h"
 
 namespace Force {
 

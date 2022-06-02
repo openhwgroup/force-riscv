@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "SynchronizeBarrier.h"
 
-#include <SynchronizeBarrier.h>
-#include <SchedulingStrategy.h>
-#include <Constraint.h>
-#include <Random.h>
+#include "lest/lest.hpp"
+
+#include "Constraint.h"
+#include "Log.h"
+#include "Random.h"
+#include "SchedulingStrategy.h"
 
 using namespace std;
 using namespace Force;

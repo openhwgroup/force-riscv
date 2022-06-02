@@ -16,13 +16,12 @@
 #ifndef Force_GenRequestQueue_H
 #define Force_GenRequestQueue_H
 
-#include <Defines.h>
-#include <Object.h>
-//#include <Enums.h>
-#include ARCH_ENUM_HEADER
-
 #include <list>
 #include <vector>
+
+#include "Defines.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

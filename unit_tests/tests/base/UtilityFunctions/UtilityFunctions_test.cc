@@ -13,14 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "UtilityFunctions.h"
 
-//------------------------------------------------
-// include necessary header files here
-//------------------------------------------------
-#include <UtilityFunctions.h>
-#include <string.h>
+#include <cstring>
+
+#include "lest/lest.hpp"
+
+#include "Log.h"
 
 using text = std::string;
 

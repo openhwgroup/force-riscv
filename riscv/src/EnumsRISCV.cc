@@ -19,11 +19,11 @@
     Please do not modify this file manually.  Instead, modify the above mentioned script to re-generate this file.
 */
 
-#include <EnumsRISCV.h>
-
-#include <GenException.h>
+#include "EnumsRISCV.h"
 
 #include <sstream>
+
+#include "GenException.h"
 
 using namespace std;
 

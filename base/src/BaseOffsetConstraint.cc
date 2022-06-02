@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <BaseOffsetConstraint.h>
-#include <Constraint.h>
-#include <Log.h>
-#include <UtilityFunctions.h>
+#include "BaseOffsetConstraint.h"
+
+#include "Constraint.h"
+#include "Log.h"
+#include "UtilityFunctions.h"
 
 /*!
   \file BaseOffsetConstraint.cc

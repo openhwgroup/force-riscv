@@ -16,7 +16,7 @@
 #ifndef Force_InstructionConstraint_H
 #define Force_InstructionConstraint_H
 
-#include <Defines.h>
+#include "Defines.h"
 
 namespace Force {
 

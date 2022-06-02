@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <OperandRequest.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "OperandRequest.h"
 
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
 
 using namespace std;
 

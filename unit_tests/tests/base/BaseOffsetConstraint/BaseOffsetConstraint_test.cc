@@ -13,10 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <BaseOffsetConstraint.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "BaseOffsetConstraint.h"
+
+#include "lest/lest.hpp"
+
+#include "Constraint.h"
+#include "Log.h"
 
 //------------------------------------------------
 // include necessary header files here

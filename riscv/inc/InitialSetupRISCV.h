@@ -16,10 +16,11 @@
 #ifndef Force_InitialSetupRISCV_H
 #define Force_InitialSetupRISCV_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <map>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

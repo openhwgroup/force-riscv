@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <XmlTreeWalker.h>
-#include <Log.h>
+#include "XmlTreeWalker.h"
 
-#include <pugixml.h>
+#include "pugixml.h"
+
+#include "Log.h"
 
 using namespace std;
 

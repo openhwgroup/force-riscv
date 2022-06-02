@@ -13,10 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <TopLevelResourcesRISCV.h>
-#include <Scheduler.h>
-#include <Log.h>
-#include <Dump.h>
+#include "Dump.h"
+#include "Log.h"
+#include "Scheduler.h"
+#include "TopLevelResourcesRISCV.h"
 
 using namespace Force;
 using namespace std;

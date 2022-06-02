@@ -13,17 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <Log.h>
 
-#include <ConfigFPIX.h>
-#include <SimAPI.h>
-#include <SimThread.h>
-#include <PluginManager.h>
+#include "ConfigFPIX.h"
+#include "Log.h"
+#include "PluginManager.h"
+#include "SimAPI.h"
+#include "SimThread.h"
 
 using namespace Force;
 using namespace std;

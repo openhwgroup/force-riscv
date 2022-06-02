@@ -16,12 +16,11 @@
 #ifndef Force_PyConstraint_H
 #define Force_PyConstraint_H
 
-#include <Constraint.h>
+#include "pybind11/operators.h"
+#include "pybind11/pybind11.h"
 
-#include <ThreadContext.h>
-
-#include <pybind11/operators.h>
-#include <pybind11/pybind11.h>
+#include "Constraint.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

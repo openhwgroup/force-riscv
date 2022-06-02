@@ -13,19 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <map>
 #include <algorithm>
+#include <cassert>
+#include <cctype>
+#include <iostream>
+#include <map>
+#include <sstream>
 #include <string>
-#include <ctype.h>
-#include <assert.h>
+#include <vector>
 
+#include "Log.h"
 #include "SimAPI.h"
 #include "SimEvent.h"
 #include "SimPlugin.h"
-#include "Log.h"
 
 using namespace std;
 using namespace Force;

@@ -13,34 +13,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenQueryAgent.h>
-#include <GenQuery.h>
-#include <Generator.h>
-#include <Register.h>
-#include <Log.h>
+#include "GenQueryAgent.h"
 
-#include <InstructionResults.h>
-#include <InstructionStructure.h>
-#include <Instruction.h>
-#include <Operand.h>
-#include <StringUtils.h>
-#include <string.h>
-#include <ExceptionRecords.h>
-#include <PageInfoRecord.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <AddressTagging.h>
-#include <ChoicesModerator.h>
-#include <Choices.h>
-#include <MemoryManager.h>
-#include <ExceptionManager.h>
-#include <ResourceDependence.h>
-#include <GenMode.h>
-#include <RestoreLoop.h>
-#include <Data.h>
-
-#include <sstream>
+#include <cstring>
 #include <memory>
+#include <sstream>
+
+#include "AddressTagging.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Data.h"
+#include "ExceptionManager.h"
+#include "ExceptionRecords.h"
+#include "GenMode.h"
+#include "GenQuery.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionResults.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "Operand.h"
+#include "PageInfoRecord.h"
+#include "Register.h"
+#include "ResourceDependence.h"
+#include "RestoreLoop.h"
+#include "StringUtils.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

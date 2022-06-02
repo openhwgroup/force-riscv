@@ -16,10 +16,11 @@
 #ifndef Fpix_Plugin_H
 #define Fpix_Plugin_H
 
-#include <Notify.h>
-#include <SimAPI.h>
-#include <EnumsFPIX.h>
 #include <map>
+
+#include "EnumsFPIX.h"
+#include "Notify.h"
+#include "SimAPI.h"
 
 using namespace std;
 

@@ -16,10 +16,11 @@
 #ifndef Force_RegisterInitData_H
 #define Force_RegisterInitData_H
 
+#include "Defines.h"
+
 namespace Force {
 
   class Generator;
-  enum EOperandType;
   class OperandDataRequest;
   class Data;
   class DataPattern;

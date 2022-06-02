@@ -13,14 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AddressTableManager.h>
-#include <AddressTable.h>
-#include <Generator.h>
-#include <Config.h>
-#include <Architectures.h>
-#include <Log.h>
+#include "AddressTableManager.h"
 
 #include <algorithm>
+
+#include "AddressTable.h"
+#include "Architectures.h"
+#include "Config.h"
+#include "Generator.h"
+#include "Log.h"
 
 using namespace std;
 

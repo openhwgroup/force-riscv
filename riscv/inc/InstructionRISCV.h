@@ -16,7 +16,7 @@
 #ifndef Force_InstructionRISCV_H
 #define Force_InstructionRISCV_H
 
-#include <Instruction.h>
+#include "Instruction.h"
 
 namespace Force {
 

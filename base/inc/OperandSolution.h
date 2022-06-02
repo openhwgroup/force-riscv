@@ -16,9 +16,10 @@
 #ifndef Force_OperandSolution_H
 #define Force_OperandSolution_H
 
-#include <UopInterface.h>
-#include <Defines.h>
 #include <map>
+
+#include "Defines.h"
+#include "UopInterface.h"
 
 namespace Force {
 

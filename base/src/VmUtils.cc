@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmUtils.h>
-#include <UtilityFunctions.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "VmUtils.h"
 
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

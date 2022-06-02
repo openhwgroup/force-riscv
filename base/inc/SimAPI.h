@@ -18,13 +18,13 @@
 
 #pragma GCC visibility push(default)
 
-#include <vector>
+#include <fstream>
 #include <map>
 #include <string>
-#include <fstream>
+#include <vector>
 
-#include <Defines.h>
-#include <VectorElementUpdates.h>
+#include "Defines.h"
+#include "VectorElementUpdates.h"
 
 struct SimException;
 

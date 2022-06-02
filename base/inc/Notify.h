@@ -16,10 +16,11 @@
 #ifndef Force_Notify_H
 #define Force_Notify_H
 
-#include <UtilityAlgorithms.h>
-#include <Log.h>
 #include <string>
 #include <vector>
+
+#include "Log.h"
+#include "UtilityAlgorithms.h"
 
 namespace Force {
 

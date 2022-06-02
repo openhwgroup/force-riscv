@@ -16,15 +16,14 @@
 #ifndef Force_PyStateTransition_H
 #define Force_PyStateTransition_H
 
-#include <StateTransition.h>
+#include "pybind11/pybind11.h"
+#include "pybind11/stl.h"
 
-#include <GenRequest.h>
-#include <Generator.h>
-#include <Scheduler.h>
-#include <ThreadContext.h>
-
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Scheduler.h"
+#include "StateTransition.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

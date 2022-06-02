@@ -13,25 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <SwitchPrivilegeSolverRISCV.h>
-
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <GenException.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <Log.h>
-#include <PageRequestRegulator.h>
-#include <Register.h>
-#include <RegisterReload.h>
-#include <RegisteredSetModifier.h>
-#include <StringUtils.h>
-#include <VaGenerator.h>
-#include <VmInfo.h>
-#include <VmManager.h>
-#include <VmMapper.h>
+#include "SwitchPrivilegeSolverRISCV.h"
 
 #include <memory>
+
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "PageRequestRegulator.h"
+#include "Register.h"
+#include "RegisterReload.h"
+#include "RegisteredSetModifier.h"
+#include "StringUtils.h"
+#include "VaGenerator.h"
+#include "VmInfo.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

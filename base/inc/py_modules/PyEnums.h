@@ -16,9 +16,9 @@
 #ifndef Force_PyEnums_H
 #define Force_PyEnums_H
 
-#include <Enums.h>
+#include "pybind11/pybind11.h"
 
-#include <pybind11/pybind11.h>
+#include "Enums.h"
 
 namespace py = pybind11;
 

@@ -13,21 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
-#include <Random.h>
-//------------------------------------------------
-// include necessary header files here
-//------------------------------------------------
-#include <Defines.h>
-#include <UtilityFunctions.h>
-#include <VectorElementUpdates.h>
-#include <SimAPI.h>
-#include <vector>
-#include <set>
-#include <iostream>
-#include <tuple>
+#include "VectorElementUpdates.h"
+
 #include <cstring>
+#include <iostream>
+#include <set>
+#include <tuple>
+#include <vector>
+
+#include "lest/lest.hpp"
+
+#include "Defines.h"
+#include "Log.h"
+#include "Random.h"
+#include "SimAPI.h"
+#include "UtilityFunctions.h"
 
 using text = std::string;
 using namespace Force;

@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PeStateUpdate.h>
-#include <Log.h>
-#include <GenRequest.h>
+#include "PeStateUpdate.h"
 
 #include <sstream>
+
+#include "GenRequest.h"
+#include "Log.h"
 
 using namespace std;
 

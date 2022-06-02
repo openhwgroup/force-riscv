@@ -18,8 +18,9 @@
 
 #include <vector>
 #include <map>
-#include <SimAPI.h>
-#include <SimPlugin.h>
+
+#include "SimAPI.h"
+#include "SimPlugin.h"
 
 using namespace std;
 

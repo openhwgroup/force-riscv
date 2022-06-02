@@ -16,7 +16,7 @@
 #ifndef Force_InstructionConstraintRISCV_H
 #define Force_InstructionConstraintRISCV_H
 
-#include <InstructionConstraint.h>
+#include "InstructionConstraint.h"
 
 namespace Force {
 

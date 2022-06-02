@@ -16,11 +16,10 @@
 #ifndef Force_PyLog_H
 #define Force_PyLog_H
 
-#include <Log.h>
+#include "pybind11/pybind11.h"
 
-#include <ThreadContext.h>
-
-#include <pybind11/pybind11.h>
+#include "Log.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

@@ -13,31 +13,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AddressSolvingShared.h>
-#include <AddressSolver.h>
-#include <Generator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <MemoryConstraint.h>
-#include <AddressTagging.h>
-#include <Operand.h>
-#include <OperandConstraint.h>
-#include <Constraint.h>
-#include <Register.h>
-#include <Instruction.h>
-#include <InstructionConstraint.h>
-#include <PcSpacing.h>
-#include <Random.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <VaGenerator.h>
-#include <GenException.h>
-#include <AddressFilteringRegulator.h>
-#include <AddressReuseMode.h>
-#include <VectorLayout.h>
-#include <Log.h>
+#include "AddressSolvingShared.h"
 
 #include <memory>
+
+#include "AddressFilteringRegulator.h"
+#include "AddressReuseMode.h"
+#include "AddressSolver.h"
+#include "AddressTagging.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionConstraint.h"
+#include "Log.h"
+#include "MemoryConstraint.h"
+#include "Operand.h"
+#include "OperandConstraint.h"
+#include "PcSpacing.h"
+#include "Random.h"
+#include "Register.h"
+#include "VaGenerator.h"
+#include "VectorLayout.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 /*!
   \file AddressSolvingShared

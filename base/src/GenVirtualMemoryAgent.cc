@@ -13,28 +13,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenVirtualMemoryAgent.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <VaGenerator.h>
-#include <PaGenerator.h>
-#include <Constraint.h>
-#include <MemoryManager.h>
-#include <Config.h>
-#include <VmUtils.h>
-#include <Random.h>
-#include <AddressTagging.h>
-#include <VmInfo.h>
-#include <PhysicalPageSplitter.h>
-#include <UtilityFunctions.h>
-#include <FreePageRangeClaimer.h>
-#include <Architectures.h>
-#include <MemoryTraits.h>
-#include <Log.h>
+#include "GenVirtualMemoryAgent.h"
 
 #include <memory>
+
+#include "AddressTagging.h"
+#include "Architectures.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "FreePageRangeClaimer.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "MemoryTraits.h"
+#include "PaGenerator.h"
+#include "PhysicalPageSplitter.h"
+#include "Random.h"
+#include "UtilityFunctions.h"
+#include "VaGenerator.h"
+#include "VmInfo.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
 
 using namespace std;
 

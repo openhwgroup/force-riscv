@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <InstructionStructure.h>
-#include <UtilityFunctions.h>
-#include <AsmText.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "InstructionStructure.h"
 
 #include <sstream>
+
+#include "AsmText.h"
+#include "Constraint.h"
+#include "Log.h"
+#include "UtilityFunctions.h"
 
 /*!
   \file InstructionStructure.cc

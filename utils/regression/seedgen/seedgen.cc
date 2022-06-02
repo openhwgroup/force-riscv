@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Random.h>
-#include <Defines.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/eval.h>
-#include <pybind11/stl.h>
+#include "pybind11/eval.h"
+#include "pybind11/pybind11.h"
+#include "pybind11/stl.h"
+
+#include "Defines.h"
+#include "Random.h"
 
 // A command line utility that exposes the Force way of generating a 64 bit seed.
 // To be used by the regression test system.

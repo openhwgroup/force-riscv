@@ -16,11 +16,10 @@
 #ifndef Force_PyThreadDispatcher_H
 #define Force_PyThreadDispatcher_H
 
-#include <ThreadDispatcher.h>
+#include "pybind11/pybind11.h"
 
-#include <Scheduler.h>
-
-#include <pybind11/pybind11.h>
+#include "Scheduler.h"
+#include "ThreadDispatcher.h"
 
 namespace py = pybind11;
 

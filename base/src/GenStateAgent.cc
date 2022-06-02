@@ -13,19 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Defines.h>
+#include "GenStateAgent.h"
+
+#include "BntHookManager.h"
+#include "Defines.h"
+#include "GenMode.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "ReExecutionManager.h"
+#include "Register.h"
+#include "StringUtils.h"
+
 PICKY_IGNORE_BLOCK_START
-#include <SimAPI.h>
+#include "SimAPI.h"
 PICKY_IGNORE_BLOCK_END
-#include <GenStateAgent.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <GenMode.h>
-#include <StringUtils.h>
-#include <Register.h>
-#include <ReExecutionManager.h>
-#include <Log.h>
-#include <BntHookManager.h>
 
 using namespace std;
 

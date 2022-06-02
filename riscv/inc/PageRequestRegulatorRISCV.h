@@ -16,7 +16,7 @@
 #ifndef Force_PageRequestRegulatorRISCV_H
 #define Force_PageRequestRegulatorRISCV_H
 
-#include <PageRequestRegulator.h>
+#include "PageRequestRegulator.h"
 
 namespace Force {
 

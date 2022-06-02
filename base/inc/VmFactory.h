@@ -16,9 +16,10 @@
 #ifndef Force_VmFactory_H
 #define Force_VmFactory_H
 
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <vector>
+
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

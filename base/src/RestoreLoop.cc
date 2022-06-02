@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RestoreLoop.h>
-#include <Generator.h>
-#include <GenExceptionAgent.h>
-#include <GenInstructionAgent.h>
-#include <GenMode.h>
-#include <ReExecutionManager.h>
-#include <Log.h>
+#include "RestoreLoop.h"
+
+#include "GenExceptionAgent.h"
+#include "GenInstructionAgent.h"
+#include "GenMode.h"
+#include "Generator.h"
+#include "Log.h"
+#include "ReExecutionManager.h"
 
 using namespace std;
 

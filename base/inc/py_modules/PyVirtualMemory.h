@@ -16,12 +16,12 @@
 #ifndef Force_PyVirtualMemory_H
 #define Force_PyVirtualMemory_H
 
-#include <Generator.h>
-#include <PagingInfo.h>
-#include <Scheduler.h>
-#include <ThreadContext.h>
+#include "pybind11/pybind11.h"
 
-#include <pybind11/pybind11.h>
+#include "Generator.h"
+#include "PagingInfo.h"
+#include "Scheduler.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

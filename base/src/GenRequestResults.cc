@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenRequest.h>
-#include <Log.h>
-#include <Constraint.h>
+#include "GenRequest.h"
 
-#include <pybind11/pybind11.h>
+#include "pybind11/pybind11.h"
+
+#include "Constraint.h"
+#include "Log.h"
 
 /*!
   \file GenRequestResults

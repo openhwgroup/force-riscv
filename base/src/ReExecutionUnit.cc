@@ -13,9 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ReExecutionUnit.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "ReExecutionUnit.h"
+
+#include "Constraint.h"
+#include "Log.h"
 
 using namespace std;
 

@@ -16,10 +16,11 @@
 #ifndef Force_VmConstraint_H
 #define Force_VmConstraint_H
 
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Defines.h>
 #include <string>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force
 {

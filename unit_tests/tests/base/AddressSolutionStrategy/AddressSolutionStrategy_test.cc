@@ -13,19 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
-#include <AddressSolutionStrategy.h>
-#include <Constraint.h>
-#include <Operand.h>
-#include <OperandConstraint.h>
-#include <OperandSolution.h>
-#include <OperandSolutionMap.h>
-#include <AddressTagging.h>
-#include <InstructionStructure.h>
-#include <Random.h>
-#include <Defines.h>
-#include <Choices.h>
+#include "AddressSolutionStrategy.h"
+
+#include "lest/lest.hpp"
+
+#include "AddressTagging.h"
+#include "Choices.h"
+#include "Constraint.h"
+#include "Defines.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "Operand.h"
+#include "OperandConstraint.h"
+#include "OperandSolution.h"
+#include "OperandSolutionMap.h"
+#include "Random.h"
 
 using text = std::string;
 using namespace std;

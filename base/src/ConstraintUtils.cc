@@ -13,17 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Constraint.h>
-#include <Log.h>
+#include "ConstraintUtils.h"
 
-#include <sstream>
 #include <fstream>
-// C++UP accumulate defined in numeric
-#include <numeric>
+#include <numeric>  // C++UP accumulate defined in numeric
+#include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
 
 using namespace std;
-
-#include <ConstraintUtils.h>
 
 /*!
   \file ConstraintUtils.cc

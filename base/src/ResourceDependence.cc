@@ -13,18 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Generator.h>
-#include <Config.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <GenException.h>
-#include <ResourceDependence.h>
-#include <Constraint.h>
-#include <UtilityFunctions.h>
-#include <Variable.h>
-#include <Log.h>
+#include "ResourceDependence.h"
 
 #include <sstream>
+
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "Generator.h"
+#include "Log.h"
+#include "UtilityFunctions.h"
+#include "Variable.h"
 
 using namespace std;
 

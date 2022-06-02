@@ -13,19 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "lest/lest.hpp"
 
-//------------------------------------------------
-// include necessary header files here
-//------------------------------------------------
-#include <Constraint.h>
-#include <GenException.h>
-#include <Log.h>
+#include "Constraint.h"
+#include "GenException.h"
+#include "Log.h"
 
 #define protected public
 #define private public
-#include <ResourceAccess.h>
+#include "ResourceAccess.h"
 
 using text = std::string;
 using namespace std;

@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PageRequestRegulatorRISCV.h>
-#include <InstructionStructure.h>
-#include <Generator.h>
-#include <GenRequest.h>
-#include <Register.h>
-#include <Log.h>
+#include "PageRequestRegulatorRISCV.h"
+
+#include "GenRequest.h"
+#include "Generator.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "Register.h"
 
 using namespace std;
 

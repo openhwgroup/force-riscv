@@ -16,8 +16,8 @@
 #ifndef Force_VmDirectMapControlBlock_H
 #define Force_VmDirectMapControlBlock_H
 
-#include <VmControlBlock.h>
-#include <Enums.h>
+#include "Enums.h"
+#include "VmControlBlock.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

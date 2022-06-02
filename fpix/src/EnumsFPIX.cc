@@ -19,11 +19,11 @@
     Please do not modify this file manually.  Instead, modify the above mentioned script to re-generate this file.
 */
 
-#include <EnumsFPIX.h>
-
-#include <GenException.h>
+#include "EnumsFPIX.h"
 
 #include <sstream>
+
+#include "GenException.h"
 
 using namespace std;
 

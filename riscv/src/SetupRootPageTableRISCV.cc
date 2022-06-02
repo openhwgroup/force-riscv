@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <SetupRootPageTableRISCV.h>
-#include <MemoryManager.h>
-#include <Log.h>
-#include <PageTableManager.h>
-#include <Constraint.h>
+#include "SetupRootPageTableRISCV.h"
 
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "PageTableManager.h"
 
 /*!
   \file SetupRootPageTableRISCV.cc

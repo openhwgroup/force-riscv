@@ -16,12 +16,12 @@
 #ifndef Force_GenSequenceAgent_H
 #define Force_GenSequenceAgent_H
 
-#include <Defines.h>
-#include <GenAgent.h>
-#include <vector>
 #include <list>
-#include <Constraint.h>
+#include <vector>
 
+#include "Constraint.h"
+#include "Defines.h"
+#include "GenAgent.h"
 
 namespace Force {
 

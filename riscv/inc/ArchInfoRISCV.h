@@ -16,7 +16,7 @@
 #ifndef Force_ArchInfoRISCV_H
 #define Force_ArchInfoRISCV_H
 
-#include <ArchInfoBase.h>
+#include "ArchInfoBase.h"
 
 namespace Force {
 

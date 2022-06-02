@@ -16,8 +16,9 @@
 #ifndef Force_SimplePeState_H
 #define Force_SimplePeState_H
 
-#include <Defines.h>
 #include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

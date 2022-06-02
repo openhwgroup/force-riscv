@@ -13,19 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <stdlib.h>
-#include <string.h>
+#include <algorithm>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <algorithm>
-#include <StringUtils.h>
-#include <optionparser.h>
-#include <Random.h>
-#include <Log.h>
-#include <ConfigFPIX.h>
-#include <EnumsFPIX.h>
-#include <usage.h>
+
+#include "optionparser.h"
+
+#include "ConfigFPIX.h"
+#include "EnumsFPIX.h"
+#include "Log.h"
+#include "Random.h"
+#include "StringUtils.h"
+#include "usage.h"
 
 using namespace std;
 

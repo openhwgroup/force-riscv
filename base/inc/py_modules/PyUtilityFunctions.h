@@ -16,11 +16,10 @@
 #ifndef Force_PyUtilityFunctions_H
 #define Force_PyUtilityFunctions_H
 
-#include <UtilityFunctions.h>
+#include "pybind11/pybind11.h"
 
-#include <ThreadContext.h>
-
-#include <pybind11/pybind11.h>
+#include "ThreadContext.h"
+#include "UtilityFunctions.h"
 
 namespace py = pybind11;
 

@@ -16,13 +16,14 @@
 #ifndef Force_ExceptionManager_H
 #define Force_ExceptionManager_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <vector>
 #include <map>
-#include <Constraint.h>
-#include <Log.h>
+#include <vector>
+
+#include "Constraint.h"
+#include "Defines.h"
+#include "Enums.h"
+#include "Log.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

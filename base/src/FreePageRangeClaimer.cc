@@ -13,23 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <FreePageRangeResolver.h>
-#include <FreePageRangeClaimer.h>
-#include <Constraint.h>
-#include <Choices.h>
-#include <ChoicesFilter.h>
-#include <Generator.h>
-#include <ChoicesModerator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <VmAddressSpace.h>
-#include <VmasControlBlock.h>
-#include <PagingChoicesAdapter.h>
-#include <VmUtils.h>
-#include <Log.h>
+#include "FreePageRangeClaimer.h"
 
 #include <memory>
 #include <sstream>
+
+#include "Choices.h"
+#include "ChoicesFilter.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "FreePageRangeResolver.h"
+#include "Generator.h"
+#include "Log.h"
+#include "PagingChoicesAdapter.h"
+#include "VmAddressSpace.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
+#include "VmasControlBlock.h"
 
 using namespace std;
 

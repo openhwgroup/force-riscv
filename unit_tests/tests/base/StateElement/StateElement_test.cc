@@ -13,16 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
-
-#include <StateElement.h>
-
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
+#include "StateElement.h"
 
 #include <memory>
+
+#include "lest/lest.hpp"
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Log.h"
+#include ARCH_ENUM_HEADER
 
 using text = std::string;
 using namespace Force;

@@ -16,11 +16,11 @@
 #ifndef Force_RandomUtils_H
 #define Force_RandomUtils_H
 
-#include <Defines.h>
 #include <algorithm>
+#include <numeric>  // C++UP accumulate defined in numeric
 #include <vector>
-// C++UP accumulate defined in numeric
-#include <numeric>
+
+#include "Defines.h"
 
 namespace Force {
 

@@ -15,12 +15,14 @@
 //
 #ifndef Force_UopInterface_H
 #define Force_UopInterface_H
+
 #include <stdint.h>
 
 #ifdef __cplusplus
 #include <string>
 extern "C" {
 #endif
+
   /*!
     \brief interface handling interactions between FORCE and UopExecutor.
   */

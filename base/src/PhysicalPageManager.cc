@@ -13,22 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PhysicalPageManager.h>
-#include <PhysicalPage.h>
-#include <GenRequest.h>
-#include <Constraint.h>
-#include <Page.h>
-#include <VmUtils.h>
-#include <VmAddressSpace.h>
-#include <PagingChoicesAdapter.h>
-#include <MemoryConstraintUpdate.h>
-#include <UtilityFunctions.h>
-#include <VmMappingStrategy.h>
-#include <MemoryTraits.h>
-#include <Log.h>
+#include "PhysicalPageManager.h"
 
 #include <algorithm>
 #include <memory>
+
+#include "Constraint.h"
+#include "GenRequest.h"
+#include "Log.h"
+#include "MemoryConstraintUpdate.h"
+#include "MemoryTraits.h"
+#include "Page.h"
+#include "PagingChoicesAdapter.h"
+#include "PhysicalPage.h"
+#include "UtilityFunctions.h"
+#include "VmAddressSpace.h"
+#include "VmMappingStrategy.h"
+#include "VmUtils.h"
 
 using namespace std;
 

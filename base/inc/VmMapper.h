@@ -16,15 +16,16 @@
 #ifndef Force_VmMapper_H
 #define Force_VmMapper_H
 
-#include <Defines.h>
-#include <Object.h>
-#include <Notify.h>
-#include <NotifyDefines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <vector>
-#include <map>
 #include <fstream>
+#include <map>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Notify.h"
+#include "NotifyDefines.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

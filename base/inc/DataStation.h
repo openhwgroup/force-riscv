@@ -16,9 +16,10 @@
 #ifndef Force_DataStation_H
 #define Force_DataStation_H
 
-#include <Defines.h>
-#include <Object.h>
 #include <map>
+
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

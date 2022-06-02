@@ -16,9 +16,11 @@
 #ifndef Force_PageTable_H
 #define Force_PageTable_H
 
-#include <Defines.h>
-#include <vector>
 #include <map>
+#include <vector>
+
+#include "Defines.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

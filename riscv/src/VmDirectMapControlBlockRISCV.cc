@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmDirectMapControlBlockRISCV.h>
-#include <Generator.h>
-#include <Config.h>
-#include <Register.h>
+#include "VmDirectMapControlBlockRISCV.h"
+
+#include "Config.h"
+#include "Generator.h"
+#include "Register.h"
 
 /*!
   \file VmDirectMapControlBlockRISCV.cc

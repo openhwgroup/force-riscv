@@ -16,10 +16,11 @@
 #ifndef Force_BntNode_H
 #define Force_BntNode_H
 
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Defines.h>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

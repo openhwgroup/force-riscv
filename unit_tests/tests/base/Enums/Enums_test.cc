@@ -19,11 +19,12 @@
     Please do not modify this file manually.  Instead, modify the above mentioned script to re-generate this file.
 */
 
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "Enums.h"
 
-#include <Enums.h>
-#include <GenException.h>
+#include "lest/lest.hpp"
+
+#include "GenException.h"
+#include "Log.h"
 
 using text = std::string;
 using namespace Force;

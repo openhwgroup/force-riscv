@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <MemoryReservation.h>
-#include <Constraint.h>
-#include <VmMapper.h>
-#include <Log.h>
+#include "MemoryReservation.h"
 
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
+#include "VmMapper.h"
 
 using namespace std;
 

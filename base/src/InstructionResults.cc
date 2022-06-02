@@ -13,19 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <InstructionResults.h>
-#include <Generator.h>
-#include <Instruction.h>
-#include <Record.h>
-#include <Config.h>
-#include <UtilityFunctions.h>
-#include <GenPC.h>
-#include <Log.h>
+#include "InstructionResults.h"
 
 #include <algorithm>
+#include <numeric>  // C++UP accumulate defined in numeric
 #include <sstream>
-// C++UP accumulate defined in numeric
-#include <numeric>
+
+#include "Config.h"
+#include "GenPC.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "Log.h"
+#include "Record.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

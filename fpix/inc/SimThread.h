@@ -17,11 +17,12 @@
 #define Fpix_SimThread_H
 
 #include <vector>
-#include <ConfigFPIX.h>
-#include <SimAPI.h>
-#include <SimUtils.h>
-#include <SimEvent.h>
-#include <PluginManager.h>
+
+#include "ConfigFPIX.h"
+#include "PluginManager.h"
+#include "SimAPI.h"
+#include "SimEvent.h"
+#include "SimUtils.h"
 
 using namespace std;
 

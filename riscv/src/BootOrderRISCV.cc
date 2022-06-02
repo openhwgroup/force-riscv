@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <BootOrderRISCV.h>
-#include <Register.h>
-#include <GenRequest.h>
-#include <Log.h>
+#include "BootOrderRISCV.h"
 
 #include <iostream>
 #include <iterator>
+
+#include "GenRequest.h"
+#include "Log.h"
+#include "Register.h"
 
 using namespace std;
 

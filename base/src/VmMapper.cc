@@ -13,31 +13,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmMapper.h>
-#include <VmFactory.h>
-#include <Generator.h>
-#include <MemoryManager.h>
-#include <Constraint.h>
-#include <VmAddressSpace.h>
-#include <VmasControlBlock.h>
-#include <VmDirectMapControlBlock.h>
-#include <VmUtils.h>
-#include <Config.h>
-#include <VmInfo.h>
-#include <RegisterReload.h>
-#include <Register.h>
-#include <AddressTagging.h>
-#include <PageRequestRegulator.h>
-#include <Variable.h>
-#include <PcSpacing.h>
-#include <GenRequest.h>
-#include <UtilityAlgorithms.h>
-#include <UtilityFunctions.h>
-#include <Log.h>
+#include "VmMapper.h"
 
+#include <algorithm>
 #include <iomanip>
 #include <memory>
-#include <algorithm>
+
+#include "AddressTagging.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "PageRequestRegulator.h"
+#include "PcSpacing.h"
+#include "Register.h"
+#include "RegisterReload.h"
+#include "UtilityAlgorithms.h"
+#include "UtilityFunctions.h"
+#include "Variable.h"
+#include "VmAddressSpace.h"
+#include "VmDirectMapControlBlock.h"
+#include "VmFactory.h"
+#include "VmInfo.h"
+#include "VmUtils.h"
+#include "VmasControlBlock.h"
 
 using namespace std;
 

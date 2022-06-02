@@ -16,11 +16,12 @@
 #ifndef Force_OperandConstraint_H
 #define Force_OperandConstraint_H
 
-#include <Defines.h>
-#include <vector>
 #include <string>
 #include <type_traits>
-#include <Enums.h>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

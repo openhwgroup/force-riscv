@@ -13,18 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <stdlib.h>
-#include <string.h>
+#include "ConfigFPIX.h"
+
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 
-#include <Defines.h>
-#include <XmlTreeWalker.h>
-#include <pugixml.h>
-#include <PathUtils.h>
-#include <Log.h>
+#include "pugixml.h"
 
-#include <ConfigFPIX.h>
+#include "Defines.h"
+#include "Log.h"
+#include "PathUtils.h"
+#include "XmlTreeWalker.h"
 
 using namespace std;
 

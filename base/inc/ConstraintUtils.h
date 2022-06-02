@@ -16,14 +16,16 @@
 #ifndef Force_ConstraintUtils_H
 #define Force_ConstraintUtils_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <vector>
-#include <stack>
 #include <algorithm>
 #include <cstring>
-#include <Log.h>
+#include <stack>
+#include <vector>
+
+#include "Constraint.h"
+#include "Defines.h"
+#include "Enums.h"
+#include "Log.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 
@@ -44,7 +46,6 @@ namespace Force {
 #define DELETE_CONSTRAINT(constr) delete constr
 #endif
 
-  class Constraint;
   class ConstraintSet;
 
   /*!

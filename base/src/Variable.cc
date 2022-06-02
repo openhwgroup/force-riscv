@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Variable.h>
-#include <StringUtils.h>
-#include <GenException.h>
-#include <Choices.h>
-#include <Log.h>
+#include "Variable.h"
 
 #include <sstream>
+
+#include "Choices.h"
+#include "GenException.h"
+#include "Log.h"
+#include "StringUtils.h"
 
 using namespace std;
 

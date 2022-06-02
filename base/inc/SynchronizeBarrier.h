@@ -16,9 +16,10 @@
 #ifndef Force_SynchronizeBarrier_H
 #define Force_SynchronizeBarrier_H
 
-#include <Defines.h>
-#include <vector>
 #include <string>
+#include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

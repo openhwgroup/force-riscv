@@ -16,15 +16,14 @@
 #ifndef Force_PyMemoryTraits_H
 #define Force_PyMemoryTraits_H
 
-#include <MemoryTraits.h>
+#include "pybind11/pybind11.h"
 
-#include <Generator.h>
-#include <MemoryManager.h>
-#include <Scheduler.h>
-#include <ThreadContext.h>
+#include "Generator.h"
+#include "MemoryManager.h"
+#include "MemoryTraits.h"
+#include "Scheduler.h"
+#include "ThreadContext.h"
 #include ARCH_ENUM_HEADER
-
-#include <pybind11/pybind11.h>
 
 namespace py = pybind11;
 

@@ -13,21 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#define CASE( name ) lest_CASE( specification(), name )
+#include <cstring>
 
-#include <string.h>
+#include "lest/lest.hpp"
+
+#include "Choices.h"
+#include "Constraint.h"
+#include "Enums.h"
+#include "Log.h"
+#include "RegisterReserver.h"
+#include "ReservationConstraint.h"
 
 #define private public
 #define protected public
+#include "Register.h"
 
-#include <Register.h>
-#include <Choices.h>
-#include <Constraint.h>
-#include <Enums.h>
-#include <RegisterReserver.h>
-#include <ReservationConstraint.h>
-#include <Log.h>
+#define CASE( name ) lest_CASE( specification(), name )
 
 using namespace std;
 using namespace Force;

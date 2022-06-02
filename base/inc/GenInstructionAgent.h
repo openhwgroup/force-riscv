@@ -16,11 +16,12 @@
 #ifndef Force_GenInstructionAgent_H
 #define Force_GenInstructionAgent_H
 
-#include <Defines.h>
-#include <GenAgent.h>
-#include <Notify.h>
-#include <NotifyDefines.h>
 #include <vector>
+
+#include "Defines.h"
+#include "GenAgent.h"
+#include "Notify.h"
+#include "NotifyDefines.h"
 
 namespace Force {
 

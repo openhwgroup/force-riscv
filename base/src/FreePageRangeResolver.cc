@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <FreePageRangeResolver.h>
-#include <Constraint.h>
-#include <Choices.h>
-#include <UtilityFunctions.h>
-#include <RandomUtils.h>
-#include <GenException.h>
-#include <Log.h>
+#include "FreePageRangeResolver.h"
 
 #include <memory>
+
+#include "Choices.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "Log.h"
+#include "RandomUtils.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

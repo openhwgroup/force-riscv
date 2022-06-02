@@ -13,14 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <Log.h>
+#include "UtilityFunctions.h"
+
+#include <fmt.h>
 
 #include <algorithm>
-#include <fmt.h>
 #include <map>
 #include <sstream>
+
+#include "Log.h"
+#include "StringUtils.h"
 
 using namespace std;
 

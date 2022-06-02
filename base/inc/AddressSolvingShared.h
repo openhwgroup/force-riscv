@@ -16,13 +16,14 @@
 #ifndef Force_AddressSolvingShared_H
 #define Force_AddressSolvingShared_H
 
-#include <ConditionFlags.h>
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <VmConstraint.h>
-#include <vector>
 #include <map>
+#include <vector>
+
+#include "ConditionFlags.h"
+#include "Defines.h"
+#include "Enums.h"
+#include "VmConstraint.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

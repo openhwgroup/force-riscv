@@ -16,9 +16,10 @@
 #ifndef Force_RegisterReload_H
 #define Force_RegisterReload_H
 
-#include <Defines.h>
-#include <Object.h>
 #include <map>
+
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

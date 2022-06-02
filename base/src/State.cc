@@ -13,15 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <State.h>
-
-#include <Generator.h>
-#include <Log.h>
-#include <Register.h>
-#include <StateElement.h>
-#include <UtilityFunctions.h>
+#include "State.h"
 
 #include <algorithm>
+
+#include "Generator.h"
+#include "Log.h"
+#include "Register.h"
+#include "StateElement.h"
+#include "UtilityFunctions.h"
 
 /*!
   \file State.cc

@@ -16,8 +16,8 @@
 #ifndef Force_VirtualMemoryInitializer_H
 #define Force_VirtualMemoryInitializer_H
 
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

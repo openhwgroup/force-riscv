@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PagingChoicesAdapter.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <Variable.h>
-#include <Constraint.h>
-#include <ChoicesFilter.h>
-#include <Log.h>
+#include "PagingChoicesAdapter.h"
 
 #include <memory>
+
+#include "Choices.h"
+#include "ChoicesFilter.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "Log.h"
+#include "Variable.h"
 
 using namespace std;
 

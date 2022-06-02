@@ -16,12 +16,12 @@
 #ifndef Force_GenCallBackAgent_H
 #define Force_GenCallBackAgent_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <GenAgent.h>
-
 #include <map>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "GenAgent.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

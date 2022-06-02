@@ -13,28 +13,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Register.h>
-#include <Random.h>
-#include <Config.h>
-#include <XmlTreeWalker.h>
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <pugixml.h>
-#include <ObjectRegistry.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <Constraint.h>
-#include <GenException.h>
-#include <RegisterInitPolicy.h>
-#include <RegisterReserver.h>
-#include <Log.h>
+#include "Register.h"
 
-#include <string.h>
 #include <algorithm>
-#include <sstream>
+#include <cstring>
 #include <memory>
-// C++UP accumulate defined in numeric
-#include <numeric>
+#include <numeric>  // C++UP accumulate defined in numeric
+#include <sstream>
+
+#include "pugixml.h"
+
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "Log.h"
+#include "ObjectRegistry.h"
+#include "Random.h"
+#include "RegisterInitPolicy.h"
+#include "RegisterReserver.h"
+#include "StringUtils.h"
+#include "UtilityFunctions.h"
+#include "XmlTreeWalker.h"
 
 using namespace std;
 
