@@ -14,13 +14,12 @@
 // limitations under the License.
 //
 
+#include "SimLoader.h"
+
+#include <dlfcn.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <dlfcn.h>
-//#include "SimInterface.h"
-#include <stdint.h>
-
-#include "SimLoader.h"
 
 //!< check for error when any simulator function address is loaded:
 int CheckSimOp(const char *which_op);

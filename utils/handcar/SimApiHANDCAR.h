@@ -16,7 +16,7 @@
 #ifndef Force_SimApiHANDCAR_H
 #define Force_SimApiHANDCAR_H
 
-#include <SimAPI.h>
+#include "SimAPI.h"
 
 class SimDllApi;
 class SimException;

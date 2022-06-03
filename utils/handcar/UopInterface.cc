@@ -13,9 +13,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <UopInterface.h>
+#include "UopInterface.h"
 
-#include <Log.h>
+#include "Log.h"
 
 using namespace Force;
 

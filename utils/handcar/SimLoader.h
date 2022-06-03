@@ -16,6 +16,9 @@
 #ifndef Force_SimLoader_H
 #define Force_SimLoader_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 // The Iss simulator is to be loaded dynamically. All function addresses can then be set...
 
 struct SimDllApi {

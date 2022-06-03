@@ -13,16 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <SimApiHANDCAR.h>
-#include <GenException.h>
-
-PICKY_IGNORE_BLOCK_START
-#include <SimLoader.h>
-PICKY_IGNORE_BLOCK_END
+#include "SimApiHANDCAR.h"
 
 #include <cctype>
 #include <cstring>
 #include <iostream>
+
+#include "GenException.h"
+
+PICKY_IGNORE_BLOCK_START
+#include "SimLoader.h"
+PICKY_IGNORE_BLOCK_END
 
 /*!
   \file SimApiHANDCAR.cc
