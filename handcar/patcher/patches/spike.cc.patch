@@ -13,29 +13,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-1,2c1
+1,2d0
 < // See LICENSE for license details.
 < 
----
-> #include "handcar_cosim_wrapper.h"
-5d3
+5d2
 < #include "remote_bitbang.h"
-14a13,14
-> #include <map>
-> #include <numeric>
-16,18c16,38
+16d12
 < #include "../VERSION"
-< 
+18c14,36
 < static void help(int exit_code = 1)
 ---
-> #include <iostream>
-> #include <ios>
+> #include <cstring>
 > #include <iomanip>
+> #include <ios>
+> #include <iostream>
+> #include <map>
+> #include <numeric>
 > 
-> #include <cstring> 
-> 
-> //For fooling input arguments
-> #include <string.h>
+> #include "handcar_cosim_wrapper.h"
 > 
 > //controls
 > #define ARGV_ELEMENT_BUFFER_SIZE 128 // The number of characters in --<option_name>=<argment> for a particular option
@@ -51,7 +46,7 @@
 > //Persistent options class and support, designed to keep consistency with Spike's existing options
 > //Options storage manages the setting and retrieval of options stored as OptionsPrimitives
 > class OptionsStorage
-20,106c40,50
+20,106c38,48
 <   fprintf(stderr, "Spike RISC-V ISA Simulator " SPIKE_VERSION "\n\n");
 <   fprintf(stderr, "usage: spike [host options] <target program> [target options]\n");
 <   fprintf(stderr, "Host Options:\n");
@@ -151,7 +146,7 @@
 >     uint64_t mVal;
 >     std::string mPath;
 >   };
-108,115c52,58
+108,115c50,56
 < bool sort_mem_region(const std::pair<reg_t, mem_t*> &a,
 <                        const std::pair<reg_t, mem_t*> &b)
 < {
@@ -168,7 +163,7 @@
 >     USED = true,
 >     UNUSED = false
 >   };
-117,140c60,134
+117,140c58,132
 < void merge_overlapping_memory_regions(std::vector<std::pair<reg_t, mem_t*>>& mems)
 < {
 <   // check the user specified memory regions and merge the overlapping or
@@ -269,9 +264,9 @@
 >     if(flat_options_temp.size() > 0)
 >     {
 >       _token_vector.push_back(flat_options_temp);
-143d136
+143d134
 < }
-145,154c138,215
+145,154c136,213
 < static std::vector<std::pair<reg_t, mem_t*>> make_mems(const char* arg)
 < {
 <   // handle legacy mem argument
@@ -361,7 +356,7 @@
 >     map_item->second.mIsUsed = true;
 > 
 >     return  SUCCESS;
-157,163d217
+157,163d215
 <   // handle base/size tuples
 <   std::vector<std::pair<reg_t, mem_t*>> res;
 <   while (true) {
@@ -369,7 +364,7 @@
 <     if (!*p || *p != ':')
 <       help();
 <     auto size = strtoull(p + 1, &p, 0);
-165,170c219,249
+165,170c217,247
 <     // page-align base and size
 <     auto base0 = base, size0 = size;
 <     size += base0 % PGSIZE;
@@ -408,7 +403,7 @@
 >     free(_stored_argv);
 >     _stored_argv = nullptr;    
 >     _stored_argc = 0;
-172,173c251,288
+172,173c249,278
 <     if (base + size < base)
 <       help();
 ---
@@ -442,19 +437,26 @@
 > 
 >     // Allocate the elements of argv starting first with with first and last, which are dummy arguments.
 >     _allocateDummyOptions();
-> 
->     for(int arg_num = 1; arg_num < (_stored_argc-1); ++arg_num)
->     {
->       _stored_argv[arg_num] = (char*)malloc(ARGV_ELEMENT_BUFFER_SIZE * sizeof(char));  
->     }
->       
->     return SUCCESS;    
->   }
-175,178c290,354
+175,178c280,282
 <     if (size != size0) {
 <       fprintf(stderr, "Warning: the memory at  [0x%llX, 0x%llX] has been realigned\n"
 <                       "to the %ld KiB page size: [0x%llX, 0x%llX]\n",
 <               base0, base0 + size0 - 1, long(PGSIZE / 1024), base, base + size - 1);
+---
+>     for(int arg_num = 1; arg_num < (_stored_argc-1); ++arg_num)
+>     {
+>       _stored_argv[arg_num] = (char*)malloc(ARGV_ELEMENT_BUFFER_SIZE * sizeof(char));  
+179a284,286
+>       
+>     return SUCCESS;    
+>   }
+181,186c288,355
+<     res.push_back(std::make_pair(reg_t(base), new mem_t(size)));
+<     if (!*p)
+<       break;
+<     if (*p != ',')
+<       help();
+<     arg = p + 1;
 ---
 > 
 >   // _loadArgMatrix function: once memory has been allocated for char** _stored_argv, scan the _options_map for enabled options and write them into the argv. 
@@ -521,20 +523,14 @@
 >           ++arg_num;
 >         }
 >       }
-181,186c357
-<     res.push_back(std::make_pair(reg_t(base), new mem_t(size)));
-<     if (!*p)
-<       break;
-<     if (*p != ',')
-<       help();
-<     arg = p + 1;
----
+>     }
+> 
 >     return SUCCESS;
-189,191d359
+189,191d357
 <   merge_overlapping_memory_regions(res);
 <   return res;
 < }
-193,200c361,460
+193,200c359,405
 < static unsigned long atoul_safe(const char* s)
 < {
 <   char* e;
@@ -591,8 +587,17 @@
 >     _stored_argv = (char **)malloc(_stored_argc * sizeof(char*));
 >     _allocateDummyOptions();
 >   } 
-> 
-> 
+202,208d406
+< static unsigned long atoul_nonzero_safe(const char* s)
+< {
+<   auto res = atoul_safe(s);
+<   if (!res)
+<     help();
+<   return res;
+< }
+210c408,483
+< int main(int argc, char** argv)
+---
 >   // One and done mode. Spike orignal code is in charge of options validation. Not meant to be used with set_simulator_parameter 
 >   OptionsStorage(const char* options):
 >     _flat_options((options == nullptr) ? "" : options),
@@ -644,17 +649,8 @@
 >     free(_stored_argv);
 >     _stored_argv = nullptr;    
 >   }
-202,208d461
-< static unsigned long atoul_nonzero_safe(const char* s)
-< {
-<   auto res = atoul_safe(s);
-<   if (!res)
-<     help();
-<   return res;
-< }
-210c463,485
-< int main(int argc, char** argv)
----
+> 
+> 
 >   char** exposeStoredArgv()
 >   {
 >     return _stored_argv;
@@ -678,7 +674,7 @@
 > bool isa_D;     // true if double-precision floating pt extension configured in
 > 
 > void initialize_simulator(const char* options)
-211a487,538
+211a485,536
 >   // Hopefully the user has called set_simulator_parameter a number of times before calling initialize_simulator, but handle the contingency if they didn't.
 >   if(_pOptionsStorage == nullptr)
 >   {
@@ -731,27 +727,27 @@
 >     printf("\n");
 >   }
 >   
-223,224d549
+223,224d547
 <   size_t initrd_size;
 <   reg_t initrd_start = 0, initrd_end = 0;
-227,231d551
+227,231d549
 <   std::vector<std::pair<reg_t, mem_t*>> mems;
 <   std::vector<std::pair<reg_t, abstract_device_t*>> plugin_devices;
 <   std::unique_ptr<icache_sim_t> ic;
 <   std::unique_ptr<dcache_sim_t> dc;
 <   std::unique_ptr<cache_sim_t> l2;
-233,236c553
+233,236c551
 <   bool log_commits = false;
 <   const char *log_path = nullptr;
 <   std::vector<std::function<extension_t*()>> extensions;
 <   const char* initrd = NULL;
 ---
 >   bool auto_init_mem = false;
-240,242d556
+240,242d554
 <   const char* dtb_file = NULL;
 <   uint16_t rbb_port = 0;
 <   bool use_rbb = false;
-244,253d557
+244,253d555
 <   debug_module_config_t dm_config = {
 <     .progbufsize = 2,
 <     .max_bus_master_bits = 0,
@@ -762,15 +758,15 @@
 <     .support_haltgroups = true,
 <     .support_impebreak = true
 <   };
-255c559
+255c557
 < 
 ---
 >  
-259c563
+259c561
 < 
 ---
 >  
-268,310d571
+268,310d569
 <   auto const device_parser = [&plugin_devices](const char *s) {
 <     const std::string str(s);
 <     std::istringstream stream(str);
@@ -814,10 +810,10 @@
 <     plugin_devices.emplace_back(base, new mmio_plugin_device_t(name, args));
 <   };
 < 
-312,313d572
+312,313d570
 <   parser.help(&suggest_help);
 <   parser.option('h', "help", 0, [&](const char* s){help(0);});
-317,321c576
+317,321c574
 < #ifdef HAVE_BOOST_ASIO
 <   parser.option('s', 0, 0, [&](const char* s){socket = true;});
 < #endif
@@ -825,9 +821,9 @@
 <   parser.option('m', 0, 1, [&](const char* s){mems = make_mems(s);});
 ---
 >   parser.option('p', 0, 1, [&](const char* s){nprocs = atoi(s);});
-324d578
+324d576
 <   parser.option(0, "rbb-port", 1, [&](const char* s){use_rbb = true; rbb_port = atoul_safe(s);});
-327,329c581,583
+327,329c579,581
 <   parser.option(0, "ic", 1, [&](const char* s){ic.reset(new icache_sim_t(s));});
 <   parser.option(0, "dc", 1, [&](const char* s){dc.reset(new dcache_sim_t(s));});
 <   parser.option(0, "l2", 1, [&](const char* s){l2.reset(cache_sim_t::construct(s, "L2$"));});
@@ -835,18 +831,18 @@
 >   parser.option(0, "ic", 1, [&](const char* s){ic = new icache_sim_t(s);});
 >   parser.option(0, "dc", 1, [&](const char* s){dc = new dcache_sim_t(s);});
 >   parser.option(0, "l2", 1, [&](const char* s){l2 = cache_sim_t::construct(s, "L2$");});
-330a585
+330a583
 >   parser.option(0, "auto-init-mem", 0, [&](const char* s){auto_init_mem = true;});
-334,335c589
+334,335c587
 <   parser.option(0, "device", 1, device_parser);
 <   parser.option(0, "extension", 1, [&](const char* s){extensions.push_back(find_extension(s));});
 ---
 >   //parser.option(0, "extension", 1, [&](const char* s){extensions.push_back(find_extension(s));});
-338d591
+338d589
 <   parser.option(0, "dtb", 1, [&](const char *s){dtb_file = s;});
-340d592
+340d590
 <   parser.option(0, "initrd", 1, [&](const char* s){initrd = s;});
-350,371d601
+350,371d599
 <   parser.option(0, "dm-progsize", 1,
 <       [&](const char* s){dm_config.progbufsize = atoul_safe(s);});
 <   parser.option(0, "dm-no-impebreak", 0,
@@ -869,7 +865,7 @@
 <                 [&](const char* s){log_commits = true;});
 <   parser.option(0, "log", 1,
 <                 [&](const char* s){log_path = s;});
-381,399c611,626
+381,399c609,624
 <   std::vector<std::string> htif_args(argv1, (const char*const*)argv + argc);
 <   if (mems.empty())
 <     mems = make_mems("2048");
@@ -906,11 +902,11 @@
 >   {
 >   if (ic) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*ic);
 >   if (dc) _pSimulatorTopLevel->get_core(i)->get_mmu()->register_memtracer(&*dc);
-400a628,630
+400a626,628
 >  
 >   _pSimulatorTopLevel->set_log(log);
 >   _pSimulatorTopLevel->set_histogram(histogram);
-402,410c632,717
+402,410c630,715
 <   if (initrd && check_file_exists(initrd)) {
 <     initrd_size = get_file_size(initrd);
 <     for (auto& m : mems) {
@@ -1007,9 +1003,9 @@
 >     if(NOISY)
 >     {
 >       printf("### handcar_cosim::set_simulator_parameter(), call failed with error code: %d\n", rcode);
-411a719
+411a717
 >     return rcode;
-414,429c722,741
+414,429c720,739
 < #ifdef HAVE_BOOST_ASIO
 <   boost::asio::io_service *io_service_ptr = NULL; // needed for socket command interface option -s
 <   boost::asio::ip::tcp::acceptor *acceptor_ptr = NULL;
@@ -1047,14 +1043,14 @@
 >   else 
 >   {
 >      if(NOISY)
-431,432c743
+431,432c741
 <        std::cerr << e.what() << std::endl;
 <        exit(-1);
 ---
 >        printf("### handcar_cosim::simulator_load_elf(...), simulator not initialized before simulator_load_elf(...) called.\n");
-435d745
+435d743
 < #endif
-437,454c747,825
+437,454c745,837
 <   sim_t s(isa, priv, varch, nprocs, halted, real_time_clint,
 <       initrd_start, initrd_end, bootargs, start_pc, mems, plugin_devices, htif_args,
 <       std::move(hartids), dm_config, log_path, dtb_enabled, dtb_file,
@@ -1153,13 +1149,8 @@
 >   {
 >     printf("#### handcar_cosim::get_simulator_version, not enough room in 'version' string buffer");
 >     return 1;
-457,461c828,849
-<   if (ic && l2) ic->set_miss_handler(&*l2);
-<   if (dc && l2) dc->set_miss_handler(&*l2);
-<   if (ic) ic->set_log(log_cache);
-<   if (dc) dc->set_log(log_cache);
-<   for (size_t i = 0; i < nprocs; i++)
----
+>   }
+> 
 >   strcpy(version, version_string);   
 > 
 >   return 0;
@@ -1172,8 +1163,13 @@
 >   if(pRegName == nullptr || pValue == nullptr || _pSimulatorTopLevel == nullptr)
 >   {
 >     return 1;
->   }
-> 
+457,461c840,847
+<   if (ic && l2) ic->set_miss_handler(&*l2);
+<   if (dc && l2) dc->set_miss_handler(&*l2);
+<   if (ic) ic->set_log(log_cache);
+<   if (dc) dc->set_log(log_cache);
+<   for (size_t i = 0; i < nprocs; i++)
+---
 >   // Is the user asking to write to a register that actually exists? 
 >   int status = 0;
 >   uint8_t category = 0; // Four is not one of the admissible categories
@@ -1182,7 +1178,7 @@
 > 
 >   // Check if this is any of the other types of register
 >   if(temp_name.find("unknown") != std::string::npos)
-463,466c851,853
+463,466c849,851
 <     if (ic) s.get_core(i)->get_mmu()->register_memtracer(&*ic);
 <     if (dc) s.get_core(i)->get_mmu()->register_memtracer(&*dc);
 <     for (auto e : extensions)
@@ -1191,7 +1187,7 @@
 >     category = 1;
 >     index = _pSimulatorTopLevel->get_xpr_number(std::string(pRegName));
 >     temp_name = _pSimulatorTopLevel->get_xpr_name(index);
-469,471c856,868
+469,471c854,866
 <   s.set_debug(debug);
 <   s.configure_log(log, log_commits);
 <   s.set_histogram(histogram);
@@ -1209,7 +1205,7 @@
 >     index = _pSimulatorTopLevel->get_vecr_number(std::string(pRegName));
 >     temp_name = _pSimulatorTopLevel->get_vecr_name(index);
 >   }
-473c870,874
+473c868,872
 <   auto return_code = s.run();
 ---
 >   if(temp_name.find("unknown") != std::string::npos)
@@ -1217,7 +1213,7 @@
 >     category = 4; //fail category
 >     status = 3;
 >   }
-475,476c876,881
+475,476c874,879
 <   for (auto& mem : mems)
 <     delete mem.second;
 ---
@@ -1227,7 +1223,7 @@
 >     category = 5;
 >     status = 0;
 >   }
-478,479c883,888
+478,479c881,886
 <   for (auto& plugin_device : plugin_devices)
 <     delete plugin_device.second;
 ---
@@ -1237,7 +1233,7 @@
 >     category = 6;
 >     status = 0;
 >   }
-481c890,928
+481c888,926
 <   return return_code;
 ---
 >   // Check the category of the register and try to obtain the name
@@ -1279,7 +1275,7 @@
 >   }
 > 
 >   return status;
-482a930,1317
+482a928,1315
 > 
 > 
 > int partial_read_large_register(int target_id, const char* pRegName, uint8_t* pValue, uint32_t length, uint32_t offset)

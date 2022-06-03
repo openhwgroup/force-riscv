@@ -13,13 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+#include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <dlfcn.h>
-#include <Defines.h>
+
+#include "Defines.h"
+
 PICKY_IGNORED
-#include "handcar_cosim_wrapper.h"
 #include "SimLoader.h"
+#include "handcar_cosim_wrapper.h"
 
 //!< check for error when any simulator function address is loaded:
 int CheckSimOp(const char *which_op);

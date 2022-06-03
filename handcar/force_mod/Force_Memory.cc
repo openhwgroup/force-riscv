@@ -16,9 +16,10 @@
 
 #include "Force_Memory.h"
 
+#include <fmt.h>
+
 #include <algorithm>
 #include <cassert>
-#include <fmt.h>
 #include <iomanip>
 #include <iostream>
 #include <ostream>

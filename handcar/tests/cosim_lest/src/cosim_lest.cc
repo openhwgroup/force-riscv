@@ -14,16 +14,14 @@
 // limitations under the License.
 //
 
-#include <lest/lest.hpp>
-#include <map>
-#include <cstring>
 #include <algorithm>
-
-//------------------------------------------------
-// include necessary header files here
-//------------------------------------------------
-#include "SimLoader.h"
+#include <cstring>
 #include <iostream>
+#include <map>
+
+#include "lest/lest.hpp"
+
+#include "SimLoader.h"
 
 using text = std::string;
 

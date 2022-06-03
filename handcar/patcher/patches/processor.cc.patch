@@ -13,13 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-20a21
+22a23,25
 > #include <cstring>
-22a24,26
-> //DEBUG
-> #include <iostream>
+> #include <iostream>  //DEBUG
 > 
-26,32c30,34
+26,32c29,33
 < processor_t::processor_t(const char* isa, const char* priv, const char* varch,
 <                          simif_t* sim, uint32_t id, bool halt_on_reset,
 <                          FILE* log_file, std::ostream& sout_)
@@ -33,7 +31,7 @@
 >                          std::ostream& sout_)
 > : debug(false), halt_request(HR_NONE), sim(sim), state(pid), id(pid), xlen(0),
 >  sout_(sout_.rdbuf()), halt_on_reset(halt_on_reset), extension_table(256, false), impl_table(256, false), last_pc(1), executions(1)
-61,69d62
+61,69d61
 < #ifdef RISCV_ENABLE_HISTOGRAM
 <   if (histogram_enabled)
 <   {
@@ -43,33 +41,33 @@
 <   }
 < #endif
 < 
-335c328
+335c327
 < void state_t::reset(processor_t* const proc, reg_t max_isa)
 ---
 > void state_t::reset(processor_t* const proc, reg_t max_isa, uint32_t id)
-337a331,332
+337a330,331
 >   prv = PRV_M;
 >   pid = id;
-339a335,336
+339a334,335
 >   XPR.set_pid(id);
 >   FPR.set_pid(id);
-345d341
+345d340
 <   prv = PRV_M;
-483a480
+483a479
 >   update_generator_register(p->id, "vtype", vtype, 0xffffffffffffffff, "write");
-484a482,484
+484a481,483
 > 
 >   //std::cout << "WARNING, vtype is hardcoded in the simulator (processor.cc, processor_t::vectorUnit_t::reset()), replace with vsetvl(i) ASAP." << std::endl;
 >   //set_vl(0, 0, 0, 0b0001000); // this could be changed to force a legal configuration 
-505a506,507
+505a505,506
 > 
 >     update_generator_register(p->id, "vtype", vtype, 0xffffffffffffffff, "write");
-518a521,522
+518a520,521
 > 
 >   update_generator_register(p->id, "vl", vl, 0xffffffffffffffff, "write");
-519a524
+519a523
 >   update_generator_register(p->id, "vstart", vstart, 0xffffffffffffffff, "write");
-523a529,556
+523a528,555
 > reg_t processor_t::vectorUnit_t::set_vl_api(reg_t reqVL, reg_t newType){
 >   int new_vlmul = 0;
 >   if (vtype != newType){
@@ -98,7 +96,7 @@
 >   return vl;
 > }
 > 
-535,541d567
+535,541d566
 < #ifndef RISCV_ENABLE_HISTOGRAM
 <   if (value) {
 <     fprintf(stderr, "PC Histogram support has not been properly enabled;");
@@ -106,7 +104,7 @@
 <     abort();
 <   }
 < #endif
-544,550d569
+544,550d568
 < #ifdef RISCV_ENABLE_COMMITLOG
 < void processor_t::enable_log_commits()
 < {
@@ -114,13 +112,13 @@
 < }
 < #endif
 < 
-554c573
+554c572
 <   state.reset(this, max_isa);
 ---
 >   state.reset(this, max_isa, id);
-639a659
+639a658
 >   //need to add register read callback calls here
-718a739,745
+718a738,744
 >   update_generator_register(this->id, "privilege", prv, 0x3ull, "write");
 > }
 > 
@@ -128,7 +126,7 @@
 > {
 >   mmu->flush_tlb();
 >   state.prv = legalize_privilege(prv);
-743,748c770,775
+743,748c769,774
 <   state.debug_mode = true;
 <   state.dcsr.cause = cause;
 <   state.dcsr.prv = state.prv;
@@ -142,7 +140,7 @@
 > //  set_privilege(PRV_M);
 > //  state.dpc = state.pc;
 > //  state.pc = DEBUG_ROM_ENTRY;
-763,783d789
+763,783d788
 <   if (debug) {
 <     std::stringstream s; // first put everything in a string, later send it to output
 <     s << "core " << std::dec << std::setfill(' ') << std::setw(3) << id
@@ -164,20 +162,20 @@
 <     return;
 <   }
 < 
-788c794
+788c793
 <     enter_debug_mode(DCSR_CAUSE_SWBP);
 ---
 >     //enter_debug_mode(DCSR_CAUSE_SWBP);
-799a806,809
+799a805,808
 > 
 >     update_generator_register(this->id, "mideleg", state.mideleg->read(), 0xffffffffffffffffull, "read");
 >     update_generator_register(this->id, "mideleg", state.hideleg, 0xffffffffffffffffull, "read");
 > 
-803a814,816
+803a813,815
 > 
 >     update_generator_register(this->id, "medeleg", state.medeleg->read(), 0xffffffffffffffffull, "read");
 >     update_generator_register(this->id, "hedeleg", state.hedeleg, 0xffffffffffffffffull, "read");
-829a843,852
+829a842,851
 >     update_generator_register(this->id, "stvec", state.stvec->read(), 0xffffffffffffffffull, "read");
 >     update_generator_register(this->id, "PC", state.pc, 0xffffffffffffffffull, "write");
 >     update_generator_register(this->id, "scause", state.scause->read(), 0xffffffffffffffffull, "write");
@@ -188,7 +186,7 @@
 >     SimException enter_s(state.scause->read(), state.stval->read(), "enter_s", epc);
 >     update_exception_event(&enter_s);
 > 
-854a878,887
+854a877,886
 >     update_generator_register(this->id, "mtvec", state.mtvec->read(), 0xffffffffffffffffull, "read");
 >     update_generator_register(this->id, "PC", state.pc, 0xffffffffffffffffull, "write");
 >     update_generator_register(this->id, "mcause", state.mcause->read(), 0xffffffffffffffffull, "write");
@@ -199,7 +197,7 @@
 >     SimException enter_m(state.mcause->read(), state.mtval->read(), "enter_m", epc);
 >     update_exception_event(&enter_m);
 > 
-870,892d902
+870,892d901
 <     std::stringstream s;  // first put everything in a string, later send it to output
 < 
 < #ifdef RISCV_ENABLE_COMMITLOG
@@ -223,12 +221,12 @@
 < 
 <     debug_output_log(&s);
 < 
-922a933,936
+922a932,935
 > 
 >   reg_t effective_value = 0;
 >   std::string text_name = std::string(csr_name(which));
 > 
-925a940,951
+925a939,950
 > 
 >     // TODO(Noah): Improve this logic when a more general mechanism, i.e. one that could potentially
 >     // handle other alias registers, can be devised. Since sstatus is a restricted alias of mstatus,
@@ -241,22 +239,22 @@
 > 
 >     update_generator_register(this->id, text_name.c_str(), effective_value, 0xffffffffffffffffull, "write");
 > 
-932a959
+932a958
 >       effective_value = val;
-936a964
+936a963
 >       effective_value = state.fflags;
-940a969
+940a968
 >       effective_value = state.frm;
-945a975
+945a974
 >       effective_value = (state.fflags << FSR_AEXC_SHIFT) | (state.frm << FSR_RD_SHIFT);
-950a981
+950a980
 >       effective_value = (VU.vxsat << VCSR_VXSAT_SHIFT) | (VU.vxrm << VCSR_VXRM_SHIFT);
-957a989,990
+957a988,989
 > 
 >       effective_value = state.minstret;
-966a1000
+966a999
 >       effective_value = state.minstret;
-969,970c1003,1016
+969,970c1002,1015
 <     case CSR_MTVAL2: state.mtval2 = val; break;
 <     case CSR_MTINST: state.mtinst = val; break;
 ---
@@ -274,46 +272,46 @@
 >         effective_value = state.mtinst;
 >         break;
 >     }
-985a1032
+985a1031
 >       effective_value = state.hedeleg;
-990a1038
+990a1037
 >       effective_value = state.hideleg;
-997a1046
+997a1045
 >       effective_value = state.htval;
-1000a1050
+1000a1049
 >       effective_value = state.htinst;
-1018a1069
+1018a1068
 >       effective_value = state.hgatp;
-1023a1075
+1023a1074
 >         effective_value = state.tselect;
-1048a1101,1103
+1048a1100,1102
 > 
 >         // If mcontrol_t had a more clear size it may make sense to bitcopy its contents.
 >         effective_value = val;
-1056a1112,1113
+1056a1111,1112
 >         
 >         effective_value = val;
-1062d1118
+1062d1117
 <       // TODO: ndreset and fullreset
-1067a1124,1125
+1067a1123,1124
 >         
 >       memcpy(&effective_value, &(state.dcsr), sizeof(dcsr_t));
-1070a1129,1130
+1070a1128,1129
 > 
 >       effective_value = state.dpc;
-1073a1134,1135
+1073a1133,1134
 > 
 >       effective_value = state.dscratch0;
-1076a1139,1140
+1076a1138,1139
 >     
 >       effective_value = state.dscratch1;
-1080a1145,1146
+1080a1144,1145
 > 
 >       effective_value = VU.vstart;
-1084a1151,1152
+1084a1150,1151
 > 
 >       effective_value = VU.vxsat;
-1088a1157,1398
+1088a1156,1397
 > 
 >       effective_value = VU.vxrm;
 >       break;
@@ -556,9 +554,9 @@
 >       break;
 >     case CSR_VTYPE:
 >       VU.set_vl_api(VU.vl, val);
-1166a1477
+1166a1476
 >   std::string text_name = std::string(csr_name(which));
-1176c1487,1500
+1176c1486,1499
 <     return search->second->read();
 ---
 >     res = search->second->read();
@@ -575,10 +573,10 @@
 >     update_generator_register(this->id, text_name.c_str(), update_val, 0xffffffffffffffffull, "read");
 > 
 >     return res;
-1412a1737,1738
+1412a1736,1737
 >   update_generator_register(this->id, text_name.c_str(), res, 0xffffffffffffffffull, "read");
 > 
-1415a1742,1975
+1415a1741,1974
 > reg_t processor_t::get_csr_api(int which)
 > {
 > #define mcounteren_ok(__which) \
@@ -813,7 +811,7 @@
 >   *val = state.prv;
 > }
 > 
-1518a2079
+1518a2078
 >         update_generator_register(this->id, "mip", state.mip->read(), 0xffffffffffffffff, "read");
-1533a2095
+1533a2094
 >         update_generator_register(this->id, "mip", state.mip->read(), 0xffffffffffffffff, "write");
