@@ -16,7 +16,7 @@
 
 
 def get_reset_pc():
-    return 0x80000000
+    return 0x50000000
 
 
 def get_initial_pc(thread_id):
@@ -40,7 +40,7 @@ def get_base_initial_pc():
 
 
 def get_base_boot_pc():
-    return 0x80000024
+    return 0x80000000
 
 
 def get_initial_pc_offset():
