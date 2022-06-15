@@ -21,4 +21,4 @@ class FpixReporter(object):
 
 
 def configure_memory(interface):
-    interface.addMemoryRange(0, 0x000080000000, 0x000080100000)
+    interface.addMemoryRange(0, 0x000080000000, 0x0000bfffffff)
