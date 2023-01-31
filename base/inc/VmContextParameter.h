@@ -16,13 +16,14 @@
 #ifndef Force_VmContextParameter_H
 #define Force_VmContextParameter_H
 
-#include <Object.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Defines.h>
-#include <string>
 #include <map>
+#include <string>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force
 {

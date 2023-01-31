@@ -16,9 +16,10 @@
 #ifndef Force_FieldEncoding_H
 #define Force_FieldEncoding_H
 
-#include <Defines.h>
-#include <vector>
 #include <string>
+#include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

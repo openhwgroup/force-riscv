@@ -16,7 +16,7 @@
 #ifndef Force_Random_H
 #define Force_Random_H
 
-#include <Defines.h>
+#include "Defines.h"
 
 namespace Force {
 

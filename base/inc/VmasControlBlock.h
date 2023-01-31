@@ -16,8 +16,9 @@
 #ifndef Force_VmasControlBlock_H
 #define Force_VmasControlBlock_H
 
-#include <VmControlBlock.h>
 #include <vector>
+
+#include "VmControlBlock.h"
 
 namespace Force {
 

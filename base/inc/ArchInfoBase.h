@@ -16,7 +16,7 @@
 #ifndef Force_ArchInfoBase_H
 #define Force_ArchInfoBase_H
 
-#include <Architectures.h>
+#include "Architectures.h"
 
 namespace Force {
 

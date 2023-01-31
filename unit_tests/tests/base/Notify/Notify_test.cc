@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "Notify.h"
 
-#include <Notify.h>
-#include <Enums.h>
-#include <Register.h>
+#include "lest/lest.hpp"
+
+#include "Enums.h"
+#include "Log.h"
+#include "Register.h"
 
 namespace Force {
 

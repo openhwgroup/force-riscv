@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ResourceAccess.h>
-#include <Constraint.h>
-#include <Generator.h>
-#include <StringUtils.h>
-#include <Log.h>
+#include "ResourceAccess.h"
 
 #include <sstream>
+
+#include "Constraint.h"
+#include "Generator.h"
+#include "Log.h"
+#include "StringUtils.h"
 
 using namespace std;
 

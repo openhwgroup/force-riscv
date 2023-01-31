@@ -13,19 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <TopLevelResourcesRISCV.h>
+#include "TopLevelResourcesRISCV.h"
 
-#include <Config.h>
-#include <Log.h>
-#include <ObjectRegistry.h>
-#include <Operand.h>
-
-#include <ArchInfoRISCV.h>
-#include <InstructionRISCV.h>
-#include <RetOperandRISCV.h>
-#include <OperandRISCV.h>
-#include <PteAttributeRISCV.h>
-#include <PyEnvironmentRISCV.h>
+#include "ArchInfoRISCV.h"
+#include "Config.h"
+#include "InstructionRISCV.h"
+#include "Log.h"
+#include "ObjectRegistry.h"
+#include "Operand.h"
+#include "OperandRISCV.h"
+#include "PteAttributeRISCV.h"
+#include "PyEnvironmentRISCV.h"
+#include "RegisterRISCV.h"
+#include "RetOperandRISCV.h"
 
 using namespace std;
 

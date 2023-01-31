@@ -16,8 +16,9 @@
 #ifndef Force_VmConstraintValidator_H
 #define Force_VmConstraintValidator_H
 
-#include <Defines.h>
 #include <vector>
+
+#include "Defines.h"
 
 namespace Force
 {

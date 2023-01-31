@@ -13,10 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <OperandDataRequest.h>
-#include <Data.h>
+#include "OperandDataRequest.h"
+
 #include <sstream>
-#include <Log.h>
+
+#include "Data.h"
+#include "Log.h"
 
 using namespace std;
 

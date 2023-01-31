@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Log.h>
-#include <UtilityFunctionsRISCV.h>
+#include "UtilityFunctionsRISCV.h"
 
 #include <string>
+
+#include "Log.h"
 
 using namespace std;
 

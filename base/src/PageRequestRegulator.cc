@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PageRequestRegulator.h>
-#include <Generator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <GenRequest.h>
-#include <Variable.h>
-#include <Log.h>
+#include "PageRequestRegulator.h"
 
 #include <sstream>
+
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "Variable.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

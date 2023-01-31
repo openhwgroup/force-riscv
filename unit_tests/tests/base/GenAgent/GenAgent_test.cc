@@ -13,12 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "GenAgent.h"
 
-#include <GenAgent.h>
-#include <UtilityFunctions.h>
 #include <vector>
+
+#include "lest/lest.hpp"
+
+#include "Log.h"
+#include "UtilityFunctions.h"
 
 using text = std::string;
 using namespace std;

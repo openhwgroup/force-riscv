@@ -15,12 +15,14 @@
 //
 #ifndef Force_AddressSolutionStrategy_H
 #define Force_AddressSolutionStrategy_H
-#include <UopInterface.h>
-#include <ConditionFlags.h>
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
+
 #include <map>
+
+#include "ConditionFlags.h"
+#include "Defines.h"
+#include "Enums.h"
+#include "UopInterface.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

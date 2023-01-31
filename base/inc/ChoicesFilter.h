@@ -15,7 +15,8 @@
 //
 #ifndef Force_ChoicesFilter_H
 #define Force_ChoicesFilter_H
-#include <Defines.h>
+
+#include "Defines.h"
 
 namespace Force {
 

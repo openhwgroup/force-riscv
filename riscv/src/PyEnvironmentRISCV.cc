@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PyEnvironmentRISCV.h>
+#include "PyEnvironmentRISCV.h"
 
-#include <py_modules/PyEnumsRISCV.h>
+#include "pybind11/embed.h"
 
-#include <pybind11/embed.h>
+#include "py_modules/PyEnumsRISCV.h"
 
 namespace py = pybind11;
 

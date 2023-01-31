@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PhysicalPageSplitter.h>
-#include <VmMapper.h>
-#include <VmUtils.h>
-#include <Log.h>
+#include "PhysicalPageSplitter.h"
+
+#include "Log.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
 
 using namespace std;
 

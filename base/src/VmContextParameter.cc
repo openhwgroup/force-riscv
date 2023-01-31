@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmContextParameter.h>
-#include <Generator.h>
-#include <Log.h>
+#include "VmContextParameter.h"
 
 #include <sstream>
+
+#include "Generator.h"
+#include "Log.h"
 
 using namespace std;
 

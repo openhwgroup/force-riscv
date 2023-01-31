@@ -13,14 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
+#include "Constraint.h"
 
 #include <memory>
 #include <vector>
 
-#include <Constraint.h>
-#include <GenException.h>
-#include <Log.h>
+#include "lest/lest.hpp"
+
+#include "GenException.h"
+#include "Log.h"
 
 using text = std::string;
 using namespace std;

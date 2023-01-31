@@ -13,22 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <StateTransition.h>
-
-#include <Constraint.h>
-#include <Generator.h>
-#include <Log.h>
-#include <MemoryInitData.h>
-#include <Random.h>
-#include <Register.h>
-#include <RegisterReserver.h>
-#include <State.h>
-#include <StateElement.h>
-#include <UtilityFunctions.h>
-#include <VirtualMemoryInitializer.h>
+#include "StateTransition.h"
 
 #include <algorithm>
-#include <pybind11/stl.h>
+
+#include "pybind11/stl.h"
+
+#include "Constraint.h"
+#include "Generator.h"
+#include "Log.h"
+#include "MemoryInitData.h"
+#include "Random.h"
+#include "Register.h"
+#include "RegisterReserver.h"
+#include "State.h"
+#include "StateElement.h"
+#include "UtilityFunctions.h"
+#include "VirtualMemoryInitializer.h"
 
 /*!
   \file StateTransitionManagerRepository.cc

@@ -16,11 +16,11 @@
 #ifndef Force_ThreadGroupPartitioner_H
 #define Force_ThreadGroupPartitioner_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

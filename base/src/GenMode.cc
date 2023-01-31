@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenMode.h>
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <Log.h>
+#include "GenMode.h"
+
+#include "Log.h"
+#include "StringUtils.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

@@ -13,9 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RecoveryAddressGeneratorRISCV.h>
-#include <VmMapper.h>
-#include <GenRequest.h>
+#include "RecoveryAddressGeneratorRISCV.h"
+
+#include "GenRequest.h"
+#include "VmMapper.h"
 
 using namespace std;
 

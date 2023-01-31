@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PageTableAllocator.h>
-#include <Constraint.h>
-#include <PaGenerator.h>
-#include <GenException.h>
-#include <Log.h>
+#include "PageTableAllocator.h"
+
+#include "Constraint.h"
+#include "GenException.h"
+#include "Log.h"
+#include "PaGenerator.h"
 
 using namespace std;
 

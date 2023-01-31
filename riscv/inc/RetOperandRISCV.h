@@ -16,12 +16,12 @@
 #ifndef Force_RetOperandRISCV_H
 #define Force_RetOperandRISCV_H
 
-#include <Defines.h>
-#include <OperandConstraint.h>
-#include <Operand.h>
-
-#include <string>
 #include <map>
+#include <string>
+
+#include "Defines.h"
+#include "Operand.h"
+#include "OperandConstraint.h"
 
 namespace Force {
 

@@ -13,9 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-6a7
+7a8,9
 > #include "Force_Memory.h"
-12,17c13
+> 
+12,17c14
 <   // should return NULL for MMIO addresses
 <   virtual char* addr_to_mem(reg_t addr) = 0;
 <   // used for MMIO addresses
@@ -24,7 +25,7 @@
 <   // Callback for processors to let the simulation know they were reset.
 ---
 >   virtual ~simif_t() = default;
-20,21c16,27
+20,21c17,28
 <   virtual const char* get_symbol(uint64_t addr) = 0;
 < 
 ---

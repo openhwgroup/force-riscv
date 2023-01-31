@@ -16,10 +16,10 @@
 #ifndef Force_BntNodeManager_H
 #define Force_BntNodeManager_H
 
-#include <Object.h>
-#include <Defines.h>
-
 #include <vector>
+
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

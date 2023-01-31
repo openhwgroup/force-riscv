@@ -16,8 +16,9 @@
 #ifndef Force_VmAddressSpace_H
 #define Force_VmAddressSpace_H
 
-#include <VmMapper.h>
 #include <vector>
+
+#include "VmMapper.h"
 
 namespace Force {
 

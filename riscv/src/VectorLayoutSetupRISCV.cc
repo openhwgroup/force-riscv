@@ -13,13 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VectorLayoutSetupRISCV.h>
-
-#include <Config.h>
-#include <InstructionStructure.h>
-#include <Register.h>
+#include "VectorLayoutSetupRISCV.h"
 
 #include <cmath>
+
+#include "Config.h"
+#include "InstructionStructure.h"
+#include "Register.h"
 
 /*!
   \file VectorLayoutSetupRISCV.cc

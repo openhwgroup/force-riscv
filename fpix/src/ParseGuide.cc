@@ -14,9 +14,11 @@
 // limitations under the License.
 //
 #include "ParseGuide.h"
-#include <string>
+
 #include <iostream>
-#include <Log.h>
+#include <string>
+
+#include "Log.h"
 
 namespace Force
 {

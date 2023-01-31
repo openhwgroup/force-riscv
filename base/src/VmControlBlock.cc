@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmControlBlock.h>
-#include <RegisterReload.h>
-#include <Generator.h>
-#include <Register.h>
-#include <Log.h>
+#include "VmControlBlock.h"
 
 #include <sstream>
+
+#include "Generator.h"
+#include "Log.h"
+#include "Register.h"
+#include "RegisterReload.h"
 
 using namespace std;
 

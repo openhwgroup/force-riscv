@@ -13,29 +13,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Defines.h>
-PICKY_IGNORED
-#include <PageTableManager.h>
-#include <Constraint.h>
-#include <Page.h>
-#include <PageTable.h>
-#include <PageTableAllocator.h>
-#include <VmConstraint.h>
-#include <VmAddressSpace.h>
-#include <VmUtils.h>
-#include <PagingChoicesAdapter.h>
-#include <UtilityFunctions.h>
-#include <Log.h>
+#include "PageTableManager.h"
 
 #include <algorithm>
 #include <memory>
+
+#include "Constraint.h"
+#include "Defines.h"
+#include "Log.h"
+#include "Page.h"
+#include "PageTable.h"
+#include "PageTableAllocator.h"
+#include "PagingChoicesAdapter.h"
+#include "UtilityFunctions.h"
+#include "VmAddressSpace.h"
+#include "VmConstraint.h"
+#include "VmUtils.h"
 
 using namespace std;
 
 namespace Force
 {
 
-  PageTableManager::PageTableManager(EMemBankType bankType) : mBankType(bankType), mpPageTableAllocator(nullptr)
+  PageTableManager::PageTableManager(EMemBankType bankType) : mRootPageTables(), mVmConstraints(), mBankType(bankType), mpPageTableAllocator(nullptr)
   {
     mpPageTableAllocator = new PageTableAllocator(bankType);
   }

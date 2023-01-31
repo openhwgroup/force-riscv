@@ -16,11 +16,12 @@
 #ifndef Force_VaGenerator_H
 #define Force_VaGenerator_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <string>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

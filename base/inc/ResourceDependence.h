@@ -16,9 +16,9 @@
 #ifndef Force_ResourceDependence_H
 #define Force_ResourceDependence_H
 
-#include <ResourceAccess.h>
-#include <Notify.h>
-#include <NotifyDefines.h>
+#include "Notify.h"
+#include "NotifyDefines.h"
+#include "ResourceAccess.h"
 
 namespace Force {
 

@@ -13,9 +13,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ReExecutionManager.h>
-#include <ReExecutionUnit.h>
-#include <Log.h>
+#include "ReExecutionManager.h"
+
+#include "Log.h"
+#include "ReExecutionUnit.h"
 
 using namespace std;
 

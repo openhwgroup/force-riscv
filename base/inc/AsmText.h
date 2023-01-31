@@ -16,9 +16,10 @@
 #ifndef Force_AsmText_H
 #define Force_AsmText_H
 
-#include <vector>
 #include <string>
-#include <Object.h>
+#include <vector>
+
+#include "Object.h"
 
 namespace Force {
 

@@ -13,32 +13,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmasControlBlockRISCV.h>
-#include <Generator.h>
-#include <Config.h>
-#include <Choices.h>
-#include <Register.h>
-#include <MemoryManager.h>
-#include <PteAttribute.h>
-#include <Page.h>
-#include <PageTable.h>
-#include <UtilityFunctions.h>
-#include <GenRequest.h>
-#include <PagingChoicesAdapter.h>
-#include <Log.h>
-#include <RegisterReload.h>
-#include <Random.h>
-#include <VmAddressSpace.h>
-#include <PhysicalPageManager.h>
-#include <Constraint.h>
-#include <VmUtils.h>
-#include <PageInfoRecord.h>
-#include <SetupRootPageTableRISCV.h>
-#include <UtilityFunctionsRISCV.h>
-#include <PagingInfo.h>
+#include "VmasControlBlockRISCV.h"
 
 #include <memory>
 #include <sstream>
+
+#include "Choices.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "Page.h"
+#include "PageInfoRecord.h"
+#include "PageTable.h"
+#include "PagingChoicesAdapter.h"
+#include "PagingInfo.h"
+#include "PhysicalPageManager.h"
+#include "PteAttribute.h"
+#include "Random.h"
+#include "Register.h"
+#include "RegisterReload.h"
+#include "SetupRootPageTableRISCV.h"
+#include "UtilityFunctions.h"
+#include "UtilityFunctionsRISCV.h"
+#include "VmAddressSpace.h"
+#include "VmUtils.h"
 /*!
   \file VmasControlBlockRISCV.cc
   \brief Code to configure control block of address spaces.

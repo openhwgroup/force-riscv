@@ -16,13 +16,14 @@
 #ifndef Force_Architectures_H
 #define Force_Architectures_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <string>
-#include <vector>
 #include <list>
 #include <map>
+#include <string>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

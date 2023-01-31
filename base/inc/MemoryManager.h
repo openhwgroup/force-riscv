@@ -16,13 +16,14 @@
 #ifndef Force_MemoryManager_H
 #define Force_MemoryManager_H
 
-#include <Notify.h>
-#include <NotifyDefines.h>
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <vector>
 #include <map>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Notify.h"
+#include "NotifyDefines.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

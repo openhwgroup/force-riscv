@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AluImmediateConstraint.h>
-#include <Constraint.h>
-#include <UtilityFunctions.h>
-#include <Log.h>
+#include "AluImmediateConstraint.h"
+
+#include "Constraint.h"
+#include "Log.h"
+#include "UtilityFunctions.h"
 
 /*!
   \file AluImmediateConstraint.cc

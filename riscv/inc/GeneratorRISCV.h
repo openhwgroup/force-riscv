@@ -16,7 +16,7 @@
 #ifndef Force_GeneratorRISCV_H
 #define Force_GeneratorRISCV_H
 
-#include <Generator.h>
+#include "Generator.h"
 
 namespace Force {
 

@@ -13,27 +13,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenSequenceAgentRISCV.h>
-#include <Register.h>
-#include <GenRequest.h>
-#include <Generator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <UtilityFunctions.h>
-#include <BootOrder.h>
-#include <InitialSetupRISCV.h>
-#include <Log.h>
+#include "GenSequenceAgentRISCV.h"
 
-#include <Config.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <memory>
 #include <algorithm>
-#include <BaseOffsetConstraint.h>
-#include <GenExceptionAgent.h>
-#include <AddressTableManager.h>
-#include <State.h>
-#include <RecoveryAddressGeneratorRISCV.h>
+#include <memory>
+
+#include "AddressTableManager.h"
+#include "BaseOffsetConstraint.h"
+#include "BootOrder.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "GenExceptionAgent.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "InitialSetupRISCV.h"
+#include "Log.h"
+#include "RecoveryAddressGeneratorRISCV.h"
+#include "Register.h"
+#include "State.h"
+#include "UtilityFunctions.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

@@ -16,10 +16,10 @@
 #ifndef Fpix_Event_H
 #define Fpix_Event_H
 
-#include <Object.h>
-#include <SimAPI.h>
-#include <PluginManager.h>
-#include <EnumsFPIX.h>
+#include "EnumsFPIX.h"
+#include "Object.h"
+#include "PluginManager.h"
+#include "SimAPI.h"
 
 using namespace std;
 

@@ -16,10 +16,11 @@
 #ifndef Force_SchedulingStrategy_H
 #define Force_SchedulingStrategy_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force
 {

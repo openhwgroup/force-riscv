@@ -16,14 +16,16 @@
 #ifndef Force_PyInterface_H
 #define Force_PyInterface_H
 
-#include <Defines.h>
-#include <string>
-#include <Python.h>
-#include <pybind11/pybind11.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <map>
+#include <string>
 #include <vector>
+
+#include "Python.h"
+#include "pybind11/pybind11.h"
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace py = pybind11;
 

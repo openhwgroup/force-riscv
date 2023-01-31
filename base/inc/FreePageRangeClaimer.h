@@ -16,11 +16,11 @@
 #ifndef Force_FreePageRangeClaimer_H
 #define Force_FreePageRangeClaimer_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

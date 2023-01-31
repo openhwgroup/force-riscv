@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <SchedulingStrategy.h>
-#include <Random.h>
-#include <Log.h>
-#include <Constraint.h>
+#include "SchedulingStrategy.h"
 
 #include <algorithm>
+
+#include "Constraint.h"
+#include "Log.h"
+#include "Random.h"
 
 using namespace std;
 

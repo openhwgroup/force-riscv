@@ -13,20 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <InitialSetupRISCV.h>
-#include <Generator.h>
-#include <Config.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <Log.h>
-#include <Register.h>
-#include <VmInfo.h>
-#include <Memory.h>
-#include <PagingInfo.h>
+#include "InitialSetupRISCV.h"
 
-#include <memory>
 #include <algorithm>
+#include <memory>
 #include <sstream>
+
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Config.h"
+#include "Generator.h"
+#include "Log.h"
+#include "Memory.h"
+#include "PagingInfo.h"
+#include "Register.h"
+#include "VmInfo.h"
 
 using namespace std;
 

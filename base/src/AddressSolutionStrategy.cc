@@ -13,17 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AddressSolutionStrategy.h>
-#include <AddressTagging.h>
-#include <OperandSolution.h>
-#include <OperandSolutionMap.h>
-#include <Constraint.h>
-#include <Register.h>
-#include <Random.h>
-#include <UtilityFunctions.h>
-#include <Log.h>
+#include "AddressSolutionStrategy.h"
+
 #include <memory>
 #include <set>
+
+#include "AddressTagging.h"
+#include "Constraint.h"
+#include "Log.h"
+#include "OperandSolution.h"
+#include "OperandSolutionMap.h"
+#include "Random.h"
+#include "Register.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

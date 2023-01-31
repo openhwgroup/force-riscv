@@ -13,20 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Config.h>
-#include <PathUtils.h>
-#include <StringUtils.h>
-#include <XmlTreeWalker.h>
-#include <Architectures.h>
-#include <Log.h>
+#include "Config.h"
 
-#include <pugixml.h>
-
-#include <stdlib.h>
-#include <string.h>
+#include <chrono>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
-#include <chrono>
+
+#include "pugixml.h"
+
+#include "Architectures.h"
+#include "Log.h"
+#include "PathUtils.h"
+#include "StringUtils.h"
+#include "XmlTreeWalker.h"
 
 using namespace std;
 

@@ -13,41 +13,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RetOperandRISCV.h>
-#include <InstructionConstraintRISCV.h>
-#include <UtilityFunctionsRISCV.h>
-#include <InstructionConstraint.h>
-#include <Instruction.h>
-#include <Choices.h>
-#include <UtilityFunctions.h>
-#include <InstructionStructure.h>
-#include <GenExceptionAgent.h>
-#include <Generator.h>
-#include <AddressTable.h>
-#include <AddressTableManager.h>
-#include <VaGenerator.h>
-#include <VmManager.h>
-#include <GenRequest.h>
-#include <Constraint.h>
-#include <Register.h>
-#include <AddressTagging.h>
-#include <ChoicesFilter.h>
-#include <Random.h>
-#include <DataStation.h>
-#include <PeStateUpdate.h>
-#include <GenException.h>
-#include <VmInfo.h>
-#include <VmMapper.h>
-#include <ChoicesModerator.h>
-#include <OperandRequest.h>
-#include <VmUtils.h>
-#include <MemoryManager.h>
-#include <RegisterReload.h>
-#include <ExceptionManager.h>
-#include <PageRequestRegulator.h>
-#include <Log.h>
+#include "RetOperandRISCV.h"
 
 #include <memory>
+
+#include "AddressTable.h"
+#include "AddressTableManager.h"
+#include "AddressTagging.h"
+#include "Choices.h"
+#include "ChoicesFilter.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "DataStation.h"
+#include "ExceptionManager.h"
+#include "GenException.h"
+#include "GenExceptionAgent.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionConstraint.h"
+#include "InstructionConstraintRISCV.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "MemoryManager.h"
+#include "OperandRequest.h"
+#include "PageRequestRegulator.h"
+#include "PeStateUpdate.h"
+#include "Random.h"
+#include "Register.h"
+#include "RegisterReload.h"
+#include "UtilityFunctions.h"
+#include "UtilityFunctionsRISCV.h"
+#include "VaGenerator.h"
+#include "VmInfo.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
 
 using namespace std;
 

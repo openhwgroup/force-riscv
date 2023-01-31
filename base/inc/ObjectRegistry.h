@@ -16,8 +16,9 @@
 #ifndef Force_ObjectRegistry_H
 #define Force_ObjectRegistry_H
 
-#include <Object.h>
 #include <map>
+
+#include "Object.h"
 
 namespace Force {
 

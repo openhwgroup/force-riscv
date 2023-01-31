@@ -17,9 +17,9 @@
 #ifndef Force_Memory_H
 #define Force_Memory_H
 
+#include <iosfwd>
 #include <list>
 #include <map>
-#include <iosfwd>
 #include <vector>
 
 #include "Force_Defines.h"

@@ -17,11 +17,12 @@
 #define Fpix_PluginManager_H
 
 #include <map>
-#include <SimAPI.h>
-#include <SimPlugin.h>
-#include <ConfigFPIX.h>
-#include <EnumsFPIX.h>
-#include <PluginInterface.h>
+
+#include "ConfigFPIX.h"
+#include "EnumsFPIX.h"
+#include "PluginInterface.h"
+#include "SimAPI.h"
+#include "SimPlugin.h"
 
 using namespace std;
 

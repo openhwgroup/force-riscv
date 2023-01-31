@@ -16,16 +16,17 @@
 #ifndef Force_RestoreLoop_H
 #define Force_RestoreLoop_H
 
-#include <Notify.h>
-#include <NotifyDefines.h>
-#include <ResourcePeState.h>
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <map>
 #include <set>
 #include <stack>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Notify.h"
+#include "NotifyDefines.h"
+#include "ResourcePeState.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

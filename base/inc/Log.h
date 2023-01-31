@@ -16,8 +16,8 @@
 #ifndef Force_Log_H
 #define Force_Log_H
 
-#include <ostream>
 #include <cassert>
+#include <ostream>
 
 namespace Force {
 

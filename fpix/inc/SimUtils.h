@@ -16,12 +16,12 @@
 #ifndef Fpix_SimUtils_H
 #define Fpix_SimUtils_H
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
-#include <ConfigFPIX.h>
-#include <SimAPI.h>
+#include "ConfigFPIX.h"
+#include "SimAPI.h"
 
 using namespace std;
 

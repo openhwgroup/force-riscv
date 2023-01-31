@@ -13,29 +13,30 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <MemoryManager.h>
-#include <Memory.h>
-#include <Architectures.h>
-#include <Record.h>
-#include <TestIO.h>
-#include <Config.h>
-#include <PathUtils.h>
-#include <Constraint.h>
-#include <MemoryReservation.h>
-#include <PhysicalPageManager.h>
-#include <PageTableManager.h>
-#include <VmUtils.h>
-#include <PagingChoicesAdapter.h>
-#include <MemoryConstraint.h>
-#include <MemoryConstraintUpdate.h>
-#include <AddressReuseMode.h>
-#include <ImageIO.h>
-#include <SymbolManager.h>
-#include <MemoryTraits.h>
-#include <Log.h>
+#include "MemoryManager.h"
 
 #include <algorithm>
 #include <sstream>
+
+#include "AddressReuseMode.h"
+#include "Architectures.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "ImageIO.h"
+#include "Log.h"
+#include "Memory.h"
+#include "MemoryConstraint.h"
+#include "MemoryConstraintUpdate.h"
+#include "MemoryReservation.h"
+#include "MemoryTraits.h"
+#include "PageTableManager.h"
+#include "PagingChoicesAdapter.h"
+#include "PathUtils.h"
+#include "PhysicalPageManager.h"
+#include "Record.h"
+#include "SymbolManager.h"
+#include "TestIO.h"
+#include "VmUtils.h"
 
 using namespace std;
 

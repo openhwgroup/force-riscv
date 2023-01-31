@@ -13,27 +13,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#define CASE( name ) lest_CASE( specification(), name )
+#include "lest/lest.hpp"
 
-#include <memory>               //unique_ptr used for choice tree interaction
-#include <string.h>
+#include <cstring>
+#include <memory>
 
-#define TOTAL_REGISTER_NUMBER 20
-#define TOTAL_PHYSICAL_REGISTER_NUMBER 21
+#include "Architectures.h"
+#include "ChoicesParser.h"
+#include "Constraint.h"
+#include "Enums.h"
+#include "UnitTestUtilities.h"
 
 #define private public
 #define protected public
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Register.h"
+#include "RegisterRISCV.h"
 
-#include <Architectures.h>
-#include <Register.h>
-#include <RegisterRISCV.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <ChoicesParser.h>
-#include <Constraint.h>
-#include <Enums.h>
-#include <UnitTestUtilities.h>
+
+#define CASE( name ) lest_CASE( specification(), name )
+
+#define TOTAL_REGISTER_NUMBER 20
+#define TOTAL_PHYSICAL_REGISTER_NUMBER 21
 
 using namespace std;
 using namespace Force;

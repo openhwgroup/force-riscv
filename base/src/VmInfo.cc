@@ -13,11 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmInfo.h>
-#include <Register.h>
-#include <Generator.h>
-#include <Log.h>
+#include "VmInfo.h"
+
 #include <sstream>
+
+#include "Generator.h"
+#include "Log.h"
+#include "Register.h"
 
 using namespace std;
 

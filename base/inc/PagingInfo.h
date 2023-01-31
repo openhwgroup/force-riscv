@@ -18,8 +18,8 @@
 
 #include ARCH_ENUM_HEADER
 
-#include <string>
 #include <map>
+#include <string>
 
 namespace Force {
 

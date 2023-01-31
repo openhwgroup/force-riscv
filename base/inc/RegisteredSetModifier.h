@@ -16,14 +16,14 @@
 #ifndef Force_RegisteredSet_H
 #define Force_RegisteredSet_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <Object.h>
-
-#include <string>
 #include <list>
 #include <map>
+#include <string>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

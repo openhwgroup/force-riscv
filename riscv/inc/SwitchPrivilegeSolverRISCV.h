@@ -16,11 +16,11 @@
 #ifndef Force_SwitchPrivilegeSolverRISCV_H
 #define Force_SwitchPrivilegeSolverRISCV_H
 
-#include <Defines.h>
-
 #include <map>
 #include <string>
 #include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

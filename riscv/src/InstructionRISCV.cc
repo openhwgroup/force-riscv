@@ -13,23 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <InstructionRISCV.h>
-#include <InstructionConstraintRISCV.h>
-#include <OperandRISCV.h>
-#include <RetOperandRISCV.h>
-#include <VectorLayoutSetupRISCV.h>
-#include <Choices.h>
-#include <ChoicesModerator.h>
-#include <Generator.h>
-#include <GenRequest.h>
-#include <Register.h>
-#include <VectorLayout.h>
-#include <InstructionStructure.h>
-#include <Log.h>
+#include "InstructionRISCV.h"
 
 #include <memory>
 #include <numeric>
 #include <sstream>
+
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "InstructionConstraintRISCV.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "OperandRISCV.h"
+#include "Register.h"
+#include "RetOperandRISCV.h"
+#include "VectorLayout.h"
+#include "VectorLayoutSetupRISCV.h"
 
 /*!
   \file InstructionRISCV.cc

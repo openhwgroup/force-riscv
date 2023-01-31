@@ -13,21 +13,23 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenRequest.h>
-#include <OperandRequest.h>
-#include <OperandDataRequest.h>
-#include <GenException.h>
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <VmUtils.h>
-#include <Constraint.h>
-#include <Log.h>
-#include <Config.h>
-#include <BntNode.h>
-#include <Instruction.h>
-#include <sstream>
+#include "GenRequest.h"
+
 #include <algorithm>
 #include <cctype>
+#include <sstream>
+
+#include "BntNode.h"
+#include "Config.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "Instruction.h"
+#include "Log.h"
+#include "OperandDataRequest.h"
+#include "OperandRequest.h"
+#include "StringUtils.h"
+#include "UtilityFunctions.h"
+#include "VmUtils.h"
 
 /*!
   \file GenRequest.cc

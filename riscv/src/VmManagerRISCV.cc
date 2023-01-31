@@ -13,10 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmManagerRISCV.h>
-#include <VmFactoryRISCV.h>
-#include <VmInfoRISCV.h>
-#include <Log.h>
+#include "VmManagerRISCV.h"
+
+#include "Log.h"
+#include "VmFactoryRISCV.h"
+#include "VmInfoRISCV.h"
 
 using namespace std;
 

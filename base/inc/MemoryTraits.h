@@ -16,13 +16,13 @@
 #ifndef Force_MemoryTraits_H
 #define Force_MemoryTraits_H
 
-#include <Defines.h>
-#include ARCH_ENUM_HEADER
-
 #include <fstream>
 #include <map>
 #include <set>
 #include <vector>
+
+#include "Defines.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

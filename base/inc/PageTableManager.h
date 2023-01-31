@@ -16,13 +16,14 @@
 #ifndef PAGE_TABLE_MANAGER_H
 #define PAGE_TABLE_MANAGER_H
 
-#include <Object.h>
-#include <Defines.h>
-#include <Enums.h>
-#include <PageTableAllocator.h>
-#include ARCH_ENUM_HEADER
 #include <map>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include "PageTableAllocator.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force
 {

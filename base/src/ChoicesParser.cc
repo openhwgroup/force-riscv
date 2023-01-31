@@ -13,20 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Choices.h>
-#include <ChoicesParser.h>
-#include <Architectures.h>
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <Config.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <XmlTreeWalker.h>
-#include <Log.h>
+#include "ChoicesParser.h"
 
-#include <pugixml.h>
-#include <string.h>
+#include <cstring>
 #include <iostream>
+
+#include "pugixml.h"
+
+#include "Architectures.h"
+#include "Choices.h"
+#include "Config.h"
+#include "Enums.h"
+#include "Log.h"
+#include "StringUtils.h"
+#include "UtilityFunctions.h"
+#include "XmlTreeWalker.h"
+#include ARCH_ENUM_HEADER
 
 /*!
   \file ChoicesParser.cc

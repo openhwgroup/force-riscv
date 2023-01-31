@@ -16,11 +16,12 @@
 #ifndef Force_VmPaMapper_H
 #define Force_VmPaMapper_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <VmUtils.h>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "VmUtils.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

@@ -16,10 +16,11 @@
 #ifndef Force_FrontEndCall_H
 #define Force_FrontEndCall_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
 #include <map>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

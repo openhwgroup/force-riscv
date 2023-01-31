@@ -16,8 +16,9 @@
 #ifndef Force_PcSpacing_H
 #define Force_PcSpacing_H
 
-#include <Defines.h>
 #include <vector>
+
+#include "Defines.h"
 
 namespace Force {
 

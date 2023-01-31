@@ -16,7 +16,7 @@
 #ifndef Force_BootOrderRISCV_H
 #define Force_BootOrderRISCV_H
 
-#include <BootOrder.h>
+#include "BootOrder.h"
 
 namespace Force {
 

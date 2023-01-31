@@ -16,7 +16,7 @@
 #ifndef Force_VmManagerRISCV_H
 #define Force_VmManagerRISCV_H
 
-#include <VmManager.h>
+#include "VmManager.h"
 
 namespace Force {
 

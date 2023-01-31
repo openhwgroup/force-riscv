@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <BntNodeManager.h>
-#include <BntNode.h>
-#include <Log.h>
+#include "BntNodeManager.h"
 
 #include <sstream>
+
+#include "BntNode.h"
+#include "Log.h"
 
 /*!
   \file BntNodeManager.cc

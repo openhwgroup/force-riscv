@@ -16,11 +16,10 @@
 #ifndef Force_PyPyInterface_H
 #define Force_PyPyInterface_H
 
-#include <PyInterface.h>
+#include "pybind11/pybind11.h"
 
-#include <ThreadContext.h>
-
-#include <pybind11/pybind11.h>
+#include "PyInterface.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

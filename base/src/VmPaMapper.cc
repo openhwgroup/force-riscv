@@ -13,20 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmPaMapper.h>
-#include <VmAddressSpace.h>
-#include <GenRequest.h>
-#include <Page.h>
-#include <VmasControlBlock.h>
-#include <RandomUtils.h>
-#include <Constraint.h>
-#include <Choices.h>
-#include <PagingChoicesAdapter.h>
-#include <GenException.h>
-#include <VmMappingStrategy.h>
-#include <Log.h>
+#include "VmPaMapper.h"
 
 #include <memory>
+
+#include "Choices.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Log.h"
+#include "Page.h"
+#include "PagingChoicesAdapter.h"
+#include "RandomUtils.h"
+#include "VmAddressSpace.h"
+#include "VmMappingStrategy.h"
+#include "VmasControlBlock.h"
 
 /*!
   \file VmPaMapper.cc

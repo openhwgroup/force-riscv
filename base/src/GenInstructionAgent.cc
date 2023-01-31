@@ -13,44 +13,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Defines.h>
-PICKY_IGNORE_BLOCK_START
-#include <SimAPI.h>
-PICKY_IGNORE_BLOCK_END
-#include <GenInstructionAgent.h>
-#include <GenRequest.h>
-#include <InstructionSet.h>
-#include <Generator.h>
-#include <InstructionStructure.h>
-#include <ObjectRegistry.h>
-#include <Instruction.h>
-#include <GenException.h>
-#include <GenMode.h>
-#include <BntNode.h>
-#include <Record.h>
-#include <Register.h>
-#include <UtilityAlgorithms.h>
-#include <MemoryManager.h>
-#include <GenPC.h>
-#include <VmUtils.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <AddressTagging.h>
-#include <ExceptionManager.h>
-#include <InstructionResults.h>
-#include <Variable.h>
-#include <BntHookManager.h>
-#include <BntNodeManager.h>
-#include <RestoreLoop.h>
-#include <ResourcePeState.h>
-#include <VirtualMemoryInitializer.h>
-#include <MemoryInitData.h>
-#include <Operand.h>
-#include <Config.h>
-#include <ReExecutionManager.h>
-#include <Log.h>
+#include "GenInstructionAgent.h"
 
 #include <memory>
+
+#include "AddressTagging.h"
+#include "BntHookManager.h"
+#include "BntNode.h"
+#include "BntNodeManager.h"
+#include "Config.h"
+#include "Defines.h"
+#include "ExceptionManager.h"
+#include "GenException.h"
+#include "GenMode.h"
+#include "GenPC.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionResults.h"
+#include "InstructionSet.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "MemoryInitData.h"
+#include "MemoryManager.h"
+#include "ObjectRegistry.h"
+#include "Operand.h"
+#include "ReExecutionManager.h"
+#include "Record.h"
+#include "Register.h"
+#include "ResourcePeState.h"
+#include "RestoreLoop.h"
+#include "UtilityAlgorithms.h"
+#include "Variable.h"
+#include "VirtualMemoryInitializer.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
+
+PICKY_IGNORE_BLOCK_START
+#include "SimAPI.h"
+PICKY_IGNORE_BLOCK_END
 
 using namespace std;
 

@@ -16,11 +16,10 @@
 #ifndef Force_PyStateElement_H
 #define Force_PyStateElement_H
 
-#include <StateElement.h>
+#include "pybind11/pybind11.h"
 
-#include <ThreadContext.h>
-
-#include <pybind11/pybind11.h>
+#include "StateElement.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

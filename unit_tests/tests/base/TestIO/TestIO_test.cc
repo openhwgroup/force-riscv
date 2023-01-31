@@ -13,17 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
-#include <Random.h>
-//------------------------------------------------
-// include necessary header files here
-//------------------------------------------------
-#include <Defines.h>
-#include <Memory.h>
-#include <TestIO.h>
-#include <SymbolManager.h>
-#include <Enums.h>
+#include "TestIO.h"
+
+#include "lest/lest.hpp"
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Log.h"
+#include "Memory.h"
+#include "Random.h"
+#include "SymbolManager.h"
 
 using text = std::string;
 

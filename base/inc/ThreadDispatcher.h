@@ -16,12 +16,12 @@
 #ifndef Force_ThreadDispatcher_H
 #define Force_ThreadDispatcher_H
 
-#include <Defines.h>
-
 #include <condition_variable>
 #include <map>
 #include <mutex>
 #include <thread>
+
+#include "Defines.h"
 
 namespace Force {
 

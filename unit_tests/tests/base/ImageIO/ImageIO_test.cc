@@ -13,14 +13,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#define CASE( name ) lest_CASE( specification(), name )
+#include "ImageIO.h"
 
-#include <map>
 #include <cstdio>
-#include <Memory.h>
-#include <ImageIO.h>
-#include <Register.h>
+#include <map>
+
+#include "lest/lest.hpp"
+
+#include "Memory.h"
+#include "Register.h"
+
+#define CASE( name ) lest_CASE( specification(), name )
 
 using namespace Force;
 using text = std::string;

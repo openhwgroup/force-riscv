@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmInfoRISCV.h>
-#include <Generator.h>
-#include <Register.h>
-#include <Log.h>
+#include "VmInfoRISCV.h"
 
 #include <sstream>
+
+#include "Generator.h"
+#include "Log.h"
+#include "Register.h"
 
 using namespace std;
 

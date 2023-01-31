@@ -16,9 +16,9 @@
 #ifndef Force_AddressTable_H
 #define Force_AddressTable_H
 
-#include <Object.h>
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

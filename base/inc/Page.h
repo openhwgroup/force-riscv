@@ -16,12 +16,13 @@
 #ifndef Force_Page_H
 #define Force_Page_H
 
-#include <Defines.h>
-#include <Object.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <PageTable.h>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include "PageTable.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

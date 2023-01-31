@@ -17,6 +17,9 @@
 #ifndef CosimTest_SimLoader_H
 #define CosimTest_SimLoader_H
 
+#include <stddef.h>
+#include <stdint.h>
+
 // The Handcar simulator is to be loaded dynamically. All function addresses can then be set...
 
 struct SimDllApi {

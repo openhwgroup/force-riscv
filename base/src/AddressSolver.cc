@@ -13,34 +13,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Defines.h>
-#include <AddressSolver.h>
-#include <Generator.h>
-#include <Instruction.h>
-#include <Operand.h>
-#include <OperandConstraint.h>
-#include <Register.h>
-#include <Choices.h>
-#include <VmMapper.h>
-#include <VmManager.h>
-#include <Constraint.h>
-#include <RandomUtils.h>
-#include <AddressSolutionFilter.h>
-#include <AddressSolvingShared.h>
-#include <AddressTagging.h>
-#include <BaseOffsetConstraint.h>
-#include <AluImmediateConstraint.h>
-#include <Random.h>
-#include <AddressFilteringRegulator.h>
-#include <Log.h>
-#include <OperandSolution.h>
-#include <AddressSolutionStrategy.h>
-#include <InstructionStructure.h>
-#include <GenMode.h>
+#include "AddressSolver.h"
 
 #include <algorithm>
 #include <memory>
 #include <sstream>
+
+#include "AddressFilteringRegulator.h"
+#include "AddressSolutionFilter.h"
+#include "AddressSolutionStrategy.h"
+#include "AddressSolvingShared.h"
+#include "AddressTagging.h"
+#include "AluImmediateConstraint.h"
+#include "BaseOffsetConstraint.h"
+#include "Choices.h"
+#include "Constraint.h"
+#include "Defines.h"
+#include "GenMode.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "Operand.h"
+#include "OperandConstraint.h"
+#include "OperandSolution.h"
+#include "Random.h"
+#include "RandomUtils.h"
+#include "Register.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

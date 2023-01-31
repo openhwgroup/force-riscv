@@ -16,8 +16,8 @@
 #ifndef Force_RegisterInitPolicy_H
 #define Force_RegisterInitPolicy_H
 
-#include <Object.h>
-#include <Defines.h>
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

@@ -16,7 +16,7 @@
 #ifndef Force_GenQueryAgent_H
 #define Force_GenQueryAgent_H
 
-#include <GenAgent.h>
+#include "GenAgent.h"
 
 namespace Force {
 

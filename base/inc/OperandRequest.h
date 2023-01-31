@@ -16,8 +16,8 @@
 #ifndef Force_OperandRequest_H
 #define Force_OperandRequest_H
 
-#include <Defines.h>
-#include <Object.h>
+#include "Defines.h"
+#include "Object.h"
 
 namespace Force {
 

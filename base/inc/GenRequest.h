@@ -16,13 +16,13 @@
 #ifndef Force_GenRequest_H
 #define Force_GenRequest_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-
 #include <map>
 #include <set>
 #include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include ARCH_ENUM_HEADER
 
 /*!
   Declare pybind11::object type without actual definitions.

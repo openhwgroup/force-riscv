@@ -13,13 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <iostream>
-#include <SimEvent.h>
-#include <SimThread.h>
-#include <GenException.h>
-#include <Log.h>
+#include "SimThread.h"
 
+#include <iostream>
 #include <sstream>
+
+#include "GenException.h"
+#include "Log.h"
+#include "SimEvent.h"
 
 using namespace std;
 

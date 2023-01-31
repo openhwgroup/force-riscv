@@ -16,14 +16,13 @@
 #ifndef Force_PyState_H
 #define Force_PyState_H
 
-#include <State.h>
+#include "pybind11/pybind11.h"
+#include "pybind11/stl.h"
 
-#include <Generator.h>
-#include <Scheduler.h>
-#include <ThreadContext.h>
-
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include "Generator.h"
+#include "Scheduler.h"
+#include "State.h"
+#include "ThreadContext.h"
 
 namespace py = pybind11;
 

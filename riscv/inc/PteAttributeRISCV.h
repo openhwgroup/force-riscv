@@ -16,8 +16,8 @@
 #ifndef Force_PteAttributeRISCV_H
 #define Force_PteAttributeRISCV_H
 
-#include <PteAttribute.h>
-#include <Object.h>
+#include "Object.h"
+#include "PteAttribute.h"
 
 namespace Force {
 

@@ -13,23 +13,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <InstructionSet.h>
-#include <InstructionStructure.h>
-#include <Architectures.h>
-#include <Config.h>
-#include <XmlTreeWalker.h>
-#include <Enums.h>
+#include "InstructionSet.h"
+
+#include <cstring>
+
+#include "pugixml.h"
+
+#include "Architectures.h"
+#include "AsmText.h"
+#include "Config.h"
+#include "Enums.h"
+#include "GenException.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "StringUtils.h"
+#include "UopUtils.h"
+#include "UtilityFunctions.h"
+#include "XmlTreeWalker.h"
 #include ARCH_ENUM_HEADER
-#include <UtilityFunctions.h>
-#include <StringUtils.h>
-#include <AsmText.h>
-#include <UopUtils.h>
-#include <GenException.h>
-#include <Log.h>
-
-#include <pugixml.h>
-
-#include <string.h>
 
 using namespace std;
 

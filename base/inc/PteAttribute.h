@@ -16,9 +16,9 @@
 #ifndef Force_PteAttribute_H
 #define Force_PteAttribute_H
 
-#include <Defines.h>
-#include <Object.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

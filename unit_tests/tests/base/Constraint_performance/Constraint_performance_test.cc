@@ -13,12 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <lest/lest.hpp>
-#include <Log.h>
+#include "Constraint.h"
 
-#include <Constraint.h>
-#include <Random.h>
 #include <chrono>
+
+#include "lest/lest.hpp"
+
+#include "Log.h"
+#include "Random.h"
 
 using text = std::string;
 using namespace Force;

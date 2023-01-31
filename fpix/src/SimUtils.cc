@@ -13,19 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <stdlib.h>
-#include <string.h>
+#include "SimUtils.h"
+
+#include <chrono>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <sstream>
-#include <chrono>
 
-#include <Log.h>
-#include <elfio/elfio.h>
-#include <Random.h>
+#include "elfio/elfio.h"
 
-#include <ConfigFPIX.h>
-#include <SimUtils.h>
-#include <SimAPI.h>
+#include "ConfigFPIX.h"
+#include "Log.h"
+#include "Random.h"
+#include "SimAPI.h"
 
 using namespace std;
 using namespace ELFIO;

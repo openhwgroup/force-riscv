@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <VmConstraint.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "VmConstraint.h"
 
 #include <sstream>
+
+#include "Constraint.h"
+#include "Log.h"
 
 using namespace std;
 

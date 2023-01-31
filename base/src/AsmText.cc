@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <AsmText.h>
-#include <Instruction.h>
-#include <Operand.h>
-#include <ObjectRegistry.h>
-#include <Log.h>
+#include "AsmText.h"
+
+#include "Instruction.h"
+#include "Log.h"
+#include "ObjectRegistry.h"
+#include "Operand.h"
 
 using namespace std;
 

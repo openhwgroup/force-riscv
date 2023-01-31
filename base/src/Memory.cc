@@ -13,15 +13,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <vector>
-#include <ostream>
-#include <iomanip>
-#include <Memory.h>
-#include <Log.h>
+#include "Memory.h"
+
 #include <fmt.h>
-#include <Random.h>
-#include <Config.h>
-#include <UtilityFunctions.h>
+
+#include <iomanip>
+#include <ostream>
+#include <vector>
+
+#include "Config.h"
+#include "Log.h"
+#include "Random.h"
+#include "UtilityFunctions.h"
 
 using namespace std;
 

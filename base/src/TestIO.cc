@@ -13,19 +13,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <vector>
-#include <elfio/elfio.h>
+#include "TestIO.h"
+
+#include <fmt.h>
+
 #include <fstream>
 #include <numeric>
+#include <vector>
 
-#include <Memory.h>
-#include <fmt.h>
-#include <Generator.h>
-#include <Instruction.h>
-#include <InstructionResults.h>
-#include <TestIO.h>
-#include <SymbolManager.h>
-#include <Log.h>
+#include "elfio/elfio.h"
+
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionResults.h"
+#include "Log.h"
+#include "Memory.h"
+#include "SymbolManager.h"
 
 using namespace std;
 using namespace ELFIO;

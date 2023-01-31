@@ -13,20 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <PagingInfo.h>
-#include <PteStructure.h>
-#include <Architectures.h>
-#include <Config.h>
-#include <XmlTreeWalker.h>
-#include <Enums.h>
+#include "PagingInfo.h"
+
+#include <cstring>
+
+#include "pugixml.h"
+
+#include "Architectures.h"
+#include "Config.h"
+#include "Enums.h"
+#include "GenException.h"
+#include "Log.h"
+#include "PteStructure.h"
+#include "StringUtils.h"
+#include "XmlTreeWalker.h"
 #include ARCH_ENUM_HEADER
-#include <StringUtils.h>
-#include <GenException.h>
-#include <Log.h>
-
-#include <pugixml.h>
-
-#include <string.h>
 
 using namespace std;
 

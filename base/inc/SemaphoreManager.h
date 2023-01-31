@@ -16,10 +16,10 @@
 #ifndef Force_SemaphoreManager_H
 #define Force_SemaphoreManager_H
 
-#include <Defines.h>
-
-#include <string>
 #include <map>
+#include <string>
+
+#include "Defines.h"
 
 namespace Force {
 

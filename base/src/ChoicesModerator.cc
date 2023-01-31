@@ -13,12 +13,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <ChoicesModerator.h>
-#include <Choices.h>
-#include <Log.h>
-#include <GenException.h>
+#include "ChoicesModerator.h"
 
 #include <sstream>
+
+#include "Choices.h"
+#include "GenException.h"
+#include "Log.h"
 
 using namespace std;
 

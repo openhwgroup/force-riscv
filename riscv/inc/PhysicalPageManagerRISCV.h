@@ -16,7 +16,7 @@
 #ifndef Force_PhysicalPageManagerRISCV_H
 #define Force_PhysicalPageManagerRISCV_H
 
-#include <PhysicalPageManager.h>
+#include "PhysicalPageManager.h"
 
 namespace Force {
 

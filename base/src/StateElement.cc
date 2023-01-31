@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <StateElement.h>
-
-#include <Log.h>
+#include "StateElement.h"
 
 #include <sstream>
+
+#include "Log.h"
 
 /*!
   \file StateElement.cc

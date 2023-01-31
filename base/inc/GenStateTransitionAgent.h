@@ -16,10 +16,9 @@
 #ifndef Force_GenStateTransitionAgent_H
 #define Force_GenStateTransitionAgent_H
 
-#include <GenAgent.h>
-
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
+#include "GenAgent.h"
 
 namespace Force {
 

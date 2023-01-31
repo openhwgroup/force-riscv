@@ -16,10 +16,10 @@
 #ifndef Force_GenAgent_H
 #define Force_GenAgent_H
 
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
 #include ARCH_ENUM_HEADER
-#include <Object.h>
 
 namespace Force {
 

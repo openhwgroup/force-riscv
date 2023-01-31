@@ -16,12 +16,13 @@
 #ifndef Force_Data_H
 #define Force_Data_H
 
-#include <Defines.h>
-#include <Object.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <vector>
 #include <memory>
+#include <vector>
+
+#include "Defines.h"
+#include "Enums.h"
+#include "Object.h"
+#include ARCH_ENUM_HEADER
 
 namespace Force {
 

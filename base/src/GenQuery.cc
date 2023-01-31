@@ -13,12 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenQuery.h>
-#include <Constraint.h>
-#include <StringUtils.h>
-#include <Log.h>
+#include "GenQuery.h"
 
-#include <PageInfoRecord.h>
+#include "Constraint.h"
+#include "Log.h"
+#include "PageInfoRecord.h"
+#include "StringUtils.h"
 
 /*!
   \file GenQuery.cc

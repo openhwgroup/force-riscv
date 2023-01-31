@@ -16,8 +16,9 @@
 #ifndef Force_PagingChoicesAdapter_H
 #define Force_PagingChoicesAdapter_H
 
-#include <Defines.h>
 #include <string>
+
+#include "Defines.h"
 
 namespace Force {
 

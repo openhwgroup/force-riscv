@@ -13,11 +13,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <RegisterReserver.h>
-#include <ReservationConstraint.h>
-#include <Register.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "RegisterReserver.h"
+
+#include "Constraint.h"
+#include "Log.h"
+#include "Register.h"
+#include "ReservationConstraint.h"
 
 using namespace std;
 

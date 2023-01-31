@@ -13,17 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <vector>
+#include "ImageIO.h"
+
+#include <fmt.h>
+
+#include <fstream>
 #include <set>
 #include <sstream>
-#include <fstream>
-#include <ImageIO.h>
-#include <Memory.h>
-#include <Config.h>
-#include <fmt.h>
-#include <Log.h>
-#include <Register.h>
-#include <StringUtils.h>
+#include <vector>
+
+#include "Config.h"
+#include "Log.h"
+#include "Memory.h"
+#include "Register.h"
+#include "StringUtils.h"
 
 /*!
   \file ImageIO.cc

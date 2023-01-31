@@ -13,19 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <Page.h>
-#include <PteStructure.h>
-#include <ObjectRegistry.h>
-#include <PteAttribute.h>
-#include <VmUtils.h>
-#include <VmFactory.h>
-#include <GenException.h>
-#include <Log.h>
+#include "Page.h"
 
 #include <algorithm>
+#include <numeric>  // C++UP accumulate defined in numeric
 #include <sstream>
-// C++UP accumulate defined in numeric
-#include <numeric>
+
+#include "GenException.h"
+#include "Log.h"
+#include "ObjectRegistry.h"
+#include "PteAttribute.h"
+#include "PteStructure.h"
+#include "VmFactory.h"
+#include "VmUtils.h"
 
 using namespace std;
 

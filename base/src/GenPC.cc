@@ -13,15 +13,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <GenPC.h>
-#include <VmUtils.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <Generator.h>
-#include <Constraint.h>
-#include <Log.h>
+#include "GenPC.h"
 
 #include <sstream>
+
+#include "Constraint.h"
+#include "Generator.h"
+#include "Log.h"
+#include "VmManager.h"
+#include "VmMapper.h"
+#include "VmUtils.h"
 
 /*!
   \file GenPC.cc

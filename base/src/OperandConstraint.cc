@@ -13,28 +13,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-#include <OperandConstraint.h>
-#include <Choices.h>
-#include <InstructionStructure.h>
-#include <Generator.h>
-#include <ChoicesModerator.h>
-#include <GenException.h>
-#include <Instruction.h>
-#include <Constraint.h>
-#include <Operand.h>
-#include <OperandRequest.h>
-#include <Register.h>
-#include <RegisterReserver.h>
-#include <InstructionConstraint.h>
-#include <GenRequest.h>
-#include <PageRequestRegulator.h>
-#include <VmManager.h>
-#include <VmMapper.h>
-#include <AddressReuseMode.h>
-#include <Log.h>
-#include <VectorLayout.h>
+#include "OperandConstraint.h"
 
 #include <memory>
+
+#include "AddressReuseMode.h"
+#include "Choices.h"
+#include "ChoicesModerator.h"
+#include "Constraint.h"
+#include "GenException.h"
+#include "GenRequest.h"
+#include "Generator.h"
+#include "Instruction.h"
+#include "InstructionConstraint.h"
+#include "InstructionStructure.h"
+#include "Log.h"
+#include "Operand.h"
+#include "OperandRequest.h"
+#include "PageRequestRegulator.h"
+#include "Register.h"
+#include "RegisterReserver.h"
+#include "VectorLayout.h"
+#include "VmManager.h"
+#include "VmMapper.h"
 
 using namespace std;
 

@@ -16,11 +16,12 @@
 #ifndef Force_OperandSolutionMap_H
 #define Force_OperandSolutionMap_H
 
-#include <Defines.h>
-#include <vector>
 #include <algorithm>
 #include <utility>
-#include <Log.h>
+#include <vector>
+
+#include "Defines.h"
+#include "Log.h"
 
 using namespace std;
 

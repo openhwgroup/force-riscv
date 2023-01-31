@@ -16,8 +16,8 @@
 #ifndef Force_PageTableAllocator_H
 #define Force_PageTableAllocator_H
 
-#include <Defines.h>
-#include <Enums.h>
+#include "Defines.h"
+#include "Enums.h"
 #include ARCH_ENUM_HEADER
 
 namespace Force {

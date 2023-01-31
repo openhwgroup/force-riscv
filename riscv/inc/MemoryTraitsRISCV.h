@@ -16,7 +16,7 @@
 #ifndef Force_MemoryTraitsRISCV_H
 #define Force_MemoryTraitsRISCV_H
 
-#include <MemoryTraits.h>
+#include "MemoryTraits.h"
 
 namespace Force {
 

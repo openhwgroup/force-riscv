@@ -16,7 +16,7 @@
 #ifndef Force_GenSequenceAgentRISCV_H
 #define Force_GenSequenceAgentRISCV_H
 
-#include <GenSequenceAgent.h>
+#include "GenSequenceAgent.h"
 
 namespace Force {
 

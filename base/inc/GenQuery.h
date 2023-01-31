@@ -16,15 +16,15 @@
 #ifndef Force_GenQuery_H
 #define Force_GenQuery_H
 
-#include <Defines.h>
-#include <Enums.h>
-#include ARCH_ENUM_HEADER
-#include <string>
 #include <map>
+#include <string>
 #include <utility>
 
-#include <PageInfoRecord.h>
-#include <ExceptionRecords.h>
+#include "Defines.h"
+#include "Enums.h"
+#include "ExceptionRecords.h"
+#include "PageInfoRecord.h"
+#include ARCH_ENUM_HEADER
 
 /*!
   Declare pybind11::object type without actual definitions.
