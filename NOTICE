@@ -1,4 +1,5 @@
  Copyright (C) [2020] Futurewei Technologies, Inc.
+ Copyright 2019-2021 T-Head Semiconductor Co., Ltd.
 
  FORCE-RISCV is licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,3 +21,12 @@ Copyright (C) [2020] Futurewei Technologies, Inc.
 
 This product includes software developed at Futurewei.
 
+
+Copyright 2019-2021 T-Head Semiconductor Co., Ltd.
+This product includes software developed at T-Head.
+
+All files in 3rd_party is not part of the FORCE-RISCV source code.
+Their licenses can be found under each directory of 3rd_party or the file hearder of files in 3rd_party.
+
+All files in 3rd_party/tools is part of pybind11(https://github.com/pybind/pybind11) project, 
+which follows LICENSE policy in 3rd_party/tools/LICENSE.
