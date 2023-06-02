@@ -68,6 +68,12 @@ class Env(object):
         self.executor = GenThreadExecutorFactory.createGenThreadExecutor(
             self.numberChips * self.numberCores * self.numberThreads
         )
+        import os
+        if os.getenv("DEBUGPY_EN"):
+            import debugpy
+            debugpy.listen(('localhost', 5678))
+            debugpy.wait_for_client()
+            debugpy.breakpoint()
 
     # Configure generator memory
     def configureMemory(self, memfile_module):
