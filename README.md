@@ -181,3 +181,13 @@ The [README.md](target/README.md) provides information on downloading and using 
 Currently we are working on FORCE-RISCV providing support for 32bit RISC-V processors. When this is working we will provide scripts and notes so the generated *.ELF files can work easily with the [CV32E40P](https://github.com/openhwgroup/cv32e40p) RV32IMC core.   The UVM verification environment for CORE-V cores, including the cv32e40p is also in GitHub [here](https://github.com/openhwgroup/core-v-verif).
 
 There is a placeholder target directory: [cv32e40p](target/riscvOVPsim_cv32e40p)
+
+# Welcome to join openhw FORCE-RISCV VTG to track further developement of FORCE-RISCV
+Follow the steps to reigister eclipse account:
+https://www.openhwgroup.org/register/
+
+Then join FORCE-RISCV VTG mattermost, which is openhw's official instant message communication tool:
+https://mattermost.openhwgroup.org/all-users/channels/vtg-force-riscv#
+
+Stage2 development of FORCE-RISCV will be tracked in FORCE-RISCV VTG mattermost.
+Welcome to join.
