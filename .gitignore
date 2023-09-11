@@ -2,6 +2,8 @@
 *.so
 *.sw*
 .idea/
+.cache/
+.vscode/
 __pycache__/
 bin/friscv
 fpix/bin/fpix_riscv
@@ -16,3 +18,4 @@ handcar/standalone/
 make_area/
 output/
 build/
+utils/handcar/handcar_cosim.so
