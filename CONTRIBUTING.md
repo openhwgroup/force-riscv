@@ -13,7 +13,7 @@ Contributors are encouraged to be a [member](https://www.openhwgroup.org/members
 5. Add your changes to git.  
    `git add *`
 6. Commit your changes:  
-   `git commit -sm 'Add some feature'`<br>...take note of that **-s**, it's important!
+   `git commit -sm 'Add some feature'`<br>...note that **-s** (signoff) is now optional.
 7. Push feature branch:  
    `git push origin <my_new_branch>`<br>
 8. Submit a [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork).  
