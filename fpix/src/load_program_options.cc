@@ -131,8 +131,15 @@ struct Arg: public option::Arg
       for (EOptionIndexBaseType i = 0; options_strings[i] != 0; i++)
       {
         string opt_str = options_strings[i];
-        string lower_case;
-        transform(opt_str.begin(), opt_str.end(), lower_case.begin(), ::tolower);
+        // bits/stdc++.h is a non-standard header file of GNU C++ library. 
+        // So, if you try to compile your code with some compiler other than GCC it will fail.
+        // For this usage, change transform to for loop
+        // std::transform(opt_str.begin(), opt_str.end(), lower_case.begin(), ::tolower);
+        string lower_case = opt_str;
+        for(char &ch : lower_case){
+          ch = std::tolower(ch);
+        }
+
         if (lower_case.find(".elf") != string::npos)
         {
           arTestFiles.push_back(opt_str);

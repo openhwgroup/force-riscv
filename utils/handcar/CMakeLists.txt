@@ -31,13 +31,16 @@ set(SOURCES
     )
 
 # shared library 
-add_library(${PROJECT_NAME} SHARED ${SOURCES})
+add_library(${PROJECT_NAME} MODULE ${SOURCES})
 target_include_directories(${PROJECT_NAME}
                     PRIVATE
                     ./
                     ./../../base/inc
                     ./../../3rd_party/inc)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CMAKE_DL_LIBS})
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE "-undefined dynamic_lookup")
+endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

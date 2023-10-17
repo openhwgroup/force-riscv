@@ -34,6 +34,7 @@ endif()
 add_subdirectory(./riscv)
 add_subdirectory(./utils/handcar)
 add_subdirectory(./fpix)
+add_subdirectory(./utils/regression/seedgen)
 
 #------------------------
 # unit tests

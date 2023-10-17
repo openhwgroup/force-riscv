@@ -56,8 +56,8 @@ namespace Force {
   class RandomURBG32 {
   public:
     typedef uint32 result_type; //!< Type define required by STL
-    uint32 min() const { return 0; } //!< min function required by STL
-    uint32 max() const { return MAX_UINT32; } //!< max function required by STL
+    static constexpr uint32 min() { return 0; } //!< min function required by STL
+    static constexpr uint32 max() { return MAX_UINT32; } //!< max function required by STL
     uint32 operator () () const { return mpRandomInstance->Random32(min(), max()); }
 
     explicit RandomURBG32(const Random* randomInstance) : mpRandomInstance(randomInstance) { } //!< Constructor with pointer to a Random object provieded.

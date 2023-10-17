@@ -26,15 +26,19 @@ export FORCE_PYTHON_LIB ?= /usr/lib/x86_64-linux-gnu/
 all:
 	@$(MAKE) riscv
 	@$(MAKE) fpix
+	@$(MAKE) handcar
 
 .PHONY: riscv
 riscv:
 	@cd riscv; $(MAKE)
 
-
 .PHONY: fpix
 fpix:
 	@cd fpix; $(MAKE)
+
+.PHONY: handcar
+handcar:
+	@cd utils/vendor; $(MAKE)
 
 .PHONY: tests
 tests:
