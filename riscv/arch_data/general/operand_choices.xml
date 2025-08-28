@@ -159,6 +159,16 @@
     <choice name="S30" value="30" weight="10"/>
     <choice name="S31" value="31" weight="10"/>
   </choices>
+  <choices name="Prime 32-bit SIMD/FP registers" type="RegisterOperand">
+    <choice name="S8" value="0" weight="10"/>
+    <choice name="S9" value="1" weight="10"/>
+    <choice name="S10" value="2" weight="10"/>
+    <choice name="S11" value="3" weight="10"/>
+    <choice name="S12" value="4" weight="10"/>
+    <choice name="S13" value="5" weight="10"/>
+    <choice name="S14" value="6" weight="10"/>
+    <choice name="S15" value="7" weight="10"/>
+  </choices>
   <choices name="16-bit SIMD/FP registers" type="RegisterOperand">
     <choice name="H0" value="0" weight="10"/>
     <choice name="H1" value="1" weight="10"/>
